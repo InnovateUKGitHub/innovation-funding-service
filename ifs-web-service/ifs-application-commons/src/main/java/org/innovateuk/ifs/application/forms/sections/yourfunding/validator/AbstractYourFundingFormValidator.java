@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundi
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
@@ -20,9 +19,6 @@ import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 public class AbstractYourFundingFormValidator {
-
-    @Value("${ifs.funding.level.decimal.percentage.enabled}")
-    private boolean fundingLevelPercentageToggle;
 
     protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier) {
 
@@ -101,11 +97,7 @@ public class AbstractYourFundingFormValidator {
             ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
             if (form.getGrantClaimPercentage() != null) {
 
-                if (!fundingLevelPercentageToggle && form.getGrantClaimPercentage().scale() > 0) {
-                    errors.rejectValue("grantClaimPercentage", "validation.field.non.decimal.format");
-                }
-
-                if (fundingLevelPercentageToggle && form.getGrantClaimPercentage().scale() > MAX_DECIMAL_PLACES) {
+                if (form.getGrantClaimPercentage().scale() > MAX_DECIMAL_PLACES) {
                     errors.rejectValue("grantClaimPercentage", "validation.finance.percentage");
                 }
 

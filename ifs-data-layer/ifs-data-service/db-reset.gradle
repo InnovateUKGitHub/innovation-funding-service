@@ -35,6 +35,10 @@ task dbResetDockerEnv {
             into inputDir
         }
         copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/wipe-ldap-users.sh")
+            into inputDir
+        }
+        copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db.sh")
             into inputDir
         }

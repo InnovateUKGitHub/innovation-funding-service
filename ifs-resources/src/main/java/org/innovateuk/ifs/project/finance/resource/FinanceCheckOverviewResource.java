@@ -11,6 +11,7 @@ FinanceCheckOverviewResource {
     private int durationInMonths;
     private BigDecimal totalProjectCost;
     private BigDecimal grantAppliedFor;
+    private BigDecimal fundingAppliedFor;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
     private BigDecimal researchParticipationPercentage;
@@ -20,9 +21,9 @@ FinanceCheckOverviewResource {
     public FinanceCheckOverviewResource() {
     }
 
-    public FinanceCheckOverviewResource(Long projectId, String projectName,LocalDate projectStartDate,
+    public FinanceCheckOverviewResource(Long projectId, String projectName, LocalDate projectStartDate,
                                         int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
-                                        BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant,
+                                        BigDecimal fundingAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant,
                                         BigDecimal researchParticipationPercentage, BigDecimal competitionMaximumResearchPercentage) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -30,6 +31,7 @@ FinanceCheckOverviewResource {
         this.durationInMonths = durationInMonths;
         this.totalProjectCost = totalProjectCost;
         this.grantAppliedFor = grantAppliedFor;
+        this.fundingAppliedFor = fundingAppliedFor;
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.totalPercentageGrant = totalPercentageGrant;
         this.researchParticipationPercentage = researchParticipationPercentage;
@@ -114,5 +116,13 @@ FinanceCheckOverviewResource {
 
     public void setCompetitionMaximumResearchPercentage(BigDecimal competitionMaximumResearchPercentage) {
         this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
+    }
+
+    public BigDecimal getFundingAppliedFor() {
+        return fundingAppliedFor;
+    }
+
+    public void setFundingAppliedFor(BigDecimal fundingAppliedFor) {
+        this.fundingAppliedFor = fundingAppliedFor;
     }
 }

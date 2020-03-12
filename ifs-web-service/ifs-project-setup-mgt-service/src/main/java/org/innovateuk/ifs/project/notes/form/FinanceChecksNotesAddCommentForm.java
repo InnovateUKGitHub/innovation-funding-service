@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.notes.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class FinanceChecksNotesAddCommentForm extends BaseBindingResultTarget {

@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.project.projectdetails.form;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 
 /**
@@ -13,7 +14,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 public class InviteeForm extends BaseBindingResultTarget {
 
     private Long userId;
-    @NotBlank
+    @javax.validation.constraints.NotBlank
     private String name;
     @NotBlank
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX)

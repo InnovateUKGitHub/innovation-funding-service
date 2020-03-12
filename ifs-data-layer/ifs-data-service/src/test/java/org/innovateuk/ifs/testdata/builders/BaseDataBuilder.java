@@ -90,6 +90,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -212,6 +213,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationFinanceService financeService;
     protected GrantOfferLetterService grantOfferLetterService;
     protected RoleProfileStatusService roleProfileStatusService;
+    protected RoleProfileStatusRepository roleProfileStatusRepository;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -324,6 +326,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
         grantOfferLetterService = serviceLocator.getBean(GrantOfferLetterService.class);
         roleProfileStatusService = serviceLocator.getBean(RoleProfileStatusService.class);
+        roleProfileStatusRepository = serviceLocator.getBean((RoleProfileStatusRepository.class));
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
     }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -67,6 +68,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
@@ -219,7 +221,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().
+                withApplication(applicationId)
+                .withGrantClaimPercentage(BigDecimal.valueOf(20)).
+                build(3);
+
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(applicationFinanceResources));
         when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
         when(projectFinanceService.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
@@ -512,9 +520,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(3.0));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -579,9 +587,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -646,9 +654,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);

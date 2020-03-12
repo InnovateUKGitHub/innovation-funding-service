@@ -26,7 +26,7 @@ public class Address {
     private String town;
     private String county;
     private String country;
-    
+
     @Length(max = 9)
     private String postcode;
 

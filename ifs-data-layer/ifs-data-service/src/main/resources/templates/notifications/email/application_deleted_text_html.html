@@ -1,0 +1,10 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+<p style="margin: 0 0 1em 0;">The application ${applicationName} has been deleted by ${leadUserName}.</p>
+<p style="margin: 0 0 1em 0;">All the application information has been deleted from the Innovation Funding Service and is no longer available to any partner organisation.</p>
+<p style="margin: 0 0 1em 0;">If you have any questions please email <a href="mailto:${leadEmail}">${leadEmail}</a>.</p>
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+<@layout.senderHTML />
+</@layout.default>

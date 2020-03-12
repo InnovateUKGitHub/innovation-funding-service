@@ -629,10 +629,11 @@ Proj Finance is able to see the Finances amended
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
-    When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the text in the element    css = .standard-definition-list dd:nth-child(2)    £379,678  # Total project cost
-    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(4)    109,660   # Grant applied for
-    And the user should see the text in the element     css = .standard-definition-list dd:nth-child(8)    28.88%       # Total percentage grant
+    When the user navigates to the page           ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the element          jQuery = dt:contains("Total project cost:") + dd:contains("£379,678")   # Total project cost
+    And the user should see the element          jQuery = dt:contains("Funding applied for:") + dd:contains("116,596")   # Grant applied for
+    And the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("109,660")
+    And the user should see the element          jQuery = dt:contains("Total percentage grant:") + dd:contains("28.88%")      # Total percentage grant
 
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
@@ -761,11 +762,12 @@ Confirming partner eligibility should update on the finance checks page
 Project finance user can see updated finance overview after partner changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
-    Given log in as a different user       &{internal_finance_credentials}
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
-    Then the user should see the text in the element   css = .standard-definition-list dd:nth-child(2)    £356,559  #Total project cost
-    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(4)    102,725   #Grant applied for
-    And the user should see the text in the element    css = .standard-definition-list dd:nth-child(8)    28.81%       #Total percentage grant
+    Given log in as a different user             &{internal_finance_credentials}
+    When the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
+    Then the user should see the element         jQuery = dt:contains("Total project cost:") + dd:contains("£356,559")   # Total project cost
+    And the user should see the element          jQuery = dt:contains("Funding applied for:") + dd:contains("116,596")   # Grant applied for
+    And the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("102,725")
+    And the user should see the element          jQuery = dt:contains("Total percentage grant:") + dd:contains("28.81%")
 
 Project finance can see updated finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -1128,10 +1130,11 @@ Custom suite setup
     Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the table row has expected values
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(2)    £402,797   # Total project cost
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(4)    116,596   # Grant applied for
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(6)    4,936     # Other public sector funding
-    the user sees the text in the element    css = .standard-definition-list dd:nth-child(8)    28.95%       # Total percentage grant
+    the user should see the element          jQuery = dt:contains("Total project cost:") + dd:contains("£402,797")   # Total project cost
+    the user should see the element          jQuery = dt:contains("Funding applied for:") + dd:contains("116,596")   # Grant applied for
+    the user should see the element          jQuery = dt:contains("Current amount:") + dd:contains("116,596")
+    the user should see the element          jQuery = dt:contains("Other public sector funding:") + dd:contains("4,936")     # Other public sector funding
+    the user should see the element          jQuery = dt:contains("Total percentage grant:") + dd:contains("28.95%")      # Total percentage grant
 
 the user fills in project costs
     Input Text    name = costs[0].value    £8,000

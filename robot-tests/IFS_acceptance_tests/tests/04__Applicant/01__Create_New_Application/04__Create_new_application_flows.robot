@@ -11,7 +11,7 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...
 ...               INFUND-1040: As an applicant I want to be able to create more than one application so..
 Suite Setup       The guest user opens the browser
-Suite Teardown    the user closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../10__Project_setup/PS_Common.robot
@@ -33,7 +33,6 @@ Non registered users non companies house route
 
 The email address does not stay in the cookie
     [Documentation]    INFUND_2510
-    [Tags]
     Given Applicant goes to the registration form
     Then the user should not see the element        jQuery = strong:contains("${test_mailbox_one}+rto@gmail.com")
 

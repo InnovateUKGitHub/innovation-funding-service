@@ -35,8 +35,6 @@ public class YourFundingViewModel {
 
     private final boolean overridingFundingRules;
 
-    private boolean fundingLevelPercentageToggle;
-
     public YourFundingViewModel(long applicationId,
                                 long sectionId,
                                 long organisationId,
@@ -53,8 +51,7 @@ public class YourFundingViewModel {
                                 long yourOrganisationSectionId,
                                 Integer maximumFundingLevel,
                                 String financesUrl,
-                                boolean overridingFundingRules,
-                                boolean fundingLevelPercentageToggle) {
+                                boolean overridingFundingRules) {
         this.applicationId = applicationId;
         this.sectionId = sectionId;
         this.organisationId = organisationId;
@@ -72,7 +69,6 @@ public class YourFundingViewModel {
         this.maximumFundingLevel = maximumFundingLevel;
         this.financesUrl = financesUrl;
         this.overridingFundingRules = overridingFundingRules;
-        this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
     }
 
     public long getApplicationId() {
@@ -146,9 +142,5 @@ public class YourFundingViewModel {
     /* view logic */
     public boolean isReadOnly() {
         return complete || !open;
-    }
-
-    public boolean isFundingLevelPercentageToggle() {
-        return fundingLevelPercentageToggle;
     }
 }

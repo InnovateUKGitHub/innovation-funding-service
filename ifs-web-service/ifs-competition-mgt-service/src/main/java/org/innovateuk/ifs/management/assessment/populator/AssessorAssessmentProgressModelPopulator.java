@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.assessment.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessorAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource;
@@ -10,13 +11,12 @@ import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.assessment.viewmodel.*;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -39,8 +39,7 @@ public class AssessorAssessmentProgressModelPopulator {
     public AssessorAssessmentProgressViewModel populateModel(long competitionId,
                                                              long assessorId,
                                                              int page,
-                                                             Optional<Long> innovationArea,
-                                                             String sortField,
+                                                             Sort sort,
                                                              String filter) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
@@ -64,14 +63,12 @@ public class AssessorAssessmentProgressModelPopulator {
                 competitionId,
                 assessorId,
                 page,
-                innovationArea,
                 filter,
-                sortField);
+                sort);
         AssessorAssessmentProgressApplicationsViewModel applicationsViewModel = getApplicationsViewModel(
                 applicationCounts,
                 competitionId,
-                innovationArea,
-                sortField,
+                sort,
                 filter);
 
         BusinessType businessType = summaryResource.getAssessor().getProfile().getBusinessType();
@@ -151,34 +148,29 @@ public class AssessorAssessmentProgressModelPopulator {
     private ApplicationCountSummaryPageResource getApplicationCounts(long competitionId,
                                                                      long assessorId,
                                                                      int page,
-                                                                     Optional<Long> innovationArea,
                                                                      String filter,
-                                                                     String sortField) {
+                                                                     Sort sort) {
         return applicationCountSummaryRestService
-                .getApplicationCountSummariesByCompetitionIdAndInnovationArea(
+                .getApplicationCountSummariesByCompetitionIdAndAssessorId(
                         competitionId,
                         assessorId,
                         page,
-                        PAGE_SIZE,
-                        innovationArea,
-                        filter,
-                        sortField)
+                        sort,
+                        filter)
                 .getSuccess();
     }
 
     private AssessorAssessmentProgressApplicationsViewModel getApplicationsViewModel(ApplicationCountSummaryPageResource applicationCounts,
                                                                                      long competitionId,
-                                                                                     Optional<Long> innovationArea,
-                                                                                     String sortField,
-                                                                                     String filterSearch) {
+                                                                                     Sort sort,
+                                                                                     String filter) {
         CompetitionResource competition  = getCompetition(competitionId);
 
         return new AssessorAssessmentProgressApplicationsViewModel(
                 simpleMap(applicationCounts.getContent(), this::getRowViewModel),
                 IN_ASSESSMENT == competition.getCompetitionStatus(),
-                innovationArea,
-                sortField,
-                new Pagination(applicationCounts),
+                sort,
+                new PaginationViewModel(applicationCounts),
                 applicationCounts.getTotalElements());
     }
 

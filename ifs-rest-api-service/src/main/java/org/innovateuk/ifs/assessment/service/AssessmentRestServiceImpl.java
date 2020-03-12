@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -91,5 +92,10 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     @Override
     public RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
         return postWithRestResult(format("%s", assessmentRestURL), assessmentCreateResource, AssessmentResource.class);
+    }
+
+    @Override
+    public RestResult<List<AssessmentResource>> createAssessments(List<AssessmentCreateResource> assessmentCreateResource) {
+        return postWithRestResult(format("%s/bulk", assessmentRestURL), assessmentCreateResource, new ParameterizedTypeReference<List<AssessmentResource>>() {});
     }
 }
