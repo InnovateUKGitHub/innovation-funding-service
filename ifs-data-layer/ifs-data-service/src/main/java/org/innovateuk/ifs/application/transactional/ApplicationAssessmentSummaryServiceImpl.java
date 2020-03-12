@@ -61,13 +61,24 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
                     Pageable pageable = PageRequest.of(pageIndex, pageSize, getSort(sort));
 
-                    Page<ApplicationAvailableAssessorResource> result = assessmentParticipantRepository.findParticipantsWithoutAssessments(
+                    Page<ApplicationAvailableAssessorResource> result = assessmentParticipantRepository.findAvailableAssessorsForApplication(
                             application.getCompetition().getId(),
                             applicationId,
                             EncodingUtils.urlDecode(assessorNameFilter),
                             pageable);
                     return new ApplicationAvailableAssessorPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize());
                 }
+        );
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long applicationId, String assessorNameFilter) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
+            assessmentParticipantRepository.findAvailableAssessorIdsForApplication(
+                    application.getCompetition().getId(),
+                    applicationId,
+                    EncodingUtils.urlDecode(assessorNameFilter)
+            )
         );
     }
 
@@ -99,7 +110,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     @Override
-    public ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId) {
+    public ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             Competition competition = application.getCompetition();
             return new ApplicationAssessmentSummaryResource(application.getId(),

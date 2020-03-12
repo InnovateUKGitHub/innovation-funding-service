@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.shibboleth.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.Email;
+
+import javax.validation.constraints.Email;
 
 public class ChangeEmail {
 
