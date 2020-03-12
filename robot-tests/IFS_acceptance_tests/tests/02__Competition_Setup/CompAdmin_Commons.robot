@@ -5,6 +5,7 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
+${Non_Ifs_Comp}      Webtest Non IFS Comp 20
 
 *** Keywords ***
 The competition admin creates competition

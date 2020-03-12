@@ -120,4 +120,14 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return getWithRestResult(applicationRestURL + "/get-latest-email-funding-date/" + applicationId, ZonedDateTime.class);
     }
 
+    @Override
+    public RestResult<Void> hideApplication(long applicationId, long userId) {
+        return postWithRestResult(format("%s/%d/hide-for-user/%d", applicationRestURL, applicationId, userId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteApplication(long applicationId) {
+        return deleteWithRestResult(format("%s/%d", applicationRestURL, applicationId), Void.class);
+    }
+
 }

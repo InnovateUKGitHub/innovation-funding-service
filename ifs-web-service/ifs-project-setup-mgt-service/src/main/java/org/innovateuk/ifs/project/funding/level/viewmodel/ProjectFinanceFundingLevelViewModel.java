@@ -18,12 +18,10 @@ public class ProjectFinanceFundingLevelViewModel {
     private final String projectName;
     private final List<ProjectFinancePartnerFundingLevelViewModel> partners;
     private final boolean collaborativeProject;
-    private boolean fundingLevelPercentageToggle;
 
     public ProjectFinanceFundingLevelViewModel(ProjectResource project,
                                                List<ProjectFinanceResource> finances,
-                                               OrganisationResource lead,
-                                               boolean fundingLevelPercentageToggle) {
+                                               OrganisationResource lead) {
         this.projectId = project.getId();
         this.applicationId = project.getApplication();
         this.projectName = project.getName();
@@ -35,7 +33,6 @@ public class ProjectFinanceFundingLevelViewModel {
                         pf.getTotalOtherFunding(), totalGrant))
                 .collect(Collectors.toList());
         this.collaborativeProject = project.isCollaborativeProject();
-        this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
     }
 
     public long getProjectId() {
@@ -83,9 +80,5 @@ public class ProjectFinanceFundingLevelViewModel {
                              .calculateFundingSought(entry.getValue().getFundingLevel())
                 )
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public boolean isFundingLevelPercentageToggle() {
-        return fundingLevelPercentageToggle;
     }
 }

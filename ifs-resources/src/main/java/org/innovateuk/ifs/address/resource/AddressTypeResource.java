@@ -2,7 +2,7 @@ package org.innovateuk.ifs.address.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Usually used within OrganisationAddressResource to link with AddressType entity by id.

@@ -82,14 +82,14 @@ Allocated assessor accepts invite to assess the competition
 
 Comp Admin allocates assessor to application
     [Documentation]  IFS-2376
-    [Tags]
     Given log in as a different user        &{Comp_admin1_credentials}
     When The user clicks the button/link    link = Dashboard
     And The user clicks the button/link     link = ${comp_name}
     And The user clicks the button/link     jQuery = a:contains("Manage assessments")
     And the user clicks the button/link     jQuery = a:contains("Allocate applications")
     Then the user clicks the button/link    jQuery = tr:contains("${appl_name}") a:contains("Assign")
-    And the user clicks the button/link     jQuery = tr:contains("Paul Plum") button:contains("Assign")
+    And the user selects the checkbox       selectedAssessors
+    And the user clicks the button/link     jQuery = button:contains("Add to application")
     When the user navigates to the page     ${server}/management/competition/${competitionId}
     Then the user clicks the button/link    jQuery = button:contains("Notify assessors")
 
