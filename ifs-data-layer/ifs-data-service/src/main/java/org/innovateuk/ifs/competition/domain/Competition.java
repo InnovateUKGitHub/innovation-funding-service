@@ -173,10 +173,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionTermsFileEntryId", referencedColumnName = "id")
     private FileEntry competitionTerms;
 
-    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name= "organisation_config_id", referencedColumnName = "id")
-    private Long competitionOrganisationConfig;
-
     private ZonedDateTime projectSetupStarted;
 
     public Competition() {
@@ -920,14 +916,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setProjectSetupStarted(ZonedDateTime projectSetupStarted) {
         this.projectSetupStarted = projectSetupStarted;
-    }
-
-    public Long getCompetitionOrganisationConfig() {
-        return competitionOrganisationConfig;
-    }
-
-    public void setCompetitionOrganisationConfig(Long competitionOrganisationConfig) {
-        this.competitionOrganisationConfig = competitionOrganisationConfig;
     }
 
     @Override

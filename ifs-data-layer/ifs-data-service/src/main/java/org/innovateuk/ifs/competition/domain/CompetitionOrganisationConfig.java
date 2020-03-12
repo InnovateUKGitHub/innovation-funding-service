@@ -11,7 +11,7 @@ public class CompetitionOrganisationConfig {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="competition_id", referencedColumnName = "id")
+    @JoinColumn(name="competition_id")
     private Competition competition;
 
     @Column(name = "international_application_allowed")
