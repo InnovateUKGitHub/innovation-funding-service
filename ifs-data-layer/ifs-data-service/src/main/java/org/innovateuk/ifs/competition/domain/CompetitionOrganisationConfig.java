@@ -14,8 +14,12 @@ public class CompetitionOrganisationConfig {
     @JoinColumn(name="competition_id", referencedColumnName = "id")
     private Competition competition;
 
-    @Column(name = "international_application_allowed")
-    private Boolean internationalApplicationAllowed;
+    @Column(name = "international_organisations_allowed")
+    private Boolean internationalOrganisationsAllowed;
+
+    public Long getId() {
+        return id;
+    }
 
     public Competition getCompetition() {
         return competition;
@@ -25,11 +29,11 @@ public class CompetitionOrganisationConfig {
         this.competition = competition;
     }
 
-    public Boolean getInternationalApplicationAllowed() {
-        return internationalApplicationAllowed;
+    public Boolean getInternationalOrganisationsAllowed() {
+        return internationalOrganisationsAllowed;
     }
 
-    public void setInternationalApplicationAllowed(Boolean internationalApplicationAllowed) {
-        this.internationalApplicationAllowed = internationalApplicationAllowed;
+    public void setInternationalOrganisationsAllowed(Boolean internationalOrganisationsAllowed) {
+        this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
     }
 }

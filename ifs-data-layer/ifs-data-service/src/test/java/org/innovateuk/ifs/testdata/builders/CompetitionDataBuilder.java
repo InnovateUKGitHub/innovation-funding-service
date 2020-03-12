@@ -114,7 +114,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 Boolean includeJesForm,
                                                 ApplicationFinanceType applicationFinanceType,
                                                 Boolean includeProjectGrowth,
-                                                Boolean includeYourOrganisation) {
+                                                Boolean includeYourOrganisation,
+                                                Boolean allowInternationalOrganisations) {
 
         return asCompAdmin(data -> {
 
@@ -172,6 +173,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setIncludeYourOrganisationSection(includeYourOrganisation);
                 competition.setFundingType(fundingType);
                 competition.setCompletionStage(completionStage);
+                competition.setInternationalApplicationAllowed(allowInternationalOrganisations);
             });
         });
     }
