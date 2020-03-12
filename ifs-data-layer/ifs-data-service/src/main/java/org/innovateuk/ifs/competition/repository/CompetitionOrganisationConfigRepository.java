@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competition.repository;
 
-import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
 
 import java.util.List;
 
 public interface CompetitionOrganisationConfigRepository {
 
-    List<Competition> findAll();
+    List<CompetitionOrganisationConfig> findByCompetitionId(Long competitionId);
 
-    List<Competition> findAllInternalApplicationAllowedIsTrue();
+    List<CompetitionOrganisationConfig> findAllInternationalApplicationAllowedIsTrue();
 }

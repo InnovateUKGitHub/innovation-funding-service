@@ -175,6 +175,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private ZonedDateTime projectSetupStarted;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name= "organisation_config_id", referencedColumnName = "id")
+    private CompetitionOrganisationConfig competitionOrganisationConfig;
+
     public Competition() {
         setupComplete = false;
     }
@@ -916,6 +920,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setProjectSetupStarted(ZonedDateTime projectSetupStarted) {
         this.projectSetupStarted = projectSetupStarted;
+    }
+
+    public CompetitionOrganisationConfig getCompetitionOrganisationConfig() {
+        return competitionOrganisationConfig;
+    }
+
+    public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
+        this.competitionOrganisationConfig = competitionOrganisationConfig;
     }
 
     @Override
