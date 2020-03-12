@@ -114,7 +114,7 @@ public class ProjectFinanceFundingLevelController {
 
         return applicationFinances.stream()
                 .map(ApplicationFinanceResource::getTotalFundingSought)
-                .reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
+                .reduce(ZERO, BigDecimal::add);
     }
 
     private ValidationMessages saveFundingLevels(List<ProjectFinanceResource> finances, ProjectFinanceFundingLevelForm form) {
