@@ -106,7 +106,7 @@
                             </th:block>
                         </tr>
                     </th:block>
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row" th:attr="aria-hidden=${model.collaborativeProject} ? 'false' : 'true'">
                         <th class="govuk-table__header" scope="col">Total grant value</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                            <Strong th:text="|&pound;${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|"></Strong></td>
