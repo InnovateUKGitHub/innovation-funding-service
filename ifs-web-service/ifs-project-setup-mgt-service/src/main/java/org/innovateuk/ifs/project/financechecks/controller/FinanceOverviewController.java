@@ -82,7 +82,7 @@ public class FinanceOverviewController {
                         applicationId,
                         canChangeFundingSought,
                         competition.isLoan(),
-                        financeCheckSummary.isAllEligibilityAndViabilityInReview());
+                        !competition.isLoan() && financeCheckSummary.isAllEligibilityAndViabilityInReview());
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {
