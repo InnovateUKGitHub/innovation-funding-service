@@ -17,6 +17,11 @@ public class CompetitionOrganisationConfig {
     @Column(name = "international_organisations_allowed")
     private Boolean internationalOrganisationsAllowed;
 
+    public CompetitionOrganisationConfig(Competition competition, Boolean internationalOrganisationsAllowed) {
+        this.competition = competition;
+        this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
+    }
+
     public Long getId() {
         return id;
     }
