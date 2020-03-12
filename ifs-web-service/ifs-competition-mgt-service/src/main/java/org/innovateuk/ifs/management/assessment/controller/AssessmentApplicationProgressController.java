@@ -62,11 +62,12 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
                                       @PathVariable long applicationId,
                                       @PathVariable long competitionId,
                                       @RequestParam(value = "page", defaultValue = "1") int page,
-                                      @RequestParam(value = "assessorNameFilter", defaultValue = "") String assessorNameFilter,
+                                      @RequestParam(value = "assessorNameFilter", defaultValue = "") String filter,
                                       @RequestParam(value = "sort", defaultValue = "ASSESSOR") Sort sort,
+                                      HttpServletRequest request,
                                       HttpServletResponse response) {
-        updateSelectionForm(response, competitionId, selectionForm);
-        return doProgressView(model, applicationId, assessorNameFilter, page - 1, sort);
+        updateSelectionForm(request, response, competitionId, applicationId, selectionForm, filter);
+        return doProgressView(model, applicationId, filter, page - 1, sort);
     }
 
     @PostMapping
@@ -187,9 +188,36 @@ public class AssessmentApplicationProgressController extends CompetitionManageme
         return applicationAssessmentSummaryRestService.getAvailableAssessorsIds(applicationId, assessorName).getSuccess();
     }
 
-    private void updateSelectionForm(HttpServletResponse response,
+    private void updateSelectionForm(HttpServletRequest request,
+                                     HttpServletResponse response,
                                      long competitionId,
-                                     AvailableAssessorForm selectionForm) {
+                                     long applicationId,
+                                     AvailableAssessorForm selectionForm,
+                                     String filter) {
+        AvailableAssessorForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AvailableAssessorForm());
+
+        AvailableAssessorForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, filter, applicationId);
+        selectionForm.setSelectedAssessors(trimmedAssessorForm.getSelectedAssessors());
+        selectionForm.setAllSelected(trimmedAssessorForm.isAllSelected());
+
         saveFormToCookie(response, competitionId, selectionForm);
+    }
+
+    private AvailableAssessorForm trimSelectionByFilteredResult(AvailableAssessorForm selectionForm,
+                                                                   String filter,
+                                                                   long applicationId) {
+        List<Long> filteredResults = getAllAssessorIds(applicationId, filter);
+        AvailableAssessorForm updatedSelectionForm = new AvailableAssessorForm();
+
+        selectionForm.getSelectedAssessors().retainAll(filteredResults);
+        updatedSelectionForm.setSelectedAssessors(selectionForm.getSelectedAssessors());
+
+        if (updatedSelectionForm.getSelectedAssessors().equals(filteredResults) && !updatedSelectionForm.getSelectedAssessors().isEmpty()) {
+            updatedSelectionForm.setAllSelected(true);
+        } else {
+            updatedSelectionForm.setAllSelected(false);
+        }
+
+        return updatedSelectionForm;
     }
 }
