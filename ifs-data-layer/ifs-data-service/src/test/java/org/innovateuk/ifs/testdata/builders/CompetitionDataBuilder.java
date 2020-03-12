@@ -173,7 +173,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setIncludeYourOrganisationSection(includeYourOrganisation);
                 competition.setFundingType(fundingType);
                 competition.setCompletionStage(completionStage);
-                competition.setInternationalApplicationAllowed(allowInternationalOrganisations);
+                competition.setInternationalOrganisationsAllowed(allowInternationalOrganisations);
             });
         });
     }

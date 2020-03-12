@@ -413,6 +413,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
 
+//        Could set default value here maybe ?
+
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));

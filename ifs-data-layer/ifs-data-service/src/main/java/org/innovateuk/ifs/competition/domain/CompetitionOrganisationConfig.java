@@ -10,12 +10,15 @@ public class CompetitionOrganisationConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competition_id", referencedColumnName = "id")
     private Competition competition;
 
     @Column(name = "international_organisations_allowed")
     private Boolean internationalOrganisationsAllowed;
+
+    private CompetitionOrganisationConfig(){
+    }
 
     public CompetitionOrganisationConfig(Competition competition, Boolean internationalOrganisationsAllowed) {
         this.competition = competition;
