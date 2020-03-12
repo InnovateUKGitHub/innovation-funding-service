@@ -715,7 +715,7 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" id="remove-organisation-model-button" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
+            <button class="govuk-button" th:id="${'remove-organisation-model-button-' + organisation.id}" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
