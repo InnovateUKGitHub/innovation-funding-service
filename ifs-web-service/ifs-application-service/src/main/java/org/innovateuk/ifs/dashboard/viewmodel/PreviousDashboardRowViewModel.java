@@ -14,10 +14,17 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.*;
  */
 public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
 
+    private static String SINGLE_TITLE = "Delete this application";
+    private static String COLLABORATIVE_TITLE = "Delete this application for all partners";
+    private static String SINGLE_MESSAGE = "This application and all its data will be permanently deleted.";
+    private static String COLLABORATIVE_MESSAGE = "This application and all its data will be permanently deleted for all partners.";
+
     private final ApplicationState applicationState;
     private final LocalDate startDate;
     private final ProjectState projectState;
     private final Long projectId;
+    private final boolean leadApplicant;
+    private final boolean collaborationLevelSingle;
 
     public PreviousDashboardRowViewModel(String title,
                                          long applicationId,
@@ -25,12 +32,16 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
                                          String competitionTitle,
                                          ApplicationState applicationState,
                                          ProjectState projectState,
-                                         LocalDate startDate) {
+                                         LocalDate startDate,
+                                         boolean leadApplicant,
+                                         boolean collaborationLevelSingle) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
         this.projectState = projectState;
         this.projectId = projectId;
         this.startDate = startDate;
+        this.leadApplicant = leadApplicant;
+        this.collaborationLevelSingle = collaborationLevelSingle;
     }
 
     public PreviousDashboardRowViewModel(DashboardPreviousRowResource resource){
@@ -39,6 +50,8 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         this.projectState = resource.getProjectState();
         this.projectId = resource.getProjectId();
         this.startDate = resource.getStartDate();
+        this.leadApplicant = resource.isLeadApplicant();
+        this.collaborationLevelSingle = resource.isCollaborationLevelSingle();
     }
 
     public ApplicationState getApplicationState() {
@@ -51,6 +64,10 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     private boolean hasProject() {
         return projectState != null;
+    }
+
+    public boolean isLeadApplicant() {
+        return leadApplicant;
     }
 
     /* View logic */
@@ -81,6 +98,22 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     public boolean isUnsuccessful() {
         return hasProject() && projectState.isUnsuccessful();
+    }
+
+    public boolean canHideApplication() {
+        return !leadApplicant && !submittedAndFinishedStates.contains(applicationState);
+    }
+
+    public boolean canDeleteApplication() {
+        return leadApplicant && !submittedAndFinishedStates.contains(applicationState);
+    }
+
+    public String getDeleteModalTitle() {
+        return collaborationLevelSingle ? SINGLE_TITLE : COLLABORATIVE_TITLE;
+    }
+
+    public String getDeleteModalMessage() {
+        return collaborationLevelSingle ? SINGLE_MESSAGE : COLLABORATIVE_MESSAGE;
     }
 
     @Override

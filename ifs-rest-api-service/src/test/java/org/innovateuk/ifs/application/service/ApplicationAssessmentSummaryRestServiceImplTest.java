@@ -11,8 +11,10 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static org.junit.Assert.assertSame;
 
 public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestServiceUnitTest<ApplicationAssessmentSummaryRestServiceImpl> {
@@ -68,4 +70,17 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
 
         assertSame(expected, service.getApplicationAssessmentSummary(applicationId).getSuccess());
     }
+
+    @Test
+    public void getAvailableAssessorIds() {
+        List<Long> expected = asList(1L, 2L);
+        long applicationId = 1L;
+        String assessorNameFilter = "Name";
+
+        setupGetWithRestResultExpectations(format("%s/%s/available-assessors-ids?assessorNameFilter=%s",
+                applicationAssessmentSummaryRestUrl, applicationId, assessorNameFilter), longsListType(), expected);
+
+        assertSame(expected, service.getAvailableAssessorsIds(applicationId, assessorNameFilter).getSuccess());
+    }
+
 }

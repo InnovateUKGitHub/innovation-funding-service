@@ -52,4 +52,4 @@ Already submitted application should not show error when the competition is clos
 
 *** Keywords ***
 the user should see that the application is not submitted
-    the user should see the element    css = div.status .not-submitted
+    the user should see the element    css = div.status-and-action .not-submitted

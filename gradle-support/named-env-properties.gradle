@@ -20,6 +20,7 @@ ext.SHIBBOLETH_IDP_MEMORY_REQUEST="2048M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
 
 ext.LDAP_USESSL="false"
+ext.ONLY_DELETE_IFS_USERS="true"
 
 ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['openshiftDomain']
@@ -49,5 +50,3 @@ ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN="innovateuk.ukri.test"
 ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS="innovateuk.ukri.test,innovateuk.test"
 
 ext.RESOURCE_DOMAIN=""
-
-ext.IFS_FUNDING_LEVEL_DECIMAL_PERCENTAGE_ENABLED=false

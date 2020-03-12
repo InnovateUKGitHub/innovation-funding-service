@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.funding.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Contains the Funding Decision choice value.
