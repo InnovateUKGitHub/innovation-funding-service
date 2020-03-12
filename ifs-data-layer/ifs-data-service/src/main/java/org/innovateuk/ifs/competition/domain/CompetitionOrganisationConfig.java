@@ -33,10 +33,6 @@ public class CompetitionOrganisationConfig {
         return competition;
     }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
-    }
-
     public Boolean getInternationalOrganisationsAllowed() {
         return internationalOrganisationsAllowed;
     }

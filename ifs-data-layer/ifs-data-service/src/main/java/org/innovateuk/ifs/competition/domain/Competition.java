@@ -175,7 +175,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private ZonedDateTime projectSetupStarted;
 
-    @OneToOne(mappedBy = "competition", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
     public Competition() {

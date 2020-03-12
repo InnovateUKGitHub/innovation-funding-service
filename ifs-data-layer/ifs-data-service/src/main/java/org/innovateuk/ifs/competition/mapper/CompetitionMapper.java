@@ -63,6 +63,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "assessmentPanelDate", ignore = true),
             @Mapping(target = "panelDate", ignore = true),
             @Mapping(target = "projectStages", ignore = true),
+            @Mapping(target = "competitionOrganisationConfig", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 
@@ -85,7 +86,9 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
 
     @AfterMapping
     public void setInternationalOrganisationsAllowed(@MappingTarget Competition competition, CompetitionResource resource) {
-        competition.setCompetitionOrganisationConfig(new CompetitionOrganisationConfig(competition, resource.getInternationalOrganisationsAllowed()));
+
+        boolean internationalOrgsAllowed = resource.getInternationalOrganisationsAllowed() != null ? resource.getInternationalOrganisationsAllowed() : false;
+        competition.setCompetitionOrganisationConfig(new CompetitionOrganisationConfig(competition, internationalOrgsAllowed));
     }
 
     private ProjectStages mapProjectSetupStageToProjectStage(ProjectSetupStage projectSetupStage, Competition competition) {
