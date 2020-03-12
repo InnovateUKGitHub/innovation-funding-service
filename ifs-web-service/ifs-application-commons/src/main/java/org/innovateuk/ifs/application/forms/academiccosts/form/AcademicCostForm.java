@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.academiccosts.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;

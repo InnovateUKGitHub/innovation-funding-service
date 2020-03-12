@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.publiccontent.form.section;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.management.publiccontent.form.AbstractPublicContentForm;
 
 /**

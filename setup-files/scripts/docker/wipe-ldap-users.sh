@@ -2,6 +2,12 @@
 
 # Wipes all users on the ldap.
 
+host=$DB_HOST
+db=$DB_NAME
+user=$DB_USER
+pass=$DB_PASS
+port=$DB_PORT
+
 echo ldap host:$LDAP_HOST
 echo ldap port:$LDAP_PORT
 echo ldap domain:$LDAP_DOMAIN
