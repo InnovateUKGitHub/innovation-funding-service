@@ -24,6 +24,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 ...             IFS-6298 Loans - Project Setup Content Review
 ...
 ...             IFS-6368 Loans - Remove Documents
+...
+...             IFS-7244 - Loans should not have change funding percentage
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -82,6 +84,13 @@ Applicant complete the project setup details
     Given the user completes the project details
     And the user completes the project team details
     Then the user should not see the element    jQuery = h2:contains("Bank details")
+
+The user is unable to change funding percentage
+    [Documentation]  IFS-7244
+    [Setup]  log in as a different user         &{internal_finance_credentials}
+    Given the user navigates to the page        ${loan_finance_checks}
+    When the user clicks the button/link        link = View finances
+    Then the user should not see the element    link = Change funding level percentages
 
 Funding sought validations
     [Documentation]  IFS-6293
