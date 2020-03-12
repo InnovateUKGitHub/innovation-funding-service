@@ -218,7 +218,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
-                        true, STANDARD, true, true).
+                        true, STANDARD, true, true, false).
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
