@@ -123,13 +123,7 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Override
     public ServiceResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId) {
-//        add legacy stuff
-        return find(baseMonitoringOfficerRepository.findByProjectId(projectId), notFoundError(BaseMonitoringOfficer.class))
-                .andOnSuccessReturn(baseMonitoringOfficers -> baseMonitoringOfficers.stream()
-                .map(BaseMonitoringOfficer::getUser)
-                .map(User::getId)
-                .collect(toList())
-                .contains(userId));
+        return serviceSuccess(baseMonitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId));
     }
 
 

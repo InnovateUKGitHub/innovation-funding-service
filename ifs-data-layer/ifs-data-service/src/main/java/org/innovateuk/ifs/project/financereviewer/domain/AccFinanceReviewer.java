@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.financereviewer.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -11,17 +10,17 @@ import javax.persistence.*;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.FINANCE_REVIEWER;
 
 /**
- * A project finance user assigned to a project as a finance reviewer.
+ * A project finance user assigned to a project as a finance reviewer once the project has gone live.
  */
 @Entity
-@DiscriminatorValue("FINANCE_REVIEWER")
-public class FinanceReviewer extends BaseFinanceReviewer {
+@DiscriminatorValue("ACC_FINANCE_REVIEWER")
+public class AccFinanceReviewer extends BaseFinanceReviewer {
 
-    public FinanceReviewer() {
+    public AccFinanceReviewer() {
         super(null, FINANCE_REVIEWER);
     }
 
-    public FinanceReviewer(User user, Project project) {
+    public AccFinanceReviewer(User user, Project project) {
         super(user, FINANCE_REVIEWER);
     }
 

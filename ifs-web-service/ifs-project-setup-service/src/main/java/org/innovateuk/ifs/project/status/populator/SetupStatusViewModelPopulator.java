@@ -77,7 +77,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private boolean showApplicationFeedbackLink(ProjectResource project,
-                                               UserResource loggedInUser,
+                                                UserResource loggedInUser,
                                                 boolean isMonitoringOfficer){
 
         if (isMonitoringOfficer){
