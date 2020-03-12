@@ -16,6 +16,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
  * REST service for retrieving {@link ApplicationAssessmentSummaryResource}'s.
@@ -34,6 +35,12 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
     public RestResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, String assessorNameFilter, Sort sort) {
         String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/available-assessors",pageIndex, pageSize, assessorNameFilter, sort, applicationId);
         return getWithRestResult(uriWithParams, ApplicationAvailableAssessorPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<Long>> getAvailableAssessorsIds(long applicationId, String assessorName) {
+        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/available-assessors-ids", null, null, assessorName, null, applicationId);
+        return getWithRestResult(uriWithParams, longsListType());
     }
 
     @Override

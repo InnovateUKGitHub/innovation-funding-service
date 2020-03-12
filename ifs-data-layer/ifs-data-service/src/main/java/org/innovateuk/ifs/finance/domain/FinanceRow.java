@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_LENGTH
  * FinanceRow defines database relations and a model to use client side and server side.
  */
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "row_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class FinanceRow<FinanceType extends Finance> {
     @Id
@@ -38,7 +38,7 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     @Length(max = MAX_DB_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String name;
 
-    @OneToMany(mappedBy="financeRowId", cascade = REMOVE)
+    @OneToMany(mappedBy = "financeRowId", cascade = REMOVE)
     private List<FinanceRowMetaValue> financeRowMetadata = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -69,7 +69,7 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     }
 
     public FinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost, FinanceRowType financeRowType) {
-        this(name, item ,description, quantity, cost, financeRowType);
+        this(name, item, description, quantity, cost, financeRowType);
         this.id = id;
     }
 
@@ -107,7 +107,7 @@ public abstract class FinanceRow<FinanceType extends Finance> {
     public void setFinanceRowMetadata(List<FinanceRowMetaValue> costValues) {
         this.financeRowMetadata = costValues;
     }
-    
+
     public void addCostValues(FinanceRowMetaValue... c) {
         Collections.addAll(this.financeRowMetadata, c);
     }
@@ -150,10 +150,11 @@ public abstract class FinanceRow<FinanceType extends Finance> {
 
     /**
      * Used for comparing application and project finance rows.  Doesn't consider associated meta fields.
+     *
      * @param another
      * @return
      */
-    public boolean matches(FinanceRow another){
+    public boolean matches(FinanceRow another) {
         if (another == null) return false;
 
         return new EqualsBuilder()

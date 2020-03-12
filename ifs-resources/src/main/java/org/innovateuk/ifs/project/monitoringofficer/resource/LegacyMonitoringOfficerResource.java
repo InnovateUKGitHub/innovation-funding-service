@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.monitoringofficer.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 
 import javax.validation.constraints.Pattern;

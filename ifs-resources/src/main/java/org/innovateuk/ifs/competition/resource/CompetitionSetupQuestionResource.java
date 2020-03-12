@@ -2,13 +2,13 @@ package org.innovateuk.ifs.competition.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.file.resource.FileTypeCategory.DOCUMENT;
-import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
-import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -284,9 +282,10 @@ public class CompetitionSetupQuestionResource {
         this.templateFormInput = templateFormInput;
     }
 
-    public static List<FileTypeCategory> getAppendixTypeCategories(){
+    public static List<FileTypeCategory> getAppendixTypeCategories() {
         return asList(PDF, SPREADSHEET);
     }
+
     public static List<FileTypeCategory> getTemplateDocumentTypeCategories() {
         return asList(PDF, SPREADSHEET, DOCUMENT);
     }

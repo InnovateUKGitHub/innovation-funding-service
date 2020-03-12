@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -26,6 +28,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.ProfileRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.RoleProfileState;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +53,10 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleProfileStatusBuilder.newRoleProfileStatus;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
@@ -97,6 +100,9 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     private RoleProfileStatusRepository roleProfileStatusRepository;
 
     @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
     @Override
     protected void setRepository(ApplicationStatisticsRepository repository) {
         this.repository = repository;
@@ -136,18 +142,15 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
 
     @Test
-    public void findByCompetitionAndInnovationArea() {
+    public void findStatisticsForApplicationsNotAssignedTo() {
         long competitionId = 1L;
-        long innovationAreaId = 54L;
         long assessorId = 20L;
 
         Application application = newApplication()
                 .with(id(null))
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
-                .withNoInnovationAreaApplicable(false)
                 .withCompetition(competitionRepository.findById(competitionId).get())
-                .withInnovationArea(innovationAreaRepository.findById(innovationAreaId).get())
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
@@ -155,56 +158,20 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
-                .withRole(APPLICANT)
-                .withUser(userMapper.mapToDomain(getSteveSmith()))
                 .withApplication(application)
+                .withRole(Role.LEADAPPLICANT)
+                .withOrganisationId(3L)
+                .withUser(userMapper.mapToDomain(getSteveSmith()))
                 .build();
 
         processRoleRepository.save(processRole);
-
         flushAndClearSession();
 
         Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "id"));
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
-        assertEquals(1, statisticsPage.getTotalElements());
-        assertEquals(20, statisticsPage.getSize());
-        assertEquals(0, statisticsPage.getNumber());
-    }
-
-    @Test
-    public void findByCompetitionAndInnovationAreaFiltered() {
-        long competitionId = 1L;
-        long innovationAreaId = 12L;
-        long assessorId = 20L;
-
-        Application application = newApplication()
-                .with(id(null))
-                .withApplicationState(ApplicationState.SUBMITTED)
-                .withName("Nuclear pulse propulsion")
-                .withNoInnovationAreaApplicable(false)
-                .withCompetition(competitionRepository.findById(competitionId).get())
-                .withInnovationArea(innovationAreaRepository.findById(innovationAreaId).get())
-                .build();
-        application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
-
-        applicationRepository.save(application);
-
-        ProcessRole processRole = newProcessRole()
-                .with(id(null))
-                .withRole(APPLICANT)
-                .withUser(userMapper.mapToDomain(getSteveSmith()))
-                .withApplication(application)
-                .build();
-
-        processRoleRepository.save(processRole);
-
-        flushAndClearSession();
-
-        Pageable pageable = PageRequest.of(0, 20, new Sort(ASC, "id"));
-
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATUSES, "", innovationAreaId, pageable);
-        assertEquals(1, statisticsPage.getTotalElements());
+        Page<ApplicationCountSummaryResource> statisticsPage = repository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, "", pageable);
+        assertEquals(6, statisticsPage.getTotalElements());
+        assertTrue(statisticsPage.getContent().stream().anyMatch(row -> row.getName().equals(application.getName())));
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
     }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -29,13 +30,13 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
     @Test
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "", "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 2L,0, 0, Sort.APPLICATION_NUMBER, "");
     }
 
     @Test(expected = AccessDeniedException.class)
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "", "");
+        classUnderTest.getApplicationCountSummariesByCompetitionIdAndAssessorId(1L, 2L,0, 0, Sort.APPLICATION_NUMBER, "");
     }
 
     @Override
