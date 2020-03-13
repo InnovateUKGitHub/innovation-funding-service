@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 /**
@@ -63,7 +59,7 @@ public class TravelCost extends AbstractFinanceRowItem {
 
     @Override
     public BigDecimal getTotal() {
-        if(cost == null || quantity == null) {
+        if (cost == null || quantity == null) {
             return BigDecimal.ZERO;
         }
         return cost.multiply(new BigDecimal(quantity));

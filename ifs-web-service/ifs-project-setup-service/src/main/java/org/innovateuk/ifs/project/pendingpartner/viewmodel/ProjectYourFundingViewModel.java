@@ -13,7 +13,6 @@ public class ProjectYourFundingViewModel {
     private final boolean fundingSectionLocked;
     private final long competitionId;
     private final boolean overridingFundingRules;
-    private boolean fundingLevelPercentageToggle;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -22,8 +21,7 @@ public class ProjectYourFundingViewModel {
                                        int maximumFundingLevel,
                                        boolean fundingSectionLocked,
                                        long competitionId,
-                                       boolean overridingFundingRules,
-                                       boolean fundingLevelPercentageToggle) {
+                                       boolean overridingFundingRules) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -33,7 +31,6 @@ public class ProjectYourFundingViewModel {
         this.fundingSectionLocked = fundingSectionLocked;
         this.competitionId = competitionId;
         this.overridingFundingRules = overridingFundingRules;
-        this.fundingLevelPercentageToggle = fundingLevelPercentageToggle;
     }
 
     public String getProjectName() {
@@ -72,7 +69,4 @@ public class ProjectYourFundingViewModel {
         return overridingFundingRules;
     }
 
-    public boolean isFundingLevelPercentageToggle() {
-        return fundingLevelPercentageToggle;
-    }
 }

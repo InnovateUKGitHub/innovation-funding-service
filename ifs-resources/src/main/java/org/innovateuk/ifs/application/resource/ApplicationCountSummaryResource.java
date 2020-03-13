@@ -40,6 +40,10 @@ public class ApplicationCountSummaryResource extends AssessmentCountSummaryResou
         public boolean isOnlyInAssessment() {
             return onlyInAssessment;
         }
+
+        public boolean isAssessorsColumn() {
+            return this == ASSESSORS;
+        }
     }
 
     public ApplicationCountSummaryResource() { }

@@ -36,7 +36,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
     private static final DashboardPreviousRowResource EXAMPLE_EXPECTED_DASHBOARD_RESOURCE = new DashboardPreviousApplicationResourceBuilder()
             .withAssignedToMe(false)
             .withApplicationState(REJECTED)
-            .withLeadApplicant(false)
+            .withLeadApplicant(true)
             .withEndDate(null)
             .withDaysLeft(0)
             .withApplicationProgress(0)
@@ -45,6 +45,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
             .withTitle("Using natural gas to heat homes")
             .withApplicationId(4)
             .withCompetitionTitle("Connected digital additive manufacturing")
+            .withCollaborationLevelSingle(true)
             .build();
 
     @Test

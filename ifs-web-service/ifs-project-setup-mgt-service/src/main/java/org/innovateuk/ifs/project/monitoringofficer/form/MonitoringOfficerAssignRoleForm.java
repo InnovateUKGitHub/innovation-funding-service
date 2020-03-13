@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.monitoringofficer.form;
 
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import javax.validation.constraints.Pattern;

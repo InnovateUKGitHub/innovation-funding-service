@@ -22,10 +22,10 @@ public class Address {
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
-    
+
     private String town;
     private String county;
-    
+
     @Length(max = 9)
     private String postcode;
 

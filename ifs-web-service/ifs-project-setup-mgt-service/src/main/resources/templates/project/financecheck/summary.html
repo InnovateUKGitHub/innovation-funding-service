@@ -43,7 +43,11 @@
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
                     </dd>
                     <th:block th:unless="${model.financeCheckSummaryResource.h2020}">
-                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Grant applied for:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Funding applied for:</dt>
+                        <dd th:unless="${model.financeCheckSummaryResource.loan}">&pound;<th:block
+                            th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.fundingAppliedFor,1,'DEFAULT')}"/>
+                        </dd>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Current amount:</dt>
                         <dt th:if="${model.financeCheckSummaryResource.loan}">Funding sought:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>

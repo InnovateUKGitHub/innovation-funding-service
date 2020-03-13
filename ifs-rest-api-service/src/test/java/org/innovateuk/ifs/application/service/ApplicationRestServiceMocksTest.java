@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
@@ -201,5 +202,28 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
         ZonedDateTime date = service.getLatestEmailFundingDate(competitionId).getSuccess();
         assertEquals(returnedDate, date);
+    }
+
+    @Test
+    public void hideApplication() {
+        long applicationId = 1L;
+        long userId = 1L;
+        String expectedUrl = format("%s/%d/hide-for-user/%d", applicationRestURL, applicationId, userId);
+
+        setupPostWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.hideApplication(applicationId, userId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void deleteApplication() {
+        long applicationId = 1L;
+        String expectedUrl = format("%s/%d", applicationRestURL, applicationId);
+
+        setupDeleteWithRestResultExpectations(expectedUrl, OK);
+
+        RestResult<Void> result = service.deleteApplication(applicationId);
+        assertTrue(result.isSuccess());
     }
 }

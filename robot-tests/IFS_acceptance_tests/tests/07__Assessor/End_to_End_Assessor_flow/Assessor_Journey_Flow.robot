@@ -2,8 +2,7 @@
 Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 ...
 ...               IFS-39 As a member of the competitions team I can resend a competition invite to an assessor so that assessor has a new invite
-Suite Teardown
-#The user closes the browser
+Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Assessor_Commons.robot
@@ -69,28 +68,28 @@ CompAdmin Invites assessor to assess an application
     Given comp admin navigate to manage applications
     Then comp admin allocate application to an assessor
 
-#New assessor has one assessment to accept
-#    [Documentation]  INFUND-9007
-#    [Tags]  HappyPath
-#    Given Log in as a different user          &{Assessor_e2e}
-#    When The user navigates to the page       ${ASSESSOR_DASHBOARD_URL}
-#    Then the user should see the element      jQuery = .action-required:contains("1 applications awaiting acceptance")
-#
-#Assessor is notified by Email
-#    [Tags]  HappyPath
-#    [Setup]    The guest user opens the browser
-#    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Your applications for the competition    You have been allocated some applications
-#
-#Assessor accepts the invite for the Application
-#    [Tags]  HappyPath
-#    Given Invited guest user log in                         &{Assessor_e2e}
-#    When Invited user accept the invitation
-#    Then the user should be redirected to the correct page  ${Assessor_application_dashboard}
-#
-#New assessor has one assessment
-#    [Documentation]  INFUND-9007
-#    When The user navigates to the page    ${ASSESSOR_DASHBOARD_URL}
-#    And the user should see the element    jQuery = .action-required:contains("1 applications to assess")
+New assessor has one assessment to accept
+    [Documentation]  INFUND-9007
+    [Tags]  HappyPath
+    Given Log in as a different user           &{Assessor_e2e}
+    When The user navigates to the page        ${ASSESSOR_DASHBOARD_URL}
+    Then the user should see the element      jQuery = .action-required:contains("1 applications awaiting acceptance")
+
+Assessor is notified by Email
+    [Tags]  HappyPath
+    [Setup]    The guest user opens the browser
+    Given the user reads his email and clicks the link  ${Assessor_e2e["email"]}    Your applications for the competition    You have been allocated some applications
+
+Assessor accepts the invite for the Application
+    [Tags]  HappyPath
+    Given Invited guest user log in                         &{Assessor_e2e}
+    When Invited user accept the invitation
+    Then the user should be redirected to the correct page  ${Assessor_application_dashboard}
+
+New assessor has one assessment
+    [Documentation]  INFUND-9007
+    When The user navigates to the page    ${ASSESSOR_DASHBOARD_URL}
+    And the user should see the element    jQuery = .action-required:contains("1 applications to assess")
 
 *** Keywords ***
 User reads the email and clicks the link to accept the assessment
@@ -168,16 +167,14 @@ Invited user accept the invitation and navigate to registration form
 
 comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = tr:nth-child(1) a:contains("View progress")
-    the user clicks the button/link             jQuery = .pagination-links a:contains("Next")
-    the user clicks the button/link             jQuery = .pagination-links a:contains("Next")
-#    the user enters text to a text field        id = assessorNameFilter   EtoE
-#    the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
-    the user adds an assessor to application    assessor-row-4
-#    the user clicks the button/link             jQuery = a:contains("Allocate applications")
-#    the user clicks the button/link             jQuery = a:contains("Manage assessments")
-#    the user clicks the button/link             jQuery = a:contains("Competition")
-#    the user clicks the button/link             jQuery = button:contains("Notify assessors")
-#    the element should be disabled              jQuery = button:contains("Notify assessors")
+    the user enters text to a text field        id = assessorNameFilter   Tom Fister
+    the user clicks the button/link             jQuery = .govuk-button:contains("Filter")
+    the user adds an assessor to application    assessor-row-1
+    the user clicks the button/link             jQuery = a:contains("Allocate applications")
+    the user clicks the button/link             jQuery = a:contains("Manage assessments")
+    the user clicks the button/link             jQuery = a:contains("Competition")
+    the user clicks the button/link             jQuery = button:contains("Notify assessors")
+    the element should be disabled              jQuery = button:contains("Notify assessors")
 
 Invited user accept the invitation
     the user clicks the button/link          Link = Park living
