@@ -83,6 +83,5 @@ then
     scaleDataService
     scaleFinanceDataService
     scaleSurveyDataService
-    scaleEuDataService
 fi
 
