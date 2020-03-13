@@ -23,138 +23,139 @@ items:
           volumes:
             - name: idp-keys-volume
               secret:
-                secretName: idp-keys-secretscontainers:
-                - image: innovateuk/idp-service:${idpVersion}
-                  name: idpvolumeMounts:
-                - name: idp-keys-volume
-                  mountPath: /var/certs
-          livenessProbe:
-            httpGet:
-              path: /idp/status
-              port: 9443
-              scheme: HTTPS
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 25
-            failureThreshold: 3
-            readinessProbe:
+                secretName: idp-keys-secrets
+                containers:
+                  - image: innovateuk/idp-service:${idpVersion}
+                    idpvolumeMounts:
+                  - name: idp-keys-volume
+                    mountPath: /var/certs
+                    livenessProbe:
               httpGet:
                 path: /idp/status
                 port: 9443
                 scheme: HTTPS
               initialDelaySeconds: 60
-              periodSeconds: 5
+              periodSeconds: 30
               timeoutSeconds: 25
-              failureThreshold: 1
-            imagePullPolicy: Always
-            env:
-              - name: SP_DOMAIN
-                valueFrom:
-                  configMapKeyRef:
-                    name: shibboleth-config
-                    key: SP_DOMAIN
-              - name: IDP_DOMAIN
-                valueFrom:
-                  configMapKeyRef:
-                    name: shibboleth-config
-                    key: IDP_DOMAIN
-              - name: NEW_RELIC_LICENSE_KEY
-                valueFrom:
-                  configMapKeyRef:
-                    name: new-relic-config
-                    key: NEW_RELIC_LICENSE_KEY
-              - name: NEW_RELIC_LOG
-                valueFrom:
-                  configMapKeyRef:
-                    name: new-relic-config
-                    key: NEW_RELIC_LOG
-              - name: JAVA_OPTS
-                value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
-              - name: NEW_RELIC_APP_NAME
-                value: "ifs-idp-service (${openshiftEnv})"
-              - name: HTTPS_PORT
-                value: "9443"
-              - name: HTTP_PORT
-                value: "9080"
-              - name: MEMCACHE_ENDPOINT
-                valueFrom:
-                  configMapKeyRef:
-                    name: shibboleth-config
-                    key: MEMCACHE_ENDPOINT
-              - name: LDAP_URL
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_URL
-              - name: LDAP_PORT
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: IDP_LDAP_PORT
-              - name: LDAP_USESTARTTLS
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_USESTARTTLS
-              - name: LDAP_USESSL
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_USESSL
-              - name: LDAP_BASEDN
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_BASEDN
-              - name: LDAP_BINDDN
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_BINDDN
-              - name: LDAP_BINDDNCREDENTIAL
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_PASSWORD
-              - name: LDAP_USERFILTER
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_USERFILTER
-              - name: LDAP_ATTRIBUTE_SEARCHFILTER
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_ATTRIBUTE_SEARCHFILTER
-              - name: LDAP_RETURNATTRIBUTES
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_RETURNATTRIBUTES
-              - name: LDAP_AUTHENTICATOR
-                valueFrom:
-                  configMapKeyRef:
-                    name: ldap-config
-                    key: LDAP_AUTHENTICATOR
-              - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-                valueFrom:
-                  configMapKeyRef:
-                    name: web-config
-                    key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-              - name: RESOURCE_DOMAIN
-                valueFrom:
-                  configMapKeyRef:
-                    name: idp-config
-                    key: RESOURCE_DOMAIN
-            ports:
-              - containerPort: 9443
-              - containerPort: 9080
-            resources:
-              requests:
-                memory: ${SHIBBOLETH_IDP_MEMORY_REQUEST}
-              limits:
-                memory: ${SHIBBOLETH_IDP_MEMORY_LIMIT}
-            test: false
+              failureThreshold: 3
+              readinessProbe:
+                httpGet:
+                  path: /idp/status
+                  port: 9443
+                  scheme: HTTPS
+                initialDelaySeconds: 60
+                periodSeconds: 5
+                timeoutSeconds: 25
+                failureThreshold: 1
+              imagePullPolicy: Always
+              env:
+                - name: SP_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: SP_DOMAIN
+                - name: IDP_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: IDP_DOMAIN
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: JAVA_OPTS
+                  value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
+                - name: NEW_RELIC_APP_NAME
+                  value: "ifs-idp-service (${openshiftEnv})"
+                - name: HTTPS_PORT
+                  value: "9443"
+                - name: HTTP_PORT
+                  value: "9080"
+                - name: MEMCACHE_ENDPOINT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: MEMCACHE_ENDPOINT
+                - name: LDAP_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_URL
+                - name: LDAP_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: IDP_LDAP_PORT
+                - name: LDAP_USESTARTTLS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_USESTARTTLS
+                - name: LDAP_USESSL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_USESSL
+                - name: LDAP_BASEDN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_BASEDN
+                - name: LDAP_BINDDN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_BINDDN
+                - name: LDAP_BINDDNCREDENTIAL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_PASSWORD
+                - name: LDAP_USERFILTER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_USERFILTER
+                - name: LDAP_ATTRIBUTE_SEARCHFILTER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_ATTRIBUTE_SEARCHFILTER
+                - name: LDAP_RETURNATTRIBUTES
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_RETURNATTRIBUTES
+                - name: LDAP_AUTHENTICATOR
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_AUTHENTICATOR
+                - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+                - name: RESOURCE_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: idp-config
+                      key: RESOURCE_DOMAIN
+              ports:
+                - containerPort: 9443
+                - containerPort: 9080
+              resources:
+                requests:
+                  memory: ${SHIBBOLETH_IDP_MEMORY_REQUEST}
+                limits:
+                  memory: ${SHIBBOLETH_IDP_MEMORY_LIMIT}
+              test: false
     triggers:
       - type: ConfigChange
   - apiVersion: v1
