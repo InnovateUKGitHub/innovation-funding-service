@@ -26,7 +26,7 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Bank details',subTitle=${project.name},size='govuk-heading-xl'"/>
 
-        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+        <form th:object="${form}" id="bank-details-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
 
             <th:block th:unless="${bankDetails == null}">
@@ -121,7 +121,7 @@
 
                 <th:block th:insert="fragments/modals :: modal-bank-details"/>
                 <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}"
-                        class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-bank">Submit bank account details
+                        class="govuk-button govuk-!-margin-top-6" id="submit-bank-details-button" data-js-modal="modal-bank">Submit bank account details
                 </button>
 
 

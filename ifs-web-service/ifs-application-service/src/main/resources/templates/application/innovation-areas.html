@@ -14,7 +14,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Innovation areas',subTitle=${model.applicationName},size='govuk-heading-xl'" />
                 <p class="govuk-body">Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.</p>
 
-                <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+                <form method="post" id="innovation-area-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-visually-hidden">
@@ -54,7 +54,7 @@
                             </div>
                         </fieldset>
                     </div>
-                    <button class="govuk-button" name="save-innovation-area">Save</button>
+                    <button class="govuk-button" id="save-innovation-area-button" name="save-innovation-area">Save</button>
                     <a class="button-clear" th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
                 </form>
 

@@ -214,7 +214,7 @@
                     <button id="mark-all-as-complete" th:unless="${model.complete}" type="submit" name="complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-                    <button th:if="${model.complete}" type="submit" name="edit" class="button-clear" value="true">
+                    <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear" value="true">
                         Edit your project costs
                     </button>
                 </div>
