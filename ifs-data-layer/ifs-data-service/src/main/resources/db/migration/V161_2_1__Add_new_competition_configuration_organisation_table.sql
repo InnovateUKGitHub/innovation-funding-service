@@ -3,5 +3,6 @@ CREATE TABLE competition_organisation_config (
   `competition_id` bigint(20) NOT NULL,
   `international_organisations_allowed` BIT(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `competition_id_UNIQUE` (`competition_id`),
   CONSTRAINT `competition_organisation_config_fk` FOREIGN KEY (`competition_id`) REFERENCES `competition` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
