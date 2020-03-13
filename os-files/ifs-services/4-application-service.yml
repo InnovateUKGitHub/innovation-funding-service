@@ -44,7 +44,7 @@ items:
                 successThreshold: 1
                 failureThreshold: 1
               imagePullPolicy: Always
-            - env:
+              env:
                 - name: SPRING_APPLICATION_JSON
                   valueFrom:
                     configMapKeyRef:
