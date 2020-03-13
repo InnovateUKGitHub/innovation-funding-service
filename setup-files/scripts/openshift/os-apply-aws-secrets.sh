@@ -88,10 +88,8 @@ function loadSpDataFromAws() {
     echo "sp" ${SSO_SP}
     export IFS=","
     for sp in "${SSO_SP}"; do
-      echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> $sp.properties
-      echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> $sp.crt
-      text=$text" --from-file="$sp".properties="$sp".properties"
-      text=$text" --from-file="$sp".crt="$sp".crt"
+      text=$text" --from-literal="$sp".properties=""$(valueFromAws /CI/IFS/$sp/PROPERTY)"
+      text=$text" --from-literal="$sp".crt=""$(valueFromAws /CI/IFS/$sp/PROPERTY)"
     done
 
     CREATE_OPTIONS=($text ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml)
