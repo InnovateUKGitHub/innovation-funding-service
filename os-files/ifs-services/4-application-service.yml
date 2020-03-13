@@ -44,7 +44,7 @@ items:
                 successThreshold: 1
                 failureThreshold: 1
               imagePullPolicy: Always
-              env:
+            - env:
                 - name: SPRING_APPLICATION_JSON
                   valueFrom:
                     configMapKeyRef:
@@ -109,7 +109,7 @@ items:
                   value: "ifs-application-service (${openshiftEnv})"
                 - name: JAVA_OPTS
                   value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
-                ports:
+              ports:
                 - containerPort: 8080
               resources:
                 limits:
