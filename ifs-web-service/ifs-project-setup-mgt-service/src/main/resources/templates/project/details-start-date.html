@@ -15,7 +15,7 @@
               th:with="linkTitle='Back to project details',linkUrl=@{/competition/{competitionId}/project/{projectId}/details(competitionId=${model.competitionId},projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post"
+        <form id="start-date-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post"
               novalidate="novalidate">
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
@@ -57,7 +57,7 @@
                 <span th:text="|${model.projectDurationInMonths} months|">9 months</span>
             </p>
 
-            <button type="submit" class="govuk-button">Save</button>
+            <button type="submit" id="save-project-startdate-button" class="govuk-button">Save</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>

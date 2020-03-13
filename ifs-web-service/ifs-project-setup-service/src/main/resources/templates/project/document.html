@@ -79,6 +79,7 @@
                   th:if="${model.isEditable()}"
                   th:object="${form}"
                   method="post"
+                  id="upload-document-form"
                   enctype="multipart/form-data"
                   th:with="viewmode='edit',
                            downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId},id=${model.projectId})},
@@ -111,7 +112,7 @@
             <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
               <div>
                 <button th:disabled="${model.showDisabledSubmitDocumentsButton}" data-js-enabled-on-file-upload=""
-                    data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton" aria-label="Submit collaboration agreement">Submit</button>
+                    data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submit-document-button" aria-label="Submit collaboration agreement">Submit</button>
               </div>
             </form>
         </th:block>

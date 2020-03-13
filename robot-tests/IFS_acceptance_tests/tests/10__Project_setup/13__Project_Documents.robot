@@ -126,9 +126,9 @@ Lead partner does not have the option to submit the documents
     [Setup]    the user navigates to the page    ${server}/project-setup/project/${Grade_Crossing_Project_Id}/document/all
     When the user should not see an error in the page
     And the user clicks the button/link          link = Collaboration agreement
-    Then the user should not see the element     id = submitDocumentButton
+    Then the user should not see the element     id = submit-document-button
     When the user goes to documents page         Back to document overview  Exploitation plan
-    Then the user should not see the element     id = submitDocumentButton
+    Then the user should not see the element     id = submit-document-button
 
 Lead partner cannot remove either document
     [Documentation]  INFUND-3011
@@ -151,7 +151,7 @@ Non-lead partner cannot remove or submit right
     [Documentation]  INFUND-3013
     [Tags]
     Given partners can not remove the documents
-    And the user should not see the element       id = submitDocumentButton
+    And the user should not see the element       id = submit-document-button
 
 PM can view both documents
     [Documentation]  INFUND-3011  INFUND-2621
@@ -420,7 +420,7 @@ Sole applicant uploads only exploitation plan and submits
     Then the user should not see the element    link = Collaboration agreement
     When the user clicks the button/link        link = Exploitation plan
     Then the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    And the user clicks the button/link         id = submitDocumentButton
+    And the user clicks the button/link         id = submit-document-button
     And the user clicks the button/link         id = submitDocumentButtonConfirm
     When the user goes to documents page        Return to documents  Set up your project
     Then the user should see the element        jQuery = li:contains("Documents") span:contains("Awaiting review")
