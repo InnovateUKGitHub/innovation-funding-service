@@ -27,6 +27,7 @@
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
                   th:object="${form}"
+                  id="manage-funding-applications-form"
                   novalidate="novalidate"
                   method="POST">
 
@@ -149,7 +150,7 @@
                     <input type="hidden"  th:name="'fundingDecisions[' + ${entry.key} + ']'" th:value="${entry.value}"/>
                 </th:block>
                 <div class="govuk-body">
-                    <button class="govuk-button govuk-!-margin-right-6" data-js-modal="send-to-all-applicants-modal">Send email to all applicants</button>
+                    <button class="govuk-button govuk-!-margin-right-6" id="send-email-to-all-applicants" data-js-modal="send-to-all-applicants-modal">Send email to all applicants</button>
                     <a class="button-clear" th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
                         Cancel
                     </a>

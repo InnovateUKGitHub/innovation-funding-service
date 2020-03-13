@@ -166,8 +166,8 @@
         <p class="govuk-body">Your bank details will now be submitted to Innovate UK.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div method="post">
-            <button class="govuk-button" id="submit-bank-details" name="submit-app-details">Submit</button>
-            <button type="button" class="js-close button-clear">Cancel</button>
+            <button class="govuk-button" id="submit-bank-details-model-button" name="submit-app-details">Submit</button>
+            <button type="button" id="cancel-submit-bank-details-model-button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -715,7 +715,7 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
+            <button class="govuk-button" th:id="${'remove-organisation-model-button-' + organisation.id}" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>

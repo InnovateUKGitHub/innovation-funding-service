@@ -19,7 +19,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
+        <form id="grant-offer-letter-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
             <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
                 <p class="govuk-body">The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
@@ -129,6 +129,7 @@
                        data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
                     <button th:attr="aria-hidden=${!model.showDisabledSubmitButton}"
                             data-js-toggle-on-file-upload=""
+                            id="send-grant-offer-letter-button"
                             disabled="disabled" class="govuk-button">Send to Innovate UK
                     </button>
                 </th:block>

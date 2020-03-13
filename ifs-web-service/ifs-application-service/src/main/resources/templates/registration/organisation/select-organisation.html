@@ -30,7 +30,7 @@
         <p class="govuk-body" th:unless="${model.collaboratorJourney}">This is the organisation that will lead the application.</p>
         <p class="govuk-body" th:if="${model.collaboratorJourney}">This is the organisation that you will join the <th:block th:text="${model.applicantJourney ? 'application' :  'project'}">application</th:block> with.</p>
 
-        <form th:object="${form}" th:action="@{/organisation/select}" method="POST">
+        <form th:object="${form}" id="save-organisation-form" th:action="@{/organisation/select}" method="POST">
             <th:block th:if="${model.canSelectOrganisation()}">
                 <div class="govuk-form-group">
                     <div class="govuk-radios">
@@ -62,7 +62,7 @@
                 <a class="govuk-link" th:if="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Join with a different organisation.</a>
             </p>
 
-            <button type="submit" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+            <button type="submit" id="save-organisation-button" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
