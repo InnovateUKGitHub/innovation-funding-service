@@ -3,6 +3,7 @@ Documentation     Suite description
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 Admin can view assessor status unavailable
@@ -147,8 +148,8 @@ the finance user searches for an assessor
     the user clicks the button/link         link = View details
 
 the assessor is assigned an application
-    the user navigates to the page       ${server}/management/assessment/competition/11/assessors/204
-    the user clicks the button/link      jQuery = td:contains("Park living") ~ td button:contains("Assign")
+    the user navigates to the page                ${server}/management/assessment/competition/11/assessors/204
+    the user adds an application to an assessor   jQuery = tr:contains("Park living") :checkbox
 
 the user should be blocked from changing the role profile
     the user clicks the button/link         link = Assessor status

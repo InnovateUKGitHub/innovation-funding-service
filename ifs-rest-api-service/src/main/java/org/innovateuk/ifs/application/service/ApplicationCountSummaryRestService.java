@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
+import java.util.List;
+
 /**
  * Interface for the action of retrieving application statistics
  */
@@ -18,4 +20,8 @@ public interface ApplicationCountSummaryRestService {
                                                                                                              int page,
                                                                                                              Sort sort,
                                                                                                              String filter);
+
+    RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId,
+                                                                         long assessorId,
+                                                                         String filter);
 }
