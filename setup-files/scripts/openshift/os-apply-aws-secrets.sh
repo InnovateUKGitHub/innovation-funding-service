@@ -89,7 +89,7 @@ function loadSpDataFromAws() {
     export IFS=","
     for sp in "${SSO_SP}"; do
       text=$text" --from-literal="$sp".properties=""$(valueFromAws /CI/IFS/$sp/PROPERTY)"
-      text=$text" --from-literal="$sp".crt=""$(valueFromAws /CI/IFS/$sp/PROPERTY)"
+      text=$text" --from-literal="$sp".crt=""$(valueFromAws /CI/IFS/$sp/CERT)"
     done
 
     CREATE_OPTIONS=($text ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml)
