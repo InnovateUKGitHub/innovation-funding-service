@@ -86,9 +86,9 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
 
     @AfterMapping
     public void setInternationalOrganisationsAllowed(@MappingTarget Competition competition, CompetitionResource resource) {
-
-        boolean internationalOrgsAllowed = resource.getInternationalOrganisationsAllowed() != null ? resource.getInternationalOrganisationsAllowed() : false;
-        competition.setCompetitionOrganisationConfig(new CompetitionOrganisationConfig(competition, internationalOrgsAllowed));
+        if (resource.getInternationalOrganisationsAllowed() == null) {
+            competition.setCompetitionOrganisationConfig(new CompetitionOrganisationConfig(competition, resource.getInternationalOrganisationsAllowed()));
+        }
     }
 
     private ProjectStages mapProjectSetupStageToProjectStage(ProjectSetupStage projectSetupStage, Competition competition) {
