@@ -26,9 +26,9 @@ items:
                 secretName: sp-keys-secrets
                 containers:
                   - image: innovateuk/sp-service:${spVersion}
-                    shibvolumeMounts:
-                  - name: sp-keys-volume
-                    mountPath: /var/certs
+                    volumeMounts:
+                      - name: sp-keys-volume
+                        mountPath: /var/certs
                     livenessProbe:
                 httpGet:
                   path: /Shibboleth.sso/Metadata
