@@ -306,6 +306,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return new CompetitionResourceBuilder(actions);
     }
 
+    public CompetitionResourceBuilder withInternationalOrganisationAllowed(Boolean... internationalOrganisationAlloweds) {
+        return withArray((internationalOrganisationAllowed, competitionResource) -> competitionResource.setInternationalOrganisationsAllowed(internationalOrganisationAllowed), internationalOrganisationAlloweds);
+    }
+
     @Override
     protected CompetitionResource createInitial() {
         return new CompetitionResource();

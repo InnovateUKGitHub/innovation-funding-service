@@ -63,4 +63,8 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
     public AddressResourceBuilder withPostcode(String... postcodes) {
         return withArray((postcode, address) -> setField("postcode", postcode, address), postcodes);
     }
+
+    public AddressResourceBuilder withCountry(String... countries) {
+        return withArray((country, address) -> setField("country", country, address), countries);
+    }
 }
