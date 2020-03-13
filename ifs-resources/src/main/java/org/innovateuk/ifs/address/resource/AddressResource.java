@@ -22,7 +22,6 @@ public class AddressResource {
     @NotBlank(message = "{validation.standard.town.required}")
     private String town;
     private String county;
-    @NotBlank(message = "{validation.standard.country.required}")
     private String country;
     @NotBlank(message = "{validation.standard.postcode.required}")
     @Length(max = 9, message = "{validation.standard.postcode.length}")
