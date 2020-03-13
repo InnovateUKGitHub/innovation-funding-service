@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
@@ -93,6 +94,16 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         when(applicationStatisticsRepositoryMock.findStatisticsForApplicationsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, 1L, 0, 20, Sort.APPLICATION_NUMBER, "asd");
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void getApplicationIdsByCompetitionIdAndAssessorId() {
+        List<Long> list = asList(1L, 2L);
+        when(applicationStatisticsRepositoryMock.findApplicationIdsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"))).thenReturn(list);
+
+        ServiceResult<List<Long>> result = service.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, 1L, "asd");
 
         assertTrue(result.isSuccess());
     }

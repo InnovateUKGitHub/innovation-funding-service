@@ -97,6 +97,7 @@ public class AssessmentApplicationProgressControllerTest extends BaseControllerM
         when(applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn)));
         when(applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, 0, 20, "", Sort.ASSESSOR)).thenReturn(restSuccess(available));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
+        when(applicationAssessmentSummaryRestService.getAvailableAssessorsIds(applicationId, "")).thenReturn(restSuccess(asList(1L, 2L)));
 
         PaginationViewModel expectedPaginationModel = new PaginationViewModel(available);
 
