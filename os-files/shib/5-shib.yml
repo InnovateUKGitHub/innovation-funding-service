@@ -28,7 +28,7 @@ items:
             - image: innovateuk/sp-service:${spVersion}
               volumeMounts:
                 - name: sp-keys-volume
-                    mountPath: /var/certs
+                  mountPath: /var/certs
               livenessProbe:
                 httpGet:
                   path: /Shibboleth.sso/Metadata
