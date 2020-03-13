@@ -209,7 +209,7 @@
 
         <p class="govuk-body">These are the rest of the applications for this competition. You can assign more to this assessor.</p>
 
-        <form method="GET">
+        <form id="assessor-progress-filter-form" method="GET">
             <div class="search-filters govuk-!-margin-top-6">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
@@ -226,7 +226,7 @@
                                    th:value="${model.filter}"/>
                         </div>
                         <div class="govuk-grid-column-one-third">
-                            <button class="govuk-button">Filter</button>
+                            <button id="assessor-progress-filter-button" class="govuk-button">Filter</button>
                         </div>
                     </div>
                 </fieldset>
@@ -252,13 +252,14 @@
                                 th:selected="${model.applicationsView.currentSort == sort}"
                                 th:text="${sort.assessorsColumn && !model.applicationsView.inAssessment ? 'Assigned' : sort.columnName}"></option>
                     </select>
-                    <button type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Sort</button>
+                    <button id="assessor-progress-filter-sort" type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0">Sort</button>
                 </div>
             </div>
 
         </form>
 
-        <form method="POST"
+        <form id="assessor-progress-selection-form"
+              method="POST"
               th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               th:object="${applicationSelectionForm}"
               data-multipage-select=""
@@ -286,7 +287,7 @@
                     </span>
                 </div>
                 <div class="govuk-grid-column-one-half select-all alignright">
-                    <button class="govuk-button govuk-!-margin-bottom-3" data-submit-el="" th:attr="disabled=${#lists.isEmpty(applicationSelectionForm.selectedApplications)}">
+                    <button id="assessor-progress-add-to" class="govuk-button govuk-!-margin-bottom-3" data-submit-el="" th:attr="disabled=${#lists.isEmpty(applicationSelectionForm.selectedApplications)}">
                         Add to assessor
                     </button>
                 </div>

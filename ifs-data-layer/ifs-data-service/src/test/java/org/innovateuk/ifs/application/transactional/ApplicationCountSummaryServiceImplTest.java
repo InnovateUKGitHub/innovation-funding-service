@@ -44,10 +44,10 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     private ApplicationCountSummaryPageResource resource;
 
     @Mock
-    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+    private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Mock
-    private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
+    private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapper;
 
 
 
@@ -79,8 +79,8 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
-        when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
+        when(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
+        when(applicationCountSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, ofNullable("filter"));
 
@@ -91,7 +91,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     @Test
     public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
         Page<ApplicationCountSummaryResource> pageCount = mock(Page.class);
-        when(applicationStatisticsRepositoryMock.findStatisticsForApplicationsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
+        when(applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, 1L, 0, 20, Sort.APPLICATION_NUMBER, "asd");
 
@@ -101,7 +101,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     @Test
     public void getApplicationIdsByCompetitionIdAndAssessorId() {
         List<Long> list = asList(1L, 2L);
-        when(applicationStatisticsRepositoryMock.findApplicationIdsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"))).thenReturn(list);
+        when(applicationStatisticsRepository.findApplicationIdsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"))).thenReturn(list);
 
         ServiceResult<List<Long>> result = service.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, 1L, "asd");
 

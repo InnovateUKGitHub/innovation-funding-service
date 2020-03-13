@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.S
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
@@ -53,7 +52,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return ApplicationSelectionForm.class;
     }
 
-    @NotSecured("Not currently secured")
     @GetMapping
     public String assessorProgress(@PathVariable long competitionId,
                                    @PathVariable long assessorId,
@@ -69,7 +67,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return "competition/assessor-progress";
     }
 
-    @NotSecured("Not currently secured")
     @PostMapping("/withdraw/{assessmentId}")
     public String withdrawAssessment(@PathVariable long competitionId,
                                      @PathVariable long assessorId,
@@ -78,7 +75,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }
 
-    @NotSecured("Not currently secured")
     @GetMapping(value = "/withdraw/{assessmentId}/confirm")
     public String withdrawAssessmentConfirm(
             Model model,
@@ -93,7 +89,6 @@ public class AssessmentAssessorProgressController extends CompetitionManagementC
         return "competition/assessor-progress-remove-confirm";
     }
 
-    @NotSecured("Not currently secured")
     @PostMapping
     public String assessorAssign(@PathVariable long competitionId,
                                  @PathVariable long assessorId,
