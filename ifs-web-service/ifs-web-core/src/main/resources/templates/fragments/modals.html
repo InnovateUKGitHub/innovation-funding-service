@@ -58,6 +58,39 @@
     </div>
 </th:block>
 
+<!-- Confirm hide application modal -->
+<th:block th:fragment="modal-confirm-hide-application (applicationId) ">
+    <div class="alignleft warning-modal" th:classappend="${'modal-confirm-hide-application-' + applicationId}" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m">Remove this application</h2>
+            <p class="govuk-body">You will not be able to see this application again. It will still be visible to partners who have not
+            removed it.</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button govuk-!-margin-bottom-0" type="submit" name="hide-application" th:value="${applicationId}">Remove application</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Confirm delete application modal -->
+<th:block th:fragment="modal-confirm-delete-application (applicationId, title, message) ">
+    <div class="alignleft warning-modal" th:classappend="${'modal-confirm-delete-application-' + applicationId}" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m" th:text="${title}">title</h2>
+            <p class="govuk-body" th:text="${message}">message</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <div>
+            <button class="govuk-button govuk-button--warning govuk-!-margin-bottom-0" type="submit" name="delete-application" th:value="${applicationId}">Delete application</button>
+            <button type="button" class="js-close button-clear">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 <!-- Remove organisation from project -->
 <th:block th:fragment="modal-project-team-remove-organisation (organisation) ">
     <div class="alignleft warning-modal" th:classappend="${'modal-project-team-remove-organisation-' + organisation.id}" role="dialog" aria-hidden="true">
@@ -133,8 +166,8 @@
         <p class="govuk-body">Your bank details will now be submitted to Innovate UK.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div method="post">
-            <button class="govuk-button" id="submit-bank-details" name="submit-app-details">Submit</button>
-            <button type="button" class="js-close button-clear">Cancel</button>
+            <button class="govuk-button" id="submit-bank-details-model-button" name="submit-app-details">Submit</button>
+            <button type="button" id="cancel-submit-bank-details-model-button" class="js-close button-clear">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -682,7 +715,7 @@
         </div>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
+            <button class="govuk-button" th:id="${'remove-organisation-model-button-' + organisation.id}" type="submit" th:name="${user.invite ? 'remove-invite' : 'remove-team-member'}" th:value="${user.inviteId}">Remove organisation</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>

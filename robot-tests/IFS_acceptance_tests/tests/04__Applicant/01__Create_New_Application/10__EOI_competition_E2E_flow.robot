@@ -90,7 +90,8 @@ Comp Admin allocates assessor to application
     And The user clicks the button/link     jQuery = a:contains("Manage assessments")
     And the user clicks the button/link     jQuery = a:contains("Allocate applications")
     Then the user clicks the button/link    jQuery = tr:contains("${EOI_application}") a:contains("Assign")
-    And the user clicks the button/link     jQuery = tr:contains("Paul Plum") button:contains("Assign")
+    And the user selects the checkbox       selectedAssessors
+    And the user clicks the button/link     jQuery = button:contains("Add to application")
     When the user navigates to the page     ${server}/management/competition/${competitionId}
     Then the user clicks the button/link    jQuery = button:contains("Notify assessors")
 

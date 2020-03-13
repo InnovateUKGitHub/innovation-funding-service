@@ -40,7 +40,7 @@
               novalidate="novalidate">
             <th:block th:unless="${model.readonly}">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
-                <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+                <button id="save-form-button" class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
                 <!--/* start of edit template */-->
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__name__}')} ? 'govuk-form-group--error'">
                     <label class="govuk-label--s" for="name">
@@ -352,7 +352,7 @@
                 <button th:unless="${model.complete}" id="application-question-complete" type="submit" name="complete"
                         class="button-clear">Mark as complete
                 </button>
-                <button th:if="${model.complete}" id="edit" type="submit" name="edit" class="button-clear">
+                <button th:if="${model.complete}" id="edit-application-details-button" type="submit" name="edit" class="button-clear">
                     Edit
                 </button>
             </div>

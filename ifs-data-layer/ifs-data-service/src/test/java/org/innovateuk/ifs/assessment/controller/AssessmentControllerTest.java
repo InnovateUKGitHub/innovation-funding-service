@@ -570,6 +570,24 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
+    public void createBulk() throws Exception {
+        List<AssessmentCreateResource> assessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(1L)
+                .withAssessorId(2L)
+                .build(1);
+        List<AssessmentResource> expectedAssessmentResource = newAssessmentResource().build(1);
+
+        when(assessmentServiceMock.createAssessments(assessmentCreateResource)).thenReturn(serviceSuccess(expectedAssessmentResource));
+
+        mockMvc.perform(post("/assessment/bulk")
+                .contentType(APPLICATION_JSON)
+                .content(toJson(assessmentCreateResource)))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(toJson(expectedAssessmentResource)));
+
+        verify(assessmentServiceMock).createAssessments(assessmentCreateResource);
+    }
+    @Test
     public void create_noApplicationId() throws Exception {
         AssessmentCreateResource assessmentCreateResource = newAssessmentCreateResource()
                 .withAssessorId(1L)

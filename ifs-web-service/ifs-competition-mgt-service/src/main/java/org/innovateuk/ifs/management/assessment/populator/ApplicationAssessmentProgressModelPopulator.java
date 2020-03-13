@@ -19,6 +19,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -55,7 +56,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getInnovationSectors(),
                 assessorNameFilter,
                 sort,
-                new PaginationViewModel(availableAssessors));
+                new PaginationViewModel(availableAssessors),
+                availableAssessors.getTotalElements() > SELECTION_LIMIT);
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {

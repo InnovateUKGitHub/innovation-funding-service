@@ -1,4 +1,7 @@
 #!/bin/bash
+
+. /wipe-ldap-users.sh
+
 # R Popple: Depending on environment variables clean migrate the database and sync it with ldap.
 if ! [ $ONLY_SYNC_LDAP = "true" ] ; then
 . /clean-migrate-db.sh

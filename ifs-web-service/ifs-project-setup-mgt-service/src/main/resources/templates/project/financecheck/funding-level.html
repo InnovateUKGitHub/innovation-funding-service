@@ -106,7 +106,7 @@
                             </th:block>
                         </tr>
                     </th:block>
-                    <tr class="govuk-table__row" th:if="${model.collaborativeProject}">
+                    <tr class="govuk-table__row" th:attr="aria-hidden=${model.collaborativeProject} ? 'false' : 'true'">
                         <th class="govuk-table__header" scope="col">Total grant value</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                            <Strong th:text="|&pound;${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|"></Strong></td>
@@ -123,13 +123,29 @@
                                             data-calculation-rawValue=${model.calculateFormFundingSought(form)}"
                                    th:value="|&pound;${#numbers.formatInteger(model.calculateFormFundingSought(form), 0,'DEFAULT')}|"/>
                             <Strong th:text="|&pound;${#numbers.formatInteger(model.calculateFormFundingSought(form),1,'DEFAULT')}|"
-                                  data-mirror="#total-funding-sought"></Strong>
+                                     data-mirror="#total-funding-sought"></Strong>
                         </td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"><Strong>100</Strong></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="govuk-!-margin-top-6" th:unless="${model.loanCompetition}">
+                <div class="eligibility govuk-!-margin-bottom-9">
+                    <div data-toggle-target class="message-alert">
+                        <p class="govuk-body">The revised amount is higher than the original funding applied for.
+                            Please make sure this project is still eligible for funding.</p>
+                    </div>
+                    <dl class="list-eligibility">
+                        <dt>Funding applied for</dt>
+                        <dd data-value-left="" th:text="|&pound;${#numbers.formatInteger(model.fundingAppliedFor,1,'DEFAULT')}|"></dd>
+                        <dt>Current amount</dt>
+                        <dd data-value-right="" data-operator=">=" th:text="|&pound;${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}|" data-value-change="" data-mirror="#total-funding-sought"></dd>
+                    </dl>
+                </div>
+            </div>
+
             <button class="govuk-button">Save and return to finances</button>
             <p class="govuk-body">
                 <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.projectId})}" class="button-clear">Cancel and return to finance overview</a>
