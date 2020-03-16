@@ -24,6 +24,7 @@ public class AssessorAssessmentProgressViewModel {
     private final long totalApplications;
     private final long assessorId;
     private final String filter;
+    private final boolean selectAllDisabled;
 
     private final List<AssessorAssessmentProgressAssignedRowViewModel> assigned;
     private final List<AssessorAssessmentProgressRejectedRowViewModel> rejected;
@@ -39,6 +40,7 @@ public class AssessorAssessmentProgressViewModel {
                                                String filter,
                                                String businessType,
                                                long totalApplications,
+                                               boolean selectAllDisabled,
                                                List<AssessorAssessmentProgressAssignedRowViewModel> assigned,
                                                List<AssessorAssessmentProgressRejectedRowViewModel> rejected,
                                                List<AssessorAssessmentProgressWithdrawnRowViewModel> previouslyAssigned,
@@ -55,6 +57,7 @@ public class AssessorAssessmentProgressViewModel {
         this.assigned = assigned;
         this.rejected = rejected;
         this.filter = filter;
+        this.selectAllDisabled = selectAllDisabled;
         this.previouslyAssigned = previouslyAssigned;
         this.applicationsView = applicationsView;
     }
@@ -102,6 +105,10 @@ public class AssessorAssessmentProgressViewModel {
     }
 
     public String getFilter() {return filter; }
+
+    public boolean isSelectAllDisabled() {
+        return selectAllDisabled;
+    }
 
     public AssessorAssessmentProgressApplicationsViewModel getApplicationsView() {
         return applicationsView;

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,5 +38,11 @@ public class ApplicationCountSummaryController {
                                                                                                                     @RequestParam(value = "sort") Sort sort,
                                                                                                                     @RequestParam(value = "filter") String filter) {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, page, size, sort, filter).toGetResponse();
+    }
+    @GetMapping("/find-ids-by-competition-id-and-assessor-id/{competitionId}/{assessorId}")
+    public RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(@PathVariable long competitionId,
+                                                                                @PathVariable long assessorId,
+                                                                                @RequestParam(value = "filter") String filter) {
+        return applicationCountSummaryService.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, assessorId, filter).toGetResponse();
     }
 }

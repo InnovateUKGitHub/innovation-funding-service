@@ -11,17 +11,14 @@ public class AssessorAssessmentProgressRemoveViewModel {
     private long competitionId;
     private long assessorId;
     private long assessmentId;
-    private String sortField;
 
     public AssessorAssessmentProgressRemoveViewModel(
             long competitionId,
             long assessorId,
-            long assessmentId,
-            String sortField) {
+            long assessmentId) {
         this.competitionId = competitionId;
         this.assessorId = assessorId;
         this.assessmentId = assessmentId;
-        this.sortField = sortField;
     }
 
     public long getCompetitionId() {
@@ -34,10 +31,6 @@ public class AssessorAssessmentProgressRemoveViewModel {
 
     public long getAssessmentId() {
         return assessmentId;
-    }
-
-    public String getSortField() {
-        return sortField;
     }
 
     @Override
@@ -56,7 +49,6 @@ public class AssessorAssessmentProgressRemoveViewModel {
                 .append(competitionId, that.competitionId)
                 .append(assessorId, that.assessorId)
                 .append(assessmentId, that.assessmentId)
-                .append(sortField, that.sortField)
                 .isEquals();
     }
 
@@ -66,7 +58,6 @@ public class AssessorAssessmentProgressRemoveViewModel {
                 .append(competitionId)
                 .append(assessorId)
                 .append(assessmentId)
-                .append(sortField)
                 .toHashCode();
     }
 }
