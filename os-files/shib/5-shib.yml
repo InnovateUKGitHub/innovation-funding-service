@@ -22,8 +22,8 @@ items:
         spec:
           volumes:
             - name: sp-keys-volume
-              configMap:
-                name: sp-keys-volume
+              secret:
+                secretName: sp-keys-volume
           containers:
             - image: innovateuk/sp-service:${spVersion}
               name: shib
