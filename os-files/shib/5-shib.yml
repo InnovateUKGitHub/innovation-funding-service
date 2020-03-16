@@ -22,10 +22,11 @@ items:
         spec:
           volumes:
             - name: sp-keys-volume
-              secret:
-                secretName: sp-keys-secrets
+              configMap:
+                name: sp-keys-volume
           containers:
             - image: innovateuk/sp-service:${spVersion}
+              name: shib
               volumeMounts:
                 - name: sp-keys-volume
                   mountPath: /var/certs
@@ -34,18 +35,18 @@ items:
                   path: /Shibboleth.sso/Metadata
                   port: 9443
                   scheme: HTTPS
-                  initialDelaySeconds: 60
-                  periodSeconds: 30
-                  timeoutSeconds: 5
-                  failureThreshold: 3
-                readinessProbe:
-                  exec:
-                    command:
-                      - readiness-probe
-                  initialDelaySeconds: 60
-                  periodSeconds: 5
-                  timeoutSeconds: 5
-                  failureThreshold: 1
+                initialDelaySeconds: 60
+                periodSeconds: 30
+                timeoutSeconds: 5
+                failureThreshold: 3
+              readinessProbe:
+                exec:
+                  command:
+                    - readiness-probe
+                initialDelaySeconds: 60
+                periodSeconds: 5
+                timeoutSeconds: 5
+                failureThreshold: 1
               imagePullPolicy: Always
               env:
                 - name: SP_DOMAIN
@@ -110,7 +111,7 @@ items:
                   memory: ${SHIBBOLETH_SP_MEMORY_LIMIT}
                 requests:
                   memory: ${SHIBBOLETH_SP_MEMORY_REQUEST}
-      test: false
+              test: false
       triggers:
         - type: ConfigChange
     status: {}
