@@ -70,7 +70,7 @@ Filtering applications on the assessor progress page
     [Documentation]    IFS-400
     When the user enters text to a text field  css = #filterSearch  ${application_ids["${availableApp}"]}
     And the user clicks the button/link        jQuery = .govuk-button:contains("Filter")
-    Then the user should see the element       jQuery = .applications-available tr:contains("${availableApp}") td:contains("Enterprise Engineering") ~ td:contains("Assign")
+    Then the user should see the element       jQuery = .applications-available tr:contains("${availableApp}"):contains("Enterprise Engineering")
 
 Assessor removal
     [Documentation]  IFS-1079

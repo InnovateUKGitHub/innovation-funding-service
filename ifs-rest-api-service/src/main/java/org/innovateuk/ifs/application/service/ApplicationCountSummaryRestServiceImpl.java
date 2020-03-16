@@ -9,8 +9,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
  * Implementing class for {@link ApplicationCountSummaryRestService}, for the action on retrieving application statistics.
@@ -42,6 +45,15 @@ public class ApplicationCountSummaryRestServiceImpl extends BaseRestService impl
                 .queryParam("filter", filter)
                 .queryParam("sort", sort);
         return getWithRestResult(builder.toUriString(), ApplicationCountSummaryPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId, long assessorId, String filter) {
+        String baseUrl = format("%s/%s/%d/%d", APPLICATION_COUNT_REST_URL, "find-ids-by-competition-id-and-assessor-id", competitionId, assessorId);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("filter", filter);
+
+        return getWithRestResult(builder.toUriString(), longsListType());
     }
 
     private String buildUri(String url, Integer pageNumber, Integer pageSize, String filter, Object... uriParameters ) {
