@@ -68,8 +68,6 @@ task prepareDeployAndUpgrade(type: Copy) {
         exclude 'config-maps/*.yml'
         exclude 'routes/*.yml'
         exclude 'gluster/'
-        // Exclude zipkin for now, ticket to remove later
-        exclude 'zipkin/*.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
