@@ -26,7 +26,7 @@ executeMySQLCommand() {
 }
 
 findAllUsersInDatabase() {
-    $(executeMySQLCommand "select email from user where system_user = 0;")
+    executeMySQLCommand "select email from user where system_user = 0;"
 }
 
 addUserToShibboleth() {
@@ -35,7 +35,6 @@ addUserToShibboleth() {
 }
 
 addUser() {
-  email=$1
   uid=$(executeMySQLCommand "select uid from user where email='$(escaped $email)';")
 
   echo "dn: uid=$uid,$domain"

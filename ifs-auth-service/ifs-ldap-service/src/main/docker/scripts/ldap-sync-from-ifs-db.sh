@@ -4,7 +4,7 @@
 
 wipeLdapUsers
 
-for u in findAllUsersInDatabase
+for u in $(findAllUsersInDatabase)
 do
   addUserToShibboleth "$u"
 done
