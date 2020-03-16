@@ -163,7 +163,6 @@ task syncShib(type: Exec) {
 }
 
 
-// To run "./gradlew syncUser -Pemail=steve.smith@empire.com"
 task syncUser() {
     doLast {
         if (project.hasProperty('email')) {
