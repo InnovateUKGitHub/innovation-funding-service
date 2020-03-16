@@ -20,24 +20,24 @@ items:
           labels:
             deploymentconfig: idp
         spec:
-          volumes:
-            - name: idp-keys-volume
+          - name: idp-keys-volume
               secret:
                 secretName: idp-keys-secrets
-                containers:
-                  - image: innovateuk/idp-service:${idpVersion}
-                    idpvolumeMounts:
-                  - name: idp-keys-volume
-                    mountPath: /var/certs
-                    livenessProbe:
-              httpGet:
-                path: /idp/status
-                port: 9443
-                scheme: HTTPS
-              initialDelaySeconds: 60
-              periodSeconds: 30
-              timeoutSeconds: 25
-              failureThreshold: 3
+          containers:
+            - image: innovateuk/idp-service:${idpVersion}
+              name: idp
+              volumeMounts:
+                - name: idp-keys-volume
+                  mountPath: /var/certs
+              livenessProbe:
+                httpGet:
+                  path: /idp/status
+                  port: 9443
+                  scheme: HTTPS
+                initialDelaySeconds: 60
+                periodSeconds: 30
+                timeoutSeconds: 25
+                failureThreshold: 3
               readinessProbe:
                 httpGet:
                   path: /idp/status
