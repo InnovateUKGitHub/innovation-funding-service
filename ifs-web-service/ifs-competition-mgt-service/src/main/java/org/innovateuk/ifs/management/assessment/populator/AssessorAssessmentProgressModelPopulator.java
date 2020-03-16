@@ -20,6 +20,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.management.cookie.CompetitionManagementCookieController.SELECTION_LIMIT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Component
@@ -83,13 +84,13 @@ public class AssessorAssessmentProgressModelPopulator {
                 filter,
                 businessType != null ? businessType.getDisplayName() : "",
                 summaryResource.getTotalApplications(),
+                applicationCounts.getTotalElements() > SELECTION_LIMIT,
                 assigned,
                 rejected,
                 previouslyAssigned,
                 applicationsViewModel
         );
     }
-
 
     private List<AssessorAssessmentProgressAssignedRowViewModel> getAssignedAssessments(List<AssessorAssessmentResource> assessorAssessments) {
         return assessorAssessments.stream()

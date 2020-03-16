@@ -130,3 +130,8 @@ the user adds an assessor to application
     [Arguments]   ${CheckboxId}
     the user selects the checkbox     ${CheckboxId}
     the user clicks the button/link   jQuery = button:contains("Add to application")
+
+the user adds an application to an assessor
+    [Arguments]   ${CheckboxId}
+    the user selects the checkbox     ${CheckboxId}
+    the user clicks the button/link   jQuery = button:contains("Add to assessor")
