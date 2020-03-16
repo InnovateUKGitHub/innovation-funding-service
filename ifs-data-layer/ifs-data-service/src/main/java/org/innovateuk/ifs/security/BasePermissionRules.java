@@ -16,7 +16,6 @@ import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.repository.BaseMonitoringOfficerRepository;
-import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
@@ -66,7 +66,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private BaseMonitoringOfficerRepository monitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
-        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
+        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();
     }
 

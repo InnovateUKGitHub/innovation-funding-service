@@ -39,13 +39,14 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -167,7 +168,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId) {
-        ProjectUser projectUser = projectUserRepository.findByProjectIdAndRoleAndUserId(projectId, PROJECT_PARTNER, userId);
+        ProjectUser projectUser = projectUserRepository.findOneByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_PARTNER_ROLES.stream().collect(Collectors.toList()));
         if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findById(projectUser.getOrganisation().getId()).orElse(null)));
         } else {
@@ -367,6 +368,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
-        return projectUserRepository.findByProjectId(projectId);
+        return projectUserRepository.findByProjectIdAndRoleIsIn(projectId, TEAM_PROJECT_USER_ROLES.stream().collect(toList()));
     }
 }

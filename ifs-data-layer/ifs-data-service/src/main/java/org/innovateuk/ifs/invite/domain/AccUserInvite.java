@@ -7,14 +7,13 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue("PROJECT")
-public class ProjectUserInvite extends BaseUserInvite {
+@DiscriminatorValue("ACC_PROJECT")
+public class AccUserInvite extends BaseUserInvite {
 
-    public ProjectUserInvite() {
+    public AccUserInvite() {
     }
 
-    public ProjectUserInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project, final InviteStatus status) {
+    public AccUserInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project, final InviteStatus status) {
         super(name, email, hash, organisation, project, status);
     }
-
 }

@@ -129,6 +129,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
+//        split into a project get team and get all users
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
                 user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());

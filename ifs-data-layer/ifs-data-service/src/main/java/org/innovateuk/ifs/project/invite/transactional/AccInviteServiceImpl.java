@@ -149,7 +149,7 @@ public abstract class AccInviteServiceImpl extends BaseTransactionalService impl
                                     projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(), organisation));
                                     invite.open();
                                     // maybe an activity log for this
-
+                                    // add some of the project user stuff here
                                     return serviceSuccess();
                                 }));
     }

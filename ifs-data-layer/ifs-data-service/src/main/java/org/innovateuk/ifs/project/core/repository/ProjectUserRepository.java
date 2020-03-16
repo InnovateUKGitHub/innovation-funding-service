@@ -11,6 +11,12 @@ public interface ProjectUserRepository extends PagingAndSortingRepository<Projec
 
     List<ProjectUser> findByProjectId(Long projectId);
 
+    List<ProjectUser> findByProjectIdAndRoleIsIn(Long projectId, List<ProjectParticipantRole> role);
+
+    List<ProjectUser> findByProjectIdAndUserIdAndRoleIsIn(long projectId, long userId, List<ProjectParticipantRole> role);
+
+    ProjectUser findOneByProjectIdAndUserIdAndRoleIsIn(long projectId, long userId, List<ProjectParticipantRole> role);
+
     List<ProjectUser> findByProjectIdAndOrganisationId(long projectId, long organisationId);
 
     ProjectUser findOneByProjectIdAndUserIdAndOrganisationIdAndRole(long projectId, long userId, long organisationId, ProjectParticipantRole role);

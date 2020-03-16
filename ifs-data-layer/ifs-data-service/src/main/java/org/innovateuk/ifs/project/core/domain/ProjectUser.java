@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.project.core.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.innovateuk.ifs.invite.domain.BaseUserInvite;
 import org.innovateuk.ifs.invite.domain.InvitedParticipant;
-import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  */
 @Entity
 @DiscriminatorValue("PROJECT_USER")
-public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, ProjectUserInvite, ProjectParticipantRole> {
+public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, BaseUserInvite, ProjectParticipantRole> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
@@ -26,7 +26,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
-    private ProjectUserInvite invite;
+    private BaseUserInvite invite;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
@@ -34,8 +34,8 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "projectId", referencedColumnName = "project_id", insertable = false, updatable = false),
-        @JoinColumn(name = "organisationId", referencedColumnName = "organisation_id", insertable = false, updatable = false)
+            @JoinColumn(name = "projectId", referencedColumnName = "project_id", insertable = false, updatable = false),
+            @JoinColumn(name = "organisationId", referencedColumnName = "organisation_id", insertable = false, updatable = false)
     })
     private PartnerOrganisation partnerOrganisation;
 
@@ -57,7 +57,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
     }
 
     @Override
-    public ProjectUserInvite getInvite() {
+    public BaseUserInvite getInvite() {
         return invite;
     }
 
@@ -101,7 +101,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
         return getRole().isProjectManager();
     }
 
-    public void setInvite(ProjectUserInvite invite) {
+    public void setInvite(BaseUserInvite invite) {
         this.invite = invite;
     }
 

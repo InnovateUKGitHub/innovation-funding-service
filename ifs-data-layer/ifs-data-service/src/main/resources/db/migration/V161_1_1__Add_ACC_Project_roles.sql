@@ -3,8 +3,7 @@
 ALTER TABLE project_user MODIFY type ENUM('PROJECT_USER',
  'PROJECT_MONITORING_OFFICER',
  'FINANCE_REVIEWER',
- 'ACC_FINANCE_REVIEWER',
- 'ACC_PROJECT_MANAGER',
+ 'ACC_PROJECT_USER',
  'ACC_MONITORING_OFFICER') NOT NULL;
 
 INSERT INTO project_role (name) VALUES ('ACC_PROJECT_PARTNER');
@@ -24,6 +23,5 @@ ALTER TABLE invite
                             'MONITORING_OFFICER',
                             'APPLICATION',
                             'ACC_MONITORING_OFFICER',
-                            'ACC_PROJECT_PARTNER',
                             'ACC_PROJECT_MANAGER',
                             'ACC_PROJECT_FINANCE_CONTACT');
