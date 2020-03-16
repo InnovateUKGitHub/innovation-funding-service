@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
@@ -40,10 +44,10 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     private ApplicationCountSummaryPageResource resource;
 
     @Mock
-    private ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+    private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Mock
-    private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
+    private ApplicationCountSummaryPageMapper applicationCountSummaryPageMapper;
 
 
 
@@ -58,9 +62,11 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
                 .withProcessRoles(
                         newProcessRole()
                                 .withRole(applicantRole, leadApplicationRole)
+                                .withUser(UserBuilder.newUser().build())
                                 .build(2),
                         newProcessRole()
                                 .withRole(leadApplicationRole, applicantRole)
+                                .withUser(UserBuilder.newUser().build())
                                 .build(2)
                 )
                 .build(2);
@@ -73,8 +79,8 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
-        when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
+        when(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(eq(competitionId), eq(SUBMITTED_STATES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
+        when(applicationCountSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, ofNullable("filter"));
 
@@ -83,13 +89,22 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void getApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndInnovationAreaProcessActivityStateIn(eq(competitionId), eq(1L), eq(SUBMITTED_STATES) , anyString(), eq(2L), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(page);
-        when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
+    public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
+        Page<ApplicationCountSummaryResource> pageCount = mock(Page.class);
+        when(applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"), argThat(new PageableMatcher(0, 20, srt("id", ASC ))))).thenReturn(pageCount);
 
-        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 1L,0, 20, ofNullable(2L), "", "");
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, 1L, 0, 20, Sort.APPLICATION_NUMBER, "asd");
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccess());
+    }
+
+    @Test
+    public void getApplicationIdsByCompetitionIdAndAssessorId() {
+        List<Long> list = asList(1L, 2L);
+        when(applicationStatisticsRepository.findApplicationIdsNotAssignedTo(eq(competitionId), eq(1L), eq("asd"))).thenReturn(list);
+
+        ServiceResult<List<Long>> result = service.getApplicationIdsByCompetitionIdAndAssessorId(competitionId, 1L, "asd");
+
+        assertTrue(result.isSuccess());
     }
 }

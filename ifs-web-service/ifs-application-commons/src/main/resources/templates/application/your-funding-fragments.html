@@ -168,38 +168,20 @@
             <span class="govuk-error-message" th:each="err : ${#fields.errors('grantClaimPercentage')}"
                   th:text="${err}"/>
 
-            <th:block th:if="${model.fundingLevelPercentageToggle}">
-                <input id="grantClaimPercentage"
-                       type="number"
-                       class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
-                       min="1"
-                       th:max="${maximumFundingLevel}"
-                       required="required"
-                       th:errorclass="govuk-input--error"
-                       th:field="*{grantClaimPercentage}"
-                       placeholder="0"
-                       step=".01"
-                       data-prevent-input-non-decimal
-                       th:attr="data-max-errormessage=#{validation.finance.grant.claim.percentage.max('%max%')},
-                            data-min-errormessage=#{validation.finance.grant.claim.percentage.min}"/>
-                <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
-            </th:block>
-
-            <th:block th:unless="${model.fundingLevelPercentageToggle}">
-                <input id="grantClaimPercentage"
-                       type="number"
-                       class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
-                       min="1"
-                       th:max="${maximumFundingLevel}"
-                       required="required"
-                       th:errorclass="govuk-input--error"
-                       th:field="*{grantClaimPercentage}"
-                       placeholder="0"
-                       data-prevent-input-non-number
-                       th:attr="data-max-errormessage=#{validation.finance.grant.claim.percentage.max('%max%')},
-                            data-min-errormessage=#{validation.finance.grant.claim.percentage.min}"/>
-                <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
-            </th:block>
+            <input id="grantClaimPercentage"
+                   type="number"
+                   class="govuk-input govuk-input--width-4 govuk-!-margin-right-1"
+                   min="1"
+                   th:max="${maximumFundingLevel}"
+                   required="required"
+                   th:errorclass="govuk-input--error"
+                   th:field="*{grantClaimPercentage}"
+                   placeholder="0"
+                   step=".01"
+                   data-prevent-input-non-decimal
+                   th:attr="data-max-errormessage=#{validation.finance.grant.claim.percentage.max('%max%')},
+                        data-min-errormessage=#{validation.finance.grant.claim.percentage.min}"/>
+            <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
         </div>
     </div>
 </th:block>

@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +13,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -59,21 +60,43 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     }
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndInnovationArea(
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionIdAndAssessorId(
                                                                                         long competitionId,
                                                                                         long assessorId,
-                                                                                        int pageIndex,
-                                                                                        int pageSize,
-                                                                                        Optional<Long> innovationArea,
-                                                                                        String filter,
-                                                                                        String sortField) {
-        Sort sort = getApplicationSummarySortField(sortField);
-        Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+                                                                                        int page,
+                                                                                        int size,
+                                                                                        ApplicationCountSummaryResource.Sort sort,
+                                                                                        String filter) {
 
-        Page<ApplicationStatistics> applicationStatistics =
-        applicationStatisticsRepository.findByCompetitionAndInnovationAreaProcessActivityStateIn(competitionId, assessorId, SUBMITTED_STATES, filter, innovationArea.orElse(null), pageable);
+        Pageable pageable = PageRequest.of(page, size, getApplicationSummarySortField(sort));
 
-        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
+        Page<ApplicationCountSummaryResource> result =
+        applicationStatisticsRepository.findStatisticsForApplicationsNotAssignedTo(competitionId, assessorId, filter, pageable);
+
+        return serviceSuccess(new ApplicationCountSummaryPageResource(result.getTotalElements(), result.getTotalPages(), result.getContent(), result.getNumber(), result.getSize()));
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getApplicationIdsByCompetitionIdAndAssessorId(long competitionId, long assessorId, String filter) {
+       return serviceSuccess(applicationStatisticsRepository.findApplicationIdsNotAssignedTo(competitionId, assessorId, filter));
+    }
+
+    private Sort getApplicationSummarySortField(ApplicationCountSummaryResource.Sort sort) {
+        switch(sort) {
+            case APPLICATION_NUMBER:
+                return Sort.by(ASC, "id");
+            case TITLE:
+                return Sort.by(ASC, "name");
+            case LEAD_ORGANISATION:
+                return Sort.by(ASC, "lead.name");
+            case ASSESSORS:
+                return JpaSort.unsafe(ASC, ApplicationStatisticsRepository.SUM_ASSESSORS);
+            case ACCEPTED:
+                return JpaSort.unsafe(ASC, ApplicationStatisticsRepository.SUM_ACCEPTED);
+            case SUBMITTED:
+                return JpaSort.unsafe(ASC, ApplicationStatisticsRepository.SUM_SUBMITTED);
+        }
+        throw new IFSRuntimeException("Unknown sort option: " + sort.name());
     }
 
     private Sort getApplicationSummarySortField(String sortBy) {

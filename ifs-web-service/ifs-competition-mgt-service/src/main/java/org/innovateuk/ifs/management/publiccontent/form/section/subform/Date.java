@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.management.publiccontent.form.section.subform;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.management.publiccontent.form.section.DatesForm;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * The repeating date that is being used in the {@link DatesForm}

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.queries.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.EnumValidator;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;

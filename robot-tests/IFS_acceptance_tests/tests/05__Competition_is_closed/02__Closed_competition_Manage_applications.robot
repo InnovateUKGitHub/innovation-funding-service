@@ -15,9 +15,11 @@ Documentation     INFUND-7734 Competition Management: Assign to application dash
 ...
 ...               IFS-5915 Assessor Filter Option
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
-Suite Teardown    The user closes the browser
+Suite Teardown
+#The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${availableApp}  Machine learning for driverless cars
@@ -26,15 +28,13 @@ ${availableApp}  Machine learning for driverless cars
 # Search for applications is covered in 'Filtering of the applications' inside file 03__Manage_applications.robot
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042  INFUND-7729  INFUND-8062  IFS-5915
-    [Tags]
     Given the user navigates to allocate applications page
     When the user verfies that the list of assessors in alphabetical order
     Then the user filters the applications by first or last name
 
 Filtering Assessors in the Assign assessors page
     [Documentation]    INFUND-8062  IFS-5915
-    [Tags]
-    Given the user clicks the button/Link                     jQuery = tr:contains("Ben") button
+    Given the user adds an assessor to application            assessor-row-1
     When the user enters text to a text field                 id = assessorNameFilter  Paige
     And the user clicks the button/link                       jQuery = button:contains(Filter)
     Then the user should see the element                      jQuery = td:contains("Paige Godfrey")
@@ -44,14 +44,12 @@ Filtering Assessors in the Assign assessors page
 
 Manage assessor list is correct
     [Documentation]    IFS-17
-    [Tags]
     [Setup]  the user clicks the button/link  link = Manage assessments
     Given the user clicks the button/link     link = Allocate assessors
     Then the assessor list is correct before changes
 
 Filter assessors
     [Documentation]    IFS-399  IFS-5915
-    [Tags]
     Given the user enters text to a text field            id = assessorNameFilter   Madeleine
     And the user clicks the button/link                   jQuery = .govuk-button:contains("Filter")
     Then the assessor list is correct before changes
@@ -59,27 +57,23 @@ Filter assessors
 
 Assessor link goes to the assessor profile
     [Documentation]  IFS-17
-    [Tags]
     Given the user clicks the button/link        link = Madeleine Martin
     Then the user should see the element         jQuery = dt:contains("Name") ~ dd:contains("Madeleine Martin")
     [Teardown]  the user clicks the button/link  link = Back to allocate assessors
 
 Assessor Progress page
     [Documentation]  IFS-156
-    [Tags]
     Given the user clicks the button/link  jQuery = td:contains("Madeleine Martin") ~ td a:contains("Assign")
     Then the user should see the element   jQuery = h2:contains("Assigned (2)") + .table-overflow tr:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") + tr:contains("Machine learning applied to the traveler experience")
 
 Filtering applications on the assessor progress page
     [Documentation]    IFS-400
-    [Tags]
     When the user enters text to a text field  css = #filterSearch  ${application_ids["${availableApp}"]}
     And the user clicks the button/link        jQuery = .govuk-button:contains("Filter")
-    Then the user should see the element       jQuery = .applications-available tr:contains("${availableApp}") td:contains("Enterprise Engineering") ~ td:contains("Assign")
+    Then the user should see the element       jQuery = .applications-available tr:contains("${availableApp}"):contains("Enterprise Engineering")
 
 Assessor removal
     [Documentation]  IFS-1079
-    [Tags]
     Given the user clicks the button/link     link = Allocate assessors
     Then the user clicks the button/link      jQuery = td:contains("Benjamin Nixon") ~ td a:contains("Assign")
     When the user clicks the button/link      jQuery = td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
@@ -88,7 +82,7 @@ Assessor removal
 
 *** Keywords ***
 the assessor list is correct before changes
-    the user should see the element    jQuery = td:contains("Madeleine Martin") ~ td:contains("2") ~ td:contains("2")
+    the user should see the element    jQuery = td:contains("Madeleine Martin") ~ td:contains("0") ~ td:contains("0")
 
 the user navigates to allocate applications page
     the user clicks the button/link      link = ${CLOSED_COMPETITION_NAME}
