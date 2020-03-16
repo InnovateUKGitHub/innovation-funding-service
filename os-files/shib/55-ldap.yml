@@ -16,19 +16,12 @@ items:
           labels:
             deploymentconfig: ldap
         spec:
-          volumes:
-            - name: ldap-keys-volume
-              secret:
-                secretName: ldap-keys-secrets
           containers:
             - env:
                 - name: LDAP_PORT
                   value: "8389"
               image: innovateuk/ldap-service:${ldapVersion}
               name: ldap
-              volumeMounts:
-                - name: ldap-keys-volume
-                  mountPath: /var/certs
               livenessProbe:
                 exec:
                   command:
