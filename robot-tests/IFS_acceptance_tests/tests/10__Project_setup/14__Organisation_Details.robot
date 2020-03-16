@@ -9,9 +9,9 @@ Resource          PS_Common.robot
 Resource          ../04__Applicant/Applicant_Commons.robot
 *** Variables ***
 ${GrowthTableCompetitionLink}            ${server}/project-setup-management/competition/${GrowthTableCompId}/project/${PS_GTC_Application_Project_Id}/details
-${GrowthTableCompetitionOrgSelectLink}   ${server}/project-setup-management/competition/${GrowthTableCompId}/project/${PS_GTC_Application_Project_Id}/organisation/select
+${GrowthTableCompetitionLink}            ${server}/project-setup-management/competition/${GrowthTableCompId}/project/${PS_GTC_Application_Project_Id}/details
 ${GrowthTableApplicationLink}            ${server}/management/competition/${GrowthTableCompId}/application/${PS_GTC_Application_No}
-${NoGrowthTableCompetitionLink}          ${server}/project-setup-management/competition/${NoGrowthTableCompId}/project/${PS_NGTC_Application_Project_Id}/organisation/select
+${NoGrowthTableCompetitionLink}          ${server}/project-setup-management/competition/${NoGrowthTableCompId}/project/${PS_NGTC_Application_Project_Id}/details
 ${NoGrowthTableApplicationLink}          ${server}/management/competition/${NoGrowthTableCompId}/application/${PS_NGTC_Application_No}
 ${WardLtdRadioBttnValue}                 117
 ${RedPlanetRadioBttnValue}               119
@@ -20,7 +20,7 @@ ${SmithZoneRadioBttnValue}               118
 *** Test Cases ***
 IFS Admin able to view further Organisation details by selecting an organisation
     [Documentation]  IFS-6697
-    Given the user navigates to the page                                       ${GrowthTableCompetitionOrgSelectLink}
+    Given the user navigates to View partner details page                      ${GrowthTableCompetitionLink}
     When the user selects an organisation                                      ${SmithZoneRadioBttnValue}
     Then the user should see further organisation details                      Business  SmithZone  89082442
     And the user should see Organisation size details with a growth table      Micro or small  1  2020  100000  200000  300000  400000  60
@@ -55,7 +55,7 @@ Finance checks can't be approved if the updated funding level exceeds the permit
 
 IFS Admin able to view further Organisation details without a growth table
     [Documentation]  IFS-6697
-    Given the user navigates to the page                    ${NoGrowthTableCompetitionLink}
+    Given the user navigates to View partner details page   ${NoGrowthTableCompetitionLink}
     Then the user should see further organisation details   Business  Ward Ltd  55522234
     And the user should see organisation size details       Micro or small  £700,000  50
 
@@ -69,7 +69,7 @@ IFS Admin able to edit further Organisation details without a growth table
 Finance user is able to view further Organisation details by selecting an organisation
     [Documentation]  IFS-6697
     [Setup]  log in as a different user                                        &{internal_finance_credentials}
-    Given the user navigates to the page                                       ${GrowthTableCompetitionOrgSelectLink}
+    Given the user navigates to View partner details page                      ${GrowthTableCompetitionLink}
     When the user selects an organisation                                      ${SmithZoneRadioBttnValue}
     Then the user should see further organisation details                      Business  SmithZone  89082442
     And the user should see Organisation size details with a growth table      Large  12  2019  600000  500000  400000  300000  200
@@ -82,7 +82,7 @@ Finance user is able to edit organisation size with a growth table
 
 Finance user is able to view further Organisation details without a growth table
     [Documentation]  IFS-6697
-    Given the user navigates to the page                    ${NoGrowthTableCompetitionLink}
+    Given the user navigates to View partner details page   ${NoGrowthTableCompetitionLink}
     Then the user should see further organisation details   Business  Ward Ltd  55522234
     And the user should see organisation size details       Large  £9,000,000  300
 
@@ -96,7 +96,7 @@ Finance user is able to edit further Organisation details without a growth table
 Support user is able to view further Organisation details by selecting an organisation and isnt able to edit
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{support_user_credentials}
-    Given the user navigates to the page                         ${NoGrowthTableCompetitionLink}
+    Given the user navigates to View partner details page        ${NoGrowthTableCompetitionLink}
     When the user should see further organisation details        Business  Ward Ltd  55522234
     And the user should see organisation size details            Micro or small  £800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
@@ -104,7 +104,7 @@ Support user is able to view further Organisation details by selecting an organi
 Comp Admin user is able to view further Organisation details by selecting an organisation and isnt able to edit
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{Comp_admin1_credentials}
-    Given the user navigates to the page                         ${NoGrowthTableCompetitionLink}
+    Given the user navigates to View partner details page        ${NoGrowthTableCompetitionLink}
     When the user should see further organisation details        Business  Ward Ltd  55522234
     And the user should see organisation size details            Micro or small  £800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
@@ -112,7 +112,7 @@ Comp Admin user is able to view further Organisation details by selecting an org
 Innovation Lead user is able to view further Organisation details by selecting an organisation and isnt able to edit
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{innovation_lead_one}
-    Given the user navigates to the page                         ${NoGrowthTableCompetitionLink}
+    Given the user navigates to view partner details page        ${NoGrowthTableCompetitionLink}
     When the user should see further organisation details        Business  Ward Ltd  55522234
     And the user should see organisation size details            Micro or small  £800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
@@ -135,6 +135,11 @@ If any of the finance sections are completed the user is no longer able to edit 
      Then the user is no longer able to edit organisation size
 
 *** Keywords ***
+The user navigates to View partner details page
+    [Arguments]  ${PageLink}
+    the user navigates to the page       ${PageLink}
+    the user clicks the button/link      link = View partner details
+
 The user selects an organisation
     [Arguments]  ${value}
     the user selects the radio button  organisationId  ${value}
@@ -241,7 +246,7 @@ The user updates organisation size details without a growth table
     the user saves and returns to organisation details page
 
 The user is no longer able to edit organisation size
-    the user navigates to the page               ${GrowthTableCompetitionOrgSelectLink}
-    the user selects an organisation             ${SmithZoneRadioBttnValue}
-    the user should not see the element          jQuery = a:contains("Edit organisation")
+    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
+    the user selects an organisation                 ${SmithZoneRadioBttnValue}
+    the user should not see the element              jQuery = a:contains("Edit organisation")
 

@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +17,11 @@ public interface ApplicationAssessmentSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
-    ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, String assessorNameFilter);
+    ServiceResult<ApplicationAvailableAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, String assessorNameFilter, ApplicationAvailableAssessorResource.Sort sort);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
+    ServiceResult<List<Long>> getAvailableAssessorIds(long applicationId, String assessorNameFilter);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
@@ -24,6 +29,6 @@ public interface ApplicationAssessmentSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Application assessment summaries across the whole system", securedType = ApplicationAssessmentSummaryResource.class)
-    ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId);
+    ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(long applicationId);
 
 }

@@ -36,7 +36,7 @@ public class GrantClaimPercentageValidator implements Validator {
     public void validate(Object target, Errors errors) {
         GrantClaimPercentage response = (GrantClaimPercentage) target;
             if (response.getPercentage() == null) {
-                rejectValue(errors, "percentage", "org.hibernate.validator.constraints.NotBlank.message");
+                rejectValue(errors, "percentage", "validation.field.must.not.be.blank");
                 return;
             }
 

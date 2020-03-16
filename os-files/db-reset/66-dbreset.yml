@@ -22,15 +22,6 @@ items:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: bitbucket-config
-    data:
-      ACC_USERNAME: "${ACC_USERNAME}"
-      ACC_PASSWORD: "${ACC_PASSWORD}"
-      ACC_BITBUCKET_URL: "${ACC_BITBUCKET_URL}"
-      ACC_SUFFIX: "${ACC_SUFFIX}"
-  - apiVersion: v1
-    kind: ConfigMap
-    metadata:
       name: performance-config
     data:
       PERFORMANCE_APPLICANT_USERS: "${PERFORMANCE_APPLICANT_USERS}"
@@ -46,6 +37,7 @@ items:
       LDAP_DOMAIN: "${LDAP_DOMAIN}"
       LDAP_SCHEME: "${LDAP_SCHEME}"
       ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
+      ONLY_DELETE_IFS_USERS: "${ONLY_DELETE_IFS_USERS}"
   - apiVersion: v1
     kind: Pod
     metadata:
@@ -94,11 +86,6 @@ items:
                 configMapKeyRef:
                   name: db-config
                   key: DB_PASS
-            - name: ACC_BITBUCKET_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: bitbucket-config
-                  key: ACC_BITBUCKET_URL
             - name: PERFORMANCE_APPLICANT_USERS
               valueFrom:
                 configMapKeyRef:
@@ -109,21 +96,6 @@ items:
                 configMapKeyRef:
                   name: performance-config
                   key: PERFORMANCE_h2020_USERS
-            - name: ACC_USERNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: bitbucket-config
-                  key: ACC_USERNAME
-            - name: ACC_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: bitbucket-config
-                  key: ACC_PASSWORD
-            - name: ACC_SUFFIX
-              valueFrom:
-                configMapKeyRef:
-                  name: bitbucket-config
-                  key: ACC_SUFFIX
             - name: LDAP_HOST
               valueFrom:
                 configMapKeyRef:
@@ -149,6 +121,11 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: ONLY_SYNC_LDAP
+            - name: ONLY_DELETE_IFS_USERS
+              valueFrom:
+                configMapKeyRef:
+                  name: ldap-config
+                  key: ONLY_DELETE_IFS_USERS
             - name: LDAP_SCHEME
               valueFrom:
                 configMapKeyRef:

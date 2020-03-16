@@ -46,7 +46,7 @@ public class GrantClaimValidatorTest {
 
 		validator.validate(claim, bindingResult);
 
-		verifyError("org.hibernate.validator.constraints.NotBlank.message");
+		verifyError("validation.field.must.not.be.blank");
 	}
 
 	@Test

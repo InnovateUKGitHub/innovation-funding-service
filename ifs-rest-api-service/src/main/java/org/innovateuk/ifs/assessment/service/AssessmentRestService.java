@@ -37,4 +37,7 @@ public interface AssessmentRestService {
     RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions);
 
     RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
+
+    RestResult<List<AssessmentResource>> createAssessments(List<AssessmentCreateResource> assessmentCreateResources);
+
 }

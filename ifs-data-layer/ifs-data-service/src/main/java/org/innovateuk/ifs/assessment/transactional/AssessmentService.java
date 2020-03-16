@@ -67,4 +67,8 @@ public interface AssessmentService {
     @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
+
+    @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<List<AssessmentResource>> createAssessments(List<AssessmentCreateResource> assessmentCreateResource);
 }
