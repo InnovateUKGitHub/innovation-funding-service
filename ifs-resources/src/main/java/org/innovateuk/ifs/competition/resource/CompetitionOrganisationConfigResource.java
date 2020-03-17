@@ -4,9 +4,11 @@ public class CompetitionOrganisationConfigResource {
 
     private Long id;
     private Boolean internationalOrganisationsAllowed;
+    private Boolean internationalLeadOrganisationAllowed;
 
-    public CompetitionOrganisationConfigResource(Boolean internationalOrganisationsAllowed) {
+    public CompetitionOrganisationConfigResource(Boolean internationalOrganisationsAllowed, Boolean internationalLeadOrganisationAllowed) {
         this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
+        this.internationalLeadOrganisationAllowed = internationalLeadOrganisationAllowed;
     }
 
     public Long getId() {
@@ -23,5 +25,13 @@ public class CompetitionOrganisationConfigResource {
 
     public void setInternationalOrganisationsAllowed(Boolean internationalOrganisationsAllowed) {
         this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
+    }
+
+    public Boolean getInternationalLeadOrganisationAllowed() {
+        return internationalLeadOrganisationAllowed;
+    }
+
+    public void setInternationalLeadOrganisationAllowed(Boolean internationalLeadOrganisationAllowed) {
+        this.internationalLeadOrganisationAllowed = internationalLeadOrganisationAllowed;
     }
 }

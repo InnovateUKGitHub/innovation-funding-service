@@ -16,12 +16,18 @@ public class CompetitionOrganisationConfig {
     @Column(name = "international_organisations_allowed")
     private Boolean internationalOrganisationsAllowed;
 
+    @Column(name = "international_lead_organisation_allowed")
+    private Boolean internationalLeadOrganisationAllowed;
+
     private CompetitionOrganisationConfig(){
     }
 
-    public CompetitionOrganisationConfig(Competition competition, Boolean internationalOrganisationsAllowed) {
+    public CompetitionOrganisationConfig(Competition competition,
+                                         Boolean internationalOrganisationsAllowed,
+                                         Boolean internationalLeadOrganisationAllowed) {
         this.competition = competition;
         this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
+        this.internationalLeadOrganisationAllowed = internationalLeadOrganisationAllowed;
     }
 
     public Long getId() {
@@ -42,5 +48,13 @@ public class CompetitionOrganisationConfig {
 
     public void setInternationalOrganisationsAllowed(Boolean internationalOrganisationsAllowed) {
         this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
+    }
+
+    public Boolean getInternationalLeadOrganisationAllowed() {
+        return internationalLeadOrganisationAllowed;
+    }
+
+    public void setInternationalLeadOrganisationAllowed(Boolean internationalLeadOrganisationAllowed) {
+        this.internationalLeadOrganisationAllowed = internationalLeadOrganisationAllowed;
     }
 }
