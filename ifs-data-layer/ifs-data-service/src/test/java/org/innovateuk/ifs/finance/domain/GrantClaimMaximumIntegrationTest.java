@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
@@ -218,7 +217,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         false, false, AssessorFinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
-                        true, STANDARD, true, true, false).
+                        true, STANDARD, true, true).
                 withApplicationFormFromTemplate().
                 withNewMilestones().
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
