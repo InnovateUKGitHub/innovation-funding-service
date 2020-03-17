@@ -9,7 +9,6 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -489,7 +488,6 @@ public class CsvUtils {
         public ApplicationFinanceType applicationFinanceType;
         public Boolean includeProjectGrowth;
         public Boolean includeYourOrganisation;
-        public Boolean allowInternationalOrganisations;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -534,7 +532,6 @@ public class CsvUtils {
             applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
             includeProjectGrowth = nullableBoolean(line.get(i++));
             includeYourOrganisation = nullableBoolean(line.get(i++));
-            allowInternationalOrganisations = nullableBoolean(line.get(i++));
         }
     }
 

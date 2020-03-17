@@ -152,9 +152,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setMinProjectDuration(template.getMinProjectDuration());
         competition.setMaxProjectDuration(template.getMaxProjectDuration());
         competition.setApplicationFinanceType(template.getApplicationFinanceType());
-        competition.setCompetitionOrganisationConfig(template.getCompetitionOrganisationConfig());
         return competition;
     }
+
+    // look to where we look for new instance to create a competition
 
     private Competition setDefaultAssessorPayAndCount(Competition competition) {
         if (competition.getAssessorCount() == null) {

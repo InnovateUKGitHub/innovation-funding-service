@@ -109,7 +109,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FundingType fundingType;
     private Set<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
-    private Boolean internationalOrganisationsAllowed;
 
     public CompetitionResource() {
     }
@@ -801,14 +800,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return competitionTerms != null;
     }
 
-    public Boolean getInternationalOrganisationsAllowed() {
-        return internationalOrganisationsAllowed;
-    }
-
-    public void setInternationalOrganisationsAllowed(Boolean internationalOrganisationsAllowed) {
-        this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -876,7 +867,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
                 .append(includeYourOrganisationSection, that.includeYourOrganisationSection)
-                .append(internationalOrganisationsAllowed, that.internationalOrganisationsAllowed)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .append(applicationFinanceType, that.applicationFinanceType)
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
@@ -946,7 +936,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(locationPerPartner)
                 .append(stateAid)
                 .append(includeYourOrganisationSection)
-                .append(internationalOrganisationsAllowed)
                 .append(grantClaimMaximums)
                 .append(applicationFinanceType)
                 .append(includeProjectGrowthTable)

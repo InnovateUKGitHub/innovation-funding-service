@@ -10,8 +10,7 @@ public class CompetitionOrganisationConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne()
-    @JoinColumn(name="competition_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "competitionOrganisationConfig" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Competition competition;
 
     @Column(name = "international_organisations_allowed")
@@ -31,6 +30,10 @@ public class CompetitionOrganisationConfig {
 
     public Competition getCompetition() {
         return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
     }
 
     public Boolean getInternationalOrganisationsAllowed() {

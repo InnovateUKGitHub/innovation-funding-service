@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.mapper.CompetitionDocumentMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -50,8 +49,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "leadTechnologist.name", target = "leadTechnologistName"),
             @Mapping(source = "executive.name", target = "executiveName"),
             @Mapping(source = "createdBy.name", target = "createdBy"),
-            @Mapping(source = "modifiedBy.name", target = "modifiedBy"),
-            @Mapping(source = "competitionOrganisationConfig.internationalOrganisationsAllowed", target = "internationalOrganisationsAllowed")
+            @Mapping(source = "modifiedBy.name", target = "modifiedBy")
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
@@ -62,8 +60,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "template", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
             @Mapping(target = "panelDate", ignore = true),
-            @Mapping(target = "projectStages", ignore = true),
-            @Mapping(target = "competitionOrganisationConfig", ignore = true)
+            @Mapping(target = "projectStages", ignore = true)
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 
@@ -82,11 +79,6 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
                 .map(stage -> mapProjectSetupStageToProjectStage(stage, competition))
                 .collect(Collectors.toList())
         );
-    }
-
-    @AfterMapping
-    public void setInternationalOrganisationsAllowed(@MappingTarget Competition competition, CompetitionResource resource) {
-        competition.setCompetitionOrganisationConfig(new CompetitionOrganisationConfig(competition, resource.getInternationalOrganisationsAllowed()));
     }
 
     private ProjectStages mapProjectSetupStageToProjectStage(ProjectSetupStage projectSetupStage, Competition competition) {
