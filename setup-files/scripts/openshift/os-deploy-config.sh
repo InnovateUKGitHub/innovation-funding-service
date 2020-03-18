@@ -39,7 +39,7 @@ function applyRoutes {
     oc apply -f $(getBuildLocation)/routes/idp-route.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/routes/shib-route.yml ${SVC_ACCOUNT_CLAUSE}
 
-    if $(isNamedEnvironment ${TARGET}); then
+    if ! $(isNamedEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/routes/mail-route.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 }
