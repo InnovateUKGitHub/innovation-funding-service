@@ -25,8 +25,6 @@ public class OrganisationDocs {
             fieldWithPath("organisationTypeDescription").description("Description of the organisation type").optional(),
             fieldWithPath("international").description("The organisation is located outside UK.").optional(),
             fieldWithPath("internationalRegistrationNumber").description("The international organisation registration number.").optional()
-
-
     };
 
     public static final OrganisationResourceBuilder organisationResourceBuilder = newOrganisationResource()

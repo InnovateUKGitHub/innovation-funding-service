@@ -27,5 +27,4 @@ public class AddressDocs {
             .withCounty("regular county")
             .withPostcode("PD65OQ")
             .withCountry("");
-
 }

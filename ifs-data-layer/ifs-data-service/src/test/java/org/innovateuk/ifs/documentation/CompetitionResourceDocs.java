@@ -84,8 +84,6 @@ public class CompetitionResourceDocs {
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
             fieldWithPath("modifiedOn").description("when the competition was modified").optional()
-//            fieldWithPath("internationalOrganisationsAllowed").description("when the competition was open for international organisations").optional(),
-//            fieldWithPath("internationalLeadOrganisationAllowed").description("when the competition allows an international organisation to be the lead").optional()
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -126,6 +124,4 @@ public class CompetitionResourceDocs {
             .withIncludeJesForm(true)
             .withFundingType(FundingType.PROCUREMENT)
             .withCompetitionTerms((FileEntryResource) null);
-//            .withInternationalOrganisationAllowed(false)
-//            .internationalLeadOrganisationAllowed(false);
 }
