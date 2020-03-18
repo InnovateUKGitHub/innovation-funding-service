@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.acc.AccMonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.grants.GrantsMonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -13,7 +13,6 @@ import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -92,7 +91,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
 
     @Autowired
-    private AccMonitoringOfficerInviteRepository accMonitoringOfficerInviteRepository;
+    private GrantsMonitoringOfficerInviteRepository grantsMonitoringOfficerInviteRepository;
 
     @Autowired
     private StakeholderRepository stakeholderRepository;
@@ -151,7 +150,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     .andOnSuccessReturn(() -> user);
         }
 
-        if(accMonitoringOfficerInviteRepository.existsByHash(hash)) {
+        if(grantsMonitoringOfficerInviteRepository.existsByHash(hash)) {
             return activateUser(user)
                     .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
                     .andOnSuccessReturn(() -> user);

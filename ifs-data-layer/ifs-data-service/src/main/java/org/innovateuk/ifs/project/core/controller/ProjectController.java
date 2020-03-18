@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.DISPLAY_PROJECT_TEAM_ROLES;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PERMISSION_TO_VIEW_PROJECT_ROLES;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -42,7 +46,12 @@ public class ProjectController {
 
     @GetMapping("/{projectId}/project-users")
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable long projectId) {
-        return projectService.getProjectUsers(projectId).toGetResponse();
+        return projectService.getProjectUsersByProjectIdAndRoleIn(projectId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList())).toGetResponse();
+    }
+
+    @GetMapping("/{projectId}/display-project-users")
+    public RestResult<List<ProjectUserResource>> getDisplayProjectUsers(@PathVariable long projectId) {
+        return projectService.getProjectUsersByProjectIdAndRoleIn(projectId, DISPLAY_PROJECT_TEAM_ROLES.stream().collect(Collectors.toList())).toGetResponse();
     }
 
     @GetMapping("/{projectId}/get-organisation-by-user/{userId}")

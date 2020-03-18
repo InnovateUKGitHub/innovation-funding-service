@@ -122,7 +122,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Add people to your project."
                                 : "The people on your project.",
-                        projectComplete ? format("/project/%d/readonly", project.getId())
+                        projectComplete ? format("/project/%d/team", project.getId())
                                 : format("/project/%d/team", project.getId()),
                         sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
                         statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))

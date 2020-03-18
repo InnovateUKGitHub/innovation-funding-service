@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -48,6 +45,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(long projectId) {
         return projectRestService.getProjectUsersForProject(projectId).getSuccess();
+    }
+
+    @Override
+    public List<ProjectUserResource> getDisplayProjectUsersForProject(long projectId) {
+        return projectRestService.getDisplayProjectUsersForProject(projectId).getSuccess();
     }
 
     @Override
@@ -129,10 +131,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
-//        split into a project get team and get all users
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
-                user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());
-        return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
+//        refactor this later on, dont need this service just call rest service everywhere
+        OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, user.getId()).getSuccess();
+        return organisationResource.getId();
     }
 }

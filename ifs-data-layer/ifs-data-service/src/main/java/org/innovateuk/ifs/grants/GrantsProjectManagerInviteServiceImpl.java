@@ -1,14 +1,13 @@
-package org.innovateuk.ifs.project.invite.transactional;
+package org.innovateuk.ifs.grants;
 
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.invite.repository.AccProjectManagerInviteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
-public class AccProjectManagerInviteServiceImpl extends AccInviteServiceImpl implements AccProjectManagerInviteService {
+public class GrantsProjectManagerInviteServiceImpl extends GrantsInviteServiceImpl implements GrantsProjectManagerInviteService {
 
     @Autowired
     private AccProjectManagerInviteRepository accProjectManagerInviteRepository;

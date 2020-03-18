@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.acc;
+package org.innovateuk.ifs.grants;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -11,16 +11,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class AccInvite<T extends AccInvite<T>> extends ProjectInvite<T> {
+public class GrantsInvite<T extends GrantsInvite<T>> extends ProjectInvite<T> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private InviteOrganisation inviteOrganisation;
 
-    public AccInvite() {
+    public GrantsInvite() {
     }
 
-    public AccInvite(final String name, final String email, final String hash, final InviteOrganisation inviteOrganisation, final Project project, final InviteStatus status) {
+    public GrantsInvite(final String name, final String email, final String hash, final InviteOrganisation inviteOrganisation, final Project project, final InviteStatus status) {
         super(name, email, hash, project, status);
         this.inviteOrganisation = inviteOrganisation;
     }

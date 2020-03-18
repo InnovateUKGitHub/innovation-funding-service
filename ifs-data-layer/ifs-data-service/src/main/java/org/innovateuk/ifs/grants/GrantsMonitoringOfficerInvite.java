@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.acc;
+package org.innovateuk.ifs.grants;
 
 import org.innovateuk.ifs.competition.domain.ResendableInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -15,12 +15,12 @@ import java.time.ZonedDateTime;
  */
 @Entity
 @DiscriminatorValue("ACC_MONITORING_OFFICER")
-public class AccMonitoringOfficerInvite extends Invite<Void, AccMonitoringOfficerInvite> implements ResendableInvite<Void, AccMonitoringOfficerInvite> {
+public class GrantsMonitoringOfficerInvite extends Invite<Void, GrantsMonitoringOfficerInvite> implements ResendableInvite<Void, GrantsMonitoringOfficerInvite> {
 
-    public AccMonitoringOfficerInvite() {
+    public GrantsMonitoringOfficerInvite() {
     }
 
-    public AccMonitoringOfficerInvite(final String name, final String email, final String hash, final InviteStatus status) {
+    public GrantsMonitoringOfficerInvite(final String name, final String email, final String hash, final InviteStatus status) {
         super(name, email, hash, status);
     }
 
@@ -34,7 +34,7 @@ public class AccMonitoringOfficerInvite extends Invite<Void, AccMonitoringOffice
     }
 
     @Override
-    public AccMonitoringOfficerInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {
+    public GrantsMonitoringOfficerInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {
         return doSend(sentBy, sentOn);
     }
 }

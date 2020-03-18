@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.repository.BaseMonitoringOfficerRepository;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -63,10 +63,10 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ProjectProcessRepository projectProcessRepository;
 
     @Autowired
-    private BaseMonitoringOfficerRepository monitoringOfficerRepository;
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
-        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
+        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();
     }
 
@@ -86,7 +86,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
-        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, userId, organisationId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList()));
         return partnerProjectUser != null;
     }
 

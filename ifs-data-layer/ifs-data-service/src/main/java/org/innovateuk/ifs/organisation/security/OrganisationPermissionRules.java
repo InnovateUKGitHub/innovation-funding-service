@@ -8,9 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
-import org.innovateuk.ifs.project.monitoring.domain.BaseMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.monitoring.repository.BaseMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
@@ -43,7 +40,7 @@ public class OrganisationPermissionRules {
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
-    private BaseMonitoringOfficerRepository projectMonitoringOfficerRepository;
+    private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
     public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
@@ -57,7 +54,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        List<BaseMonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
+        List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());
         return getMonitoringOfficersOrganisationIds(projectMonitoringOfficers).contains(organisation.getId());
     }
 
@@ -125,7 +122,7 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Project Partners can see the Partner Organisations within their Projects")
     public boolean projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(OrganisationResource organisation, UserResource user) {
 
-        List<ProjectUser> projectRoles = projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+        List<ProjectUser> projectRoles = projectUserRepository.findByUserId(user.getId());
 
         return projectRoles.stream().anyMatch(projectUser -> {
             List<PartnerOrganisation> partnerOrganisations = projectUser.getProject().getPartnerOrganisations();
@@ -145,7 +142,7 @@ public class OrganisationPermissionRules {
         return organisation.getUsers().isEmpty();
     }
 
-    private List<Long> getMonitoringOfficersOrganisationIds(List<BaseMonitoringOfficer> projectMonitoringOfficers) {
+    private List<Long> getMonitoringOfficersOrganisationIds(List<MonitoringOfficer> projectMonitoringOfficers) {
         List<Long> monitoringOfficersOrganisationIds = new ArrayList<>();
         projectMonitoringOfficers.forEach(pmo -> {
             pmo.getProject()

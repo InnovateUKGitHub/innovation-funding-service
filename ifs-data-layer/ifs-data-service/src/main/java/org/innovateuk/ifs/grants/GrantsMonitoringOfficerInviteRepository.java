@@ -1,10 +1,9 @@
-package org.innovateuk.ifs.acc;
+package org.innovateuk.ifs.grants;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 
-public interface AccMonitoringOfficerInviteRepository extends InviteRepository<AccMonitoringOfficerInvite> {
+public interface GrantsMonitoringOfficerInviteRepository extends InviteRepository<GrantsMonitoringOfficerInvite> {
 
     boolean existsByStatusAndEmail(InviteStatus status, String email);
 

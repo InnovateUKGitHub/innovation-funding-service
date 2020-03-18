@@ -139,8 +139,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<List<ProjectUserResource>> getProjectUsers(long projectId) {
-        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
+    public ServiceResult<List<ProjectUserResource>> getProjectUsersByProjectIdAndRoleIn(long projectId, List<ProjectParticipantRole> projectParticipantRoles) {
+        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId, projectParticipantRoles), projectUserMapper::mapToResource));
     }
 
     @Override
@@ -168,7 +168,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId) {
-        ProjectUser projectUser = projectUserRepository.findOneByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_PARTNER_ROLES.stream().collect(Collectors.toList()));
+        ProjectUser projectUser = projectUserRepository.findFirstByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList()));
         if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findById(projectUser.getOrganisation().getId()).orElse(null)));
         } else {
@@ -367,7 +367,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(projectRepository.findOneByApplicationId(applicationId), notFoundError(Project.class, applicationId));
     }
 
-    private List<ProjectUser> getProjectUsersByProjectId(Long projectId) {
-        return projectUserRepository.findByProjectIdAndRoleIsIn(projectId, TEAM_PROJECT_USER_ROLES.stream().collect(toList()));
+    private List<ProjectUser> getProjectUsersByProjectId(Long projectId, List<ProjectParticipantRole> projectParticipantRoles) {
+        return projectUserRepository.findByProjectIdAndRoleIsIn(projectId, projectParticipantRoles);
     }
 }

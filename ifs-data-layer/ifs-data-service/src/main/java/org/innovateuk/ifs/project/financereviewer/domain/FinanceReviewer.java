@@ -15,7 +15,11 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.FINA
  */
 @Entity
 @DiscriminatorValue("FINANCE_REVIEWER")
-public class FinanceReviewer extends BaseFinanceReviewer {
+public class FinanceReviewer extends ProjectParticipant {
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "projectId", referencedColumnName = "id")
+    private Project project;
 
     public FinanceReviewer() {
         super(null, FINANCE_REVIEWER);
@@ -23,6 +27,12 @@ public class FinanceReviewer extends BaseFinanceReviewer {
 
     public FinanceReviewer(User user, Project project) {
         super(user, FINANCE_REVIEWER);
+        this.project = project;
+    }
+
+    @Override
+    public Project getProcess() {
+        return project;
     }
 
     @Override

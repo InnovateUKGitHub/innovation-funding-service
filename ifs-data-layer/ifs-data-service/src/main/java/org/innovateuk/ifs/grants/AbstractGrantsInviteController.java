@@ -1,14 +1,13 @@
-package org.innovateuk.ifs.project.invite.controller;
+package org.innovateuk.ifs.grants;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
-import org.innovateuk.ifs.project.invite.transactional.AccInviteService;
 import org.springframework.web.bind.annotation.*;
 
-public abstract class AbstractAccInviteController {
+public abstract class AbstractGrantsInviteController {
 
-    protected abstract AccInviteService getInviteService();
+    protected abstract GrantsInviteService getInviteService();
 
     @PostMapping
     public RestResult<Void> invitePartnerOrganisation(@PathVariable long projectId, @RequestBody SendProjectPartnerInviteResource inviteOrganisationResource) {

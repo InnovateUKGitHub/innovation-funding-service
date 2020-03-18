@@ -96,14 +96,6 @@ ShibCompatValidUser On
       require shibboleth
     </Location>
 
-    <Location ~ "/acc-user/.*">
-      AuthType shibboleth
-      ShibRequireSession Off
-      ShibRequestSetting isPassive On
-      ShibRequestSetting applicationId default
-      require shibboleth
-    </Location>
-
   <Location /error>
     AuthType shibboleth
     ShibRequireSession Off

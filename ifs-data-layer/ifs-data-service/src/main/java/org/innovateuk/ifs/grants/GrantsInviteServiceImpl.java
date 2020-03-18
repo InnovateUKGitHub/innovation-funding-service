@@ -1,6 +1,5 @@
-package org.innovateuk.ifs.project.invite.transactional;
+package org.innovateuk.ifs.grants;
 
-import org.innovateuk.ifs.acc.AccInvite;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
@@ -15,6 +14,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.domain.ProjectPartnerInvite;
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
+import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -29,11 +29,12 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.grants.GrantsInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public abstract class AccInviteServiceImpl extends BaseTransactionalService implements AccInviteService {
+public abstract class GrantsInviteServiceImpl extends BaseTransactionalService implements GrantsInviteService {
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
@@ -60,7 +61,7 @@ public abstract class AccInviteServiceImpl extends BaseTransactionalService impl
         INVITE_PROJECT_PARTNER_ORGANISATION
     }
 
-    public abstract InviteRepository<AccInvite> getInviteRepository();
+    public abstract InviteRepository<GrantsInvite> getInviteRepository();
 
     public abstract ProjectParticipantRole getProjectParticipantRole();
 
@@ -72,42 +73,42 @@ public abstract class AccInviteServiceImpl extends BaseTransactionalService impl
                     inviteOrganisation.setOrganisationName(invite.getOrganisationName());
                     inviteOrganisation = inviteOrganisationRepository.save(inviteOrganisation);
 
-                    AccInvite accInvite = new AccInvite();
-                    accInvite.setInviteOrganisation(inviteOrganisation);
-                    accInvite.setEmail(invite.getEmail());
-                    accInvite.setName(invite.getUserName());
-                    accInvite.setHash(generateInviteHash());
-                    accInvite.setTarget(project);
+                    GrantsInvite grantsInvite = new GrantsInvite();
+                    grantsInvite.setInviteOrganisation(inviteOrganisation);
+                    grantsInvite.setEmail(invite.getEmail());
+                    grantsInvite.setName(invite.getUserName());
+                    grantsInvite.setHash(generateInviteHash());
+                    grantsInvite.setTarget(project);
 
-                    accInvite = getInviteRepository().save(accInvite);
-                    return sendInviteNotification(accInvite)
+                    grantsInvite = getInviteRepository().save(grantsInvite);
+                    return sendInviteNotification(grantsInvite)
                             .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
                 })
         );
     }
 
-    private ServiceResult<AccInvite> sendInviteNotification(AccInvite accInvite) {
-        return find(accInvite.getTarget().getLeadOrganisation(), notFoundError(Organisation.class)).andOnSuccess(leadOrganisation -> {
+    private ServiceResult<GrantsInvite> sendInviteNotification(GrantsInvite grantsInvite) {
+        return find(grantsInvite.getTarget().getLeadOrganisation(), notFoundError(Organisation.class)).andOnSuccess(leadOrganisation -> {
             NotificationSource from = systemNotificationSource;
-            NotificationTarget to = new UserNotificationTarget(accInvite.getName(), accInvite.getEmail());
+            NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-            // Change to acc link
+            // Change to grants link
             Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("inviteUrl", String.format("%s/acc-user/project/%d/finance-contact/%s/accept", webBaseUrl, accInvite.getProject().getId(), accInvite.getHash()));
-            notificationArguments.put("applicationId", accInvite.getTarget().getApplication().getId());
-            notificationArguments.put("projectName", accInvite.getTarget().getName());
+            notificationArguments.put("inviteUrl", String.format("%s/grants-user/project/%d/finance-contact/%s/accept", webBaseUrl, grantsInvite.getProject().getId(), grantsInvite.getHash()));
+            notificationArguments.put("applicationId", grantsInvite.getTarget().getApplication().getId());
+            notificationArguments.put("projectName", grantsInvite.getTarget().getName());
             notificationArguments.put("leadOrganisationName", leadOrganisation.getOrganisation().getName());
 
-            Notification notification = new Notification(from, singletonList(to), ProjectPartnerInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+            Notification notification = new Notification(from, singletonList(to), INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
 
             return notificationService.sendNotificationWithFlush(notification, EMAIL)
-                    .andOnSuccessReturn(() -> accInvite);
+                    .andOnSuccessReturn(() -> grantsInvite);
         });
     }
 
     @Override
     public ServiceResult<Void> resendInvite(long inviteId) {
-        return find(getInviteRepository().findById(inviteId), notFoundError(AccInvite.class, inviteId))
+        return find(getInviteRepository().findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
                 .andOnSuccess(this::sendInviteNotification)
                 .andOnSuccessReturnVoid((sentInvite) -> sentInvite.resend(loggedInUserSupplier.get(), ZonedDateTime.now()));
     }
@@ -120,26 +121,26 @@ public abstract class AccInviteServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<SentProjectPartnerInviteResource> getInviteByHash(String hash) {
-        return find(getInviteRepository().getByHash(hash), notFoundError(AccInvite.class, hash))
+        return find(getInviteRepository().getByHash(hash), notFoundError(GrantsInvite.class, hash))
                 .andOnSuccessReturn(this::mapToSentResource);
     }
 
-    private SentProjectPartnerInviteResource mapToSentResource(AccInvite accInvite) {
-        return new SentProjectPartnerInviteResource(accInvite.getId(),
-                accInvite.getSentOn(),
-                accInvite.getProject().getName(),
-                ofNullable(accInvite.getUser()).map(User::getId).orElse(null),
-                accInvite.getStatus(),
-                accInvite.getInviteOrganisation().getOrganisationName(),
-                accInvite.getName(),
-                accInvite.getEmail(),
-                accInvite.getProject().getApplication().getId());
+    private SentProjectPartnerInviteResource mapToSentResource(GrantsInvite grantsInvite) {
+        return new SentProjectPartnerInviteResource(grantsInvite.getId(),
+                grantsInvite.getSentOn(),
+                grantsInvite.getProject().getName(),
+                ofNullable(grantsInvite.getUser()).map(User::getId).orElse(null),
+                grantsInvite.getStatus(),
+                grantsInvite.getInviteOrganisation().getOrganisationName(),
+                grantsInvite.getName(),
+                grantsInvite.getEmail(),
+                grantsInvite.getProject().getApplication().getId());
     }
 
 
     @Override
     public ServiceResult<Void> acceptInvite(long inviteId, long organisationId) {
-        return find(getInviteRepository().findById(inviteId), notFoundError(AccInvite.class, inviteId))
+        return find(getInviteRepository().findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
                 .andOnSuccess(invite ->
                         find(organisation(organisationId))
                                 .andOnSuccess((organisation) -> {

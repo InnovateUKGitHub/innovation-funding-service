@@ -1,20 +1,19 @@
-package org.innovateuk.ifs.project.invite.transactional;
+package org.innovateuk.ifs.grants;
 
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.invite.repository.AccFinanceContactInviteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccFinanceContactInviteServiceImpl extends AccInviteServiceImpl implements AccFinanceContactInviteService {
+public class GrantsFinanceContactInviteServiceImpl extends GrantsInviteServiceImpl implements GrantsFinanceContactInviteService {
 
     @Autowired
-    private AccFinanceContactInviteRepository accFinanceContactInviteRepository;
+    private GrantsFinanceContactInviteRepository grantsFinanceContactInviteRepository;
 
     @Override
     public InviteRepository getInviteRepository() {
-        return accFinanceContactInviteRepository;
+        return grantsFinanceContactInviteRepository;
     }
 
     @Override
