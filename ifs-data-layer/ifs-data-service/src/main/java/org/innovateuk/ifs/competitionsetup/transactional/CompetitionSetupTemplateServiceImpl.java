@@ -154,7 +154,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setApplicationFinanceType(template.getApplicationFinanceType());
         return competition;
     }
-    
+
     private Competition setDefaultAssessorPayAndCount(Competition competition) {
         if (competition.getAssessorCount() == null) {
             Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
