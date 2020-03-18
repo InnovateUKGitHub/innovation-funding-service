@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.grants.GrantsMonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.grants.repository.GrantsMonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;

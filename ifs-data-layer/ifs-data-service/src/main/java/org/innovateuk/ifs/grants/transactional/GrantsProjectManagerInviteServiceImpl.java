@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.transactional;
 
+import org.innovateuk.ifs.grants.repository.GrantsProjectManagerInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,11 @@ import org.springframework.stereotype.Service;
 public class GrantsProjectManagerInviteServiceImpl extends GrantsInviteServiceImpl implements GrantsProjectManagerInviteService {
 
     @Autowired
-    private AccProjectManagerInviteRepository accProjectManagerInviteRepository;
+    private GrantsProjectManagerInviteRepository grantsProjectManagerInviteRepository;
 
     @Override
     public InviteRepository getInviteRepository() {
-        return accProjectManagerInviteRepository;
+        return grantsProjectManagerInviteRepository;
     }
 
     @Override

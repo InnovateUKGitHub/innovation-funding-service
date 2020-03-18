@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.grants.transactional.GrantsInviteService;
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.springframework.web.bind.annotation.*;

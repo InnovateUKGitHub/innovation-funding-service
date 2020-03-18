@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.domain;
 
 import org.innovateuk.ifs.competition.domain.ResendableInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;

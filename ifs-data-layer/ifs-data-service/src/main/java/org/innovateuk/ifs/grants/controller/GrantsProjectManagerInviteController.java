@@ -1,5 +1,7 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.controller;
 
+import org.innovateuk.ifs.grants.transactional.GrantsInviteService;
+import org.innovateuk.ifs.grants.transactional.GrantsProjectManagerInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

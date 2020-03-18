@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.invite.resource.SendProjectPartnerInviteResource;

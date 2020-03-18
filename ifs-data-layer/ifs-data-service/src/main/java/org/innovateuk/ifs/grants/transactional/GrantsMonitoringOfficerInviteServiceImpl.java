@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.transactional;
 
+import org.innovateuk.ifs.grants.repository.GrantsMonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.springframework.beans.factory.annotation.Autowired;

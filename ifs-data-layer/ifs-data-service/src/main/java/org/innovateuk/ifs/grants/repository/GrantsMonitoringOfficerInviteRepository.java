@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.grants;
+package org.innovateuk.ifs.grants.repository;
 
+import org.innovateuk.ifs.grants.domain.GrantsMonitoringOfficerInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 
