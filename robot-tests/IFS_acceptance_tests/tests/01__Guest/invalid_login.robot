@@ -10,57 +10,46 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Email persists with correct email address and wrong password
     [Documentation]    INFUND-703
-    [Tags]
     ${lead_applicant}    ${incorrect_password}
 
 Email persists with correct email address and invalid password
     [Documentation]    INFUND-703
-    [Tags]
     ${lead_applicant}    ${lower_case_password}
 
 Email persists with correct email address and empty password
     [Documentation]    INFUND-703
-    [Tags]
     ${lead_applicant}    ${EMPTY}
 
 Email persists with wrong email address and correct password
     [Documentation]    INFUND-703
-    [Tags]
     ${valid_email2}    ${correct_password}
 
 Email persists with wrong email address and wrong password
     [Documentation]    INFUND-703
-    [Tags]
     ${valid_email2}    ${incorrect_password}
 
 Email persists with wrong email address and invalid password
     [Documentation]    INFUND-703
-    [Tags]
     ${valid_email2}    ${lower_case_password}
 
 Email persists with wrong email address and empty password
     [Documentation]    INFUND-703
-    [Tags]
     ${valid_email2}    ${EMPTY}
 
 Email persists with invalid email address and correct password
     [Documentation]    INFUND-703
-    [Tags]
     ${invalid_email_plain}    ${correct_password}
 
 Email persists with invalid email address and wrong password
     [Documentation]    INFUND-703
-    [Tags]
     ${invalid_email_plain}    ${incorrect_password}
 
 Email persists with invalid email address and invalid password
     [Documentation]    INFUND-703
-    [Tags]
     ${invalid_email_plain}    ${lower_case_password}
 
 Email persists with invalid email address and empty password
     [Documentation]    INFUND-703
-    [Tags]
     ${invalid_email_plain}    ${EMPTY}
 
 *** Keywords ***

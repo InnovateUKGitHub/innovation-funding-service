@@ -25,27 +25,23 @@ Back to the dashboard link
 
 Server-side validations: DOI
     [Documentation]    INFUND-3715  IFS-1947  INFUND-7060  IFS-3942
-    [Tags]
     Given the user navigate to DOI page
     When the user clicks the button/link     jQuery = button:contains("Save and return to your declaration of interest")
     Then the user should see the proper validation messages triggered
 
 Server-side validations when Yes selected at yes/no
     [Documentation]    INFUND-3715  IFS-1947  INFUND-7060  IFS-3942
-    [Tags]
     Given the user select Yes radio button option
     When the user clicks the button/link       jQuery = button:contains("Save and return to your declaration of interest")
     Then the user should see the proper validation messages
 
 Client-side validations
     [Documentation]    INFUND-3715
-    [Tags]
     Given the user correctly fills out the role, principle employer and accurate fields
     Then the user should not see the validation messages
 
 Successful save for the DOI form
     [Documentation]    INFUND-3715  INFUND-5432
-    [Tags]
     Given the user clicks the button/link    jQuery = button:contains("Save and return to your declaration of interest")
     When the user should be redirected to the correct page    ${assessment_declaration_url}
     Then the user should see the correct DOI details saved
@@ -53,7 +49,6 @@ Successful save for the DOI form
 
 the user checks for the update DOI message
     [Documentation]  IFS-3941
-    [Tags]
     [Setup]  Save DOI current modified date
     Given the user clicks the button/link   link = Dashboard
     When the user updates the DOI modified date
