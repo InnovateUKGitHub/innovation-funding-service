@@ -109,14 +109,11 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
     @Override
     public ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId) {
         Optional<MonitoringOfficer> monitoringOfficer = monitoringOfficerRepository.findOneByProjectIdAndRole(projectId, ProjectParticipantRole.MONITORING_OFFICER);
-//        return find(projectRepository.findById(projectId), notFoundError(Project.class))
-//                .andOnSuccess(project -> {
-                    if (monitoringOfficer.isPresent()) {
-                        return toMonitoringOfficerResource(monitoringOfficer.get(), projectId);
-                    } else {
-                        return legacyMonitoringOfficer(projectId);
-                    }
-//                });
+        if (monitoringOfficer.isPresent()) {
+            return toMonitoringOfficerResource(monitoringOfficer.get(), projectId);
+        } else {
+            return legacyMonitoringOfficer(projectId);
+        }
     }
 
     @Override

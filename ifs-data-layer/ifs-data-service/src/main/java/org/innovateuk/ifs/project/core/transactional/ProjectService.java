@@ -43,13 +43,13 @@ public interface ProjectService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<List<ProjectUserResource>> getProjectUsersByProjectIdAndRoleIn(long projectId, List<ProjectParticipantRole> projectParticipantRoles);
 
-// 	@PostAuthorize("hasPermission(returnObject, 'READ')")
+ 	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ADD_PARTNER')")
     ServiceResult<ProjectUser> addPartner(long projectId, long userId, long organisationId);
 
-//    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getLeadOrganisation(long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
