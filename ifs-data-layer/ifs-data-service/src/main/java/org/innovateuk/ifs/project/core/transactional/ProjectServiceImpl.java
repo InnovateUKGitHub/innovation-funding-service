@@ -168,7 +168,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId) {
-        ProjectUser projectUser = projectUserRepository.findFirstByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList()));
+        ProjectUser projectUser = projectUserRepository.findFirstByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         if (projectUser != null && projectUser.getOrganisation() != null) {
             return serviceSuccess(organisationMapper.mapToResource(organisationRepository.findById(projectUser.getOrganisation().getId()).orElse(null)));
         } else {

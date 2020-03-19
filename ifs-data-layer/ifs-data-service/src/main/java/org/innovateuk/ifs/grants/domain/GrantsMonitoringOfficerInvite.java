@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.grants.domain;
 
-import org.innovateuk.ifs.competition.domain.ResendableInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.project.core.domain.Project;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.time.ZonedDateTime;
 
 
 /**
@@ -15,26 +12,12 @@ import java.time.ZonedDateTime;
  */
 @Entity
 @DiscriminatorValue("ACC_MONITORING_OFFICER")
-public class GrantsMonitoringOfficerInvite extends Invite<Void, GrantsMonitoringOfficerInvite> implements ResendableInvite<Void, GrantsMonitoringOfficerInvite> {
+public class GrantsMonitoringOfficerInvite extends GrantsInvite<GrantsMonitoringOfficerInvite> {
 
     public GrantsMonitoringOfficerInvite() {
     }
 
-    public GrantsMonitoringOfficerInvite(final String name, final String email, final String hash, final InviteStatus status) {
-        super(name, email, hash, status);
-    }
-
-    @Override
-    public Void getTarget() {
-        return null;
-    }
-
-    @Override
-    public void setTarget(Void target) {
-    }
-
-    @Override
-    public GrantsMonitoringOfficerInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {
-        return doSend(sentBy, sentOn);
+    public GrantsMonitoringOfficerInvite(final String name, final String email, final String hash, final Project project, final InviteStatus status) {
+        super(name, email, hash, null, project, status);
     }
 }

@@ -28,10 +28,8 @@ public enum ProjectParticipantRole implements ParticipantRole {
 
     public static final EnumSet<ProjectParticipantRole> DISPLAY_PROJECT_TEAM_ROLES = EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT);
 
-    public  static final EnumSet<ProjectParticipantRole> PERMISSION_TO_VIEW_PROJECT_ROLES =EnumSet.of(PROJECT_PARTNER, PROJECT_MANAGER, PROJECT_FINANCE_CONTACT, ACC_PROJECT_MANAGER, ACC_PROJECT_FINANCE_CONTACT, ACC_MONITORING_OFFICER);
-
     public static final EnumSet<ProjectParticipantRole> PROJECT_MONITORING_OFFICER_ROLES =
-            EnumSet.of(MONITORING_OFFICER);
+            EnumSet.of(MONITORING_OFFICER, ACC_MONITORING_OFFICER);
 
     private final long id;
     private final String name;

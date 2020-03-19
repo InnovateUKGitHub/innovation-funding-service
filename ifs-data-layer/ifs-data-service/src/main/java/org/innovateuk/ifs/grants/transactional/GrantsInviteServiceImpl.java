@@ -23,14 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
-import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.grants.transactional.GrantsInviteServiceImpl.Notifications.INVITE_PROJECT_PARTNER_ORGANISATION;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -42,9 +38,6 @@ public abstract class GrantsInviteServiceImpl extends BaseTransactionalService i
 
     @Autowired
     private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
 
     @Autowired
     private ProjectInviteValidator projectInviteValidator;
@@ -65,6 +58,8 @@ public abstract class GrantsInviteServiceImpl extends BaseTransactionalService i
     public abstract InviteRepository<GrantsInvite> getInviteRepository();
 
     public abstract ProjectParticipantRole getProjectParticipantRole();
+
+    public abstract Notification getNotification(GrantsInvite grantsInvite);
 
     @Override
     public ServiceResult<Void> sendInvite(long projectId, SendProjectPartnerInviteResource invite) {
@@ -90,17 +85,9 @@ public abstract class GrantsInviteServiceImpl extends BaseTransactionalService i
 
     private ServiceResult<GrantsInvite> sendInviteNotification(GrantsInvite grantsInvite) {
         return find(grantsInvite.getTarget().getLeadOrganisation(), notFoundError(Organisation.class)).andOnSuccess(leadOrganisation -> {
-            NotificationSource from = systemNotificationSource;
             NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-            // Change to grants link
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("inviteUrl", String.format("%s/grants-user/project/%d/finance-contact/%s/accept", webBaseUrl, grantsInvite.getProject().getId(), grantsInvite.getHash()));
-            notificationArguments.put("applicationId", grantsInvite.getTarget().getApplication().getId());
-            notificationArguments.put("projectName", grantsInvite.getTarget().getName());
-            notificationArguments.put("leadOrganisationName", leadOrganisation.getOrganisation().getName());
-
-            Notification notification = new Notification(from, singletonList(to), INVITE_PROJECT_PARTNER_ORGANISATION, notificationArguments);
+            Notification notification = getNotification(grantsInvite);
 
             return notificationService.sendNotificationWithFlush(notification, EMAIL)
                     .andOnSuccessReturn(() -> grantsInvite);

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.innovateuk.ifs.invite.domain.BaseUserInvite;
 import org.innovateuk.ifs.invite.domain.InvitedParticipant;
+import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  */
 @Entity
 @DiscriminatorValue("PROJECT_USER")
-public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, BaseUserInvite, ProjectParticipantRole> {
+public class ProjectUser extends ProjectParticipant implements InvitedParticipant<Project, ProjectUserInvite, ProjectParticipantRole> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
@@ -26,7 +26,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id", referencedColumnName = "id")
-    private BaseUserInvite invite;
+    private ProjectUserInvite invite;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId", referencedColumnName = "id")
@@ -57,7 +57,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
     }
 
     @Override
-    public BaseUserInvite getInvite() {
+    public ProjectUserInvite getInvite() {
         return invite;
     }
 
@@ -101,7 +101,7 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
         return getRole().isProjectManager();
     }
 
-    public void setInvite(BaseUserInvite invite) {
+    public void setInvite(ProjectUserInvite invite) {
         this.invite = invite;
     }
 

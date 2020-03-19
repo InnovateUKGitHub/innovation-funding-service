@@ -66,7 +66,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private MonitoringOfficerRepository monitoringOfficerRepository;
 
     protected boolean isPartner(long projectId, long userId) {
-        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList()));
+        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();
     }
 
@@ -86,7 +86,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
-        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, userId, organisationId, PERMISSION_TO_VIEW_PROJECT_ROLES.stream().collect(Collectors.toList()));
+        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, userId, organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return partnerProjectUser != null;
     }
 
