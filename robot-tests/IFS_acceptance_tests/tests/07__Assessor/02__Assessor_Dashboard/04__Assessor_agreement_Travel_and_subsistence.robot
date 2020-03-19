@@ -16,14 +16,12 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Travel and subsistence rates
     [Documentation]    INFUND-7061
-    [Tags]
     Given the user clicks the button/link  link = travel and subsistence rates
     Then the user should see travel and subsistence rates
     [Teardown]   the user clicks the button/link    link = ${ASSESSOR_DASHBOARD_TITLE}
 
 Cancel returns you back to the dashboard
     [Documentation]    INFUND-8009
-    [Tags]
     Given The user should see the element                     jQuery = .message-alert a:contains('your assessor agreement')    #his checks the alert message on the top of the page
     And the user clicks the button/link                       jQuery = a:contains("your assessor agreement")
     When the user clicks the button/link                      jQuery = a:contains("Cancel")
@@ -32,13 +30,11 @@ Cancel returns you back to the dashboard
 
 Back button takes you to the previous page
     [Documentation]    INFUND-8009
-    [Tags]
     Given the user clicks the button/link                     link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
 
 Assessor agreement
     [Documentation]    INFUND-1481
-    [Tags]
     Given the user opens assessor agreement in new window
     When the user clicks the button/link                      jQuery = button:contains("Save and return to assessments")
     Then the user should be redirected to the correct page    ${ASSESSOR_DASHBOARD_URL}
@@ -51,7 +47,6 @@ Agreement Confirmation
 
 Find out more about our travel and subsistence rates
     [Documentation]    INFUND-8806
-    [Tags]
     [Setup]    The user navigates to the page                 ${Server}/assessment/profile/agreement
     Given the user should see the element                     jQuery = p:contains("Find out more about our travel and subsistence rates")
     When the user clicks the button/link                      link = travel and subsistence rates
