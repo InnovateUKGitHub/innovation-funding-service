@@ -17,13 +17,11 @@ Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
 Invalid Login
-    [Tags]
     Given the user is not logged-in
     Then the user cannot login with their new details    ${lead_applicant}    ${passw0rd2}
 
 Valid login with double role as Applicant
     [Documentation]    INFUND-1479
-    [Tags]
     Given The guest user inserts user email and password      &{Multiple_user_credentials}
     And The guest user clicks the log-in button
     Then the user should see multiple role dashboard view
@@ -88,7 +86,6 @@ Reset password
 
 Reset password user enters new psw
     [Documentation]    INFUND-1889
-    [Tags]
     [Setup]    Clear the login fields
     When the user enters text to a text field              id = password  ${newPassw0rd}
     And the user clicks the button/link                    css = button[type="submit"]
