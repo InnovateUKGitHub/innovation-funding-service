@@ -3,6 +3,7 @@ package org.innovateuk.ifs.profile.populator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.profile.viewmodel.OrganisationProfileViewModel;
 import org.innovateuk.ifs.profile.viewmodel.UserProfileViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class UserProfilePopulator {
         } else {
             name = user.getName();
         }
-        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.getAllowMarketingEmails(), organisationViewModels);
+        return new UserProfileViewModel(name, user.getPhoneNumber(), user.getEmail(), user.getAllowMarketingEmails(), organisationViewModels, user.hasAnyRoles(Role.MONITORING_OFFICER));
     }
 
     private OrganisationProfileViewModel toOrganisationViewModel(OrganisationResource organisation) {
