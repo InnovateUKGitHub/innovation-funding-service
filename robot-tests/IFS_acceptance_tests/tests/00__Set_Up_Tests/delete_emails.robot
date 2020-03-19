@@ -7,5 +7,4 @@ Resource         ../../resources/defaultResources.robot
 *** Test Cases ***
 Empty test mailboxes to set up for email enabled test runs
     [Documentation]    INFUND-3822
-    [Tags]
     Delete the emails from the local test mailbox

@@ -161,7 +161,7 @@
 </th:block>
 
 <th:block th:fragment="labour_row (id, row)">
-    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}">
+    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}" class="form-group-row-validated">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
