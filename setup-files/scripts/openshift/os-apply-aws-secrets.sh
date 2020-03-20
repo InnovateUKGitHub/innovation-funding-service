@@ -8,6 +8,7 @@ VERSION=$3
 USE_IAM=$4 # Use IAM to authenticate, instead of instead of local credentials.
 : ${USE_IAM:="true"} # Default to IAM. This will work on bamboo, but not on developer machines.
 LOCAL_AWS_PROFILE="iukorg" # If USE_IAM = "true" then this the profile we use for local credentials.
+SSO_SP=$5
 
 # Common functions
 . $(dirname $0)/deploy-functions.sh
@@ -21,6 +22,7 @@ echo "PROJECT="${PROJECT}
 echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
 echo "USE_IAM"=${USE_IAM}
+echo "SSO_SP="${SSO_SP}
 
 if [[ ${USE_IAM} != "true" && ${USE_IAM} != "false" ]]; then
     echo "IF USE_IAM is specified it must be either 'true' or 'false'"
@@ -80,6 +82,23 @@ function valueFromAws() {
     done
 }
 
+function loadSpDataFromAws() {
+    echo "Configuring SSO SP's"
+    echo "sp's" ${SSO_SP}
+    IFS="," read -r -a SPS <<< ${SSO_SP}
+    for sp in ${SPS[@]}; do
+      echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> "$sp.properties"
+      echo "$(valueFromAws /CI/IFS/$sp/CERT)" >> "$sp.crt"
+      text=$text" --from-file="$sp".properties="$sp".properties"
+      text=$text" --from-file="$sp".crt="$sp".crt"
+    done
+
+    CREATE_OPTIONS=($text ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml)
+    APPLY_OPTIONS=(-f - ${SVC_ACCOUNT_CLAUSE})
+
+    eval oc create secret generic sp-secrets "${CREATE_OPTIONS[@]}" | eval oc apply "${APPLY_OPTIONS[@]}"
+}
+
 # Create a file with aws credentials which mounted to the aws-cli docker image.
 docker stop ssm-access-container || true
 docker image rm ssm-access-image || true
@@ -94,5 +113,7 @@ else
 fi
 
 applyAwsCerts $([[ ${TARGET} == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
+
+loadSpDataFromAws
 
 docker stop ssm-access-container || true

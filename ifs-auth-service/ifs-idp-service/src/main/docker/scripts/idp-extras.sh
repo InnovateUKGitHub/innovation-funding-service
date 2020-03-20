@@ -2,7 +2,7 @@
 
 . shibboleth-setup-functions.sh
 
-LOCAL_CONFIG_DIR=/etc/shibboleth/extras
+CONFIG_DIR=/var/shibboleth
 SHIBBOLETH_CONF_DIR=/etc/shibboleth
 
 # Configuration

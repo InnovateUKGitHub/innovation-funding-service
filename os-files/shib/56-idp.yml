@@ -24,12 +24,17 @@ items:
           - name: idp-keys-volume
             secret:
               secretName: idp-keys-secrets
+          - name: shibboleth-volume
+            secret:
+              secretName: sp-secrets
         containers:
         - image: innovateuk/idp-service:${idpVersion}
           name: idp
           volumeMounts:
             - name: idp-keys-volume
               mountPath: /var/certs
+            - name: shibboleth-volume
+              mountPath: /var/shibboleth
           livenessProbe:
             httpGet:
               path: /idp/status
