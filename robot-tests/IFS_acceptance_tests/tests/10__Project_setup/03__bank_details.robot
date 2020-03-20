@@ -68,7 +68,6 @@ Academic user is able to submit bank details
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5543
-    [Tags]
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the internal user is able to see updated statuses
@@ -95,7 +94,6 @@ Bank details verified by Experian require no action by the Project Finance
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
-    [Tags]
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then project finance is able to view progress of partners bank details
 
@@ -109,7 +107,6 @@ IFS Admin can see Bank Details
 
 Other internal users do not have access to bank details export
     [Documentation]  INFUND-5852
-    [Tags]
     [Setup]  log in as a different user                                 &{Comp_admin1_credentials}
     Given the user navigates to the page                                ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should not see the element                            link = Export all bank details
@@ -117,7 +114,6 @@ Other internal users do not have access to bank details export
 
 Project Finance user can export bank details
     [Documentation]  INFUND-5852
-    [Tags]
     Given the project finance user downloads the bank details
     Then the user opens the excel and checks the content
     [Teardown]  remove the file from the operating system  bank_details.csv
@@ -188,7 +184,7 @@ The non lead partner submits bank details
     the user should not see an error in the page
     the user should not see the element          jQuery = p:contains("The bank account details below are being")
     the user clicks the button/link              jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link              id = submit-bank-details
+    the user clicks the button/link              id = submit-bank-details-model-button
 
 Verify bank details blank submission page validation for non-lead partner
     partner fills in his bank details         ${Grade_Crossing_Partner_Email}   ${Grade_Crossing_Project_Id}  00000123  000004
@@ -228,7 +224,7 @@ The academic user is able to enter bank details
     the user clicks the button/link                  jquery = button:contains("Cancel")
     the user should not see the element              jQuery = p:contains("The bank account details below are being reviewed")
     the user clicks the button/link                  jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                  id = submit-bank-details
+    the user clicks the button/link                  id = submit-bank-details-model-button
 
 The academic user navigates to the bank details page
     the user clicks the button/link                    jQuery = .projects-in-setup a:contains("${Grade_Crossing_Application_Title}")
@@ -298,7 +294,7 @@ Verify bank details experian validations
 
 Verify bank details blank submission page validation
     the user clicks the button/link                   jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                   id = submit-bank-details
+    the user clicks the button/link                   id = submit-bank-details-model-button
     the user should see a field and summary error     Please enter a valid account number.
     the user should see a field and summary error     Please enter a valid sort code.
     the user should see a field and summary error     Search using a valid postcode or enter the address manually.
@@ -306,7 +302,7 @@ Verify bank details blank submission page validation
     the user enters text to a text field              name = sortCode         36912
     the user clicks the button/link                   jQuery = button:contains("Enter address manually")
     the user clicks the button/link                   jQuery = button:contains("Submit bank account details")
-    the user clicks the button/link                   id = submit-bank-details
+    the user clicks the button/link                   id = submit-bank-details-model-button
     the user should see a summary error               The first line of the address cannot be blank.
     the user should see a summary error               The postcode cannot be blank.
     the user should see a summary error               The town cannot be blank.
@@ -339,7 +335,7 @@ The user submits the bank account details
     the user enters text to a text field  name = accountNumber  ${account_number}
     the user enters text to a text field  name = sortCode  ${sort_code}
     the user clicks the button/link       jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link       id = submit-bank-details
+    the user clicks the button/link       id = submit-bank-details-model-button
 
 The project finance user downloads the bank details
     the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/competition/${PS_Competition_Id}/status/bank-details/export  ${DOWNLOAD_FOLDER}/bank_details.csv

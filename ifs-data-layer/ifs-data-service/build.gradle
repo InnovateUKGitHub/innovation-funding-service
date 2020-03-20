@@ -54,9 +54,9 @@ def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
 deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
 
-createContainer.portBindings = ['8086:8080','9006:8000']
+createContainer.portBindings = ['8086:8080', '9006:8000']
 
-createContainer.networkAliases=["ifs-data-service"]
+createContainer.networkAliases = ["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 
@@ -118,13 +118,13 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.3'
     compile "com.opencsv:opencsv:4.3.2"
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-sil-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-file", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-data-layer:data-service-notifications", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-sil-resources", configuration: 'testArtifacts')
 
     testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testCompile "com.openpojo:openpojo:0.8.4"
@@ -158,16 +158,30 @@ test {
 }
 
 
-task syncShib(type:Exec) {
+task syncShib(type: Exec) {
     commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
-task prepareAnonymisedDB(dependsOn:[":docker:ifs-mysql:ifs-database:updateIfsWebUser", syncShib]) {
+
+task syncUser() {
+    doLast {
+        if (project.hasProperty('email')) {
+            exec {
+                commandLine 'docker', 'exec', 'ldap', '/usr/local/bin/ldap-sync-user.sh', project.getProperty('email')
+            }
+        } else {
+            throw new GradleException('Please enter a valid email. Example, ./gradlew syncUser -Pemail=steve.smith@empire.com')
+        }
+    }
+}
+
+
+task prepareAnonymisedDB(dependsOn: [":docker:ifs-mysql:ifs-database:updateIfsWebUser", syncShib]) {
     syncShib.mustRunAfter ":docker:ifs-mysql:ifs-database:updateIfsWebUser"
 }
 
 flywayClean.dependsOn applyProfiles
 flywayMigrate.dependsOn processResources
 
-ext.ifsDataServiceRestBaseURL="http://data-service:8080"
-ext.serverPort=8080
+ext.ifsDataServiceRestBaseURL = "http://data-service:8080"
+ext.serverPort = 8080

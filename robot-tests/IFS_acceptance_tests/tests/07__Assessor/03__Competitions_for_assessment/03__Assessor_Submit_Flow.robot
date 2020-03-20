@@ -43,7 +43,6 @@ Summary:All the sections are present
 
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]
     Given The user should see the element    jQuery = .deadline:contains("days left to submit")
     # And the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
@@ -110,7 +109,6 @@ Summary:Assessor should be able to re-edit before submit
 
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
-    [Tags]
     When The user clicks the button/link                  jQuery = .govuk-button:contains("Save assessment")
     And the user should see a field and summary error     Please indicate your decision.
     And The user enters text to a text field              id = feedback    ${EMPTY}
@@ -121,7 +119,6 @@ Summary:Funding Decision Validations
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
-    [Tags]
     [Setup]    browser validations have been disabled
     Given the user enters multiple strings into a text field     id = feedback  t  5001
     When the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")
@@ -156,7 +153,7 @@ User Saves the Assessment as Not Recommended
 Submit Assessments
     [Documentation]    INFUND-5739  INFUND-3743  INFUND-6358
     [Tags]  HappyPath
-    Given the user should see the element          jQuery = .in-progress li:nth-child(7):contains("Intelligent Building")
+    Given the user should see the element          jQuery = .in-progress li:contains("Intelligent Building")
     And the user should see that the element is disabled    id = submit-assessment-button
     When the user submits the assessment
     Then the user should see correct details after assessment submitted
@@ -224,25 +221,24 @@ the user enter text more than maximum word count limit
 the user should see correct details
     the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     the user should see the element                     jQuery = .status-msg:contains("Assessed")
-    the user should see the element                     css = li:nth-child(7) .positive
-    the user should see the element                     css = li:nth-child(7) input[type = "checkbox"] ~ label
-    the application should have the correct status      css = .progress-list li:nth-child(7)    Assessed
+    the user should see the element                     jQuery = li:contains("Intelligent Building") .positive
+    the user should see the element                     jQuery = li:contains("Intelligent Building") input[type = "checkbox"] ~ label
+    the application should have the correct status      jQuery = li:contains("Intelligent Building")    Assessed
 
 the user should see assessment as not recommended details
-    The user should see the element                      css = li:nth-child(6) .negative
-    the user should see the element                      css = li:nth-child(6) input[type = "checkbox"] ~ label
-    the application should have the correct status       css = .progress-list li:nth-child(6)    Assessed
-    the application should have the correct status       css = .progress-list li:nth-child(7)    Assessed
+    The user should see the element                      jQuery = li:contains("Park living") .negative
+    the user should see the element                      jQuery = li:contains("Park living") input[type = "checkbox"] ~ label
+    the application should have the correct status       jQuery = li:contains("Park living")    Assessed
 
 the user should see correct details after assessment submitted
     the application should have the correct status    css = div.submitted    Submitted assessment
-    the user should see the element                   css = li:nth-child(6) input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    the user should see the element                   jQuery = li:contains("Park living") input[type = "checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
     the user should see the element                   jQuery = h4:contains("Intelligent Building")
     the user should see the element                   jQuery = strong:contains("98")
     the user should not see the element               link = Intelligent Building
 
 the user submits the assessment
-    the user clicks the button/link            css = .in-progress li:nth-child(7) input[type = "checkbox"] ~ label
+    the user clicks the button/link            jQuery = .in-progress li:contains("Intelligent Building") input[type = "checkbox"] ~ label
     the user clicks the button/link            jQuery = button:contains("Submit assessments")
     the user clicks the button/link            jQuery = button:contains("Cancel")
     the user clicks the button/link            jQuery = button:contains("Submit assessments")

@@ -7,8 +7,7 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           long organisationId,
                                           long competitionId,
                                           String applicationName,
-                                          String url,
-                                          boolean fundingLevelPercentageToggle) {
+                                          String url) {
         super(
                 applicationId,
                 sectionId,
@@ -26,8 +25,7 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 0,
                 0,
                 url,
-                false,
-                fundingLevelPercentageToggle
+                false
         );
     }
 }

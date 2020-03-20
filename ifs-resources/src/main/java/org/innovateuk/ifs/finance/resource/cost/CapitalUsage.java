@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;

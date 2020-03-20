@@ -5,10 +5,10 @@ set -e
 PROJECT=$1
 TARGET=$2
 VERSION=$3
-AWS_PROFILE=$4 # Name of aws profile that identifies credentials and config - required for named environments
-AWS_ACCESS_KEY=$5 # Secret key that allows access to AWS parameter store - required for named environments
-AWS_ACCESS_KEY_ID=$6 # Secret key id that allows access to AWS parameter store - required for named environments
-SSO_SP=$7
+USE_IAM=$4 # Use IAM to authenticate, instead of instead of local credentials.
+: ${USE_IAM:="true"} # Default to IAM. This will work on bamboo, but not on developer machines.
+LOCAL_AWS_PROFILE="iukorg" # If USE_IAM = "true" then this the profile we use for local credentials.
+SSO_SP=$5
 
 # Common functions
 . $(dirname $0)/deploy-functions.sh
@@ -21,14 +21,13 @@ echo "Applying secrets for $PROJECT Openshift project"
 echo "PROJECT="${PROJECT}
 echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
-echo "AWS_PROFILE="${AWS_PROFILE}
+echo "USE_IAM"=${USE_IAM}
 echo "SSO_SP="${SSO_SP}
 
-if [[ -z ${AWS_PROFILE} || -z ${AWS_ACCESS_KEY} || -z ${AWS_ACCESS_KEY_ID} ]]; then
-    echo "AWS_PROFILE, AWS_ACCESS_KEY, AWS_ACCESS_KEY_ID must be specified"
+if [[ ${USE_IAM} != "true" && ${USE_IAM} != "false" ]]; then
+    echo "IF USE_IAM is specified it must be either 'true' or 'false'"
     exit 1
 fi
-
 
 # Apply the certs from the aws
 # $1 the discriminator
@@ -101,16 +100,17 @@ function loadSpDataFromAws() {
 }
 
 # Create a file with aws credentials which mounted to the aws-cli docker image.
-mkdir -p ifs-auth-service/aws/
-echo -e "[$AWS_PROFILE]" > ifs-auth-service/aws/credentials
-echo -e "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ifs-auth-service/aws/credentials
-echo -e "aws_secret_access_key = $AWS_ACCESS_KEY" >> ifs-auth-service/aws/credentials
-
-# Start a docker image that can communicate with the aws
 docker stop ssm-access-container || true
 docker image rm ssm-access-image || true
 docker build --tag="ssm-access-image" docker/aws-cli
-docker run -id --rm -e AWS_PROFILE=${AWS_PROFILE} -v $PWD/ifs-auth-service/aws:/root/.aws --name ssm-access-container ssm-access-image
+
+if [[ "$USE_IAM" = "false" ]]; then
+    # Use the local developer AWS credentials as the mount point for this container
+    docker run -id --rm -e AWS_PROFILE=${LOCAL_AWS_PROFILE} -v ~/.aws:/root/.aws --name ssm-access-container ssm-access-image
+else
+    # Authentication delegated to IAM. Will only work on AWS containers
+    docker run -id --rm --name ssm-access-container ssm-access-image
+fi
 
 applyAwsCerts $([[ ${TARGET} == "ifs-prod" ]] && echo "PROD"|| echo "NON-PROD")
 

@@ -590,7 +590,7 @@ lead uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
     the user can remove the uploaded file  deleteDocument  ${valid_pdf}
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Set up your project

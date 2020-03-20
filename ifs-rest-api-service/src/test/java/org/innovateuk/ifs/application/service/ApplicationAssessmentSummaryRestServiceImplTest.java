@@ -2,16 +2,19 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationAvailableAssessorResource.Sort;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Test;
 
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 import static org.junit.Assert.assertSame;
 
 public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestServiceUnitTest<ApplicationAssessmentSummaryRestServiceImpl> {
@@ -27,18 +30,19 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
 
     @Test
     public void getAvailableAssessors() {
-        ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
+        ApplicationAvailableAssessorPageResource expected = new ApplicationAvailableAssessorPageResource();
 
         Long applicationId = 1L;
         int page = 2;
         int size = 3;
         String assessorNameFilter = "Name";
+        Sort sort = Sort.ASSESSOR;
 
-        setupGetWithRestResultExpectations(format("%s/%s/available-assessors?page=%s&size=%s&assessorNameFilter=%s",
+        setupGetWithRestResultExpectations(format("%s/%s/available-assessors?page=%s&size=%s&assessorNameFilter=%s&sort=%s",
                 applicationAssessmentSummaryRestUrl, applicationId, page,
-                size, assessorNameFilter), ApplicationAssessorPageResource.class, expected);
+                size, assessorNameFilter, sort), ApplicationAvailableAssessorPageResource.class, expected);
 
-        assertSame(expected, service.getAvailableAssessors(applicationId, page, size, assessorNameFilter).getSuccess());
+        assertSame(expected, service.getAvailableAssessors(applicationId, page, size, assessorNameFilter, sort).getSuccess());
     }
 
     @Test
@@ -66,4 +70,17 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
 
         assertSame(expected, service.getApplicationAssessmentSummary(applicationId).getSuccess());
     }
+
+    @Test
+    public void getAvailableAssessorIds() {
+        List<Long> expected = asList(1L, 2L);
+        long applicationId = 1L;
+        String assessorNameFilter = "Name";
+
+        setupGetWithRestResultExpectations(format("%s/%s/available-assessors-ids?assessorNameFilter=%s",
+                applicationAssessmentSummaryRestUrl, applicationId, assessorNameFilter), longsListType(), expected);
+
+        assertSame(expected, service.getAvailableAssessorsIds(applicationId, assessorNameFilter).getSuccess());
+    }
+
 }

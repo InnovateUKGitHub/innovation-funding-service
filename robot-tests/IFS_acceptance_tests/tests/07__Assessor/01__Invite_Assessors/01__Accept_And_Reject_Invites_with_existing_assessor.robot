@@ -49,7 +49,6 @@ ${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_
 *** Test Cases ***
 Assessor dashboard contains the correct competitions
     [Documentation]    INFUND-3716  INFUND-4950  INFUND-6899
-    [Tags]
     Given the user should see the element     jQuery = h1:contains(${ASSESSOR_DASHBOARD_TITLE})
     Then The user should not see the element  jQuery = h2:contains("Competitions for assessment")
     And The user should see the element       jQuery = h2:contains("Upcoming competitions to assess") ~ ul a:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
@@ -57,7 +56,6 @@ Assessor dashboard contains the correct competitions
 
 User can view the competition brief
     [Documentation]    INFUND-5494
-    [Tags]
     Given the user clicks the button/link        link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     When the user clicks the button/link         link = View competition brief
     Then The user should get a competition brief window
@@ -66,14 +64,12 @@ User can view the competition brief
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107  INFUND-6455
-    [Tags]
     Given the user clicks the button/link                      link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the total calculation in dashboard should be correct  Upcoming competitions to assess    //*[@class = "upcoming-to-assess"]/div/ul/li
     And the total calculation in dashboard should be correct   Invitations to assess    //*[@class = "invite-to-assess"]/div/ul/li
 
 Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631  INFUND-5157  INFUND-6455
-    [Tags]
     Given the user clicks the button/link                   link = ${READY_TO_OPEN_COMPETITION_NAME}
     And the user checks for field validations
     When the assessor fills all fields with valid inputs
@@ -83,7 +79,6 @@ Existing assessor: Reject invitation from Dashboard
 
 Existing Assessor tries to accept expired invitation in closed assessment
     [Documentation]    INFUND-943
-    [Tags]
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
     And the user should not see the element        link = ${IN_ASSESSMENT_COMPETITION_NAME}
@@ -93,7 +88,6 @@ Existing Assessor tries to accept expired invitation in closed assessment
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500  INFUND-6455
-    [Tags]
     [Setup]    Logout as user
     Given the assessor accepts the invite
     When the user clicks the button/link      jQuery = a:contains("Click here to sign in")
@@ -103,7 +97,6 @@ Existing assessor: Accept invitation from the invite link
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718  INFUND-5001
-    [Tags]
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     And the assessor should see the correct date
     When The user clicks the button/link           link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
@@ -113,7 +106,6 @@ Upcoming competition should be visible
 
 The assessment period starts the comp moves to the comp for assessment
     [Documentation]  INFUND-3718  INFUND-3720
-    [Tags]
     Given the assessment start period changes in the db in the past       ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     And the user should not see the element                               jQuery = h2:contains("Upcoming competitions to assess")
@@ -129,7 +121,6 @@ Number of days remaining until assessment submission
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
-    [Tags]
     Given the user navigates to the page   ${Invitation_nonexisting_assessor2}
     And the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link    jQuery = button:contains("Confirm")
@@ -137,7 +128,6 @@ Registered user should not allowed to accept other assessor invite
 
 The user should not be able to accept or reject the same applications
     [Documentation]    INFUND-5165
-    [Tags]
     Given the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
     Then the assessor shouldn't be able to accept the accepted competition
@@ -145,7 +135,6 @@ The user should not be able to accept or reject the same applications
 
 The Admin's invites overview should be updated for accepted invites
     [Documentation]    INFUND-6450
-    [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link     jQuery = a:contains("Invite assessors to assess the competition")

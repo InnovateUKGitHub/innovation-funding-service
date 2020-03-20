@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -79,9 +80,8 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
     }
 
     @Test
-    public void applicationCountSummariesByCompetitionIdAndInnovationArea() {
+    public void getApplicationCountSummariesByCompetitionIdAndAssessorId() {
         Long competitionId = 1L;
-        long innovationAreaId = 54L;
         long assessorId = 20L;
         loginCompAdmin();
 
@@ -89,9 +89,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
                 .with(id(null))
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withName("Warp Drive")
-                .withNoInnovationAreaApplicable(false)
                 .withCompetition(competitionRepository.findById(competitionId).get())
-                .withInnovationArea(innovationAreaRepository.findById(innovationAreaId).get())
                 .build();
         application.getApplicationProcess().setProcessState(ApplicationState.SUBMITTED);
 
@@ -109,12 +107,12 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
 
         flushAndClearSession();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 6, "", "", ofNullable(innovationAreaId)).getSuccess();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, 6, Sort.APPLICATION_NUMBER, "").getSuccess();
 
-        assertEquals(1, counts.getTotalElements());
+        assertEquals(6, counts.getTotalElements());
         assertEquals(0, counts.getNumber());
         assertEquals(1, counts.getTotalPages());
-        ApplicationCountSummaryResource summaryResource = counts.getContent().get(0);
+        ApplicationCountSummaryResource summaryResource = counts.getContent().stream().filter(row -> row.getName().equals(application.getName())).findAny().get();
         assertEquals((long) application.getId(), (long) summaryResource.getId());
         assertEquals("Warp Drive", summaryResource.getName());
         assertEquals("Empire Ltd", summaryResource.getLeadOrganisation());

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Invite assessors - ${model.competitionName}|" />
     </head>
 
     <body class="govuk-template__body competition-management competition-overview">
@@ -205,7 +205,6 @@
                                                     </label>
                                                 </div>
                                             </div>
-
                                         </td>
                                         <td class="govuk-table__cell">
                                             <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})}" th:if="${assessor.id}"

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 
 import javax.validation.constraints.*;
@@ -16,7 +15,9 @@ import java.math.RoundingMode;
  */
 public class LabourCost extends AbstractFinanceRowItem {
 
-    public interface YearlyWorkingDays {}
+    public interface YearlyWorkingDays {
+    }
+
     private Long id;
 
     private String name;
@@ -32,10 +33,10 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @Min.List({
-            @Min(value=1, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
-            @Min(value=1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+            @Min(value = 1, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
+            @Min(value = 1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     })
-    @Max(value=365, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
+    @Max(value = 365, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer labourDays;
 
@@ -56,11 +57,11 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.id = id;
         this.name = name;
         this.role = role;
-        if(StringUtils.isNotEmpty(this.name)
+        if (StringUtils.isNotEmpty(this.name)
                 && this.name.equals(LabourCostCategory.WORKING_DAYS_KEY)
-                && StringUtils.isEmpty(this.role)){
+                && StringUtils.isEmpty(this.role)) {
             // User is only allowed to enter the labourDays on this instance, so need to fill the role field for validation.
-            this.role =LabourCostCategory.WORKING_DAYS_PER_YEAR;
+            this.role = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         }
         this.grossEmployeeCost = grossEmployeeCost;
         this.labourDays = labourDays;
@@ -96,11 +97,11 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     private BigDecimal getRatePerDay(Integer workingDaysPerYear) {
-        if(grossEmployeeCost == null || workingDaysPerYear == null) {
+        if (grossEmployeeCost == null || workingDaysPerYear == null) {
             return null;
         }
 
-        if(workingDaysPerYear.equals(0)) {
+        if (workingDaysPerYear.equals(0)) {
             return BigDecimal.ZERO;
         }
 
@@ -131,7 +132,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     private void calculateTotal() {
-        if(rate!=null && labourDays!=null) {
+        if (rate != null && labourDays != null) {
             total = rate.multiply(new BigDecimal(labourDays));
         } else {
             total = BigDecimal.ZERO;
@@ -163,7 +164,7 @@ public class LabourCost extends AbstractFinanceRowItem {
         this.description = description;
     }
 
-    public BigDecimal totalDiff(Integer workingDaysPerYear, LabourCost otherOverhead){
+    public BigDecimal totalDiff(Integer workingDaysPerYear, LabourCost otherOverhead) {
         BigDecimal thisTotal = getTotal(workingDaysPerYear) == null ? BigDecimal.ZERO : getTotal(workingDaysPerYear);
         BigDecimal otherTotal = otherOverhead.getTotal(workingDaysPerYear) == null ? BigDecimal.ZERO : otherOverhead.getTotal(workingDaysPerYear);
         return thisTotal.subtract(otherTotal);
