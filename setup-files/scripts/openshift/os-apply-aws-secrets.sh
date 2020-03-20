@@ -87,8 +87,8 @@ function loadSpDataFromAws() {
     echo "sp" ${SSO_SP}
     export IFS=","
     for sp in "${SSO_SP}"; do
-      echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> $sp.properties
-      echo "$(valueFromAws /CI/IFS/$sp/CERT)" >> $sp.crt
+      echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> "$sp.properties"
+      echo "$(valueFromAws /CI/IFS/$sp/CERT)" >> "$sp.crt"
       text=$text" --from-file="$sp".properties="$sp".properties"
       text=$text" --from-file="$sp".crt="$sp".crt"
     done
