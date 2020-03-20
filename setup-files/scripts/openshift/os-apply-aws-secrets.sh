@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -e
 
 PROJECT=$1
 TARGET=$2
@@ -85,8 +85,8 @@ function valueFromAws() {
 function loadSpDataFromAws() {
     echo "Configuring SSO SP's"
     echo "sp's" ${SSO_SP}
-    IFS="," read -r -a SPS <<< "${SSO_SP}"
-    for sp in "${SPS}"; do
+    IFS="," read -r -a SPS <<< ${SSO_SP}
+    for sp in ${SPS}; do
       echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> "$sp.properties"
       echo "$(valueFromAws /CI/IFS/$sp/CERT)" >> "$sp.crt"
       text=$text" --from-file="$sp".properties="$sp".properties"
