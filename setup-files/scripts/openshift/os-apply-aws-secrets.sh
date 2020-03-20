@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -e
 
 PROJECT=$1
 TARGET=$2
