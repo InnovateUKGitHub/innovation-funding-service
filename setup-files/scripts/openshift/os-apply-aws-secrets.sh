@@ -85,7 +85,7 @@ function valueFromAws() {
 function loadSpDataFromAws() {
     echo "Configuring SSO SP's"
     echo "sp's" ${SSO_SP}
-    IFS="," read -r -a SPS <<< ${SSO_SP}
+    IFS="," read -r -a SPS <<< "${SSO_SP}"
     for sp in "${SPS}"; do
       echo "$(valueFromAws /CI/IFS/$sp/PROPERTY)" >> "$sp.properties"
       echo "$(valueFromAws /CI/IFS/$sp/CERT)" >> "$sp.crt"
