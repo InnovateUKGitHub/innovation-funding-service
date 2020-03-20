@@ -8,27 +8,23 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Cancel button returns to read only view
     [Documentation]    INFUND-8009
-    [Tags]
     Given the user clicks the button/link                   jQuery = a:contains("Cancel")
     Then the user should be redirected to the correct page  ${assessment_details_url}
 
 Back button returns to assessor dashboard
     [Documentation]    INFUND-8009
-    [Tags]
     Given the user clicks the button/link                   link = ${ASSESSOR_DASHBOARD_TITLE}
     Then the user should be redirected to the correct page  ${ASSESSOR_DASHBOARD_URL}
     [Teardown]    user opens the edit details form
 
 Back button from edit returns to read only view
     [Documentation]    INFUND-8009
-    [Tags]
     Given the user clicks the button/link  link=Your details
     Then the user should be redirected to the correct page  ${assessment_details_url}
     [Teardown]    the user clicks the button/link           jQuery = a:contains("Edit")
 
 Validations for invalid inputs
     [Documentation]    INFUND-1480
-    [Tags]
     Given the user should see the element        jQuery = h1:contains("Edit your details")
     And the user should see the element          jQuery = h3:contains("Email") ~ p:contains("bob.malone@gmail.com")
     When the user enters the invalid details
@@ -36,7 +32,6 @@ Validations for invalid inputs
 
 Valid Profile Update
     [Documentation]    INFUND-1480
-    [Tags]
     When the assessor updates profile details
     And the user clicks the button/link    jQuery = a:contains("your details")
     Then the saved changes are visible
