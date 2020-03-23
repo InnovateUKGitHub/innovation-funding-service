@@ -12,3 +12,6 @@ UPDATE competition c
 INNER JOIN competition_organisation_config cog
 SET c.competition_organisation_config_id = cog.id
 WHERE cog.temporary_competition_id = c.id;
+
+ALTER TABLE competition_organisation_config DROP FOREIGN KEY competition_organisation_config_fk;
+ALTER TABLE competition_organisation_config DROP COLUMN temporary_competition_id;
