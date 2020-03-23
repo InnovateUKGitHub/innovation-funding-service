@@ -32,7 +32,7 @@ public class Organisation {
     private OrganisationType organisationType;
 
     @Column(nullable = false)
-    private boolean international;
+    private Boolean international;
 
     @Column(name = "international_registration_number")
     private String internationalRegistrationNumber;
