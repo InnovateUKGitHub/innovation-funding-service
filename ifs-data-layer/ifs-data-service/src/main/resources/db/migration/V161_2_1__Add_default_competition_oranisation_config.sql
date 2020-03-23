@@ -7,3 +7,8 @@ FROM competition c
 WHERE c.id NOT IN (
 	SELECT cog.temporary_competition_id FROM competition_organisation_config cog
 );
+
+UPDATE competition c
+INNER JOIN competition_organisation_config cog
+SET c.competition_organisation_config_id = cog.id
+WHERE cog.temporary_competition_id = c.id;

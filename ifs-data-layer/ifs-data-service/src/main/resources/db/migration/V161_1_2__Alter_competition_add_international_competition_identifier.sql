@@ -9,8 +9,3 @@ INSERT INTO address_type VALUES (5,'INTERNATIONAL');
 ALTER TABLE competition ADD COLUMN competition_organisation_config_id BIGINT(20) DEFAULT NULL;
 ALTER TABLE competition ADD UNIQUE KEY competition_organisation_config_id_UNIQUE (competition_organisation_config_id);
 ALTER TABLE competition ADD CONSTRAINT fk_competition_organisation_config FOREIGN KEY(competition_organisation_config_id) REFERENCES competition_organisation_config(id);
-
-UPDATE competition c
-INNER JOIN competition_organisation_config cog
-SET c.competition_organisation_config_id = cog.id
-WHERE cog.temporary_competition_id = c.id;
