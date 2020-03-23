@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.management.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.JsonTestUtil;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource.Sort;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -11,10 +13,13 @@ import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestServi
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.assessment.form.ApplicationSelectionForm;
 import org.innovateuk.ifs.management.assessment.populator.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressRemoveViewModel;
 import org.innovateuk.ifs.management.assessment.viewmodel.AssessorAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.navigation.Pagination;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.util.CompressedCookieService;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -25,10 +30,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.util.Optional.empty;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasItems;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorCompetitionSummaryResourceBuilder.newAssessorCompetitionSummaryResource;
@@ -42,8 +49,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupCompressedCookieService;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -67,6 +74,13 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
     @Mock
     private AssessmentRestService assessmentRestService;
 
+    @Mock
+    private CompressedCookieService compressedCookieService;
+
+    @Before
+    public void setUpCookies() {
+        setupCompressedCookieService(compressedCookieService);
+    }
     @Override
     protected AssessmentAssessorProgressController supplyControllerUnderTest() {
         return new AssessmentAssessorProgressController();
@@ -137,10 +151,8 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionId))
                 .thenReturn(restSuccess(assessorCompetitionSummaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, assessorId, 0, 20, empty(), "", "")).thenReturn(restSuccess(expectedPageResource));
-        when(assessmentRestService.createAssessment(isA(AssessmentCreateResource.class))).thenReturn(restSuccess(assessmentResource));
-
-
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionId, assessorId, 0, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, "")).thenReturn(restSuccess(asList(1L, 21L)));
 
         MvcResult result = mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
                 .andExpect(model().attributeExists("model"))
@@ -182,7 +194,18 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         assertEquals(assignedAssessments.get(2).getRejectComment(), model.getRejected().get(0).getRejectComment());
 
 
-        mockMvc.perform(post("/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign", competitionId, assessorId, applicationId))
+        AssessmentCreateResource expectedAssessmentCreateResource = newAssessmentCreateResource()
+                .withApplicationId(applicationId)
+                .withAssessorId(assessorId)
+                .build();
+
+        AssessmentResource expectedAssessmentResource = newAssessmentResource().build();
+        ApplicationSelectionForm form = new ApplicationSelectionForm();
+        form.setSelectedApplications(singletonList(applicationId));
+        when(compressedCookieService.getCookieValue(any(), eq("applicationSelectionForm_comp_1"))).thenReturn(JsonTestUtil.toJson(form));
+        when(assessmentRestService.createAssessments(singletonList(expectedAssessmentCreateResource))).thenReturn(restSuccess(singletonList(expectedAssessmentResource)));
+
+        mockMvc.perform(post("/assessment/competition/{competitionId}/assessors/{assessorId}", competitionId, assessorId))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
     }
@@ -217,9 +240,10 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
 
         when(assessorCompetitionSummaryRestService.getAssessorSummary(assessorId, competitionResource.getId())).thenReturn(restSuccess(summaryResource));
         when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionResource.getId(), assessorId, 1, 20, empty(), "", "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, 1, Sort.APPLICATION_NUMBER, "")).thenReturn(restSuccess(expectedPageResource));
+        when(applicationCountSummaryRestService.getApplicationIdsByCompetitionIdAndAssessorId(competitionResource.getId(), assessorId, "")).thenReturn(restSuccess(asList(1L, 21L)));
 
-        AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}?page=1", competitionResource.getId(), assessorId))
+        AssessorAssessmentProgressViewModel model = (AssessorAssessmentProgressViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}/assessors/{assessorId}?page=2", competitionResource.getId(), assessorId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/assessor-progress"))
                 .andExpect(model().attributeExists("model"))
@@ -239,13 +263,10 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         assertEquals(2L, model.getApplicationsView().getApplications().get(1).getSubmitted());
         assertEquals("Lead Org 2", model.getApplicationsView().getApplications().get(1).getLeadOrganisation());
 
-        Pagination actualPagination = model.getApplicationsView().getPagination();
-        assertEquals(1, actualPagination.getCurrentPage());
-        assertEquals(20,actualPagination.getPageSize());
+        PaginationViewModel actualPagination = model.getApplicationsView().getPagination();
+        assertEquals(2, actualPagination.getCurrentPage());
+        assertEquals(20,actualPagination.getSize());
         assertEquals(3, actualPagination.getTotalPages());
-        assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
-        assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
-        assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
     }
 
     @Test
@@ -259,7 +280,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         mockMvc.perform(
                 post("/assessment/competition/{competitionId}/assessors/{assessorId}/withdraw/{assessmentId}", competitionId, assessorId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s?sortField=", competitionId, assessorId)));
+                .andExpect(redirectedUrl(format("/assessment/competition/%s/assessors/%s", competitionId, assessorId)));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
@@ -275,8 +296,7 @@ public class AssessmentAssessorProgressControllerTest extends BaseControllerMock
         AssessorAssessmentProgressRemoveViewModel expectedModel = new AssessorAssessmentProgressRemoveViewModel(
                 competitionId,
                 assessorId,
-                assessmentId,
-                ""
+                assessmentId
         );
 
         mockMvc.perform(

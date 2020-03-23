@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Invite assessors - ${model.competitionName}|"/>
 </head>
 
 <body class="govuk-template__body competition-management competition-overview invite-assessors">
@@ -52,9 +52,9 @@
                 Assessors
             </h2>
             <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item">
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                     <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}"
-                       class="govuk-tabs__tab govuk-tabs__tab--selected">Find</a>
+                       class="govuk-tabs__tab">Find</a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <form method="GET">
+                <form method="GET" id="filter-assessors-form">
                     <div class="search-filters govuk-!-margin-top-6">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-0">
@@ -92,7 +92,7 @@
                                            value="">
                                 </div>
                                 <div class="govuk-grid-column-one-third">
-                                    <button class="govuk-button" >Filter</button>
+                                    <button class="govuk-button" id="assessor-filter-button">Filter</button>
                                 </div>
                             </div>
                         </fieldset>
@@ -116,6 +116,7 @@
                 </div>
 
                 <form method="POST"
+                      id="select-assessors-form"
                       th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
                       th:object="${assessorSelectionForm}"
                       data-multipage-select=""
@@ -144,7 +145,11 @@
                     </span>
                         </div>
                         <div class="govuk-grid-column-one-half select-all alignright">
-                            <button class="govuk-button govuk-!-margin-bottom-3" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorSelectionForm.selectedAssessorIds)}">
+                            <button class="govuk-button govuk-!-margin-bottom-3"
+                                    name="addSelected"
+                                    id="add-selected-assessors-to-invite-list-button"
+                                    data-submit-el=""
+                                    th:attr="disabled=${#lists.isEmpty(assessorSelectionForm.selectedAssessorIds)}">
                                 Add selected to invite list
                             </button>
                         </div>

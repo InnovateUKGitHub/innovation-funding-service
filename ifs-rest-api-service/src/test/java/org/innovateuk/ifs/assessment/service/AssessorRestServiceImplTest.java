@@ -22,7 +22,7 @@ public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<Assesso
     }
 
     @Test
-    public void createAssessorByInviteHash() throws Exception {
+    public void createAssessorByInviteHash() {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
@@ -33,9 +33,8 @@ public class AssessorRestServiceImplTest extends BaseRestServiceUnitTest<Assesso
         assertTrue(response.isSuccess());
     }
 
-
     @Test
-    public void notifyAssessors() throws Exception {
+    public void notifyAssessors() {
         long competitionId = 1L;
 
         setupPutWithRestResultExpectations(format("%s/notify-assessors/competition/%s", assessorRestUrl,

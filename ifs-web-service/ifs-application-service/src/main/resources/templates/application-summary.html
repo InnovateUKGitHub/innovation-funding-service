@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml"
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
       th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${applicationName + ' - Application overview'}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application overview - ${applicationName}|" />
     </head>
 
     <body class="govuk-template__body app-summary" th:classappend="${model.application.isOpen() ? 'is-open' : 'is-closed' }">

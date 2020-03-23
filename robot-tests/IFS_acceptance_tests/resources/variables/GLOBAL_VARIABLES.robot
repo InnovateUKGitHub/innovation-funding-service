@@ -66,6 +66,8 @@ ${OPEN_COMPETITION_APPLICATION_4_NAME}    Greenland was nearly ice-free for exte
 ${OPEN_COMPETITION_APPLICATION_4_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_4_NAME}']}
 ${OPEN_COMPETITION_APPLICATION_5_NAME}    Evolution of the global phosphorus cycle
 ${OPEN_COMPETITION_APPLICATION_5_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_5_NAME}']}
+${OPEN_COMPETITION_APPLICATION_6_NAME}    Safeguarding pollinators and their values to human well-being
+${OPEN_COMPETITION_APPLICATION_6_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_6_NAME}']}
 
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
@@ -251,11 +253,16 @@ ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables
 ${EMPIRE_LTD_NAME}         Empire Ltd
-${EMPIRE_LTD_ID}           ${organisation_ids["${EMPIRE_LTD_NAME}"]}
-${organisationLudlowName}  Ludlow
-${organisationLudlowId}    ${organisation_ids["${organisationLudlowName}"]}
-${organisationEggsName}    EGGS
-${organisationEggsId}      ${organisation_ids["${organisationEggsName}"]}
+${EMPIRE_LTD_ID}            ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}   Ludlow
+${organisationLudlowId}     ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}     EGGS
+${organisationEggsId}       ${organisation_ids["${organisationEggsName}"]}
+${organisationRedName}      Red Planet
+${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
+${organisationSmithName}    SmithZone
+${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
+
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1

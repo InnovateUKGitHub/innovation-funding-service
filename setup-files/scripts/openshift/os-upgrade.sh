@@ -70,9 +70,6 @@ function upgradeServices {
     watchSilStubStatus
 
     upgradeSurvey
-
-    upgradeEuGrantRegistration
-
 }
 
 function upgradeSurvey {
@@ -83,25 +80,11 @@ function upgradeSurvey {
     rolloutStatus "survey-svc"
 }
 
-function upgradeEuGrantRegistration {
-    oc apply -f $(getBuildLocation)/eu-grant-registration/eu-grant-registration-data-service.yml ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "eu-grant-registration-data-service"
-    oc apply -f $(getBuildLocation)/eu-grant-registration/eu-grant-registration-service.yml ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "eu-grant-registration-service"
-}
-
 function forceReloadSurvey {
     oc rollout latest dc/survey-data-service ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "survey-data-service"
     oc rollout latest dc/survey-svc ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "survey-svc"
-}
-
-function forceReloadEuGrantRegistration {
-    oc rollout latest dc/eu-grant-registration-data-service ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "eu-grant-registration-data-service"
-    oc rollout latest dc/eu-grant-registration-svc ${SVC_ACCOUNT_CLAUSE}
-    rolloutStatus "eu-grant-registration-svc"
 }
 
 function forceReload {
@@ -145,8 +128,6 @@ function forceReload {
     watchSilStubStatus
 
     forceReloadSurvey
-
-    forceReloadEuGrantRegistration
 }
 
 function watchSilStubStatus {

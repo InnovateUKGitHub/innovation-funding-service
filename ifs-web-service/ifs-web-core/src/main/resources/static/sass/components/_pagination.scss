@@ -11,6 +11,7 @@
   overflow: hidden;
   position: relative;
   text-align: center;
+  padding: 0;
 
   li {
     width: 49%;
@@ -27,11 +28,11 @@
     text-decoration: none;
 
     &:hover {
-      background: govuk-colour("grey-4");
+      background: govuk-colour("light-grey");
     }
 
     &:focus {
-      background-color: $govuk-focus-colour;
+      @include govuk-focused-text;
     }
   }
 
@@ -92,7 +93,7 @@
     }
 
     &:focus {
-      background-color: $govuk-focus-colour;
+      @include govuk-focused-text;
     }
   }
 

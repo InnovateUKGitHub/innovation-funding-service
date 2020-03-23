@@ -101,8 +101,6 @@ the application for assessment should be removed
 The order of the applications should be correct according to the status
     element should contain    css = li:nth-child(1) .msg-deadline-waiting    Pending
     element should contain    css = li:nth-child(2) .msg-deadline-waiting    Pending
-    element should contain    css = li:nth-child(3) .msg-deadline-waiting    Pending
-    element should contain    css = .progress-list li:nth-child(7) .msg-progress    In progress
     element should contain    css = .progress-list li:nth-child(5) .msg-progress    Accepted
 
 The user should get a competition brief window

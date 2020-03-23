@@ -24,52 +24,51 @@ Labour
     [Setup]    the user navigates to Your-finances page         Removing mechanical storage from server farms
     Given the user clicks the button/link                       link = Your project costs
     When the Applicant fills in the Labour costs for two rows
-    Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £104,348  jQuery = button:contains("Labour") [data-mirror^="#section-total"]  £104,348
+    And the user expands the section                            Labour
+    Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £104,348  jQuery = [data-mirror^="#section-total-labour"]  £104,348
     And the user clicks the button/link                         name = remove_cost
     And The row should be removed                               css = .labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads page with autosave
-    Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £52,174   jQuery = button:contains("Labour") [data-mirror^="#section-total"]  £52,174
+    Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £52,174   jQuery = [data-mirror^="#section-total-labour"]  £52,174
     And the applicant edits the working days field
-    Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £48,000   jQuery = button:contains("Labour") [data-mirror^="#section-total"]  £48,000
+    Then Totals should be correct                               jQuery = h4:contains("Total labour costs") [data-mirror^="#section-total"]  £48,000   jQuery = [data-mirror^="#section-total-labour"]  £48,000
     [Teardown]    the user clicks the button/link               jQuery = button:contains("Labour")
 
 Overhead costs
     [Documentation]    INFUND-192, INFUND-736, INFUND -6390 , INFUND-6788
     [Tags]  HappyPath
     # Check for No overheads costs option
-    Given the user clicks the button/link         jQuery = button:contains("Overhead costs")
+    Given the user expands the section            Overhead costs
     When The user clicks the button/link          jQuery = label:contains("No overhead costs")
-    Then the user should see the element          jQuery = button span:contains("£0")
-    And the user clicks the button/link           jQuery = button:contains("Overhead costs")
+    Then the user should see the element          jQuery = span:contains("£0")
     # Check for calculate overheads
-    When the user clicks the button/link          jQuery = button:contains("Overhead costs")
     Then the user clicks the button/link          css = [data-target="overhead-total"] label
     And the user should see the element           jQuery = a:contains("overhead calculation spreadsheet.xlsx")
     And the user should see the element           jQuery = a:contains("overhead calculation spreadsheet.ods")
     # Check for 20% Labour costs option
     When the user clicks the button/link          jQuery = button:contains("Overhead costs")
     Then the user chooses 20% overheads option
-    And admin costs total should be correct       jQuery = button:contains("Overhead costs") [data-mirror^="#section-total"]  £9,600
+    And admin costs total should be correct       jQuery = [data-mirror^="#section-total-overhead"]  £9,600
     [Teardown]  the user clicks the button/link   jQuery = button:contains("Overhead costs")
 
 Materials
     [Documentation]    INFUND-192, INFUND-736, INFUND-6390
     [Tags]  HappyPath
     When the Applicant fills the Materials fields
-    Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Materials") [data-mirror^="#section-total"]  £2,000
+    Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-material"]  £2,000
     And the user clicks the button/link            css = #material-costs-table tbody tr:nth-of-type(1) button
     And the user reloads page with autosave
-    Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]    £1,000  jQuery = button:contains("Materials") [data-mirror^="#section-total"]  £1,000
+    Then Totals should be correct                  jQuery = h4:contains("Total materials costs") [data-mirror^="#section-total"]    £1,000  jQuery = [data-mirror^="#section-total-material"]  £1,000
     [Teardown]    the user clicks the button/link  jQuery = button:contains("Materials")
 
 Capital usage
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]  HappyPath
     When the applicant fills the 'capital usage' field
-    Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £200
+    Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £200  jQuery = [data-mirror^="#section-total-capital-usage"]  £200
     And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
     And the user reloads page with autosave
-    Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £100  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £100
+    Then Totals should be correct                       jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £100  jQuery = [data-mirror^="#section-total-capital-usage"]  £100
     And the user clicks the button/link                 css = #capital-usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link       jQuery = button:contains("Capital usage")
 
@@ -77,7 +76,7 @@ Capital usage - negative total
     [Documentation]    INFUND-4879, INFUND-6390
     [Tags]  HappyPath
     When the applicant fills the 'capital usage' field to a negative value
-    Then Totals should be correct                  jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £0  jQuery = button:contains("Capital usage") [data-mirror^="#section-total"]  £0
+    Then Totals should be correct                  jQuery = h4:contains("Total capital usage costs") [data-mirror^="#section-total"]  £0  jQuery = [data-mirror^="#section-total-capital-usage"]  £0
     And the user clicks the button/link            css = #capital-usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link  jQuery = button:contains("Capital usage")
 
@@ -85,26 +84,26 @@ Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
     [Tags]  HappyPath
     When the applicant edits the Subcontracting costs section
-    Then the user should see the element             jQuery = button:contains("Subcontracting") > *:contains("£200")
-    [Teardown]    the user clicks the button/link    jQuery = button:contains("Subcontracting costs")
+    Then Wait Until Element Contains Without Screenshots    jQuery = [data-mirror^="#section-total-subcontracting"]  £200
+    [Teardown]    the user clicks the button/link           jQuery = button:contains("Subcontracting costs")
 
 Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]  HappyPath
     When the Applicant fills the Travel fields
-    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £2,000
+    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £2,000  jQuery = [data-mirror^="#section-total-travel"]  £2,000
     And the user clicks the button/link          css = #travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads page with autosave
-    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = button:contains("Travel and subsistence") [data-mirror^="#section-total"]  £1,000
+    Then Totals should be correct                jQuery = h4:contains("Total travel and subsistence costs") [data-mirror^="#section-total"]  £1,000  jQuery = [data-mirror^="#section-total-travel"]  £1,000
     [Teardown]  the user clicks the button/link  jQuery = button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]  HappyPath
     When the applicant adds one row for the other costs
-    Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Other costs") [data-mirror^="#section-total"]  £200
+    Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = [data-mirror^="#section-total-other"]  £200
     Then the user reloads page with autosave
-    Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = button:contains("Other costs") [data-mirror^="#section-total"]  £200
+    Then Totals should be correct                        jQuery = h4:contains("Total other costs") [data-mirror^="#section-total"]  £200  jQuery = [data-mirror^="#section-total-other"]  £200
     [Teardown]    the user clicks the button/link        jQuery = button:contains("Other costs")
 
 *** Keywords ***
@@ -237,7 +236,7 @@ Totals should be correct with the old styling
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Wait Until Element Contains Without Screenshots    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Element Should Contain    jQuery = button:contains("Overhead costs")    ${ADMIN_VALUE}
+    Element Should Contain    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 The row should be removed
     [Arguments]    ${ROW}

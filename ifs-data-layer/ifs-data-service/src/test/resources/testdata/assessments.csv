@@ -2,6 +2,11 @@ Assessor email,Application name,Reject Reason,Reject Comment,State,Feedback,Reco
 tera.maynard@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N,No,No
 louise.yates@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N,No,No
 paul.plum@gmail.com,Park living,\N,\N,PENDING,\N,\N,No,No
+angelo.arnold@gmail.com,Plastic reprocessing with zero waste,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+anita.ruiz@gmail.com,Plastic reprocessing with zero waste,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+bob.malone@gmail.com,Plastic reprocessing with zero waste,\N,\N,ACCEPTED,This was a fantastic application,"Very good application, quite pleased",No,No
+brandi.mccarthy@gmail.com,Plastic reprocessing with zero waste,\N,\N,ACCEPTED,This was a fantastic application,"Very good application, quite pleased",No,No
+camille.shelton@gmail.com,Plastic reprocessing with zero waste,\N,\N,ACCEPTED,This was a fantastic application,"Very good application, quite pleased",No,No
 felix.wilson@gmail.com,Intelligent water system,\N,\N,PENDING,\N,\N,No,No
 tera.maynard@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N,No,No
 louise.yates@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N,No,No
@@ -111,3 +116,24 @@ ryan.burton@gmail.com,Val is awesome 2 - Application 2,\N,\N,ACCEPTED,\N,\N,No,N
 sam.gilbert@gmail.com,Val is awesome 2 - Application 1,\N,\N,ACCEPTED,\N,\N,No,No
 sammy.klein@gmail.com,Val is awesome 2 - Application 1,\N,\N,ACCEPTED,\N,\N,No,No
 sammy.ward@gmail.com,Val is awesome 2 - Application 1,\N,\N,ACCEPTED,\N,\N,No,No
+alexis.colon@gmail.com,Low power air purification systems,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+alexis.colon@gmail.com,Molecular tree breeding,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+alexis.colon@gmail.com,Living with Virtual Reality,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+alexis.colon@gmail.com,Living with Augmented Reality,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+alexis.colon@gmail.com,Living with Bio-wearables,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+alexis.colon@gmail.com,Plastic reprocessing with zero waste,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased",No,No
+dewey.watts@gmail.com,Low power air purification systems,\N,\N,ACCEPTED,\N,\N,No,No
+dewey.watts@gmail.com,Molecular tree breeding,\N,\N,ACCEPTED,\N,\N,No,No
+dewey.watts@gmail.com,Living with Virtual Reality,\N,\N,ACCEPTED,\N,\N,No,No
+dewey.watts@gmail.com,Living with Augmented Reality,\N,\N,ACCEPTED,\N,\N,No,No
+dewey.watts@gmail.com,Living with Bio-wearables,\N,\N,ACCEPTED,\N,\N,No,No
+dewey.watts@gmail.com,Plastic reprocessing with zero waste,\N,\N,ACCEPTED,\N,\N,No,No
+clayton.edwards@gmail.com,Low power air purification systems,\N,\N,ACCEPTED,\N,\N,No,No
+clayton.edwards@gmail.com,Molecular tree breeding,\N,\N,ACCEPTED,\N,\N,No,No
+clayton.edwards@gmail.com,Living with Virtual Reality,\N,\N,ACCEPTED,\N,\N,No,No
+mabel.robinson@gmail.com,Machine learning for driverless cars,\N,\N,ACCEPTED,\N,\N,No,No
+mabel.robinson@gmail.com,Machine learning applied to the traveler experience,\N,\N,ACCEPTED,\N,\N,No,No
+paige.godfrey@gmail.com,Machine learning applied to the traveler experience,\N,\N,ACCEPTED,\N,\N,No,No
+paige.godfrey@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,ACCEPTED,\N,\N,No,No
+riley.butler@gmail.com,Machine learning for driverless cars,\N,\N,ACCEPTED,\N,\N,No,No
+riley.butler@gmail.com,Machine learning applied to the traveler experience,\N,\N,ACCEPTED,\N,\N,No,No

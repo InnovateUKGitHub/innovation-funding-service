@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Spend profile - ${model.project.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -12,7 +12,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main" th:with="project=${model.project}">
 
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to send spend profiles.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -118,7 +118,7 @@
                 </tbody>
             </table>
         </th:block>
-        <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}"
+        <a th:href="@{/project/{id}/spend-profile/total/confirmation(id=${project.getId()})}" id="submit-project-spend-profile-button"
            class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-confirm-spend-profile-totals">Submit project spend profile</a>
     </main>
 </div>

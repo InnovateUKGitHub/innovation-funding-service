@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - ' +model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.title + ' - ' + model.projectName},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body project-other-documents">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -17,7 +17,7 @@
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <div class="govuk-error-summary__body">
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
@@ -79,6 +79,7 @@
                   th:if="${model.isEditable()}"
                   th:object="${form}"
                   method="post"
+                  id="upload-document-form"
                   enctype="multipart/form-data"
                   th:with="viewmode='edit',
                            downloadUrl=@{/project/{id}/document/config/{documentConfigId}/download(documentConfigId=${model.documentConfigId},id=${model.projectId})},
@@ -111,14 +112,14 @@
             <form th:action="@{/project/{id}/document/config/{documentConfigId}(documentConfigId=${model.documentConfigId}, id=${model.projectId})}" method="post">
               <div>
                 <button th:disabled="${model.showDisabledSubmitDocumentsButton}" data-js-enabled-on-file-upload=""
-                    data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submitDocumentButton" aria-label="Submit collaboration agreement">Submit</button>
+                    data-js-modal="modal-configured-partner-document" class="govuk-button govuk-!-margin-top-6" name="submitDocument" type="submit" id="submit-document-button" aria-label="Submit collaboration agreement">Submit</button>
               </div>
             </form>
         </th:block>
 
          <th:block th:unless="${model.editable}">
             <div class="govuk-!-margin-top-6">
-                <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="button-secondary">Return to documents</a>
+                <a th:href="@{/project/{projectId}/document/all/(projectId=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
             </div>
         </th:block>
 

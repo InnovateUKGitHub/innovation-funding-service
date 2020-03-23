@@ -6,8 +6,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.organisationdetails.controller.SelectOrganisationController;
-import org.innovateuk.ifs.project.organisationdetails.viewmodel.SelectOrganisationViewModel;
+import org.innovateuk.ifs.project.organisationdetails.select.controller.SelectOrganisationController;
+import org.innovateuk.ifs.project.organisationdetails.select.viewmodel.SelectOrganisationViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -74,9 +74,9 @@ public class SelectOrganisationControllerTest extends BaseControllerMockMVCTest<
             .andReturn();
 
         SelectOrganisationViewModel selectViewModel = (SelectOrganisationViewModel) result.getModelAndView().getModel().get("model");
-        String url = "project/select-organisation";
+        String view = "project/organisationdetails/select-organisation";
 
-        assertEquals(url, result.getModelAndView().getViewName());
+        assertEquals(view, result.getModelAndView().getViewName());
         assertEquals(competitionId, selectViewModel.getCompetitionId());
         assertTrue(selectViewModel.getPartnerOrganisations().get(0).isLeadOrganisation());
         assertTrue(selectViewModel.getPartnerOrganisations().get(2).getOrganisationName()

@@ -95,7 +95,7 @@
 </th:block>
 
 <th:block th:fragment="invite-form (model, organisation)">
-    <table th:id="${'invite-user-' + organisation.id}"
+    <table th:id="|invite-user-${organisation.id}|"
            class="govuk-table govuk-!-margin-bottom-2"
            th:attr="aria-hidden=${organisation.openAddTeamMemberForm} ? 'false' : 'true'">
         <thead class="govuk-table__head">
@@ -111,14 +111,14 @@
             th:classappend="((${#fields.hasErrors('name')}) or (${#fields.hasErrors('email')})) ? 'govuk-form-group--error'">
             <td class="govuk-table__cell govuk-form-group"
                 th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="name">
+                <label class="govuk-label govuk-label--s" th:for="|${organisation.id}-name|">
                     Name
                 </label>
                 <th:block th:if="${#fields.hasErrors('name')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('name')}"
                                       th:text="${err}"/>
                 </th:block>
-                <input id="name"
+                <input th:id="|${organisation.id}-name|"
                        th:field="*{name}"
                        th:errorclass="govuk-input--error"
                        class="govuk-input govuk-input--width-30"
@@ -129,14 +129,14 @@
             </td>
             <td class="govuk-table__cell govuk-form-group"
                 th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="email">
+                <label class="govuk-label govuk-label--s" th:for="|${organisation.id}-email|">
                     Email
                 </label>
                 <th:block th:if="${#fields.hasErrors('email')}">
                                 <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
                                       th:text="${err}"/>
                 </th:block>
-                <input id="email"
+                <input th:id="|${organisation.id}-emails|"
                        th:field="*{email}"
                        th:errorclass="govuk-input--error"
                        class="govuk-input govuk-input--width-30"
@@ -148,6 +148,7 @@
             </td>
             <td class="govuk-table__cell">
                 <button name="invite-to-project"
+                        id="invite-to-project-button"
                         class="govuk-button govuk-!-margin-top-6"
                         th:value="${organisation.id}">
                     Invite to project

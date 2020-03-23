@@ -52,7 +52,7 @@
                     </div>
                     <div class="govuk-grid-row">
                         <div class="govuk-grid-column-full alignright">
-                            <button class="govuk-button govuk-!-margin-0">Filter</button>
+                            <button class="govuk-button govuk-!-margin-0" id="filter-applications">Filter</button>
                         </div>
                     </div>
                 </fieldset>
@@ -107,9 +107,9 @@
                     <fieldset class="govuk-fieldset mark-applications">
                         <legend class="govuk-visually-hidden">Mark selected applications</legend>
                         <h3 class="govuk-heading-s">Mark application as:</h3>
-                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Successful</button>
-                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="button-secondary" data-submit-el="">Unsuccessful</button>
-                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="button-secondary" data-submit-el="">On hold</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='FUNDED' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">Successful</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='UNFUNDED' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">Unsuccessful</button>
+                        <button th:disabled="${model.selectionForm.applicationIds.isEmpty()}" type="submit" value='ON_HOLD' name="fundingDecision" class="govuk-button govuk-button--secondary" data-submit-el="">On hold</button>
                     </fieldset>
                 </div>
             </div>

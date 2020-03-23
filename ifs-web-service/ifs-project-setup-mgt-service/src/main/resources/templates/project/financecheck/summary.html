@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.financeCheckSummaryResource.applicationId}: ${model.financeCheckSummaryResource.projectName} - Finance checks|"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Finance checks - ${model.financeCheckSummaryResource.projectName}|"/>
 </head>
 <body class="govuk-template__body competition-management project-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay"/>
@@ -15,7 +15,7 @@
               th:with="linkTitle='Projects in setup',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}, dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -27,6 +27,13 @@
                 by</strong></p>
         </div>
 
+        <th:block th:if="${model.isShowChangeFundingLevelPercentageAlert()}">
+            <div class="message-alert govuk-!-margin-bottom-6">
+                <p class="govuk-body">You need to review the project finances on the
+                    <a th:href="@{/project/{id}/funding-level(id=${model.financeCheckSummaryResource.projectId})}" class="govuk-link">change funding level percentage</a> page.</p>
+            </div>
+        </th:block>
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <h2 class="govuk-heading-m">Project finances</h2>
@@ -36,7 +43,11 @@
                         th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}"/>
                     </dd>
                     <th:block th:unless="${model.financeCheckSummaryResource.h2020}">
-                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Grant applied for:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Funding applied for:</dt>
+                        <dd th:unless="${model.financeCheckSummaryResource.loan}">&pound;<th:block
+                            th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.fundingAppliedFor,1,'DEFAULT')}"/>
+                        </dd>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Current amount:</dt>
                         <dt th:if="${model.financeCheckSummaryResource.loan}">Funding sought:</dt>
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks edit duration',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Finance checks edit duration - ${model.project.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body competition-management">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.project.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your project details.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             <div class="govuk-error-summary__body" th:if="${#fields.hasErrors('${form}')}">

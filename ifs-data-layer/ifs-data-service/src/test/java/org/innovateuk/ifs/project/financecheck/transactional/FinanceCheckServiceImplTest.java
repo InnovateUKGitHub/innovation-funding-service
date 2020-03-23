@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -67,6 +68,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
@@ -219,7 +221,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().withGrantClaimPercentage(BigDecimal.valueOf(20)).build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().
+                withApplication(applicationId)
+                .withGrantClaimPercentage(BigDecimal.valueOf(20)).
+                build(3);
+
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(applicationFinanceResources));
         when(partnerOrganisationRepository.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
         when(projectFinanceService.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
@@ -512,9 +520,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(3.0));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -579,9 +587,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -646,9 +654,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withFinanceOrganisationDetails(projectFinances).
                 build(2);
 
-
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(projectFinanceService.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeService.financeTotals(project.getApplication().getId())).thenReturn(serviceSuccess(emptyList()));
         when(projectFinanceService.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
@@ -697,37 +705,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                                 withFundingAmount(null, BigDecimal.valueOf(1000)).
                                 build(2)).
                         build());
-    }
-
-    private void setupFinancialAndNonFinancialTestData(boolean isIncludeGrowthTable, boolean noResponse, boolean noInput) {
-        Long turnoverFormInputId = 678L;
-        Long staffCountFormInputId = 987L;
-        Competition comp = new Competition();
-        comp.setId(competitionId);
-        Application app = new Application();
-        app.setId(applicationId);
-        app.setCompetition(comp);
-        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(app));
-
-        ProcessRole updatedBy = newProcessRole().withApplication(app).withOrganisationId(organisationId).build();
-        FormInputResponse headcount = newFormInputResponse().withValue("1").withUpdatedBy(updatedBy).build();
-        FormInputResponse turnover = newFormInputResponse().withValue("2").withUpdatedBy(updatedBy).build();
-
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).build();
-        FormInput organisationTurnoverFormInput = newFormInput().withType(ORGANISATION_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).build();
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(ORGANISATION_TURNOVER))).thenReturn(noInput ? emptyList() : asList(organisationTurnoverFormInput));
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
-
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(staffCountFormInputId).build();
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(noInput ? emptyList() : asList(financialYearEnd));
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
-        when(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(financialCount));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
     }
 
     @Test

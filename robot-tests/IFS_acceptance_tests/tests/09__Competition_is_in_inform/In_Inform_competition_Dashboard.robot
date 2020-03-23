@@ -98,7 +98,7 @@ Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
     [Tags]  HappyPath
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
-    Given the user should see the element    jQuery = .status:contains("Unsuccessful")
+    Given the user should see the element    jQuery = .status-and-action:contains("Unsuccessful")
     When the user clicks the button/link     jQuery = a:contains("${electric_application_titile}")
     And the user should see the element      jQuery = .warning-alert:contains("Your application has not been successful in this competition")
 

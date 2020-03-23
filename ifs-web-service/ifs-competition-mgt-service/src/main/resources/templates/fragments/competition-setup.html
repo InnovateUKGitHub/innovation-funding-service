@@ -111,7 +111,7 @@
 <!-- ===================Comp admin Page back button============================== -->
 <div th:fragment="setup-home">
     <div class="govuk-!-margin-top-6">
-        <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}">Return to setup overview</a>
+        <a class="govuk-button govuk-button--secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}">Return to setup overview</a>
     </div>
 </div>
 
@@ -148,7 +148,7 @@
         <p class="govuk-body">This will inform all applicants of the funding decision. If applicants are successful you cannot retract this decision.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button name="send-emails" class="govuk-button">Send email to all applicants</button>
+            <button name="send-emails" id="send-email-to-all-applicants-button" class="govuk-button">Send email to all applicants</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>

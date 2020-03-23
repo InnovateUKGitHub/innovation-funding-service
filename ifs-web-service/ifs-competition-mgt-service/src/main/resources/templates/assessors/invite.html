@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Invite assessors - ${model.competitionName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="govuk-template__body competition-management competition-overview">
@@ -15,7 +15,7 @@
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='govuk-heading-xl'" />
 
-                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
@@ -59,8 +59,8 @@
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
                         </li>
-                        <li class="govuk-tabs__list-item">
-                            <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">Invite</a>
+                        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                            <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Invite</a>
                         </li>
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Pending and declined</a>
@@ -84,6 +84,7 @@
                             <div class="govuk-details__text">
                                 <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
                                       method="POST"
+                                      id="invite-assessor-form"
                                       th:object="${form}"
                                       novalidate="novalidate">
                                     <button class="hidden-save" type="submit" name="inviteNewUsers" tabindex="-1" aria-hidden="true">Add assessors to list</button>
@@ -174,6 +175,7 @@
                                                 <td class="govuk-table__cell alignright width-20-percent">
                                                     <button class="button-clear remove-another-row"
                                                             name="removeNewUser"
+                                                            id="remove-new-user-button"
                                                             th:value="${iterStat.index}"
                                                             type="submit">
                                                         Remove
@@ -184,18 +186,19 @@
                                         </table>
 
                                         <p class="alignright govuk-!-margin-top-6">
-                                            <button class="button-clear" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" type="submit">Add another assessor in this area</button>
+                                            <button class="button-clear" data-repeatable-rowcontainer="#invite-table tbody" name="addNewUser" id="add-another-assessor-in-area-button" type="submit">Add another assessor in this area</button>
                                         </p>
 
                                         <div class="alignright">
-                                            <button type="submit" name="inviteNewUsers" class="govuk-button govuk-!-margin-0">Add assessors to list</button>
+                                            <button type="submit" name="inviteNewUsers" id="add-assessors-to-list-button" class="govuk-button govuk-!-margin-0">Add assessors to list</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                         </details>
 
-                        <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
+                        <form method="POST" id="review-and-send-assessor-invites-form"
+                              th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
 
                             <div class="govuk-grid-row sorting">
                                 <div class="govuk-grid-column-one-half">
@@ -203,7 +206,8 @@
                                     <span class="govuk-body govuk-!-font-size-19 govuk-!-font-weight-bold">assessors</span>
                                 </div>
                                 <div class="govuk-grid-column-one-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                                    <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="govuk-button govuk-!-margin-bottom-0">Review and send invites</a>
+                                    <a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}"
+                                       id="review-and-send-assessor-invites-button" class="govuk-button govuk-!-margin-bottom-0">Review and send invites</a>
                                 </div>
                             </div>
 
@@ -216,7 +220,7 @@
                                         <th class="govuk-table__header" scope="col">Innovation area</th>
                                         <th class="govuk-table__header" scope="col">Contract and DOI</th>
                                         <td scope="col" class="govuk-table__header alignright">
-                                            <button name="removeAll" class="button-clear alignright"
+                                            <button name="removeAll" id="remove-all-invited-assessors-button" class="button-clear alignright"
                                                     th:if="${!#lists.isEmpty(model.assessors)}">
                                                 Remove all
                                             </button>
@@ -240,7 +244,7 @@
                                             <span class="no" th:unless="${assessor.compliant}">No</span>
                                         </td>
                                         <td class="govuk-table__cell alignright">
-                                            <button class="button-clear alignright" name="remove" th:value="${assessor.email}">
+                                            <button class="button-clear alignright" id="remove-assessor-button" name="remove" th:value="${assessor.email}">
                                                 Remove <span aria-hidden="true" th:text="${assessor.name}">John Barnes </span>
                                             </button>
                                         </td>

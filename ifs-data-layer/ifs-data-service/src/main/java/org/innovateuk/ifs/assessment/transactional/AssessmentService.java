@@ -3,10 +3,10 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -67,4 +67,8 @@ public interface AssessmentService {
     @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
+
+    @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<List<AssessmentResource>> createAssessments(List<AssessmentCreateResource> assessmentCreateResource);
 }

@@ -1,8 +1,8 @@
 /*--- Progress list ---*/
-@import "govuk-frontend/settings/all";
+@import "govuk-frontend/govuk/settings/all";
 
 .progress-list{
-  background-color: govuk-colour("grey-3");
+  background-color:govuk-colour("light-grey");
   margin: 20px 0 50px;
   padding: 15px;
 
@@ -38,9 +38,9 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-   }
+  }
 
-  .task{
+  .task {
     @include govuk-font(16);
     @include media-down(tablet) {
       margin-bottom: 15px;
@@ -103,6 +103,10 @@
     justify-content: flex-end;
     align-items: center;
     margin: 0;
+  }
+
+  .action {
+    margin-right: 30px;
   }
 
   .status-msg {
@@ -248,7 +252,7 @@
 
   .read-only,
   .waiting{
-    background-color: govuk-colour("grey-4");
+    background-color: govuk-colour("light-grey");
     color: $govuk-secondary-text-colour;
 
     .govuk-heading-s,
@@ -270,7 +274,8 @@
     width: 78%;
   }
 
-  .status{
+  .status,
+  .status-and-action {
     @include media-down(mobile) {
       flex: 1 0 auto;
     }

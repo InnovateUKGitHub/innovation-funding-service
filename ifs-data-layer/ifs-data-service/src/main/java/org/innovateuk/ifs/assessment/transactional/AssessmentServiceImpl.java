@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
@@ -19,6 +18,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +26,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -42,10 +43,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
-    protected static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = asLinkedSet(
-            ApplicationState.APPROVED,
-            ApplicationState.REJECTED,
-            ApplicationState.SUBMITTED);
 
     private AssessmentRepository assessmentRepository;
     private AssessmentMapper assessmentMapper;
@@ -134,7 +131,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId) {
-        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetCompetitionId(state, competitionId));
+        return serviceSuccess(assessmentRepository.countByActivityStateAndTargetCompetitionIdAndParticipantUserStatusIn(state, competitionId, singletonList(UserStatus.ACTIVE)));
     }
 
     @Override
@@ -238,6 +235,14 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
                         .andOnSuccess(application ->  createAssessment(assessor, application, ASSESSOR))
                 );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<AssessmentResource>> createAssessments(List<AssessmentCreateResource> assessmentCreateResource) {
+        return aggregate(assessmentCreateResource.stream()
+                .map(this::createAssessment)
+                .collect(toList()));
     }
 
 

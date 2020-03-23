@@ -3,11 +3,14 @@ package org.innovateuk.ifs.financecheck.eligibility.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check Eligibility page
@@ -34,6 +37,7 @@ public class FinanceChecksEligibilityViewModel {
     private final boolean loanCompetition;
     private final boolean collaborativeProject;
     private final boolean canEditAcademicFinances;
+    private final boolean eligibilityReadyToConfirm;
 
     public FinanceChecksEligibilityViewModel(ProjectResource project,
                                              CompetitionResource competition,
@@ -48,7 +52,8 @@ public class FinanceChecksEligibilityViewModel {
                                              LocalDate approvalDate,
                                              boolean externalView,
                                              boolean isUsingJesFinances,
-                                             boolean canEditAcademicFinances) {
+                                             boolean canEditAcademicFinances,
+                                             List<ProjectFinanceResource> projectFinances) {
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -68,6 +73,7 @@ public class FinanceChecksEligibilityViewModel {
         this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.canEditAcademicFinances = canEditAcademicFinances;
+        this.eligibilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
     }
 
     public boolean isApproved() {
@@ -217,5 +223,14 @@ public class FinanceChecksEligibilityViewModel {
 
     public boolean isShowChangesLink() {
         return eligibilityOverview.isHasApplicationFinances();
+    }
+
+    public boolean isEligibilityReadyToConfirm() {
+        return eligibilityReadyToConfirm;
+    }
+
+    private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {
+        return finances.stream().allMatch(finance ->
+            BigDecimal.valueOf(finance.getMaximumFundingLevel()).compareTo(finance.getGrantClaimPercentage()) >=0);
     }
 }

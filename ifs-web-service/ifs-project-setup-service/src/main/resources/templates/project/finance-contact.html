@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance contact',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Finance contact - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="govuk-template__body project-detail finance-contact">
@@ -24,7 +24,7 @@
                     <li>review the spend profile of your project costs</li>
                 </ul>
 
-                <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
+                <form id="finance-contact-form" method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
                     <input type="hidden" th:field="*{organisation}" />
 
                     <div class="govuk-form-group govuk-!-margin-top-6" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
@@ -126,7 +126,7 @@
                                                        required="required"/>
                                             </td>
                                             <td class="govuk-table__cell alignright">
-                                                <button class="button-clear govuk-!-margin-bottom-0" name="invite-fc" id="invite-finance-contact">Invite to project</button>
+                                                <button class="button-clear govuk-!-margin-bottom-0" name="invite-fc" id="invite-finance-contact-button">Invite to project</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -139,7 +139,7 @@
 
                     <p class="govuk-body">You can change your finance contact up until your grant offer letter is generated.</p>
 
-                    <button class="govuk-button govuk-!-margin-top-6" type="submit"  name="save-fc" id="save">Save finance contact</button>
+                    <button class="govuk-button govuk-!-margin-top-6" type="submit" name="save-fc" id="save-finance-contact-button">Save finance contact</button>
                 </form>
 
 

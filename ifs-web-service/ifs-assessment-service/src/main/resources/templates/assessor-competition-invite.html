@@ -17,7 +17,7 @@
                      role="alert"
                      aria-labelledby="error-summary-title"
                      tabindex="-1"
-                     data-module="error-summary">
+                     data-module="govuk-error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
                     <th:block th:insert="fragments/elements :: error-summary-list(form)" />
                 </div>
@@ -72,8 +72,7 @@
                                            th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
                                     <label for="acceptCompetition"
                                            class="govuk-label govuk-radios__label">
-                                        Yes, I am able to assess applications to this competition
-                                        <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                                        Yes, I am able to assess applications to this competition<th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item" data-target="reject-competition">

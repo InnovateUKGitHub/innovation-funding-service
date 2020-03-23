@@ -52,8 +52,8 @@
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Invite</a>
                 </li>
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">View status</a>
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}" class="govuk-tabs__tab">View status</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
@@ -91,7 +91,7 @@
                             <td class="govuk-table__cell" th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
                             <td class="govuk-table__cell">
                                 <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/{applicationId}/view(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
-                                   class="button-secondary">View invite</a>
+                                   class="govuk-button govuk-button--secondary">View invite</a>
                             </td>
 
                         </tr>

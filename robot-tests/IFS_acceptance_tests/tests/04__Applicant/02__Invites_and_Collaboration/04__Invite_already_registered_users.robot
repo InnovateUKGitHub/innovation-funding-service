@@ -285,8 +285,8 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link       css = .govuk-button[type="submit"]    #Save and continue
     the user clicks the button/link       link = Application team
     the user clicks the button/link       jQuery = button:contains("Add person to INNOVATE LTD")
-    The user enters text to a text field  id = name    Olivier Giroud
-    The user enters text to a text field  id = email   ${test_mailbox_one}+invite2@gmail.com
+    The user enters text to a text field  css = [name=name]    Olivier Giroud
+    The user enters text to a text field  css = [name=email]     ${test_mailbox_one}+invite2@gmail.com
     the user clicks the button/link       jQuery = button:contains("Invite to application")
     the user should see the element       jQuery = td:contains("${test_mailbox_one}+invite2@gmail.com")
     the user clicks the button/link       link = Application overview

@@ -14,8 +14,8 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${model.user.id})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">You are unable to change this email address.</h2>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">You cannot change this email address.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
@@ -61,7 +61,7 @@
                 </div>
 
                 <a th:href="@{/admin/user/{userId}/active(userId=${model.user.id})}"
-                    class="button-secondary">Return to view user details</a>
+                    class="govuk-button govuk-button--secondary">Return to view user details</a>
             </form>
         </form>
 

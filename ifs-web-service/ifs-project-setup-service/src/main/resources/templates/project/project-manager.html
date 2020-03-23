@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" >
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.projectName + ' - Project Manager'},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project manager - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="govuk-template__body project-detail project-manager">
@@ -19,7 +19,7 @@
 
                 <p class="govuk-body">As lead partner you must choose a Project Manager who will be responsible for setting up your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
 
-                <form method="POST" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
+                <form method="POST" id="project-manager-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${form}">
                     <fieldset class="govuk-fieldset">
                         <div class="govuk-form-group" id="project-manager-section" th:classappend="${#fields.hasErrors('*') ? 'govuk-form-group--error' : ''}">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -118,7 +118,7 @@
                                                    th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                         </td>
                                         <td class="govuk-table__cell alignright">
-                                            <button class="button-clear govuk-!-margin-bottom-0" id="invite-project-manager" name="invite-pm">Invite to project</button>
+                                            <button class="button-clear govuk-!-margin-bottom-0" id="invite-project-manager-button" name="invite-pm">Invite to project</button>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -19,20 +19,17 @@ ${appl_name}         Procurement app
 *** Test Cases ***
 Comp Admin creates procurement competition
     [Documentation]  IFS-6368
-    [Tags]
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
     Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  project-setup-completion-stage  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
-    [Tags]
     [Setup]  get competition id and set open date to yesterday  ${comp_name}
     Given Log in as a different user            &{RTO_lead_applicant_credentials}
     Then logged in user applies to competition  ${comp_name}  3
 
 Applicant completes Application questions
     [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
-    [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
@@ -58,7 +55,6 @@ Applicant submits the application
 
 Invite a registered assessor
     [Documentation]  IFS-2376
-    [Tags]
     Given log in as a different user                          &{Comp_admin1_credentials}
     When the user clicks the button/link                      link = ${comp_name}
     And the user clicks the button/link                       link = Invite assessors to assess the competition
@@ -73,7 +69,6 @@ Invite a registered assessor
 
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
-    [Tags]
     Given Log in as a different user                        &{assessor_credentials}
     When The user clicks the button/link                    Link = ${comp_name}
     And the user selects the radio button                   acceptInvitation  true
@@ -82,20 +77,18 @@ Allocated assessor accepts invite to assess the competition
 
 Comp Admin allocates assessor to application
     [Documentation]  IFS-2376
-    [Tags]
-    Given log in as a different user        &{Comp_admin1_credentials}
-    When The user clicks the button/link    link = Dashboard
-    And The user clicks the button/link     link = ${comp_name}
-    And The user clicks the button/link     jQuery = a:contains("Manage assessments")
-    And the user clicks the button/link     jQuery = a:contains("Allocate applications")
-    Then the user clicks the button/link    jQuery = tr:contains("${appl_name}") a:contains("Assign")
-    And the user clicks the button/link     jQuery = tr:contains("Paul Plum") button:contains("Assign")
-    When the user navigates to the page     ${server}/management/competition/${competitionId}
-    Then the user clicks the button/link    jQuery = button:contains("Notify assessors")
+    Given log in as a different user              &{Comp_admin1_credentials}
+    When The user clicks the button/link          link = Dashboard
+    And The user clicks the button/link           link = ${comp_name}
+    And The user clicks the button/link           jQuery = a:contains("Manage assessments")
+    And the user clicks the button/link           jQuery = a:contains("Allocate applications")
+    Then the user clicks the button/link          jQuery = tr:contains("${appl_name}") a:contains("Assign")
+    And the user adds an assessor to application  jQuery = tr:contains("Paul Plum") :checkbox
+    When the user navigates to the page           ${server}/management/competition/${competitionId}
+    Then the user clicks the button/link          jQuery = button:contains("Notify assessors")
 
 Allocated assessor assess the application
     [Documentation]  IFS-2376
-    [Tags]
     Given Log in as a different user                       &{assessor_credentials}
     When The user clicks the button/link                   link = ${comp_name}
     And the user clicks the button/link                    jQuery = li:contains("${appl_name}") a:contains("Accept or reject")
@@ -107,7 +100,6 @@ Allocated assessor assess the application
 
 the comp admin closes the assessment and releases feedback
     [Documentation]  IFS-2376
-    [Tags]
     Given log in as a different user                  &{Comp_admin1_credentials}
     When making the application a successful project  ${competitionId}    ${appl_name}
     And moving competition to Project Setup           ${competitionId}
@@ -115,7 +107,6 @@ the comp admin closes the assessment and releases feedback
 
 the procurement comp moves to project setup tab
     [Documentation]  IFS-2376  IFS-6368
-    [Tags]
     Given the user clicks the button/link    link = Dashboard
     When the user clicks the button/link     jQuery = a:contains("Project setup")
     Then the user clicks the button/link     link = ${comp_name}
@@ -142,7 +133,7 @@ Internal user generate the GOL
     Given applicant send project spend profile
     When the internal user approve SP and issue GOL
     Then applicant upload the GOL
-    And the internal user approve the GOL
+    And the internal user approve the GOL   ${ProjectID}
 
 *** Keywords ***
 Custom Suite Setup
@@ -163,8 +154,8 @@ the user fills in procurement Application details
     the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       css = button[name="mark_as_complete"]
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       id = application-question-complete
+    the user clicks the button/link       link = Back to application overview
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user marks the procurement finances as complete
@@ -251,16 +242,6 @@ Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${appl_name}
     Set suite variable    ${ProjectID}
 
-the user enters bank details
-    the user clicks the button/link                      link = Bank details
-    the user enters text to a text field                 name = accountNumber  ${Account_Two}
-    the user enters text to a text field                 name = sortCode  ${Sortcode_two}
-    the user enters text to a text field                 name = addressForm.postcodeInput    BS14NT
-    the user clicks the button/link                      id = postcode-lookup
-    the user selects the index from the drop-down menu   1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Submit bank account details")
-    the user clicks the button/link                      id = submit-bank-details
-
 internal user assign MO to loan project
     the user navigates to the page           ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Search for MO                            Orvill  Orville Gibbs
@@ -318,11 +299,3 @@ applicant upload the GOL
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
-
-the internal user approve the GOL
-    log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
-    the user selects the radio button   APPROVED  acceptGOL
-    the user clicks the button/link     id = submit-button
-    the user clicks the button/link     id = accept-signed-gol
-    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")

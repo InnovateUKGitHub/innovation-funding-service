@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes',hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Notes - ${model.projectName}|,hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
     </head>
 
     <body class="govuk-template__body competition-management project-management note-form">
@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <main class="govuk-main-wrapper" id="main-content" role="main" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                <div class="govuk-error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+                <div class="govuk-error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">There was a problem saving your comment.</h2>
                     <div class="govuk-error-summary__body">
                         <ul class="govuk-list govuk-error-summary__list">
@@ -68,7 +68,7 @@
                         </th:block>
                         <th:block th:if="${model.projectIsActive}">
                             <th:block th:if="${model.noteId == null}">
-                                <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 button-secondary">Comment</a>
+                                <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Comment</a>
                             </th:block>
                             <th:block th:if="${(model.noteId != null) and (note.id == model.noteId)}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
                                 <h2 class="govuk-heading-m">Add your comment</h2>
@@ -133,9 +133,8 @@
                                                   th:text="${err}"/>
                                                 </th:block>
                                                 <input type="file" id="attachment" class="inputfile" name="attachment">
-                                                <label for="attachment" class="button-secondary govuk-!-margin-top-6">+
-                                                    Upload</label>
-                                                <button name="uploadAttachment" class="button-secondary" type="submit"
+                                                <label for="attachment" class="govuk-!-margin-top-6">Upload</label>
+                                                <button name="uploadAttachment" class="govuk-button govuk-button--secondary" type="submit"
                                                         data-for-file-upload="attachment">Save
                                                 </button>
                                             </div>

@@ -72,7 +72,7 @@ the user moves the closed competition to panel
 
 the compadmin can remove an assessor or application from the invite list
     [Arguments]   ${assessor_or_application}
-    the user clicks the button/link      jQuery = td:contains("${assessor_or_application}") ~ td:contains("Remove")
+    the user clicks the button/link      jQuery = tr:contains("${assessor_or_application}") button:contains("Remove")
     the user clicks the button/link      link = Find
     the user should see the element      jQuery = tr:contains("${assessor_or_application}")
 
@@ -115,8 +115,9 @@ comp admin navigate to manage applications
     the user clicks the button/link       jQuery = a:contains("Manage applications")
 
 assessor should see the competition terms and conditions
-    [Arguments]  ${terms_and_conditions}  ${back_link}
-    Given the user clicks the button/link        link = View award terms and conditions
+    [Arguments]  ${back_link}
+    Given the user expands the section           Award terms and conditions
+    When the user clicks the button/link         link = View award terms and conditions
     Then the user should see the element         jQuery = h1:contains("${terms_and_conditions}")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 
@@ -126,3 +127,13 @@ the assessor accept the application
     the user clicks the button/link       jQuery = .progress-list div:contains("${application_name}") ~ div a:contains("Accept or reject")
     the user selects the radio button     reviewAccept  true
     the user clicks the button/link       css = button[type="submit"]  # Confirm
+
+the user adds an assessor to application
+    [Arguments]   ${CheckboxId}
+    the user selects the checkbox     ${CheckboxId}
+    the user clicks the button/link   jQuery = button:contains("Add to application")
+
+the user adds an application to an assessor
+    [Arguments]   ${CheckboxId}
+    the user selects the checkbox     ${CheckboxId}
+    the user clicks the button/link   jQuery = button:contains("Add to assessor")

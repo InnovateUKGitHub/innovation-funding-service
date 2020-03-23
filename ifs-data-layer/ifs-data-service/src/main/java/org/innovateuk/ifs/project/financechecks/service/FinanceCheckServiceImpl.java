@@ -7,7 +7,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -83,6 +86,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ProjectFinanceService projectFinanceService;
 
     @Autowired
+    private ApplicationFinanceService applicationFinanceService;
+
+    @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Override
@@ -120,10 +126,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Competition competition = application.getCompetition();
 
         List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceService.financeChecksTotals(projectId).getSuccess();
+        List<ApplicationFinanceResource> applicationFinanceResourceList = applicationFinanceService.financeTotals(application.getId()).getSuccess();
 
-        BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
-        BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
-        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
+        BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getTotal);
+        BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getTotalFundingSought);
+        BigDecimal fundingAppliedFor = calculateTotalForAllOrganisations(applicationFinanceResourceList, BaseFinanceResource::getTotalFundingSought);
+        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, BaseFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought).setScale(MAX_DECIMAL_PLACES, ROUND_HALF_UP);
 
         ServiceResult<Double> researchParticipationPercentage = projectFinanceService.getResearchParticipationPercentageFromProject(project.getId());
@@ -132,7 +140,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
 
         return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
+                totalProjectCost, totalFundingSought, fundingAppliedFor,totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     @Override
@@ -259,8 +267,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private BigDecimal calculateTotalForAllOrganisations(List<ProjectFinanceResource> projectFinanceResourceList, Function<ProjectFinanceResource, BigDecimal> keyExtractor) {
-        return projectFinanceResourceList.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
+    private <F extends BaseFinanceResource> BigDecimal calculateTotalForAllOrganisations(List<F> financeResources, Function<BaseFinanceResource, BigDecimal> keyExtractor) {
+        return financeResources.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
     }
 
     private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
@@ -427,7 +435,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private ServiceResult<EligibilityProcess> getEligibilityProcess(PartnerOrganisation partnerOrganisation) {
-
         return serviceSuccess(eligibilityWorkflowHandler.getProcess(partnerOrganisation));
     }
 

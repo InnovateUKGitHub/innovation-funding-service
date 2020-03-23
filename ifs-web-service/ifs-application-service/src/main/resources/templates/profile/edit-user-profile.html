@@ -18,13 +18,13 @@
              role="alert"
              aria-labelledby="error-summary-title"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title"  id="error-summary-title">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(userDetailsForm)" />
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='govuk-heading-xl'" />
-        <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}" novalidate="novalidate">
+        <form th:action="${userDetailsForm.getActionUrl()}" id="edit-user-profile-form" method="post" th:object="${userDetailsForm}" novalidate="novalidate">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="firstName">
                         First name
@@ -102,7 +102,7 @@
                     </div>
 
                 </div>
-            <button class="govuk-button govuk-!-margin-top-6" name="create-account" type="submit">Save changes</button>
+            <button class="govuk-button govuk-!-margin-top-6" id="save-user-profile-button" name="create-account" type="submit">Save changes</button>
         </form>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

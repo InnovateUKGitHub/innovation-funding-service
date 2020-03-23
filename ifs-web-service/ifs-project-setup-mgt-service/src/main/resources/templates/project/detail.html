@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project details - ${model.project.application}: ${model.project.name}|" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project details - ${model.project.name}|" />
 </head>
 <body class="govuk-template__body competition-management project-management project-detail">
 
@@ -98,6 +98,11 @@
                 </tbody>
             </table>
         </th:block>
+
+        <p class="govuk-body">
+            <a th:href="@{/competition/{competitionId}/project/{projectId}/organisation/select(competitionId=${model.competitionId},projectId=${model.project.id})}"
+               class="govuk-link">View partner details</a>
+        </p>
 
         <h2 class="govuk-heading-m">Innovate UK project finance reviewer</h2>
 

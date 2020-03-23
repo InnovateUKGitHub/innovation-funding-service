@@ -31,13 +31,13 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
     INDIRECT_COSTS_EQUIPMENT("Exceptions", "Equipment", "exceptions_equipment"),
     INDIRECT_COSTS_OTHER_COSTS("Exceptions", "Other costs", "exceptions_other_costs");
 
-    private final String name;
     private final String label;
+    private final String name;
     private final String financeRowName;
 
-    AcademicCostCategoryGenerator(String label, String name, String financeRowName){
-        this.name = name;
+    AcademicCostCategoryGenerator(String label, String name, String financeRowName) {
         this.label = label;
+        this.name = name;
         this.financeRowName = financeRowName;
     }
 

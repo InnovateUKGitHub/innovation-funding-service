@@ -166,7 +166,7 @@ the user fills the other application details questions
     The user enters text to a text field  id = application_details-startdate_month  11
     The user enters text to a text field  css = [id="durationInMonths"]  20
     the user clicks the button/link       jQuery = button:contains("Mark")
-    the user clicks the button/link       link = Application overview
+    the user clicks the button/link       link = Back to application overview
 
 the business user fills in the project costs
 # The project costs are added such that business partner costs are less than 50% of overall project costs
@@ -189,6 +189,7 @@ the user edits the research category
     the user clicks the button/link     jQuery = button:contains("Edit")
     the user clicks the button twice    jQuery = label[for^="researchCategory"]:contains("${research_category}")
     the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
     the user clicks the button/link     link = Your project finances
 
 the user edits the organisation size

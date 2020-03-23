@@ -288,7 +288,7 @@ public class ProjectFinanceChecksController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/attachment/{attachmentId}")
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(Long projectId,  @PathVariable long attachmentId) {
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,  @PathVariable long attachmentId) {
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
@@ -466,6 +466,8 @@ public class ProjectFinanceChecksController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
+        List<ProjectFinanceResource> projectFinances = projectFinanceService.getProjectFinances(project.getId());
+
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
             model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
@@ -485,7 +487,8 @@ public class ProjectFinanceChecksController {
                 eligibility.getEligibilityApprovalDate(),
                 true,
                 isUsingJesFinances,
-                false));
+                false,
+                projectFinances));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
 

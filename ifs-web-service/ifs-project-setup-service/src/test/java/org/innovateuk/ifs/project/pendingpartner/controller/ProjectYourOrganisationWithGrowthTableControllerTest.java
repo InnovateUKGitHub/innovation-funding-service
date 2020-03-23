@@ -92,7 +92,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
         setupResource();
         setupAsyncExpectations(asyncFuturesGenerator);
         YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
         when(yourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
         when(withGrowthTableFormPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
 
@@ -136,7 +136,7 @@ public class ProjectYourOrganisationWithGrowthTableControllerTest extends BaseCo
 
     @Test
     public void markAsCompleteWithGrowthTable_failure() throws Exception {
-        when(viewModelPopulator.populate(projectId, organisationId)).thenReturn(yourOrganisationViewModel);
+        when(viewModelPopulator.populate(projectId, organisationId, getLoggedInUser())).thenReturn(yourOrganisationViewModel);
 
         MvcResult result = mockMvc.perform(post(viewPageUrl())
             .param("mark-as-complete", ""))

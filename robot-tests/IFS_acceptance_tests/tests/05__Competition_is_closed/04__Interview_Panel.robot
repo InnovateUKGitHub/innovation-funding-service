@@ -325,7 +325,7 @@ the comp admin see the response uploaded by lead applicant
      the user should see the element      jQuery = p:contains("The lead applicant has responded to feedback. Download and review all attachments before the interview panel.")
 
 the compAdmin removes the application from notify list
-    the user clicks the button/link   jQuery = td:contains("${computer_vision_application}") ~ td:contains("Remove")
+    the user clicks the button/link   jQuery = td:contains("${computer_vision_application}") ~ td:contains("Remove") button
     the user clicks the button/link   link = Applications allocated for interview
     the user should see the element   jQuery = td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
     the user clicks the button/link   css = .govuk-button[name="addSelected"]  #Allocate
@@ -392,7 +392,7 @@ the comp admin send invites to the applicants
     the user clicks the button/link       link = Review and send invites
     the compAdmin uploads additional feedback for an application
     the compAdmin removes uploaded feedback for an application
-    the user clicks the button/link       css = .govuk-button[type = "submit"]     #Send invite
+    the user clicks the button/link       jQuery = button:contains("Send invite")     #Send invite
     the Competition Admin should see the assigned applications in the View status tab
     the user checks for Key Statistics for assigned to interview panel
 
@@ -410,7 +410,7 @@ the comp admin view invite send to an applicant
     the user clicks the button/link    link = Edit and resend invite
 
 the comp admin resend invite to an applicant
-    the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove")
+    the user clicks the button/link    jQuery = td:contains("${Neural_network_application}") ~ td div:nth-child(2):contains("Remove") button
     the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  jQuery = div td:contains("${Neural_network_application}") ~ td:contains("testing_5MB.pdf")
     the user clicks the button/link     css = .govuk-button[type="submit"]  #Resend invite
 

@@ -60,9 +60,17 @@ task setDbResetDefaults {
     if (!project.hasProperty('ONLY_SYNC_LDAP')) {
         project.ext.ONLY_SYNC_LDAP = false
     }
+    
+    if (!project.hasProperty('ONLY_DELETE_IFS_USERS')) {
+        project.ext.ONLY_SYNC_LDAP = false
+    }
 }
 prepareDeployment.mustRunAfter setDbResetDefaults
 
+task osApplySecretsProduction(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "ifs-prod", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
 
 task osDeployProduction(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -91,6 +99,10 @@ task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setF
 
 // UAT tasks
 
+task osApplySecretsUat(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "ifs-uat", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
 
 task osDeployUat(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -129,6 +141,10 @@ task importAnonDataIntoUat(type: Exec, dependsOn: prepareDeployment) {
 
 // Demo tasks
 
+task osApplySecretsDemo(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "ifs-demo", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
 
 task osDeployDemo(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -152,6 +168,10 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 
 // Sysint tasks
 
+task osApplySecretsSysint(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "ifs-sysint", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
 
 task osDeploySysint(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -181,6 +201,10 @@ task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinan
 
 // Perf tasks
 
+task osApplySecretsPerf(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "ifs-perf", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
 
 task osDeployPerf(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -214,6 +238,11 @@ task osInitClusterLocal(type: Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
+task osApplySecretsLocal(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-local-secrets.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
 task osDeployLocal(type: Exec, dependsOn: prepareDeployment) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]
@@ -244,10 +273,10 @@ task dbAnonymisedDumpLocal(type: Exec, dependsOn: [setDatabaseDefaults, prepareD
     args = [openshiftEnv, "local", project.version]
 }
 
-task deleteProjectLocal(type: Exec) {
+task osDeleteProjectLocal(type: Exec) {
     doFirst {
         executable 'oc'
-        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        args 'delete', 'project', openshiftEnv, "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
     }
 
     ignoreExitValue true
@@ -257,10 +286,10 @@ task deleteProjectLocal(type: Exec) {
     }
 }
 
-task createProjectLocal(type: Exec, dependsOn: deleteProjectLocal) {
+task osCreateProjectLocal(type: Exec, dependsOn: osDeleteProjectLocal) {
     doFirst {
         executable 'oc'
-        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${"oc whoami -t".execute().text.trim()}", "--server=${svcAccountClauseServerLocal}", "--insecure-skip-tls-verify=true"
     }
 }
 
@@ -270,10 +299,13 @@ task importAnonDataIntoLocal(type:Exec, dependsOn: prepareDeployment) {
 }
 
 // Remote tasks
-
+// TODO IFS-7091 remove when replaced by deleteProjectRemote in bamboo
 task deleteProject(type: Exec) {
     def token
     doFirst {
+        if (isNamedEnv()) {
+            throw new GradleException("Cannot delete a named environment")
+        }
         token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
         executable 'oc'
         args 'delete', 'project', openshiftEnv, "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
@@ -300,7 +332,73 @@ task deleteProject(type: Exec) {
     }
 }
 
+task osDeleteProjectRemote(type: Exec) {
+    def token
+    doFirst {
+        if (isNamedEnv()) {
+            throw new GradleException("Cannot delete a named environment")
+        }
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
+        executable 'oc'
+        args 'delete', 'project', openshiftEnv, "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+    }
+
+    ignoreExitValue true
+
+    doLast {
+        while ({
+            sleep(35 * 1000)
+
+            def ocCommand = "oc get project ${openshiftEnv} --token=${token} --server=${svcAccountClauseServer} --insecure-skip-tls-verify=true"
+            def proc = ocCommand.execute()
+
+            proc.waitFor()
+
+            def projectDeleted = proc.exitValue() == 1
+            if ( !projectDeleted ) {
+                println "Project is not deleted yet.. "
+            }
+
+            !projectDeleted
+        }()) continue
+    }
+}
+
+// TODO IFS-7091 remove when replaced by createProjectRemote in bamboo
 task createProject(dependsOn: deleteProject) {
+    def token
+
+    def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
+    def openshiftAdminGroup = "CN=ocp_ifs_admins,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
+
+    doFirst {
+
+        token = System.env.bamboo_openshift_svc_account_token ?: "oc whoami -t".execute().text.trim()
+        exec {
+            executable 'oc'
+            args 'new-project', "${openshiftEnv}", "--namespace=${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+        }
+
+        if (openshiftEnv == "ifs-prod" || openshiftEnv == "ifs-uat") {
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+        } else {
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin', "${openshiftAdminGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+
+            exec {
+                executable 'oc'
+                args 'adm', 'policy', 'add-role-to-group', 'admin',  "${openshiftDevGroup}", '-n', "${openshiftEnv}", "--token=${token}", "--server=${svcAccountClauseServer}", "--insecure-skip-tls-verify=true"
+            }
+        }
+    }
+}
+
+task osCreateProjectRemote(dependsOn: osDeleteProjectRemote) {
     def token
 
     def openshiftDevGroup = "CN=ocp_ifs_devs,OU=Groups,OU=org-cs-0,DC=org-cs-0,DC=iuk,DC=local"
@@ -330,6 +428,16 @@ task createProject(dependsOn: deleteProject) {
             }
         }
     }
+}
+
+task osApplyAwsSecretsRemote(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
+    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+}
+
+task osApplyLocalSecretsRemote(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-local-secrets.sh'
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task osDeployRemote(type: Exec, dependsOn: prepareDeployment) {

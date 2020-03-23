@@ -52,8 +52,8 @@
                 Invite assessors to panel
             </h2>
             <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item">
-                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">Find</a>
+                <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Invite</a>

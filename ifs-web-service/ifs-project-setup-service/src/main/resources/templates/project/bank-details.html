@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=${project.name + ' - Bank Details'},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+              th:with="pageTitle=|Bank details - ${project.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body bank-detail">
 <th:block th:insert="fragments/layout :: body-start"/>
@@ -17,7 +17,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
-             aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We are unable to save your bank account
                 details.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
@@ -26,7 +26,7 @@
         <th:block th:insert="fragments/layout :: page-title"
                   th:with="pageTitle='Bank details',subTitle=${project.name},size='govuk-heading-xl'"/>
 
-        <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
+        <form th:object="${form}" id="bank-details-form" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"
               novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
 
             <th:block th:unless="${bankDetails == null}">
@@ -121,7 +121,7 @@
 
                 <th:block th:insert="fragments/modals :: modal-bank-details"/>
                 <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}"
-                        class="govuk-button govuk-!-margin-top-6" data-js-modal="modal-bank">Submit bank account details
+                        class="govuk-button govuk-!-margin-top-6" id="submit-bank-details-button" data-js-modal="modal-bank">Submit bank account details
                 </button>
 
 

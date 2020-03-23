@@ -54,8 +54,8 @@
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Find</a>
                         </li>
-                        <li class="govuk-tabs__list-item">
-                            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab govuk-tabs__tab--selected">Invite</a>
+                        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+                            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Invite</a>
                         </li>
                         <li class="govuk-tabs__list-item">
                             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}" class="govuk-tabs__tab">Pending and declined</a>

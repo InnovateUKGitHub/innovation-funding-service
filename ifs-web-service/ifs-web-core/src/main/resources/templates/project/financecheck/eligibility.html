@@ -2,7 +2,7 @@
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:insert="fragments/layout :: head"
-              th:with="pageTitle=|${summaryModel.applicationId}: ${summaryModel.projectName} - Eligibility check for ${summaryModel.organisationName}|"/>
+              th:with="pageTitle=|Eligibility check for ${summaryModel.organisationName} - ${summaryModel.projectName}|"/>
 </head>
 
 <body class="govuk-template__body competition-management eligibility-form finance-row-form overheads">
@@ -196,7 +196,7 @@
                     Save form
                 </button>
 
-                <div class="govuk-accordion" data-module="accordion" id="accordion-finances">
+                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
                     <th:block th:insert="application/your-project-costs-fragments :: labour"/>
                     <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads"/>
                     <th:block th:insert="application/your-project-costs-fragments :: overheads"/>
@@ -242,7 +242,7 @@
 
                 <th:block th:unless="${summaryModel.externalView or summaryModel.isApproved()}">
                     <a th:unless="${summaryModel.canEditAcademicFinances}"
-                       th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#academic-cost-actions'}(editAcademicFinances=${true})}" class="button-secondary" name="edit-academic-finances">Edit</a>
+                       th:href="@{${#ifsUtil.formPostUri(#httpServletRequest) + '#academic-cost-actions'}(editAcademicFinances=${true})}" class="govuk-button govuk-button--secondary" name="edit-academic-finances">Edit</a>
                     <div id="academic-cost-actions" th:if="${summaryModel.canEditAcademicFinances}">
                         <button id="save-academic-costs" class="govuk-button vertical-align-baseline govuk-!-margin-right-4" name="save-academic-costs">Save</button>
                         <a class="govuk-link govuk-body vertical-align-baseline" th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">Cancel changes</a>
@@ -305,22 +305,28 @@
                         <option value="RED">Red</option>
                     </select>
                 </div>
-                <button type="button" data-js-modal="modal-confirm-eligibility" class="govuk-button"
+                <button th:if="${!summaryModel.eligibilityReadyToConfirm}"
+                        disabled="disabled"
+                        class="govuk-button">Approve eligible costs</button>
+                <button th:unless="${!summaryModel.eligibilityReadyToConfirm}"
+                        type="button"
+                        data-js-modal="modal-confirm-eligibility"
+                        class="govuk-button"
                         id="confirm-button">Approve eligible costs
                 </button>
                 <th:block th:insert="fragments/modals :: modal-confirm-eligibility (${summaryModel})"/>
                 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
             </th:block>
 
-            <a class="button-secondary"
+            <a class="govuk-button govuk-button--secondary"
                th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}"
                th:classappend="${summaryModel.isApproved() ? 'govuk-!-margin-top-9' : ''}">Return to finance checks</a>
         </form>
         <div class="govuk-!-margin-top-6" th:unless="${summaryModel.isExternalView()}">
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}"
-               class="button-secondary govuk-!-margin-right-4">Queries</a>
+               class="govuk-button govuk-button--secondary govuk-!-margin-right-4">Queries</a>
             <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-               class="button-secondary">Notes</a>
+               class="govuk-button govuk-button--secondary">Notes</a>
         </div>
         <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>

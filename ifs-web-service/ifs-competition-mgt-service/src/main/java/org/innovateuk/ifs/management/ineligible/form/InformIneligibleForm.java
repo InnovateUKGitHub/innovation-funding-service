@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.ineligible.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;

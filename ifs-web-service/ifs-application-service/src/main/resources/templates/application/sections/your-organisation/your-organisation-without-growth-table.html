@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your organisation'" />
+    <th:block th:with="applicationName=${#strings.isEmpty(commonFinancesModel.applicationName)} ? #{ifs.application.no_title} : ${commonFinancesModel.applicationName}">
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your organisation - ${applicationName}|" />
+    </th:block>
 </head>
 <body class="govuk-template__body your-organisation app-form">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -19,7 +21,7 @@
              aria-labelledby="error-summary-title"
              role="alert"
              tabindex="-1"
-             data-module="error-summary">
+             data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem on this page.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -42,10 +44,11 @@
                                            form=${form},
                                            organisationSizeOptions=${model.organisationSizeOptions},
                                            isH2020=${commonFinancesModel.h2020},
+                                           isProcurementCompetition=${commonFinancesModel.procurementCompetition},
+                                           isInternalUser=${false},
                                            showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
                                            showStateAidAgreement=${model.showStateAidAgreement},
                                            readOnly=${commonFinancesModel.readOnly},
-                                           checkboxText='I confirm that by submitting my application my organisation will be <a href=&quot;https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#state-aid&quot; target=&quot;_blank&quot; class=&quot;govuk-link&quot; aria-describedby=&quot;state-aid-hint&quot;>eligible for State aid</a> <span id=&quot;state-aid-hint&quot;>(opens in a new window)</span> within 90 days of any offer being made.'
                                     )" />
 
             <div class="form-footer" th:if="${commonFinancesModel.open}">
@@ -62,7 +65,7 @@
             <div>
                 <a th:href="${commonFinancesModel.financesUrl}"
                    th:if="${commonFinancesModel.readOnly}"
-                   class="govuk-!-margin-top-6 button-secondary">Return to finances
+                   class="govuk-!-margin-top-6 govuk-button govuk-button--secondary">Return to finances
                 </a>
                 <button type="submit" th:unless="${commonFinancesModel.readOnly}"
                         class="govuk-!-margin-top-6 govuk-button">

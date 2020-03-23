@@ -114,9 +114,9 @@ Verify add new team member field validation
 
 The lead partner is able to add a new team member
     [Documentation]  IFS-5719
-    Given the user clicks the button/link  jQuery = button:contains("Add team member")
-    When the user adds a new team member   Tester   ${leadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Tester (pending for 0 days)") ~ td:contains("${leadNewMemberEmail}")
+    Given the user clicks the button/link    jQuery = button:contains("Add team member")
+    When The user adds a new team member     Tester   ${leadNewMemberEmail}
+    Then the user should see the element     jQuery = td:contains("Tester (pending for 0 days)") ~ td:contains("${leadNewMemberEmail}")
     [Teardown]   Logout as user
 
 A new team member is able to accept the invitation from lead partner and see project set up
@@ -127,11 +127,11 @@ A new team member is able to accept the invitation from lead partner and see pro
 
 Non Lead partner is able to add a new team member
     [Documentation]  IFS-5719
-    [Setup]  log in as a different user    &{collaborator1_credentials}
-    Given the user navigates to the page   ${newProjecTeamPage}
-    And the user clicks the button/link    jQuery = button:contains("Add team member")
-    When the user adds a new team member   Testerina   ${nonLeadNewMemberEmail}
-    Then the user should see the element   jQuery = td:contains("Testerina (pending for 0 days)") ~ td:contains("${nonLeadNewMemberEmail}")
+    [Setup]  log in as a different user               &{collaborator1_credentials}
+    Given the user navigates to the page              ${newProjecTeamPage}
+    And the user clicks the button/link               jQuery = button:contains("Add team member")
+    When The user adds a new team member              Testerina   ${nonLeadNewMemberEmail}
+    Then the user should see the element              jQuery = td:contains("Testerina (pending for 0 days)") ~ td:contains("${nonLeadNewMemberEmail}")
     [Teardown]   the user logs out if they are logged in
 
 A new team member is able to accept the invitation from non lead partner and see projec set up
@@ -158,7 +158,7 @@ A user is able to re-send an invitation
     [Setup]    log in as a different user                  &{lead_applicant_credentials}
     Given the user navigates to the page                   ${newProjecTeamPage}
     And the user clicks the button/link                    jQuery = button:contains("Add team member")
-    When the user adds a new team member                   Removed   ${removeInviteEmail}
+    When The user adds a new team member                   Removed   ${removeInviteEmail}
     Then the user is able to re-send an invitation
     And the user reads his email                            ${removeInviteEmail}  New designs for a circular economy: Magic material: Invitation for project 112.  You have been invited to join the project Magic material by Empire Ltd.
 
@@ -418,18 +418,6 @@ The Project team status appears as complete for the internal user
     the user navigates to the page    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status/all
     the user should see the element   jQuery = th:contains("Magic material")~ ~ td:contains("Complete")
 
-the user should see project manager/finance contact validations
-    [Arguments]   ${save_CTA}  ${errormessage}
-    the user clicks the button/link                  jQuery = button:contains("${save_CTA}")
-    the user should see a field and summary error    ${errormessage}
-
-The user selects their finance contact
-    [Arguments]  ${financeContactName}
-    the user clicks the button/link     link = Your finance contact
-    the user should see project manager/finance contact validations    Save finance contact   You need to select a finance contact before you can continue.
-    the user selects the radio button   financeContact   ${financeContactName}
-    the user clicks the button/link     jQuery = button:contains("Save finance contact")
-
 The user navigates to the Project team page from the dashboard
     the user clicks the button/link   link = ${PS_PD_Application_Title}
     the user clicks the button/link   link = Project team
@@ -602,7 +590,7 @@ lead uploads the exploitation plan
     the user clicks the button/link     link = Exploitation plan
     the user can remove the uploaded file  deleteDocument  ${valid_pdf}
     the user uploads to the collaboration agreement/exploitation plan    ${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
     the user clicks the button/link     link = Set up your project

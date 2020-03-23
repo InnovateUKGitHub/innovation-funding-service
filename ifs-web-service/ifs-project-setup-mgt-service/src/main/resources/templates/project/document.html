@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review document'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Review document - ${model.projectName}|" />
 </head>
 <body class="govuk-template__body competition-management project-management">
 
@@ -15,7 +15,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Documents',linkUrl=@{/project/{id}/document/all/(id=${model.projectId})}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
@@ -60,7 +60,7 @@
                     <fieldset class="govuk-fieldset">
                         <legend id="radio-review" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         </legend>
-                        <div class="govuk-radios" data-module="radios">
+                        <div class="govuk-radios">
                             <div class="govuk-radios__item">
                                 <input class="govuk-radios__input"
                                        id="radio-review-approve"
@@ -119,7 +119,7 @@
             </th:block>
             <th:block th:unless="${model.status.name() == 'SUBMITTED'}">
                 <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="button-secondary">Return to documents</a>
+                    <a th:href="@{/project/{id}/document/all/(id=${model.projectId})}" class="govuk-button govuk-button--secondary">Return to documents</a>
                 </div>
             </th:block>
 
