@@ -135,11 +135,11 @@ public class Organisation {
         this.organisationType = organisationType;
     }
 
-    public boolean isInternational() {
+    public Boolean getInternational() {
         return international;
     }
 
-    public void setInternational(boolean international) {
+    public void setInternational(Boolean international) {
         this.international = international;
     }
 
