@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 /**
  * Provides the initialization method and redirect when registering a new organisation as a lead applicant.
@@ -18,14 +19,23 @@ import javax.servlet.http.HttpServletResponse;
 @SecuredBySpring(value = "Controller", description = "Anyone can start the lead applicant journey.", securedType = OrganisationCreationLeadInitializationController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationLeadInitializationController extends AbstractOrganisationCreationController {
+
     @GetMapping
     public String initializeLeadRegistrationJourney(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
         registrationCookieService.deleteOrganisationCreationCookie(response);
+        // Implement properly once IFS-7194 has done in, for now set to true for all
+        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
+        boolean isInternationalCompetition = true;
 
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
+
+        if (isInternationalCompetition) {
+            return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
+        }
+
         return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
     }
 }

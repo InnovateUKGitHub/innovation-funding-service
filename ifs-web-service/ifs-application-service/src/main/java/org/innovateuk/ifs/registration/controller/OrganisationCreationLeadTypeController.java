@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
+import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
@@ -49,9 +50,9 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     @GetMapping
     public String selectOrganisationType(Model model,
                                          HttpServletRequest request) {
-        model.addAttribute("model", organisationCreationSelectTypePopulator.populate());
 
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
+        model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request));
         model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         if (organisationCreationFormCookie.isPresent()) {
@@ -85,10 +86,18 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                 return redirectToNotEligibleUrl();
             }
 
+            Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
+
+            if (organisationInternationalForm.isPresent()) {
+                if (organisationInternationalForm.get().getInternational()) {
+                    return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
+                }
+            }
+
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
-            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate();
+            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate(request);
             model.addAttribute("model", selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
         }

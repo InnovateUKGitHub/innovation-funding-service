@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application - Is your organisation international ',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
+</head>
+<body class="govuk-template__body create-application-organisation">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back', linkUrl=${competitionId != null ? '/application/create/start-application/'+competitionId : '/competition/search'},currentApplication=${currentApplication}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
+        </div>
+
+        <h1 class="govuk-heading-xl">
+            <span class="govuk-caption-xl">Create an account</span>
+            Tell us where your organisation is based
+        </h1>
+
+        <p class="govuk-body govuk-!-margin-top-6">Is your organisation based in the UK?</p>
+
+        <form id="lead-organisation-type-form"
+              th:object="${organisationForm}"
+              th:action="@{/organisation/create/international-organisation}" method="POST" novalidate="novalidate">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{international}')} ? 'govuk-form-group--error'">
+                <fieldset id="international" class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-visually-hidden" id="internationalId">
+                        <span class="govuk-fieldset__heading">Some stuff here</span>
+                    </legend>
+                    <th:block th:if="${#fields.hasErrors('*{international}')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{international}')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input id="isNotInternational" value="false" type="radio" required="required"
+                                   class="govuk-radios__input"
+                                   th:field="*{international}" th:attr="data-required-errormessage=#{validation.standard.organisation.isInternational.required}" />
+                            <label for="isNotInternational"
+                                   class="govuk-label govuk-radios__label">
+                                Yes, it is
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item" data-target="reject-panel">
+                            <input id="isInternational" value="true" type="radio" required="required"
+                                   class="govuk-radios__input"
+                                   th:field="*{international}" th:attr="data-required-errormessage=#{validation.standard.organisation.isInternational.required}"/>
+                            <label for="isInternational"
+                                   class="govuk-label govuk-radios__label">
+                                No, it is based outside the UK
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <button id="lead-organisation-type-cta" class="govuk-button govuk-!-margin-top-6" name="select-company-type" type="submit">Continue</button>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
