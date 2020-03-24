@@ -223,7 +223,7 @@ the user enter text more than maximum word count limit
 the user should see correct details
     the user should not see the element                 jQuery = .govuk-error-message:contains("Please enter your feedback")
     the user should see the element                     jQuery = .status-msg:contains("Assessed")
-    the user should see the element                     css = li:nth-child(3) .positive
+    the user should see the element                     css = li:contains("Val is awesome - Application 3") .positive
     the user should see the element                     css = li:nth-child(3) input[type = "checkbox"] ~ label
     the application should have the correct status      css = .progress-list li:nth-child(3)    Assessed
 
