@@ -109,6 +109,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FundingType fundingType;
     private Set<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
+    private CompetitionOrganisationConfigResource competitionOrganisationConfigResource;
 
     public CompetitionResource() {
     }
@@ -795,6 +796,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionTerms = competitionTerms;
     }
 
+    public CompetitionOrganisationConfigResource getCompetitionOrganisationConfigResource() {
+        return competitionOrganisationConfigResource;
+    }
+
+    public void setCompetitionOrganisationConfigResource(CompetitionOrganisationConfigResource competitionOrganisationConfigResource) {
+        this.competitionOrganisationConfigResource = competitionOrganisationConfigResource;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -872,6 +881,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
                 .append(fundingType, that.fundingType)
                 .append(competitionTerms, that.competitionTerms)
+                .append(competitionOrganisationConfigResource, that.competitionOrganisationConfigResource)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -941,6 +951,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(includeProjectGrowthTable)
                 .append(fundingType)
                 .append(competitionTerms)
+                .append(competitionOrganisationConfigResource)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

@@ -488,6 +488,7 @@ public class CsvUtils {
         public ApplicationFinanceType applicationFinanceType;
         public Boolean includeProjectGrowth;
         public Boolean includeYourOrganisation;
+        public Boolean competitionOrganisationConfig;
 
         private CompetitionLine(List<String> line, int lineNumber) {
 
@@ -532,6 +533,7 @@ public class CsvUtils {
             applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
             includeProjectGrowth = nullableBoolean(line.get(i++));
             includeYourOrganisation = nullableBoolean(line.get(i++));
+            competitionOrganisationConfig = nullableBoolean(line.get(i++));
         }
     }
 
