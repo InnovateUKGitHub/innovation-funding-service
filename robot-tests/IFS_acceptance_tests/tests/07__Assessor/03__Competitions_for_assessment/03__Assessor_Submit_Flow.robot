@@ -43,7 +43,6 @@ Summary:All the sections are present
 
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]
     Given The user should see the element    jQuery = .deadline:contains("days left to submit")
     # And the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
@@ -110,7 +109,6 @@ Summary:Assessor should be able to re-edit before submit
 
 Summary:Funding Decision Validations
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5228
-    [Tags]
     When The user clicks the button/link                  jQuery = .govuk-button:contains("Save assessment")
     And the user should see a field and summary error     Please indicate your decision.
     And The user enters text to a text field              id = feedback    ${EMPTY}
@@ -121,7 +119,6 @@ Summary:Funding Decision Validations
 
 Summary:Word count check(Your feedback)
     [Documentation]    INFUND-1485  INFUND-4217  INFUND-5178  INFUND-5179
-    [Tags]
     [Setup]    browser validations have been disabled
     Given the user enters multiple strings into a text field     id = feedback  t  5001
     When the user clicks the button/link                         jQuery = .govuk-button:contains("Save assessment")

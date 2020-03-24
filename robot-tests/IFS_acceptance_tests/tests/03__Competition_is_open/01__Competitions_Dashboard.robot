@@ -17,7 +17,6 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 *** Test Cases ***
 Competition dashboard Open competition
     [Documentation]    INFUND-7562  INF-2637
-    [Tags]
     When The user clicks the button/link   link = Performance testing competition
     Then the user should see the element   jQuery = span:contains("Performance testing competition")
     And the user should see the element    jQuery = h1:contains("Open")
@@ -46,7 +45,6 @@ Key statistics for the open Competitions
 
 Competition dashboard ready to Open competition
     [Documentation]    INFUND-7358  INF-2637
-    [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery = span:contains("${READY_TO_OPEN_COMPETITION_NAME}")

@@ -12,7 +12,6 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Guest user can click on the footer links
     [Documentation]    IFS-362
-    [Tags]
     Given the user tries the footer links    ${frontDoor}
     And the user tries the footer links      ${LOGIN_URL}
     And the user navigates to the page       ${LOGIN_URL}

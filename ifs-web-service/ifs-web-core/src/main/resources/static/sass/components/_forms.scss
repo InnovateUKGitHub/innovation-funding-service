@@ -206,13 +206,18 @@ tr {
     &.govuk-form-group--error {
       td {
         vertical-align: bottom;
-        padding: 10px 20px 10px 0;
-        border-bottom: 1px solid $govuk-border-colour;
 
-        &:first-child {
+        &:first-of-type {
           border-left: 5px solid $govuk-error-colour;
           padding-left: 15px;
         }
+      }
+    }
+
+    td {
+      .govuk-form-group--error {
+        vertical-align: bottom;
+        padding: 10px 20px 10px 0;
       }
     }
   }
