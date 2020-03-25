@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.registration.form;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
-public class OrganisationInternationalDetailsForm {
+public class OrganisationInternationalDetailsForm implements Serializable {
 
     @NotBlank(message = "{validation.standard.organisationname.required}")
     private String name;
@@ -21,6 +22,9 @@ public class OrganisationInternationalDetailsForm {
     private String country;
 
     private String zipCode;
+
+    public OrganisationInternationalDetailsForm() {
+    }
 
     public OrganisationInternationalDetailsForm(String name, String companyRegistrationNumber, String addressLine1, String addressLine2, String town, String country, String zipCode) {
         this.name = name;

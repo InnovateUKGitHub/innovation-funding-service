@@ -32,11 +32,12 @@ public class OrganisationCreationSelectTypePopulator {
 
         List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess();
 
+        // change to get them back instead of filter
         Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
         if (organisationInternationalForm.isPresent()) {
             if (organisationInternationalForm.get().getInternational()) {
                 organisationTypeResourceList = organisationTypeResourceList.stream()
-                        .filter(resource -> !resource.getName().equals("Research"))
+                        .filter(resource -> !OrganisationTypeEnum.getFromId(resource.getId()).equals(OrganisationTypeEnum.RESEARCH))
                         .collect(Collectors.toList());
             }
         }
