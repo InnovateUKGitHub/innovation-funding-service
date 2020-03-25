@@ -213,6 +213,11 @@ New MO see the project setup view for assigned project
     Given the user clicks the button/link  link = ${Assign_Project2}
     Then the user should see the project set view
 
+Mo is able to view application feedback on a competition which as been through assessment and interview panels
+    [Documentation]  IFS-7230
+    Given the user clicks the button/link   link = view application feedback
+    Then the user should see the element    jQuery = h1:contains("Feedback overview")
+
 Assign MO role to existing IFS user
     [Documentation]  IFS-5104
     [Setup]  log in as a different user         &{Comp_admin1_credentials}

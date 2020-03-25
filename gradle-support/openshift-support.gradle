@@ -153,7 +153,7 @@ prepareConfigDeployment.mustRunAfter setDbResetDefaults
 
 task osApplySecretsProduction(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "ifs-prod", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    args = [openshiftEnv, "ifs-prod", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
 task osDeployProduction(type: Exec, dependsOn: prepareDeployAndUpgrade) {
@@ -190,7 +190,7 @@ task financeDataSyncProduction(type: Exec, dependsOn: [setDatabaseDefaults, setF
 
 task osApplySecretsUat(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "ifs-uat", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    args = [openshiftEnv, "ifs-uat", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
 task osDeployUat(type: Exec, dependsOn: prepareDeployAndUpgrade) {
@@ -237,7 +237,7 @@ task importAnonDataIntoUat(type: Exec, dependsOn: prepareAnonDump) {
 
 task osApplySecretsDemo(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "ifs-demo", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    args = [openshiftEnv, "ifs-demo", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
 task osDeployDemo(type: Exec, dependsOn: prepareDeployAndUpgrade) {
@@ -269,7 +269,7 @@ task financeDataSyncDemo(type: Exec, dependsOn: [setDatabaseDefaults, setFinance
 
 task osApplySecretsSysint(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "ifs-sysint", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    args = [openshiftEnv, "ifs-sysint", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
 task osDeploySysint(type: Exec, dependsOn: prepareDeployAndUpgrade) {
@@ -307,7 +307,7 @@ task financeDataSyncSysint(type: Exec, dependsOn: [setDatabaseDefaults, setFinan
 
 task osApplySecretsPerf(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "ifs-perf", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    args = [openshiftEnv, "ifs-perf", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
 task osDeployPerf(type: Exec, dependsOn: prepareDeployAndUpgrade) {
@@ -546,7 +546,7 @@ task osCreateProjectRemote(dependsOn: osDeleteProjectRemote) {
 
 task osApplyAwsSecretsRemote(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-aws-secrets.sh'
-    args = [openshiftEnv, "remote", project.version, project.findProperty("ifs_aws_profile") ?: "" , project.findProperty("ifs_aws_access_key") ?: "", project.findProperty("ifs_aws_access_key_id") ?: ""]
+    args = [openshiftEnv, "remote", project.version, project.findProperty("use_iam") ?: "true", project.findProperty("sso_sp") ?: ""]
 }
 
 task osApplyLocalSecretsRemote(type: Exec) {
