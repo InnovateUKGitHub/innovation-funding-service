@@ -2,20 +2,6 @@ apiVersion: v1
 kind: List
 items:
   - apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: survey-db-config
-    data:
-      DB_URL: "${SURVEY_DB_URL}"
-      DB_USER: "${SURVEY_DB_USER}"
-      DB_PASS: "${SURVEY_DB_PASS}"
-  - apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: web-system-user
-    data:
-      SYSTEM_USER_UUID: "${SYSTEM_USER_UUID}"
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       creationTimestamp: null
@@ -89,21 +75,30 @@ items:
                     configMapKeyRef:
                       name: survey-db-config
                       key: DB_PASS
+                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
                 - name: IFS_WEB_SYSTEM_USER_UID
                   valueFrom:
                     configMapKeyRef:
-                      name: web-system-user
-                      key: SYSTEM_USER_UUID
+                      name: web-config
+                      key: IFS_WEB_SYSTEM_USER_UID
                 - name: JAVA_OPTS
                   value: -Xms800m -Xmx800m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-survey-data-service (${openshiftEnv})"
-                - name: NEW_RELIC_LICENSE_KEY
-                  value: "${NEW_RELIC_LICENCE_KEY}"
-                - name: NEW_RELIC_LOG
-                  value: "STDOUT"
-                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-                  value: "100"
               ports:
                 - containerPort: 8080
               resources:
