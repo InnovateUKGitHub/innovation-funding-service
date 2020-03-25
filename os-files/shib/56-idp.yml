@@ -25,8 +25,8 @@ items:
               secret:
                 secretName: idp-keys-secrets
             - name: shibboleth-volume
-                secret:
-                  secretName: sp-secrets
+              secret:
+                secretName: sp-secrets
           containers:
             - image: innovateuk/idp-service:${idpVersion}
               name: idp
