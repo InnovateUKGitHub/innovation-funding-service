@@ -114,7 +114,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
     private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-
+//add bit in for the international check
         if (competitionIdOpt.isPresent()) {
             List<OrganisationTypeResource> organisationTypesAllowed = competitionRestService.getCompetitionOrganisationType(competitionIdOpt.get()).getSuccess();
             return organisationTypesAllowed.stream()

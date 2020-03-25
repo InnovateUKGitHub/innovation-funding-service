@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationInternationalDetailsForm;
@@ -24,14 +26,16 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.Countries.COUNTRIES;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 
 /**
  * Provides methods for picking an international organisation as part of the registration process.
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.INTERNATIONAL_ORGANISATION)
-@SecuredBySpring(value = "Controller", description = "Everyone has permission to selct if their organisation is international or not",
+@SecuredBySpring(value = "Controller", description = "Everyone has permission to create an international",
         securedType = OrganisationCreationInternationalController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationInternationalController extends AbstractOrganisationCreationController {
@@ -118,14 +122,16 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         organisationResource.setName(organisationInternationalDetailsForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
         organisationResource.setInternational(true);
-
-        if (OrganisationTypeEnum.RESEARCH.getId() != organisationTypeForm.get().getOrganisationType()) {
-            organisationResource.setInternationalRegistrationNumber(organisationInternationalDetailsForm.get().getCompanyRegistrationNumber());
-        }
+        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, organisationInternationalDetailsForm)))
+        organisationResource.setInternationalRegistrationNumber(organisationInternationalDetailsForm.get().getCompanyRegistrationNumber());
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
 
         return organisationJourneyEnd.completeProcess(request, response, userResource, organisationResource.getId());
+    }
+
+    private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm) {
+        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationInternationalDetailsForm), new AddressTypeResource(INTERNATIONAL.getOrdinal(), INTERNATIONAL.name()));
     }
 
     private AddressResource createAddressResource(Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm) {

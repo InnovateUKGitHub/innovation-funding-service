@@ -100,26 +100,23 @@
                        th:attr="data-required-errormessage=#{validation.standard.town.required}"/>
             </div>
 
-            <!--<div th:each="(country, iteration : ${countries})" class="govuk-grid-row funder-row"-->
-                 <!--th:id="'funder-row-'+${iteration.index}">-->
-                <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('*{country}')} ? 'govuk-form-group--error'">
-                    <label class="govuk-label govuk-label--s govuk-!-margin-bottom-7">Country</label>
-                    <th:block th:if="${#fields.hasErrors('country')}">
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('*{country}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s">Country</label>
+                <th:block th:if="${#fields.hasErrors('country')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('town')}"
                           th:text="${err}"></span>
-                    </th:block>
-                    <select class="govuk-select"
-                    th:id="country"
-                    th:field="*{country}"
-                    data-required-errormessage="The country cannot be blank."
-                    data-auto-complete="">
+                </th:block>
+                <select class="govuk-select"
+                        th:id="country"
+                        th:field="*{country}"
+                        data-required-errormessage="The country cannot be blank."
+                        data-auto-complete="">
                     <option value=""></option>
-                    <option th:each="country : countries" th:value="${country}"
+                    <option th:each="country : ${countries}" th:value="${country}"
                             th:text="${country}"></option>
-                    </select>
-                </div>
-            <!--</div>-->
+                </select>
+            </div>
 
             <div class="govuk-form-group">
                 <label class="govuk-label--s" for="zipCode">
