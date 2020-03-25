@@ -32,7 +32,7 @@ public class Organisation {
     private OrganisationType organisationType;
 
     @Column(nullable = false)
-    private Boolean international;
+    private boolean international;
 
     @Column(name = "international_registration_number")
     private String internationalRegistrationNumber;
@@ -135,11 +135,11 @@ public class Organisation {
         this.organisationType = organisationType;
     }
 
-    public Boolean getInternational() {
+    public boolean isInternational() {
         return international;
     }
 
-    public void setInternational(Boolean international) {
+    public void setInternational(boolean international) {
         this.international = international;
     }
 
