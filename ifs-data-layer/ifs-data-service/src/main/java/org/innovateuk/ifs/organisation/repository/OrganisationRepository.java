@@ -15,6 +15,7 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     Organisation findOneByName(String name);
     List<Organisation> findDistinctByUsers(User user);
     List<Organisation> findDistinctByUsersId(long userId);
+    List<Organisation> findDistinctByUsersIdAndInternationalIsTrue(long userId);
     List<Organisation> findByNameOrderById(String name);
     List<Organisation> findByCompaniesHouseNumberOrderById(String companiesHouseNumber);
     Organisation findByProcessRolesUserIdAndProcessRolesApplicationId(long userId, long applicationId);

@@ -106,6 +106,12 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    public ServiceResult<List<OrganisationResource>> getAllInternationalByUserId(long userId) {
+        return serviceSuccess(simpleMap(organisationRepository.findDistinctByUsersIdAndInternationalIsTrue(userId),
+                organisationMapper::mapToResource));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
         return update(organisationToCreate);

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationInternationalDetailsForm;
 import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
@@ -42,8 +41,8 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
 
     @GetMapping
     public String selectInternationalOrganisation(Model model,
-                                         HttpServletRequest request,
-                                         @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalForm organisationInternationalForm) {
+                                                  HttpServletRequest request,
+                                                  @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalForm organisationInternationalForm) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
         model.addAttribute("competitionId", competitionIdOpt.orElse(null));
 
@@ -56,11 +55,17 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                                                    BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,
-                                                   HttpServletResponse response) {
+                                                   HttpServletResponse response,
+                                                   UserResource userResource) {
 
         Supplier<String> failureView = () -> selectInternationalOrganisation(model, request, organisationForm);
         Supplier<String> successView = () -> {
             registrationCookieService.saveToOrganisationInternationalCookie(organisationForm, response);
+            if (userResource != null) {
+                if (!organisationRestService.getAllByUserId(userResource.getId()).getSuccess().isEmpty()) {
+                    return "redirect:/organisation/select";
+                }
+            }
             return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
         };
 
@@ -122,7 +127,7 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         organisationResource.setName(organisationInternationalDetailsForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
         organisationResource.setInternational(true);
-        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, organisationInternationalDetailsForm)))
+        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, organisationInternationalDetailsForm)));
         organisationResource.setInternationalRegistrationNumber(organisationInternationalDetailsForm.get().getCompanyRegistrationNumber());
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();

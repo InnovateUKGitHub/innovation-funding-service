@@ -71,6 +71,10 @@ public class ApplicationCreationAuthenticatedController {
     private String redirectToOrganisationCreation(long competitionId, HttpServletResponse response) {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
+        // change to do lookup for comp config
+        if (true) {
+            return "redirect:/organisation/create/international-organisation";
+        }
         return "redirect:/organisation/select";
     }
 }
