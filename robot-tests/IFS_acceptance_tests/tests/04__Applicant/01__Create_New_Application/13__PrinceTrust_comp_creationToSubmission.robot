@@ -5,8 +5,8 @@ Documentation   IFS-2688 As a Portfolio manager I am able to create a Prince's T
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
-Resource        ../Applicant_Commons.robot
-Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource        ../../../resources/common/Applicant_Commons.robot
+Resource        ../../../resources/common/Competition_Commons.robot
 
 
 *** Variables ***

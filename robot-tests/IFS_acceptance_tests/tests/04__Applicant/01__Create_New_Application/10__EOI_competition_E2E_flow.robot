@@ -18,9 +18,9 @@ Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../../07__Assessor/Assessor_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 # This suite covers End to End flow of EOI type competition i.e comp creation, applicaiotn submission , assessmnet submission, release feedback
 *** Variables ***

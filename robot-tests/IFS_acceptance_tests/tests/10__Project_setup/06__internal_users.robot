@@ -18,7 +18,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Project Finance has a dashboard and can see projects in PS

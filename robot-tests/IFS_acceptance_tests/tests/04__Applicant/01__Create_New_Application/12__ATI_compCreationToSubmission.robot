@@ -11,9 +11,9 @@ Documentation     IFS-2396  ATI Competition type template
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${ATIcompetitionTitle}  ATI Competition

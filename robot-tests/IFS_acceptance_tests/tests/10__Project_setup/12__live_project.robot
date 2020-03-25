@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 Suite Setup       Project fiance approves the grant offer letter
 Suite Teardown    Close browser and delete emails
 
