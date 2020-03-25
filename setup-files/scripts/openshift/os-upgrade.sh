@@ -19,7 +19,8 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function upgradeServices {
-  # Deploying finance-data-service before data-service as latter submits updates to former.
+
+    # Deploying finance-data-service before data-service as latter submits updates to former.
     # rolloutStatus checks ensure that service has been deployed successfully before proceeding further.
     oc apply -f $(getBuildLocation)/ifs-services/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "finance-data-service"
@@ -59,12 +60,6 @@ function upgradeServices {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
-    fi
-
-    # conditionally deploy zipkin
-    if $(isPerfEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/zipkin/70-zipkin.yml ${SVC_ACCOUNT_CLAUSE}
-        oc apply -f $(getBuildLocation)/mysql/3-zipkin-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchSilStubStatus
