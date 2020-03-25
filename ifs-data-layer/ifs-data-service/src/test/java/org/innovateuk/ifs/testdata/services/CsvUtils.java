@@ -830,16 +830,8 @@ public class CsvUtils {
             return false;
         }
 
-        if ("0".equals(s)) {
-            return false;
-        }
-
         if ("1".equals(s)) {
             return true;
-        }
-
-        if ("no".equals(s.toLowerCase())) {
-            return false;
         }
 
         if ("yes".equals(s.toLowerCase())) {
