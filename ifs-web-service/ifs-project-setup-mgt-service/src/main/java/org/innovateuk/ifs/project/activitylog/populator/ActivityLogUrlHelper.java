@@ -56,6 +56,8 @@ public class ActivityLogUrlHelper {
             case GRANT_OFFER_LETTER_PUBLISHED:
             case GRANT_OFFER_LETTER_SIGNED:
             case GRANT_OFFER_LETTER_APPROVED:
+            case GRANT_OFFER_LETTER_REJECTED:
+                return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());
             case GRANTS_PROJECT_MANAGER_INVITED:
             case GRANTS_FINANCE_CONTACT_INVITED:
             case GRANTS_MONITORING_OFFICER_INVITED:
