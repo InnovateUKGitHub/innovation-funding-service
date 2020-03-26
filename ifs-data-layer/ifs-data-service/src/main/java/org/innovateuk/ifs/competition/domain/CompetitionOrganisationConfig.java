@@ -19,7 +19,7 @@ public class CompetitionOrganisationConfig {
     @Column(name = "international_lead_organisation_allowed")
     private Boolean internationalLeadOrganisationAllowed;
 
-    CompetitionOrganisationConfig() {
+    public CompetitionOrganisationConfig() {
     }
 
     public CompetitionOrganisationConfig(Competition competition,
