@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignmentResource;

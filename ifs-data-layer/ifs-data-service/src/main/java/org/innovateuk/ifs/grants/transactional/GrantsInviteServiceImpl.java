@@ -8,12 +8,16 @@ import org.innovateuk.ifs.grants.domain.GrantsFinanceContactInvite;
 import org.innovateuk.ifs.grants.domain.GrantsInvite;
 import org.innovateuk.ifs.grants.domain.GrantsMonitoringOfficerInvite;
 import org.innovateuk.ifs.grants.domain.GrantsProjectManagerInvite;
+import org.innovateuk.ifs.grants.repository.GrantsFinanceContactInviteRepository;
 import org.innovateuk.ifs.grants.repository.GrantsInviteRepository;
+import org.innovateuk.ifs.grants.repository.GrantsMonitoringOfficerInviteRepository;
+import org.innovateuk.ifs.grants.repository.GrantsProjectManagerInviteRepository;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -66,6 +70,15 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     private GrantsInviteRepository grantsInviteRepository;
 
     @Autowired
+    private GrantsFinanceContactInviteRepository grantsFinanceContactInviteRepository;
+
+    @Autowired
+    private GrantsMonitoringOfficerInviteRepository grantsMonitoringOfficerInviteRepository;
+
+    @Autowired
+    private GrantsProjectManagerInviteRepository grantsProjectManagerInviteRepository;
+
+    @Autowired
     private ActivityLogService activityLogService;
 
     @Value("${ifs.web.baseURL}")
@@ -90,11 +103,22 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                     grantsInvite.setName(invite.getUserName());
                     grantsInvite.setHash(generateInviteHash());
                     grantsInvite.setTarget(project);
-
-                    grantsInvite = grantsInviteRepository.save(grantsInvite);
+                    grantsInvite = getInviteRepository(invite).save(grantsInvite);
                     return sendInviteNotification(grantsInvite)
                             .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
                 });
+    }
+
+    private GrantsInviteRepository getInviteRepository(GrantsInviteResource invite) {
+        switch (invite.getGrantsInviteRole()) {
+            case GRANTS_PROJECT_MANAGER:
+                return grantsProjectManagerInviteRepository;
+            case GRANTS_PROJECT_FINANCE_CONTACT:
+                return grantsFinanceContactInviteRepository;
+            case GRANTS_MONITORING_OFFICER:
+                return grantsMonitoringOfficerInviteRepository;
+        }
+        throw new IFSRuntimeException("Unknown invite role: " + invite.getGrantsInviteRole().name());
     }
 
     private ServiceResult<GrantsInvite> sendInviteNotification(GrantsInvite grantsInvite) {
