@@ -32,12 +32,7 @@ public class AddressResource {
     }
 
     public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.addressLine3 = addressLine3;
-        this.town = town;
-        this.county = county;
-        this.postcode = postcode;
+        this(addressLine1, addressLine2, addressLine3, town, county, postcode, null);
     }
 
     public AddressResource(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode, String country) {

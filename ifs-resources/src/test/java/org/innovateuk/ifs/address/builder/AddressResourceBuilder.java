@@ -65,6 +65,6 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
     }
 
     public AddressResourceBuilder withCountry(String... countries) {
-        return withArray((country, address) -> setField("country", country, address), countries);
+        return withArraySetFieldByReflection("country", countries);
     }
 }

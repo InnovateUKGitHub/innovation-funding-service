@@ -1,104 +1,140 @@
 apiVersion: v1
 kind: List
 items:
-- apiVersion: v1
-  kind: DeploymentConfig
-  metadata:
-    creationTimestamp: null
-    name: application-svc
-  spec:
-    replicas: 1
-    selector:
-      deploymentconfig: application-svc
-    strategy:
-      type: Rolling
-      rollingParams:
-        timeoutSeconds: 600
-        maxSurge: 2
-        maxUnavailable: 0
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          deploymentconfig: application-svc
-      spec:
-        containers:
-        - image: innovateuk/application-service:${applicationServiceVersion}
-          name: application-svc
-          livenessProbe:
-            httpGet:
-              path: /monitoring/health
-              port: 8080
-            initialDelaySeconds: 180
-            periodSeconds: 31
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /monitoring/health
-              port: 8080
-            initialDelaySeconds: 180
-            periodSeconds: 5
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 1
-          imagePullPolicy: Always
-          env:
-          - name: SPRING_APPLICATION_JSON
-            value: '{"logout":{"url": "https://${SHIB_ADDRESS}/Logout/"}}'
-          - name: JAVA_OPTS
-            value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
-          - name: NEW_RELIC_APP_NAME
-            value: "ifs-application-service (${openshiftEnv})"
-          - name: NEW_RELIC_LICENSE_KEY
-            value: "${NEW_RELIC_LICENCE_KEY}"
-          - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-            value: "${GA_TRACKING_ID}"
-          - name: IFS_WEB_SYSTEM_USER_UID
-            value: "${SYSTEM_USER_UUID}"
-          - name: NEW_RELIC_LOG
-            value: "STDOUT"
-          - name: IFS_WEB_REST_CONNECTIONS_MAX_TOTAL
-            value: "1000"
-          - name: IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE
-            value: "1000"
-          - name: IFS_WEB_AJP_CONNECTIONS_MAX_TOTAL
-            value: "700"
-          - name: IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT
-            value: "700"
-          - name: IFS_WEB_AJP_CONNECTIONS_MAX_THREADS
-            value: "300"
-          - name: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
-            value: "${IFS_LIVE_PROJECTS_LANDING_PAGE_URL}"
-          - name: IFS_EARLY_METRICS_URL
-            value: "${IFS_EARLY_METRICS_URL}"
-          ports:
-          - containerPort: 8080
-          resources:
-            limits:
-              cpu: 1000m
-            requests:
-              cpu: 100m
-              memory: 1G
-    test: false
-    triggers:
-    - type: ConfigChange
-    status: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    creationTimestamp: null
-    name: application-svc
-  spec:
-    ports:
-    - name: 8080-tcp
-      port: 8080
-      targetPort: 8080
-    - name: 8009-tcp
-      port: 8009
-      targetPort: 8009
-    selector:
-      deploymentconfig: application-svc
-  status:
-    loadBalancer: {}
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      creationTimestamp: null
+      name: application-svc
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: application-svc
+      strategy:
+        type: Rolling
+        rollingParams:
+          timeoutSeconds: 600
+          maxSurge: 2
+          maxUnavailable: 0
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            deploymentconfig: application-svc
+        spec:
+          containers:
+            - image: innovateuk/application-service:${applicationServiceVersion}
+              name: application-svc
+              livenessProbe:
+                httpGet:
+                  path: /monitoring/health
+                  port: 8080
+                initialDelaySeconds: 180
+                periodSeconds: 31
+                timeoutSeconds: 5
+                successThreshold: 1
+                failureThreshold: 3
+              readinessProbe:
+                httpGet:
+                  path: /monitoring/health
+                  port: 8080
+                initialDelaySeconds: 180
+                periodSeconds: 5
+                timeoutSeconds: 5
+                successThreshold: 1
+                failureThreshold: 1
+              imagePullPolicy: Always
+              env:
+                - name: SPRING_APPLICATION_JSON
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: SPRING_APPLICATION_JSON
+                - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
+                - name: IFS_WEB_SYSTEM_USER_UID
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_SYSTEM_USER_UID
+                - name: IFS_WEB_REST_CONNECTIONS_MAX_TOTAL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_REST_CONNECTIONS_MAX_TOTAL
+                - name: IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_REST_CONNECTIONS_MAX_PER_ROUTE
+                - name: IFS_WEB_AJP_CONNECTIONS_MAX_TOTAL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_AJP_CONNECTIONS_MAX_TOTAL
+                - name: IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_AJP_CONNECTIONS_ACCEPT_COUNT
+                - name: IFS_WEB_AJP_CONNECTIONS_MAX_THREADS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_AJP_CONNECTIONS_MAX_THREADS
+                - name: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
+                - name: IFS_EARLY_METRICS_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_EARLY_METRICS_URL
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: NEW_RELIC_APP_NAME
+                  value: "ifs-application-service (${openshiftEnv})"
+                - name: JAVA_OPTS
+                  value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
+              ports:
+                - containerPort: 8080
+              resources:
+                limits:
+                  cpu: 1000m
+                requests:
+                  cpu: 100m
+                  memory: 1G
+      test: false
+      triggers:
+        - type: ConfigChange
+      status: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      creationTimestamp: null
+      name: application-svc
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          targetPort: 8080
+        - name: 8009-tcp
+          port: 8009
+          targetPort: 8009
+      selector:
+        deploymentconfig: application-svc
+    status:
+      loadBalancer: {}
