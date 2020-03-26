@@ -43,6 +43,6 @@ public interface MonitoringOfficerService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);
 
-//    add permissions
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_MONITORING_OFFICER')")
     ServiceResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId);
 }
