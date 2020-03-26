@@ -10,6 +10,7 @@ import org.mockito.Mock;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +28,7 @@ public class CompetitionOrganisationConfigServiceImplTest extends BaseServiceUni
     @Test
     public void findOneByCompetitionId() {
         long competitionId = 100L;
-        CompetitionOrganisationConfig config = new CompetitionOrganisationConfig();
+        CompetitionOrganisationConfig config = new CompetitionOrganisationConfig(newCompetition().build(),false, false);
 
         when(competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(config));
 
