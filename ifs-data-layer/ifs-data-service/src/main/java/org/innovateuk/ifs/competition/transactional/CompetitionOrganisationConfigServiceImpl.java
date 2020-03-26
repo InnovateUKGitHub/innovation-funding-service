@@ -26,9 +26,10 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
 
         Optional<CompetitionOrganisationConfig> config = competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId);
 
-        return config.map(competitionOrganisationConfig ->
+        if (config.isPresent()) {
+            return serviceSuccess(Optional.of(mapper.mapToResource(config.get())));
+        }
 
-                serviceSuccess(Optional.of(mapper.mapToResource(competitionOrganisationConfig))))
-                .orElseGet(() -> serviceSuccess(Optional.empty()));
+        return serviceSuccess(Optional.empty());
     }
 }
