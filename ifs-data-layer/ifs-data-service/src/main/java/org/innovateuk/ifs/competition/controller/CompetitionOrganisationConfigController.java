@@ -16,11 +16,10 @@ import java.util.Optional;
 public class CompetitionOrganisationConfigController {
 
     @Autowired
-    CompetitionOrganisationConfigService competitionOrganisationConfigService;
+    private CompetitionOrganisationConfigService competitionOrganisationConfigService;
 
     @GetMapping("/find-by-competition-id/{competitionId}")
     public RestResult<Optional<CompetitionOrganisationConfigResource>> findOneByCompetitionId(@PathVariable final long competitionId) {
         return competitionOrganisationConfigService.findOneByCompetitionId(competitionId).toGetResponse();
     }
-
 }

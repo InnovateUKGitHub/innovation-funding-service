@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface CompetitionOrganisationConfigService {
 
-    @NotSecured(value = "Any user can find the international competitions",
-            mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "Any user can find the international competitions", mustBeSecuredByOtherServices = false)
     ServiceResult<Optional<CompetitionOrganisationConfigResource>> findOneByCompetitionId(long competitionId);
 }

@@ -22,13 +22,17 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
 
         Optional<CompetitionOrganisationConfig> config = competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId);
 
-        if (config.isPresent()) {
-            CompetitionOrganisationConfigResource resource = new CompetitionOrganisationConfigResource();
-            resource.setId(competitionId);
-            resource.setInternationalOrganisationsAllowed(config.get().getInternationalOrganisationsAllowed());
-            resource.setInternationalLeadOrganisationAllowed(config.get().getInternationalLeadOrganisationAllowed());
-            return serviceSuccess(Optional.of(resource));
-        }
-        return serviceSuccess(Optional.empty());
+        return config.map(competitionOrganisationConfig ->
+
+                serviceSuccess(Optional.of(mapToResource(competitionOrganisationConfig))))
+                .orElseGet(() -> serviceSuccess(Optional.empty()));
+    }
+
+    public CompetitionOrganisationConfigResource mapToResource(CompetitionOrganisationConfig config) {
+        CompetitionOrganisationConfigResource resource = new CompetitionOrganisationConfigResource();
+        resource.setId(config.getId());
+        resource.setInternationalOrganisationsAllowed(config.getInternationalOrganisationsAllowed());
+        resource.setInternationalLeadOrganisationAllowed(config.getInternationalLeadOrganisationAllowed());
+        return resource;
     }
 }
