@@ -4,7 +4,7 @@ import org.innovateuk.ifs.grants.domain.GrantsMonitoringOfficerInvite;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 
-public interface GrantsMonitoringOfficerInviteRepository extends GrantsInviteRepository<GrantsMonitoringOfficerInvite> {
+public interface GrantsMonitoringOfficerInviteRepository extends InviteRepository<GrantsMonitoringOfficerInvite> {
 
     boolean existsByStatusAndEmail(InviteStatus status, String email);
 }

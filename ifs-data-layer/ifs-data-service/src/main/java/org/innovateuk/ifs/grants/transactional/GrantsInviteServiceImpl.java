@@ -93,23 +93,23 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<Void> sendInvite(long projectId, GrantsInviteResource invite) {
         return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project -> {
-                    InviteOrganisation inviteOrganisation = new InviteOrganisation();
-                    inviteOrganisation.setOrganisationName(invite.getOrganisationName());
-                    inviteOrganisation = inviteOrganisationRepository.save(inviteOrganisation);
+            InviteOrganisation inviteOrganisation = new InviteOrganisation();
+            inviteOrganisation.setOrganisationName(invite.getOrganisationName());
+            inviteOrganisation = inviteOrganisationRepository.save(inviteOrganisation);
 
-                    GrantsInvite grantsInvite = new GrantsInvite();
-                    grantsInvite.setInviteOrganisation(inviteOrganisation);
-                    grantsInvite.setEmail(invite.getEmail());
-                    grantsInvite.setName(invite.getUserName());
-                    grantsInvite.setHash(generateInviteHash());
-                    grantsInvite.setTarget(project);
-                    grantsInvite = getInviteRepository(invite).save(grantsInvite);
-                    return sendInviteNotification(grantsInvite)
-                            .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
-                });
+            GrantsInvite grantsInvite = getInviteType(invite);
+            grantsInvite.setInviteOrganisation(inviteOrganisation);
+            grantsInvite.setEmail(invite.getEmail());
+            grantsInvite.setName(invite.getUserName());
+            grantsInvite.setHash(generateInviteHash());
+            grantsInvite.setTarget(project);
+            getInviteRepository(invite).save(grantsInvite);
+            return sendInviteNotification(grantsInvite)
+                    .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+        });
     }
 
-    private GrantsInviteRepository getInviteRepository(GrantsInviteResource invite) {
+    private InviteRepository getInviteRepository(GrantsInviteResource invite) {
         switch (invite.getGrantsInviteRole()) {
             case GRANTS_PROJECT_MANAGER:
                 return grantsProjectManagerInviteRepository;
@@ -117,6 +117,18 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                 return grantsFinanceContactInviteRepository;
             case GRANTS_MONITORING_OFFICER:
                 return grantsMonitoringOfficerInviteRepository;
+        }
+        throw new IFSRuntimeException("Unknown invite role: " + invite.getGrantsInviteRole().name());
+    }
+
+    private GrantsInvite getInviteType(GrantsInviteResource invite) {
+        switch (invite.getGrantsInviteRole()) {
+            case GRANTS_PROJECT_MANAGER:
+                return new GrantsProjectManagerInvite();
+            case GRANTS_PROJECT_FINANCE_CONTACT:
+                return new GrantsFinanceContactInvite();
+            case GRANTS_MONITORING_OFFICER:
+                return new GrantsMonitoringOfficerInvite();
         }
         throw new IFSRuntimeException("Unknown invite role: " + invite.getGrantsInviteRole().name());
     }
@@ -139,11 +151,18 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-        return new Notification(from, singletonList(to), getEmailTemplate(), notificationArguments);
+        return new Notification(from, singletonList(to), getEmailTemplate(grantsInvite.getClass()), notificationArguments);
     }
 
-    private Notifications getEmailTemplate() {
-        return null;
+    private Notifications getEmailTemplate(Class<? extends GrantsInvite> clazz) {
+        if (GrantsProjectManagerInvite.class.equals(clazz)) {
+            return Notifications.INVITE_GRANTS_PROJECT_MANAGER;
+        } else if (GrantsMonitoringOfficerInvite.class.equals(clazz)) {
+            return Notifications.INVITE_GRANTS_MONITORING_OFFICER;
+        } else if (GrantsFinanceContactInvite.class.equals(clazz)) {
+            return Notifications.INVITE_GRANTS_PROJECT_FINANCE_CONTACT;
+        }
+        throw new IFSRuntimeException("No matching email template");
     }
 
     @Override
@@ -187,7 +206,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                                     if (invite.getUser().hasRole(roleToAdd)) {
                                         invite.getUser().addRole(roleToAdd);
                                     }
-                                    if(!invite.getUser().hasRole(LIVE_PROJECTS_USER)) {
+                                    if (!invite.getUser().hasRole(LIVE_PROJECTS_USER)) {
                                         invite.getUser().addRole(LIVE_PROJECTS_USER);
                                     }
                                     return serviceSuccess();
