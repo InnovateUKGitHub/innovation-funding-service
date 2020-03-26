@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.grants.repository.GrantsMonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -91,9 +90,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
 
     @Autowired
-    private GrantsMonitoringOfficerInviteRepository grantsMonitoringOfficerInviteRepository;
-
-    @Autowired
     private StakeholderRepository stakeholderRepository;
 
     @Override
@@ -150,11 +146,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     .andOnSuccessReturn(() -> user);
         }
 
-        if(grantsMonitoringOfficerInviteRepository.existsByHash(hash)) {
-            return activateUser(user)
-                    .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
-                    .andOnSuccessReturn(() -> user);
-        }
         return serviceFailure(GENERAL_NOT_FOUND);
     }
 
