@@ -5,12 +5,9 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.project.core.domain.Project;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
-@MappedSuperclass
+@Entity
 public class GrantsInvite<T extends GrantsInvite<T>> extends ProjectInvite<T> {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -10,7 +10,7 @@ import javax.persistence.*;
  * Invite for a new project manager for a live project
  */
 @Entity
-@DiscriminatorValue("ACC_PROJECT_MANAGER")
+@DiscriminatorValue("GRANTS_PROJECT_MANAGER")
 public class GrantsProjectManagerInvite extends GrantsInvite<GrantsProjectManagerInvite> {
 
     public GrantsProjectManagerInvite() {

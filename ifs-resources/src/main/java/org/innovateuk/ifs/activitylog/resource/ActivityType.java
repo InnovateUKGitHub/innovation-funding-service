@@ -38,7 +38,9 @@ public enum ActivityType {
     MARKED_PROJECT_AS_UNSUCCESSFUL,
     ORGANISATION_REMOVED,
     ORGANISATION_ADDED,
-
+    GRANTS_PROJECT_MANAGER_INVITED,
+    GRANTS_FINANCE_CONTACT_INVITED,
+    GRANTS_MONITORING_OFFICER_INVITED,
 
     NONE //Will not be persisted to database. Only gives default value to annotation.
 

@@ -11,7 +11,7 @@ import javax.persistence.Entity;
  * Invite a user to be a system-wide monitoring officer.
  */
 @Entity
-@DiscriminatorValue("ACC_PROJECT_FINANCE_CONTACT")
+@DiscriminatorValue("GRANTS_PROJECT_FINANCE_CONTACT")
 public class GrantsFinanceContactInvite extends GrantsInvite<GrantsFinanceContactInvite> {
 
     public GrantsFinanceContactInvite() {
