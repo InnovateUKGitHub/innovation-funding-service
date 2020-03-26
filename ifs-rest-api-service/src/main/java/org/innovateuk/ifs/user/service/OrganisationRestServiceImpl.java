@@ -56,7 +56,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
     @Override
     public RestResult<List<OrganisationResource>> getAllInternationalByUserId(long userId) {
         return getWithRestResult(organisationRestURL + "/international-by-user-id/" + userId,  organisationResourceListType());
-
     }
 
     @Override

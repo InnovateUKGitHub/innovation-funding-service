@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,19 +23,22 @@ import java.util.Optional;
 @PreAuthorize("permitAll")
 public class OrganisationCreationLeadInitializationController extends AbstractOrganisationCreationController {
 
+    @Autowired
+    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+
     @GetMapping
     public String initializeLeadRegistrationJourney(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
         registrationCookieService.deleteOrganisationCreationCookie(response);
         // Implement properly once IFS-7194 has done in, for now set to true for all
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        boolean isInternationalCompetition = true;
+        Optional<CompetitionOrganisationConfigResource> organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
 
-        if (isInternationalCompetition) {
+        if (organisationConfig.isPresent() && organisationConfig.get().getInternationalLeadOrganisationAllowed()) {
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
         }
 
