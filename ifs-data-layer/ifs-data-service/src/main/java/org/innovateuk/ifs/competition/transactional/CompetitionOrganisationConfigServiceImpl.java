@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionOrganisationConfig;
+import org.innovateuk.ifs.competition.mapper.CompetitionOrganisationConfigMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionOrganisationConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
     @Autowired
     private CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
 
+    @Autowired
+    private CompetitionOrganisationConfigMapper mapper;
+
     @Override
     public ServiceResult<Optional<CompetitionOrganisationConfigResource>> findOneByCompetitionId(long competitionId) {
 
@@ -24,15 +28,7 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
 
         return config.map(competitionOrganisationConfig ->
 
-                serviceSuccess(Optional.of(mapToResource(competitionOrganisationConfig))))
+                serviceSuccess(Optional.of(mapper.mapToResource(competitionOrganisationConfig))))
                 .orElseGet(() -> serviceSuccess(Optional.empty()));
-    }
-
-    public CompetitionOrganisationConfigResource mapToResource(CompetitionOrganisationConfig config) {
-        CompetitionOrganisationConfigResource resource = new CompetitionOrganisationConfigResource();
-        resource.setId(config.getId());
-        resource.setInternationalOrganisationsAllowed(config.getInternationalOrganisationsAllowed());
-        resource.setInternationalLeadOrganisationAllowed(config.getInternationalLeadOrganisationAllowed());
-        return resource;
     }
 }
