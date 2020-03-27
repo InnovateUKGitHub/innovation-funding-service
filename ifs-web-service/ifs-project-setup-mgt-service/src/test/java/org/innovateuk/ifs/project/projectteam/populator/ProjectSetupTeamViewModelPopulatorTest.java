@@ -133,12 +133,8 @@ public class ProjectSetupTeamViewModelPopulatorTest {
                         .get();
 
         assertEquals(1, partnerOneViewModel.getUsers().size());
-        assertNotNull(partnerOneViewModel.getProjectManager());
 
-        AbstractProjectTeamRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
-        assertEquals(partnerOneUser.getId(), 123L);
-
-        AbstractProjectTeamRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
+        AbstractProjectTeamRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(0);
         assertEquals((long) invites.get(0).getId(), partnerOneInvitee.getId());
         assertEquals("Mr Invite (pending for 10 days)", partnerOneInvitee.getName());
 
