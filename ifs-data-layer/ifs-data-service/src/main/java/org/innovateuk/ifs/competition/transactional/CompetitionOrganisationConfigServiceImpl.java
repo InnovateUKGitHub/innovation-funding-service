@@ -22,14 +22,14 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
     private CompetitionOrganisationConfigMapper mapper;
 
     @Override
-    public ServiceResult<Optional<CompetitionOrganisationConfigResource>> findOneByCompetitionId(long competitionId) {
+    public ServiceResult<CompetitionOrganisationConfigResource> findOneByCompetitionId(long competitionId) {
 
         Optional<CompetitionOrganisationConfig> config = competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId);
 
         if (config.isPresent()) {
-            return serviceSuccess(Optional.of(mapper.mapToResource(config.get())));
+            return serviceSuccess(mapper.mapToResource(config.get()));
         }
 
-        return serviceSuccess(Optional.empty());
+        return serviceSuccess(new CompetitionOrganisationConfigResource(false, false));
     }
 }
