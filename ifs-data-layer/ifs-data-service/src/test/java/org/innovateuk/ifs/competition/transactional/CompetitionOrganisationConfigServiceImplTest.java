@@ -39,7 +39,7 @@ public class CompetitionOrganisationConfigServiceImplTest extends BaseServiceUni
         when(competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(config));
         when(mapper.mapToResource(config)).thenReturn(resource);
 
-        ServiceResult<Optional<CompetitionOrganisationConfigResource>> result = service.findOneByCompetitionId(competitionId);
+        ServiceResult<CompetitionOrganisationConfigResource> result = service.findOneByCompetitionId(competitionId);
 
         assertTrue(result.isSuccess());
     }
