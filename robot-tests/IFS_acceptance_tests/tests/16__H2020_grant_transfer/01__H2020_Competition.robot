@@ -8,9 +8,9 @@ Documentation  IFS-5158 - Competition Template
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
-Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${CA_UpcomingComp}           ${server}/management/dashboard/upcoming

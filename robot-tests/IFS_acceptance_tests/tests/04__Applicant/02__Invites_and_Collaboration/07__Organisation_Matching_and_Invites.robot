@@ -6,7 +6,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 # research partners

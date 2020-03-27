@@ -14,8 +14,8 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../10__Project_setup/PS_Common.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Non registered users non companies house route

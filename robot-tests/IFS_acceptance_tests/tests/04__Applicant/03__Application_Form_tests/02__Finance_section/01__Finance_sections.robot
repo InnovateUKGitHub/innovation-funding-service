@@ -18,7 +18,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../Applicant_Commons.robot
+Resource          ../../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${applicationName}  ${OPEN_COMPETITION_APPLICATION_5_NAME}

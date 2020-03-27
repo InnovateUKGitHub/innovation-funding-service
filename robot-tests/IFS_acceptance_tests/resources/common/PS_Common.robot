@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    ../../resources/defaultResources.robot
-Resource    ../04__Applicant/Applicant_Commons.robot
+Resource    Applicant_Commons.robot
 
 *** Variables ***
 
