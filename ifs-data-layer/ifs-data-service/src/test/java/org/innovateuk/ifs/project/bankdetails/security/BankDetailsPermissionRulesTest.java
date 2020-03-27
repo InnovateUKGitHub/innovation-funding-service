@@ -83,7 +83,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     @Test
     public void partnersCannotSeeBankDetailsOfAnotherOrganisation() {
         when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisationResource.getId(), PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisationResource.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(null);
         assertFalse(rules.partnersCanSeeTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 
@@ -91,7 +91,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     public void partnersCanUpdateTheirOwnOrganisationBankDetails() {
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(partnerProjectUser);
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisationResource.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(partnerProjectUser.get(0));
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisationResource.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(partnerProjectUser.get(0));
         assertTrue(rules.partnersCanSubmitTheirOwnOrganisationsBankDetails(bankDetailsResource, user));
     }
 

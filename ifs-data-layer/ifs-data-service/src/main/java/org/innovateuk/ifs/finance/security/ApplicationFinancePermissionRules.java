@@ -140,7 +140,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         Optional<Project> project = projectRepository.findByApplicationId(applicationFinanceResource.getApplication());
 
         if (project.isPresent()) {
-            
+
             return project.get().getProjectUsers().stream()
                     .map(ProjectUser::getUser)
                     .map(User::getId)

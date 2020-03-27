@@ -124,7 +124,7 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, OrganisationResource organisation, boolean userIsPartner) {
         ProjectUser partnerProjectUser = newProjectUser().build();
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisation.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(userIsPartner ? partnerProjectUser : null);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisation.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
     protected void setupMonitoringOfficerExpectations(ProjectResource project, UserResource user, boolean userIsMonitoringOfficer) {
