@@ -1,4 +1,15 @@
-datasources:da39a3ee5e6b4b0d3255bfef95601890afd80709
-commandlineoptions:458fa11267fdfd5ffe6d48e5248d74c3f06c38b1
+datasources:6778006c4c1e6a414b368eae496e9bb4e9297857
+commandlineoptions:1e2309aff85b096401950a2e27c773a606ac569b
 suitesfrom:no-suites-from-option
-file:1bdbe0f3662510f558daf09934ad4b103d2921c1
+file:47f1268636e4e329e1331a60de43392a759ec37d
+--suite 07__Assessor.Assessor Dashboard.Assessor agreement Travel and subsistence
+--suite 07__Assessor.Assessor Dashboard.Your DOI
+--suite 07__Assessor.Assessor Dashboard.Your details
+--suite 07__Assessor.Assessor Dashboard.Your skills
+--suite 07__Assessor.Competitions for assessment.Assessment overview and Application review
+--suite 07__Assessor.Competitions for assessment.Assessor Submit Flow
+--suite 07__Assessor.Competitions for assessment.Competition dashboard
+--suite 07__Assessor.End to End Assessor flow.Assessor Journey Flow
+--suite 07__Assessor.Invite Assessors.Accept And Reject Invites with existing assessor
+--suite 07__Assessor.Invite Assessors.Allocation Of Assessors
+--suite 07__Assessor.Invite Assessors.Invite Nonregistered assessor
