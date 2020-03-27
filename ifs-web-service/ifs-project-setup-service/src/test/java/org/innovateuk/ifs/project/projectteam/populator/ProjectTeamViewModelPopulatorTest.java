@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -57,6 +58,9 @@ public class ProjectTeamViewModelPopulatorTest {
     @Mock
     private ProjectInviteRestService projectInviteRestService;
 
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
     @Test
     public void populate() {
         UserResource loggedInUser = newUserResource().withId(123L).build();
@@ -95,6 +99,7 @@ public class ProjectTeamViewModelPopulatorTest {
                 .withSentOn(ZonedDateTime.now().minusHours(2).minusDays(10))
                 .build(1);
 
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);

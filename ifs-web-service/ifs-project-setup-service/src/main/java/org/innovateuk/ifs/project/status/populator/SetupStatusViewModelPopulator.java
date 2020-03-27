@@ -55,13 +55,10 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SetupSectionStatus sectionStatus;
 
-    @Autowired
-    private MonitoringOfficerRestService monitoringOfficerRestService;
-
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
-        boolean monitoringOfficer = monitoringOfficerRestService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();;
+        boolean monitoringOfficer = monitoringOfficerService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
