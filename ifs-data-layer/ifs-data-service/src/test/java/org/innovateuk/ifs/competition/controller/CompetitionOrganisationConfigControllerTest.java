@@ -6,8 +6,6 @@ import org.innovateuk.ifs.competition.transactional.CompetitionOrganisationConfi
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Optional;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
@@ -32,7 +30,7 @@ public class CompetitionOrganisationConfigControllerTest extends BaseControllerM
 
         CompetitionOrganisationConfigResource resource = new CompetitionOrganisationConfigResource();
 
-        when(competitionOrganisationConfigService.findOneByCompetitionId(competitionId)).thenReturn(serviceSuccess(Optional.of(resource)));
+        when(competitionOrganisationConfigService.findOneByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/competition-organisation-config/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
