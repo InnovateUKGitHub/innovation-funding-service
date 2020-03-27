@@ -165,7 +165,6 @@ public class MonitoringOfficerServiceImplTest {
                 )
                 .build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer(monitoringOfficer).build()));
         when(projectMonitoringOfficerRepositoryMock.findOneByProjectIdAndRole(projectId, ProjectParticipantRole.MONITORING_OFFICER)).thenReturn(Optional.of(monitoringOfficer));
 
         ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);
@@ -190,7 +189,6 @@ public class MonitoringOfficerServiceImplTest {
 
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer().build()));
         when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceSuccess(newLegacyMonitoringOfficerResource()
                 .withEmail(email)
                 .withFirstName(firstName)
@@ -214,7 +212,6 @@ public class MonitoringOfficerServiceImplTest {
     public void findMonitoringOfficerForProject_notFound() {
         long projectId = 1L;
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.ofNullable(newProject().withProjectMonitoringOfficer().build()));
         when(legacyMonitoringOfficerService.getMonitoringOfficer(projectId)).thenReturn(serviceFailure(CommonErrors.notFoundError(LegacyMonitoringOfficer.class)));
 
         ServiceResult<MonitoringOfficerResource> result = service.findMonitoringOfficerForProject(projectId);

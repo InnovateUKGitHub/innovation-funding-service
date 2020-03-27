@@ -99,7 +99,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisation.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(new ProjectUser());
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), user.getId(), organisation.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(new ProjectUser());
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
@@ -137,7 +137,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         UserResource user = newUserResource().build();
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(null);
 
         assertFalse(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
     }
@@ -150,7 +150,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
         UserResource user = newUserResource().build();
 
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(new ProjectUser());
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(new ProjectUser());
 
         assertTrue(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
     }

@@ -81,8 +81,8 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
         when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), userOnProjectForOrganisationOne.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(singletonList(projectUserForUserOnOrganisationOne));
         when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), userOnProjectForOrganisationTwo.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(singletonList(projectUserForUserOnOrganisationTwo));
         when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), userNotOnProject.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(emptyList());
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUserForUserOnOrganisationOne);
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUserForUserOnOrganisationTwo);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), userOnProjectForOrganisationOne.getId(), organisationOne.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUserForUserOnOrganisationOne);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(project.getId(), userOnProjectForOrganisationTwo.getId(), organisationTwo.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUserForUserOnOrganisationTwo);
         when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
     }
 
