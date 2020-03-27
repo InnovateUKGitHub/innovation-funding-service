@@ -7,7 +7,7 @@ Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Default Tags
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 #This test suite is using the Application:  Robot test application
 

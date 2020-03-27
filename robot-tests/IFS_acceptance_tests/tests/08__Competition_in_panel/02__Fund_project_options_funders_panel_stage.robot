@@ -20,8 +20,8 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}

@@ -6,7 +6,7 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../resources/defaultResources.robot
-Resource          ../07__Assessor/Assessor_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Test Cases ***
 In Assessment dashboard page
