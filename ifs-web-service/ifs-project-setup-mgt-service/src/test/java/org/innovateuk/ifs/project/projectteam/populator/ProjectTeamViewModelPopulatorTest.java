@@ -132,7 +132,7 @@ public class ProjectTeamViewModelPopulatorTest {
                         .findAny()
                         .get();
 
-        assertEquals(2, partnerOneViewModel.getUsers().size());
+        assertEquals(1, partnerOneViewModel.getUsers().size());
         assertNotNull(partnerOneViewModel.getProjectManager());
 
         AbstractProjectTeamRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
