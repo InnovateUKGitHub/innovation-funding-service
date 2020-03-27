@@ -111,7 +111,6 @@ public class ProjectSetupTeamViewModelPopulatorTest {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
         when(projectInviteRestService.getInvitesByProject(project.getId())).thenReturn(restSuccess(invites));
         when(projectPartnerInviteRestService.getPartnerInvites(project.getId())).thenReturn(restSuccess(partnerInvites));
-        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         ProjectTeamViewModel model = service.populate(project.getId(), loggedInUser);
 
