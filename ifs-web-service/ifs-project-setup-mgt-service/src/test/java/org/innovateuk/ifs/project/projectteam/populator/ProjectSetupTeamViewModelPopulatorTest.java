@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectTeamViewModelPopulatorTest {
+public class ProjectSetupTeamViewModelPopulatorTest {
 
     @InjectMocks
     private ProjectTeamViewModelPopulator service;
