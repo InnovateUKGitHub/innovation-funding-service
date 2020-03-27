@@ -71,7 +71,7 @@ the counts of the key statistics of the closed competition should be correct
     ${APPLICATIONS_PER_ASSESSOR} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Applications per assessor") .govuk-heading-l
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    5
     ${APPLICATIONS_REQ} =    Get text    jQuery = .govuk-grid-column-one-third:contains("Applications requiring additional assessors") .govuk-heading-l
-    Should Be Equal As Integers  ${APPLICATIONS_REQ}     5
+    Should Be Equal As Integers  ${APPLICATIONS_REQ}     3
     ${Assessor_without_app} =    Get text     jQuery = .govuk-grid-column-one-third:contains("Assessors without applications") .govuk-heading-l
     Should Be Equal As Integers    ${Assessor_without_app}   4
 
