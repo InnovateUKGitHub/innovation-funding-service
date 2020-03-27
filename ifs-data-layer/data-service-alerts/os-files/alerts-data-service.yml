@@ -50,9 +50,15 @@ items:
           - name: NEW_RELIC_APP_NAME
             value: "ifs-data-service-alerts (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "${NEW_RELIC_LICENCE_KEY}"
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LICENSE_KEY
           - name: NEW_RELIC_LOG
-            value: "STDOUT"
+            valueFrom:
+              configMapKeyRef:
+                name: new-relic-config
+                key: NEW_RELIC_LOG
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
             value: "100"
           ports:

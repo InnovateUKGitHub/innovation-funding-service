@@ -37,7 +37,6 @@ ${Intelligent_water}   ${application_ids['Intelligent water system']}
 *** Test Cases ***
 View the list of the applications
     [Documentation]    INFUND-7042
-    [Tags]
     Given comp admin navigate to manage applications
     Then the application list is correct before changes
     [Teardown]  the user clicks the button/link  link = Manage assessments
@@ -49,7 +48,6 @@ View the list of assessors
 
 Filter assessors
     [Documentation]    IFS-399  IFS-5915
-    [Tags]
     Given the user filter assessors by first or last name
     [Teardown]    the user clicks the button/link  link = Clear filter
 
@@ -61,13 +59,11 @@ View assessor progress page
 
 Selecting Review assessor link shows the assessor page
     [Documentation]  IFS-1046
-    [Tags]
     Given the user clicks the button/link  link = Review assessor
     Then the user should see the element   jQuery = dt:contains("Name") ~ dd:contains("Paul Plum")
 
 Accepting the application changes the Accepted column
     [Documentation]  IFS-321
-    [Tags]
     [Setup]  Log in as a different user   &{assessor_credentials}
     Given the user accepts the application
     And Log in as a different user        &{Comp_admin1_credentials}
@@ -80,31 +76,28 @@ Remove an assigned application (Notified)
     When the user clicks the button/link      jQuery = button:contains("Remove assessor")
     Then the user should not see the element  jQuery = td:contains("${Molecular_id}") ~ td:contains("Yes") ~ td:contains("Remove")
     And the user should see the element       jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
-    And the user clicks the button/link       link = Next
+    And the user clicks the button/link       jQuery = .pagination-links a:contains("Next")
 
 Reassign a removed application
     [Documentation]    INFUND-398
-    [Tags]
     Given the user clicks the button/link      jQuery = button:contains("Reassign")
     Then the user should not see the element   jQuery = h2:contains("Previously assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Reassign")
     And the user should see the element        jQuery = h2:contains("Assigned") ~ div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") ~ td:contains("Remove")
 
 Assign an application to an assessor
     [Documentation]    IFS-811
-    [Tags]
-    Given the user clicks the button/link  link = Allocate assessors
-    And the user clicks the button/link    jQuery = a:contains("41 to")
-    When the user clicks the button/link   jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
-    Then the user should see the element   jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
-    When the user clicks the button/link    jQuery = td:contains("36") ~ td button:contains("Assign")
-    Then the user should see the element   jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
+    Given the user clicks the button/link             link = Allocate assessors
+    And the user clicks the button/link               jQuery = a:contains("41 to")
+    When the user clicks the button/link              jQuery = td:contains("Shaun Bradley") ~ td a:contains("View progress")
+    Then the user should see the element              jQuery = h2:contains("Assigned (0)") + p:contains("No applications have been assigned to this assessor")
+    When the user adds an application to an assessor  jQuery = tr:contains("36") :checkbox
+    Then the user should see the element              jQuery = h2:contains("Assigned (1)") + .table-overflow tr:contains("36")
 
 Filter by application number on the assessor page
     [Documentation]    IFS-400
-    [Tags]
     Given the user enters text to a text field  css = #filterSearch    ${Intelligent_water}
     When the user clicks the button/link        jQuery = button:contains("Filter")
-    Then the user should see the element        jQuery = tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
+    Then the user should see the element        jQuery = tr:nth-child(1) td:contains("${Intelligent_water}")
     And the user should not see the element     jQuery = .pagination-label:contains("Next")
 
 Filtering of the applications
@@ -115,7 +108,6 @@ Filtering of the applications
 
 Application number navigates to Overview
     [Documentation]    INFUND-7042
-    [Tags]
     Given the user clicks the button/link           link = ${Intelligent_water}
     Then The user should see the element           jQuery = .govuk-caption-l:contains("Intelligent water system")
     And the user should see the element            jQuery = h1:contains("Application overview")
@@ -123,13 +115,11 @@ Application number navigates to Overview
 
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
-    [Tags]
     Given the user clicks the button/link          jQuery = td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     Then the user should see details on application progress page
 
 Review the application
     [Documentation]    INFUND-7046
-    [Tags]
     Given the user clicks the button/link  link = Review application
     Then the user should see the element  jQuery = h1:contains("Application overview")
     [Teardown]    The user goes back to the previous page
@@ -236,8 +226,8 @@ the user should see details on assessors progress page
     the user should see the element    jQuery = h4:contains("Type") ~ span:contains("Academic")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("5")
     the user should see the element    jQuery = h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
-    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
-    the user should see the element    jQuery = h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+    the user should see the element    jQuery = .applications-available td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
+    the user should see the element    jQuery = .applications-available td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
 
 the user filter by application name
     the user enters text to a text field   css = #filterSearch    ${Intelligent_water}

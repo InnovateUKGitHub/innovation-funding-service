@@ -240,7 +240,7 @@
 </th:block>
 
 <th:block th:fragment="other_funding_row (id, row)">
-    <tr class="govuk-table__row" th:with="path=${'otherFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+    <tr class="govuk-table__row form-group-row-validated" th:with="path=${'otherFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
         <input type="hidden"
                th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group"

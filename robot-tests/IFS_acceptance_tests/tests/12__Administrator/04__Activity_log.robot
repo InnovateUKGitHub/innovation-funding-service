@@ -77,7 +77,7 @@ The user completes documents
     the user clicks the button/link     link = Documents
     the user clicks the button/link     link = Exploitation plan
     the user uploads the file           name=document   ${valid_pdf}
-    the user clicks the button/link     id = submitDocumentButton
+    the user clicks the button/link     id = submit-document-button
     the user clicks the button/link     id = submitDocumentButtonConfirm
 
 The user completes project team

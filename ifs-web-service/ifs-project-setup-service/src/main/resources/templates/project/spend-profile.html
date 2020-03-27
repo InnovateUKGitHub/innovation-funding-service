@@ -343,9 +343,9 @@
 
                     <th:block th:if="${!model.markedAsComplete}">
                         <p class="govuk-body govuk-!-margin-top-6">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
-                        <form method="post"
+                        <form method="post" id="spend-profile-mark-as-complete-form"
                               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                            <button class="govuk-button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
+                            <button class="govuk-button" id="spend-profile-mark-as-complete-button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
                         </form>
                     </th:block>
                 </th:block>

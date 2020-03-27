@@ -53,29 +53,64 @@ items:
               imagePullPolicy: Always
               env:
                 - name: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
-                  value: "${GA_TRACKING_ID}"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_GOOGLEANALYTICS_TRACKINGID
                 - name: IFS_WEB_SYSTEM_USER_UID
-                  value: "${SYSTEM_USER_UUID}"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_SYSTEM_USER_UID
+                - name: SPRING_APPLICATION_JSON
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: SPRING_APPLICATION_JSON
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: LDAP_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_URL
+                - name: SHIBBOLETH_LDAP_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: SHIBBOLETH_LDAP_PORT
+                - name: SHIBBOLETH_LDAP_BASE_DN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: SHIBBOLETH_LDAP_BASE_DN
+                - name: SHIBBOLETH_LDAP_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: SHIBBOLETH_LDAP_USER
+                - name: LDAP_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ldap-config
+                      key: LDAP_PASSWORD
+                - name: SHIBBOLETH_API_KEYS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: shibboleth-config
+                      key: SHIBBOLETH_API_KEYS
                 - name: JAVA_OPTS
                   value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-registration-service (${openshiftEnv})"
-                - name: NEW_RELIC_LICENSE_KEY
-                  value: "${NEW_RELIC_LICENCE_KEY}"
-                - name: NEW_RELIC_LOG
-                  value: "STDOUT"
-                - name: LDAP_URL
-                  value: "${LDAP_URL}"
-                - name: SHIBBOLETH_LDAP_PORT
-                  value: "${SHIBBOLETH_LDAP_PORT}"
-                - name: SHIBBOLETH_LDAP_BASE_DN
-                  value: "${LDAP_BASEDN}"
-                - name: SHIBBOLETH_LDAP_USER
-                  value: "${SHIBBOLETH_LDAP_USER}"
-                - name: LDAP_PASSWORD
-                  value: "${LDAP_PASSWORD}"
-                - name: SHIBBOLETH_API_KEYS
-                  value: "1234567890"
               ports:
                 - containerPort: 8080
               resources:

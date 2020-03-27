@@ -24,17 +24,13 @@ ${quarantine_warning}    This file has been found to be unsafe
 *** Test Cases ***
 Application Dashboard
     [Documentation]    INFUND-7369
-    [Tags]
     Given the user clicks the button/link    link = ${openCompetitionRTO_name}
     When the user clicks the button/link     jQuery = a:contains("Applications: All, submitted, ineligible")
     Then The user should see the element     jQuery = a:contains("Submitted applications")
     And The user should see the element      link = All applications
 
 List of all Applications
-    [Documentation]    INFUND-7367
-    ...
-    ...    INFUND-3063
-    [Tags]
+    [Documentation]    INFUND-7367 INFUND-3063
     When the user clicks the button/link             link = All applications
     Then the user should see the element             jQuery = h1:contains("All applications")
     And the user should see the element              jQuery = th:contains("Application number")
@@ -46,24 +42,21 @@ List of all Applications
 
 All Applications page: calculation in the table header
     [Documentation]    INFUND-7369
-    [Tags]
     Then the table header matches correctly
 
 The applications can be sorted by application number
-    [Documentation]    INFUND-8010
-    [Tags]    Failing    INFUND-8582
+    [Documentation]    INFUND-8010  INFUND-8582
+    [Tags]    Failing
     When the application list is sorted by              Application no.
     Then the applications should be sorted by column    1
 
 The applications can be sorted by lead applicant
     [Documentation]    INFUND-8010
-    [Tags]
     When the application list is sorted by              Lead
     Then the applications should be sorted by column    3
 
 Filter on application number
     [Documentation]    INFUND-8010
-    [Tags]
     Given the user enters text to a text field          id = filterSearch    ${OPEN_COMPETITION_APPLICATION_6_NUMBER}
     When the user clicks the button/link                jQuery = button:contains("Filter")
     Then the user should see the element                jQuery = td:contains("Safeguarding pollinators and their values to human well-being")
@@ -73,12 +66,10 @@ Filter on application number
 
 All Applications page: Key Statistics
     [Documentation]    INFUND-2259 INFUND-7369
-    [Tags]
     Then the totals in the Key statistics should be correct
 
 Application has application team details
     [Documentation]  IFS-43  IFS-6152
-    [Tags]
     Given the user clicks the button/link          link = ${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should see the element           jQuery = h1 span:contains("${OPEN_COMPETITION_APPLICATION_NAME}")
     When the user clicks the button/link           id = accordion-questions-heading-1-1     #Application team
@@ -86,7 +77,6 @@ Application has application team details
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
-    [Tags]
     [Setup]  The user logs-in in new browser                               &{lead_applicant_credentials}
     When the user can see the option to upload a file on the page          ${APPLICATION_OVERVIEW_URL}
     Then the user uploads the file                                         css = input.inputfile  ${5mb_pdf}
@@ -112,7 +102,6 @@ Comp admin can link to the comp page from application overview
 
 Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
-    [Tags]
     Given the user navigates to the page             ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link             jQuery = button:contains("Finances summary")
     Then the user should not see the element         link = your project finances
