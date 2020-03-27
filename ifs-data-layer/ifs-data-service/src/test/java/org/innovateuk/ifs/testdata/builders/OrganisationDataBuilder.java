@@ -21,7 +21,9 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
 
     public OrganisationDataBuilder createOrganisation(String organisationName,
                                                       String companyRegistrationNumber,
-                                                      OrganisationTypeEnum organisationType) {
+                                                      OrganisationTypeEnum organisationType,
+                                                      Boolean isInternational,
+                                                      String internationalRegistrationNumber) {
 
         return with(data -> {
 
@@ -32,6 +34,8 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         withName(organisationName).
                         withCompaniesHouseNumber(companyRegistrationNumber).
                         withOrganisationType(organisationType.getId()).
+                        withIsInternational(isInternational).
+                        withInternationalRegistrationNumber(internationalRegistrationNumber).
                         build()).getSuccess();
 
                 data.setOrganisation(created);
