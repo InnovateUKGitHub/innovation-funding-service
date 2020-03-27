@@ -250,7 +250,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         setLoggedInUser(userResource);
 
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(emptyList());
+        when(projectRestService.getProjectUsersForProject(projectId)).thenReturn(restSuccess(emptyList()));
 
         long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
 
