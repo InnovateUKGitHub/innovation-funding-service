@@ -145,7 +145,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    public Notification getNotification(GrantsInvite grantsInvite) {
+    private Notification getNotification(GrantsInvite grantsInvite) {
 
         Map<String, Object> notificationArguments = new HashMap<>();
         NotificationSource from = systemNotificationSource;

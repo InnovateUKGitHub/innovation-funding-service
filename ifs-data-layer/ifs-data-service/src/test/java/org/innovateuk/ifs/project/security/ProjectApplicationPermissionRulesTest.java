@@ -6,11 +6,14 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -31,13 +34,13 @@ public class ProjectApplicationPermissionRulesTest extends BasePermissionRulesTe
         Project linkedProject = newProject().build();
 
         when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).
                 thenReturn(newProjectUser().build(1));
 
         assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
 
         verify(projectRepository).findOneByApplicationId(application.getId());
-        verify(projectUserRepository).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
     }
 
     @Test
@@ -63,13 +66,13 @@ public class ProjectApplicationPermissionRulesTest extends BasePermissionRulesTe
         Project linkedProject = newProject().build();
 
         when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).
                 thenReturn(emptyList());
 
         assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
 
         verify(projectRepository).findOneByApplicationId(application.getId());
-        verify(projectUserRepository).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
     }
 
 
