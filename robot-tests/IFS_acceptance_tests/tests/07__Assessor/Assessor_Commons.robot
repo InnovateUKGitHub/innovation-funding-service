@@ -118,7 +118,6 @@ assessor should see the competition terms and conditions
     [Arguments]  ${back_link}
     Given the user expands the section           Award terms and conditions
     When the user clicks the button/link         link = View award terms and conditions
-    Then the user should see the element         jQuery = h1:contains("${terms_and_conditions}")
     [Teardown]  the user clicks the button/link  link = ${back_link}
 
 the assessor accept the application
