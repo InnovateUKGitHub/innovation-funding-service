@@ -27,8 +27,8 @@ Suite Setup       Custom suite setup
 #Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***

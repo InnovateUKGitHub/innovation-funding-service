@@ -26,8 +26,8 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Submit button disabled when application is incomplete

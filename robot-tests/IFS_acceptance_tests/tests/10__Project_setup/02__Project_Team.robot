@@ -34,8 +34,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6492 - Accept Terms & Conditions for New Partners in Project Setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 
 *** Variables ***

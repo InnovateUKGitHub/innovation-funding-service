@@ -38,7 +38,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../07__Assessor/Assessor_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${electric_application_titile}   Electric Drive

@@ -6,6 +6,9 @@ public class CompetitionOrganisationConfigResource {
     private Boolean internationalOrganisationsAllowed;
     private Boolean internationalLeadOrganisationAllowed;
 
+    public CompetitionOrganisationConfigResource() {
+    }
+
     public CompetitionOrganisationConfigResource(Boolean internationalOrganisationsAllowed, Boolean internationalLeadOrganisationAllowed) {
         this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
         this.internationalLeadOrganisationAllowed = internationalLeadOrganisationAllowed;

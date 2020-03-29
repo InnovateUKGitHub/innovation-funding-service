@@ -3,7 +3,7 @@ Documentation     Suite description
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../07__Assessor/Assessor_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Test Cases ***
 Admin can view assessor status unavailable

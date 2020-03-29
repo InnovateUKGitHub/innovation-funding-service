@@ -57,8 +57,6 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 fi
 
-injectFlywayVariables
-
 useContainerRegistry
 pushDBResetImages
 
