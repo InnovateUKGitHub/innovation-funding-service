@@ -187,6 +187,20 @@
                                      data-js-number-of-files="10"
                                      data-js-upload-one-at-a-time="">
                                     <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
+                                    <details class="govuk-details">
+                                        <summary class="govuk-details__summary">
+                                            <span class="govuk-details__summary-text">What file types can I upload?</span>
+                                        </summary>
+                                        <div class="govuk-details__text wysiwyg-styles">
+                                            <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                                            <ul class="govuk-list govuk-list--bullet">
+                                                <li>spreadsheet (.ods)</li>
+                                                <li>text document (.odt)</li>
+                                                <li>PDF (.pdf)</li>
+                                            </ul>
+                                            <p>Each document must be less than 10MB</p>
+                                        </div>
+                                    </details>
                                     <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No
                                         file currently
                                         uploaded.</p>
@@ -206,7 +220,6 @@
                                             </div>
                                         </li>
                                     </ul>
-                                    <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"
