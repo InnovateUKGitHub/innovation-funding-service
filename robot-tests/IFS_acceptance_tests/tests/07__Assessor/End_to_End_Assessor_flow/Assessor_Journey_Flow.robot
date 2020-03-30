@@ -5,8 +5,8 @@ Documentation     INFUND-8092 E2E for the Assessor Journey Flow
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
-Resource          ../../04__Applicant/Applicant_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Invite a new Assessor to assess a competition

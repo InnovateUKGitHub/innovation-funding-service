@@ -14,9 +14,9 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../10__Project_setup/PS_Common.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${quarantine_warning}    This file has been found to be unsafe

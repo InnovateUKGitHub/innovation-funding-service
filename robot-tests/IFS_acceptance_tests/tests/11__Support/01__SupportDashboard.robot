@@ -12,7 +12,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Support  CompAdmin  HappyPath
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com

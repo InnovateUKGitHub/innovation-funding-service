@@ -11,8 +11,8 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${apcCompetitionTitle}         Advanced Propulsion Centre Competition

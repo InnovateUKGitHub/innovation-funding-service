@@ -18,7 +18,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_nonregistered_assessor2}  ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
