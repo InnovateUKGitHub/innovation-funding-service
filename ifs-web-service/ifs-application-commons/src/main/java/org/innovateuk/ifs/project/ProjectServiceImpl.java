@@ -131,7 +131,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
-//        refactor this later on, dont need this service just call rest service everywhere
         OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, user.getId()).getSuccess();
         return organisationResource.getId();
     }
