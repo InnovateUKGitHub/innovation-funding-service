@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.InternalUserProjectStatusService;
@@ -24,10 +25,16 @@ public class StatusController {
     @Autowired
     private InternalUserProjectStatusService internalUserProjectStatusService;
 
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "2q";
+
     @GetMapping("/competition/{competitionId}")
-    public RestResult<List<ProjectStatusResource>> getCompetitionStatus(@PathVariable final long competitionId,
-                                                                        @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString){
-        return internalUserProjectStatusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).toGetResponse();
+    public RestResult<ProjectStatusPageResource> getCompetitionStatus(@PathVariable final long competitionId,
+                                                                      @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString,
+                                                                      @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                                                      @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size) {
+        return internalUserProjectStatusService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString), page, size).toGetResponse();
     }
 
     @GetMapping("/previous/competition/{competitionId}")
