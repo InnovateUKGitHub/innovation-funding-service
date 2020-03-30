@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSOR_ACCEPTS;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
+import static org.innovateuk.ifs.testdata.CompetitionOrganisationConfigDataBuilder.newCompetitionConfigData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitionFunders;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -45,9 +46,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
+    private CompetitionOrganisationConfigDataBuilder competitionOrganisationConfigDataBuilder;
 
     private List<CsvUtils.CompetitionLine> competitionLines;
     private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
+    private static List<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLines;
+
 
     @PostConstruct
     public void readCsvs() {
@@ -56,9 +60,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
+        competitionOrganisationConfigDataBuilder = newCompetitionConfigData(serviceLocator);
 
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
+        competitionOrganisationConfigLines = readCompetitionOrganisationConfig();
+
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
@@ -93,6 +100,17 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         funderLine.ifPresent(line ->
                 competitionFunderDataBuilder.
                         withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder).
+                        build());
+    }
+
+    public void createCompetitionOrganisationConfig(CompetitionData competition) {
+
+        Optional<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLine = simpleFindFirst(competitionOrganisationConfigLines, l ->
+                Objects.equals(competition.getCompetition().getName(), l.competition));
+
+        competitionOrganisationConfigLine.ifPresent(line ->
+                competitionOrganisationConfigDataBuilder.
+                        withCompetitionOrganisationConfigData(line.competition, line.internationalOrganisationsAllowed, line.internationalLeadOrganisationAllowed).
                         build());
     }
 
