@@ -183,8 +183,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
 
-        QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
-                .getId());
+        QuestionResourceBuilder questionResourceBuilder = newQuestionResource();
 
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().withCompetition(competitionResource
                 .getId());
@@ -590,7 +589,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).withType(TEXTAREA).build
                 (1);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
-                withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
         when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn
@@ -605,7 +603,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withType(TEXTAREA, FILEUPLOAD)
                 .build(2);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
-                withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
         when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn

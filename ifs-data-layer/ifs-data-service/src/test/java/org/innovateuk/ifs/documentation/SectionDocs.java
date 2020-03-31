@@ -20,7 +20,6 @@ public class SectionDocs {
             fieldWithPath("leadQuestions").description("list of lead questions belonging to the section").optional(),
             fieldWithPath("parentSection").description("parent section of this section").optional(),
             fieldWithPath("childSections").description("list of child sections").optional(),
-            fieldWithPath("displayInAssessmentApplicationSummary").description("whether to display this section in the assessment summary").optional(),
             fieldWithPath("type").description("marks the section as a specific type").optional()
     };
 
@@ -33,6 +32,5 @@ public class SectionDocs {
             .withCompetition(1L)
             .withQuestions(asList(1L, 2L, 3L))
             .withParentSection(3L)
-            .withChildSections(asList(2L, 4L))
-            .withDisplayInAssessmentApplicationSummary(true);
+            .withChildSections(asList(2L, 4L));
 }
