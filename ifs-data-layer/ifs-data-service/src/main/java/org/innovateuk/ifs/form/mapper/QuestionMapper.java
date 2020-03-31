@@ -25,10 +25,4 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
 
     public abstract Question mapToDomain(QuestionResource resource);
 
-    @AfterMapping
-    public void removeInactiveFormInputIds(Question entity, @MappingTarget QuestionResource resource) {
-        entity.getFormInputs().stream()
-                .filter(formInput -> !formInput.getActive())
-                .forEach(formInput -> resource.getFormInputs().remove(formInput.getId()));
-    }
 }

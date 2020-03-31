@@ -58,15 +58,15 @@ public class YourProjectCostsViewModel {
         this.financeRowTypes = financeRowTypes;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, long competitionId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
+        this.competitionId = competitionId;
 
         this.applicationId = null;
         this.sectionId = null;
-        this.competitionId = null;
         this.organisationId = null;
         this.complete = false;
         this.applicationName = null;
