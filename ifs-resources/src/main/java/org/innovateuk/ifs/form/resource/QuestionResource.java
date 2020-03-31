@@ -5,9 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Question defines database relations and a model to use client side and server side.
  */
@@ -16,7 +13,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
     private String name;
     private String shortName;
     private String description;
-    private List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
@@ -105,10 +101,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
         return this.questionNumber;
     }
 
-    public List<Long> getFormInputs() {
-        return this.formInputs;
-    }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -166,9 +158,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
         this.questionSetupType = questionSetupType;
     }
 
-    public void setFormInputs(List<Long> formInputs) {
-        this.formInputs = formInputs;
-    }
 
     @Override
     public int compareTo(QuestionResource o) {
@@ -188,7 +177,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(name, that.name)
                 .append(shortName, that.shortName)
                 .append(description, that.description)
-                .append(formInputs, that.formInputs)
                 .append(markAsCompletedEnabled, that.markAsCompletedEnabled)
                 .append(assignEnabled, that.assignEnabled)
                 .append(multipleStatuses, that.multipleStatuses)
@@ -209,7 +197,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(name)
                 .append(shortName)
                 .append(description)
-                .append(formInputs)
                 .append(markAsCompletedEnabled)
                 .append(assignEnabled)
                 .append(multipleStatuses)
