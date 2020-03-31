@@ -545,16 +545,13 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
             return restSuccess(newFormInputResource().with(id((Long) args[0])).build());
         });
 
-        List<Long> formInputIds = questionResources.get(1L).getFormInputs();
-        List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().withFormInputs
-                (formInputIds).
+        List<FormInputResponseResource> formInputResponses = singletonList(newFormInputResponseResource().
                 with(idBasedValues("Value "))
-                .build(formInputIds.size());
+                .build());
 
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess
                 (formInputResponses));
-        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponseResource ->
-                formInputResponseResource.getFormInput(), identity()));
+        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(FormInputResponseResource::getFormInput, identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn
                 (formInputsToFormInputResponses);
     }
