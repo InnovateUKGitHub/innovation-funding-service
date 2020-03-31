@@ -70,11 +70,6 @@ public class SectionServiceImpl implements SectionService {
         return sectionStatusRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
     }
 
-    @Override
-    public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return sectionStatusRestService.allSectionsMarkedAsComplete(applicationId).getSuccess();
-    }
-
     /**
      * Get Sections that have no parent section.
      *
