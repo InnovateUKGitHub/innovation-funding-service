@@ -89,7 +89,6 @@ public class QuestionResourceBuilder extends BaseBuilder<QuestionResource, Quest
 
     public QuestionResourceBuilder withCompetitionAndSectionAndPriority(CompetitionResource competition, SectionResource section, Integer priority) {
         return with(question -> {
-            question.setCompetition(competition.getId());
             question.setSection(section.getId());
             setField("priority", priority, question);
         });

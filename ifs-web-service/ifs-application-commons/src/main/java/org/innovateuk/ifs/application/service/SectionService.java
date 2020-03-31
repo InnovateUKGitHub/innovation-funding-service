@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 
@@ -27,7 +26,6 @@ public interface SectionService {
     default List<SectionResource> getAllByCompetitionIdExcludingTerms(long id) {
         return simpleFilterNot(getAllByCompetitionId(id), SectionResource::isTermsAndConditions);
     }
-    void removeSectionsQuestionsWithType(SectionResource section, FormInputType type);
     SectionResource getSectionByQuestionId(long questionId);
     Set<Long> getQuestionsForSectionAndSubsections(long sectionId);
     List<SectionResource> getSectionsForCompetitionByType(long competitionId, SectionType type);

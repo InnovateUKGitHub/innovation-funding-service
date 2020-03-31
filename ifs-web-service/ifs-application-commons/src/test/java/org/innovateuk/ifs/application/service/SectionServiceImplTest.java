@@ -113,13 +113,6 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     }
 
     @Test
-    public void testRemoveSectionsQuestionsWithType() throws Exception {
-        assertEquals(2, childSection1.getQuestions().size());
-        service.removeSectionsQuestionsWithType(parentSection, FILEUPLOAD);
-        assertEquals(1, childSection1.getQuestions().size());
-    }
-
-    @Test
     public void testGetSectionsByType() {
         SectionResource section = newSectionResource().build();
         when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(asList(section)));
