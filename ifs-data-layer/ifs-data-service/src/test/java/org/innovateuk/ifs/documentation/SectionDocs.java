@@ -17,7 +17,6 @@ public class SectionDocs {
             fieldWithPath("questionGroup").description("group the question belongs to").optional(),
             fieldWithPath("competition").description("competition the section belongs to").optional(),
             fieldWithPath("questions").description("list of questions belonging to the section").optional(),
-            fieldWithPath("leadQuestions").description("list of lead questions belonging to the section").optional(),
             fieldWithPath("parentSection").description("parent section of this section").optional(),
             fieldWithPath("childSections").description("list of child sections").optional(),
             fieldWithPath("type").description("marks the section as a specific type").optional()
