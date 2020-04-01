@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * View model for the application overview
  */
-public class ApplicationOverviewViewModel extends BaseAnalyticsViewModel {
+public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
 
     private final ProcessRoleResource processRole;
     private final CompetitionResource competition;
@@ -18,11 +18,20 @@ public class ApplicationOverviewViewModel extends BaseAnalyticsViewModel {
     private final Set<ApplicationOverviewSectionViewModel> sections;
 
     public ApplicationOverviewViewModel(ProcessRoleResource processRole, CompetitionResource competition, ApplicationResource application, Set<ApplicationOverviewSectionViewModel> sections) {
-        super(application.getId(), competition.getName());
         this.processRole = processRole;
         this.competition = competition;
         this.application = application;
         this.sections = sections;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competition.getName();
     }
 
     public ProcessRoleResource getProcessRole() {

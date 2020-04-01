@@ -66,8 +66,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
         final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         if (modelAndView.getModel().get("model") instanceof BaseAnalyticsViewModel) {
-            dataLayer.setCompetitionName(((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getCompetitionName());
-            return;
+            String competitionName = ((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getCompetitionName();
+            if (competitionName != null) {
+                dataLayer.setCompetitionName(((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getCompetitionName());
+                return;
+            }
         }
 
         if (pathVariables.containsKey(COMPETITION_ID)) {
@@ -129,8 +132,11 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     private void setApplicationId(GoogleAnalyticsDataLayer dataLayer, HttpServletRequest request, ModelAndView modelAndView) {
 
         if (modelAndView.getModel().get("model") instanceof BaseAnalyticsViewModel) {
-            dataLayer.setApplicationId(((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getApplicationId());
-            return;
+            Long applicationId = ((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getApplicationId();
+            if (applicationId != null) {
+                dataLayer.setApplicationId(((BaseAnalyticsViewModel) modelAndView.getModel().get("model")).getApplicationId());
+                return;
+            }
         }
 
         final Map<String,String> pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);

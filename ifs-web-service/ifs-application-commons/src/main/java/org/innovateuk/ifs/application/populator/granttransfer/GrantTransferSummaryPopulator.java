@@ -39,6 +39,7 @@ public class GrantTransferSummaryPopulator extends AbstractLeadOnlyModelPopulato
             return new GrantTransferDetailsSummaryViewModel(
                     question.getId(),
                     application.getId(),
+                    application.getCompetitionName(),
                     isApplicationSubmitted(application) || !isCompetitionOpen(application),
                     isComplete,
                     userIsLeadApplicant,
@@ -58,6 +59,7 @@ public class GrantTransferSummaryPopulator extends AbstractLeadOnlyModelPopulato
         return new GrantTransferDetailsSummaryViewModel(
                 question.getId(),
                 application.getId(),
+                application.getCompetitionName(),
                 isApplicationSubmitted(application) || !isCompetitionOpen(application),
                 isComplete,
                 userIsLeadApplicant,
@@ -77,6 +79,7 @@ public class GrantTransferSummaryPopulator extends AbstractLeadOnlyModelPopulato
         return new GrantAgreementSummaryViewModel(
                 question.getId(),
                 application.getId(),
+                application.getCompetitionName(),
                 isApplicationSubmitted(application) || !isCompetitionOpen(application),
                 isComplete,
                 userIsLeadApplicant,
