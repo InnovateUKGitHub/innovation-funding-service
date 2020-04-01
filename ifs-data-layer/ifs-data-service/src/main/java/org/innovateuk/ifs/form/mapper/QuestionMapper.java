@@ -24,5 +24,4 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
     public abstract QuestionResource mapToResource(Question domain);
 
     public abstract Question mapToDomain(QuestionResource resource);
-
 }
