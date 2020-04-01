@@ -11,11 +11,12 @@ import org.mockito.Mock;
 import java.util.UUID;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,7 +34,7 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
     public void invitePartnerOrganisation() throws Exception {
         long projectId = 1L;
 
-        GrantsInviteResource grantsInviteResource = new GrantsInviteResource("orgName", "userName", "email", GrantsInviteResource.GrantsInviteRole.GRANTS_PROJECT_MANAGER);
+        GrantsInviteResource grantsInviteResource = new GrantsInviteResource("orgName", "userName", "email", GRANTS_PROJECT_MANAGER);
 
         when(grantsInviteService.sendInvite(projectId, grantsInviteResource)).thenReturn(serviceSuccess());
 
