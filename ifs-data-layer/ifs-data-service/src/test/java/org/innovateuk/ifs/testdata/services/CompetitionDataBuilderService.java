@@ -108,6 +108,12 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         Optional<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLine = simpleFindFirst(competitionOrganisationConfigLines, l ->
                 Objects.equals(competition.getCompetition().getName(), l.competition));
 
+        if (!competitionOrganisationConfigLine.isPresent()) {
+            competitionOrganisationConfigDataBuilder.
+                    withCompetitionOrganisationConfigData(competition.getCompetition().getName(), false, false).
+                    build();
+        }
+
         competitionOrganisationConfigLine.ifPresent(line ->
                 competitionOrganisationConfigDataBuilder.
                         withCompetitionOrganisationConfigData(line.competition, line.internationalOrganisationsAllowed, line.internationalLeadOrganisationAllowed).
@@ -155,9 +161,9 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionBeforeMilestones = this.competitionDataBuilder.
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
-                    line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                    line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
-                    line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.fundingType, line.competitionCompletionStage,
+                        line.innovationSector, true, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
+                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null, line.fundingType, line.competitionCompletionStage,
                         line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
                 withApplicationFormFromTemplate().
                 withApplicationFinances(line.includeJesForm, line.applicationFinanceType, line.includeProjectGrowth, line.includeYourOrganisation).
@@ -166,30 +172,39 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         CompetitionDataBuilder competitionWithMilestones = getCompetitionWithMilestones(line, competitionBeforeMilestones);
         return competitionWithMilestones.
                 withPublicContent(
-                    line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                    line.competitionDescription, line.projectSize, line.keywords,
-                    line.inviteOnly);
+                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.projectSize, line.keywords,
+                        line.inviteOnly);
     }
 
     private CompetitionDataBuilder getCompetitionWithMilestones(CsvUtils.CompetitionLine line, CompetitionDataBuilder competitionBeforeMilestones) {
 
         switch (line.competitionStatus) {
 
-            case OPEN: return line.nonIfs ?
-                    withOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
-                    withOpenStatus(competitionBeforeMilestones, line.lineNumber);
+            case OPEN:
+                return line.nonIfs ?
+                        withOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
+                        withOpenStatus(competitionBeforeMilestones, line.lineNumber);
 
-            case ASSESSOR_FEEDBACK: return withAssessorFeedbackStatus(competitionBeforeMilestones, line.lineNumber);
-            case CLOSED: return withClosedStatus(competitionBeforeMilestones, line.lineNumber);
-            case COMPETITION_SETUP: return withCompetitionSetupStatus(competitionBeforeMilestones, line.lineNumber);
-            case FUNDERS_PANEL: return withFundersPanelStatus(competitionBeforeMilestones, line.lineNumber);
-            case IN_ASSESSMENT: return withInAssessmentStatus(competitionBeforeMilestones, line.lineNumber);
-            case PROJECT_SETUP: return withProjectSetupStatus(competitionBeforeMilestones, line.lineNumber);
-            case READY_TO_OPEN: return line.nonIfs ?
-                    withReadyToOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
-                    withReadyToOpenStatus(competitionBeforeMilestones, line.lineNumber);
+            case ASSESSOR_FEEDBACK:
+                return withAssessorFeedbackStatus(competitionBeforeMilestones, line.lineNumber);
+            case CLOSED:
+                return withClosedStatus(competitionBeforeMilestones, line.lineNumber);
+            case COMPETITION_SETUP:
+                return withCompetitionSetupStatus(competitionBeforeMilestones, line.lineNumber);
+            case FUNDERS_PANEL:
+                return withFundersPanelStatus(competitionBeforeMilestones, line.lineNumber);
+            case IN_ASSESSMENT:
+                return withInAssessmentStatus(competitionBeforeMilestones, line.lineNumber);
+            case PROJECT_SETUP:
+                return withProjectSetupStatus(competitionBeforeMilestones, line.lineNumber);
+            case READY_TO_OPEN:
+                return line.nonIfs ?
+                        withReadyToOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
+                        withReadyToOpenStatus(competitionBeforeMilestones, line.lineNumber);
 
-            default: throw new IllegalArgumentException("Unknown CompetitionStatus value of " + line.competitionStatus.name());
+            default:
+                throw new IllegalArgumentException("Unknown CompetitionStatus value of " + line.competitionStatus.name());
         }
     }
 
