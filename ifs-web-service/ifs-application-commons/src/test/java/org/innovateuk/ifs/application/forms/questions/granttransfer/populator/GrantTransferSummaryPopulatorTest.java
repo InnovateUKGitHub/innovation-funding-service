@@ -57,8 +57,7 @@ public class GrantTransferSummaryPopulatorTest {
 
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
                 .withCompetition(competitionId).build();
-        QuestionResource question = QuestionResourceBuilder.newQuestionResource()
-                .withCompetition(competitionId).build();
+        QuestionResource question = QuestionResourceBuilder.newQuestionResource().build();
         ApplicantResource applicant = ApplicantResourceBuilder.newApplicantResource()
                 .withOrganisation(OrganisationResourceBuilder.newOrganisationResource().build()).build();
         boolean userIsLeadApplicant = true;
@@ -108,8 +107,7 @@ public class GrantTransferSummaryPopulatorTest {
 
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
                 .withCompetition(competitionId).build();
-        QuestionResource question = QuestionResourceBuilder.newQuestionResource()
-                .withCompetition(competitionId).build();
+        QuestionResource question = QuestionResourceBuilder.newQuestionResource().build();
         ApplicantResource applicant = ApplicantResourceBuilder.newApplicantResource()
                 .withOrganisation(OrganisationResourceBuilder.newOrganisationResource().build()).build();
         boolean userIsLeadApplicant = true;

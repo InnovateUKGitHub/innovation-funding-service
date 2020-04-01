@@ -7,10 +7,10 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
-Resource        ../Applicant_Commons.robot
-Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource        ../../07__Assessor/Assessor_Commons.robot
-Resource        ../../10__Project_setup/PS_Common.robot
+Resource        ../../../resources/common/Applicant_Commons.robot
+Resource        ../../../resources/common/Competition_Commons.robot
+Resource        ../../../resources/common/Assessor_Commons.robot
+Resource        ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${comp_name}         Procurement AT Comp

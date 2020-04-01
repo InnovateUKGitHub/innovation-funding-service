@@ -1,0 +1,23 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ldap-config
+data:
+  LDAP_HOST: "${LDAP_HOST}"
+  LDAP_URL: "${LDAP_URL}"
+  LDAP_PORT: "${LDAP_PORT}"
+  LDAP_PASS: "${LDAP_PASS}"
+  LDAP_DOMAIN: "${LDAP_DOMAIN}"
+  LDAP_SCHEME: "${LDAP_SCHEME}"
+  ONLY_SYNC_LDAP: "${ONLY_SYNC_LDAP}"
+  ONLY_DELETE_IFS_USERS: "${ONLY_DELETE_IFS_USERS}"
+  IDP_LDAP_PORT: "8389"
+  LDAP_USESTARTTLS: "false"
+  LDAP_USESSL: "${LDAP_USESSL}"
+  LDAP_BASEDN: "${LDAP_BASEDN}"
+  LDAP_BINDDN: "${LDAP_BINDDN}"
+  LDAP_PASSWORD: "${LDAP_PASSWORD}"
+  LDAP_USERFILTER: "(&(mail={user})(!(employeeType=inactive)))"
+  LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=\$resolutionContext.principal)"
+  LDAP_RETURNATTRIBUTES: "mail,uid"
+  LDAP_AUTHENTICATOR: "${LDAP_AUTHENTICATOR}"

@@ -5,9 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Question defines database relations and a model to use client side and server side.
  */
@@ -16,12 +13,10 @@ public class QuestionResource implements Comparable<QuestionResource> {
     private String name;
     private String shortName;
     private String description;
-    private List<Long> formInputs = new ArrayList<>();
     private Boolean markAsCompletedEnabled = false;
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
     private Integer priority;
-    private Long competition;
     private Long section;
     private String questionNumber;
     private QuestionType type;
@@ -54,10 +49,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
 
     public String getDescription() {
         return this.description;
-    }
-
-    public Long getCompetition() {
-        return this.competition;
     }
 
     public Long getSection() {
@@ -105,10 +96,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
         return this.questionNumber;
     }
 
-    public List<Long> getFormInputs() {
-        return this.formInputs;
-    }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
@@ -138,10 +125,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
         this.priority = priority;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
-    }
-
     public void setSection(Long section) {
         this.section = section;
     }
@@ -166,10 +149,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
         this.questionSetupType = questionSetupType;
     }
 
-    public void setFormInputs(List<Long> formInputs) {
-        this.formInputs = formInputs;
-    }
-
     @Override
     public int compareTo(QuestionResource o) {
         return Integer.compare(this.priority, o.priority);
@@ -188,12 +167,10 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(name, that.name)
                 .append(shortName, that.shortName)
                 .append(description, that.description)
-                .append(formInputs, that.formInputs)
                 .append(markAsCompletedEnabled, that.markAsCompletedEnabled)
                 .append(assignEnabled, that.assignEnabled)
                 .append(multipleStatuses, that.multipleStatuses)
                 .append(priority, that.priority)
-                .append(competition, that.competition)
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
@@ -209,12 +186,10 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(name)
                 .append(shortName)
                 .append(description)
-                .append(formInputs)
                 .append(markAsCompletedEnabled)
                 .append(assignEnabled)
                 .append(multipleStatuses)
                 .append(priority)
-                .append(competition)
                 .append(section)
                 .append(questionNumber)
                 .append(type)

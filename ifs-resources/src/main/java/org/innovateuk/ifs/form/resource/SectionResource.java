@@ -17,10 +17,8 @@ public class SectionResource {
     private Boolean questionGroup;
     private Long competition;
     private List<Long> questions = new ArrayList<>();
-    private List<Long> leadQuestions = new ArrayList<>();
     private Long parentSection;
     private List<Long> childSections;
-    private Boolean displayInAssessmentApplicationSummary = false;
     private SectionType type;
 
 
@@ -95,10 +93,6 @@ public class SectionResource {
         this.childSections = childSections;
     }
 
-    public void setDisplayInAssessmentApplicationSummary(Boolean displayInAssessmentApplicationSummary) {
-        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -124,10 +118,6 @@ public class SectionResource {
         return this.competition;
     }
 
-    public Boolean isDisplayInAssessmentApplicationSummary() {
-        return this.displayInAssessmentApplicationSummary;
-    }
-
     public SectionType getType() {
 		return type;
 	}
@@ -140,12 +130,5 @@ public class SectionResource {
     public void setType(SectionType type) {
 		this.type = type;
 	}
-
-    public List<Long> getLeadQuestions() {
-        return leadQuestions;
-    }
-    public void setLeadQuestions(List<Long> questions) {
-        this.leadQuestions = questions;
-    }
 
 }

@@ -31,6 +31,12 @@ public class Organisation {
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
 
+    @Column(nullable = false)
+    private boolean international;
+
+    @Column(name = "international_registration_number")
+    private String internationalRegistrationNumber;
+
     @OneToMany(mappedBy="organisationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -127,5 +133,21 @@ public class Organisation {
 
     public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
+    }
+
+    public boolean isInternational() {
+        return international;
+    }
+
+    public void setInternational(boolean international) {
+        this.international = international;
+    }
+
+    public String getInternationalRegistrationNumber() {
+        return internationalRegistrationNumber;
+    }
+
+    public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
+        this.internationalRegistrationNumber = internationalRegistrationNumber;
     }
 }

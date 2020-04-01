@@ -13,7 +13,6 @@ public class FormInputResource {
     private Integer wordCount;
     private FormInputType type;
     private Long question;
-    private Long competition;
     private Set<Long> inputValidators;
     private String description;
     private Boolean includedInApplicationSummary = false;
@@ -71,14 +70,6 @@ public class FormInputResource {
 
     public void setType(FormInputType type) {
         this.type = type;
-    }
-
-    public Long getCompetition() {
-        return this.competition;
-    }
-
-    public void setCompetition(Long competition) {
-        this.competition = competition;
     }
 
     public Set<Long> getInputValidators() {

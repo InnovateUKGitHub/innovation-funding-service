@@ -18,9 +18,9 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../10__Project_setup/PS_Common.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable

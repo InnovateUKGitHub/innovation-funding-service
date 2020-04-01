@@ -55,7 +55,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 
 *** Test Cases ***

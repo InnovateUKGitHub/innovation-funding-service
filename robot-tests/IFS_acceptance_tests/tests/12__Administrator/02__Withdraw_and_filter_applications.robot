@@ -22,8 +22,8 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-6187 Remove competitions from Project Setup once all projects are completed
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
-Resource        ../10__Project_setup/PS_Common.robot
-Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource        ../../resources/common/PS_Common.robot
+Resource        ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${externalProjectWithdrawnMessage}    This project has been withdrawn

@@ -74,7 +74,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-6732 Ensure spend profile cannot be generated when there is a pending invite
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_Project_Id}
