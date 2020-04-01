@@ -95,7 +95,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     public void createCompetitionFunder(CompetitionData competition) {
 
         Optional<CsvUtils.CompetitionFunderLine> funderLine = simpleFindFirst(competitionFunderLines, l ->
-                Objects.equals(competition.getCompetition().getName(), l.competitionName));
+                competition.getCompetition().getName().equals(l.competitionName));
 
         funderLine.ifPresent(line ->
                 competitionFunderDataBuilder.
@@ -106,18 +106,18 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     public void createCompetitionOrganisationConfig(CompetitionData competition) {
 
         Optional<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLine = simpleFindFirst(competitionOrganisationConfigLines, l ->
-                Objects.equals(competition.getCompetition().getName(), l.competition));
+                competition.getCompetition().getName().equals(l.competition));
 
         if (!competitionOrganisationConfigLine.isPresent()) {
             competitionOrganisationConfigDataBuilder.
                     withCompetitionOrganisationConfigData(competition.getCompetition().getName(), false, false).
                     build();
+        } else {
+            competitionOrganisationConfigLine.ifPresent(line ->
+                    competitionOrganisationConfigDataBuilder.
+                            withCompetitionOrganisationConfigData(line.competition, line.internationalOrganisationsAllowed, line.internationalLeadOrganisationAllowed).
+                            build());
         }
-
-        competitionOrganisationConfigLine.ifPresent(line ->
-                competitionOrganisationConfigDataBuilder.
-                        withCompetitionOrganisationConfigData(line.competition, line.internationalOrganisationsAllowed, line.internationalLeadOrganisationAllowed).
-                        build());
     }
 
     public CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
