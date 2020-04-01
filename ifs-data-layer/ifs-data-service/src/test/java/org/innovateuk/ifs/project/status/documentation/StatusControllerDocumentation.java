@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.documentation.ProjectPartnerStatusResourceDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -73,9 +74,12 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
                         ),
                         requestParameters(
-                                parameterWithName("applicationSearchString").description("The filter to search by application number.")
+                                parameterWithName("applicationSearchString").description("The filter to search by application number."),
+                                parameterWithName("page").description("The page number requested."),
+                                parameterWithName("size").description("Size of each page.")
                         ),
-                        responseFields(fieldWithPath("[]").description("List of project statuses"))
+
+                        responseFields(PageResourceDocs.pageResourceFields)
                                 .andWithPrefix("content[].", projectStatusResourceFields)
                 ));
     }
