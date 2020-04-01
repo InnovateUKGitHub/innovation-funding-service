@@ -33,12 +33,12 @@ public abstract class AbstractLeadOnlyViewModel implements BaseAnalyticsViewMode
 
     @Override
     public Long getApplicationId() {
-        return null;
+        return applicationId;
     }
 
     @Override
     public String getCompetitionName() {
-        return null;
+        return competitionName;
     }
 
     public Long getQuestionId() {

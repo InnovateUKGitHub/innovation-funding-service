@@ -132,7 +132,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
 
         GenericQuestionApplicationViewModel viewModel = populator.populate(applicantQuestion);
 
-        assertEquals((long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
+        assertEquals((Long) applicantQuestion.getApplication().getId(), viewModel.getApplicationId());
         assertEquals((long) applicantQuestion.getQuestion().getId(), viewModel.getQuestionId());
         assertEquals((long) applicantQuestion.getCurrentUser().getId(), viewModel.getCurrentUser());
 
