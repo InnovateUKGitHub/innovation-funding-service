@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -115,14 +114,6 @@ public class SectionServiceImpl implements SectionService {
 
     public List<SectionResource> findResourceByIdInList(final List<Long> ids, final List<SectionResource> list) {
         return simpleFilter(list, item -> ids.contains(item.getId()));
-    }
-
-    private List<SectionResource> filterByIdList(final List<Long> ids, final List<SectionResource> list) {
-        return simpleFilter(list, section -> ids.contains(section.getId()));
-    }
-
-    private List<QuestionResource> getQuestionsBySection(final List<Long> questionIds, final List<QuestionResource> questions) {
-        return simpleFilter(questions, q -> questionIds.contains(q.getId()));
     }
 
     @Override
