@@ -90,7 +90,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        assertThat(model.get("commonFinancesModel")).matches(futureMatcher(commonFinancesViewModel));
+        assertThat(model.get("model")).matches(futureMatcher(commonFinancesViewModel));
         assertThat(model.get("form")).matches(futureMatcher(form));
 
         verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
