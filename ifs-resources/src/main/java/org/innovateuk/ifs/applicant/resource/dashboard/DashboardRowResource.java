@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.applicant.resource.dashboard;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Abstract resource representing an application or project on the applicant dashboard
  */
-public abstract class DashboardRowResource implements Comparable<DashboardRowResource> {
+public abstract class DashboardRowResource implements Comparable<DashboardRowResource>, Serializable {
 
     protected String title;
     protected long applicationId;

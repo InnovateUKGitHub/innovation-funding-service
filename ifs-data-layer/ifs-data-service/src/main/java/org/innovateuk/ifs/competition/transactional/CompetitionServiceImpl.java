@@ -25,6 +25,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +75,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private FileService fileService;
 
     @Override
+    @Cacheable(cacheNames="competition", unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResult(#result)")
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
         return findCompetitionById(id).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
     }

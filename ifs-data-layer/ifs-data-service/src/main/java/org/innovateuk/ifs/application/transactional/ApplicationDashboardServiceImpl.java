@@ -8,12 +8,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private ApplicationRepository applicationRepository;
 
     @Override
+    @Cacheable(cacheNames="dashboard", unless = "#result.isFailure()")
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
         List<Application> applications = applicationRepository.findApplicationsForDashboard(userId);
 

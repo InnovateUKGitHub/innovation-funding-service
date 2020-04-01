@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +65,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     @Override
+    @Cacheable(cacheNames="questionsByCompetition", unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResult(#result)")
     public ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId) {
         return serviceSuccess(questionsToResources(questionRepository.findByCompetitionId(competitionId)));
     }

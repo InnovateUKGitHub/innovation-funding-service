@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -23,9 +24,10 @@ import java.util.TreeSet;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
-public class CompetitionResource implements ApplicationConfiguration, ProjectConfiguration {
+public class CompetitionResource implements ApplicationConfiguration, ProjectConfiguration, CacheableWhenCompetitionOpen {
 
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final String H2020_TYPE_NAME = "Horizon 2020";
@@ -952,5 +954,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
+    }
+
+    @Override
+    public boolean isCompetitionOpen() {
+        return getCompetitionStatus().isLaterThan(READY_TO_OPEN);
     }
 }
