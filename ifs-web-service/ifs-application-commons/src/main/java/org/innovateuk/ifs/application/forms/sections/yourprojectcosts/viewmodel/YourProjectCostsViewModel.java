@@ -63,15 +63,15 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.financeRowTypes = financeRowTypes;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, long competitionId, String competitionName) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, long competitionId, String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.applicationId = applicationId;
 
-        this.applicationId = null;
         this.sectionId = null;
         this.organisationId = null;
         this.complete = false;
