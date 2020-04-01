@@ -4,13 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.constraints.NotBlank;
 
+import java.io.Serializable;
 import java.util.List;
 
 /*
  *  Resource for project document.
  */
 
-public class CompetitionDocumentResource {
+public class CompetitionDocumentResource implements Serializable  {
     public static final String COLLABORATION_AGREEMENT_TITLE = "Collaboration agreement";
 
     private Long id;
