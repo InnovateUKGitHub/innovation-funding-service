@@ -12,10 +12,10 @@
             <th:block th:if="${section.hasAttachment(contentGroup.id)}">
                 <div>
                     <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
-                       th:text="${section.fileName(contentGroup.id)}"
+                       th:text="${section.fileName(contentGroup.id) (opens in a new window)}"
                        class="govuk-link"
                        target="_blank"
-                       aria-describedby="attachment-hint"></a> <span id="attachment-hint">(opens in a new window)</span>
+                       aria-describedby="attachment-hint"></a>
                 </div>
             </th:block>
         </div>

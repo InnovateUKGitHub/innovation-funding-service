@@ -110,7 +110,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 "\n" +
                 "<p>Please allow enough time to complete this document before your project start date.</p>\n" +
                 "\n" +
-                "<p>Guidance on completing a collaboration agreement can be found on the <a target=\"_blank\" href=\"http://www.ipo.gov.uk/lambert\">Lambert Agreement website</a>.</p>\n" +
+                "<p>Guidance on completing a collaboration agreement can be found on the <a target=\"_blank\" href=\"http://www.ipo.gov.uk/lambert\">Lambert Agreement website(opens in a new window)</a>.</p>\n" +
                 "\n" +
                 "<p>Your collaboration agreement must be:</p>\n" +
                 "<ul class=\"list-bullet\"><li>in portable document format (PDF)</li>\n" +
