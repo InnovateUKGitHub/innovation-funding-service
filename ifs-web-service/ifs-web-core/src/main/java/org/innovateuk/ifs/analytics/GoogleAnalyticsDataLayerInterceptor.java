@@ -49,7 +49,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
         final GoogleAnalyticsDataLayer dl = getOrCreateDataLayer(modelAndView);
 
-        if (modelAndView.getViewName().startsWith("redirect:")) {
+        if (modelAndView.getViewName() != null && modelAndView.getViewName().startsWith("redirect:")) {
             return;
         }
 
