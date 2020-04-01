@@ -75,7 +75,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private FileService fileService;
 
     @Override
-    @Cacheable(cacheNames="competition", unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResult(#result)")
+    @Cacheable(cacheNames="competition",
+            key = "T(java.lang.String).format('competition:%d', #id)",
+            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResult(#result)")
     public ServiceResult<CompetitionResource> getCompetitionById(long id) {
         return findCompetitionById(id).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
     }

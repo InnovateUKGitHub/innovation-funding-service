@@ -57,7 +57,7 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
     }
 
     @Override
-    @Cacheable(cacheNames="siteTerms", key = "1", unless = "#result.isFailure()")
+    @Cacheable(cacheNames="siteTerms", key = "siteTerms", unless = "#result.isFailure()")
     public ServiceResult<SiteTermsAndConditionsResource> getLatestSiteTermsAndConditions() {
         return find(siteTermsAndConditionsRepository.findTopByOrderByVersionDesc(),
                 notFoundError(SiteTermsAndConditions.class)).andOnSuccessReturn
