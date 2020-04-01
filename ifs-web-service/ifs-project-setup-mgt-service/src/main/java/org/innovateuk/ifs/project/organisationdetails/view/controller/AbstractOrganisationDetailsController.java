@@ -53,7 +53,7 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                 project.isCollaborativeProject()));
 
         if (includeYourOrganisationSection) {
-            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(false,
+            model.addAttribute("yourOrganisation", new ProjectYourOrganisationViewModel(project.getApplication(), competition.getName(),false,
                     false,
                     false,
                     projectId,
