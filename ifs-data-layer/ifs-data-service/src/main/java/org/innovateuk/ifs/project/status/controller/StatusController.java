@@ -27,7 +27,7 @@ public class StatusController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
-    private static final String DEFAULT_PAGE_SIZE = "2q";
+    private static final String DEFAULT_PAGE_SIZE = "5";
 
     @GetMapping("/competition/{competitionId}")
     public RestResult<ProjectStatusPageResource> getCompetitionStatus(@PathVariable final long competitionId,
