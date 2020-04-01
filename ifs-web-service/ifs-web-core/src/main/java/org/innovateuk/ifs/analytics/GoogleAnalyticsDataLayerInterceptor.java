@@ -49,6 +49,10 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
         final GoogleAnalyticsDataLayer dl = getOrCreateDataLayer(modelAndView);
 
+        if (modelAndView.getViewName().startsWith("redirect:")) {
+            return;
+        }
+
         setCompetitionName(dl, request, modelAndView);
         setUserRoles(dl, request);
         setApplicationId(dl, request, modelAndView);
