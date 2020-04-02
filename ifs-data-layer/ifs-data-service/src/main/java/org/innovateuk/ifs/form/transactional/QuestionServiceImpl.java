@@ -67,7 +67,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     @Cacheable(cacheNames="questionsByCompetition",
             key = "T(java.lang.String).format('questionsByCompetition:%d', #competitionId)",
-            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResult(#result)")
+            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResultIfCompetitionIsOpen(#result)")
     public ServiceResult<List<QuestionResource>> findByCompetition(final Long competitionId) {
         return serviceSuccess(questionsToResources(questionRepository.findByCompetitionId(competitionId)));
     }

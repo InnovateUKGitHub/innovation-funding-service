@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public class CacheHelper {
 
-    public static boolean cacheResult(ServiceResult<?> result) {
+    public static boolean cacheResultIfCompetitionIsOpen(ServiceResult<?> result) {
         if (result.isFailure()) {
             return false;
         }

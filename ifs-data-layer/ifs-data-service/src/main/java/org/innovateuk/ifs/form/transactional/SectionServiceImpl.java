@@ -128,7 +128,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     @Override
     @Cacheable(cacheNames="sectionsByCompetition",
             key = "T(java.lang.String).format('sectionsByCompetition:%d', #competitionId)",
-            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResult(#result)")
+            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResultIfCompetitionIsOpen(#result)")
     public ServiceResult<List<SectionResource>> getByCompetitionId(final Long competitionId) {
         return find(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competitionId), notFoundError(Section.class, competitionId)).
                 andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));
