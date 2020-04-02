@@ -21,10 +21,10 @@
                 <tr class="govuk-table__row" th:each="row : ${model.rows}">
                     <th class="govuk-table__header" scope="row">
                         <div class="govuk-grid-row govuk-!-padding-right-0">
-                            <div class="govuk-grid-column-one-half">
+                            <div class="govuk-grid-column-two-thirds">
                                 <div class="govuk-heading-s govuk-!-margin-0" th:text="${row.projectName}" />
                             </div>
-                            <div class="govuk-grid-column-one-half alignright">
+                            <div class="govuk-grid-column-one-third alignright">
                                 <th:block th:if="${row.projectState.withdrawn}">
                                     <strong class="ifs-project-status-withdrawn">Withdrawn</strong>
                                 </th:block>
