@@ -5,9 +5,9 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.util.Set;
 
-public class FinanceChecksProjectCostsViewModel  extends YourProjectCostsViewModel {
+public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-    public FinanceChecksProjectCostsViewModel(Set<FinanceRowType> financeRowTypes) {
-        super(false, false, false, financeRowTypes);
+    public FinanceChecksProjectCostsViewModel(Set<FinanceRowType> financeRowTypes, long competitionId) {
+        super(false, false, false, financeRowTypes, competitionId);
     }
 }
