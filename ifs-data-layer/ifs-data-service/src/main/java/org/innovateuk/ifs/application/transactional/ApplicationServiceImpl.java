@@ -73,7 +73,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    @CacheEvict(value = "dashboard", key = "#userId")
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
                                                                                                           long competitionId,
                                                                                                           long userId,

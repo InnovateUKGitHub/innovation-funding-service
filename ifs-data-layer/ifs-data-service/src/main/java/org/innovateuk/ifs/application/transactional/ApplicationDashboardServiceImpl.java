@@ -46,7 +46,6 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private ApplicationRepository applicationRepository;
 
     @Override
-    @Cacheable(cacheNames="dashboard", unless = "#result.isFailure()")
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
         List<Application> applications = applicationRepository.findApplicationsForDashboard(userId);
 
