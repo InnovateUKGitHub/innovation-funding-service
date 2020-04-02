@@ -5,8 +5,6 @@ package org.innovateuk.ifs.competition.resource;
  */
 public class SiteTermsAndConditionsResource extends TermsAndConditionsResource {
 
-    private static final long serialVersionUID = 4469552707071101526L;
-
     public SiteTermsAndConditionsResource() {
     }
 

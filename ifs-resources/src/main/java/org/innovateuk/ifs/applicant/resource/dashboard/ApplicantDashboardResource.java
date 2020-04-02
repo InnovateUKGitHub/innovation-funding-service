@@ -3,10 +3,9 @@ package org.innovateuk.ifs.applicant.resource.dashboard;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class ApplicantDashboardResource implements Serializable {
+public class ApplicantDashboardResource {
 
     private List<DashboardInSetupRowResource> inSetup;
     private List<DashboardEuGrantTransferRowResource> euGrantTransfer;

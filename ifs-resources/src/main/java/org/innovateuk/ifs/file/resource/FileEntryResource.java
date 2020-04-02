@@ -4,13 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.http.MediaType;
 
-import java.io.Serializable;
-
 /**
  * A Resource representation of a FileEntry.  Subclasses of this class will be the representations
  * of subclasses of FileEntry.
  */
-public class FileEntryResource implements Serializable {
+public class FileEntryResource {
 
     private Long id;
     private String name;

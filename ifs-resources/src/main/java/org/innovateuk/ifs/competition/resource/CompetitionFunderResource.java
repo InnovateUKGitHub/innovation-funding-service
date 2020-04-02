@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 
-public class CompetitionFunderResource implements Serializable {
+public class CompetitionFunderResource {
 
     private Long id;
     private Funder funder;
