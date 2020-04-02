@@ -19,7 +19,7 @@ public interface UsersRolesService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByIds(Long[] ids);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByApplicationId(long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
@@ -28,7 +28,7 @@ public interface UsersRolesService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ProcessRoleResource>> getProcessRolesByUserId(long userId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<ProcessRoleResource>> getAssignableProcessRolesByApplicationId(long applicationId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'CHECK_USER_APPLICATION')")

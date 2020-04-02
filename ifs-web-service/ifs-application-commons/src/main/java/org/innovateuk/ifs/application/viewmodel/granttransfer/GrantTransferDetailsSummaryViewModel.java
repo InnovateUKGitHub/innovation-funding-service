@@ -24,12 +24,12 @@ public class GrantTransferDetailsSummaryViewModel extends AbstractLeadOnlyViewMo
 
     private final EuActionTypeResource actionType;
 
-    public GrantTransferDetailsSummaryViewModel(Long questionId, Long applicationId, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly) {
-        this(questionId, applicationId, closed, complete, canMarkAsComplete, allReadOnly, null, null, null, null, null, null, null, null);
+    public GrantTransferDetailsSummaryViewModel(Long questionId, Long applicationId, String competitionName, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly) {
+        this(questionId, applicationId, competitionName, closed, complete, canMarkAsComplete, allReadOnly, null, null, null, null, null, null, null, null);
     }
 
-    public GrantTransferDetailsSummaryViewModel(Long questionId, Long applicationId, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
-        super(questionId, applicationId, closed, complete, canMarkAsComplete, allReadOnly);
+    public GrantTransferDetailsSummaryViewModel(Long questionId, Long applicationId, String competitionName, boolean closed, boolean complete, boolean canMarkAsComplete, boolean allReadOnly, String grantAgreementNumber, String participantId, String projectName, LocalDate startDate, LocalDate endDate, BigDecimal fundingContribution, Boolean projectCoordinator, EuActionTypeResource actionType) {
+        super(questionId, applicationId, competitionName, closed, complete, canMarkAsComplete, allReadOnly);
         this.grantAgreementNumber = grantAgreementNumber;
         this.participantId = participantId;
         this.projectName = projectName;

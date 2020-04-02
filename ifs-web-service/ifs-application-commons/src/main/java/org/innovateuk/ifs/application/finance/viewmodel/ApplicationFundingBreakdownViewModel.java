@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
@@ -11,24 +12,32 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 /**
  * View model for finance/finance-summary :: finance-breakdown-table.
  */
-public class ApplicationFundingBreakdownViewModel {
+public class ApplicationFundingBreakdownViewModel implements BaseAnalyticsViewModel {
 
     private final long applicationId;
+    private final String competitionName;
     private final List<BreakdownTableRow> rows;
     private final boolean collaborativeProject;
     private final Set<FinanceRowType> financeRowTypes;
     private final boolean anyApplicantHasVat;
 
-    public ApplicationFundingBreakdownViewModel(long applicationId, List<BreakdownTableRow> rows, boolean collaborativeProject, Set<FinanceRowType> financeRowTypes, boolean anyApplicantHasVat) {
+    public ApplicationFundingBreakdownViewModel(long applicationId, String competitionName, List<BreakdownTableRow> rows, boolean collaborativeProject, Set<FinanceRowType> financeRowTypes, boolean anyApplicantHasVat) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.rows = rows;
         this.collaborativeProject = collaborativeProject;
         this.financeRowTypes = financeRowTypes;
         this.anyApplicantHasVat = anyApplicantHasVat;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public List<BreakdownTableRow> getRows() {

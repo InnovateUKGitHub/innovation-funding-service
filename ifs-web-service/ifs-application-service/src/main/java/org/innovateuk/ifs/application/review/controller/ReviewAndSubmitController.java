@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.review.controller;
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
+import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -198,10 +199,7 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-        model.addAttribute("earlyMetricsUrl", earlyMetricsUrl);
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion()));
 
         return getTrackingPage(competition);
     }

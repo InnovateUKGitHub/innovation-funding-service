@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.application.review.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-public class ReviewAndSubmitViewModel {
+public class ReviewAndSubmitViewModel implements BaseAnalyticsViewModel {
 
     private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
     private final ApplicationResource application;
@@ -20,6 +21,15 @@ public class ReviewAndSubmitViewModel {
         this.userIsLeadApplicant = userIsLeadApplicant;
     }
 
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competition.getName();
+    }
 
     public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {
         return applicationReadOnlyViewModel;

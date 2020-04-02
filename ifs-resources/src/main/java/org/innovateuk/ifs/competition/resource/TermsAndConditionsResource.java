@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.competition.resource;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
  * Resource representation of TermsAndConditions
  */
-public abstract class TermsAndConditionsResource {
+public abstract class TermsAndConditionsResource implements Serializable {
 
     private Long id;
     protected String name;
