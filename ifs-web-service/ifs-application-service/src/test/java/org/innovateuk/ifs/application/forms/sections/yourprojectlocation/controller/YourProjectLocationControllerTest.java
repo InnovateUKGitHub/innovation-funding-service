@@ -261,7 +261,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 .param("mark-as-complete", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("application/sections/your-project-location/your-project-location"))
-                .andExpect(model().attribute("commonFinancesModel", commonFinancesViewModel))
+                .andExpect(model().attribute("model", commonFinancesViewModel))
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
 
