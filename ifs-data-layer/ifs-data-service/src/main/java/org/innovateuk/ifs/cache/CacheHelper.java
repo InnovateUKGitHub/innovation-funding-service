@@ -14,8 +14,12 @@ public class CacheHelper {
         Object payload = result.getSuccess();
 
         if (payload instanceof Collection) {
-            CacheableWhenCompetitionOpen target = (CacheableWhenCompetitionOpen) ((Collection) payload).iterator().next();
-            return target.isCompetitionOpen();
+            if (((Collection) payload).isEmpty()) {
+                return false;
+            } else {
+                CacheableWhenCompetitionOpen target = (CacheableWhenCompetitionOpen) ((Collection) payload).iterator().next();
+                return target.isCompetitionOpen();
+            }
         }
 
         if (payload instanceof CacheableWhenCompetitionOpen) {
