@@ -35,6 +35,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -534,5 +536,54 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, leadOnApplication1));
         assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user2));
         assertFalse(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user3));
+    }
+
+    @Test
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjects() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+                thenReturn(newProjectUser().build(1));
+
+        assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(null);
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository, never()).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
+    }
+
+    @Test
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
+
+        UserResource user = newUserResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
+                thenReturn(emptyList());
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
     }
 }

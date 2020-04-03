@@ -22,6 +22,7 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
     private List<Long> childSections;
     private SectionType type;
     //Used by @Cacheable
+    @JsonIgnore
     private boolean competitionOpen;
 
 
