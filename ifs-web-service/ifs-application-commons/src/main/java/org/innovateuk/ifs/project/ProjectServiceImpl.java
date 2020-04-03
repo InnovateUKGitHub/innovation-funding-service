@@ -14,9 +14,11 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -127,11 +129,16 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectUserResource> projectUsersForUserAndOrganisation = simpleFilter(projectUsersForOrganisation, user -> user.getUser().equals(userId));
 
         return !projectUsersForUserAndOrganisation.isEmpty();
+
     }
 
     @Override
     public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
-        OrganisationResource organisationResource = projectRestService.getOrganisationByProjectAndUser(projectId, user.getId()).getSuccess();
-        return organisationResource.getId();
+        try {
+            return projectRestService.getOrganisationByProjectAndUser(projectId, user.getId()).getSuccess().getId();
+        } catch (Exception ex) {
+            throw new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), Collections.singletonList(projectId));
+        }
     }
+
 }
