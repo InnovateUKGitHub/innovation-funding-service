@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -25,6 +26,7 @@ public class FormInputResource implements CacheableWhenCompetitionOpen {
     private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
     private FileEntryResource file;
     //Used by @Cacheable
+    @JsonIgnore
     private boolean competitionOpen;
 
     public FormInputResource() {

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
@@ -13,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 
+import static org.innovateuk.ifs.application.transactional.ApplicationServiceSecurityTest.verifyApplicationRead;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -30,6 +33,8 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
     private TokenPermissionRules tokenRules;
     private UserLookupStrategies userLookupStrategies;
     private TokenLookupStrategies tokenLookupStrategies;
+    ApplicationPermissionRules applicationPermissionRules;
+    ApplicationLookupStrategy applicationLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
@@ -37,15 +42,15 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         tokenRules = getMockPermissionRulesBean(TokenPermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
         tokenLookupStrategies = getMockPermissionEntityLookupStrategiesBean(TokenLookupStrategies.class);
+        applicationPermissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
+
     }
 
     @Test
     public void findAssignableUsers() {
-        when(classUnderTestMock.findAssignableUsers(123L))
-                .thenReturn(serviceSuccess(newUserResource().buildSet(2)));
-
-        classUnderTest.findAssignableUsers(123L);
-        assertViewMultipleUsersExpectations();
+        verifyApplicationRead(applicationLookupStrategy, applicationPermissionRules,
+                (applicationId) -> classUnderTest.findAssignableUsers(applicationId));
     }
 
     @Test
@@ -82,11 +87,8 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void findRelatedUsers() {
-        when(classUnderTestMock.findRelatedUsers(123L))
-                .thenReturn(serviceSuccess(newUserResource().buildSet(2)));
-
-        classUnderTest.findRelatedUsers(123L);
-        assertViewMultipleUsersExpectations();
+        verifyApplicationRead(applicationLookupStrategy, applicationPermissionRules,
+                (applicationId) -> classUnderTest.findRelatedUsers(applicationId));
     }
 
     private void assertViewSingleUserExpectations() {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,6 +25,7 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
     //Used by @Cacheable
+    @JsonIgnore
     private boolean competitionOpen;
 
     public QuestionResource() {
