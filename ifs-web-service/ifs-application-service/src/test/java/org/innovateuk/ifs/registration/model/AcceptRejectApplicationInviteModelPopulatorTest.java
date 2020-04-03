@@ -27,6 +27,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
 
         ApplicationInviteResource invite = newApplicationInviteResource().
                 withLeadApplicant(leadApplicantName).
+                withApplication(1L).
                 withLeadApplicantEmail(leadApplicantEmail).
                 withLeadOrganisation(leadOrganisationName).
                 withLeadOrganisationId(leadOrganisationId).
@@ -69,6 +70,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
                 withLeadOrganisationId(leadOrganisationId).
                 withCompetitionId(competition.getId()).
                 withCompetitionName(competition.getName()).
+                withApplication(1L).
                 withInviteOrganisationNameConfirmed(inviteOrganisationNameConfirmed).
                 build();
 
@@ -100,6 +102,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
 
         ApplicationInviteResource invite = newApplicationInviteResource().
                 withLeadApplicant(leadApplicantName).
+                withApplication(1L).
                 withLeadApplicantEmail(leadApplicantEmail).
                 withLeadOrganisation(leadOrganisationName).
                 withLeadOrganisationId(leadOrganisationId).

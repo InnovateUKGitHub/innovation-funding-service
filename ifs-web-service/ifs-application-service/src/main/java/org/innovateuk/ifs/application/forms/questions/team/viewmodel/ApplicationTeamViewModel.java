@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
 import java.util.List;
 
-public class ApplicationTeamViewModel {
+public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     private final long applicationId;
+    private final String competitionName;
     private final String applicationName;
     private final long questionId;
     private final List<ApplicationTeamOrganisationViewModel> organisations;
@@ -16,6 +19,7 @@ public class ApplicationTeamViewModel {
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
+                                    String competitionName,
                                     long questionId,
                                     List<ApplicationTeamOrganisationViewModel> organisations,
                                     long loggedInUserId,
@@ -24,6 +28,7 @@ public class ApplicationTeamViewModel {
                                     boolean open,
                                     boolean complete) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.applicationName = applicationName;
         this.questionId = questionId;
         this.organisations = organisations;
@@ -34,8 +39,14 @@ public class ApplicationTeamViewModel {
         this.complete = complete;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getApplicationName() {

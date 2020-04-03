@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public interface OrganisationService {
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Set<OrganisationResource>> findByApplicationId(long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")

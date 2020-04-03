@@ -106,7 +106,7 @@ public class ApplicationTermsPartnerModelPopulatorTest {
 
         ApplicationTermsPartnerViewModel actual = populator.populate(application, questionId);
 
-        assertEquals((long) application.getId(), actual.getApplicationId());
+        assertEquals((Long) application.getId(), actual.getApplicationId());
         assertEquals(questionId, actual.getQuestionId());
 
         ApplicationTermsPartnerRowViewModel expectedRow1 =

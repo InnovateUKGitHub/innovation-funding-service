@@ -27,7 +27,7 @@ public class InterviewFeedbackViewModelPopulator {
         this.userRestService = userRestService;
     }
 
-    public InterviewFeedbackViewModel populate(long applicationId, UserResource userResource, boolean isFeedbackReleased) {
+    public InterviewFeedbackViewModel populate(long applicationId, String competitionName, UserResource userResource, boolean isFeedbackReleased) {
         String responseFilename = ofNullable(interviewResponseRestService.findResponse(applicationId).getSuccess())
                 .map(FileEntryResource::getName)
                 .orElse(null);
@@ -38,7 +38,9 @@ public class InterviewFeedbackViewModelPopulator {
                 .map(FileEntryResource::getName)
                 .orElse(null);
 
-        return new InterviewFeedbackViewModel(responseFilename,
+        return new InterviewFeedbackViewModel(applicationId,
+                competitionName,
+                responseFilename,
                 feedbackFilename,
                 role.map(ProcessRoleResource::getRole).map(Role::isLeadApplicant).orElse(false),
                 isFeedbackReleased,

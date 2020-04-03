@@ -9,6 +9,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -125,6 +126,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     @Override
+    @Cacheable(cacheNames="sectionsByCompetition",
+            key = "T(java.lang.String).format('sectionsByCompetition:%d', #competitionId)",
+            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResultIfCompetitionIsOpen(#result)")
     public ServiceResult<List<SectionResource>> getByCompetitionId(final Long competitionId) {
         return find(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competitionId), notFoundError(Section.class, competitionId)).
                 andOnSuccessReturn(r -> simpleMap(r, sectionMapper::mapToResource));

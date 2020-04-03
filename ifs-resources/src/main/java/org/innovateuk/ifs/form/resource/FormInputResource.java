@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
+import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
@@ -8,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FormInputResource {
+public class FormInputResource implements CacheableWhenCompetitionOpen {
     private Long id;
     private Integer wordCount;
     private FormInputType type;
@@ -24,6 +25,8 @@ public class FormInputResource {
     private FormInputScope scope;
     private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
     private FileEntryResource file;
+    //Used by @Cacheable
+    private boolean competitionOpen;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -163,5 +166,14 @@ public class FormInputResource {
 
     public void setFile(FileEntryResource file) {
         this.file = file;
+    }
+
+    @Override
+    public boolean isCompetitionOpen() {
+        return competitionOpen;
+    }
+
+    public void setCompetitionOpen(boolean competitionOpen) {
+        this.competitionOpen = competitionOpen;
     }
 }
