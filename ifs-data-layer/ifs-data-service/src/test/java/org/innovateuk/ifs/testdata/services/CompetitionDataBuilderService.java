@@ -108,15 +108,15 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         Optional<CsvUtils.CompetitionOrganisationConfigLine> competitionOrganisationConfigLine = simpleFindFirst(competitionOrganisationConfigLines, l ->
                 competition.getCompetition().getName().equals(l.competition));
 
-        if (!competitionOrganisationConfigLine.isPresent()) {
-            competitionOrganisationConfigDataBuilder.
-                    withCompetitionOrganisationConfigData(competition.getCompetition().getName(), false, false).
-                    build();
-        } else {
+        if (competitionOrganisationConfigLine.isPresent()) {
             competitionOrganisationConfigLine.ifPresent(line ->
                     competitionOrganisationConfigDataBuilder.
                             withCompetitionOrganisationConfigData(line.competition, line.internationalOrganisationsAllowed, line.internationalLeadOrganisationAllowed).
                             build());
+        } else {
+            competitionOrganisationConfigDataBuilder.
+                    withCompetitionOrganisationConfigData(competition.getCompetition().getName(), false, false).
+                    build();
         }
     }
 
