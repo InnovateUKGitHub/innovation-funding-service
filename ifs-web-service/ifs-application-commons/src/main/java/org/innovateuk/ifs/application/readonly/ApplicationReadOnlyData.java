@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
@@ -24,7 +25,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 
-public class ApplicationReadOnlyData {
+public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
 
     private final CompetitionResource competition;
     private final ApplicationResource application;
@@ -64,6 +65,16 @@ public class ApplicationReadOnlyData {
                 .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
         this.questionToAssessorResponse = Multimaps.index(assessorResponses, AssessorFormInputResponseResource::getQuestion);
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competition.getName();
     }
 
     public Map<Long, QuestionResource> getQuestionIdToQuestion() {

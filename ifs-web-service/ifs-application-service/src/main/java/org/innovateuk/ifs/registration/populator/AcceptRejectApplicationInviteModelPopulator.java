@@ -20,7 +20,7 @@ public class AcceptRejectApplicationInviteModelPopulator {
         boolean inviteOrganisationExists = inviteOrganisation.getOrganisation() != null;
         boolean leadOrganisation = invite.getLeadOrganisationId().equals(inviteOrganisation.getOrganisation());
 
-        return new AcceptRejectApplicationInviteViewModel(competitionId, competitionName, leadOrganisationName,
+        return new AcceptRejectApplicationInviteViewModel(invite.getApplication(), competitionId, competitionName, leadOrganisationName,
                 leadApplicantName, inviteOrganisationName, leadApplicantEmail, inviteOrganisationExists,
                 leadOrganisation);
     }

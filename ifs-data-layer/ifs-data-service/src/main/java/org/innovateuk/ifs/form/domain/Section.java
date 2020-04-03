@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -205,5 +206,9 @@ public class Section implements Comparable<Section> {
     
     public SectionType getType() {
         return type;
+    }
+
+    public boolean isCompetitionOpen() {
+        return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
     }
 }

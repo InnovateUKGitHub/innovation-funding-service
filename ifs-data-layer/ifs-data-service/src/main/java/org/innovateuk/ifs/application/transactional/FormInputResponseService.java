@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 
@@ -17,16 +16,17 @@ import java.util.List;
  */
 public interface FormInputResponseService {
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(long applicationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(long formInputId, long applicationId);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionSetupType(long applicationId,
                                                                                              QuestionSetupType questionSetupType);
-    @PostFilter("hasPermission(filterObject, 'READ')")
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId);
 
     // TODO: IFS-3830 we need to have separate methods for save and update

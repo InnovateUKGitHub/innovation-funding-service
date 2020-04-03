@@ -47,6 +47,7 @@ public class CommonYourFinancesViewModelPopulator {
 
         return new CommonYourProjectFinancesViewModel(
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
+                application.getCompetitionName(),
                 application.getName(),
                 applicationId,
                 sectionId,

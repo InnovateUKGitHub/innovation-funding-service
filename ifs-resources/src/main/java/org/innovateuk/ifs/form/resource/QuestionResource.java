@@ -3,12 +3,13 @@ package org.innovateuk.ifs.form.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-public class QuestionResource implements Comparable<QuestionResource> {
+public class QuestionResource implements Comparable<QuestionResource>, CacheableWhenCompetitionOpen {
     private Long id;
     private String name;
     private String shortName;
@@ -22,6 +23,8 @@ public class QuestionResource implements Comparable<QuestionResource> {
     private QuestionType type;
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
+    //Used by @Cacheable
+    private boolean competitionOpen;
 
     public QuestionResource() {
         //default constructor
@@ -147,6 +150,15 @@ public class QuestionResource implements Comparable<QuestionResource> {
 
     public void setQuestionSetupType(QuestionSetupType questionSetupType) {
         this.questionSetupType = questionSetupType;
+    }
+
+    @Override
+    public boolean isCompetitionOpen() {
+        return competitionOpen;
+    }
+
+    public void setCompetitionOpen(boolean competitionOpen) {
+        this.competitionOpen = competitionOpen;
     }
 
     @Override

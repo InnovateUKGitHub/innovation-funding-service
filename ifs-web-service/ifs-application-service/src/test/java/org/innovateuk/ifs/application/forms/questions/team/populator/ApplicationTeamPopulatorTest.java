@@ -133,7 +133,7 @@ public class ApplicationTeamPopulatorTest {
 
         ApplicationTeamViewModel viewModel = populator.populate(application.getId(), questionId, user);
 
-        assertEquals((long) application.getId(), viewModel.getApplicationId());
+        assertEquals((Long) application.getId(), viewModel.getApplicationId());
         assertEquals(application.getName(), viewModel.getApplicationName());
         assertEquals((long) user.getId(), viewModel.getLoggedInUserId());
         assertEquals(questionId, viewModel.getQuestionId());
