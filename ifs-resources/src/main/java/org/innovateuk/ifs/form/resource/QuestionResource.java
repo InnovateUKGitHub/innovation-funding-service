@@ -18,7 +18,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     private Boolean assignEnabled = true;
     private Boolean multipleStatuses = false;
     private Integer priority;
-    private Long competition;
     private Long section;
     private String questionNumber;
     private QuestionType type;
@@ -53,10 +52,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public String getDescription() {
         return this.description;
-    }
-
-    public Long getCompetition() {
-        return this.competition;
     }
 
     public Long getSection() {
@@ -133,10 +128,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
         this.priority = priority;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
-    }
-
     public void setSection(Long section) {
         this.section = section;
     }
@@ -192,7 +183,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
                 .append(assignEnabled, that.assignEnabled)
                 .append(multipleStatuses, that.multipleStatuses)
                 .append(priority, that.priority)
-                .append(competition, that.competition)
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
@@ -212,7 +202,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
                 .append(assignEnabled)
                 .append(multipleStatuses)
                 .append(priority)
-                .append(competition)
                 .append(section)
                 .append(questionNumber)
                 .append(type)

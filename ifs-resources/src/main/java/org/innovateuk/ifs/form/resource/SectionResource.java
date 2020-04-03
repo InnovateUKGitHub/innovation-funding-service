@@ -20,7 +20,6 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
     private List<Long> questions = new ArrayList<>();
     private Long parentSection;
     private List<Long> childSections;
-    private Boolean displayInAssessmentApplicationSummary = false;
     private SectionType type;
     //Used by @Cacheable
     private boolean competitionOpen;
@@ -97,10 +96,6 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
         this.childSections = childSections;
     }
 
-    public void setDisplayInAssessmentApplicationSummary(Boolean displayInAssessmentApplicationSummary) {
-        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -124,10 +119,6 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
 
     public Long getCompetition() {
         return this.competition;
-    }
-
-    public Boolean isDisplayInAssessmentApplicationSummary() {
-        return this.displayInAssessmentApplicationSummary;
     }
 
     public SectionType getType() {
