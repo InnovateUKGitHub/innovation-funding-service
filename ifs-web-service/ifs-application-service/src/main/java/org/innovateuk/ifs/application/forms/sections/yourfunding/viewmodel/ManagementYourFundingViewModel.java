@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 public class ManagementYourFundingViewModel extends YourFundingViewModel {
 
     public ManagementYourFundingViewModel(long applicationId,
+                                          String competitionName,
                                           long sectionId,
                                           long organisationId,
                                           long competitionId,
@@ -10,6 +11,7 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           String url) {
         super(
                 applicationId,
+                competitionName,
                 sectionId,
                 organisationId,
                 competitionId,

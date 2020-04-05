@@ -16,7 +16,6 @@ import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestServic
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
-import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -36,6 +35,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentAggregateResourceBuilder.newApplicationAssessmentAggregateResource;
 import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -46,7 +46,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -71,7 +71,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     private ApplicantRestService applicantRestService;
 
     @Mock
-    private CategoryRestService categoryRestServiceMock;
+    private CategoryRestService categoryRestService;
 
     @Mock
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
@@ -88,9 +88,6 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     @Mock
     private ProjectService projectService;
 
-    @Mock
-    private InviteService inviteService;
-
     @Before
     public void setUpData() {
 
@@ -102,16 +99,23 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
 
         questionResources.forEach((id, questionResource) -> when(applicantRestService.getQuestion(any(), any(), eq(questionResource.getId()))).thenReturn(newApplicantQuestionResource().build()));
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
-        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
+        when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(2)));
     }
 
     @Test
-    public void testUpload() throws Exception {
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), BigDecimal.valueOf(3));
+    public void upload() throws Exception {
+        ApplicationAssessmentAggregateResource aggregateResource = newApplicationAssessmentAggregateResource()
+                .withScopeAssessed(true)
+                .withTotalScope(5)
+                .withInScope(4)
+                .withScores(ImmutableMap.of(1L, new BigDecimal("2")))
+                .withAveragePercentage(BigDecimal.valueOf(3))
+                .build();
+
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
+
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.APPROVED);
         app.setCompetitionStatus(ASSESSOR_FEEDBACK);
@@ -124,7 +128,7 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
         MockMultipartFile file = new MockMultipartFile("response", "testFile.pdf", "application/pdf", "My content!".getBytes());
 
         mockMvc.perform(
-                fileUpload("/application/" + app.getId() + "/feedback")
+                multipart("/application/" + app.getId() + "/feedback")
                         .file(file)
                         .param("uploadResponse", "1"))
                 .andExpect(status().isOk())
@@ -134,12 +138,19 @@ public class ApplicationFeedbackControllerTest extends AbstractApplicationMockMV
     }
 
     @Test
-    public void testRemove() throws Exception {
-        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(
-                true, 5, 4, ImmutableMap.of(1L, new BigDecimal("2")), BigDecimal.valueOf(3));
+    public void remove() throws Exception {
+        ApplicationAssessmentAggregateResource aggregateResource = newApplicationAssessmentAggregateResource()
+                .withScopeAssessed(true)
+                .withTotalScope(5)
+                .withInScope(4)
+                .withScores(ImmutableMap.of(1L, new BigDecimal("2")))
+                .withAveragePercentage(BigDecimal.valueOf(3))
+                .build();
+
         ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
                 .withFeedback(asList("Feedback 1", "Feedback 2"))
                 .build();
+
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.APPROVED);
         app.setCompetitionStatus(ASSESSOR_FEEDBACK);

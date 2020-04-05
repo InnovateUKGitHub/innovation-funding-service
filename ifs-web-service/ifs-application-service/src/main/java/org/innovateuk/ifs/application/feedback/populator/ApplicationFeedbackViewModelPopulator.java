@@ -1,18 +1,17 @@
 package org.innovateuk.ifs.application.feedback.populator;
 
-import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
-import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
-import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
-import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.ApplicationFeedbackViewModel;
 import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFinanceSummaryViewModelPopulator;
+import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakdownViewModelPopulator;
 import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.populator.section.AbstractApplicationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -110,7 +109,7 @@ public class ApplicationFeedbackViewModelPopulator extends AbstractApplicationMo
 
         final InterviewFeedbackViewModel interviewFeedbackViewModel;
         if (interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, user, application.getCompetitionStatus().isFeedbackReleased());
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(applicationId, application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
         } else {
             interviewFeedbackViewModel = null;
         }

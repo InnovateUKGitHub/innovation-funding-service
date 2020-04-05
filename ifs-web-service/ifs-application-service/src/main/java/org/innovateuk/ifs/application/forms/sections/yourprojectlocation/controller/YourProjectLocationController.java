@@ -87,7 +87,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         Future<YourProjectLocationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));
 
-        model.addAttribute("commonFinancesModel", commonViewModelRequest);
+        model.addAttribute("model", commonViewModelRequest);
         model.addAttribute("form", formRequest);
 
         return VIEW_PAGE;
@@ -134,7 +134,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
         Supplier<String> failureHandler = () -> {
             CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
-            model.addAttribute("commonFinancesModel", viewModel);
+            model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
         };

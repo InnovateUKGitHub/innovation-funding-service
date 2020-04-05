@@ -5,7 +5,7 @@ Documentation    IFS-7080  Add sort option to table: assign assessors to applica
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 *** Variables ***
 ${assessor_alexis_id}          ${user_ids['alexis.colon@gmail.com']}
 ${assessor_camile_id}          ${user_ids['camille.shelton@gmail.com']}

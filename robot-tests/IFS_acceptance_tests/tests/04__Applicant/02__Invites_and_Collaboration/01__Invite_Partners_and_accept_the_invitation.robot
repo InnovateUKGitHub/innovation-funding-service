@@ -33,7 +33,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application

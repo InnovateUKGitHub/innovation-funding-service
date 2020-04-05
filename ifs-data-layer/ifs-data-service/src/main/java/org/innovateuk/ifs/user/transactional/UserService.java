@@ -23,10 +23,10 @@ public interface UserService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserResource> findInactiveByEmail(String email);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Set<UserResource>> findAssignableUsers(long applicationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Set<UserResource>> findRelatedUsers(long applicationId);
 
     @PreAuthorize("hasPermission(#user, 'CHANGE_PASSWORD')")

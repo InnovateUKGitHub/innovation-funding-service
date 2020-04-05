@@ -39,7 +39,7 @@ Documentation     INFUND-2630 As a Competitions team member I want to be able to
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${Successful_Monitoring_Officer_Page}    ${server}/project-setup-management/project/${Grade_Crossing_Project_Id}/monitoring-officer
@@ -215,6 +215,7 @@ New MO see the project setup view for assigned project
 
 Mo is able to view application feedback on a competition which as been through assessment and interview panels
     [Documentation]  IFS-7230
+    [Setup]  release feedback on inform comp
     Given the user clicks the button/link   link = view application feedback
     Then the user should see the element    jQuery = h1:contains("Feedback overview")
 
@@ -405,3 +406,11 @@ The user should see assigned MO details
 Custom suite teardown
     the user closes the browser
     Disconnect from database
+
+release feedback on inform comp
+    log in as a different user    &{Comp_admin1_credentials}
+    ${status}   ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  link = ${INFORM_COMPETITION_NAME}
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords   the user clicks the button/link  link = ${INFORM_COMPETITION_NAME}
+    ...                              AND    the user clicks the button/link  jQuery = button:contains("Release feedback")
+    log in as a different user     tom@poly.io   ${short_password}
+    the user clicks the button/link  link = ${Assign_Project2}

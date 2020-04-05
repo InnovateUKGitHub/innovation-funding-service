@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.Question;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -51,26 +50,26 @@ public interface QuestionStatusService {
             "'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> isMarkedAsComplete(Question question, long applicationId, long organisationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(long questionId,
                                                                                               long applicationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusForOrganisationOnApplication(
             long questionId, long applicationId, long organisationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(
             Long[] questionIds, long applicationId, long organisationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(long applicationId,
                                                                                  long organisationId);
 
     @PostAuthorize("hasPermission(filterObject, 'READ')")
     ServiceResult<Optional<QuestionStatusResource>> findByApplicationAndMarkedAsCompleteByOrganisation(long questionId, long applicationId, long organisationId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<QuestionStatusResource>> findCompletedQuestionsByApplicationId(long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.security;
 
-import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.user.resource.UserResource;

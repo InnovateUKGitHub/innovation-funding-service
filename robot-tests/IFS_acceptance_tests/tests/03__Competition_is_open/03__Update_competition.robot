@@ -24,7 +24,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 # ${ready_to_open_competition_name} is the 'Photonics for health'
 

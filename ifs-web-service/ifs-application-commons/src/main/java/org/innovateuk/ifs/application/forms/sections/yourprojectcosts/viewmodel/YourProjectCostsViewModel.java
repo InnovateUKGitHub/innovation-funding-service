@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.util.Set;
 
-public class YourProjectCostsViewModel {
+public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     private final Long applicationId;
+
+    private final String competitionName;
 
     private final Long sectionId;
 
@@ -32,6 +35,7 @@ public class YourProjectCostsViewModel {
     private final Set<FinanceRowType> financeRowTypes;
 
     public YourProjectCostsViewModel(long applicationId,
+                                     String competitionName,
                                      long sectionId,
                                      long competitionId,
                                      long organisationId,
@@ -46,6 +50,7 @@ public class YourProjectCostsViewModel {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.sectionId = sectionId;
         this.competitionId = competitionId;
         this.complete = complete;
@@ -58,15 +63,16 @@ public class YourProjectCostsViewModel {
         this.financeRowTypes = financeRowTypes;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, long competitionId, String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
+        this.competitionId = competitionId;
+        this.competitionName = competitionName;
+        this.applicationId = applicationId;
 
-        this.applicationId = null;
         this.sectionId = null;
-        this.competitionId = null;
         this.organisationId = null;
         this.complete = false;
         this.applicationName = null;
@@ -75,8 +81,14 @@ public class YourProjectCostsViewModel {
         this.includeVat = false;
     }
 
+    @Override
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public Long getSectionId() {

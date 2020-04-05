@@ -22,7 +22,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../04__Applicant/Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 User cannot accept/reject an invite to an application that has been withdrawn

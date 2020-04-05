@@ -7,7 +7,6 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
 
@@ -28,7 +27,7 @@ public interface ApplicationInviteService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
     
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")

@@ -17,7 +17,7 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***

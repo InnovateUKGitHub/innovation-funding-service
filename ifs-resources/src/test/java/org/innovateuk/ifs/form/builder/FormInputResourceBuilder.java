@@ -61,10 +61,6 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((question, formInput) -> formInput.setQuestion(question), questions);
     }
 
-    public FormInputResourceBuilder withCompetition(Long... competitions) {
-        return withArray((competition, formInput) -> formInput.setCompetition(competition), competitions);
-    }
-
     public FormInputResourceBuilder withPriority(Integer... priorities) {
         return withArray((priority, formInput) -> formInput.setPriority(priority), priorities);
     }

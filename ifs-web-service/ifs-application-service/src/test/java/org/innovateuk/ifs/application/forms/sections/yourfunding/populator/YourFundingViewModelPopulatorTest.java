@@ -42,7 +42,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourFundingViewModelPopulator> {
-    private static final long APPLICATION_ID = 1L;
+    private static final Long APPLICATION_ID = 1L;
     private static final long SECTION_ID = 2L;
 
     @Mock
