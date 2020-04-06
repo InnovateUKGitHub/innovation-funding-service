@@ -79,6 +79,7 @@ public class YourFundingViewModelPopulator {
         boolean overridingFundingRules = isMaximumFundingLevelOverridden(section);
 
         return new YourFundingViewModel(applicationId,
+                section.getCompetition().getName(),
                 section.getSection().getId(),
                 section.getCurrentApplicant().getOrganisation().getId(),
                 section.getCompetition().getId(),
@@ -99,7 +100,7 @@ public class YourFundingViewModelPopulator {
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        return new ManagementYourFundingViewModel(applicationId, sectionId, organisationId, application.getCompetition(), application.getName(),
+        return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
                 format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
 
     }

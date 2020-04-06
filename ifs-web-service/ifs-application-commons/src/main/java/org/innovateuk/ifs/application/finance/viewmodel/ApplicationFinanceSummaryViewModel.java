@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 
 import java.math.BigDecimal;
@@ -11,9 +12,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 /**
  * View model for finance/finance-summary :: application-finances-summary.
  */
-public class ApplicationFinanceSummaryViewModel {
+public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewModel {
 
     private final long applicationId;
+    private final String competitionName;
     private final List<FinanceSummaryTableRow> rows;
     private final boolean readOnly;
     private final boolean collaborativeProject;
@@ -23,6 +25,7 @@ public class ApplicationFinanceSummaryViewModel {
     private final Long currentUsersOrganisationId;
 
     public ApplicationFinanceSummaryViewModel(long applicationId,
+                                              String competitionName,
                                               List<FinanceSummaryTableRow> rows,
                                               boolean readOnly,
                                               boolean collaborativeProject,
@@ -30,6 +33,7 @@ public class ApplicationFinanceSummaryViewModel {
                                               boolean fundingLevelFirst,
                                               Long currentUsersOrganisationId) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.rows = rows;
         this.readOnly = readOnly;
         this.collaborativeProject = collaborativeProject;
@@ -38,8 +42,15 @@ public class ApplicationFinanceSummaryViewModel {
         this.currentUsersOrganisationId = currentUsersOrganisationId;
     }
 
-    public long getApplicationId() {
+
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public List<FinanceSummaryTableRow> getRows() {
