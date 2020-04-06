@@ -11,15 +11,15 @@ public class UserProfileViewModel {
     private final String emailAddress;
     private final boolean allowMarketingEmails;
     private final Set<OrganisationProfileViewModel> organisations;
-    private final boolean isMonitoringOfficer;
+    private final boolean monitoringOfficer;
 
-    public UserProfileViewModel(String name, String phoneNumber, String emailAddress, boolean allowMarketingEmails, Set<OrganisationProfileViewModel> organisations, boolean isMonitoringOfficer) {
+    public UserProfileViewModel(String name, String phoneNumber, String emailAddress, boolean allowMarketingEmails, Set<OrganisationProfileViewModel> organisations, boolean monitoringOfficer) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.allowMarketingEmails = allowMarketingEmails;
         this.organisations = organisations;
-        this.isMonitoringOfficer = isMonitoringOfficer;
+        this.monitoringOfficer = monitoringOfficer;
     }
 
     public String getName() {
@@ -43,6 +43,6 @@ public class UserProfileViewModel {
     }
 
     public boolean isMonitoringOfficer() {
-        return isMonitoringOfficer;
+        return monitoringOfficer;
     }
 }
