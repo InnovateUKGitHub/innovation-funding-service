@@ -34,6 +34,7 @@ import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -43,6 +44,9 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -268,14 +272,15 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         String applicationSearchString = "1";
 
         List<Project> projects = setupCompetitionStatusMocks(competitionId);
+        Page<Project> page = new PageImpl<>(projects, PageRequest.of(0, 5), 3);
 
-        when(projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)).thenReturn(projects);
+        when(projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString, PageRequest.of(0,5))).thenReturn(page);
 
-        ServiceResult<List<ProjectStatusResource>> result = service.getCompetitionStatus(competitionId, applicationSearchString);
+        ServiceResult<ProjectStatusPageResource> result = service.getCompetitionStatus(competitionId, applicationSearchString, 0, 5);
 
         assertTrue(result.isSuccess());
 
-        List<ProjectStatusResource> projectStatusResources = result.getSuccess();
+        List<ProjectStatusResource> projectStatusResources = result.getSuccess().getContent();
         assertTrue(projectsGetSortedByApplicationId(projectStatusResources));
         assertEquals(3, projectStatusResources.size());
         assertEquals(new Integer(3), projectStatusResources.get(0).getNumberOfPartners());
