@@ -70,6 +70,10 @@ public class CsvUtils {
         return simpleMapWithIndex(readCsvLines("competitions"), CompetitionLine::new);
     }
 
+    public static List<CompetitionOrganisationConfigLine> readCompetitionOrganisationConfig() {
+        return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
+    }
+
     public static List<CompetitionFunderLine> readCompetitionFunders() {
         return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }
@@ -532,6 +536,21 @@ public class CsvUtils {
             applicationFinanceType = ApplicationFinanceType.valueOf(line.get(i++));
             includeProjectGrowth = nullableBoolean(line.get(i++));
             includeYourOrganisation = nullableBoolean(line.get(i++));
+        }
+    }
+
+    public static class CompetitionOrganisationConfigLine {
+        public int lineNumber;
+        public String competition;
+        public boolean internationalOrganisationsAllowed;
+        public boolean internationalLeadOrganisationAllowed;
+
+        private CompetitionOrganisationConfigLine(List<String> line , int lineNumber) {
+            this.lineNumber = lineNumber;
+            int i = 0;
+            competition = nullable(line.get(i++));
+            internationalOrganisationsAllowed = nullableBoolean(line.get(i++));
+            internationalLeadOrganisationAllowed = nullableBoolean(line.get(i++));
         }
     }
 
