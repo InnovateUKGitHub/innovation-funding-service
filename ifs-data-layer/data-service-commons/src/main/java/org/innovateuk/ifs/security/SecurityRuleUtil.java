@@ -45,4 +45,6 @@ public final class SecurityRuleUtil {
     public static boolean isInnovationLead(User user) { return user.hasRole(INNOVATION_LEAD); }
 
     public static boolean isStakeholder(User user) { return user.hasRole(STAKEHOLDER); }
+
+    public static boolean isCompetitionFinance(User user) { return user.hasRole(COMPETITION_FINANCE); }
 }

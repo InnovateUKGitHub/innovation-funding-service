@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isStakeholder;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -49,8 +48,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size))
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasRole(COMPETITION_FINANCE)
+                    ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(user.getId(), PageRequest.of(page, size))
                     : competitionRepository.findProjectSetup(PageRequest.of(page, size));
 
             return handleCompetitionSearchResultPage(competitions, this::toProjectSetupCompetitionResult);
@@ -75,8 +74,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER)
-                    ? competitionRepository.findPreviousForInnovationLeadOrStakeholder(user.getId(), PageRequest.of(page, size))
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasRole(COMPETITION_FINANCE)
+                    ? competitionRepository.findPreviousForInnovationLeadOrStakeholderOrCompetitionFinance(user.getId(), PageRequest.of(page, size))
                     : competitionRepository.findPrevious(PageRequest.of(page, size));
 
             return handleCompetitionSearchResultPage(competitions, this::toPreviousCompetitionSearchResult);
@@ -217,21 +216,21 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
 
     private Long getLiveCount() {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                (isInnovationLead(user) || isStakeholder(user)) ?
+                (isInnovationLead(user) || isStakeholder(user) || isCompetitionFinance(user)) ?
                         competitionRepository.countLiveForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countLive()
         ).getSuccess();
     }
 
     private Long getPSCount() {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                (isInnovationLead(user) || isStakeholder(user)) ?
+                (isInnovationLead(user) || isStakeholder(user) || isCompetitionFinance(user)) ?
                         competitionRepository.countProjectSetupForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countProjectSetup()
         ).getSuccess();
     }
 
     private Long getFeedbackReleasedCount() {
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
-                (isInnovationLead(user) || isStakeholder(user)) ?
+                (isInnovationLead(user) || isStakeholder(user) || isCompetitionFinance(user)) ?
                         competitionRepository.countPreviousForInnovationLeadOrStakeholder(user.getId()) : competitionRepository.countPrevious()
         ).getSuccess();
     }

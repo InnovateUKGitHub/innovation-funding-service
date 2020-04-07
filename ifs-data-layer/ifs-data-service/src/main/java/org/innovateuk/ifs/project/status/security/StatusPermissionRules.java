@@ -80,6 +80,11 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Competition finance users should be able to access current status of competition that are assigned to them")
+    public boolean assignedCompetitionFinanceCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
+        return userIsCompFinanceInCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Internal admin team (comp admin and project finance) users should be able to access the current status of project")
     public boolean internalAdminTeamCanViewProjectStatus(ProjectResource project, UserResource user){
         return isInternalAdmin(user);

@@ -15,7 +15,7 @@ public interface ProjectPartnerInviteService {
             description = "Only project finance users can invite partner organisations.")
     ServiceResult<Void> invitePartnerOrganisation(long projectId, SendProjectPartnerInviteResource invite);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
     @SecuredBySpring(value = "VIEW_PROJECT_PARTNER_INVITES", securedType = SendProjectPartnerInviteResource.class,
             description = "Only internal users can see project partner invites.")
     ServiceResult<List<SentProjectPartnerInviteResource>> getPartnerInvites(long projectId);

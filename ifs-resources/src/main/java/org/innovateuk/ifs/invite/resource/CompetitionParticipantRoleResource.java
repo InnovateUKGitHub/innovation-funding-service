@@ -8,5 +8,6 @@ public enum CompetitionParticipantRoleResource {
     STAKEHOLDER,
     ASSESSOR,
     PANEL_ASSESSOR,
-    INTERVIEW_ASSESSOR
+    INTERVIEW_ASSESSOR,
+    COMPETITION_FINANCE
 }

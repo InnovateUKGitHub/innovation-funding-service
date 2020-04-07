@@ -12,7 +12,7 @@ public class DashboardTabsViewModel {
     }
 
     public boolean live() {
-        return isInternal(userResource) || isStakeholder(userResource);
+        return isInternal(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource);
     }
 
     public boolean upcoming() {
@@ -24,11 +24,11 @@ public class DashboardTabsViewModel {
     }
 
     public boolean projectSetup() {
-        return isInternal(userResource) || isStakeholder(userResource);
+        return isInternal(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource);
     }
 
     public boolean previous() {
-        return isInternal(userResource) || isStakeholder(userResource);
+        return isInternal(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource);
     }
 
     public boolean support() {
