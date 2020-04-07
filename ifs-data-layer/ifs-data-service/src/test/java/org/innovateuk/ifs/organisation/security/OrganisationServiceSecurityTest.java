@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.application.transactional.ApplicationServiceSecurityTest.verifyApplicationRead;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -97,21 +95,6 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     @Test
     public void update() {
         assertAccessDenied(() -> classUnderTest.update(newOrganisationResource().build()), () -> {
-            verify(rules)
-                    .systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules)
-                    .memberOfOrganisationCanUpdateOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules)
-                    .projectFinanceUserCanUpdateAnyOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
-    public void addAddress() {
-        when(lookup.findOrganisationById(123L)).thenReturn(newOrganisationResource().build());
-
-        assertAccessDenied(() -> classUnderTest.addAddress(123L, REGISTERED, newAddressResource().build()), () -> {
             verify(rules)
                     .systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(isA(OrganisationResource.class), eq(getLoggedInUser()));
             verify(rules)

@@ -1,24 +1,19 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
-import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -50,7 +45,6 @@ import java.util.stream.Collectors;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
@@ -75,13 +69,13 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     private BankDetailsMapper bankDetailsMapper;
 
     @Autowired
-    private OrganisationAddressMapper organisationAddressMapper;
+    private OrganisationApplicationAddressMapper organisationApplicationAddressMapper;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
 
     @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
+    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     @Autowired
     private AddressRepository addressRepository;

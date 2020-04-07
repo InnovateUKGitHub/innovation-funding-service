@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.bankdetails.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.core.domain.Project;
 
@@ -40,8 +40,8 @@ public class BankDetailsBuilder extends BaseBuilder<BankDetails, BankDetailsBuil
         return withArray((organisation, bankDetails) -> setField("organisation", organisation, bankDetails), organisations);
     }
 
-    public BankDetailsBuilder withOrganiationAddress(OrganisationAddress... organisationAddresses) {
-        return withArray((organisationAddress, bankDetails) -> setField("organisationAddress", organisationAddress, bankDetails), organisationAddresses);
+    public BankDetailsBuilder withOrganiationAddress(OrganisationApplicationAddress... organisationApplicationAddresses) {
+        return withArray((organisationAddress, bankDetails) -> setField("organisationAddress", organisationAddress, bankDetails), organisationApplicationAddresses);
     }
 
     public BankDetailsBuilder withSortCode(String... sortCodes) {

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -72,7 +72,7 @@ public class PartnerOrganisationRepositoryIntegrationTest extends BaseRepository
     private QueryRepository queryRepository;
 
     @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
+    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     private User projectManager;
     private User projectPartner;

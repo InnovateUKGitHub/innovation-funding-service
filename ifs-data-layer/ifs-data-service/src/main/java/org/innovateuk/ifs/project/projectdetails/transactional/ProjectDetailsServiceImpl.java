@@ -19,8 +19,8 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
+import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -85,7 +85,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private AddressMapper addressMapper;
 
     @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
+    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -355,11 +355,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private boolean isMonitoringOfficerAssigned(long projectId) {
-        LegacyMonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
-        return monitoringOfficer != null;
-    }
-
     private LegacyMonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
         return legacyMonitoringOfficerRepository.findOneByProjectId(projectId);
     }
@@ -385,13 +380,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                     });
                                 })
                 );
-    }
-
-    private void deleteAddressIfNotLinkedToOrganisation(Address oldAddress, Long organisationId) {
-        OrganisationAddress maybeAddress = organisationAddressRepository.findByOrganisationIdAndAddressId(organisationId, oldAddress.getId());
-        if (maybeAddress == null) {
-            addressRepository.delete(oldAddress);
-        }
     }
 
     @Override

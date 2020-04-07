@@ -22,9 +22,9 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
@@ -155,7 +155,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private AddressMapper addressMapperMock;
 
     @Mock
-    private OrganisationAddressRepository organisationAddressRepositoryMock;
+    private OrganisationApplicationAddressRepository organisationApplicationAddressRepositoryMock;
 
     @Mock
     private AddressTypeRepository addressTypeRepositoryMock;
@@ -992,7 +992,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withName(PROJECT.name())
                 .build();
 
-        OrganisationAddress organisationAddress = newOrganisationAddress()
+        OrganisationApplicationAddress organisationApplicationAddress = newOrganisationAddress()
                 .withOrganisation(leadOrganisation)
                 .withAddress(newAddress).withAddressType(projectAddressType)
                 .build();
@@ -1003,8 +1003,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressRepositoryMock.existsById(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
         when(addressTypeRepositoryMock.findById(PROJECT.getOrdinal())).thenReturn(Optional.of(projectAddressType));
-        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
-        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(organisationApplicationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
+        when(organisationApplicationAddressRepositoryMock.save(organisationApplicationAddress)).thenReturn(organisationApplicationAddress);
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -1012,7 +1012,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
+        verify(organisationApplicationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationApplicationAddress.class));
         assertEquals(newAddress, project.getAddress());
     }
 
@@ -1023,7 +1023,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress().build();
         AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
-        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+        OrganisationApplicationAddress organisationApplicationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
@@ -1031,8 +1031,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressRepositoryMock.existsById(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
         when(addressTypeRepositoryMock.findById(PROJECT.getOrdinal())).thenReturn(Optional.of(projectAddressType));
-        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
-        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(organisationApplicationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationApplicationAddress));
+        when(organisationApplicationAddressRepositoryMock.save(organisationApplicationAddress)).thenReturn(organisationApplicationAddress);
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());

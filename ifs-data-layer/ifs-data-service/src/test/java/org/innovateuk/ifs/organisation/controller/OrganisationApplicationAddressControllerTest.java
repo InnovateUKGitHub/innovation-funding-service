@@ -3,7 +3,7 @@ package org.innovateuk.ifs.organisation.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationApplicationAddressService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -15,10 +15,10 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrganisationAddressControllerTest extends BaseControllerMockMVCTest<OrganisationAddressController> {
+public class OrganisationApplicationAddressControllerTest extends BaseControllerMockMVCTest<OrganisationAddressController> {
 
     @Mock
-    private OrganisationAddressService organisationAddressServiceMock;
+    private OrganisationApplicationAddressService organisationApplicationAddressServiceMock;
 
     @Override
     protected OrganisationAddressController supplyControllerUnderTest() {
@@ -31,13 +31,13 @@ public class OrganisationAddressControllerTest extends BaseControllerMockMVCTest
         long id = 1L;
 
         OrganisationAddressResource organisationAddressResource = OrganisationAddressResourceBuilder.newOrganisationAddressResource().build();
-        when(organisationAddressServiceMock.findOne(id)).thenReturn(serviceSuccess(organisationAddressResource));
+        when(organisationApplicationAddressServiceMock.findOne(id)).thenReturn(serviceSuccess(organisationAddressResource));
 
         mockMvc.perform(get("/organisationaddress/{id}", id)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(organisationAddressResource)));
 
-        verify(organisationAddressServiceMock).findOne(id);
+        verify(organisationApplicationAddressServiceMock).findOne(id);
     }
 
     @Test
@@ -47,13 +47,13 @@ public class OrganisationAddressControllerTest extends BaseControllerMockMVCTest
         long addressId = 2L;
 
         OrganisationAddressResource organisationAddressResource = OrganisationAddressResourceBuilder.newOrganisationAddressResource().build();
-        when(organisationAddressServiceMock.findByOrganisationIdAndAddressId(organisationId, addressId)).thenReturn(serviceSuccess(organisationAddressResource));
+        when(organisationApplicationAddressServiceMock.findByOrganisationIdAndAddressId(organisationId, addressId)).thenReturn(serviceSuccess(organisationAddressResource));
 
         mockMvc.perform(get("/organisationaddress/organisation/{organisationId}/address/{addressId}", organisationId, addressId)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(organisationAddressResource)));
 
-        verify(organisationAddressServiceMock).findByOrganisationIdAndAddressId(organisationId, addressId);
+        verify(organisationApplicationAddressServiceMock).findByOrganisationIdAndAddressId(organisationId, addressId);
     }
 }
 

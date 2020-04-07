@@ -10,7 +10,7 @@ import org.innovateuk.ifs.documentation.OrganisationAddressDocs;
 import org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder;
 import org.innovateuk.ifs.organisation.controller.OrganisationAddressController;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.transactional.OrganisationAddressService;
+import org.innovateuk.ifs.organisation.transactional.OrganisationApplicationAddressService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -26,10 +26,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class OrganisationAddressControllerDocumentation extends BaseControllerMockMVCTest<OrganisationAddressController> {
+public class OrganisationApplicationAddressControllerDocumentation extends BaseControllerMockMVCTest<OrganisationAddressController> {
 
     @Mock
-    private OrganisationAddressService organisationAddressServiceMock;
+    private OrganisationApplicationAddressService organisationApplicationAddressServiceMock;
 
     @Override
     protected OrganisationAddressController supplyControllerUnderTest() {
@@ -48,7 +48,7 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                 .withAddress(addressResource)
                 .withAddressType(addressTypeResource)
                 .build();
-        when(organisationAddressServiceMock.findOne(id)).thenReturn(serviceSuccess(organisationAddressResource));
+        when(organisationApplicationAddressServiceMock.findOne(id)).thenReturn(serviceSuccess(organisationAddressResource));
 
         mockMvc.perform(get("/organisationaddress/{id}", id)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -63,7 +63,7 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                         .andWithPrefix("addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
 
-        verify(organisationAddressServiceMock).findOne(id);
+        verify(organisationApplicationAddressServiceMock).findOne(id);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                 .withAddressType(addressTypeResource)
                 .build();
 
-        when(organisationAddressServiceMock.findByOrganisationIdAndAddressId(organisationId, addressId)).thenReturn(serviceSuccess(organisationAddressResource));
+        when(organisationApplicationAddressServiceMock.findByOrganisationIdAndAddressId(organisationId, addressId)).thenReturn(serviceSuccess(organisationAddressResource));
 
         mockMvc.perform(get("/organisationaddress/organisation/{organisationId}/address/{addressId}", organisationId, addressId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -96,6 +96,6 @@ public class OrganisationAddressControllerDocumentation extends BaseControllerMo
                                 .andWithPrefix("addressType.", AddressTypeResourceDocs.addressTypeResourceFields)
                 ));
 
-        verify(organisationAddressServiceMock).findByOrganisationIdAndAddressId(organisationId, addressId);
+        verify(organisationApplicationAddressServiceMock).findByOrganisationIdAndAddressId(organisationId, addressId);
     }
 }

@@ -4,12 +4,12 @@ import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
+import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
 import org.mapstruct.Mapper;
 
 @Mapper(
         config = GlobalMapperConfig.class,
-        uses = {OrganisationAddressMapper.class}
+        uses = {OrganisationApplicationAddressMapper.class}
 )
 public abstract class AddressTypeMapper extends BaseMapper<AddressType, AddressTypeResource, Long>{
 

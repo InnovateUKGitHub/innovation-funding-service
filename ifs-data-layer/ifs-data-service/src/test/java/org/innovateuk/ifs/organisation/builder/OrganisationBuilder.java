@@ -2,7 +2,7 @@ package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.User;
@@ -64,7 +64,7 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
         return withList(users, (userList, org) -> org.setUsers(users));
     }
 
-    public OrganisationBuilder withAddress(List<OrganisationAddress> addresses) {
+    public OrganisationBuilder withAddress(List<OrganisationApplicationAddress> addresses) {
         return withList(addresses, (addressList, org) ->  org.setAddresses(addresses));
     }
 }

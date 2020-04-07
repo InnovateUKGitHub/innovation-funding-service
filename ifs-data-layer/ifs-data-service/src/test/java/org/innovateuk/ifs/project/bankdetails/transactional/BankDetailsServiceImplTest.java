@@ -11,12 +11,11 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
+import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
+import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -110,10 +109,10 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     private AddressTypeRepository addressTypeRepository;
 
     @Mock
-    private OrganisationAddressMapper organisationAddressMapper;
+    private OrganisationApplicationAddressMapper organisationApplicationAddressMapper;
 
     @Mock
-    private OrganisationAddressRepository organisationAddressRepository;
+    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     @Before
     public void setUp() {
@@ -121,7 +120,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         project = newProject().build();
         AddressResource addressResource = newAddressResource().build();
         Address address = newAddress().build();
-        OrganisationAddress organisationAddress = newOrganisationAddress().build();
+        OrganisationApplicationAddress organisationApplicationAddress = newOrganisationAddress().build();
 
         bankDetailsResource = newBankDetailsResource()
                 .withProject(project.getId())
@@ -135,7 +134,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
                 .withSortCode(bankDetailsResource.getSortCode())
                 .withAccountNumber(bankDetailsResource.getAccountNumber())
                 .withOrganisation(organisation)
-                .withOrganiationAddress(organisationAddress)
+                .withOrganiationAddress(organisationApplicationAddress)
                 .build();
 
         accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
@@ -146,7 +145,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
         when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
         when(addressTypeRepository.findById(BANK_DETAILS.getOrdinal())).thenReturn(Optional.of(new AddressType()));
-        when(organisationAddressMapper.mapToDomain(any(OrganisationAddressResource.class))).thenReturn(organisationAddress);
+        when(organisationApplicationAddressMapper.mapToDomain(any(OrganisationAddressResource.class))).thenReturn(organisationApplicationAddress);
     }
 
     @Test

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -45,10 +46,6 @@ public class Organisation {
             joinColumns = @JoinColumn(name = "organisationId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
     private List<User> users = new ArrayList<>();
-
-    @OneToMany(mappedBy = "organisation",
-            cascade = CascadeType.ALL)
-    private List<OrganisationAddress> addresses = new ArrayList<>();
 
     @OneToMany(mappedBy="organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
@@ -95,19 +92,6 @@ public class Organisation {
 
     public void setCompaniesHouseNumber(String companiesHouseNumber) {
         this.companiesHouseNumber = companiesHouseNumber;
-    }
-
-    public List<OrganisationAddress> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<OrganisationAddress> addresses) {
-        this.addresses = addresses;
-    }
-
-    public void addAddress(Address address, AddressType addressType){
-        OrganisationAddress organisationAddress = new OrganisationAddress(this, address, addressType);
-        this.addresses.add(organisationAddress);
     }
 
     public void setUsers(List<User> users) {

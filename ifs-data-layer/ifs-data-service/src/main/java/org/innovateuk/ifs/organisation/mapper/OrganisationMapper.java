@@ -14,7 +14,7 @@ import org.mapstruct.Mappings;
     config = GlobalMapperConfig.class,
     uses = {
         ProcessRoleMapper.class,
-        OrganisationAddressMapper.class,
+        OrganisationApplicationAddressMapper.class,
         OrganisationTypeMapper.class,
         UserMapper.class
     }
