@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummar
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -14,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ApplicationFeedbackViewModel {
+
+    protected static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
+    protected static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     private final ApplicationResource application;
     private final CompetitionResource competition;
@@ -128,6 +132,13 @@ public class ApplicationFeedbackViewModel {
 
     public boolean isCollaborativeProject() {
         return collaborativeProject;
+    }
+
+    public String getTermsAndConditionsTerminology() {
+        if (FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType()) {
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        return TERMS_AND_CONDITIONS_OTHER;
     }
 
 }
