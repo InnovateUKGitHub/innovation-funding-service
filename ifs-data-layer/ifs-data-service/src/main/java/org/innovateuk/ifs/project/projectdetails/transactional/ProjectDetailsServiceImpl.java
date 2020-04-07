@@ -372,16 +372,11 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 andOnSuccess(() ->
                         find(getProject(projectId), getOrganisation(organisationId)).
                                 andOnSuccess((project, organisation) -> {
-                                    Address oldAddress = project.getAddress();
-                                    if (address.getId() != null && addressRepository.existsById(address.getId())) {
-                                        Address existingAddress = addressRepository.findById(address.getId()).orElse(null);
-                                        project.setAddress(existingAddress);
+                                    Optional<Address> matchingAddress = addressRepository.findAddressEqualTo(address);
+                                    if (matchingAddress.isPresent()) {
+                                        project.setAddress(matchingAddress.get());
                                     } else {
-                                        Address newAddress = addressMapper.mapToDomain(address);
-                                        project.setAddress(newAddress);
-                                    }
-                                    if (oldAddress != null) {
-                                        deleteAddressIfNotLinkedToOrganisation(oldAddress, organisationId);
+                                        project.setAddress(addressRepository.save(addressMapper.mapToDomain(address)));
                                     }
 
                                     return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {

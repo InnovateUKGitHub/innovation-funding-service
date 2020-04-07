@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -100,6 +101,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Autowired
     private ProjectFinanceService projectFinanceService;
 
+    @Autowired
+    private AddressMapper addressMapper;
+
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
     @Override
@@ -188,32 +192,21 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
-        AddressResource addressResource = bankDetailsResource.getAddress();
 
-        updateAddressForExistingBankDetails(addressResource, bankDetailsResource, bankDetails);
+        updateAddressForExistingBankDetails(bankDetailsResource, bankDetails);
 
         bankDetailsRepository.save(bankDetails);
 
         return serviceSuccess(accountDetails);
     }
 
-    private void updateAddressForExistingBankDetails(AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        AddressType addressType = addressTypeRepository.findById(BANK_DETAILS.getOrdinal()).get();
-        List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
-
-        OrganisationAddress newOrganisationAddress;
-        if (bankOrganisationAddresses != null && !bankOrganisationAddresses.isEmpty()) {
-            newOrganisationAddress = bankOrganisationAddresses.get(0);
-            newOrganisationAddress.getAddress().updateFrom(addressResource);
+    private void updateAddressForExistingBankDetails(BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
+        Optional<org.innovateuk.ifs.address.domain.Address> matchingAddress = addressRepository.findAddressEqualTo(bankDetailsResource.getAddress());
+        if (matchingAddress.isPresent()) {
+            bankDetails.setAddress(matchingAddress.get());
         } else {
-            addressResource.setId(null);
-            OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
-            organisationAddressResource.setAddress(addressResource);
-            organisationAddressResource.setOrganisation(bankDetailsResource.getOrganisation());
-            organisationAddressResource.setAddressType(new AddressTypeResource(BANK_DETAILS.getOrdinal()));
-            newOrganisationAddress = organisationAddressRepository.save(organisationAddressMapper.mapToDomain(organisationAddressResource));
+            bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
         }
-        bankDetails.setOrganisationAddress(newOrganisationAddress);
     }
 
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
