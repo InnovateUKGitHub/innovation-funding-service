@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
 /**
  * Generic ViewModel for common fields in LeadOnlyViewModels
  */
-public abstract class AbstractLeadOnlyViewModel {
+public abstract class AbstractLeadOnlyViewModel implements BaseAnalyticsViewModel {
 
     private Long questionId;
     private Long applicationId;
+    private String competitionName;
     private boolean closed;
     private boolean complete;
     private boolean canMarkAsComplete;
@@ -14,11 +17,13 @@ public abstract class AbstractLeadOnlyViewModel {
 
     protected AbstractLeadOnlyViewModel(Long questionId,
                                         Long applicationId,
+                                        String competitionName,
                                         boolean closed,
                                         boolean complete,
                                         boolean canMarkAsComplete,
                                         boolean allReadOnly) {
         this.questionId = questionId;
+        this.competitionName = competitionName;
         this.applicationId = applicationId;
         this.closed = closed;
         this.complete = complete;
@@ -26,12 +31,18 @@ public abstract class AbstractLeadOnlyViewModel {
         this.allReadOnly = allReadOnly;
     }
 
-    public Long getQuestionId() {
-        return questionId;
-    }
-
+    @Override
     public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
     }
 
     public boolean isCanMarkAsComplete() {

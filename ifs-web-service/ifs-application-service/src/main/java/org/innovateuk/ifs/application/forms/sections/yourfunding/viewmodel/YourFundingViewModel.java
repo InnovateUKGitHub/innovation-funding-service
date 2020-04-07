@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 
-public class YourFundingViewModel {
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
+public class YourFundingViewModel implements BaseAnalyticsViewModel {
     private final long applicationId;
+
+    private final String competitionName;
 
     private final long sectionId;
 
@@ -36,6 +40,7 @@ public class YourFundingViewModel {
     private final boolean overridingFundingRules;
 
     public YourFundingViewModel(long applicationId,
+                                String competitionName,
                                 long sectionId,
                                 long organisationId,
                                 long competitionId,
@@ -53,6 +58,7 @@ public class YourFundingViewModel {
                                 String financesUrl,
                                 boolean overridingFundingRules) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.sectionId = sectionId;
         this.organisationId = organisationId;
         this.competitionId = competitionId;
@@ -71,8 +77,14 @@ public class YourFundingViewModel {
         this.overridingFundingRules = overridingFundingRules;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public long getSectionId() {

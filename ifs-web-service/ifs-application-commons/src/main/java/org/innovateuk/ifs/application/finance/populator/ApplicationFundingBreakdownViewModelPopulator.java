@@ -89,6 +89,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         }
 
         return new ApplicationFundingBreakdownViewModel(applicationId,
+                competition.getName(),
                 rows,
                 application.isCollaborativeProject(),
                 competition.getFinanceRowTypes(),

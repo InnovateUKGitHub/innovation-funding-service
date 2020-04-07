@@ -470,7 +470,7 @@ public class ProjectFinanceChecksController {
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(competition.getFinanceRowTypes()));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypes(), competition.getId(), competition.getName()));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public class SectionResource {
+public class SectionResource implements CacheableWhenCompetitionOpen {
     private Long id;
     private String name;
     private String description;
@@ -17,11 +18,12 @@ public class SectionResource {
     private Boolean questionGroup;
     private Long competition;
     private List<Long> questions = new ArrayList<>();
-    private List<Long> leadQuestions = new ArrayList<>();
     private Long parentSection;
     private List<Long> childSections;
-    private Boolean displayInAssessmentApplicationSummary = false;
     private SectionType type;
+    //Used by @Cacheable
+    @JsonIgnore
+    private boolean competitionOpen;
 
 
     public SectionResource() {
@@ -95,10 +97,6 @@ public class SectionResource {
         this.childSections = childSections;
     }
 
-    public void setDisplayInAssessmentApplicationSummary(Boolean displayInAssessmentApplicationSummary) {
-        this.displayInAssessmentApplicationSummary = displayInAssessmentApplicationSummary;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -124,10 +122,6 @@ public class SectionResource {
         return this.competition;
     }
 
-    public Boolean isDisplayInAssessmentApplicationSummary() {
-        return this.displayInAssessmentApplicationSummary;
-    }
-
     public SectionType getType() {
 		return type;
 	}
@@ -141,11 +135,12 @@ public class SectionResource {
 		this.type = type;
 	}
 
-    public List<Long> getLeadQuestions() {
-        return leadQuestions;
-    }
-    public void setLeadQuestions(List<Long> questions) {
-        this.leadQuestions = questions;
+    @Override
+    public boolean isCompetitionOpen() {
+        return competitionOpen;
     }
 
+    public void setCompetitionOpen(boolean competitionOpen) {
+        this.competitionOpen = competitionOpen;
+    }
 }
