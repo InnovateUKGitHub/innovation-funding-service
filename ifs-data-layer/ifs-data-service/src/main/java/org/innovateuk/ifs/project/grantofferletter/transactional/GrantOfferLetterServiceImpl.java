@@ -7,6 +7,9 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.docusign.resource.DocusignRequest;
+import org.innovateuk.ifs.docusign.resource.DocusignType;
+import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -25,6 +28,7 @@ import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantO
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +78,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private DocusignService docusignService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -306,21 +313,28 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             }
 
             User projectManager = getExistingProjectManager(project).get().getUser();
-            NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("dashboardUrl", webBaseUrl);
-            notificationArguments.put("applicationId", project.getApplication().getId());
-            notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
+            if (project.isUseDocusignForGrantOfferLetter()) {
+                return sendGrantOfferLetterSuccess(project).andOnSuccess(() ->
+                     docusignService.send(new DocusignRequest(projectManager.getId(), projectManager.getName(), projectManager.getEmail(), String.format("Sign Grant Offer Letter %d:%s", project.getApplication().getId(), project.getName()), getGrantOfferLetterFileAndContents(projectId).getSuccess(), DocusignType.SIGNED_GRANT_OFFER_LETTER, String.format("/project-setup/project/%d/offer", projectId)))
+                    .andOnSuccessReturnVoid((project::setSignedGolDocusignDocument)));
+            } else {
+                NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-            return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
-                Notification notification = new Notification(systemNotificationSource,
-                                                             singletonList(pmTarget),
-                                                             NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
-                                                             notificationArguments);
+                Map<String, Object> notificationArguments = new HashMap<>();
+                notificationArguments.put("dashboardUrl", webBaseUrl);
+                notificationArguments.put("applicationId", project.getApplication().getId());
+                notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
 
-                return notificationService.sendNotificationWithFlush(notification, EMAIL);
-            });
+                return sendGrantOfferLetterSuccess(project).andOnSuccess(() -> {
+                    Notification notification = new Notification(systemNotificationSource,
+                            singletonList(pmTarget),
+                            NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER,
+                            notificationArguments);
+
+                    return notificationService.sendNotificationWithFlush(notification, EMAIL);
+                });
+            }
         });
     }
 
@@ -400,6 +414,11 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             if (golWorkflowHandler.grantOfferLetterRejected(project, user)) {
                 project.setOfferSubmittedDate(null);
                 project.setGrantOfferLetterRejectionReason(golRejectionReason);
+                if (project.isUseDocusignForGrantOfferLetter()) {
+                    User projectManager = getExistingProjectManager(project).get().getUser();
+                    docusignService.resend(project.getSignedGolDocusignDocument().getId(), new DocusignRequest(projectManager.getId(), projectManager.getName(), projectManager.getEmail(), String.format("Sign Grant Offer Letter %d:%s", project.getApplication().getId(), project.getName()), getGrantOfferLetterFileAndContents(project.getId()).getSuccess(), DocusignType.SIGNED_GRANT_OFFER_LETTER, String.format("/project-setup/project/%d/offer", project.getId())))
+                            .andOnSuccessReturnVoid((project::setSignedGolDocusignDocument));
+                }
                 return serviceSuccess();
             } else {
                 LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
@@ -413,6 +432,25 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return getProject(projectId).andOnSuccess(
                 golWorkflowHandler::getExtendedState);
     }
+
+    @Override
+    public ServiceResult<StringResource> getDocusignUrl(long projectId) {
+        return getProject(projectId).andOnSuccessReturn(project -> {
+            User projectManager = getExistingProjectManager(project).get().getUser();
+            //String envelopeId, String userId, String name, String email, String redirect
+            return new StringResource(docusignService.getDocusignUrl(project.getSignedGolDocusignDocument().getEnvelopeId(), projectManager.getId(),
+                    projectManager.getName(), projectManager.getEmail(), String.format("/project-setup/project/%d/offer", projectId)));
+        });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> importGrantOfferLetter(long projectId) {
+        return getProject(projectId).andOnSuccess(project ->
+            docusignService.importDocument(project.getSignedGolDocusignDocument().getEnvelopeId()));
+
+    }
+
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
         List<ProjectUser> projectUsers = project.getProjectUsers();

@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  */
 public interface FileService {
 
-    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = false)
     ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource file, Supplier<InputStream> inputStreamSupplier);
 
     @NotSecured(value = "This Service is to be used within other services", mustBeSecuredByOtherServices = false)

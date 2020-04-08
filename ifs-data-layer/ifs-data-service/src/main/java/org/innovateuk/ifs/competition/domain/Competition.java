@@ -179,6 +179,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    private boolean useDocusignForGrantOfferLetter;
+
     public Competition() {
         setupComplete = false;
     }
@@ -928,6 +930,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
         this.competitionOrganisationConfig = competitionOrganisationConfig;
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
+    }
+
+    public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
 
     @Override

@@ -11,8 +11,9 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterAppr
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.springframework.security.core.parameters.P;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -83,4 +84,9 @@ public interface GrantOfferLetterService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
     ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
+
+    ServiceResult<StringResource> getDocusignUrl(long projectId);
+
+    ServiceResult<Void> importGrantOfferLetter(long projectId);
+
 }
