@@ -35,6 +35,6 @@ public interface ProcessRoleRepository extends PagingAndSortingRepository<Proces
 
     @Query("SELECT other.organisationId FROM ProcessRole pr " +
             "JOIN ProcessRole other on other.applicationId = pr.applicationId " +
-            "WHERE pr.userId = :userId")
+            "WHERE pr.user.id = :userId")
     List<Long> findOrganisationIdsSharingApplicationsWithUser(long userId);
 }
