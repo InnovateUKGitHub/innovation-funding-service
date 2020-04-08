@@ -47,7 +47,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
 
         ProjectResource project = projectService.getById(projectId);
         ProjectDetailsAddressViewModel projectDetailsAddressViewModel = loadDataIntoModel(project);
-        if (project.getAddress() != null && project.getAddress().getId() != null) {
+        if (project.getAddress() != null) {
             form.getAddressForm().editAddress(project.getAddress());
         }
 
