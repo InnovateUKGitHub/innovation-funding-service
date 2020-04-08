@@ -91,7 +91,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
             }
         }
 
-        return new ApplicationFinanceSummaryViewModel(applicationId, rows, !open,
+        return new ApplicationFinanceSummaryViewModel(applicationId, competition.getName(), rows, !open,
                 application.isCollaborativeProject(),
                 competition.getCollaborationLevel(),
                 competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),

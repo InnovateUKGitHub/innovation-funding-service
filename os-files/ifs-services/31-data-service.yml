@@ -31,7 +31,7 @@ items:
                   port: 8080
                 initialDelaySeconds: 120
                 periodSeconds: 31
-                timeoutSeconds: 5
+                timeoutSeconds: 25
                 successThreshold: 1
                 failureThreshold: 3
               readinessProbe:
@@ -40,9 +40,9 @@ items:
                   port: 8080
                 initialDelaySeconds: 120
                 periodSeconds: 5
-                timeoutSeconds: 5
+                timeoutSeconds: 25
                 successThreshold: 1
-                failureThreshold: 1
+                failureThreshold: 3
               imagePullPolicy: Always
               env:
                 - name: SPRING_DATASOURCE_URL

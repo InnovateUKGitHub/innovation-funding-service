@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.category.resource;
 
+import java.io.Serializable;
+
 /**
  * Resource Class for a generic {@code Category}
  */
-public abstract class CategoryResource {
+public abstract class CategoryResource implements Serializable {
     private Long id;
     private String name;
     private String description;

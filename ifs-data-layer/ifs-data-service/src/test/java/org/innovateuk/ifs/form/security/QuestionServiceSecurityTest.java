@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.security.AssessmentLookupStrategy;
 import org.innovateuk.ifs.assessment.security.AssessmentPermissionRules;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.QuestionServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -43,17 +42,6 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
     }
 
-    @Test
-    public void testFindByCompetition() {
-        final Long competitionId = 1L;
-
-        when(classUnderTestMock.findByCompetition(competitionId))
-                .thenReturn(serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
-
-        classUnderTest.findByCompetition(competitionId);
-        verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
-    }
 
     @Test
     public void testGetQuestionById() {
@@ -144,18 +132,6 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
                         .loggedInUsersCanSeeAllQuestions(isA(Question.class), isA(UserResource.class))
         );
     }
-
-    @Test
-    public void testGetQuestionsBySectionIdAndType() {
-        when(classUnderTestMock.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL))
-                .thenReturn(serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
-
-        classUnderTest.getQuestionsBySectionIdAndType(1L, QuestionType.GENERAL);
-
-        verify(questionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
-                .loggedInUsersCanSeeAllQuestions(isA(QuestionResource.class), isA(UserResource.class));
-    }
-
     @Test
     public void testGetQuestionByIdAndAssessmentId() {
         Long questionId = 1L;

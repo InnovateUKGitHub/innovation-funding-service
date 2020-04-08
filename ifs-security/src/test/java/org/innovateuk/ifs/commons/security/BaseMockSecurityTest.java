@@ -228,7 +228,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
         return mock;
     }
 
-    protected void assertAccessDenied(Runnable serviceCall, Runnable verifications) {
+    protected static void assertAccessDenied(Runnable serviceCall, Runnable verifications) {
         try {
             serviceCall.run();
             fail("Expected an AccessDeniedException");

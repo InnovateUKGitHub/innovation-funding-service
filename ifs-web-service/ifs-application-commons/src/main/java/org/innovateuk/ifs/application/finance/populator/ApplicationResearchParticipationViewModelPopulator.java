@@ -30,7 +30,8 @@ public class ApplicationResearchParticipationViewModelPopulator {
 
         return new ApplicationResearchParticipationViewModel(
                 applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess() ,
-                competition
+                competition,
+                applicationId
         );
 
     }
