@@ -53,6 +53,11 @@ public class OrganisationPermissionRules {
         return isStakeholder(user);
     }
 
+    @PermissionRule(value = "READ", description = "Competition finance users can see all Organisations")
+    public boolean competitionFinanceUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isCompetitionFinance(user);
+    }
+
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")
     public boolean monitoringOfficersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
         List<MonitoringOfficer> projectMonitoringOfficers = projectMonitoringOfficerRepository.findByUserId(user.getId());

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /**
@@ -34,6 +33,11 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Queries")
     public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
+    }
+
+    @PermissionRule(value = "PF_CREATE", description = "Only Competition Finance Users can create Queries")
+    public boolean competitionFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
+        return userIsCompFinanceOnCompetitionForProject(query.contextClassPk, user.getId()) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
     private boolean queryHasOnePostWithAuthorBeingCurrentProjectFinance(QueryResource query, UserResource user) {

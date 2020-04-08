@@ -14,7 +14,7 @@ public interface CompetitionSearchService {
     ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
 
     @SecuredBySpring(value = "FIND_PROJECT_SETUP", description = "Only internal users can see project setup competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
     ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
@@ -25,15 +25,15 @@ public interface CompetitionSearchService {
     ServiceResult<CompetitionSearchResult> findNonIfsCompetitions(int page, int size);
 
     @SecuredBySpring(value = "FIND_PREVIOUS", description = "Only internal users can see previous competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
     ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size);
 
     @SecuredBySpring(value = "SEARCH", description = "Only internal users can search for competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
     @SecuredBySpring(value = "COUNT", description = "Only internal users count competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
 }

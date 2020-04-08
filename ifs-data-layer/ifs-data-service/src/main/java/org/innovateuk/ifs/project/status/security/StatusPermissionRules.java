@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.security;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -80,6 +79,11 @@ public class StatusPermissionRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(competition.getId(), user.getId());
     }
 
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Competition finance users should be able to access current status of competition that are assigned to them")
+    public boolean assignedCompetitionFinanceCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
+        return userIsCompFinanceInCompetition(competition.getId(), user.getId());
+    }
+
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Internal admin team (comp admin and project finance) users should be able to access the current status of project")
     public boolean internalAdminTeamCanViewProjectStatus(ProjectResource project, UserResource user){
         return isInternalAdmin(user);
@@ -92,13 +96,16 @@ public class StatusPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Innovation lead users should be able to view current status of project from competition assigned to them")
     public boolean assignedInnovationLeadCanViewProjectStatus(ProjectResource project, UserResource user){
-        Application application = applicationRepository.findById(project.getApplication()).get();
-        return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
+        return userIsInnovationLeadOnCompetition(project.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Stakeholders should be able to view current status of project from competition assigned to them")
     public boolean assignedStakeholderCanViewProjectStatus(ProjectResource project, UserResource user){
-        Application application = applicationRepository.findById(project.getApplication()).get();
-        return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
+        return userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_PROJECT_STATUS", description = "Competition finance users should be able to view current status of project from competition assigned to them")
+    public boolean assignedCompetitionFinanceUsersCanViewProjectStatus(ProjectResource project, UserResource user){
+        return userIsCompFinanceInCompetition(project.getCompetition(), user.getId());
     }
 }
