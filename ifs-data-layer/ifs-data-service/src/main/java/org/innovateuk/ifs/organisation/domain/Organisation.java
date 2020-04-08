@@ -4,6 +4,7 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,6 +38,10 @@ public class Organisation {
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.ALL)
     private List<OrganisationAddress> addresses = new ArrayList<>();
+
+    //Only used by queries.
+    @OneToMany(mappedBy="organisationId")
+    private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
