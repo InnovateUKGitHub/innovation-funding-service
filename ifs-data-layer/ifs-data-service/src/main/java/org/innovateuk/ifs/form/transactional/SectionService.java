@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.form.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -39,10 +39,10 @@ public interface SectionService {
     @PreAuthorize("hasPermission(#questionId, 'org.innovateuk.ifs.form.resource.QuestionResource', 'READ')")
     ServiceResult<SectionResource> getSectionByQuestionId(final Long questionId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @NotSecured(value = "Everyone can see sections", mustBeSecuredByOtherServices = false)
     ServiceResult<List<SectionResource>> getByCompetitionId(final Long CompetitionId);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @NotSecured(value = "Everyone can see sections", mustBeSecuredByOtherServices = false)
     ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(final Long competitionId);
 
     @PreAuthorize("hasPermission(#parentId, 'org.innovateuk.ifs.form.resource.SectionResource', 'READ')")

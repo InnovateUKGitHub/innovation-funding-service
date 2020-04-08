@@ -39,7 +39,10 @@ public class YourOrganisationViewModelPopulator {
 
         PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
-        return new ProjectYourOrganisationViewModel(showStateAidAgreement,
+        return new ProjectYourOrganisationViewModel(
+                project.getApplication(),
+                competition.getName(),
+                showStateAidAgreement,
                 pendingPartner.isYourFundingComplete(),
                 competition.isH2020(),
                 projectId,

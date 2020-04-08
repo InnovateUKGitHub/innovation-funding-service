@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
-import org.innovateuk.ifs.form.builder.FormInputBuilder;
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
-import org.innovateuk.ifs.form.resource.FormInputScope;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +16,7 @@ import org.springframework.test.annotation.Rollback;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 
@@ -61,7 +55,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionById() {
+    public void getQuestionById() {
         questionResource = controller.getQuestionById(questionId).getSuccess();
 
         assertNotNull(questionResource);
@@ -69,30 +63,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionByIdRemovesInactiveFormInputs() {
-        //Create an inactive form input for the question.
-        Question question = questionRepository.findById(questionId).get();
-        FormInputBuilder baseInput = newFormInput()
-                .with(id(null))
-                .withQuestion(question)
-                .withPriority(1)
-                .withType(FormInputType.TEXTAREA)
-                .withScope(FormInputScope.APPLICATION)
-                .withQuestion(question);
-        FormInput inactiveFormInput = baseInput.withActive(false).build();
-        FormInput activeFormInput = baseInput.withActive(true).build();
-        formInputRepository.save(inactiveFormInput);
-        formInputRepository.save(activeFormInput);
-        flushAndClearSession();
-
-        questionResource = controller.getQuestionById(questionId).getSuccess();
-
-        assertFalse(questionResource.getFormInputs().contains(inactiveFormInput.getId()));
-        assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
-    }
-
-    @Test
-    public void testFindByCompetition() {
+    public void findByCompetition() {
         List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccess();
 
         assertNotNull(questions);
@@ -100,14 +71,14 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetNextQuestion() {
+    public void getNextQuestion() {
         QuestionResource nextQuestion = controller.getNextQuestion(12L).getSuccess();
         assertNotNull(nextQuestion);
         assertEquals(new Long(13L), nextQuestion.getId());
     }
 
     @Test
-    public void testGetPreviousQuestion() {
+    public void getPreviousQuestion() {
         QuestionResource previousQuestion = controller.getPreviousQuestion(12L).getSuccess();
 
         assertNotNull(previousQuestion);
@@ -115,7 +86,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionByIdAndAssessmentId() {
+    public void getQuestionByIdAndAssessmentId() {
         loginFelixWilson();
         Long questionId = 1L;
         Long assessmentId = 7L;
@@ -125,7 +96,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     }
 
     @Test
-    public void testGetQuestionsByAssessmentId() {
+    public void getQuestionsByAssessmentId() {
         loginFelixWilson();
         Long assessmentId = 7L;
 

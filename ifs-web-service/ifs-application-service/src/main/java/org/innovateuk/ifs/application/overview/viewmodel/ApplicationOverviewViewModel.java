@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -10,7 +11,7 @@ import java.util.Set;
 /**
  * View model for the application overview
  */
-public class ApplicationOverviewViewModel {
+public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
 
     protected static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
     protected static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
@@ -25,6 +26,16 @@ public class ApplicationOverviewViewModel {
         this.competition = competition;
         this.application = application;
         this.sections = sections;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competition.getName();
     }
 
     public ProcessRoleResource getProcessRole() {

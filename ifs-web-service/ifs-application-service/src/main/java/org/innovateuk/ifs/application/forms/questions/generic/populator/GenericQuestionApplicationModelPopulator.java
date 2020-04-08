@@ -54,6 +54,7 @@ public class GenericQuestionApplicationModelPopulator {
                                                        .withLastUpdatedByName(response.getUpdatedByUserName()));
 
         return viewModelBuilder.withApplicationId(application.getId())
+                .withCompetitionName(competition.getName())
                 .withApplicationName(application.getName())
                 .withCurrentUser(applicantQuestion.getCurrentUser().getId())
                 .withQuestionId(question.getId())

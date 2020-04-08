@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.feedback.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class ApplicationFeedbackViewModel {
+public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
 
     protected static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
     protected static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
@@ -68,6 +69,16 @@ public class ApplicationFeedbackViewModel {
         this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return application.getCompetitionName();
     }
 
     public ApplicationResource getApplication() {
