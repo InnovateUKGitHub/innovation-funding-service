@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * financial position on a Project
  */
 @Controller
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'comp_finance')")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = FinanceChecksViabilityController.class)
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/viability")
 public class FinanceChecksViabilityController {
@@ -127,7 +127,6 @@ public class FinanceChecksViabilityController {
     }
 
     private String doViewViability(Long projectId, Long organisationId, Model model, FinanceChecksViabilityForm form) {
-        List<ProjectFinanceResource> projectFinances = financeService.getProjectFinances(projectId);
         model.addAttribute("model", getViewModel(projectId, organisationId));
         model.addAttribute("form", form);
 

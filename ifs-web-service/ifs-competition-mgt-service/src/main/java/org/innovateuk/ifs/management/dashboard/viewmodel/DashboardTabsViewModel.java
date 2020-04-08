@@ -12,7 +12,7 @@ public class DashboardTabsViewModel {
     }
 
     public boolean live() {
-        return isInternal(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource);
+        return isInternal(userResource) || isStakeholder(userResource);
     }
 
     public boolean upcoming() {

@@ -5,9 +5,9 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.domain.StakeholderInvite;
+import org.innovateuk.ifs.competition.domain.*;
+import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
@@ -18,10 +18,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
-import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
-import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.*;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.domain.User;
@@ -91,6 +88,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private StakeholderRepository stakeholderRepository;
+
+    @Autowired
+    private CompetitionFinanceInviteRepository competitionFinanceInviteRepository;
+
+    @Autowired
+    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     @Transactional
@@ -327,6 +330,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
+    public ServiceResult<Void> createCompetitionFinanceUser(String hash, CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource) {
+        return getCompetitionFinanceInviteByHash(hash)
+                .andOnSuccess(invite -> createCompetitionFinance(competitionFinanceRegistrationResource, invite)
+                        .andOnSuccess(user -> associateCompetitionFinanceUserWithCompetition(invite.getTarget(), user))
+                        .andOnSuccess(() -> updateCompetitionFinanceInviteStatus(invite))
+                        .andOnSuccessReturnVoid());
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<User> createMonitoringOfficer(String hash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
         return getMonitoringOfficerInviteByHash(hash)
                 .andOnSuccess(invite -> createMonitoringOfficerUser(monitoringOfficerRegistrationResource, invite)
@@ -338,6 +351,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
         stakeholderRepository.save(new Stakeholder(competition, user));
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> associateCompetitionFinanceUserWithCompetition(Competition competition, User user) {
+        competitionFinanceRepository.save(new CompetitionFinance(competition, user));
         return serviceSuccess();
     }
 
@@ -373,6 +391,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
+    private ServiceResult<User> createCompetitionFinance(CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource, CompetitionFinanceInvite competitionFinanceInvite) {
+        final UserResource userResource = competitionFinanceRegistrationResource.toUserResource();
+        userResource.setEmail(competitionFinanceInvite.getEmail());
+        userResource.setRoles(singletonList(COMPETITION_FINANCE));
+        return validateUser(userResource).
+                andOnSuccess(validUser -> {
+                    final User user = userMapper.mapToDomain(userResource);
+                    return createUserWithUid(user, userResource.getPassword()).
+                            andOnSuccess(this::activateUser)
+                            .andOnSuccessReturn(() -> user);
+                });
+    }
+
     private ServiceResult<User> createMonitoringOfficerUser(MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource, MonitoringOfficerInvite monitoringOfficerInvite) {
         final UserResource userResource = monitoringOfficerRegistrationResource.toUserResource();
         userResource.setEmail(monitoringOfficerInvite.getEmail());
@@ -398,6 +429,12 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess();
     }
 
+    private ServiceResult<Void> updateCompetitionFinanceInviteStatus(CompetitionFinanceInvite competitionFinanceInvite) {
+        competitionFinanceInvite.open();
+        competitionFinanceInviteRepository.save(competitionFinanceInvite);
+        return serviceSuccess();
+    }
+
     private ServiceResult<Void> updateMonitoringOfficerInvite(MonitoringOfficerInvite monitoringOfficerInvite) {
         monitoringOfficerInviteRepository.save(monitoringOfficerInvite.open());
         return serviceSuccess();
@@ -413,6 +450,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<StakeholderInvite> getStakeholderInviteByHash(String hash) {
         return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+    }
+
+    private ServiceResult<CompetitionFinanceInvite> getCompetitionFinanceInviteByHash(String hash) {
+        return find(competitionFinanceInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
     private ServiceResult<MonitoringOfficerInvite> getMonitoringOfficerInviteByHash(String hash) {

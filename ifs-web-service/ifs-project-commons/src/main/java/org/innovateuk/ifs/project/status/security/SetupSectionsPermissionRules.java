@@ -66,6 +66,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isStakeholder);
     }
 
+    @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "Competition finance users can access after project details are submitted by the lead")
+    public boolean competitionFinanceCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isCompetitionFinance);
+    }
+
     @PermissionRule(value = "EDIT_MONITORING_OFFICER_SECTION", description = "An internal user can access after project details are submitted by the lead")
     public boolean internalCanEditMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
@@ -82,10 +87,20 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksSection, SecurityRuleUtil::isInternalAdmin);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION", description = "A Competition finance user can always access the Finance checks section")
+    public boolean competitionFinanceCanAccessFinanceChecksSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksSection, SecurityRuleUtil::isCompetitionFinance);
+    }
+
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "An internal user can access the Spend Profile " +
             "section when the lead partner submits the project spendprofile")
     public boolean internalCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isInternalAdmin);
+    }
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A Competition finance user can access the Spend Profile " +
+            "section when the lead partner submits the project spendprofile")
+    public boolean competitionFinanceUsersCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isCompetitionFinance);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Support user can access the Spend Profile " +
@@ -126,6 +141,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isStakeholder);
     }
 
+    @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A Competition finance user can access the Documents section once all documents have been approved")
+    public boolean competitionFinanceCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isCompetitionFinance);
+    }
+
     @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Comp admin or project finance users can approve or reject documents")
     public boolean internalAdminUserCanApproveDocuments(ProjectCompositeId projectCompositeId, UserResource user) {
         return SecurityRuleUtil.isInternalAdmin(user);
@@ -157,6 +177,11 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection, SecurityRuleUtil::isInternalAdmin);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION", description = "A Competition finance user can always access the Finance checks queries section")
+    public boolean competitionFinanceUserCanAccessFinanceChecksQueriesSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection, SecurityRuleUtil::isCompetitionFinance);
+    }
+
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated for the organisation")
     public boolean internalCanAccessFinanceChecksAddQuery(ProjectOrganisationCompositeId target, UserResource user) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(target.getProjectId());
@@ -166,6 +191,11 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
     public boolean internalCanAccessFinanceChecksNotesSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::isInternalAdmin);
+    }
+
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A competition finance user can always access the Finance checks notes section")
+    public boolean competitonFinanceUserCanAccessFinanceChecksNotesSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::isCompetitionFinance);
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn, Function<UserResource, Boolean> userCheckFn) {

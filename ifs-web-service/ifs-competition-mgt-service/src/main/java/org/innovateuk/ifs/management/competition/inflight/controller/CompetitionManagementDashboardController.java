@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+
 @Controller
 public class CompetitionManagementDashboardController {
     private static final String TEMPLATE_PATH = "dashboard/";
@@ -58,13 +60,16 @@ public class CompetitionManagementDashboardController {
             " support, innovation lead and stakeholder roles are allowed to view the competition management dashboard")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(UserResource user) {
+        if (user.hasRole(COMPETITION_FINANCE)) {
+            return "redirect:/dashboard/project-setup";
+        }
         return "redirect:/dashboard/live";
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the list of live competitions")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
     @GetMapping("/dashboard/live")
     @NavigationRoot
     public String live(Model model, UserResource user) {

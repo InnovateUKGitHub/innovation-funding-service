@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Query;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompetitionFinance;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /*
@@ -26,7 +28,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
  */
 @Component
 @PermissionRules
-public class AttachmentPermissionsRules {
+public class AttachmentPermissionsRules extends BasePermissionRules {
 
     @Autowired
     private AttachmentMapper attachmentMapper;
@@ -51,6 +53,11 @@ public class AttachmentPermissionsRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Competition Finance can upload attachments.")
+    public boolean competitionFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
+        return userIsCompFinanceOnCompetitionForProject(project.getId(), user.getId());
+    }
+
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project partners can upload attachments.")
     public boolean projectPartnersCanUploadAttachments(final ProjectResource project, final UserResource user) {
         return isProjectPartner(user, project);
@@ -64,6 +71,11 @@ public class AttachmentPermissionsRules {
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment saved with a post, or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean projectFinanceUsersCanFetchAnyAttachment(AttachmentResource attachment, UserResource user) {
         return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Competition Finance users can fetch any Attachment saved with a post, or any attachment they have uploaded that has yet to be saved with a post.")
+    public boolean competitionFinanceUsersCanFetchAnyAttachment(AttachmentResource attachment, UserResource user) {
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : isCompetitionFinance(user);
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")
@@ -86,6 +98,11 @@ public class AttachmentPermissionsRules {
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")
     public boolean financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
         return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : projectPartnerIsAllowedToFetchQueryAttachment(attachment, user);
+    }
+
+    @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Competition Contact users can only download an Attachment saved with a post they are related to, or any attachment they have uploaded that has yet to be saved with a post.")
+    public boolean competitionFinanceUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
+        return attachmentIsStillOrphan(attachment) ? attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) : isCompetitionFinance(user);
     }
 
     private boolean projectPartnerIsAllowedToFetchQueryAttachment(AttachmentResource attachmentResource, UserResource user) {
