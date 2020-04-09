@@ -61,7 +61,7 @@
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="@{/{id}/terms-and-conditions(id=${model.assessmentId})}" class="govuk-link"
-                                       th:text="model.termsAndConditionsTerminology"></a>
+                                       th:text="${model.termsAndConditionsTerminology}"></a>
                                 </h3>
                             </div>
                             <div class="task-status"><span>No score required</span></div>

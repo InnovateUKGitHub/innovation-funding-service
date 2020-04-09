@@ -28,7 +28,7 @@ public class ApplicationOverviewViewModelTest {
         // given
         CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.GRANT).build();
         ApplicationOverviewViewModel viewModel = new ApplicationOverviewViewModel(null,
-                CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.INVESTOR_PARTNERSHIPS).build(),
+                CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.GRANT).build(),
                 null, null);
 
         // when

@@ -28,7 +28,7 @@ public class ApplicationFeedbackViewModelTest {
         // given
         CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.GRANT).build();
         ApplicationFeedbackViewModel viewModel = new ApplicationFeedbackViewModel(null,
-                CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.INVESTOR_PARTNERSHIPS).build(),
+                CompetitionResourceBuilder.newCompetitionResource().withFundingType(FundingType.GRANT).build(),
                 null, null, null, null, false, null, null, null, null, null, null, 1L, false, false);
 
         // when
