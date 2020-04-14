@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -18,6 +19,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +29,9 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     @Mock
     private ProjectProcessRepository projectProcessRepository;
+
+    @Mock
+    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected ProjectPermissionRules supplyPermissionRulesUnderTest() {
@@ -86,6 +91,24 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         assertTrue(rules.stakeholdersCanViewProjects(project, stakeholderUserResourceOnCompetition));
 
         allInternalUsers.forEach(user -> assertFalse(rules.stakeholdersCanViewProjects(newProjectResource().build(), user)));
+    }
+
+    @Test
+    public void competitionFinanceUsersCanViewProjects() {
+
+        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(COMPETITION_FINANCE)).build();
+        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        Competition competition = newCompetition().build();
+
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanViewProjects(project, competitionFinanceUserResourceOnCompetition));
+
+        allInternalUsers.forEach(user -> assertFalse(rules.competitionFinanceUsersCanViewProjects(newProjectResource().build(), user)));
     }
 
     @Test

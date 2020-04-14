@@ -79,7 +79,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "SAVE_ELIGIBILITY",
-            description = "Project Finance Users can save Eligibility")
+            description = "Competition Finance Users can save Eligibility")
     public boolean competitionFinanceUserCanSaveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return userIsCompFinanceOnCompetitionForProject(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectActive(projectOrganisationCompositeId.getProjectId());
     }

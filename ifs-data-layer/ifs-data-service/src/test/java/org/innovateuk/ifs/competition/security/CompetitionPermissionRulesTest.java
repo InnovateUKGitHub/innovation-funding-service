@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -17,8 +18,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -34,6 +34,9 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
+    @Mock
+    private CompetitionFinanceRepository competitionFinanceRepository;
+
     @Override
     protected CompetitionPermissionRules supplyPermissionRulesUnderTest() {
         return new CompetitionPermissionRules();
@@ -44,7 +47,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         //null user cannot see competition in setup.
         assertFalse(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(COMPETITION_SETUP).build(), null));
         //null user can see open competitions
-        assertTrue(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build(), null));
+        assertTrue(rules.externalUsersCannotViewCompetitionsInSetup(newCompetitionResource().withCompetitionStatus(OPEN).build(), null));
     }
 
     @Test
@@ -127,7 +130,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<InnovationLead> innovationLeads = newInnovationLead().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
-        CompetitionSearchResultItem competitionSearchResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
+        CompetitionSearchResultItem competitionSearchResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(OPEN).withId(1L).build();
         CompetitionSearchResultItem competitionSearchResultItemFeedbackReleased = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
 
         when(innovationLeadRepository.findInnovationsLeads(1L)).thenReturn(innovationLeads);
@@ -149,7 +152,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
         CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
 
-        CompetitionSearchResultItem competitionSearchResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).withId(competitionId).build();
+        CompetitionSearchResultItem competitionSearchResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(OPEN).withId(competitionId).build();
         CompetitionSearchResultItem competitionSearchResultItemFeedbackReleased = newLiveCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
 
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderAssignedToCompetition.getId())).thenReturn(true);
@@ -161,12 +164,34 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
+    public void onlyCompetitionFinanceUsersAssignedToCompCanAccess() {
+
+        long competitionId = 1L;
+
+        List<Role> competitionFinanceRoles = singletonList(COMPETITION_FINANCE);
+        UserResource competitionFinanceUserAssignedToCompetition = newUserResource().withRolesGlobal(competitionFinanceRoles).build();
+        UserResource competitionFinanceUserNotAssignedToCompetition = newUserResource().withRolesGlobal(competitionFinanceRoles).build();
+
+        CompetitionResource competition = newCompetitionResource().withId(competitionId).build();
+
+        CompetitionSearchResultItem competitionSearchResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(OPEN).withId(competitionId).build();
+        CompetitionSearchResultItem competitionSearchResultItemFeedbackReleased = newLiveCompetitionSearchResultItem().withCompetitionStatus(ASSESSOR_FEEDBACK).withId(2L).build();
+
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserAssignedToCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.compFinanceCanViewCompetitionAssignedToThem(competitionSearchResultItem, competitionFinanceUserAssignedToCompetition));
+        assertFalse(rules.compFinanceCanViewCompetitionAssignedToThem(competitionSearchResultItemFeedbackReleased, competitionFinanceUserAssignedToCompetition));
+        assertFalse(rules.compFinanceCanViewCompetitionAssignedToThem(competitionSearchResultItem, competitionFinanceUserNotAssignedToCompetition));
+        assertFalse(rules.compFinanceCanViewCompetitionAssignedToThem(competitionSearchResultItemFeedbackReleased, competitionFinanceUserNotAssignedToCompetition));
+    }
+
+    @Test
     public void onlyInnovationLeadUsersAssignedToCompWithoutFeedbackReleasedCanAccessComp() {
         List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<InnovationLead> innovationLeads = newInnovationLead().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
-        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
+        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(OPEN).withId(1L).build();
         CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withId(2L).withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
 
         when(innovationLeadRepository.findInnovationsLeads(1L)).thenReturn(innovationLeads);
@@ -187,7 +212,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         UserResource stakeholderAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
         UserResource stakeholderNotAssignedToCompetition = newUserResource().withRolesGlobal(stakeholderRoles).build();
 
-        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(competitionId).build();
+        CompetitionResource openCompetition = newCompetitionResource().withCompetitionStatus(OPEN).withId(competitionId).build();
         CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withId(2L).withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
 
         when(stakeholderRepository.existsByCompetitionIdAndUserId(openCompetition.getId(), stakeholderAssignedToCompetition.getId())).thenReturn(true);

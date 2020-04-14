@@ -2,6 +2,8 @@ package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -22,6 +24,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -33,8 +36,7 @@ import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBui
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -48,6 +50,9 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Mock
     private InviteOrganisationRepository inviteOrganisationRepository;
+
+    @Mock
+    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Test
     public void systemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
@@ -80,6 +85,22 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
         });
+    }
+
+    @Test
+    public void competitionFinanceUsersCanSeeAllOrganisations() {
+        long organisationId = 1L;
+
+        Competition competition = newCompetition()
+                .build();
+        OrganisationResource organisation = newOrganisationResource()
+                .withId(organisationId)
+                .build();
+        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanSeeAllOrganisations(organisation, userResource));
     }
 
     @Test
