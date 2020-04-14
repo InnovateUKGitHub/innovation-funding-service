@@ -154,7 +154,7 @@
                             <td class="govuk-table__cell ifs-table__email" th:text="${user.email}">alexis@kinney.com</td>
                             <td class="govuk-table__cell alignright">
                                 <form method="POST"
-                                      th:action="@{/competition/setup/{competitionId}/manage-finance-user?addFinanceUser=addFinanceUser&userId={userId}(competitionId=${model.competitionId},userId=${user.id})}">
+                                      th:action="@{/competition/setup/{competitionId}/manage-finance-users?addFinanceUser=addFinanceUser&userId={userId}(competitionId=${model.competitionId},userId=${user.id})}">
                                     <button type="submit"
                                             class="govuk-button govuk-button--secondary govuk-!-margin-0">
                                         Add
@@ -197,7 +197,7 @@
                             <td class="govuk-table__cell">Added</td>
                             <td class="govuk-table__cell alignright">
                                 <form method="POST"
-                                      th:action="@{/competition/setup/{competitionId}/manage-finance-user?removeFinanceUser=removeFinanceUser&userId={userId}(competitionId=${model.competitionId},userId=${user.id})}">
+                                      th:action="@{/competition/setup/{competitionId}/manage-finance-users?removeFinanceUser=removeFinanceUser&userId={userId}(competitionId=${model.competitionId},userId=${user.id})}">
                                     <button type="submit"
                                             class="govuk-button govuk-button--secondary govuk-!-margin-0">
                                         Remove
