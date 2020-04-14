@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -23,10 +24,13 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -77,9 +81,15 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     private MonitoringOfficerService monitoringOfficerService;
 
     @Override
-    public ServiceResult<List<ProjectStatusResource>> getCompetitionStatus(long competitionId, String applicationSearchString) {
-        return serviceSuccess(getProjectStatuses(() -> projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString)));
+    public ServiceResult<ProjectStatusPageResource> getCompetitionStatus(long competitionId,
+                                                                         String applicationSearchString,
+                                                                         int page,
+                                                                         int size) {
+        Page<Project> result = projectRepository.searchByCompetitionIdAndApplicationIdLike(competitionId, applicationSearchString, PageRequest.of(page, size));
+        return serviceSuccess(new ProjectStatusPageResource(result.getTotalElements(), result.getTotalPages(),
+                getProjectStatuses(result::getContent), result.getNumber(), result.getSize()));
     }
+
 
     @Override
     public ServiceResult<List<ProjectStatusResource>> getPreviousCompetitionStatus(long competitionId) {

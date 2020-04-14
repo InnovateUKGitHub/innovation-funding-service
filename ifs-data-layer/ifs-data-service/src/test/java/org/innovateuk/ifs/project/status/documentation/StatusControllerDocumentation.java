@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.status.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.documentation.ProjectPartnerStatusResourceDocs;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.InternalUserProjectStatusService;
@@ -61,20 +63,24 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                         withProjectSetupCompleteStatus(PENDING, PENDING, PENDING).
                         withProjectState(LIVE).
                         build(3);
+        ProjectStatusPageResource page = new ProjectStatusPageResource(10, 2, projectStatusResources, 0, 5);
 
-        when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(serviceSuccess(projectStatusResources));
+        when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString, 0, 5)).thenReturn(serviceSuccess(page));
 
-        mockMvc.perform(get("/project/competition/{id}?applicationSearchString=" + applicationSearchString, competitionId)
+        mockMvc.perform(get("/project/competition/{id}?applicationSearchString={applicationSearchString}&page={page}&size={size}", competitionId, applicationSearchString, 0, 5)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
                         ),
                         requestParameters(
-                                parameterWithName("applicationSearchString").description("The filter to search by application number.")
+                                parameterWithName("applicationSearchString").description("The filter to search by application number."),
+                                parameterWithName("page").description("The page number requested."),
+                                parameterWithName("size").description("Size of each page.")
                         ),
-                        responseFields(fieldWithPath("[]").description("List of project statuses"))
-                                .andWithPrefix("[].", projectStatusResourceFields)
+
+                        responseFields(PageResourceDocs.pageResourceFields)
+                                .andWithPrefix("content[].", projectStatusResourceFields)
                 ));
     }
 

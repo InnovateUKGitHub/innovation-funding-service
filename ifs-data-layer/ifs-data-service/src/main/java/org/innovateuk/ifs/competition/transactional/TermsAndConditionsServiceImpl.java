@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.repository.SiteTermsAndConditionsRepositor
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +57,7 @@ public class TermsAndConditionsServiceImpl implements TermsAndConditionsService 
     }
 
     @Override
+    @Cacheable(cacheNames="siteTerms", key = "#root.methodName", unless = "#result.isFailure()")
     public ServiceResult<SiteTermsAndConditionsResource> getLatestSiteTermsAndConditions() {
         return find(siteTermsAndConditionsRepository.findTopByOrderByVersionDesc(),
                 notFoundError(SiteTermsAndConditions.class)).andOnSuccessReturn

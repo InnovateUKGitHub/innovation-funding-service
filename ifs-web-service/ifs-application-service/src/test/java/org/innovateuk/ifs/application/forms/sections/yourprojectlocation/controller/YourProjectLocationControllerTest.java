@@ -62,7 +62,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     private ApplicationFinanceResource applicationFinance = newApplicationFinanceResource().build();
 
     private CommonYourProjectFinancesViewModel commonFinancesViewModel =
-            new CommonYourProjectFinancesViewModel("/finances", "Application name", 1L, 2L, false, false, true, false);
+            new CommonYourProjectFinancesViewModel("/finances", "Competition name", "Application name", 1L, 2L, false, false, true, false);
 
     @Test
     public void viewPage() throws Exception {
@@ -90,7 +90,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        assertThat(model.get("commonFinancesModel")).matches(futureMatcher(commonFinancesViewModel));
+        assertThat(model.get("model")).matches(futureMatcher(commonFinancesViewModel));
         assertThat(model.get("form")).matches(futureMatcher(form));
 
         verify(commonYourFinancesViewModelPopulatorMock, times(1)).populate(organisationId, applicationId, sectionId, internalUser);
@@ -261,7 +261,7 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
                 .param("mark-as-complete", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("application/sections/your-project-location/your-project-location"))
-                .andExpect(model().attribute("commonFinancesModel", commonFinancesViewModel))
+                .andExpect(model().attribute("model", commonFinancesViewModel))
                 .andExpect(model().attribute("form", form))
                 .andExpect(model().attributeHasFieldErrorCode("form", "postcode", "APPLICATION_PROJECT_LOCATION_REQUIRED"));
 

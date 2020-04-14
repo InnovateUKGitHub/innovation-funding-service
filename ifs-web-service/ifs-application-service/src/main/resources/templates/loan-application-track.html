@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
-      th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+      th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application Status - ${applicationName}|"/>
 </head>
@@ -21,23 +21,23 @@
         </th:block>
 
         <p class="govuk-body">You have completed part A. To finish your application you must complete part B, the
-            <a th:href="${earlyMetricsUrl}" target="_blank" class="govuk-link">startup high growth index survey</a> (opens in a new window),
+            <a th:href="${model.earlyMetricsUrl}" target="_blank" class="govuk-link">startup high growth index survey</a> (opens in a new window),
             before the competition closes on
-            <span th:text="${#temporals.format(currentCompetition.endDate, 'd MMM yyyy')}"></span>.</p>
+            <span th:text="${#temporals.format(model.currentCompetition.endDate, 'd MMM yyyy')}"></span>.</p>
         <p class="govuk-body">If you have completed both parts A and B, we will be in touch to let you know if your application has progressed to the next stage.</p>
 
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
             <h2 class="govuk-panel__title">Part A: Innovation Funding Service application</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
-                Application number: <span th:text="${currentApplication.id}"/><br/>
+                Application number: <span th:text="${model.currentApplication.id}"/><br/>
                 You completed part A on
-                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"/>
+                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMM yyyy')}"/>
                     at
-                    <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}"/>.
+                    <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}"/>.
                 <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}"
+                    <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View part A</a>
-                    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}"
+                    <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
                        class="govuk-link">Print part A</a>
                 </div>
             </div>
@@ -119,7 +119,7 @@
             <h3 class="govuk-heading-m">Give us feedback</h3>
 
             <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
-            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Give us feedback</a>
+            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${model.currentCompetition.id})}" class="govuk-button">Give us feedback</a>
 
             <p class="govuk-body govuk-!-margin-bottom-6">
                 <a class="govuk-link" th:href="@{/applicant/dashboard}">Finish without feedback</a>

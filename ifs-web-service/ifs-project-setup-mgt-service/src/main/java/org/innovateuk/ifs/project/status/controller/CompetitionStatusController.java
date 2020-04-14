@@ -60,9 +60,10 @@ public class CompetitionStatusController {
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId,
-                                           @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString) {
+                                           @RequestParam(name = "applicationSearchString", defaultValue = "") String applicationSearchString,
+                                           @RequestParam(name = "page", defaultValue = "1") int page) {
 
-        CompetitionStatusViewModel viewModel = competitionStatusViewModelPopulator.populate(loggedInUser, competitionId, applicationSearchString);
+        CompetitionStatusViewModel viewModel = competitionStatusViewModelPopulator.populate(loggedInUser, competitionId, applicationSearchString, page - 1);
         model.addAttribute(MODEL, viewModel);
 
         return "project/competition-status-all";
