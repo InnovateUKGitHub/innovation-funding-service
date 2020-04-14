@@ -30,7 +30,7 @@ public interface ProjectDetailsService {
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only project finance or IFS Admin can update the project duration")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator', 'comp_finance')")
     ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")

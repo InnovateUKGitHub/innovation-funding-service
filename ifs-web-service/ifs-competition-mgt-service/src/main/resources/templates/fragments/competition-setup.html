@@ -64,7 +64,7 @@
                                 </h3>
                             </div>
                         </li>
-                        <li>
+                        <li th:if="${canAssignFinanceUsers}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <th:block th:if="${model.general.initialComplete}">

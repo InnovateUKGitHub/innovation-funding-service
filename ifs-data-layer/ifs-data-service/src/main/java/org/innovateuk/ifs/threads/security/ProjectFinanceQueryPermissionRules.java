@@ -49,6 +49,11 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user);
     }
 
+    @PermissionRule(value = "PF_READ", description = "Competition Finance users can view Queries")
+    public boolean compFinanceUsersCanViewQueries(final QueryResource query, final UserResource user) {
+        return userIsCompFinanceOnCompetitionForProject(query.contextClassPk, user.getId());
+    }
+
     @PermissionRule(value = "PF_READ", description = "Project partners can view Queries")
     public boolean projectPartnersCanViewQueries(final QueryResource query, final UserResource user) {
         return isPartner(user, query.contextClassPk);
@@ -57,6 +62,11 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a query")
     public boolean projectFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk);
+    }
+
+    @PermissionRule(value = "PF_ADD_POST", description = "Comp Finance users can add posts to a query")
+    public boolean compFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
+        return userIsCompFinanceOnCompetitionForProject(query.contextClassPk, user.getId()) && isProjectInSetup(query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project partners can add posts to a query")

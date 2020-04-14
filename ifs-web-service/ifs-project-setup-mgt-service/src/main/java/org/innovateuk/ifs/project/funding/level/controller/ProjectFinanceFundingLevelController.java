@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -19,7 +18,6 @@ import org.innovateuk.ifs.project.funding.level.viewmodel.ProjectFinanceFundingL
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,19 +28,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static java.math.BigDecimal.ZERO;
-import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 @Controller
 @RequestMapping("/project/{projectId}/funding-level")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
-@PreAuthorize("hasAuthority('project_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_finance')")
 public class ProjectFinanceFundingLevelController {
 
     @Autowired

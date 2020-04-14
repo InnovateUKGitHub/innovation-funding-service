@@ -26,7 +26,7 @@ public interface FinanceCheckQueriesService extends MessageThreadService<QueryRe
     ServiceResult<Long> create(@P("queryResource") QueryResource queryResource);
 
     @Override
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_finance')")
     @SecuredBySpring(value = "CLOSE_QUERY", description = "Only project finance users can close queries")
     ServiceResult<Void> close(Long queryId);
 

@@ -126,7 +126,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(COMPETITION_FINANCE))  ?
+        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(COMPETITION_FINANCE) || userResource.hasRole(COMPETITION_FINANCE))  ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 

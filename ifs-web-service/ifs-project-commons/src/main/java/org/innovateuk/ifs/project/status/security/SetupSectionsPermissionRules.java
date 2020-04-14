@@ -188,6 +188,12 @@ public class SetupSectionsPermissionRules {
         return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && Objects.equals(pu.getOrganisation(), target.getOrganisationId())).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection, SecurityRuleUtil::isInternalAdmin);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A comp finance team user cannot add a query until a finance contact has been allocated for the organisation")
+    public boolean compFinanceCanAccessFinanceChecksAddQuery(ProjectOrganisationCompositeId target, UserResource user) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(target.getProjectId());
+        return simpleFindFirst(projectUsers, pu -> pu.isFinanceContact() && Objects.equals(pu.getOrganisation(), target.getOrganisationId())).isPresent() && doSectionCheck(target.getProjectId(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection, SecurityRuleUtil::isCompetitionFinance);
+    }
+
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
     public boolean internalCanAccessFinanceChecksNotesSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::isInternalAdmin);

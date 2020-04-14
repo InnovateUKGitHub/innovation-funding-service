@@ -50,6 +50,11 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         return isInternal(user);
     }
 
+    @PermissionRule(value = "NOTES_READ", description = "Comp finance users are able to see notes")
+    public boolean compFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
+        return userIsCompFinanceOnCompetitionForProject(note.contextClassPk, user.getId());
+    }
+
     private Optional<ProjectFinance> findProjectFinance(Long id) {
         return projectFinanceRepository.findById(id);
     }

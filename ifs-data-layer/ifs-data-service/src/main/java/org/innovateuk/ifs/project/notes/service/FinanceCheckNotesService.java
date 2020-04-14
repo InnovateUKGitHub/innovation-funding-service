@@ -26,7 +26,7 @@ public interface FinanceCheckNotesService extends MessageThreadService<NoteResou
     ServiceResult<Long> create(@P("noteResource") NoteResource noteResource);
 
     @Override
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_finance')")
     @SecuredBySpring(value = "CLOSE_NOTE", description = "Only project finance users can close notes")
     ServiceResult<Void> close(Long noteId);
 
