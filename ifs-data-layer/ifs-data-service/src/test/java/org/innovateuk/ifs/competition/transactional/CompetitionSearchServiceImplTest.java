@@ -150,14 +150,14 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
 
         List<Competition> expectedCompetitions = newCompetition().build(2);
 
-        when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholder(eq(stakeholderUser.getId()), any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
+        when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(eq(stakeholderUser.getId()), any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
         when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
 
         CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 
         assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response.getContent());
-        verify(competitionRepositoryMock).findProjectSetupForInnovationLeadOrStakeholder(eq(stakeholderUser.getId()), any());
+        verify(competitionRepositoryMock).findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(eq(stakeholderUser.getId()), any());
         verify(competitionRepositoryMock, never()).findProjectSetup(any());
     }
 

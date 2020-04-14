@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -31,8 +32,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -55,6 +55,9 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
 
     @Mock
     private ApplicationRepository applicationRepository;
+
+    @Mock
+    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected FormInputResponsePermissionRules supplyPermissionRulesUnderTest() {
@@ -137,6 +140,21 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
 
         assertTrue(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, stakeholderUserResource));
         allInternalUsers.forEach(user -> Assert.assertFalse(rules.stakeholdersCanSeeFormInputResponsesForApplications(sharedInputResponse, user)));
+    }
+
+    @Test
+    public void competitionFinanceUsersCanSeeFormInputResponsesForApplications() {
+        Competition competition = newCompetition().build();
+        application.setCompetition(competition);
+        UserResource competitionFinanceUserResource = newUserResource()
+                .withRoleGlobal(COMPETITION_FINANCE)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResource.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanSeeFormInputResponsesForApplications(sharedInputResponse, competitionFinanceUserResource));
+        allInternalUsers.forEach(user -> Assert.assertFalse(rules.competitionFinanceUsersCanSeeFormInputResponsesForApplications(sharedInputResponse, user)));
     }
 
     @Test

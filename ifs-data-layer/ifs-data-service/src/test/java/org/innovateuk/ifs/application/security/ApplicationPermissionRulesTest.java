@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -22,7 +23,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -61,6 +65,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private UserResource competitionFinanceUserResourceOnCompetition;
     private UserResource monitoringOfficerOnProjectForApplication1;
     private UserResource user2;
     private UserResource user3;
@@ -81,6 +86,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
 
+    @Mock
+    private CompetitionFinanceRepository competitionFinanceRepository;
+
     @Before
     public void setup() {
         competition = newCompetition().withLeadTechnologist().build();
@@ -92,6 +100,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User stakeholderUserOnCompetition = newUser().build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
+        User competitionFinanceUserOnCompetition = newUser().build();
+        competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRoleGlobal(COMPETITION_FINANCE).build();
 
         monitoringOfficerOnProjectForApplication1 = newUserResource().build();
 
@@ -182,6 +193,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void onlyCompetitionFinanceUserAssignedToCompetitionForApplicationCanAccessApplication() {
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersAssignedToCompetitionCanViewApplications(applicationResource1, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.competitionFinanceUsersAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
+    }
+
+    @Test
     public void monitoringOfficerAssignedToProjectCanViewApplications() {
         assertTrue(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, monitoringOfficerOnProjectForApplication1));
         assertFalse(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, stakeholderUser()));
@@ -241,6 +260,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
+        assertFalse(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
+    }
+
+    @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
         when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
@@ -267,6 +299,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
+    }
+
+    @Test
+    public void competitionFinanceUserCanSeeApplicationFinancesTotals() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user2));
+        assertFalse(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user3));
     }
 
     @Test
