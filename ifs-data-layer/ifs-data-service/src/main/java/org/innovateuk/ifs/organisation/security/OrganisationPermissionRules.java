@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -113,7 +115,7 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "Project Partners can see the Partner Organisations within their Projects")
     public boolean projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(OrganisationResource organisation, UserResource user) {
 
-        List<ProjectUser> projectRoles = projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+        List<ProjectUser> projectRoles = projectUserRepository.findByUserId(user.getId());
 
         return projectRoles.stream().anyMatch(projectUser -> {
             List<PartnerOrganisation> partnerOrganisations = projectUser.getProject().getPartnerOrganisations();

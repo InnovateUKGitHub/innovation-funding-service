@@ -22,7 +22,6 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilde
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -255,7 +254,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         List<ProjectUser> allProjectUserEntries =
                 combineLists(thisUsersProjectUserEntriesWithoutLinkedOrganisation, thisUsersProjectUserEntriesIncludingLinkedOrganisation);
 
-        when(projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(allProjectUserEntries);
 
         OrganisationResource linkedOrganisationToCheck = newOrganisationResource().
                 withId(organisationBeingChecked.getId()).
@@ -263,7 +262,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         assertTrue(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
 
-        verify(projectUserRepository).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+        verify(projectUserRepository).findByUserId(user.getId());
     }
 
     @Test
@@ -300,7 +299,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         List<ProjectUser> allProjectUserEntries =
                 combineLists(thisUsersProjectUserEntriesWithoutLinkedOrganisation, thisUsersProjectUserEntriesIncludingLinkedOrganisation);
 
-        when(projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_PARTNER)).thenReturn(allProjectUserEntries);
+        when(projectUserRepository.findByUserId(user.getId())).thenReturn(allProjectUserEntries);
 
         OrganisationResource linkedOrganisationToCheck = newOrganisationResource().
                 withId(organisationBeingChecked.getId()).
@@ -308,7 +307,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         assertFalse(rules.projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(linkedOrganisationToCheck, user));
 
-        verify(projectUserRepository).findByUserIdAndRole(user.getId(), PROJECT_PARTNER);
+        verify(projectUserRepository).findByUserId(user.getId());
     }
 
     @Test

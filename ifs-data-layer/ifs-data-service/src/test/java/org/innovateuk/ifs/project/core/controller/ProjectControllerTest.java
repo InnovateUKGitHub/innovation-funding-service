@@ -9,12 +9,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -64,7 +66,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     public void getProjectUsers() throws Exception {
         List<ProjectUserResource> projectUsers = newProjectUserResource().build(3);
 
-        when(projectServiceMock.getProjectUsers(123)).thenReturn(serviceSuccess(projectUsers));
+        when(projectServiceMock.getProjectUsersByProjectIdAndRoleIn(123L, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(serviceSuccess(projectUsers));
 
         mockMvc.perform(get("/project/{projectId}/project-users", 123))
                 .andExpect(status().isOk())

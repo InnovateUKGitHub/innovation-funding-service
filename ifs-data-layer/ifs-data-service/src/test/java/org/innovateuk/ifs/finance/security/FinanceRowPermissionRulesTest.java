@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.singletonList;
@@ -30,7 +31,7 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrg
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
@@ -100,8 +101,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             project = newProjectResource().withId(projectId).build();
             projectUserResource = newUserResource().withId(userId).build();
 
-            when(projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER))
-                    .thenReturn(singletonList(newProjectUser().withId(userId).build()));
+            when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(singletonList(newProjectUser().withId(userId).build()));
         }
 
         // Create different users with different project
@@ -112,7 +112,7 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
             otherProject = newProjectResource().withId(otherProjectProjectId).build();
             otherProjectUserResource = newUserResource().withId(otherProjectUserId).build();
 
-            when(projectUserRepository.findByProjectIdAndUserIdAndRole(otherProjectProjectId, otherProjectUserId, PROJECT_PARTNER))
+            when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(otherProjectProjectId, otherProjectUserId, PROJECT_USER_ROLES.stream().collect(Collectors.toList())))
                     .thenReturn(singletonList(newProjectUser().withId(otherProjectUserId).build()));
         }
 
