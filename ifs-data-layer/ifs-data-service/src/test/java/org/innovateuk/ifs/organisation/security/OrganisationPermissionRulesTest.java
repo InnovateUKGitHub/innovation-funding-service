@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -10,8 +9,6 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,9 +16,6 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -29,14 +23,13 @@ import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +43,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void systemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
+        when(processRoleRepository.existsByOrganisationId(anyLong())).thenReturn(false);
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(newOrganisationResource().build(), user));
@@ -141,7 +135,8 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
+        OrganisationResource organisation = newOrganisationResource().build();
+        when(processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId())).thenReturn(true);
 
         assertTrue(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, user));
     }
@@ -153,7 +148,8 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         UserResource anotherUser = newUserResource().build();
         UserResource unrelatedUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
+        OrganisationResource organisation = newOrganisationResource().build();
+        when(processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId())).thenReturn(false);
 
         assertFalse(rules.memberOfOrganisationCanViewOwnOrganisation(organisation, unrelatedUser));
     }
@@ -162,9 +158,9 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     public void memberOfOrganisationCanUpdateOwnOrganisation() {
 
         UserResource user = newUserResource().build();
-        UserResource anotherUser = newUserResource().build();
+        OrganisationResource organisation = newOrganisationResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
+        when(processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId())).thenReturn(true);
 
         assertTrue(rules.memberOfOrganisationCanUpdateOwnOrganisation(organisation, user));
     }
@@ -173,45 +169,13 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     public void memberOfOrganisationCanUpdateOwnOrganisationButUserIsNotAMemberOfTheOrganisation() {
 
         UserResource user = newUserResource().build();
-        UserResource anotherUser = newUserResource().build();
         UserResource unrelatedUser = newUserResource().build();
 
-        OrganisationResource organisation = newOrganisationResource().withUsers(asList(user.getId(), anotherUser.getId())).build();
+        OrganisationResource organisation = newOrganisationResource().build();
+        when(processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId())).thenReturn(false);
+
 
         assertFalse(rules.memberOfOrganisationCanUpdateOwnOrganisation(organisation, unrelatedUser));
-    }
-
-    @Test
-    public void usersCanViewOrganisationsOnTheirOwnApplications() {
-
-        Organisation organisation = newOrganisation().withId(123L).build();
-        Application application = newApplication().build();
-        ProcessRole processRole = newProcessRole().withApplication(application).withOrganisationId(organisation.getId()).build();
-        UserResource user = newUserResource().build();
-
-        when(processRoleRepository.findByUserId(user.getId())).thenReturn(singletonList(processRole));
-        when(processRoleRepository.findByApplicationId(application.getId())).thenReturn(singletonList(processRole));
-
-        OrganisationResource organisationResource =
-                newOrganisationResource().withId(organisation.getId()).withProcessRoles(singletonList(processRole.getId())).build();
-
-        assertTrue(rules.usersCanViewOrganisationsOnTheirOwnApplications(organisationResource, user));
-    }
-
-    @Test
-    public void usersCanViewOrganisationsOnTheirOwnApplicationsButUserIsNotOnAnyApplicationsWithThisOrganisation() {
-
-        UserResource user = newUserResource().build();
-
-        Organisation anotherOrganisation = newOrganisation().withId(456L).build();
-        User anotherUser = newUser().build();
-        Application anotherApplication = newApplication().build();
-        ProcessRole anotherProcessRole = newProcessRole().withUser(anotherUser).withApplication(anotherApplication).withOrganisationId(anotherOrganisation.getId()).build();
-
-        OrganisationResource anotherOrganisationResource =
-                newOrganisationResource().withId(anotherOrganisation.getId()).withProcessRoles(singletonList(anotherProcessRole.getId())).build();
-
-        assertFalse(rules.usersCanViewOrganisationsOnTheirOwnApplications(anotherOrganisationResource, user));
     }
 
     @Test
@@ -227,6 +191,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers() {
+        when(processRoleRepository.existsByOrganisationId(anyLong())).thenReturn(false);
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(systemRegistrationUser())) {
                 assertTrue(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(newOrganisationResource().build(), user));
@@ -237,15 +202,9 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     }
 
     @Test
-    public void systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToApplication() {
-        OrganisationResource organisation = newOrganisationResource().withProcessRoles(singletonList(123L)).build();
-        allGlobalRoleUsers.forEach(user ->
-                assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user)));
-    }
-
-    @Test
     public void systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsersButOrganisationAttachedToUsers() {
-        OrganisationResource organisation = newOrganisationResource().withUsers(singletonList(123L)).build();
+        when(processRoleRepository.existsByOrganisationId(anyLong())).thenReturn(true);
+        OrganisationResource organisation = newOrganisationResource().build();
         allGlobalRoleUsers.forEach(user ->
                 assertFalse(rules.systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(organisation, user)));
     }

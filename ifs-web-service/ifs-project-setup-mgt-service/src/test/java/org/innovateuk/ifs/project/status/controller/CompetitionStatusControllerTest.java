@@ -67,7 +67,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
 
-        when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString())).thenReturn(competitionStatusViewModel);
+        when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString(), eq(0))).thenReturn(competitionStatusViewModel);
 
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
@@ -80,7 +80,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         String applicationSearchString = "12";
 
         CompetitionStatusViewModel competitionStatusViewModel = mock(CompetitionStatusViewModel.class);
-        when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString())).thenReturn(competitionStatusViewModel);
+        when(competitionStatusViewModelPopulatorMock.populate(Mockito.any(UserResource.class), anyLong(), anyString(), eq(0))).thenReturn(competitionStatusViewModel);
 
         mockMvc.perform(get("/competition/" + competitionId + "/status/all?applicationSearchString=" + applicationSearchString))
                 .andExpect(view().name("project/competition-status-all"))
