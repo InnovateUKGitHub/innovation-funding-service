@@ -134,11 +134,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException {
-        try {
-            return projectRestService.getOrganisationByProjectAndUser(projectId, user.getId()).getSuccess().getId();
-        } catch (Exception ex) {
+
+        RestResult<OrganisationResource> organisationResource = organisationRestService.getByUserAndProjectId(user.getId(), projectId);
+
+        if (organisationResource.toServiceResult().isFailure()) {
             throw new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), Collections.singletonList(projectId));
         }
+
+        return organisationResource.getSuccess().getId();
     }
 
 }
