@@ -64,7 +64,7 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "The System Registration User can see Organisations on behalf of non-logged in users " +
             "whilst the Organisation is not yet linked to an Application")
     public boolean systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(OrganisationResource organisation, UserResource user) {
-        return isSystemRegistrationUser(user) && organisationNotYetLinkedToAnApplication(organisation);
+        return isSystemRegistrationUser(user) && !organisationLinkedToAnApplication(organisation);
     }
 
     @PermissionRule(value = "READ", description = "A member of an Organisation can view their own Organisation")
@@ -91,7 +91,7 @@ public class OrganisationPermissionRules {
     @PermissionRule(value = "UPDATE", description = "The System Registration User can update Organisations that are not yet linked to Applications on behalf of non-logged in Users " +
             "during the regsitration process")
     public boolean systemRegistrationUserCanUpdateOrganisationsNotYetConnectedToApplicationsOrUsers(OrganisationResource organisation, UserResource user) {
-        return isSystemRegistrationUser(user) && organisationNotYetLinkedToAnApplication(organisation);
+        return isSystemRegistrationUser(user) && !organisationLinkedToAnApplication(organisation);
     }
 
     @PermissionRule(value = "UPDATE", description = "A member of an Organisation can update their own Organisation")
@@ -125,8 +125,8 @@ public class OrganisationPermissionRules {
         return processRoleRepository.existsByUserIdAndOrganisationId(user.getId(), organisation.getId());
     }
 
-    private boolean organisationNotYetLinkedToAnApplication(OrganisationResource organisation) {
-        return !processRoleRepository.existsByOrganisationId(organisation.getId());
+    private boolean organisationLinkedToAnApplication(OrganisationResource organisation) {
+        return processRoleRepository.existsByOrganisationId(organisation.getId());
     }
 
     private List<Long> getMonitoringOfficersOrganisationIds(List<MonitoringOfficer> projectMonitoringOfficers) {
