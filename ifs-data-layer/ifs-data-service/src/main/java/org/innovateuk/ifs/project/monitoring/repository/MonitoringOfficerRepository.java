@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.monitoring.repository;
 
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerAssignedProjectResource;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerUnassignedProjectResource;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MonitoringOfficerRepository extends PagingAndSortingRepository<MonitoringOfficer, Long> {
 
@@ -17,6 +19,8 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
 
 
     List<MonitoringOfficer> findByUserId(long userId);
+
+    Optional<MonitoringOfficer> findOneByProjectIdAndRole(long projectId, ProjectParticipantRole role);
 
     boolean existsByProjectIdAndUserId(long projectId, long userId);
 
