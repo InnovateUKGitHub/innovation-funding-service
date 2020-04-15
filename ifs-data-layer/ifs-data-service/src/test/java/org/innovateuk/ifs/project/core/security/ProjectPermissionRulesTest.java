@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
 import org.innovateuk.ifs.project.core.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -29,9 +28,6 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
     @Mock
     private ProjectProcessRepository projectProcessRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected ProjectPermissionRules supplyPermissionRulesUnderTest() {

@@ -44,6 +44,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(PROJECT_FINANCE);
     }
 
+    protected UserResource competitionFinanceUser() {
+        return getUserWithRole(COMPETITION_FINANCE);
+    }
+
     protected UserResource supportUser() {
         return getUserWithRole(SUPPORT);
     }

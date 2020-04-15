@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.builder.StakeholderBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -85,9 +84,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Before
     public void setup() {

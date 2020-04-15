@@ -2,8 +2,6 @@ package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -24,7 +22,6 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -50,9 +47,6 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Mock
     private InviteOrganisationRepository inviteOrganisationRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Test
     public void systemRegistrationUserCanViewAnOrganisationThatIsNotYetLinkedToAnApplication() {
@@ -89,18 +83,13 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     @Test
     public void competitionFinanceUsersCanSeeAllOrganisations() {
-        long organisationId = 1L;
-
-        Competition competition = newCompetition()
-                .build();
-        OrganisationResource organisation = newOrganisationResource()
-                .withId(organisationId)
-                .build();
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
-
-        assertTrue(rules.competitionFinanceUsersCanSeeAllOrganisations(organisation, userResource));
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(COMPETITION_FINANCE)) {
+                assertTrue(rules.competitionFinanceUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.competitionFinanceUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
     }
 
     @Test

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -55,9 +54,6 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
 
     @Mock
     private ApplicationRepository applicationRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected FormInputResponsePermissionRules supplyPermissionRulesUnderTest() {

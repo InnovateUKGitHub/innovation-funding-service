@@ -2,14 +2,12 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.util.Optional;
 
@@ -30,9 +28,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesTest<PartnerOrganisationPermissionRules> {
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected PartnerOrganisationPermissionRules supplyPermissionRulesUnderTest() {

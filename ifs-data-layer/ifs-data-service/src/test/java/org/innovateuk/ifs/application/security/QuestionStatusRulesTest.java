@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
@@ -48,9 +47,6 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
 
     @Mock
     private ApplicationRepository applicationRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected QuestionStatusRules supplyPermissionRulesUnderTest() {

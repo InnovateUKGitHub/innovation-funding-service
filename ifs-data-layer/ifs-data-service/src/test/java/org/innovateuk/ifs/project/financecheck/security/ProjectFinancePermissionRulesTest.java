@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financecheck.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
@@ -49,10 +48,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Mock
     private ProjectProcessRepository projectProcessRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
-
 
     @Before
     public void setUp() throws Exception {
@@ -351,10 +346,16 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void competitionFinanceUserCanSeeProjectFinancesForOrganisations() {
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
 
-        assertTrue(rules.competitionFinanceUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, userResource));
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(competitionFinanceUser())) {
+                assertTrue(rules.competitionFinanceUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, user));
+            } else {
+                assertFalse(rules.competitionFinanceUserCanSeeProjectFinancesForOrganisations(projectFinanceResource, user));
+            }
+        });
     }
 
     @Test

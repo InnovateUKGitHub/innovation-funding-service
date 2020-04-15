@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,9 +25,6 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
 
     @Mock
     private InnovationLeadRepository innovationLeadRepository;
-
-    @Mock
-    private CompetitionFinanceRepository competitionFinanceRepository;
 
     @Override
     protected CompetitionSummaryPermissionRules supplyPermissionRulesUnderTest() {
