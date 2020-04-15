@@ -54,15 +54,4 @@ public class FormInputControllerIntegrationTest extends BaseControllerIntegratio
         assertTrue(formInput.isPresent());
         assertThat(formInput.get().getDescription(), containsString("1. What is the business opportunity that your project addresses?"));
     }
-
-    @Test
-    public void testFindByCompetitionIdAndScope() {
-        Long competitionId = 1L;
-        List<FormInputResource> formInputs = controller.findByCompetitionIdAndScope(competitionId, APPLICATION).getSuccess();
-
-        assertThat(formInputs, hasSize(16));
-
-        Optional<FormInputResource> formInput = formInputs.stream().filter(f -> !competitionId.equals(f.getCompetition())).findAny();
-        assertFalse(formInput.isPresent());
-    }
 }

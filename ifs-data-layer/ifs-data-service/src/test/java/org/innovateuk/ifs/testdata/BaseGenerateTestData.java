@@ -264,6 +264,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createCompetitionFundersForCompetitions(createCompetitionFutures), taskExecutor);
 
+        CompletableFuture<Void> competitionOrganisationConfigFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                createCompetitionOrganisationConfigForCompetitions(createCompetitionFutures), taskExecutor);
+
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
                 createPublicContent(createCompetitionFutures), taskExecutor);
 
@@ -284,7 +287,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         CompletableFuture.allOf(competitionFundersFutures,
                                 publicContentFutures,
                                 assessorFutures,
-                                competitionsFinalisedFuture
+                                competitionsFinalisedFuture,
+                                competitionOrganisationConfigFutures
         ).join();
 
         long after = System.currentTimeMillis();
@@ -338,6 +342,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void createCompetitionFundersForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         createCompetitionFunders(competitions);
+    }
+
+    private void createCompetitionOrganisationConfigForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        createCompetitionOrganisationConfig(competitions);
     }
 
     private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
@@ -419,6 +428,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitionFunders(List<CompetitionData> competitions) {
         competitions.forEach(competitionDataBuilderService::createCompetitionFunder);
+    }
+
+    private void createCompetitionOrganisationConfig(List<CompetitionData> competitions) {
+        competitions.forEach(competitionDataBuilderService::createCompetitionOrganisationConfig);
     }
 
     private void createPublicContentGroups(List<CompetitionData> competitions) {

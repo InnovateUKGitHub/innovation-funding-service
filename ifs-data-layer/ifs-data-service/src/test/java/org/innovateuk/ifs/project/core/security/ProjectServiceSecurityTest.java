@@ -15,6 +15,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -23,6 +24,7 @@ import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.ArgumentMatchers.isA;
@@ -118,7 +120,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.getProjectUsers(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getProjectUsersByProjectIdAndRoleIn(123L, PROJECT_USER_ROLES.stream().collect(Collectors.toList())), () -> {
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
             verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
             verify(projectPermissionRules).monitoringOfficerOnProjectCanView(project, getLoggedInUser());

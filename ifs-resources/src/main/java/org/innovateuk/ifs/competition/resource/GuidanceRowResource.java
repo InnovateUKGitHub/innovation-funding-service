@@ -20,7 +20,6 @@ public class GuidanceRowResource implements Serializable {
     @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String justification;
 
-    private Long formInput;
     private Integer priority;
 
     public Long getId() {
@@ -47,14 +46,6 @@ public class GuidanceRowResource implements Serializable {
         this.justification = justification;
     }
 
-    public Long getFormInput() {
-        return formInput;
-    }
-
-    public void setFormInput(Long formInput) {
-        this.formInput = formInput;
-    }
-
     public Integer getPriority() {
         return priority;
     }
@@ -75,7 +66,6 @@ public class GuidanceRowResource implements Serializable {
                 .append(id, that.id)
                 .append(subject, that.subject)
                 .append(justification, that.justification)
-                .append(formInput, that.formInput)
                 .isEquals();
     }
 
@@ -85,7 +75,6 @@ public class GuidanceRowResource implements Serializable {
                 .append(id)
                 .append(subject)
                 .append(justification)
-                .append(formInput)
                 .toHashCode();
     }
 }

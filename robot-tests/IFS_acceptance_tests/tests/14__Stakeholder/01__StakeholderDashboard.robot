@@ -11,7 +11,7 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
-Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource        ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${openProgrammeCompetitionName}  Photonics for All

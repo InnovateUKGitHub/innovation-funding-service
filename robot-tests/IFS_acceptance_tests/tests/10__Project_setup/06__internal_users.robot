@@ -18,7 +18,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Project Finance has a dashboard and can see projects in PS
@@ -66,6 +66,7 @@ Comp Admin user can see the internal project summary page
 *** Keywords ***
 The comp admin navigates to project summary page
     the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    the user clicks the button/link   link = 2
     the user should see the element   jQuery = th div:contains("${PS_EF_APPLICATION_TITLE}")
 
 The user isn't able to see bank details and finance checks

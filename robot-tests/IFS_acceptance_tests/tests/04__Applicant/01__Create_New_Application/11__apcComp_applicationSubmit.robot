@@ -11,8 +11,8 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${apcCompetitionTitle}         Advanced Propulsion Centre Competition
@@ -23,13 +23,11 @@ ${termaandconditionsHeading}   Innovate UK grant terms and conditions for an Adv
 *** Test Cases ***
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
-    [Tags]
     Given The user logs-in in new browser           &{Comp_admin1_credentials}
     Then the competition admin creates competition  ${business_type_id}  ${apcCompetitionTitle}  APC  ${compType_APC}  1  GRANT  project-setup-completion-stage  yes  1  true  single
 
 Applicant applies to newly created APC competition
     [Documentation]  IFS-2286  IFS-4221  IFS-4222
-    [Tags]
     [Setup]   get competition id and set open date to yesterday  ${apcCompetitionTitle}
     Given Log in as a different user                        &{lead_applicant_credentials}
     Then logged in user applies to competition              ${apcCompetitionTitle}  1
@@ -38,7 +36,6 @@ Applicant applies to newly created APC competition
 
 Applicant submits his application
     [Documentation]  IFS-2286  IFS-5920
-    [Tags]
     Given the user clicks the button/link               link = Application details
     When the user fills in the Application details      ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)
@@ -49,7 +46,6 @@ Applicant submits his application
 
 The internal user checks accepted terms and conditions for submitted application
     [Documentation]  IFS-5920
-    [Tags]
     [Setup]  Get competitions id and set it as suite variable   ${apcCompetitionTitle}
     ${acpapplicationId} =  get application id by name  ${apcApplicationTitle}
     Given log in as a different user                   &{Comp_admin1_credentials}

@@ -22,19 +22,17 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../../04__Applicant/Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
-    [Tags]
     Given the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
     Then the user should see the element             jQuery = h1:contains("Invitation withdrawn")
     [Teardown]    the user clicks the button/link    jQuery = #navigation a:contains(Dashboard)
 
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716 INFUND-6040 INFUND-3724 INFUND-3725 INFUND-3723
-    [Tags]
     Given The user clicks the button/link   link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then the user should see competition details
     And The order of the applications should be correct according to the status
@@ -42,14 +40,12 @@ Competition link should navigate to the applications
 
 User can view the competition brief
     [Documentation]    INFUND-5494
-    [Tags]
     Given the user clicks the button/link           link = View competition brief
     Then the user should get a competition brief window
     [Teardown]    the user closes the competition brief
 
 Accept an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128
-    [Tags]
     Given the user should see the element                     jQuery = .in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When the user accepts the invitation
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
@@ -57,7 +53,6 @@ Accept an application for assessment
 
 Reject an application for assessment
     [Documentation]    INFUND-1180  INFUND-4128  INFUND-6358  INFUND-3726
-    [Tags]
     [Setup]    Log in as a different user                &{assessor_credentials}
     Given The user clicks the button/link                link = ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the element                  jQuery = .in-progress li:nth-child(1):contains("Park living"):contains("Pending")
@@ -66,14 +61,12 @@ Reject an application for assessment
 
 Check the comp admin see the assessor has rejected the application
     [Documentation]  IFS-396
-    [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link  link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then comp admin checks the assessor rejected the application for assessment
 
 Comp admin can see the application is rejected on manage assessor page
     [Documentation]  IFS-396
-    [Tags]
     [Setup]  the user navigates to the page                     ${server}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
     Given the user clicks the button/link                       link = Manage assessors
     When the user clicks the button/link in the paginated list  jQuery = td:contains("Paul Plum") ~ td a:contains("View progress")

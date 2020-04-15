@@ -13,6 +13,8 @@ delete from form_input where id in (select fit.id from (select fi.id from form_i
 
 delete from document_config_file_type where document_config_id in (select id from document_config where competition_id in (1,2,3,4,5,6,7,8,9));
 
+delete from competition_organisation_config where id in (select competition_organisation_config_id from competition where id in (1,2,3,4,5,6,7,8,9));
+
 delete from document_config where competition_id in (1,2,3,4,5,6,7,8,9);
 
 delete from grant_claim_maximum_competition where competition_id in (1,2,3,4,5,6,7,8,9);

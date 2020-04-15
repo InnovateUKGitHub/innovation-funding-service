@@ -3,7 +3,7 @@ Documentation     IFS-6062 Activity Log front-end
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  HappyPath
 Resource          ../../resources/defaultResources.robot
-Resource          ../10__Project_setup/PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${PsActivityLogCompetitionName}     Integrated delivery programme - low carbon vehicles

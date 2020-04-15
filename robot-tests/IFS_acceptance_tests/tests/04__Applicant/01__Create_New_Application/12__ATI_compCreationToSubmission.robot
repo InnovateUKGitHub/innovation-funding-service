@@ -11,9 +11,9 @@ Documentation     IFS-2396  ATI Competition type template
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${ATIcompetitionTitle}  ATI Competition
@@ -22,21 +22,18 @@ ${ATIapplicationTitle}  ATI application
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
-    [Tags]
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
     Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  project-setup-completion-stage  yes  1  true  collaborative
     And user fills in funding overide
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
-    [Tags]
     Given get competition id and set open date to yesterday  ${ATIcompetitionTitle}
     When log in as a different user                          &{lead_applicant_credentials}
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
     [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725
-    [Tags]
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
@@ -54,13 +51,11 @@ Single applicant cannot submit his application to a collaborative comp
 
 Invite a collaborator and check the application can the be submitted
     [Documentation]  IFS-3421  IFS-5920
-    [Tags]
     Given the lead invites already registered user
     Then the applicant submits the application
 
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
-    [Tags]
     When Log in as a different user                    &{internal_finance_credentials}
     Then moving competition to Closed                  ${competitionId}
     And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
@@ -83,13 +78,11 @@ New partner orgination checks for funding level guidance
 
 Applicant completes Project Details
     [Documentation]  IFS-2332
-    [Tags]
     When log in as a different user              &{lead_applicant_credentials}
     Then project lead submits project address    ${ProjectID}
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
-    [Tags]
     Given Log in as a different user            &{internal_finance_credentials}
     When the user navigates to the page         ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
     And the user clicks the button/link         jQuery = tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")

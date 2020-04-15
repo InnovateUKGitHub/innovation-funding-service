@@ -6,7 +6,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 # research partners
@@ -19,7 +19,6 @@ ${bLead}          businesslead@gmail.com
 *** Test Cases ***
 Business invites other business from same organisation in his application and the latter is able to accept
     [Documentation]  IFS-1324
-    [Tags]
     # TODO would be nice to try with custom address insertion instead of clicking checkbox same-address IFS-1550
     Given we create a new user                             ${openCompetitionBusinessRTO}  Business  collab  ${bCollaborator}  ${BUSINESS_TYPE_ID}
     And the user logs out if they are logged in
@@ -35,7 +34,6 @@ Business invites other business from same organisation in his application and th
 # In those test cases we add Operating address as well. So we don't click the checkbox = use same address
 Researcher invites other researcher from same organisation in his application and the latter is able to accept
     [Documentation]  IFS-1325
-    [Tags]
     Given New Research user applies to Competition and starts application
     And Another Research user applies to Competition and starts application
     Then the latter researcher is able to invite the first one to his application

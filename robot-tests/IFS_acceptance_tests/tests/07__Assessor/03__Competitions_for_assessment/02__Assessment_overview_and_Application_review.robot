@@ -30,21 +30,18 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Assessment overview should show all the questions
     [Documentation]    INFUND-3400  INFUND-1188
-    [Tags]
     Given The user clicks the button/link    link = ${IN_ASSESSMENT_COMPETITION_NAME}
     When the user clicks the button/link     link = ${IN_ASSESSMENT_APPLICATION_5_TITLE}
     Then the uesr should see assessment overview details
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]
     Given the user should see the element  jQuery = .sub-header:contains("days left to submit")
     #Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
     # TODO IFS-3176
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540  INFUND-5379
-    [Tags]
     Given the user clicks the button/link                      jQuery = .govuk-details__summary-text:contains("Unable to assess this application")
     When the user fills in rejection details
     And the user clicks the button/link                       jquery = button:contains("Reject")
@@ -53,12 +50,10 @@ Reject application (Unable to assess this application)
 
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
-    [Tags]
     Given the user navigates to the page and gets a custom error message    ${SERVER}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    ${403_error_message}
 
 Navigation using previous button
     [Documentation]    INFUND-4264
-    [Tags]
     Given the user navigates to the page               ${Assessor_application_dashboard}
     And The user clicks the button/link                link = Intelligent water system
     When the user clicks the button/link               link = 4. Economic benefit
@@ -67,7 +62,6 @@ Navigation using previous button
 
 Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
-    [Tags]
     Given the user clicks the button/link       link = Back to your assessment overview
     And Application detail section should not be scorable
     Then Project summary section should not be scorable
@@ -81,13 +75,11 @@ Application questions should be scorable
 
 Assessor should see terms and conditions question
     [Documentation]  IFS-5920
-    [Tags]
     Given the terms and condition question should not be scorable
     Then the user should see read only view of terms and conditions
 
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
-    [Tags]
     Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB
     And the user closes the last opened tab
     And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB
@@ -100,7 +92,6 @@ Appendix can be opened on the question view
 
 Scope: Validations
     [Documentation]  IFS-508
-    [Tags]
     Given the user clicks the button/link               link = Back to your assessment overview
     And the user clicks the button/link                 link = Scope
     When the user clicks the button/link                jQuery = button:contains("Save and return to assessment overview")
@@ -109,7 +100,6 @@ Scope: Validations
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483
-    [Tags]
     When the user selects the index from the drop-down menu  1    css = .research-category
     And the user clicks the button/link                      jQuery = label:contains("Yes")
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
@@ -119,14 +109,12 @@ Scope: Status in the overview is updated
 
 Scope: Autosave
     [Documentation]    INFUND-1483  INFUND-3780
-    [Tags]
     Given the user clicks the button/link               link = Scope
     Then the user should see the element                jQuery = .govuk-select:contains("Feasibility studies")
     And the user should see the text in the element    css = .editor    Testing feedback field when "Yes" is selected.
 
 Scope: Word count
     [Documentation]    INFUND-1483  INFUND-3400
-    [Tags]
     Given the user enters multiple strings into a text field  css = .editor  a${SPACE}  100
     Then the user should see the element              jQuery = span:contains("Words remaining: 0")
 
@@ -141,7 +129,6 @@ Scope: Guidance
 
 Economic Benefit: validations
     [Documentation]  IFS-508
-    [Tags]
     Given the user clicks the button/link               link = Back to your assessment overview
     And I open one of the application questions         link = 4. Economic benefit
     When the user clicks the button/link                jQuery = button:contains("Save and return to assessment overview")
@@ -149,7 +136,6 @@ Economic Benefit: validations
 
 Economic Benefit: word count
     [Documentation]    INFUND-3859
-    [Tags]
     [Setup]    The user clicks the button/link             link = Back to your assessment overview
     Given I open one of the application questions          link = 4. Economic benefit
     And I should see word count underneath feedback form   Words remaining: 100
@@ -162,7 +148,6 @@ Economic Benefit: word count
 
 Economic Benefit: Autosave
     [Documentation]    INFUND-3780
-    [Tags]
     When the user selects the option from the drop-down menu  9    css = .assessor-question-score
     And the user enters text to a text field                  css = .editor    This is to test the feedback entry.
     And the user clicks the button/link                       jQuery = a:contains("Back to your assessment overview")
@@ -178,7 +163,6 @@ Economic Benefit: Guidance
 
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
-    [Tags]
     Given the user should see finance overview
     When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user reloads the page
@@ -186,7 +170,6 @@ Finance overview
 
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
-    [Tags]
     Given The user navigates to the page           ${ASSESSOR_DASHBOARD_URL}
     When The user clicks the button/link           link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element           jQuery = .progress-list li:contains("Intelligent water system") strong:contains("In progress")

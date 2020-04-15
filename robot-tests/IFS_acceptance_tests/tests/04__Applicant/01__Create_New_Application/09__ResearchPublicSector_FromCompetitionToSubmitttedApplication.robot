@@ -11,8 +11,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 # This Suite moves competition Photonics for Public to Project Setup
 # This suite is using Generic Type Competitions

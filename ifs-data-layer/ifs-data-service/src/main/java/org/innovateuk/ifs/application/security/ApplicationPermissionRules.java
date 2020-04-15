@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -108,14 +109,14 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isLeadApplicant(applicationResource.getId(), user);
     }
 
-    @PermissionRule(value = "READ", description = "A user can see an application resource which they are connected to")
-    public boolean usersConnectedToTheApplicationCanView(ApplicationResource application, UserResource user) {
-        return userIsConnectedToApplicationResource(application, user);
-    }
-
     @PermissionRule(value = "READ", description = "Internal users (other than innovation lead) can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
         return !isInnovationLead(user) && isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "A user can see an application resource which they are connected to")
+    public boolean usersConnectedToTheApplicationCanView(ApplicationResource application, UserResource user) {
+        return userIsConnectedToApplicationResource(application, user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
@@ -131,6 +132,15 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Monitoring officers can see application resources for projects assigned to them.")
     public boolean monitoringOfficerAssignedToProjectCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ", description = "Project Partners can see applications that are linked to their Projects")
+    public boolean projectPartnerCanViewApplicationsLinkedToTheirProjects(final ApplicationResource application, final UserResource user) {
+        Project linkedProject = projectRepository.findOneByApplicationId(application.getId());
+        if (linkedProject == null) {
+            return false;
+        }
+        return isPartner(linkedProject.getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "A user can update their own application if they are a lead applicant or collaborator of the application")

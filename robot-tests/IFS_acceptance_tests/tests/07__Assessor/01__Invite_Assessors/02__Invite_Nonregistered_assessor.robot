@@ -18,7 +18,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_nonregistered_assessor2}  ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
@@ -28,7 +28,6 @@ ${openCompetitionAPC}                  Low-cost propulsion mechanisms for subson
 *** Test Cases ***
 Non-registered assessor: Accept invitation
     [Documentation]    INFUND-228  INFUND-4145
-    [Tags]
     Given the user navigates to the page    ${Invitation_nonregistered_assessor3}
     When the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link     jQuery = button:contains("Confirm")
@@ -36,7 +35,6 @@ Non-registered assessor: Accept invitation
 
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
-    [Tags]
     Given the user clicks the button/link    jQuery = .govuk-button:contains("Create account")
     And the user should see the element      jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
     When the user clicks the button/link     jQuery = .govuk-back-link:contains("Back")
@@ -44,21 +42,18 @@ User can navigate back to Become an Assessor page
 
 Create assessor account: server-side validations
     [Documentation]    INFUND-1478
-    [Tags]
     Given the user clicks the button/link                   jQuery = .govuk-button:contains("Create account")
     When the user clicks the button/link                    jQuery = button:contains("Continue")
     Then the user should see the validation error in the create assessor form
 
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
-    [Tags]
     Given the user should not see the error messages after entering valid values
     When the user clicks the button/link                                           id = postcode-lookup
     Then the user should see a field and summary error                             Enter a UK postcode    # empty postcode check
 
 Create assessor account: Postcode lookup and save
     [Documentation]    INFUND-1478
-    [Tags]
     Given the user enters the postcode and password to create account
     When the user clicks the button/link                      jQuery = button:contains("Continue")
     Then the user should see the element                      jQuery = h1:contains("Your account has been created")
@@ -67,7 +62,6 @@ Create assessor account: Postcode lookup and save
 
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
-    [Tags]
     Given logging in and error checking               &{nonregistered_assessor3_credentials}
     And the user should see the element               link = ${IN_ASSESSMENT_COMPETITION_NAME}
     When the user clicks the button/link              link = ${IN_ASSESSMENT_COMPETITION_NAME}
@@ -77,7 +71,6 @@ Create assessor account: Accepted competitions should be displayed in dashboard
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
-    [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link  link = ${openCompetitionRTO_name}
     And the user clicks the button/link    jQuery = a:contains("Invite assessors to assess the competition")
@@ -88,7 +81,6 @@ Innovation area on assessor profile for invited user
 
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631  INFUND-4636  INFUND-5165
-    [Tags]
     Given the user checks for validations on reject invitation page
     When the assessor fills in all fields
     And The user clicks the button/link                    jQuery = button:contains("Confirm")
@@ -97,21 +89,18 @@ Non-registered assessor: Reject invitation
     And the assessor shouldn't be able to accept the rejected competition
 
 The internal user invites an applicant as an assessor
-    [Tags]
     Given the comp admin logs in and navigate to invite tab   ${openCompetitionRTO_name}
     When The internal user invites a user as an assessor      Dave Adams  ${RTO_lead_applicant_credentials["email"]}
     Then the internal user send invite
     [Teardown]    Logout as user
 
 The invited applicant accepts the invitation
-    [Tags]
     Given the user reads his email and clicks the link    ${RTO_lead_applicant_credentials["email"]}  Invitation to assess '${openCompetitionRTO_name}'  We are inviting you to assess applications
     When the user selects the radio button                acceptInvitation  true
     And the user clicks the button/link                   css = button[type = "Submit"]
     Then the user should see the element                  jQuery = p:contains("Your email address is linked to an existing account.")
 
 The internal user invites the applicant to assess another competition
-    [Tags]
     Given the comp admin logs in and navigate to invite tab  ${openCompetitionAPC}
     When The internal user invites a user as an assessor     Dave Adams  ${RTO_lead_applicant_credentials["email"]}
     Then the user should see a field and summary error       ${email_already_in_use}

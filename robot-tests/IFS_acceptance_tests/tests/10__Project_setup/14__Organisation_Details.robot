@@ -5,8 +5,8 @@ Documentation     IFS-6697 Project setup internal: View further organisation det
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 *** Variables ***
 ${GrowthTableCompetitionLink}            ${server}/project-setup-management/competition/${GrowthTableCompId}/project/${PS_GTC_Application_Project_Id}/details
 ${GrowthTableCompetitionLink}            ${server}/project-setup-management/competition/${GrowthTableCompId}/project/${PS_GTC_Application_Project_Id}/details

@@ -5,7 +5,7 @@ Documentation    INFUND-5629 As a Competitions team member I want to be able to 
 Suite Setup      Custom suite setup
 Force Tags       CompAdmin
 Resource         ../../resources/defaultResources.robot
-Resource         CompAdmin_Commons.robot
+Resource         ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Business opportunity Server-side validations setup questions

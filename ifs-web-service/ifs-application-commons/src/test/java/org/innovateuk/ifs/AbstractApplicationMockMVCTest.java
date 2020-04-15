@@ -183,8 +183,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
 
         competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
 
-        QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource
-                .getId());
+        QuestionResourceBuilder questionResourceBuilder = newQuestionResource();
 
         SectionResourceBuilder sectionResourceBuilder = newSectionResource().withCompetition(competitionResource
                 .getId());
@@ -453,11 +452,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationRestService.getOrganisationsByApplicationId(applications.get(4).getId())).thenReturn
                 (restSuccess(application5Organisations));
 
-        organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4,
-                processRole7, processRole8, processRole8), ProcessRoleResource::getId));
-        organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
-        organisation3.setProcessRoles(simpleMap(singletonList(processRole11), ProcessRoleResource::getId));
-
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));
@@ -545,15 +539,13 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
             return restSuccess(newFormInputResource().with(id((Long) args[0])).build());
         });
 
-        List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().withFormInputs
-                (1L).
+        List<FormInputResponseResource> formInputResponses = singletonList(newFormInputResponseResource().
                 with(idBasedValues("Value "))
-                .build(1);
+                .build());
 
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess
                 (formInputResponses));
-        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(formInputResponseResource ->
-                formInputResponseResource.getFormInput(), identity()));
+        formInputsToFormInputResponses = formInputResponses.stream().collect(toMap(FormInputResponseResource::getFormInput, identity()));
         when(formInputResponseService.mapFormInputResponsesToFormInput(formInputResponses)).thenReturn
                 (formInputsToFormInputResponses);
     }
@@ -592,7 +584,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         List<FormInputResource> formInputs = newFormInputResource().with(incrementingIds(1)).withType(TEXTAREA).build
                 (1);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
-                withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
         when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn
@@ -607,7 +598,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withType(TEXTAREA, FILEUPLOAD)
                 .build(2);
         QuestionResource questionResource = questionResourceBuilder.with(id(id)).with(name(name)).
-                withFormInputs(simpleMap(formInputs, FormInputResource::getId)).
                 build();
         when(questionRestService.findById(questionResource.getId())).thenReturn(restSuccess(questionResource));
         when(formInputRestService.getByQuestionIdAndScope(questionResource.getId(), APPLICATION)).thenReturn

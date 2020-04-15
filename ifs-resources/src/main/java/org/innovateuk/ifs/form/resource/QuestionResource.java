@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,6 +26,8 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
     //Used by @Cacheable
+    @JsonIgnore
+
     private boolean competitionOpen;
 
     public QuestionResource() {
@@ -53,10 +56,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public String getDescription() {
         return this.description;
-    }
-
-    public Long getCompetition() {
-        return this.competition;
     }
 
     public Long getSection() {
@@ -133,10 +132,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
         this.priority = priority;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
-    }
-
     public void setSection(Long section) {
         this.section = section;
     }
@@ -159,6 +154,14 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
 
     public void setQuestionSetupType(QuestionSetupType questionSetupType) {
         this.questionSetupType = questionSetupType;
+    }
+
+    public Long getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Long competition) {
+        this.competition = competition;
     }
 
     @Override
@@ -192,7 +195,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
                 .append(assignEnabled, that.assignEnabled)
                 .append(multipleStatuses, that.multipleStatuses)
                 .append(priority, that.priority)
-                .append(competition, that.competition)
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
@@ -212,7 +214,6 @@ public class QuestionResource implements Comparable<QuestionResource>, Cacheable
                 .append(assignEnabled)
                 .append(multipleStatuses)
                 .append(priority)
-                .append(competition)
                 .append(section)
                 .append(questionNumber)
                 .append(type)

@@ -63,3 +63,5 @@ function applyFileCerts() {
 }
 
 applyFileCerts
+
+oc create secret generic sp-secrets || true # Even though the secret is empty we still need it so the idp pod will start
