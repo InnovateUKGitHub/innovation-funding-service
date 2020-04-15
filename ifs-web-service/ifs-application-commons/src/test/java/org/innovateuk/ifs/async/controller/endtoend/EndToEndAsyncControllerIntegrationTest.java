@@ -10,10 +10,9 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.service.DefaultRestTemplateAdaptor;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.ManageUserPageResource;
+import org.innovateuk.ifs.user.resource.ManageUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.After;
 import org.junit.Before;
@@ -38,17 +37,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.security.ProxyUtils.unwrapProxy;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.ManageUserResourceBuilder.newManageUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.eq;
@@ -156,14 +153,21 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 withInnovationArea(newInnovationAreaResource().withSectorName("The Sector").build()).
                 build();
 
+        ManageUserPageResource page = new ManageUserPageResource(1L, 1, newManageUserResource()
+                .withId(2L, 4L, 6L)
+                .build(3), 1, 1);
+
         when(restTemplateMock.exchange(eq(baseRestUrl + "/application/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(ApplicationResource.class))).thenAnswer(invocation -> dataLayerResponse(application, executionBehaviour));
 
         when(restTemplateMock.exchange(eq(baseRestUrl + "/competition/456"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(CompetitionResource.class))).thenAnswer(invocation -> dataLayerResponse(competition, executionBehaviour));
 
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/user/active?filter=&page=1&size=10"), eq(HttpMethod.GET), isA(HttpEntity.class),
+                eq(ManageUserPageResource.class))).thenAnswer(invocation -> dataLayerResponse(page, executionBehaviour));
+
         // set up expectations for the retrieval of the Lead Organisation
-        List<Long> leadOrganisationUserIds = setupLeadOrganisationRetrievalExpectations(executionBehaviour);
+        List<Long> users = page.getContent().stream().map(ManageUserResource::getId).collect(Collectors.toList());
 
         //
         // call the method under test
@@ -179,12 +183,12 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         // assert that the values added directly to the model in the Controller itself are present
         //
         assertThat(model.get("applicationSectorAndCompetitionCode"), equalTo("The Sector-The Activity Code"));
-        assertThat(model.get("leadOrganisationUsers"), equalTo(leadOrganisationUserIds));
+        assertThat(model.get("users"), equalTo(users));
 
         //
         // and assert that the values added as a Future directly to the model in the Controller have resolved correctly
         //
-        assertThat((List<String>) model.get("explicitlyAsyncResultsAddedAsAFutureToTheModel"), contains(
+        assertThat((List<String>) model.get("explicitlyAsyncResultsAddedAsAFutureToTheModel"), containsInAnyOrder(
                 "doExplicitAsyncActivities2ThenAmended",
                 "doExplicitAsyncActivities4ThenAmended",
                 "doExplicitAsyncActivities6ThenAmended"));
@@ -232,28 +236,6 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
             // expected behaviour - Now assert that any ongoing Futures were cleared after an exception was thrown
             assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
         }
-    }
-
-    private List<Long> setupLeadOrganisationRetrievalExpectations(ExpectedExecutionBehaviour executionBehaviour) {
-
-        Role leadApplicantRole = Role.LEADAPPLICANT;
-        Role collaboratorRole = Role.COLLABORATOR;
-
-        List<ProcessRoleResource> applicationProcessRoles = newProcessRoleResource().
-                withId(1L, 3L, 5L).
-                withRole(collaboratorRole, leadApplicantRole, collaboratorRole).
-                withOrganisation(333L, 444L, 555L).
-                build(3);
-
-        when(restTemplateMock.exchange(eq(baseRestUrl + "/processrole/find-by-application-id/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(processRoleResourceListType()))).thenAnswer(invocation -> dataLayerResponse(applicationProcessRoles, executionBehaviour));
-
-        List<Long> leadOrganisationUserIds = asList(2L, 4L, 6L);
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
-
-        when(restTemplateMock.exchange(eq(baseRestUrl + "/organisation/find-by-id/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(OrganisationResource.class))).thenAnswer(invocation -> dataLayerResponse(leadOrganisation, executionBehaviour));
-        return leadOrganisationUserIds;
     }
 
     private <T> ResponseEntity<T> entity(T result) {

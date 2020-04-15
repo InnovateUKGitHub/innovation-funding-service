@@ -130,7 +130,7 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
         awaitAll(userResult).thenAccept(userPage -> {
 
             List<Long> users = userPage.getContent().stream().map(ManageUserResource::getId).collect(Collectors.toList());
-            model.addAttribute("leadOrganisationUsers", userPage.getContent());
+            model.addAttribute("users", users);
 
             testService.doSomeHiddenAsyncActivities(model, users);
 
