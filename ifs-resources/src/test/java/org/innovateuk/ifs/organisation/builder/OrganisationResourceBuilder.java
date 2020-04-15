@@ -55,10 +55,6 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
         return withArray((user, organisation) -> setField("users", user, organisation), users);
     }
 
-    public OrganisationResourceBuilder withProcessRoles(List<Long>... processRoles) {
-        return withArray((processRoleList, organisation) -> organisation.setProcessRoles(processRoleList), processRoles);
-    }
-
     public OrganisationResourceBuilder withAddress(List<OrganisationAddressResource>... organisationAddressResource) {
     	return withArray((orgAddress, organisation) -> setField("addresses", orgAddress, organisation), organisationAddressResource);
     }

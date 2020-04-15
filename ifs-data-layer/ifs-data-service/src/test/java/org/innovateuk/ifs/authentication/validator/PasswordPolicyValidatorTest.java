@@ -178,8 +178,6 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 build();
         Organisation org1 = newOrganisation().withId(123L).withName("Empire Ltd").build();
         Organisation org2 = newOrganisation().withId(456L).withName("EGGS").build();
-        org1.addUser(user);
-        org2.addUser(user);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1, org2));
@@ -212,7 +210,6 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 withLastName("Smith").
                 build();
         Organisation org1 = newOrganisation().withId(123L).withName("(((£&").build();
-        org1.addUser(user);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1));
@@ -231,8 +228,6 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         User user = newUser().withId(13L).withFirstName("William").withLastName("Lo").build();
         Organisation org1 = newOrganisation().withId(123L).withName("Hi").build();
         Organisation org2 = newOrganisation().withId(456L).withName("lo").build();
-        org1.addUser(user);
-        org2.addUser(user);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1, org2));
