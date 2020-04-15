@@ -3,10 +3,6 @@ package org.innovateuk.ifs.documentation;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static com.google.common.primitives.Longs.asList;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -27,19 +23,6 @@ public class OrganisationDocs {
             .withId(1L)
             .withName("Company name")
             .withCompaniesHouseNumber("0123456789")
-            .withAddress(newOrganisationAddressResource()
-                    .withAddress(newAddressResource()
-                            .withAddressLine1("Address line 1")
-                            .withAddressLine2("Address line 2")
-                            .withAddressLine3("Address line 3")
-                            .withCounty("County")
-                            .withPostcode("Postcode")
-                            .build())
-                    .withAddressType(newAddressTypeResource()
-                            .withName("Address type")
-                            .build())
-                    .build(1))
-            .withUsers(asList(1L, 2L))
             .withOrganisationType(1L)
             .withOrganisationTypeName("Organisation type");
 }

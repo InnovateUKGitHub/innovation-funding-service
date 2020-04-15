@@ -126,7 +126,7 @@ public class OrganisationPermissionRules {
     }
 
     private boolean organisationNotYetLinkedToAnApplication(OrganisationResource organisation) {
-        return processRoleRepository.existsByOrganisationId(organisation.getId());
+        return !processRoleRepository.existsByOrganisationId(organisation.getId());
     }
 
     private List<Long> getMonitoringOfficersOrganisationIds(List<MonitoringOfficer> projectMonitoringOfficers) {
