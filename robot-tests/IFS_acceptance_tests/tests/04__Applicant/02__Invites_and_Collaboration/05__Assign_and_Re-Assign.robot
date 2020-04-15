@@ -23,7 +23,7 @@ Suite Teardown    Custom suite teardown
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
 
 # This suite uses application: Assign test
 
@@ -41,7 +41,6 @@ Lead applicant can assign a question
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
     ...    This test depends on the previous test suite to run first
-    [Tags]
     When the user assigns the question to the collaborator      Stuart Anderson
     And the user should see the element                         jQuery = p:contains("This question is assigned to"):contains("you")
     And the applicant assigns the question to the collaborator  Dennis Bergkamp
@@ -66,7 +65,6 @@ The question is enabled for the assignee
 Collaborator should see the terms and conditions from the overview page
     [Documentation]  INFUND-2417
     ...  This test depends on the previous test suite to run first
-    [Tags]
     Given the user clicks the button/link          link = Back to application overview
     When The user clicks the button/link           link = Award terms and conditions
     Then the user should see the element           jQuery = h1:contains("Terms and conditions of an Innovate UK grant award")
@@ -89,7 +87,6 @@ Collaborator should see the review button instead of the review and submit
 Last update message is correctly updating
     [Documentation]  INFUND-280
     ...  This test depends on the previous test suite to run first
-    [Tags]
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test
     And the user clicks the button/link   link = Public description
@@ -108,7 +105,6 @@ Collaborators cannot assign a question
 Collaborators can mark as ready for review
     [Documentation]  INFUND-877
     ...  This test depends on the previous test suite to run first
-    [Tags]
     When the user clicks the button/link            jQuery = button:contains("Assign to lead for review")
     Then the user should see the notification       You have successfully assigned the question
     And the user should see the element             jQuery = p:contains("This question is assigned to"):contains("Stuart Anderson")
@@ -116,7 +112,6 @@ Collaborators can mark as ready for review
 Collaborator cannot edit after marking ready for review
     [Documentation]  INFUND-275
     ...    This test depends on the previous test suite to run first
-    [Tags]
     Then the user should see the element  css = .textarea-wrapped .readonly
 
 Collaborators should not be able to edit application details
@@ -133,7 +128,6 @@ Collaborators should not be able to edit application details
 The question should be reassigned to the lead applicant
     [Documentation]  INFUND-275
     ...  This test depends on the previous test suite to run first
-    [Tags]
     [Setup]  log in as a different user      ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link      link = Assign test
@@ -147,7 +141,6 @@ The question should be reassigned to the lead applicant
 Appendices are assigned along with the question
     [Documentation]  INFUND-409
     ...  This test depends on the previous test suite to run first
-    [Tags]
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = Assign test
     And the user clicks the button/link   link = 6. Innovation
@@ -163,7 +156,6 @@ Appendices are assigned along with the question
 
 RTO Collaborator is not guided that the research area is not selected
     [Documentation]  IFS-4099
-    [Tags]
     Given the user navigates to Your-finances page  Assign test
     When the user clicks the button/link            link = Your funding
     Then The user should not see the element        jQuery = .govuk-list li:contains("the lead applicant must mark the research category page as complete")
@@ -172,7 +164,6 @@ RTO Collaborator is not guided that the research area is not selected
 
 Lead selects Research category
     [Documentation]  INFUND-6823  IFS-3938
-    [Tags]
     [Setup]  log in as a different user        ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to Your-finances page  Assign test
@@ -185,7 +176,6 @@ Lead selects Research category
 Lead marks finances as complete
     [Documentation]  INFUND-3016
     ...  This test depends on the previous test suite to run first
-    [Tags]
     Given the user navigates to the page                 ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link                  jQuery = .progress-list a:contains("Assign test")
     Then the applicant completes the application details  Assign test  ${tomorrowday}  ${month}  ${nextyear}
@@ -204,7 +194,6 @@ Lead marks finances as complete
 Collaborator from another organisation should be able to mark Finances as complete
     [Documentation]  INFUND-3016
     ...  This test depends on the previous test suite to run first
-    [Tags]
     [Setup]  log in as a different user               ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to Your-finances page    Assign test
     Then the user should see all finance subsections incomplete
@@ -213,7 +202,6 @@ Collaborator from another organisation should be able to mark Finances as comple
 The question is disabled for other collaborators
     [Documentation]  INFUND-275
     ...    This test case is still using the old application
-    [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given Steve smith assigns a question to the collaborator
     Given log in as a different user       &{collaborator2_credentials}
@@ -224,7 +212,6 @@ The question is disabled for other collaborators
 The question is disabled on the summary page for other collaborators
     [Documentation]  INFUND-2302
     ...    This test case is still using the old application
-    [Tags]
     Given the user navigates to the page     ${SUMMARY_URL}
     When the user expands the section        Public description
     Then the user should see the element     jQuery = label:contains("Public description") ~ p.wysiwyg-styles

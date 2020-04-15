@@ -60,8 +60,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com

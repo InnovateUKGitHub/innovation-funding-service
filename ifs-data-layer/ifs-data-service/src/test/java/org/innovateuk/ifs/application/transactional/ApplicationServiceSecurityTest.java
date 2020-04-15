@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
-import org.innovateuk.ifs.project.security.ProjectApplicationPermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.EnumSet;
+import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -36,37 +36,44 @@ import static org.mockito.Mockito.*;
 public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationService> {
     private ApplicationPermissionRules applicationRules;
     private CompetitionPermissionRules competitionRules;
-    private ProjectApplicationPermissionRules projectApplicationPermissionRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CompetitionLookupStrategy competitionLookupStrategy;
+
+    public static void verifyApplicationRead(ApplicationLookupStrategy applicationLookupStrategy,
+                                             ApplicationPermissionRules applicationRules,
+                                             Consumer<Long> serviceMethod) {
+        final long applicationId = 1L;
+        ApplicationResource application = newApplicationResource()
+                .build();
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(application);
+        assertAccessDenied(
+                () -> serviceMethod.accept(applicationId),
+                () -> {
+                    verify(applicationRules).usersConnectedToTheApplicationCanView(eq(application),
+                            isA(UserResource.class));
+                    verify(applicationRules).projectPartnerCanViewApplicationsLinkedToTheirProjects(eq(application),
+                            isA(UserResource.class));
+                    verify(applicationRules).internalUsersCanViewApplications(eq(application),
+                            isA(UserResource.class));
+                    verify(applicationRules).innovationLeadAssignedToCompetitionCanViewApplications(eq(application),
+                            isA(UserResource.class));
+                }
+        );
+
+    }
+
 
     @Before
     public void lookupPermissionRules() {
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
         competitionRules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
-        projectApplicationPermissionRules = getMockPermissionRulesBean(ProjectApplicationPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         competitionLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
     }
 
     @Test
     public void testGetApplicationResource() {
-        final long applicationId = 1L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource()
-                .build());
-        assertAccessDenied(
-                () -> classUnderTest.getApplicationById(applicationId),
-                () -> {
-                    verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class),
-                            isA(UserResource.class));
-                    verify(projectApplicationPermissionRules).projectPartnerCanViewApplicationsLinkedToTheirProjects(isA(ApplicationResource.class),
-                            isA(UserResource.class));
-                    verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA
-                            (UserResource.class));
-                    verify(applicationRules).innovationLeadAssignedToCompetitionCanViewApplications(isA
-                            (ApplicationResource.class), isA(UserResource.class));
-                }
-        );
+        verifyApplicationRead(applicationLookupStrategy, applicationRules, (applicationId) -> classUnderTest.getApplicationById(applicationId));
     }
 
     @Test

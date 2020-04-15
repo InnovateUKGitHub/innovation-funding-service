@@ -14,7 +14,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom Suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../07__Assessor/Assessor_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Test Cases ***
 Competition dashboard

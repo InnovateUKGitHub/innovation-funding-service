@@ -40,8 +40,6 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     private CompetitionResource competition;
     private SectionResource parentSection;
     private SectionResource childSection1;
-    private FormInputResource formInputResource1;
-    private FormInputResource formInputResource2;
 
     @Override
     protected SectionServiceImpl supplyServiceUnderTest() {
@@ -55,20 +53,20 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
         competition = CompetitionResourceBuilder.newCompetitionResource().build();
         parentSection = newSectionResource().withCompetition(competition.getId()).build();
         childSection1 = newSectionResource().withCompetition(competition.getId()).withParentSection(parentSection.getId()).build();
-        formInputResource1 = newFormInputResource().withType(FILEUPLOAD).build();
-        formInputResource2 = newFormInputResource().withType(TEXTAREA).build();
+        FormInputResource formInputResource1 = newFormInputResource().withType(FILEUPLOAD).build();
+        FormInputResource formInputResource2 = newFormInputResource().withType(TEXTAREA).build();
 
-        parentSection.setChildSections(asList(childSection1.getId()));
+        parentSection.setChildSections(singletonList(childSection1.getId()));
 
         when(sectionRestService.getById(eq(childSection1.getId()))).thenReturn(restSuccess(childSection1));
         when(sectionRestService.getById(eq(parentSection.getId()))).thenReturn(restSuccess(parentSection));
 
         when(sectionRestService.getByCompetition(anyLong())).thenReturn(restSuccess(asList(parentSection, childSection1)));
 
-        QuestionResource question1 = QuestionResourceBuilder.newQuestionResource().withFormInputs(singletonList(formInputResource1.getId())).build();
+        QuestionResource question1 = QuestionResourceBuilder.newQuestionResource().build();
         when(questionRestService.findById(eq(question1.getId()))).thenReturn(restSuccess(question1));
 
-        QuestionResource question2 = QuestionResourceBuilder.newQuestionResource().withFormInputs(singletonList(formInputResource2.getId())).build();
+        QuestionResource question2 = QuestionResourceBuilder.newQuestionResource().build();
         when(questionRestService.findById(eq(question2.getId()))).thenReturn(restSuccess(question2));
 
         childSection1.setQuestions(Arrays.asList(question1.getId(), question2.getId()));
@@ -80,13 +78,13 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     }
 
     @Test
-    public void testFilterParentSections() throws Exception {
+    public void filterParentSections() {
         List<SectionResource> parentSections = service.filterParentSections(asList(parentSection, childSection1));
         assertEquals(parentSection.getId(), parentSections.get(0).getId());
     }
 
     @Test
-    public void testFilterParentSectionsToEnsureSectionsSortedByPriority() throws Exception {
+    public void filterParentSectionsToEnsureSectionsSortedByPriority() {
 
         // Set the sections with random priority
         SectionResource parentSection1 = newSectionResource().withCompetition(competition.getId()).withPriority(3).build();
@@ -113,9 +111,9 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     }
 
     @Test
-    public void testGetSectionsByType() {
+    public void getSectionsByType() {
         SectionResource section = newSectionResource().build();
-        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(asList(section)));
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(section)));
 
         List<SectionResource> result = service.getSectionsForCompetitionByType(competition.getId(), SectionType.FINANCE);
 
@@ -124,9 +122,9 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     }
 
     @Test
-    public void testGetFinanceSection() {
+    public void getFinanceSection() {
         SectionResource section = newSectionResource().build();
-        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(asList(section)));
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.FINANCE)).thenReturn(restSuccess(singletonList(section)));
 
         SectionResource result = service.getFinanceSection(competition.getId());
 
@@ -134,9 +132,9 @@ public class SectionServiceImplTest extends BaseServiceUnitTest<SectionServiceIm
     }
 
     @Test
-    public void testGetOrganisationFinanceSection() {
+    public void getOrganisationFinanceSection() {
         SectionResource section = newSectionResource().build();
-        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.ORGANISATION_FINANCES)).thenReturn(restSuccess(asList(section)));
+        when(sectionRestService.getSectionsByCompetitionIdAndType(competition.getId(), SectionType.ORGANISATION_FINANCES)).thenReturn(restSuccess(singletonList(section)));
 
         SectionResource result = service.getOrganisationFinanceSection(competition.getId());
 

@@ -309,6 +309,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
+        when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
@@ -854,6 +855,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
+        when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
@@ -1496,6 +1498,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectRestService.existsOnApplication(project.getId(), organisationResource.getId())).thenReturn(restSuccess(true));
         when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
         when(monitoringOfficerService.findMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerResult);
+        when(monitoringOfficerService.isMonitoringOfficerOnProject(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
         when(projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(restSuccess(organisationResource));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())

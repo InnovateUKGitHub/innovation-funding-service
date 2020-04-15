@@ -91,8 +91,8 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          CompAdmin_Commons.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${peter_freeman}     Peter Freeman

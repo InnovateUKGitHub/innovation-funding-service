@@ -32,7 +32,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations

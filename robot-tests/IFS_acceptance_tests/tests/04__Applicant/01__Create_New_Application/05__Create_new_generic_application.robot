@@ -6,8 +6,8 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${competitionName}  Generic competition for TsnCs

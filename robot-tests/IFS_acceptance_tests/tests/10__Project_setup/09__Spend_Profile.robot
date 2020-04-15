@@ -74,7 +74,7 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-6732 Ensure spend profile cannot be generated when there is a pending invite
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${project_overview}    ${server}/project-setup/project/${PS_SP_Project_Id}
@@ -135,6 +135,7 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
+    And the user clicks the button/link     link = 2
     Then the project finance user generate spend profile
     And the project finance user should not see query responses flagged
 
@@ -418,8 +419,9 @@ Project Finance is able to Reject Spend Profile
 Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the user should see the element    css = #table-project-status tr:nth-of-type(6) td:nth-of-type(7).status.rejected  # Rejected Spend profile
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When the user clicks the button/link    link = 2
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.rejected  # Rejected Spend profile
 
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
@@ -491,9 +493,10 @@ Project Finance is able to Approve Spend Profile
 Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    Then the user should see the element    css = #table-project-status tr:nth-of-type(8) td:nth-of-type(7).status.ok        # Completed Spend profile
-    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(8) > td.govuk-table__cell.status.action > a   # GOL
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status
+    When The user clicks the button/link    link = 2
+    Then the user should see the element    css = #table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.ok        # Completed Spend profile
+    And the user should see the element     css = #table-project-status > tbody > tr:nth-child(3) > td.govuk-table__cell.status.action > a   # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
@@ -622,7 +625,8 @@ the project finance user generate spend profile
 
 the project finance user should not see query responses flagged
     the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    the user should see the element        css = #table-project-status tr:nth-of-type(6) td:nth-of-type(4).ok
+    the user clicks the button/link        link = 2
+    the user should see the element        css = #table-project-status tr:nth-of-type(1) td:nth-of-type(4).ok
     the user navigates to the page         ${server}/project-setup-management/competition/${PS_Competition_Id}/status/queries
     the user should not see the element    link = ${Ooba_Lead_Org_Name}
     the user reads his email               ${PS_SP_Lead_PM_Email}  ${PS_Competition_Name}: Your spend profile is available for project ${PS_SP_Application_No}  The finance checks for all partners in the project have now been completed
@@ -771,7 +775,8 @@ partners can see the Spend Profile section completed
 
 the project finance user should see the spend profile details
     the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/status
-    the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(6) > td.govuk-table__cell.status.action > a  # Review Spend profile
+    the user clicks the button/link              link = 2
+    the user clicks the button/link              css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action > a  # Review Spend profile
     the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_Project_Id}/spend-profile/approval
     the user should not see the element          jQuery = h2:contains("The spend profile has been approved")
     the user should not see the element          jQuery = h2:contains("The spend profile has been rejected")
@@ -813,14 +818,15 @@ the comp admin can download the SP CSV files
     the user should not see an error in the page
 
 the comp admin should see the SP status uodated correctly
-    the user should see the element        css = #table-project-status tr:nth-of-type(6) td:nth-of-type(1).status.ok         # Project details
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(6) > td:nth-child(3)           # Documents
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(6) > td:nth-child(4)           # Monitoring officer
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(6) > td:nth-child(5)           # Bank details
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(6) > td:nth-child(6)           # Finance checks
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(6) > td:nth-child(7)           # Spend profile
-    the user should see the element        css = #table-project-status > tbody > tr:nth-child(6) > td.govuk-table__cell.status.action  # GOL
-    the user should not see the element    css = #table-project-status tr:nth-of-type(6) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+    the user clicks the button/link        link = 2
+    the user should see the element        css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok         # Project details
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(3)           # Documents
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(4)           # Monitoring officer
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(5)           # Bank details
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(6)           # Finance checks
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td:nth-child(7)           # Spend profile
+    the user should see the element        css = #table-project-status > tbody > tr:nth-child(1) > td.govuk-table__cell.status.action  # GOL
+    the user should not see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 the project finance reject the SP
     the user should see the element     jQuery = #main-content button:contains("Reject")
@@ -863,6 +869,7 @@ the project finance approves to SP
     the user should not see an error in the page
     the user clicks the button/link          jQuery = button:contains("Approved")
     the user clicks the button/link          jQuery = .modal-accept-profile button:contains("Approve")
+    the user clicks the button/link          link = 2
     the user should see the element          jQuery = th div:contains("${PS_SP_Application_Title}")
     the user should not see the element      jQuery = h3:contains("The spend profile has been approved")
 

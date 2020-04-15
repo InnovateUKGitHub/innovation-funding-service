@@ -88,8 +88,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page

@@ -29,7 +29,7 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 
 # Alternative Bank account pair:12345677 - 000004 #
 # Another valid B account pair: 51406795 - 404745 #
@@ -68,7 +68,6 @@ Academic user is able to submit bank details
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5543
-    [Tags]
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the internal user is able to see updated statuses
@@ -95,7 +94,6 @@ Bank details verified by Experian require no action by the Project Finance
 
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
-    [Tags]
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then project finance is able to view progress of partners bank details
 
@@ -109,7 +107,6 @@ IFS Admin can see Bank Details
 
 Other internal users do not have access to bank details export
     [Documentation]  INFUND-5852
-    [Tags]
     [Setup]  log in as a different user                                 &{Comp_admin1_credentials}
     Given the user navigates to the page                                ${server}/project-setup-management/competition/${PS_Competition_Id}/status
     Then the user should not see the element                            link = Export all bank details
@@ -117,7 +114,6 @@ Other internal users do not have access to bank details export
 
 Project Finance user can export bank details
     [Documentation]  INFUND-5852
-    [Tags]
     Given the project finance user downloads the bank details
     Then the user opens the excel and checks the content
     [Teardown]  remove the file from the operating system  bank_details.csv

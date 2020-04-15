@@ -70,6 +70,10 @@ public class CsvUtils {
         return simpleMapWithIndex(readCsvLines("competitions"), CompetitionLine::new);
     }
 
+    public static List<CompetitionOrganisationConfigLine> readCompetitionOrganisationConfig() {
+        return simpleMapWithIndex(readCsvLines("competition-organisation-config"), CompetitionOrganisationConfigLine::new);
+    }
+
     public static List<CompetitionFunderLine> readCompetitionFunders() {
         return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }
@@ -535,6 +539,21 @@ public class CsvUtils {
         }
     }
 
+    public static class CompetitionOrganisationConfigLine {
+        public int lineNumber;
+        public String competition;
+        public boolean internationalOrganisationsAllowed;
+        public boolean internationalLeadOrganisationAllowed;
+
+        private CompetitionOrganisationConfigLine(List<String> line , int lineNumber) {
+            this.lineNumber = lineNumber;
+            int i = 0;
+            competition = nullable(line.get(i++));
+            internationalOrganisationsAllowed = nullableBoolean(line.get(i++));
+            internationalLeadOrganisationAllowed = nullableBoolean(line.get(i++));
+        }
+    }
+
     public static class CompetitionFunderLine {
         public String competitionName;
         public Funder funder;
@@ -614,6 +633,8 @@ public class CsvUtils {
         public String county;
         public List<OrganisationAddressType> addressType;
         public String companyRegistrationNumber;
+        public Boolean isInternational;
+        public String internationalRegistrationNumber;
 
         private OrganisationLine(List<String> line) {
 
@@ -631,6 +652,8 @@ public class CsvUtils {
                     simpleMap(asList(addressTypeLine.split(",")), OrganisationAddressType::valueOf) :
                 emptyList();
             companyRegistrationNumber = nullable(line.get(i++));
+            isInternational = nullableBoolean(line.get(i++));
+            internationalRegistrationNumber = nullable(line.get(i++));
         }
     }
 
@@ -823,10 +846,6 @@ public class CsvUtils {
         String value = nullable(s);
 
         if (value == null) {
-            return false;
-        }
-
-        if ("0".equals(s)) {
             return false;
         }
 

@@ -8,8 +8,8 @@ Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
 Suite Teardown  the user closes the browser
 Force Tags      InnovationLead  HappyPath
 Resource        ../../resources/defaultResources.robot
-Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource        ../10__Project_setup/PS_Common.robot
+Resource        ../../resources/common/Competition_Commons.robot
+Resource        ../../resources/common/PS_Common.robot
 
 *** Test Cases ***
 Innovation Lead should see Submitted and Ineligible Applications

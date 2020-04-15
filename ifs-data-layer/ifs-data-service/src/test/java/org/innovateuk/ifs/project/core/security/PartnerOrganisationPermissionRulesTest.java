@@ -7,12 +7,14 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
@@ -58,7 +60,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .withProject(projectId)
                 .withOrganisation(organisationId)
                 .build();
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(null);
 
         assertFalse(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
     }
@@ -76,7 +78,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         ProjectUser projectUser = newProjectUser()
                 .build();
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUser);
 
         assertTrue(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
     }
@@ -88,7 +90,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().withProject(project).build();
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(singletonList(projectUser));
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(singletonList(projectUser));
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
 
@@ -101,7 +103,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
         Project project = newProject().build();
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(emptyList());
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
 
@@ -153,7 +155,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .withProject(projectId)
                 .withOrganisation(organisationId)
                 .build();
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(null);
 
         assertFalse(rules.partnersCanReadTheirOwnPendingPartnerProgress(partnerOrg, user));
     }
@@ -171,7 +173,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
                 .build();
         ProjectUser projectUser = newProjectUser()
                 .build();
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUser);
 
         assertTrue(rules.partnersCanReadTheirOwnPendingPartnerProgress(partnerOrg, user));
     }
@@ -204,7 +206,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
             .build();
         ProjectUser projectUser = newProjectUser()
             .build();
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUser);
 
         assertTrue(rules.partnersCanUpdateTheirOwnPendingPartnerProgress(partnerOrg, user));
     }

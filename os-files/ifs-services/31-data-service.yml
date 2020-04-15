@@ -2,29 +2,6 @@ apiVersion: v1
 kind: List
 items:
   - apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: db-config
-    data:
-      DB_URL: "${DB_URL}"
-      DB_USER: "${DB_USER}"
-      DB_PASS: "${DB_PASS}"
-      FLYWAY_LOCATIONS: "${FLYWAY_LOCATIONS}"
-  - apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: cache-config
-    data:
-      IFS_DATA_SERVICE_CACHE_TYPE: "${IFS_DATA_SERVICE_CACHE_TYPE}"
-      IFS_DATA_SERVICE_CACHE_PREFIX: "${IFS_DATA_SERVICE_CACHE_PREFIX}"
-      IFS_DATA_SERVICE_REDIS_SSL: "${IFS_DATA_SERVICE_REDIS_SSL}"
-      IFS_DATA_SERVICE_REDIS_PASSWORD: "${IFS_DATA_SERVICE_REDIS_PASSWORD}"
-      IFS_DATA_SERVICE_REDIS_STANDALONE_HOST: "${IFS_DATA_SERVICE_REDIS_STANDALONE_HOST}"
-      IFS_DATA_SERVICE_REDIS_STANDALONE_PORT: "${IFS_DATA_SERVICE_REDIS_STANDALONE_PORT}"
-      IFS_DATA_SERVICE_CACHE_TTL: "${IFS_DATA_SERVICE_CACHE_TTL}"
-      IFS_DATA_SERVICE_REDIS_CLUSTER_NODES: "${IFS_DATA_SERVICE_REDIS_CLUSTER_NODES}"
-      IFS_DATA_SERVICE_REDIS_MAX_ACTIVE: "${IFS_DATA_SERVICE_REDIS_MAX_ACTIVE}"
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       creationTimestamp: null
@@ -101,7 +78,7 @@ items:
                 - name: SPRING_FLYWAY_LOCATIONS
                   valueFrom:
                     configMapKeyRef:
-                      name: db-config
+                      name: flyway-config
                       key: FLYWAY_LOCATIONS
                 - name: SPRING_CACHE_TYPE
                   valueFrom:
@@ -149,39 +126,84 @@ items:
                       name: cache-config
                       key: IFS_DATA_SERVICE_REDIS_MAX_ACTIVE
                 - name: IFS_WEB_BASEURL
-                  value: 'https://${SHIB_ADDRESS}'
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_WEB_BASEURL
                 - name: IDP_REST_BASEURL
-                  value: 'http://registration-svc:8080'
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IDP_REST_BASEURL
+                - name: NEW_RELIC_LICENSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LICENSE_KEY
+                - name: NEW_RELIC_LOG
+                  valueFrom:
+                    configMapKeyRef:
+                      name: new-relic-config
+                      key: NEW_RELIC_LOG
+                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
+                - name: IFS_EARLY_METRICS_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_EARLY_METRICS_URL
+                - name: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
+                - name: IFS_FINANCE_TOTALS_ENABLED
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_FINANCE_TOTALS_ENABLED
+                - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_FINANCE-TOTALS_AUTHSECRETKEY
+                - name: SIL_REST_BASEURL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: SIL_REST_BASEURL
+                - name: IFS_DATA_POSTCODE_LOOKUP_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_POSTCODE_LOOKUP_KEY
+                - name: IFS_DATA_COMPANIES_HOUSE_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_COMPANIES_HOUSE_KEY
+                - name: IFS_DATA_SERVICE_FILE_STORAGE_BASE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_DATA_SERVICE_FILE_STORAGE_BASE
+                - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN
+                - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
                 - name: JAVA_OPTS
                   value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME
                   value: "ifs-data-service (${openshiftEnv})"
-                - name: NEW_RELIC_LICENSE_KEY
-                  value: "${NEW_RELIC_LICENCE_KEY}"
-                - name: NEW_RELIC_LOG
-                  value: "STDOUT"
-                - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-                  value: "100"
-                - name: IFS_EARLY_METRICS_URL
-                  value: "${IFS_EARLY_METRICS_URL}"
-                - name: IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS
-                  value: "${IFS_DATA_SERVICE_FILE_GRANT_SEND_DELAY_MILLIS}"
-                - name: IFS_FINANCE_TOTALS_ENABLED
-                  value: "${IFS_FINANCE_TOTALS_ENABLED}"
-                - name: IFS_FINANCE-TOTALS_AUTHSECRETKEY
-                  value: "${AUTH_KEY}"
-                - name: SIL_REST_BASEURL
-                  value: "${SIL_REST_BASEURL}"
-                - name: IFS_DATA_POSTCODE_LOOKUP_KEY
-                  value: "${IFS_DATA_POSTCODE_LOOKUP_KEY}"
-                - name: IFS_DATA_COMPANIES_HOUSE_KEY
-                  value: "${IFS_DATA_COMPANIES_HOUSE_KEY}"
-                - name: IFS_DATA_SERVICE_FILE_STORAGE_BASE
-                  value: "${IFS_DATA_SERVICE_FILE_STORAGE_BASE}"
-                - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN
-                  value: "${IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN}"
-                - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
-                  value: "${IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS}"
               ports:
                 - containerPort: 8080
               resources:

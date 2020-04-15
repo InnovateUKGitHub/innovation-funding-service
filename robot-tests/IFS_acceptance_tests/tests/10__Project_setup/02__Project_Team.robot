@@ -34,8 +34,8 @@ Documentation   IFS-5700 - Create new project team page to manage roles in proje
 ...             IFS-6492 - Accept Terms & Conditions for New Partners in Project Setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 
 *** Variables ***
@@ -326,7 +326,7 @@ lead able to submit only exploitation plan when all partners removed from projec
 the same organisation isnt able to join the project
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
-    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
     the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")
@@ -335,7 +335,7 @@ the same organisation isnt able to join the project
 a new organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}
     logout as user
-    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd .
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${addNewPartnerOrgAppID}: PSC application 7  You have been invited to join the project ${applicationName} by Ward Ltd.
     the user accepts invitation and selects organisation type     ${orgId}  ${orgName}
     the user fills in account details                             ${fname}  ${sname}
     the user clicks the button/link                               jQuery = button:contains("Create account")

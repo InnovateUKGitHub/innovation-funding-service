@@ -12,12 +12,11 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Competition dashboard Open competition
     [Documentation]    INFUND-7562  INF-2637
-    [Tags]
     When The user clicks the button/link   link = ${openCompetitionRTO_name}
     Then the user should see the element   jQuery = span:contains("Predicting market trends programme")
     And the user should see the element    jQuery = h1:contains("Open")
@@ -46,7 +45,6 @@ Key statistics for the open Competitions
 
 Competition dashboard ready to Open competition
     [Documentation]    INFUND-7358  INF-2637
-    [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link in the paginated list    link = ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery = span:contains("${READY_TO_OPEN_COMPETITION_NAME}")
