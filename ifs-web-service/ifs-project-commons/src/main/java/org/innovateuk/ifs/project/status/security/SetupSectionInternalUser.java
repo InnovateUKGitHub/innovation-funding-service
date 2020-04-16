@@ -38,7 +38,7 @@ public class SetupSectionInternalUser {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource) ||  isCompetitionFinance(userResource)) {
+        if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
             return projectSetupProgressChecker.isMonitoringOfficerSubmitted() ? ACCESSIBLE : NOT_ACCESSIBLE;
         }
 
@@ -63,7 +63,7 @@ public class SetupSectionInternalUser {
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
-            if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource)) {
+            if (isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) {
                 if (approved) {
                     return ACCESSIBLE;
                 } else {
@@ -79,7 +79,7 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessDocumentsSection(UserResource userResource) {
 
-        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
+        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
         }
 

@@ -66,11 +66,6 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isStakeholder);
     }
 
-    @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "Competition finance users can access after project details are submitted by the lead")
-    public boolean competitionFinanceCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isCompetitionFinance);
-    }
-
     @PermissionRule(value = "EDIT_MONITORING_OFFICER_SECTION", description = "An internal user can access after project details are submitted by the lead")
     public boolean internalCanEditMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
@@ -139,11 +134,6 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A stakeholder can access the Documents section once all documents have been approved")
     public boolean stakeholderCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isStakeholder);
-    }
-
-    @PermissionRule(value = "ACCESS_DOCUMENTS_SECTION", description = "A Competition finance user can access the Documents section once all documents have been approved")
-    public boolean competitionFinanceCanAccessDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessDocumentsSection, SecurityRuleUtil::isCompetitionFinance);
     }
 
     @PermissionRule(value = "APPROVE_DOCUMENTS", description = "Comp admin or project finance users can approve or reject documents")
