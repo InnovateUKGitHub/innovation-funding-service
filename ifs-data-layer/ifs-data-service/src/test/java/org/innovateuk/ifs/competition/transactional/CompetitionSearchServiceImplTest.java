@@ -162,6 +162,28 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Test
+    public void findProjectSetupCompetitionsWhenLoggedInAsCompetitionFinance() {
+        int page = 0;
+        int size = 20;
+        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
+        User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(COMPETITION_FINANCE)).build();
+        setLoggedInUser(competitionFinanceUser);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+
+        List<Competition> expectedCompetitions = newCompetition().build(2);
+
+        when(competitionRepositoryMock.findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(eq(competitionFinanceUser.getId()), any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now().minusDays(1)).build());
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(1).getId())).thenReturn(newApplication().withManageFundingEmailDate(ZonedDateTime.now()).build());
+
+        CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
+
+        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response.getContent());
+        verify(competitionRepositoryMock).findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(eq(competitionFinanceUser.getId()), any());
+        verify(competitionRepositoryMock, never()).findProjectSetup(any());
+    }
+
+    @Test
     public void findUpcomingCompetitions() {
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
         when(competitionRepositoryMock.findUpcoming()).thenReturn(competitions);
@@ -190,6 +212,29 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         int size = 20;
         List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build(1));
         when(competitionRepositoryMock.findPrevious(any())).thenReturn(new PageImpl<>(competitions, PageRequest.of(page, size), 30));
+        when(applicationRepository.countPrevious(competitionId)).thenReturn(1);
+        when(projectRepositoryMock.countByApplicationCompetitionId(competitionId)).thenReturn(2);
+        when(projectRepositoryMock.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, ProjectState.COMPLETED_STATES)).thenReturn(3);
+
+        CompetitionSearchResult response = service.findPreviousCompetitions(page, size).getSuccess();
+
+        assertEquals((long) competitionId, response.getContent().get(0).getId());
+        assertEquals(1, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getApplications());
+        assertEquals(2, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getProjects());
+        assertEquals(3, ((PreviousCompetitionSearchResultItem) response.getContent().get(0)).getCompleteProjects());
+    }
+
+    @Test
+    public void findPreviousCompetitionsWhenLoggedInAsCompetitionFinanceUser() {
+        int page = 0;
+        int size = 20;
+        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
+        User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(COMPETITION_FINANCE)).build();
+        setLoggedInUser(competitionFinanceUser);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+
+        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build(1));
+        when(competitionRepositoryMock.findPreviousForInnovationLeadOrStakeholderOrCompetitionFinance(user.getId(), PageRequest.of(page, size))).thenReturn(new PageImpl<>(competitions, PageRequest.of(page, size), 30));
         when(applicationRepository.countPrevious(competitionId)).thenReturn(1);
         when(projectRepositoryMock.countByApplicationCompetitionId(competitionId)).thenReturn(2);
         when(projectRepositoryMock.countByApplicationCompetitionIdAndProjectProcessActivityStateIn(competitionId, ProjectState.COMPLETED_STATES)).thenReturn(3);

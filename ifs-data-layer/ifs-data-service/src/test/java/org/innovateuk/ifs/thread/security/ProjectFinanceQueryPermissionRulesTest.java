@@ -95,20 +95,20 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, partner));
     }
-//
+
 //    @Test
 //    public void testThatOnlyCompetitionFinanceProjectFinanceUsersCanCreateQueries() {
-//
+
 //        AttachmentResource attachmentResource = new AttachmentResource(41L, "Attachment", "Email", 200L, ZonedDateTime.now());
 //        PostResource post = new PostResource(51L, competitionFinanceUser, "Body", singletonList(attachmentResource), ZonedDateTime.now());
 //        QueryResource queryResource1 = new QueryResource(29L, anyLong(), singletonList(post), FinanceChecksSectionType.ELIGIBILITY,"title", false, ZonedDateTime.now(), competitionFinanceUser, ZonedDateTime.now());
-//
+
 //        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 //        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
-//        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcessInSetup);
+//        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
 //
-//        assertTrue(rules.competitionFinanceUsersCanCreateQueries(queryResource1, competitionFinanceUser));
-//        assertFalse(rules.competitionFinanceUsersCanCreateQueries(queryResource1, partner));
+//        assertTrue(rules.competitionFinanceUsersCanCreateQueries(queryResource, competitionFinanceUser));
+//        assertFalse(rules.competitionFinanceUsersCanCreateQueries(queryResource, partner));
 //    }
 
     @Test
