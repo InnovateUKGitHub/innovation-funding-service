@@ -1,0 +1,1 @@
+ALTER TABLE competition ADD COLUMN average_assessor_score bit(1) DEFAULT NULL;

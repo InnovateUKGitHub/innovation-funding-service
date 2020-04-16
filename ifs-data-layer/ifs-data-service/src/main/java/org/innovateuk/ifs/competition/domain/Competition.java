@@ -107,6 +107,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private Boolean resubmission;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
+    private Boolean averageAssessorScore;
 
     @Enumerated(EnumType.STRING)
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
@@ -793,6 +794,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public Boolean getAverageAssessorScore() {
+        return averageAssessorScore;
+    }
+
+    public void setAverageAssessorScore(Boolean averageAssessorScore) {
+        this.averageAssessorScore = averageAssessorScore;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {

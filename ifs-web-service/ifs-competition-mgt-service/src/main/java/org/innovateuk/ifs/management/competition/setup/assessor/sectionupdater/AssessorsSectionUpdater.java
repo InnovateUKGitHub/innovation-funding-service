@@ -72,6 +72,7 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
         competition.setAssessorCount(assessorsForm.getAssessorCount());
         competition.setHasAssessmentPanel(assessorsForm.getHasAssessmentPanel());
         competition.setHasInterviewStage(assessorsForm.getHasInterviewStage());
+        competition.setAverageAssessorScore(assessorsForm.getAverageAssessorScore());
         competition.setAssessorFinanceView(assessorsForm.getAssessorFinanceView());
     }
 
