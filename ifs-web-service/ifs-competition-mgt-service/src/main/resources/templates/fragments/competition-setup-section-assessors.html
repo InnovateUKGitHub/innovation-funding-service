@@ -157,7 +157,7 @@
                                    value="1"
                                    th:errorclass="field-error"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.assessorsform.interviewStage.required}" />
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.averageAssessorScore.required}" />
                             <label for="averageAssessorScore-0"
                                    class="govuk-label govuk-radios__label">
                                 Yes
@@ -246,6 +246,9 @@
 
                 <dt>Enable interview stage for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
+
+                <dt>Include the average assessor score in funding decision notifications?</dt>
+                <dd th:text="${competitionSetupForm.averageAssessorScore} ? 'Yes' : 'No' "/>
 
                 <dt>Assessor view of finances?</dt>
                 <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}"/>

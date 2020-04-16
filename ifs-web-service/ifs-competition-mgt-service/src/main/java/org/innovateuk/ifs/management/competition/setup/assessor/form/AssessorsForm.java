@@ -27,7 +27,7 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.interviewStage.required}")
     private Boolean hasInterviewStage;
 
-    @NotNull(message = "{validation.assessorsform.interviewStage.required}")
+    @NotNull(message = "{validation.assessorsform.averageAssessorScore.required}")
     private Boolean averageAssessorScore;
 
     @NotNull(message = "{validation.assessorsform.assessorFinanceView.required}")
