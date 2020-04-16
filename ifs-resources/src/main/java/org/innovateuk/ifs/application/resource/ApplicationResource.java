@@ -88,6 +88,11 @@ public class ApplicationResource {
         return applicationState;
     }
 
+    @JsonIgnore
+    public String getApplicationStateDisplayName() {
+        return applicationState.getDisplayName();
+    }
+
     public void setApplicationState(ApplicationState applicationState) {
         this.applicationState = applicationState;
     }
