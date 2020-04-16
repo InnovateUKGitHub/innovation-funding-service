@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
@@ -36,11 +39,17 @@ import static org.mockito.Mockito.when;
 public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceQueryPermissionRules> {
     private QueryResource queryResource;
     private UserResource projectFinanceUser;
+    private UserResource competitionFinanceUser;
     private UserResource partner;
     private UserResource incorrectPartner;
     private ProjectProcess projectProcessInSetup;
     private ProjectProcess projectProcessInLive;
     private ProjectProcess projectProcessInWithdrawn;
+    private Competition competition;
+    private ProjectFinance projectFinance;
+    private Project project;
+
+    private long projectId = 31L;
 
     @Mock
     private ProjectFinanceRepository projectFinanceRepository;
@@ -52,6 +61,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     public void setUp() throws Exception {
         projectFinanceUser = projectFinanceUser();
         partner = getUserWithRole(PARTNER);
+        competitionFinanceUser = competitionFinanceUser();
 
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
@@ -59,9 +69,10 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
         incorrectPartner.setId(1993L);
 
-        Project project = newProject().build();
-        ProjectFinance projectFinance = newProjectFinance().withProject(project).build();
-        projectProcessInSetup = newProjectProcess().withActivityState(ProjectState.SETUP).build();
+        competition = newCompetition().build();
+        project = newProject().withId(projectId).withApplication(newApplication().withCompetition(competition).build()).build();
+        projectFinance = newProjectFinance().withProject(project).build();
+        projectProcessInSetup = newProjectProcess().withProject(project).withActivityState(ProjectState.SETUP).build();
         projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
         projectProcessInWithdrawn = newProjectProcess().withActivityState(ProjectState.WITHDRAWN).build();
 
@@ -84,6 +95,21 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, partner));
     }
+//
+//    @Test
+//    public void testThatOnlyCompetitionFinanceProjectFinanceUsersCanCreateQueries() {
+//
+//        AttachmentResource attachmentResource = new AttachmentResource(41L, "Attachment", "Email", 200L, ZonedDateTime.now());
+//        PostResource post = new PostResource(51L, competitionFinanceUser, "Body", singletonList(attachmentResource), ZonedDateTime.now());
+//        QueryResource queryResource1 = new QueryResource(29L, anyLong(), singletonList(post), FinanceChecksSectionType.ELIGIBILITY,"title", false, ZonedDateTime.now(), competitionFinanceUser, ZonedDateTime.now());
+//
+//        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+//        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
+//        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcessInSetup);
+//
+//        assertTrue(rules.competitionFinanceUsersCanCreateQueries(queryResource1, competitionFinanceUser));
+//        assertFalse(rules.competitionFinanceUsersCanCreateQueries(queryResource1, partner));
+//    }
 
     @Test
     public void testThatProjectFinanceUsersCannotCreateQueriesWhenProjectIsInLive() {

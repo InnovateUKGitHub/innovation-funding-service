@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -20,9 +21,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
+import static org.innovateuk.ifs.project.finance.builder.NoteResourceBuilder.newNoteResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.junit.Assert.assertFalse;
@@ -38,6 +42,8 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     private ProjectProcess projectProcessInSetup;
     private ProjectProcess projectProcessInLive;
     private ProjectProcess projectProcessInWithdrawn;
+    private Competition competition;
+    private Project project;
 
     @Mock
     private ProjectFinanceRepository projectFinanceRepository;
@@ -52,7 +58,8 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         intruder = getUserWithRole(FINANCE_CONTACT);
         noteResource = sampleNote();
 
-        Project project = newProject().build();
+        competition = newCompetition().build();
+        project = newProject().withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectFinance projectFinance = newProjectFinance().withProject(project).build();
         projectProcessInSetup = newProjectProcess().withActivityState(ProjectState.SETUP).build();
         projectProcessInLive = newProjectProcess().withActivityState(ProjectState.LIVE).build();
@@ -125,5 +132,18 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
         assertFalse(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, intruder));
+    }
+
+    @Test
+    public void thatOnlyCompetitionFinanceUsersViewNotes() {
+        UserResource userResource = competitionFinanceUser();
+        NoteResource noteResource1 = newNoteResource().withContextClassPk(project.getId()).build();
+
+        when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
+        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+
+        assertTrue(rules.compFinanceUsersCanViewNotes(noteResource1, userResource));
+        assertTrue(rules.compFinanceUsersCanViewNotes(noteResource1, userResource));
+        assertFalse(rules.compFinanceUsersCanViewNotes(noteResource1, intruder));
     }
 }
