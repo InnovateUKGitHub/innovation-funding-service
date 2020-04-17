@@ -4,6 +4,7 @@ package org.innovateuk.ifs.management.notification.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class SendNotificationsViewModel {
     private long unsuccessfulRecipientsCount;
     private long onHoldRecipientsCount;
     private boolean h2020;
+    private  Map<Long, BigDecimal> averageAssessorScores;
 
     public SendNotificationsViewModel(List<ApplicationSummaryResource> applications,
                                       long successfulRecipientsCount,
@@ -25,7 +27,8 @@ public class SendNotificationsViewModel {
                                       long onHoldRecipientsCount,
                                       long competitionId,
                                       String competitionName,
-                                      boolean h2020) {
+                                      boolean h2020,
+                                      Map<Long, BigDecimal> averageAssessorScores) {
 
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
@@ -34,6 +37,7 @@ public class SendNotificationsViewModel {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.h2020 = h2020;
+        this.averageAssessorScores = averageAssessorScores;
     }
 
     public long getCompetitionId() {
@@ -62,6 +66,10 @@ public class SendNotificationsViewModel {
 
     public boolean isH2020() {
         return h2020;
+    }
+
+    public Map<Long, BigDecimal> getAverageAssessorScores() {
+        return averageAssessorScores;
     }
 
     public Map<Long, FundingDecision> getFundingDecisions() {

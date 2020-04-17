@@ -5,18 +5,22 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.competition.inflight.populator.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class SendNotificationsModelPopulator {
@@ -30,6 +34,9 @@ public class SendNotificationsModelPopulator {
     @Autowired
     private ApplicationNotificationTemplateRestService applicationNotificationTemplateRestService;
 
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
 
@@ -39,7 +46,9 @@ public class SendNotificationsModelPopulator {
 
         List<ApplicationSummaryResource> filteredApplications = pagedApplications.getContent().stream()
                 .filter(application -> applicationIds.contains(application.getId()) )
-                .collect(Collectors.toList());
+                .collect(toList());
+
+        Map<Long, BigDecimal> averageAssessorScoresMap = getApplicationAssessmentAggregateResources(filteredApplications);
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -57,7 +66,18 @@ public class SendNotificationsModelPopulator {
                                               onHoldCount,
                                               competitionId,
                                               competitionResource.getName(),
-                                              competitionResource.isH2020());
+                                              competitionResource.isH2020(),
+                                              averageAssessorScoresMap);
+    }
+
+    private Map<Long, BigDecimal> getApplicationAssessmentAggregateResources(List<ApplicationSummaryResource> applicationSummaryResources) {
+        Map<Long, BigDecimal> applicationAssessmentAggregateResources = new HashMap<>();
+
+        applicationSummaryResources.forEach(application -> {
+            BigDecimal applicationAssessments = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(application.getId()).getSuccess().getAveragePercentage();
+            applicationAssessmentAggregateResources.put(application.getId(), applicationAssessments);
+        });
+        return  applicationAssessmentAggregateResources;
     }
 
     private long getApplicationCountByFundingDecision(List<ApplicationSummaryResource> filteredApplications, FundingDecision fundingDecision) {
