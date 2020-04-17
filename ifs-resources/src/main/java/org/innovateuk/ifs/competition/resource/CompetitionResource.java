@@ -89,7 +89,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Boolean useResubmissionQuestion;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
-    private Boolean averageAssessorScore;
+    private CompetitionAverageAssessorScoreConfigResource averageAssessorScore;
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -647,11 +647,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.hasInterviewStage = hasInterviewStage;
     }
 
-    public Boolean getAverageAssessorScore() {
+    public CompetitionAverageAssessorScoreConfigResource getAverageAssessorScore() {
         return averageAssessorScore;
     }
 
-    public void setAverageAssessorScore(Boolean averageAssessorScore) {
+    public void setAverageAssessorScore(CompetitionAverageAssessorScoreConfigResource averageAssessorScore) {
         this.averageAssessorScore = averageAssessorScore;
     }
 

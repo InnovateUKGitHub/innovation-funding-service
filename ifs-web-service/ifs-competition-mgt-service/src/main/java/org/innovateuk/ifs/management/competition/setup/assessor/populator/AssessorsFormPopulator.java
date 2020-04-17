@@ -29,7 +29,7 @@ public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 		competitionSetupForm.setHasAssessmentPanel(competitionResource.isHasAssessmentPanel());
 		competitionSetupForm.setHasInterviewStage(competitionResource.isHasInterviewStage());
 		competitionSetupForm.setAssessorFinanceView(competitionResource.getAssessorFinanceView());
-		competitionSetupForm.setAverageAssessorScore(competitionResource.getAverageAssessorScore());
+		competitionSetupForm.setAverageAssessorScore(competitionResource.getAverageAssessorScore().getAverageAssessorScore());
 
 		return competitionSetupForm;
 	}

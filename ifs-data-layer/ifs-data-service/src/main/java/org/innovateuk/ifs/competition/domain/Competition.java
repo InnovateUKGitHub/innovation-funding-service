@@ -107,7 +107,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private Boolean resubmission;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
-    private Boolean averageAssessorScore;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionAverageAssessorScoreConfigId", referencedColumnName = "id")
+    private CompetitionAverageAssessorScoreConfig competitionAverageAssessorScoreConfig;
 
     @Enumerated(EnumType.STRING)
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
@@ -796,14 +799,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.hasInterviewStage = hasInterviewStage;
     }
 
-    public Boolean getAverageAssessorScore() {
-        return averageAssessorScore;
-    }
-
-    public void setAverageAssessorScore(Boolean averageAssessorScore) {
-        this.averageAssessorScore = averageAssessorScore;
-    }
-
     public AssessorFinanceView getAssessorFinanceView() {
         return assessorFinanceView;
     }
@@ -937,6 +932,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
         this.competitionOrganisationConfig = competitionOrganisationConfig;
+    }
+
+    public CompetitionAverageAssessorScoreConfig getCompetitionAverageAssessorScoreConfig() {
+        return competitionAverageAssessorScoreConfig;
+    }
+
+    public void setCompetitionAverageAssessorScoreConfig(CompetitionAverageAssessorScoreConfig competitionAverageAssessorScoreConfig) {
+        this.competitionAverageAssessorScoreConfig = competitionAverageAssessorScoreConfig;
     }
 
     @Override

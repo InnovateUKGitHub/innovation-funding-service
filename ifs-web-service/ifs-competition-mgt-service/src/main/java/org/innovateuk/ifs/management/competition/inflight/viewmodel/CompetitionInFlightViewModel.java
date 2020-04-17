@@ -58,7 +58,7 @@ public class CompetitionInFlightViewModel {
         this.readOnly = readOnly;
         this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel() != null ? competitionResource.isHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionResource.isHasInterviewStage() != null ? competitionResource.isHasInterviewStage() : false;
-        this.averageAssessorScoreEnabled = competitionResource.getAverageAssessorScore() != null ? competitionResource.getAverageAssessorScore() : false;
+        this.averageAssessorScoreEnabled = competitionResource.getAverageAssessorScore() != null ? competitionResource.getAverageAssessorScore().getAverageAssessorScore() : false;
         this.assessorFinanceView = competitionResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.hasAssessmentStage();
     }
