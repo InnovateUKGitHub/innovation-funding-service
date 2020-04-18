@@ -19,7 +19,7 @@ public class SendNotificationsViewModel {
     private long unsuccessfulRecipientsCount;
     private long onHoldRecipientsCount;
     private boolean h2020;
-    private  Map<Long, BigDecimal> averageAssessorScores;
+    private Map<Long, BigDecimal> averageAssessorScores;
 
     public SendNotificationsViewModel(List<ApplicationSummaryResource> applications,
                                       long successfulRecipientsCount,
