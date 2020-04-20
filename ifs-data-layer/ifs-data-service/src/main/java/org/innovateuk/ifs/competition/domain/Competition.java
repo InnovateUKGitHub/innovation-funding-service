@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -62,7 +63,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionTypeId", referencedColumnName = "id")
     private CompetitionType competitionType;
 
+    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
     private Integer assessorCount;
+
+    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
     private BigDecimal assessorPay;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST)
@@ -105,9 +109,18 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean multiStream;
     private Boolean resubmission;
+
+    @ZeroDowntime(reference = "IFS-7369", description = "Assessment Panel")
     private Boolean hasAssessmentPanel;
+
+    @ZeroDowntime(reference = "IFS-7369", description = "Interview Stage")
     private Boolean hasInterviewStage;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionAssessmentConfigId", referencedColumnName = "id")
+    private CompetitionAssessmentConfig competitionAssessmentConfig;
+
+    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
     @Enumerated(EnumType.STRING)
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
@@ -928,6 +941,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
         this.competitionOrganisationConfig = competitionOrganisationConfig;
+    }
+
+    public CompetitionAssessmentConfig getCompetitionAssessmentConfig() {
+        return competitionAssessmentConfig;
+    }
+
+    public void setCompetitionAssessmentConfig(CompetitionAssessmentConfig competitionAssessmentConfig) {
+        this.competitionAssessmentConfig = competitionAssessmentConfig;
     }
 
     @Override

@@ -33,6 +33,7 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
+    private boolean averageAssessorScoreEnabled;
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
 
@@ -55,8 +56,9 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
-        this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel() != null ? competitionResource.isHasAssessmentPanel() : false;
-        this.interviewPanelEnabled = competitionResource.isHasInterviewStage() != null ? competitionResource.isHasInterviewStage() : false;
+        this.assessmentPanelEnabled = competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel() != null ? competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel() : false;
+        this.interviewPanelEnabled = competitionResource.getCompetitionAssessmentConfig().getHasInterviewStage() != null ? competitionResource.getCompetitionAssessmentConfig().getHasInterviewStage() : false;
+        this.averageAssessorScoreEnabled = competitionResource.getCompetitionAssessmentConfig().getAverageAssessorScore() != null ? competitionResource.getCompetitionAssessmentConfig().getAverageAssessorScore() : false;
         this.assessorFinanceView = competitionResource.getAssessorFinanceView();
         this.competitionHasAssessmentStage = competitionResource.hasAssessmentStage();
     }
@@ -125,6 +127,10 @@ public class CompetitionInFlightViewModel {
     public boolean isInterviewPanelEnabled() {
         return interviewPanelEnabled && competitionStatus != READY_TO_OPEN &&
                 competitionStatus != OPEN && competitionStatus != ASSESSOR_FEEDBACK;
+    }
+
+    public boolean isAverageAssessorScoreEnabled() {
+        return averageAssessorScoreEnabled;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {

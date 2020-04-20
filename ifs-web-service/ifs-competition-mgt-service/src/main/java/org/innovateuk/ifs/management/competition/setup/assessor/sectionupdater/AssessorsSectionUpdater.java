@@ -3,9 +3,11 @@ package org.innovateuk.ifs.management.competition.setup.assessor.sectionupdater;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
@@ -33,25 +35,36 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
+    @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
     @Override
     public CompetitionSetupSection sectionToSave() {
         return CompetitionSetupSection.ASSESSORS;
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition,
+                                                CompetitionSetupForm competitionSetupForm) {
 
         AssessorsForm assessorsForm = (AssessorsForm) competitionSetupForm;
 
         if (!sectionToSave().preventEdit(competition)) {
 
-
             List<AssessorCountOptionResource> assessorCountOptions = assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()).getSuccess();
             if (assessorCountOptions.stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {
-                setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
-                setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
 
-                return competitionSetupRestService.update(competition).toServiceResult();
+                // Update existing config resource to below
+                CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
+
+                // pass resource as arg in below two methods
+                setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm, competitionAssessmentConfigResource);
+                setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm, competitionAssessmentConfigResource);
+
+// call restservice to update the config -- remove lin 66
+//                return competitionAssessmentConfigRestService.update(competitionAssessmentConfigResource).toServiceResult();
+//                return competitionSetupRestService.update(competition).toServiceResult();
+                return competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource).toServiceResult();
             } else {
                 return serviceFailure(fieldError("assessorCount",
                         assessorsForm.getAssessorCount(),
@@ -62,17 +75,32 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
         }
     }
 
-    private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AssessorsForm assessorsForm) {
+    // Update void to new resource
+    private CompetitionAssessmentConfigResource setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition,
+                                                                AssessorsForm assessorsForm,
+                                                                CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         if (!competition.isSetupAndLive()) {
-            competition.setAssessorPay(assessorsForm.getAssessorPay());
+
+            competitionAssessmentConfigResource.setAssessorPay(assessorsForm.getAssessorPay());
         }
+
+        // return new resource
+        return new CompetitionAssessmentConfigResource();
     }
 
-    private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AssessorsForm assessorsForm) {
-        competition.setAssessorCount(assessorsForm.getAssessorCount());
-        competition.setHasAssessmentPanel(assessorsForm.getHasAssessmentPanel());
-        competition.setHasInterviewStage(assessorsForm.getHasInterviewStage());
-        competition.setAssessorFinanceView(assessorsForm.getAssessorFinanceView());
+    // Update void to new resource
+    private CompetitionAssessmentConfigResource setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition,
+                                                             AssessorsForm assessorsForm,
+                                                             CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
+
+        competitionAssessmentConfigResource.setAssessorCount(assessorsForm.getAssessorCount());
+        competitionAssessmentConfigResource.setHasAssessmentPanel(assessorsForm.getHasAssessmentPanel());
+        competitionAssessmentConfigResource.setHasInterviewStage(assessorsForm.getHasInterviewStage());
+        competitionAssessmentConfigResource.setAssessorFinanceView(assessorsForm.getAssessorFinanceView());
+        competitionAssessmentConfigResource.setAverageAssessorScore(assessorsForm.getAverageAssessorScore());
+        competition.setCompetitionAssessmentConfig(competitionAssessmentConfigResource);
+
+        return competitionAssessmentConfigResource;
     }
 
     @Override
