@@ -64,7 +64,7 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
 // call restservice to update the config -- remove lin 66
 //                return competitionAssessmentConfigRestService.update(competitionAssessmentConfigResource).toServiceResult();
 //                return competitionSetupRestService.update(competition).toServiceResult();
-                return competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource).toServiceResult();
+                return competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource).toServiceResult().andOnSuccessReturnVoid();
             } else {
                 return serviceFailure(fieldError("assessorCount",
                         assessorsForm.getAssessorCount(),

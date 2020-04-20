@@ -17,7 +17,7 @@ public class CompetitionAssessmentConfigRestServiceImpl extends BaseRestService 
     }
 
     @Override
-    public RestResult<Void> update(long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
-        return putWithRestResult(competitionAssessmentConfigUrl + "/" + competitionId, CompetitionAssessmentConfigResource.class, Void.class);
+    public RestResult<CompetitionAssessmentConfigResource> update(long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
+        return putWithRestResult(competitionAssessmentConfigUrl + "/" + competitionId, competitionAssessmentConfigResource, CompetitionAssessmentConfigResource.class);
     }
 }

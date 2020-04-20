@@ -19,7 +19,7 @@ public class CompetitionAssessmentConfigController {
     }
 
     @PutMapping("/{competitionId}")
-    public RestResult<Void> update(@PathVariable final long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
+    public RestResult<Void> update(@PathVariable final long competitionId, @RequestBody CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         return competitionAssessmentConfigService.update(competitionId, competitionAssessmentConfigResource).toPutResponse();
     }
 }
