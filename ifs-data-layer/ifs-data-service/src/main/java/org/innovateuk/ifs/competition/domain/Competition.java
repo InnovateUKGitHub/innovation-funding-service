@@ -118,7 +118,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionAssessmentConfigId", referencedColumnName = "id")
-    private CompetitionAssessmentConfig competitionAssessmentConfig;
+    private CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
 
     @ZeroDowntime(reference = "IFS-7369", description = "TODO")
     @Enumerated(EnumType.STRING)
@@ -190,7 +190,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
-    private CompetitionOrganisationConfig competitionOrganisationConfig;
+    private CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
 
     public Competition() {
         setupComplete = false;
@@ -694,7 +694,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public Integer getAssessorCount() {
-        return assessorCount;
+        return competitionAssessmentConfig.getAssessorCount();
     }
 
     public void setAssessorCount(Integer assessorCount) {
@@ -702,7 +702,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public BigDecimal getAssessorPay() {
-        return assessorPay;
+        return competitionAssessmentConfig.getAssessorPay();
     }
 
     public void setAssessorPay(BigDecimal assessorPay) {
@@ -793,7 +793,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public Boolean isHasAssessmentPanel() {
-        return hasAssessmentPanel;
+        return competitionAssessmentConfig.getHasAssessmentPanel();
     }
 
     public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
@@ -801,7 +801,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public Boolean isHasInterviewStage() {
-        return hasInterviewStage;
+        return competitionAssessmentConfig.getHasInterviewStage();
     }
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
@@ -809,7 +809,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public AssessorFinanceView getAssessorFinanceView() {
-        return assessorFinanceView;
+        return competitionAssessmentConfig.getAssessorFinanceView();
     }
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {

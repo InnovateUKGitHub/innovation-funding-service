@@ -9,5 +9,5 @@ import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResour
 public interface CompetitionAssessmentConfigRestService {
 
     RestResult<CompetitionAssessmentConfigResource> findOneByCompetitionId(long competitionId);
-    RestResult<Void> update(long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource);
+    RestResult<CompetitionAssessmentConfigResource> update(long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource);
 }

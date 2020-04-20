@@ -53,18 +53,12 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
 
             List<AssessorCountOptionResource> assessorCountOptions = assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()).getSuccess();
             if (assessorCountOptions.stream().anyMatch(assessorOption -> assessorsForm.getAssessorCount().equals(assessorOption.getOptionValue()))) {
-
-                // Update existing config resource to below
                 CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
 
-                // pass resource as arg in below two methods
                 setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm, competitionAssessmentConfigResource);
                 setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm, competitionAssessmentConfigResource);
 
-// call restservice to update the config -- remove lin 66
-//                return competitionAssessmentConfigRestService.update(competitionAssessmentConfigResource).toServiceResult();
-//                return competitionSetupRestService.update(competition).toServiceResult();
-                return competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource).toServiceResult();
+                return competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource).toServiceResult().andOnSuccessReturnVoid();
             } else {
                 return serviceFailure(fieldError("assessorCount",
                         assessorsForm.getAssessorCount(),
@@ -75,7 +69,6 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
         }
     }
 
-    // Update void to new resource
     private CompetitionAssessmentConfigResource setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition,
                                                                 AssessorsForm assessorsForm,
                                                                 CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
@@ -84,11 +77,9 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
             competitionAssessmentConfigResource.setAssessorPay(assessorsForm.getAssessorPay());
         }
 
-        // return new resource
         return new CompetitionAssessmentConfigResource();
     }
 
-    // Update void to new resource
     private CompetitionAssessmentConfigResource setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition,
                                                              AssessorsForm assessorsForm,
                                                              CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {

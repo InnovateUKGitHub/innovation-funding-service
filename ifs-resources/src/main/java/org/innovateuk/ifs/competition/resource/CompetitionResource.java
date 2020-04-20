@@ -83,18 +83,19 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Set<Long> researchCategories;
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Integer assessorCount;
-    @ZeroDowntime(reference = "TODO", description = "TODO")
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private BigDecimal assessorPay;
     private String activityCode;
     private boolean setupComplete = false;
     private Boolean useResubmissionQuestion;
-    @ZeroDowntime(reference = "TODO", description = "TODO")
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Boolean hasAssessmentPanel;
-    @ZeroDowntime(reference = "TODO", description = "TODO")
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Boolean hasInterviewStage;
     private CompetitionAssessmentConfigResource competitionAssessmentConfig;
-    @ZeroDowntime(reference = "TODO", description = "TODO")
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
