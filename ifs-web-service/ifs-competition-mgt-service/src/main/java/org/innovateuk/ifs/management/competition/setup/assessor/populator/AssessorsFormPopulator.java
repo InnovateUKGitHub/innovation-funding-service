@@ -24,7 +24,6 @@ public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
 		AssessorsForm competitionSetupForm = new AssessorsForm();
 
-//		replace competitionResource with new Resource
 		competitionSetupForm.setAssessorCount(competitionResource.getAssessorCount());
 		competitionSetupForm.setAssessorPay(competitionResource.getCompetitionAssessmentConfig().getAssessorPay() != null ? competitionResource.getCompetitionAssessmentConfig().getAssessorPay() : BigDecimal.ZERO);
 		competitionSetupForm.setHasAssessmentPanel(competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel());
