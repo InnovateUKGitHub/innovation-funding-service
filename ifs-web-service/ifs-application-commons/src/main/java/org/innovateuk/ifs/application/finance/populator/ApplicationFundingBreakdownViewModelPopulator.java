@@ -165,7 +165,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
             }
 
             if (assessorProcessRoles().contains(currentUserRole.get().getRole())
-                    && DETAILED.equals(competition.getAssessorFinanceView())) {
+                    && DETAILED.equals(competition.getCompetitionAssessmentConfig().getAssessorFinanceView())) {
                 return Optional.of(assessorLink(application, organisation));
             }
         }
