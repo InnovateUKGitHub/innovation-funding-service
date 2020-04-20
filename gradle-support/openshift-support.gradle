@@ -87,13 +87,15 @@ task prepareBaseline(type: Copy) {
 
 task prepareAnonDump(type: Copy) {
 
-    destinationDir = file('build/resources/main')
+    destinationDir = file('build/resources/main/db-anonymised-data/')
+    
     from('os-files/db-anonymised-data/') {
         include '**/*.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
     }
+    into destinationDir
 }
 
 task prepareFinanceDataSync(type: Copy) {
