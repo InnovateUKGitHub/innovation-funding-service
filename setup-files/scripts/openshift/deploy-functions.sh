@@ -194,6 +194,7 @@ function tailorAppInstance() {
 }
 
 function useContainerRegistry() {
+    find .
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/**/*.yml
