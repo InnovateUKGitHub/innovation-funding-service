@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -25,9 +26,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
@@ -38,9 +39,7 @@ import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundin
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
 public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
@@ -65,6 +64,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
+
+    @Autowired
+    private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -196,6 +198,8 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     perNotificationTargetArguments.put("applicationName", application.getName());
                     perNotificationTargetArguments.put("applicationId", applicationId);
                     perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
+                    perNotificationTargetArguments.put("averageAssessorScore", "Average assessor score: " + getAssessorAverageScore(applicationId) + "%");
+
                     return Pair.of(pair.getValue(), perNotificationTargetArguments);
                 });
 
@@ -205,6 +209,10 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
         Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
         return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
+    }
+
+    private BigDecimal getAssessorAverageScore(long applicationId) {
+        return assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccess().getAveragePercentage();
     }
 
     private List<ServiceResult<Pair<Long, NotificationTarget>>> getApplicantNotificationTargets(List<Long> applicationIds) {
