@@ -24,7 +24,7 @@ public class UpcomingCompetitionViewModel {
         this.competitionName = competitionResource.getName();
         this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
-        this.assessorPay = competitionResource.getAssessorPay();
+        this.assessorPay = competitionResource.getCompetitionAssessmentConfig().getAssessorPay();
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
     }
 

@@ -38,7 +38,7 @@ public class InterviewPermissionRules {
     }
 
     private boolean competitionHasInterviewPanel(CompetitionResource competition) {
-        return competition.isHasInterviewStage();
+        return competition.getCompetitionAssessmentConfig().getHasInterviewStage();
     }
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {

@@ -1,3 +1,3 @@
-ALTER TABLE competition ADD COLUMN competition_average_assessor_score_config_id BIGINT(20) DEFAULT NULL;
-ALTER TABLE competition ADD UNIQUE KEY competition_average_assessor_score_config_id_UNIQUE (competition_average_assessor_score_config_id);
-ALTER TABLE competition ADD CONSTRAINT fk_competition_average_assessor_score_config FOREIGN KEY(competition_average_assessor_score_config_id) REFERENCES competition_average_assessor_score_config(id);
+ALTER TABLE competition ADD COLUMN competition_assessment_config_id BIGINT(20) DEFAULT NULL;
+ALTER TABLE competition ADD UNIQUE KEY competition_assessment_config_id_UNIQUE (competition_assessment_config_id);
+ALTER TABLE competition ADD CONSTRAINT fk_competition_assessment_config FOREIGN KEY(competition_assessment_config_id) REFERENCES competition_assessment_config(id);

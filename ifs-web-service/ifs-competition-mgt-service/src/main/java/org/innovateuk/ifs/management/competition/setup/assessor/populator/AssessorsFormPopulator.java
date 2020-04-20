@@ -24,14 +24,14 @@ public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
 		AssessorsForm competitionSetupForm = new AssessorsForm();
 
+//		replace competitionResource with new Resource
 		competitionSetupForm.setAssessorCount(competitionResource.getAssessorCount());
-		competitionSetupForm.setAssessorPay(competitionResource.getAssessorPay() != null ? competitionResource.getAssessorPay() : BigDecimal.ZERO);
-		competitionSetupForm.setHasAssessmentPanel(competitionResource.isHasAssessmentPanel());
-		competitionSetupForm.setHasInterviewStage(competitionResource.isHasInterviewStage());
+		competitionSetupForm.setAssessorPay(competitionResource.getCompetitionAssessmentConfig().getAssessorPay() != null ? competitionResource.getCompetitionAssessmentConfig().getAssessorPay() : BigDecimal.ZERO);
+		competitionSetupForm.setHasAssessmentPanel(competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel());
+		competitionSetupForm.setHasInterviewStage(competitionResource.getCompetitionAssessmentConfig().getHasInterviewStage());
 		competitionSetupForm.setAssessorFinanceView(competitionResource.getAssessorFinanceView());
-		competitionSetupForm.setAverageAssessorScore(competitionResource.getAverageAssessorScore().getAverageAssessorScore());
+		competitionSetupForm.setAverageAssessorScore(competitionResource.getCompetitionAssessmentConfig().getAverageAssessorScore());
 
 		return competitionSetupForm;
 	}
-
 }

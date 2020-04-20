@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -83,13 +84,17 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
     private Integer assessorCount;
+    @ZeroDowntime(reference = "TODO", description = "TODO")
     private BigDecimal assessorPay;
     private String activityCode;
     private boolean setupComplete = false;
     private Boolean useResubmissionQuestion;
+    @ZeroDowntime(reference = "TODO", description = "TODO")
     private Boolean hasAssessmentPanel;
+    @ZeroDowntime(reference = "TODO", description = "TODO")
     private Boolean hasInterviewStage;
-    private CompetitionAverageAssessorScoreConfigResource averageAssessorScore;
+    private CompetitionAssessmentConfigResource competitionAssessmentConfig;
+    @ZeroDowntime(reference = "TODO", description = "TODO")
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -647,12 +652,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.hasInterviewStage = hasInterviewStage;
     }
 
-    public CompetitionAverageAssessorScoreConfigResource getAverageAssessorScore() {
-        return averageAssessorScore;
+    public CompetitionAssessmentConfigResource getCompetitionAssessmentConfig() {
+        return competitionAssessmentConfig;
     }
 
-    public void setAverageAssessorScore(CompetitionAverageAssessorScoreConfigResource averageAssessorScore) {
-        this.averageAssessorScore = averageAssessorScore;
+    public void setCompetitionAssessmentConfig(CompetitionAssessmentConfigResource competitionAssessmentConfig) {
+        this.competitionAssessmentConfig = competitionAssessmentConfig;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {
