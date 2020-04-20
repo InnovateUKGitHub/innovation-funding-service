@@ -83,7 +83,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         } else {
             addIndustrialFinance(model, applicationId, costSection.getId(), organisationId);
         }
-        addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competition.getAssessorFinanceView());
+        addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competition.getCompetitionAssessmentConfig().getAssessorFinanceView());
         addFinanceDetails(model, applicationId);
 
         return new AssessmentDetailedFinancesViewModel(assessmentId, applicationId, application,
