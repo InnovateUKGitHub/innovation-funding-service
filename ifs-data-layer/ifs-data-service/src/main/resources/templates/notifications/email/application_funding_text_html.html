@@ -6,7 +6,7 @@
       Innovate UK<br/>
       ${competitionName}<br/>
       ${applicationName}<br/>
-      ${averageAssessorScore}
+      <#if averageAssessorScore??>${averageAssessorScore}</#if>
   </strong></p>
   <p style="margin: 0 0 1em 0;">${message?no_esc}</p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
