@@ -104,18 +104,17 @@
                         Innovate UK, part of UK Research and Innovation <br/>
                         [competition name] <br/>
                         [application title] <br/>
-                        [Average assessor score:
-                        <span th:text="|${#numbers.formatDecimal(assessorScore,0,1)}%|"></span>
-                        ]
+                        <span th:unless="${!model.showAverageAssessorScore()}"
+                              th:text="|[Average assessor score: ${#numbers.formatDecimal(assessorScore,0,1)}%]|"></span>
+
                     </p>
                     <p class="govuk-hint" th:unless="${model.isH2020()}">
                         Dear [recipient name] <br/>
                         Innovate UK <br/>
                         [competition name] <br/>
                         [application title] <br/>
-                        [Average assessor score:
-                        <span th:text="|${#numbers.formatDecimal(assessorScore,0,1)}%|"></span>
-                        ]
+                        <span th:unless="${!model.showAverageAssessorScore()}"
+                              th:text="|[Average assessor score: ${#numbers.formatDecimal(assessorScore,0,1)}%]|"></span>
                     </p>
                 </div>
 

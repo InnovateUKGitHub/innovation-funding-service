@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
@@ -119,7 +120,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 });
     }
 
-
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
@@ -203,12 +203,19 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     return Pair.of(pair.getValue(), perNotificationTargetArguments);
                 });
 
+        applications.forEach(app ->
+                globalArguments.put("showScore", getCompetitionResource(app.getId()).getCompetitionAssessmentConfig().getAverageAssessorScore()));
+
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
 
         Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
         return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
+    }
+
+    private CompetitionResource getCompetitionResource(long applicationId) {
+        return applicationService.getCompetitionByApplicationId(applicationId).getSuccess();
     }
 
     private BigDecimal getAssessorAverageScore(long applicationId) {

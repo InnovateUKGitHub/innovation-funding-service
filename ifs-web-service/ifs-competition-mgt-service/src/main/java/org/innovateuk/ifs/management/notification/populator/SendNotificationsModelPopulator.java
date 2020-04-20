@@ -66,7 +66,8 @@ public class SendNotificationsModelPopulator {
                                               competitionId,
                                               competitionResource.getName(),
                                               competitionResource.isH2020(),
-                                              averageAssessorScoresMap);
+                                              averageAssessorScoresMap,
+                                              competitionResource);
     }
 
     private Map<Long, BigDecimal> getApplicationAssessmentAggregateResources(List<ApplicationSummaryResource> applicationSummaryResources) {

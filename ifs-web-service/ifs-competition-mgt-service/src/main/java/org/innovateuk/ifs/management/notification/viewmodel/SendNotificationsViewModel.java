@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.notification.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -20,6 +21,7 @@ public class SendNotificationsViewModel {
     private long onHoldRecipientsCount;
     private boolean h2020;
     private Map<Long, BigDecimal> averageAssessorScores;
+    private CompetitionResource competitionResource;
 
     public SendNotificationsViewModel(List<ApplicationSummaryResource> applications,
                                       long successfulRecipientsCount,
@@ -28,7 +30,8 @@ public class SendNotificationsViewModel {
                                       long competitionId,
                                       String competitionName,
                                       boolean h2020,
-                                      Map<Long, BigDecimal> averageAssessorScores) {
+                                      Map<Long, BigDecimal> averageAssessorScores,
+                                      CompetitionResource competitionResource) {
 
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
@@ -38,6 +41,7 @@ public class SendNotificationsViewModel {
         this.competitionName = competitionName;
         this.h2020 = h2020;
         this.averageAssessorScores = averageAssessorScores;
+        this.competitionResource = competitionResource;
     }
 
     public long getCompetitionId() {
@@ -80,5 +84,14 @@ public class SendNotificationsViewModel {
                         ApplicationSummaryResource::getId,
                         ApplicationSummaryResource::getFundingDecision
                 ));
+    }
+
+    public CompetitionResource getCompetitionResource() {
+        return competitionResource;
+    }
+
+    public boolean showAverageAssessorScore() {
+
+        return getCompetitionResource().getCompetitionAssessmentConfig().getAverageAssessorScore() !=null && getCompetitionResource().getCompetitionAssessmentConfig().getAverageAssessorScore();
     }
 }
