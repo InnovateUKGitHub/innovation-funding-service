@@ -117,7 +117,7 @@
 
         <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
 
-        <div class="govuk-body govuk-!-margin-top-6">
+        <div th:if="${model.externalFinanceUser}" class="govuk-body govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${model.application.competition},appId=${model.application.id})}"
                class="govuk-link"
                rel="nofollow"

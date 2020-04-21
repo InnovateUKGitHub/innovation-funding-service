@@ -42,6 +42,10 @@ public class SetupSectionInternalUser {
             return projectSetupProgressChecker.isMonitoringOfficerSubmitted() ? ACCESSIBLE : NOT_ACCESSIBLE;
         }
 
+        if (isExternalFinanceUser(userResource)) {
+            return NOT_ACCESSIBLE;
+        }
+
         return ACCESSIBLE;
     }
 
@@ -79,7 +83,7 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessDocumentsSection(UserResource userResource) {
 
-        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
+        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource) || isExternalFinanceUser(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
         }
 

@@ -28,6 +28,7 @@ public class ManagementApplicationViewModel {
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
     private final Long projectId;
+    private final boolean externalFinanceUser;
 
 
     public ManagementApplicationViewModel(ApplicationResource application,
@@ -38,7 +39,8 @@ public class ManagementApplicationViewModel {
                                           boolean canMarkAsIneligible,
                                           boolean canReinstate,
                                           boolean support,
-                                          Long projectId) {
+                                          Long projectId,
+                                          boolean externalFinanceUser) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -48,6 +50,7 @@ public class ManagementApplicationViewModel {
         this.canReinstate = canReinstate;
         this.support = support;
         this.projectId = projectId;
+        this.externalFinanceUser = externalFinanceUser;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -134,5 +137,9 @@ public class ManagementApplicationViewModel {
 
     public String getPreviousApplicationTitle() {
         return previousApplicationTitle;
+    }
+
+    public boolean isExternalFinanceUser() {
+        return externalFinanceUser;
     }
 }
