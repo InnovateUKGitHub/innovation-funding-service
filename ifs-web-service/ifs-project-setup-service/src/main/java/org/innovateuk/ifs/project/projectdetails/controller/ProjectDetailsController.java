@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
@@ -60,6 +61,9 @@ public class ProjectDetailsController {
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
 
+    @Autowired
+    private ProjectRestService projectRestService;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
@@ -68,7 +72,7 @@ public class ProjectDetailsController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<ProjectUserResource> projectUsers = projectRestService.getProjectUsersForProject(projectResource.getId()).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> organisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
@@ -98,7 +102,7 @@ public class ProjectDetailsController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
         boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<ProjectUserResource> projectUsers = projectRestService.getProjectUsersForProject(projectResource.getId()).getSuccess();
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> organisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();

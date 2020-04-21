@@ -109,4 +109,5 @@ public enum Role implements Identifiable {
     public static Set<Role> multiDashboardRoles() {
         return EnumSet.of(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
     }
+
 }
