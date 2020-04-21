@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class CompetitionAssessmentConfigResource {
 
-    private Long id;
     private Boolean averageAssessorScore;
 
     private Integer assessorCount;
@@ -14,10 +13,6 @@ public class CompetitionAssessmentConfigResource {
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
     public CompetitionAssessmentConfigResource() {
-    }
-
-    public CompetitionAssessmentConfigResource(Boolean averageAssessorScore) {
-        this.averageAssessorScore = averageAssessorScore;
     }
 
     public CompetitionAssessmentConfigResource(Boolean averageAssessorScore,
@@ -32,14 +27,6 @@ public class CompetitionAssessmentConfigResource {
         this.hasAssessmentPanel = hasAssessmentPanel;
         this.hasInterviewStage = hasInterviewStage;
         this.assessorFinanceView = assessorFinanceView;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Boolean getAverageAssessorScore() {

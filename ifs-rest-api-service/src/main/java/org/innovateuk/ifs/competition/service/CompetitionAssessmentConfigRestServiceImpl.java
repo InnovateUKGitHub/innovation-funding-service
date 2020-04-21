@@ -12,7 +12,7 @@ public class CompetitionAssessmentConfigRestServiceImpl extends BaseRestService 
 
     @Override
     public RestResult<CompetitionAssessmentConfigResource> findOneByCompetitionId(long competitionId) {
-        return getWithRestResult(competitionAssessmentConfigUrl + "/find-by-competition-id/" + competitionId,
+        return getWithRestResult(competitionAssessmentConfigUrl + "/" + competitionId,
                 CompetitionAssessmentConfigResource.class);
     }
 

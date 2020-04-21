@@ -8,7 +8,6 @@ import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -73,9 +72,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Autowired
     private FormInputService formInputService;
-
-    @Autowired
-    private AverageAssessorScoreRepository averageAssessorScoreRepository;
 
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {

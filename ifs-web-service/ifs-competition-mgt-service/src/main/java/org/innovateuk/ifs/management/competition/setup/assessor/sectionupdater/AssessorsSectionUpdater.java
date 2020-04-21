@@ -73,11 +73,10 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
                                                                 AssessorsForm assessorsForm,
                                                                 CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         if (!competition.isSetupAndLive()) {
-
             competitionAssessmentConfigResource.setAssessorPay(assessorsForm.getAssessorPay());
         }
 
-        return new CompetitionAssessmentConfigResource();
+        return competitionAssessmentConfigResource;
     }
 
     private CompetitionAssessmentConfigResource setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition,
@@ -89,7 +88,6 @@ public class AssessorsSectionUpdater extends AbstractSectionUpdater implements C
         competitionAssessmentConfigResource.setHasInterviewStage(assessorsForm.getHasInterviewStage());
         competitionAssessmentConfigResource.setAssessorFinanceView(assessorsForm.getAssessorFinanceView());
         competitionAssessmentConfigResource.setAverageAssessorScore(assessorsForm.getAverageAssessorScore());
-        competition.setCompetitionAssessmentConfig(competitionAssessmentConfigResource);
 
         return competitionAssessmentConfigResource;
     }

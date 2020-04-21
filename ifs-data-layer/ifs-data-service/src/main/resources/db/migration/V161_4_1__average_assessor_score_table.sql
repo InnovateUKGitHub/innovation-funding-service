@@ -1,3 +1,5 @@
+-- IFS-7370: Make assessor score available in notifications: Domain for storing assessor scores & emails
+
 CREATE TABLE average_assessor_score (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   application_id bigint(20) NOT NULL,
