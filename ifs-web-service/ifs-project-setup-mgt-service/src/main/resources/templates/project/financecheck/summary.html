@@ -80,7 +80,7 @@
                     </th:block>
                 </dl>
 
-                <th:block th:unless="${model.canEditProjectDuration()}">
+                <th:block th:if="${model.canEditProjectDuration()}">
                     <a th:href="@{/competition/{competitionId}/project/{projectId}/duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">Edit</a>
                 </th:block>
             </div>
