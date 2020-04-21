@@ -1,3 +1,4 @@
+-- IFS-7370: Make assessor score available in notifications: Domain for storing assessor scores & emails
 
 INSERT INTO average_assessor_score
 (application_id, score)

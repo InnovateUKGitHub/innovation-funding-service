@@ -19,8 +19,8 @@ import java.util.Optional;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 
 /**
- * The {@code RejectAction} is used by the assessor. It handles the rejection event
- * for an application during assessment.
+ * The {@code SubmitAction} is used by the assessor. It handles the submit event
+ * for an application after assessment and during funding decision notifications.
  * For more info see {@link AssessmentWorkflow}
  */
 @Component
