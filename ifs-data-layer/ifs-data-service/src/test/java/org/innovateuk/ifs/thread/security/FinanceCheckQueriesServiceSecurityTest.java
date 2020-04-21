@@ -19,7 +19,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckQueriesService> {
@@ -39,18 +38,19 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null, null, null);
         assertAccessDenied(
                 () -> classUnderTest.create(queryResource),
                 () -> {
                     verify(queryRules).onlyProjectFinanceUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
+                    verify(queryRules).competitionFinanceUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(queryRules);
                 });
     }
 
     @Test
-    public void test_findOne() throws Exception {
+    public void findOne() throws Exception {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -60,13 +60,14 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
             verify(queryRules).projectFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
             verify(queryRules).projectPartnersCanViewQueries(isA(QueryResource.class), eq(user));
+            verify(queryRules).compFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
 
             verifyNoMoreInteractions(queryRules);
         });
     }
 
     @Test
-    public void test_findAll() throws Exception {
+    public void findAll() throws Exception {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -81,12 +82,13 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
         verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
         verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), eq(user));
+        verify(queryRules, times(2)).compFinanceUsersCanViewQueries(isA(QueryResource.class), eq(user));
 
         verifyNoMoreInteractions(queryRules);
     }
 
     @Test
-    public void test_addPost() throws Exception {
+    public void addPost() throws Exception {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -97,6 +99,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
             verify(queryRules).projectFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
             verify(queryRules).projectPartnersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
+            verify(queryRules).compFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
 
             verifyNoMoreInteractions(queryRules);
         });

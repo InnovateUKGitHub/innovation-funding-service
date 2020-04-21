@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -36,7 +37,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
     @Test
     public void testGetFinanceCheckSummary(){
-        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
+        assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE, COMPETITION_FINANCE);
     }
 
     @Test
@@ -80,6 +81,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -95,6 +98,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -112,6 +117,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                             .projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules)
                             .projectPartnersCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -127,6 +134,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -138,6 +147,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -149,6 +160,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                 () -> {
                     verify(projectFinancePermissionRules)
                             .projectFinanceUserCanSaveCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .competitionFinanceUserCanSaveCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
