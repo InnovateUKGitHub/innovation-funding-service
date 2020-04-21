@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public class AverageAssessorScore {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
