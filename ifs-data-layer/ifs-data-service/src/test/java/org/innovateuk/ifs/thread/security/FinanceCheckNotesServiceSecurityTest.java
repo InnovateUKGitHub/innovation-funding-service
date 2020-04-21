@@ -46,6 +46,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
                 () -> classUnderTest.create(noteResource),
                 () -> {
                     verify(noteRules).onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(isA(NoteResource.class), isA(UserResource.class));
+                    verify(noteRules).externalFinanceUsersCanCreateQueries(isA(NoteResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(noteRules);
                 });
     }
