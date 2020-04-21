@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.management.competition.setup.assessor.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,6 +18,9 @@ import java.math.BigDecimal;
 @Service
 public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 
+	@Autowired
+	private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
 	@Override
 	public CompetitionSetupSection sectionToFill() {
 		return CompetitionSetupSection.ASSESSORS;
@@ -22,14 +28,16 @@ public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
+		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionResource.getId()).getSuccess();
+
 		AssessorsForm competitionSetupForm = new AssessorsForm();
 
-		competitionSetupForm.setAssessorCount(competitionResource.getCompetitionAssessmentConfig().getAssessorCount());
-		competitionSetupForm.setAssessorPay(competitionResource.getCompetitionAssessmentConfig().getAssessorPay() != null ? competitionResource.getCompetitionAssessmentConfig().getAssessorPay() : BigDecimal.ZERO);
-		competitionSetupForm.setHasAssessmentPanel(competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel());
-		competitionSetupForm.setHasInterviewStage(competitionResource.getCompetitionAssessmentConfig().getHasInterviewStage());
-		competitionSetupForm.setAssessorFinanceView(competitionResource.getCompetitionAssessmentConfig().getAssessorFinanceView());
-		competitionSetupForm.setAverageAssessorScore(competitionResource.getCompetitionAssessmentConfig().getAverageAssessorScore());
+		competitionSetupForm.setAssessorCount(competitionAssessmentConfigResource.getAssessorCount());
+		competitionSetupForm.setAssessorPay(competitionAssessmentConfigResource.getAssessorPay() != null ? competitionAssessmentConfigResource.getAssessorPay() : BigDecimal.ZERO);
+		competitionSetupForm.setHasAssessmentPanel(competitionAssessmentConfigResource.getHasAssessmentPanel());
+		competitionSetupForm.setHasInterviewStage(competitionAssessmentConfigResource.getHasInterviewStage());
+		competitionSetupForm.setAssessorFinanceView(competitionAssessmentConfigResource.getAssessorFinanceView());
+		competitionSetupForm.setAverageAssessorScore(competitionAssessmentConfigResource.getAverageAssessorScore());
 
 		return competitionSetupForm;
 	}

@@ -13,7 +13,7 @@ public class CompetitionAssessmentConfigController {
     @Autowired
     private CompetitionAssessmentConfigService competitionAssessmentConfigService;
 
-    @GetMapping("/find-by-competition-id/{competitionId}")
+    @GetMapping("/{competitionId}")
     public RestResult<CompetitionAssessmentConfigResource> findOneByCompetitionId(@PathVariable final long competitionId) {
         return competitionAssessmentConfigService.findOneByCompetitionId(competitionId).toGetResponse();
     }

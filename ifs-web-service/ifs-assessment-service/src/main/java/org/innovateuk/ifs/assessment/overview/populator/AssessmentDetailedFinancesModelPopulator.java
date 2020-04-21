@@ -3,8 +3,8 @@ package org.innovateuk.ifs.assessment.overview.populator;
 import org.innovateuk.ifs.application.finance.populator.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
@@ -16,7 +16,9 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentDetailedFinanc
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -66,12 +68,15 @@ public class AssessmentDetailedFinancesModelPopulator {
     private AcademicCostViewModelPopulator academicCostViewModelPopulator;
     @Autowired
     private ApplicationAcademicCostFormPopulator applicationAcademicCostFormPopulator;
+    @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     public AssessmentDetailedFinancesViewModel populateModel(long applicationId, long organisationId, Model model, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         List<AssessmentResource> assessments = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccess();
         Long assessmentId = assessments.isEmpty() ? null : assessments.get(0).getId();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         List<ProcessRoleResource> applicationRoles = userRestService.findProcessRole(application.getId()).getSuccess();
 
@@ -83,7 +88,8 @@ public class AssessmentDetailedFinancesModelPopulator {
         } else {
             addIndustrialFinance(model, applicationId, costSection.getId(), organisationId);
         }
-        addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competition.getCompetitionAssessmentConfig().getAssessorFinanceView());
+
+        addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competitionAssessmentConfigResource.getAssessorFinanceView());
         addFinanceDetails(model, applicationId);
 
         return new AssessmentDetailedFinancesViewModel(assessmentId, applicationId, application,

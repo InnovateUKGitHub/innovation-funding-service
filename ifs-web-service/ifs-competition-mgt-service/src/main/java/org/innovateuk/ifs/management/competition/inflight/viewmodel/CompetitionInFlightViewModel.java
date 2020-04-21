@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -33,11 +30,11 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
-    private boolean averageAssessorScoreEnabled;
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
+                                        CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,
@@ -56,11 +53,10 @@ public class CompetitionInFlightViewModel {
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
         this.readOnly = readOnly;
-        this.assessmentPanelEnabled = competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel() != null ? competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel() : false;
-        this.interviewPanelEnabled = competitionResource.getCompetitionAssessmentConfig().getHasInterviewStage() != null ? competitionResource.getCompetitionAssessmentConfig().getHasInterviewStage() : false;
-        this.averageAssessorScoreEnabled = competitionResource.getCompetitionAssessmentConfig().getAverageAssessorScore() != null ? competitionResource.getCompetitionAssessmentConfig().getAverageAssessorScore() : false;
-        this.assessorFinanceView = competitionResource.getCompetitionAssessmentConfig().getAssessorFinanceView();
-        this.competitionHasAssessmentStage = competitionResource.getCompetitionAssessmentConfig().getHasAssessmentPanel();
+        this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
+        this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
+        this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
+        this.competitionHasAssessmentStage = competitionResource.hasAssessmentStage();
     }
 
     public Long getCompetitionId() {
@@ -127,10 +123,6 @@ public class CompetitionInFlightViewModel {
     public boolean isInterviewPanelEnabled() {
         return interviewPanelEnabled && competitionStatus != READY_TO_OPEN &&
                 competitionStatus != OPEN && competitionStatus != ASSESSOR_FEEDBACK;
-    }
-
-    public boolean isAverageAssessorScoreEnabled() {
-        return averageAssessorScoreEnabled;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {

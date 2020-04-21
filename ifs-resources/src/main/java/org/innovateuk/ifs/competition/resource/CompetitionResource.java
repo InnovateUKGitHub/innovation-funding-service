@@ -94,7 +94,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Boolean hasAssessmentPanel;
     @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Boolean hasInterviewStage;
-    private CompetitionAssessmentConfigResource competitionAssessmentConfig;
     @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
@@ -651,14 +650,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
-    }
-
-    public CompetitionAssessmentConfigResource getCompetitionAssessmentConfig() {
-        return competitionAssessmentConfig;
-    }
-
-    public void setCompetitionAssessmentConfig(CompetitionAssessmentConfigResource competitionAssessmentConfig) {
-        this.competitionAssessmentConfig = competitionAssessmentConfig;
     }
 
     public AssessorFinanceView getAssessorFinanceView() {
