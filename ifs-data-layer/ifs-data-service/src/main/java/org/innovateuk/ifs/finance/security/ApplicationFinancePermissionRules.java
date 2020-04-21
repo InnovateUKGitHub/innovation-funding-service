@@ -170,7 +170,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         Optional<Application> application = applicationRepository.findById(applicationId);
         if (application.isPresent()) {
             Competition competition = competitionRepository.findById(application.get().getCompetition().getId()).get();
-            return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED) && competition.getCompetitionAssessmentConfig().getAssessorFinanceView().equals(AssessorFinanceView.DETAILED) ;
+            return competition.getCompetitionAssessmentConfig().getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
         }
         return false;
     }
