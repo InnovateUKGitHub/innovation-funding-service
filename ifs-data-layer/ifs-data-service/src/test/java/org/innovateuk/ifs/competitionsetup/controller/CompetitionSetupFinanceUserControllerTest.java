@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinance
 import org.innovateuk.ifs.invite.resource.CompetitionFinanceInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.registration.resource.CompetitionFinanceRegistrationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
@@ -15,7 +16,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,7 +72,7 @@ public class CompetitionSetupFinanceUserControllerTest extends BaseControllerMoc
     public void findCompetitionFinanceUser() throws Exception {
 
         long competitionId = 1L;
-        List<UserResource> competitionFinanceUsers = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build(2);
+        List<UserResource> competitionFinanceUsers = newUserResource().withRoleGlobal(Role.EXTERNAL_FINANCE).build(2);
 
         when(competitionSetupFinanceUserService.findFinanceUser(competitionId)).thenReturn(serviceSuccess(competitionFinanceUsers));
 
@@ -147,7 +147,7 @@ public class CompetitionSetupFinanceUserControllerTest extends BaseControllerMoc
     public void findPendingFinanceUseInvites() throws Exception {
 
         long competitionId = 1L;
-        List<UserResource> pendingCompetitionFinanceInvites = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build(2);
+        List<UserResource> pendingCompetitionFinanceInvites = newUserResource().withRoleGlobal(Role.EXTERNAL_FINANCE).build(2);
 
         when(competitionSetupFinanceUserService.findPendingFinanceUseInvites(competitionId)).thenReturn(serviceSuccess(pendingCompetitionFinanceInvites));
 

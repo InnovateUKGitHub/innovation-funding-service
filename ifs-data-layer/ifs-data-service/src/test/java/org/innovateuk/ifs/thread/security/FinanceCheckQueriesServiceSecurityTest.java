@@ -44,7 +44,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
                 () -> classUnderTest.create(queryResource),
                 () -> {
                     verify(queryRules).onlyProjectFinanceUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
-                    verify(queryRules).competitionFinanceUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
+                    verify(queryRules).externalFinanceUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(queryRules);
                 });
     }
