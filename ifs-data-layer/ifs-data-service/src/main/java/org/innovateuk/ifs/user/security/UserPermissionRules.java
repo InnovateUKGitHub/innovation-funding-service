@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinance;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -57,7 +57,7 @@ public class UserPermissionRules {
     private StakeholderRepository stakeholderRepository;
 
     @Autowired
-    private CompetitionFinanceRepository competitionFinanceRepository;
+    private ExternalFinanceRepository externalFinanceRepository;
 
     @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
@@ -337,7 +337,7 @@ public class UserPermissionRules {
                 simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
 
         List<Competition> competitions =
-                simpleMap(competitionFinanceRepository.findByCompetitionFinanceId(compFinance.getId()), CompetitionFinance::getProcess);
+                simpleMap(externalFinanceRepository.findByCompetitionFinanceId(compFinance.getId()), ExternalFinance::getProcess);
 
         List<Competition> userCompetitions = getUserCompetitions(applicationsWhereThisUserIsInConsortium, projectsThisUserIsAMemberOf);
 

@@ -29,7 +29,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project/{projectId}/team")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
 @SecuredBySpring(value = "VIEW_PROJECT_TEAM", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project team page")
 public class ProjectTeamController {
 

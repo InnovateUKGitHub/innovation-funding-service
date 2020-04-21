@@ -71,7 +71,7 @@ public class ProjectDetailsController {
 
     private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support, innovation lead and stakeholders can view the project details")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,

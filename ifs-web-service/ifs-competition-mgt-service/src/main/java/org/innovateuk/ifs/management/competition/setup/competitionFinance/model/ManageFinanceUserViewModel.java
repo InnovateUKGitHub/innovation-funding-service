@@ -12,20 +12,20 @@ public class ManageFinanceUserViewModel extends CompetitionSetupViewModel {
     private Long competitionId;
     private String competitionName;
     private List<UserResource> availableCompFinanceUsers;
-    private List<UserResource> compFinanceUsersAssignedToCompetition;
+    private List<UserResource> externalFinanceReviewersAssignedToCompetition;
     private List<UserResource> pendingCompFinanceInvitesForCompetition;
     private String tab;
 
     public ManageFinanceUserViewModel(Long competitionId, String competitionName,
                                       List<UserResource> availableCompFinanceUsers,
-                                      List<UserResource> compFinanceUsersAssignedToCompetition,
+                                      List<UserResource> externalFinanceReviewersAssignedToCompetition,
                                       List<UserResource> pendingCompFinanceInvitesForCompetition,
                                       String tab
     ) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.availableCompFinanceUsers = availableCompFinanceUsers;
-        this.compFinanceUsersAssignedToCompetition = compFinanceUsersAssignedToCompetition;
+        this.externalFinanceReviewersAssignedToCompetition = externalFinanceReviewersAssignedToCompetition;
         this.pendingCompFinanceInvitesForCompetition = pendingCompFinanceInvitesForCompetition;
         this.tab = tab;
     }
@@ -42,8 +42,8 @@ public class ManageFinanceUserViewModel extends CompetitionSetupViewModel {
         return availableCompFinanceUsers;
     }
 
-    public List<UserResource> getCompFinanceUsersAssignedToCompetition() {
-        return compFinanceUsersAssignedToCompetition;
+    public List<UserResource> getExternalFinanceReviewersAssignedToCompetition() {
+        return externalFinanceReviewersAssignedToCompetition;
     }
 
     public List<UserResource> getPendingCompFinanceInvitesForCompetition() {
@@ -66,7 +66,7 @@ public class ManageFinanceUserViewModel extends CompetitionSetupViewModel {
                 .append(competitionId, viewModel.competitionId)
                 .append(competitionName, viewModel.competitionName)
                 .append(availableCompFinanceUsers, viewModel.availableCompFinanceUsers)
-                .append(compFinanceUsersAssignedToCompetition, viewModel.compFinanceUsersAssignedToCompetition)
+                .append(externalFinanceReviewersAssignedToCompetition, viewModel.externalFinanceReviewersAssignedToCompetition)
                 .append(pendingCompFinanceInvitesForCompetition, viewModel.pendingCompFinanceInvitesForCompetition)
                 .append(tab, viewModel.tab)
                 .isEquals();
@@ -78,7 +78,7 @@ public class ManageFinanceUserViewModel extends CompetitionSetupViewModel {
                 .append(competitionId)
                 .append(competitionName)
                 .append(availableCompFinanceUsers)
-                .append(compFinanceUsersAssignedToCompetition)
+                .append(externalFinanceReviewersAssignedToCompetition)
                 .append(pendingCompFinanceInvitesForCompetition)
                 .append(tab)
                 .toHashCode();

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinance;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.util.List;
@@ -11,24 +11,24 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
-public class CompetitionFinanceBuilder extends BaseBuilder<CompetitionFinance, CompetitionFinanceBuilder> {
+public class CompetitionFinanceBuilder extends BaseBuilder<ExternalFinance, CompetitionFinanceBuilder> {
 
     public static CompetitionFinanceBuilder newCompetitionFinance() {
         return new CompetitionFinanceBuilder(emptyList()).with(uniqueIds());
     }
 
-    private CompetitionFinanceBuilder(List<BiConsumer<Integer, CompetitionFinance>> multiActions) {
+    private CompetitionFinanceBuilder(List<BiConsumer<Integer, ExternalFinance>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected CompetitionFinanceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionFinance>> actions) {
+    protected CompetitionFinanceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ExternalFinance>> actions) {
         return new CompetitionFinanceBuilder(actions);
     }
 
     @Override
-    protected CompetitionFinance createInitial() {
-        return createDefault(CompetitionFinance.class);
+    protected ExternalFinance createInitial() {
+        return createDefault(ExternalFinance.class);
     }
 
     public CompetitionFinanceBuilder withId(Long... ids)  {

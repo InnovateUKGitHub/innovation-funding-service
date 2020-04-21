@@ -6,7 +6,7 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
@@ -93,7 +93,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private CompetitionFinanceInviteRepository competitionFinanceInviteRepository;
 
     @Autowired
-    private CompetitionFinanceRepository competitionFinanceRepository;
+    private ExternalFinanceRepository externalFinanceRepository;
 
     @Override
     @Transactional
@@ -355,7 +355,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> associateCompetitionFinanceUserWithCompetition(Competition competition, User user) {
-        competitionFinanceRepository.save(new CompetitionFinance(competition, user));
+        externalFinanceRepository.save(new ExternalFinance(competition, user));
         return serviceSuccess();
     }
 
@@ -391,10 +391,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 });
     }
 
-    private ServiceResult<User> createCompetitionFinance(CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource, CompetitionFinanceInvite competitionFinanceInvite) {
+    private ServiceResult<User> createCompetitionFinance(CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource, ExternalFinanceInvite externalFinanceInvite) {
         final UserResource userResource = competitionFinanceRegistrationResource.toUserResource();
-        userResource.setEmail(competitionFinanceInvite.getEmail());
-        userResource.setRoles(singletonList(COMPETITION_FINANCE));
+        userResource.setEmail(externalFinanceInvite.getEmail());
+        userResource.setRoles(singletonList(EXTERNAL_FINANCE));
         return validateUser(userResource).
                 andOnSuccess(validUser -> {
                     final User user = userMapper.mapToDomain(userResource);
@@ -429,9 +429,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> updateCompetitionFinanceInviteStatus(CompetitionFinanceInvite competitionFinanceInvite) {
-        competitionFinanceInvite.open();
-        competitionFinanceInviteRepository.save(competitionFinanceInvite);
+    private ServiceResult<Void> updateCompetitionFinanceInviteStatus(ExternalFinanceInvite externalFinanceInvite) {
+        externalFinanceInvite.open();
+        competitionFinanceInviteRepository.save(externalFinanceInvite);
         return serviceSuccess();
     }
 
@@ -452,7 +452,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
-    private ServiceResult<CompetitionFinanceInvite> getCompetitionFinanceInviteByHash(String hash) {
+    private ServiceResult<ExternalFinanceInvite> getCompetitionFinanceInviteByHash(String hash) {
         return find(competitionFinanceInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 

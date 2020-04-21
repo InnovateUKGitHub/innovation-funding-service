@@ -84,7 +84,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     @Test
     public void competitionFinanceUsersCanSeeAllOrganisations() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(COMPETITION_FINANCE)) {
+            if (user.hasRole(EXTERNAL_FINANCE)) {
                 assertTrue(rules.competitionFinanceUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.competitionFinanceUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionId + ': ' + model.competitionName + ' - Finance users'},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionId + ': ' + model.competitionName + ' - External finance reviewers'},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body">
 
@@ -20,15 +20,15 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance users', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='External finance reviewers', subTitle=${model.competitionId + ': ' + model.competitionName}, size='govuk-heading-xl'" />
 
-        <p class="govuk-body">Make sure it is appropriate for the finance users to see this competition before you invite them.</p>
+        <p class="govuk-body">Make sure it is appropriate for the external finance reviewers to see this competition before you invite them.</p>
         <p class="govuk-body">They will be able to view (but not edit):</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>information, statistics and milestones while the competition is open</li>
-            <li>applications that are submitted or marked as ineligible, including detailed finances</li>
+            <li>applications that are submitted or marked as ineligible, including finance details</li>
             <li>an overview of project setup</li>
-            <li>competition details and applications once they move to the 'Previous' tab</li>
+            <li>competition details and applications once they move to the 'Previous' dashboard section</li>
         </ul>
 
         <h2 class="govuk-heading-m">Key statistics</h2>
@@ -36,22 +36,22 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-quarter">
                 <div class="highlight-panel highlight-panel-padded govuk-!-margin-bottom-6">
-                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${#lists.size(model.compFinanceUsersAssignedToCompetition) + #lists.size(model.pendingCompFinanceInvitesForCompetition)}">0</span>
-                    <small>Competition finance users added</small>
+                    <span class="govuk-heading-l govuk-!-margin-0" th:text="${#lists.size(model.externalFinanceReviewersAssignedToCompetition) + #lists.size(model.pendingCompFinanceInvitesForCompetition)}">0</span>
+                    <small>External finance reviewers added</small>
                 </div>
             </div>
         </div>
 
         <details class="govuk-details govuk-!-margin-bottom-6" th:open="${form.visible}">
             <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">Invite a new competition finance user</span>
+                <span class="govuk-details__summary-text">Invite a new external finance reviewer</span>
             </summary>
 
             <div class="govuk-details__text">
 
                 <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{/competition/setup/{competitionId}/manage-finance-users?inviteFinanceUser=inviteFinanceUser&tab={tab}(competitionId=${model.competitionId},tab=${param.tab == null or param.tab[0] == 'add' ? 'add' : 'added'})}">
 
-                    <p class="govuk-body">Enter the new finance user's details below.</p>
+                    <p class="govuk-body">Enter the new external reviewer's details.</p>
 
                     <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
                         <label class="govuk-label govuk-label--s" for="firstName">
@@ -113,7 +113,7 @@
                                               data-required-errormessage=#{validation.invite.email.required}" />
                     </div>
                     <div class="govuk-form-group govuk-!-margin-0">
-                        <button class="govuk-button govuk-!-margin-0" name="inviteFinanceUser">Invite finance user</button>
+                        <button class="govuk-button govuk-!-margin-0" name="inviteFinanceUser">Send the invitation</button>
                     </div>
                 </form>
 
@@ -131,14 +131,14 @@
                 </li>
                 <li class="govuk-tabs__list-item" th:classappend="${param.tab != null and param.tab[0] == 'added' ? 'govuk-tabs__list-item--selected' : ''}">
                     <a href="?tab=added"
-                       class="govuk-tabs__tab">Added to competition (<span th:text="${#lists.size(model.compFinanceUsersAssignedToCompetition) + #lists.size(model.pendingCompFinanceInvitesForCompetition)}"></span>)</a>
+                       class="govuk-tabs__tab">Added to competition (<span th:text="${#lists.size(model.externalFinanceReviewersAssignedToCompetition) + #lists.size(model.pendingCompFinanceInvitesForCompetition)}"></span>)</a>
                 </li>
             </ul>
             <section class="govuk-tabs__panel">
                 <th:block th:unless="${param.tab != null and param.tab[0] == 'added'}">
                     <p class="govuk-body govuk-!-font-weight-bold">
                         <span class="govuk-!-font-size-48" th:text="${#lists.size(model.availableCompFinanceUsers)}"></span>
-                        finance user's available to add
+                        External finance reviewers available
                     </p>
                     <table class="govuk-table finance-user-table">
                         <thead class="govuk-table__head">
@@ -171,8 +171,8 @@
                 </th:block>
                 <th:block th:if="${param.tab != null and param.tab[0] == 'added'}">
                     <p class="govuk-body govuk-!-font-weight-bold">
-                        <span class="govuk-!-font-size-48" th:text="${#lists.size(model.compFinanceUsersAssignedToCompetition) + #lists.size(model.pendingCompFinanceInvitesForCompetition)}"></span>
-                        finance users added to this competition
+                        <span class="govuk-!-font-size-48" th:text="${#lists.size(model.externalFinanceReviewersAssignedToCompetition) + #lists.size(model.pendingCompFinanceInvitesForCompetition)}"></span>
+                        External finance reviewers added
                     </p>
 
                     <table class="govuk-table finance-user-table">
@@ -191,7 +191,7 @@
                             <td class="govuk-table__cell">Invite pending</td>
                             <td class="govuk-table__cell alignright"></td>
                         </tr>
-                        <tr class="govuk-table__row" th:each="user : ${model.compFinanceUsersAssignedToCompetition}">
+                        <tr class="govuk-table__row" th:each="user : ${model.externalFinanceReviewersAssignedToCompetition}">
                             <td class="govuk-table__cell" th:text="${user.name}">Alexis Kinney</td>
                             <td class="govuk-table__cell" th:text="${user.email}">alexis@kinney.com</td>
                             <td class="govuk-table__cell">Added</td>

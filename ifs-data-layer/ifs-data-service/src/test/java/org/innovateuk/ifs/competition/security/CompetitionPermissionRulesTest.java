@@ -164,7 +164,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
         long competitionId = 1L;
 
-        List<Role> competitionFinanceRoles = singletonList(COMPETITION_FINANCE);
+        List<Role> competitionFinanceRoles = singletonList(EXTERNAL_FINANCE);
         UserResource competitionFinanceUserAssignedToCompetition = newUserResource().withRolesGlobal(competitionFinanceRoles).build();
         UserResource competitionFinanceUserNotAssignedToCompetition = newUserResource().withRolesGlobal(competitionFinanceRoles).build();
 
@@ -173,7 +173,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         CompetitionSearchResultItem competitionSearchResultItem = newLiveCompetitionSearchResultItem().withCompetitionStatus(OPEN).withId(competitionId).build();
         CompetitionSearchResultItem competitionSearchResultItemFeedbackReleased = newLiveCompetitionSearchResultItem().withCompetitionStatus(ASSESSOR_FEEDBACK).withId(2L).build();
 
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserAssignedToCompetition.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserAssignedToCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.compFinanceCanViewCompetitionAssignedToThem(competitionSearchResultItem, competitionFinanceUserAssignedToCompetition));
         assertFalse(rules.compFinanceCanViewCompetitionAssignedToThem(competitionSearchResultItemFeedbackReleased, competitionFinanceUserAssignedToCompetition));

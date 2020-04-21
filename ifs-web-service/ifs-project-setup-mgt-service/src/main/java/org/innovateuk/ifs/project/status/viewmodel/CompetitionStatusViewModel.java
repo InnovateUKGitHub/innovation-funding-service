@@ -14,6 +14,7 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
     private long pendingSpendProfilesCount;
     private String applicationSearchString;
     private PaginationViewModel paginationViewModel;
+    private boolean externalFinanceUser;
 
     public CompetitionStatusViewModel(CompetitionResource competition,
                                       boolean hasProjectFinanceRole,
@@ -21,13 +22,15 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
                                       long pendingSpendProfilesCount,
                                       String applicationSearchString,
                                       List<InternalProjectSetupRow> rows,
-                                      PaginationViewModel paginationViewModel) {
+                                      PaginationViewModel paginationViewModel,
+                                      boolean externalFinanceUser) {
         super(competition, rows, hasProjectFinanceRole);
         this.showTabs = hasProjectFinanceRole;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.applicationSearchString = applicationSearchString;
         this.paginationViewModel = paginationViewModel;
+        this.externalFinanceUser = externalFinanceUser;
     }
 
     @Override
@@ -47,5 +50,9 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
 
     public PaginationViewModel getPaginationViewModel() {
         return paginationViewModel;
+    }
+
+    public boolean isExternalFinanceUser() {
+        return externalFinanceUser;
     }
 }

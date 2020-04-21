@@ -8,7 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.sections.SectionAccess.NOT_ACCESSIBLE;
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -55,7 +55,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(COMPETITION_FINANCE)) ?
+        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
@@ -126,12 +126,12 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(COMPETITION_FINANCE) || userResource.hasRole(COMPETITION_FINANCE))  ?
+        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE))  ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
     public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
-        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(COMPETITION_FINANCE)) ?
+        return (userResource.hasRole(PROJECT_FINANCE) || userResource.hasRole(EXTERNAL_FINANCE)) ?
                 ACCESSIBLE : NOT_ACCESSIBLE;
     }
 

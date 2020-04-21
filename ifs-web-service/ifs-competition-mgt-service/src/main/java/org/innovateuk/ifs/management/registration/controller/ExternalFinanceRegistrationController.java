@@ -2,13 +2,13 @@ package org.innovateuk.ifs.management.registration.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceUsersRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupExternalFinanceUsersRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionFinanceInviteResource;
 import org.innovateuk.ifs.management.registration.form.CompetitionFinanceRegistrationForm;
-import org.innovateuk.ifs.management.registration.populator.CompetitionFinanceRegistrationModelPopulator;
-import org.innovateuk.ifs.management.registration.service.CompetitionFinanceService;
+import org.innovateuk.ifs.management.registration.populator.ExternalFinanceRegistrationModelPopulator;
+import org.innovateuk.ifs.management.registration.service.ExternalFinanceService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,25 +27,25 @@ import static java.lang.String.format;
 @RequestMapping("/finance-user")
 @SecuredBySpring(value = "Controller",
         description = "Anyone can register for an account, if they have the invite hash",
-        securedType = CompetitionFinanceRegistrationController.class)
+        securedType = ExternalFinanceRegistrationController.class)
 @PreAuthorize("permitAll")
-public class CompetitionFinanceRegistrationController {
+public class ExternalFinanceRegistrationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private CompetitionFinanceRegistrationModelPopulator competitionFinanceRegistrationModelPopulator;
+    private ExternalFinanceRegistrationModelPopulator externalFinanceRegistrationModelPopulator;
 
     @Autowired
-    private CompetitionSetupFinanceUsersRestService competitionSetupFinanceUsersRestService;
+    private CompetitionSetupExternalFinanceUsersRestService competitionSetupExternalFinanceUsersRestService;
 
     @Autowired
-    private CompetitionFinanceService competitionFinanceService;
+    private ExternalFinanceService externalFinanceService;
 
     @GetMapping("/{inviteHash}/register")
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") CompetitionFinanceRegistrationForm competitionFinanceRegistrationForm) {
-        CompetitionFinanceInviteResource competitionFinanceInviteResource = competitionSetupFinanceUsersRestService.getCompetitionFinanceInvite(inviteHash).getSuccess();
-        model.addAttribute("model", competitionFinanceRegistrationModelPopulator.populateModel(competitionFinanceInviteResource.getEmail()));
+        CompetitionFinanceInviteResource competitionFinanceInviteResource = competitionSetupExternalFinanceUsersRestService.getExternalFinanceInvite(inviteHash).getSuccess();
+        model.addAttribute("model", externalFinanceRegistrationModelPopulator.populateModel(competitionFinanceInviteResource.getEmail()));
         return "competition-finance/create-account";
     }
 
@@ -63,7 +63,7 @@ public class CompetitionFinanceRegistrationController {
             return failureView.get();
         } else {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ServiceResult<Void> result = competitionFinanceService.createCompetitionFinance(inviteHash, competitionFinanceRegistrationForm);
+                ServiceResult<Void> result = externalFinanceService.createExternalFinanceUser(inviteHash, competitionFinanceRegistrationForm);
                 //  fix this
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
@@ -89,7 +89,7 @@ public class CompetitionFinanceRegistrationController {
             return "redirect:/";
         }
 
-        return competitionSetupFinanceUsersRestService.getCompetitionFinanceInvite(inviteHash).andOnSuccessReturn(invite -> {
+        return competitionSetupExternalFinanceUsersRestService.getExternalFinanceInvite(inviteHash).andOnSuccessReturn(invite -> {
             if (InviteStatus.OPENED != invite.getStatus()) {
                 return format("redirect:/finance-user/%s/register", inviteHash);
             } else {
@@ -102,8 +102,8 @@ public class CompetitionFinanceRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            CompetitionFinanceInviteResource competitionFinanceInviteResource = competitionSetupFinanceUsersRestService.getCompetitionFinanceInvite(inviteHash).getSuccess();
-            model.addAttribute("model", competitionFinanceRegistrationModelPopulator.populateModel(competitionFinanceInviteResource.getEmail()));
+            CompetitionFinanceInviteResource competitionFinanceInviteResource = competitionSetupExternalFinanceUsersRestService.getExternalFinanceInvite(inviteHash).getSuccess();
+            model.addAttribute("model", externalFinanceRegistrationModelPopulator.populateModel(competitionFinanceInviteResource.getEmail()));
             return "competition-finance/create-account";
         }
     }

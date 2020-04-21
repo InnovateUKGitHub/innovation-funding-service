@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceUsersRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupExternalFinanceUsersRestService;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
@@ -41,7 +41,7 @@ public class CompetitionSetupCompetitionFinanceController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private CompetitionSetupFinanceUsersRestService competitionSetupFinanceUsersRestService;
+    private CompetitionSetupExternalFinanceUsersRestService competitionSetupExternalFinanceUsersRestService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -85,7 +85,7 @@ public class CompetitionSetupCompetitionFinanceController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
-            RestResult<Void> saveResult = competitionSetupFinanceUsersRestService.inviteFinanceUsers(inviteUserResource, competitionId);
+            RestResult<Void> saveResult = competitionSetupExternalFinanceUsersRestService.inviteExternalFinanceUsers(inviteUserResource, competitionId);
             return handleInviteCompetitionFinanceErrors(saveResult, validationHandler, form).
                     failNowOrSucceedWith(failureView, () -> "redirect:/competition/setup/" + competitionId + "/manage-finance-users?tab=" + tab);
         });
@@ -96,7 +96,7 @@ public class CompetitionSetupCompetitionFinanceController {
                                  @RequestParam("userId") long userId,
                                  Model model) {
 
-        competitionSetupFinanceUsersRestService.addFinanceUsers(competitionId, userId);
+        competitionSetupExternalFinanceUsersRestService.addExternalFinanceUsers(competitionId, userId);
         return "redirect:/competition/setup/" + competitionId + "/manage-finance-users?tab=" + DEFAULT_TAB;
     }
 
@@ -105,7 +105,7 @@ public class CompetitionSetupCompetitionFinanceController {
                                     @RequestParam("userId") long userId,
                                     Model model) {
 
-        competitionSetupFinanceUsersRestService.removeFinanceUsers(competitionId, userId);
+        competitionSetupExternalFinanceUsersRestService.removeExternalFinanceUsers(competitionId, userId);
         return "redirect:/competition/setup/" + competitionId + "/manage-finance-users?tab=" + ADDED_TAB;
     }
 

@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMA
 @Controller
 @RequestMapping("/project/{projectId}/funding-level")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'external_finance')")
 public class ProjectFinanceFundingLevelController {
 
     @Autowired

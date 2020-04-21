@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 
 /**
  * This controller is for allowing internal users to view and update application finances entered by applicants.
@@ -109,7 +109,7 @@ public class FinanceCheckController {
                 project.getProjectState().isActive(),
                 project.isCollaborativeProject(),
                 hasOrganisationSizeChanged(projectId),
-                userResource.hasRole(COMPETITION_FINANCE)));
+                userResource.hasRole(EXTERNAL_FINANCE)));
         return "project/financecheck/summary";
     }
 

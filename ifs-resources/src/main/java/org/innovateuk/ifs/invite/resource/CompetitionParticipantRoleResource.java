@@ -9,5 +9,5 @@ public enum CompetitionParticipantRoleResource {
     ASSESSOR,
     PANEL_ASSESSOR,
     INTERVIEW_ASSESSOR,
-    COMPETITION_FINANCE
+    EXTERNAL_FINANCE
 }

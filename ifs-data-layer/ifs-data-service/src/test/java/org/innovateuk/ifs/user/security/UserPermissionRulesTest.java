@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinance;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -114,8 +114,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
         Project project = newProject().withApplication(application).build();
-        CompetitionFinance competitionFinance = newCompetitionFinance().withCompetition(competition).build();
-        UserResource competitionFinanceResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        ExternalFinance externalFinance = newCompetitionFinance().withCompetition(competition).build();
+        UserResource competitionFinanceResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         UserResource userResource = newUserResource().withRoleGlobal(LEADAPPLICANT).build();
         User user = newUser().withId(userResource.getId()).build();
         List<ProcessRole> processRoles = newProcessRole()
@@ -128,7 +128,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         when(processRoleRepository.findByUserId(userResource.getId())).thenReturn(processRoles);
         when(projectUserRepository.findByUserId(userResource.getId())).thenReturn(projectUsers);
-        when(competitionFinanceRepository.findByCompetitionFinanceId(competitionFinanceResource.getId())).thenReturn(singletonList(competitionFinance));
+        when(externalFinanceRepository.findByCompetitionFinanceId(competitionFinanceResource.getId())).thenReturn(singletonList(externalFinance));
 
         assertTrue(rules.competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(userResource, competitionFinanceResource));
 

@@ -143,11 +143,11 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         Competition competition = newCompetition().build();
         application.setCompetition(competition);
         UserResource competitionFinanceUserResource = newUserResource()
-                .withRoleGlobal(COMPETITION_FINANCE)
+                .withRoleGlobal(EXTERNAL_FINANCE)
                 .build();
 
         when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResource.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanSeeFormInputResponsesForApplications(sharedInputResponse, competitionFinanceUserResource));
         allInternalUsers.forEach(user -> Assert.assertFalse(rules.competitionFinanceUsersCanSeeFormInputResponsesForApplications(sharedInputResponse, user)));

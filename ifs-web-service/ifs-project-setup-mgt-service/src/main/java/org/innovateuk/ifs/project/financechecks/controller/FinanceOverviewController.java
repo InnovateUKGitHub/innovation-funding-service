@@ -56,7 +56,7 @@ public class FinanceOverviewController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'comp_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
     public String view(@PathVariable("projectId") Long projectId,
                        Model model) {
         model.addAttribute("model", buildFinanceCheckOverviewViewModel(projectId));

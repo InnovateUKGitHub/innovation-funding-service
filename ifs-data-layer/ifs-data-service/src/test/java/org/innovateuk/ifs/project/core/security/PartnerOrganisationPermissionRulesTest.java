@@ -144,13 +144,13 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         long projectId = 1L;
         Competition competition = newCompetition().build();
         Organisation organisation = newOrganisation().build();
-        UserResource user = newUserResource().withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
         Project project = newProject().withId(projectId).withApplication(newApplication()
                 .withCompetition(competition).build()).build();
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(organisation.getId()).withProject(projectId).build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanViewProjects(partnerOrg, user));
     }
@@ -223,13 +223,13 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
         long projectId = 1L;
         long organisationId = 2L;
         Competition competition = newCompetition().build();
-        UserResource user = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource user = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Project project = newProject().withId(projectId).withApplication(newApplication()
                 .withCompetition(competition).build()).build();
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(organisationId).withProject(project.getId()).build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanReadPendingPartnerProgress(partnerOrg, user));
     }

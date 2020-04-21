@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -128,10 +128,10 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         QuestionStatusResource questionStatusResource = newQuestionStatusResource()
                 .withApplication(newApplicationResource().withId(application.getId()).build())
                 .build();
-        UserResource competitionFinanceUser = newUserResource().withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
 
         when(applicationRepository.findById(questionStatusResource.getApplication())).thenReturn(Optional.of(application));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
         assertTrue(rules.competitionFinanceUserCanReadQuestionStatus(questionStatusResource, competitionFinanceUser));
     }
 

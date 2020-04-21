@@ -63,7 +63,7 @@ public class CompetitionManagementApplicationController {
     private ManagementApplicationPopulator managementApplicationPopulator;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}")
     @AsyncMethod
     public String newApplicationSummary(@PathVariable("applicationId") final Long applicationId,
@@ -133,7 +133,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'comp_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(

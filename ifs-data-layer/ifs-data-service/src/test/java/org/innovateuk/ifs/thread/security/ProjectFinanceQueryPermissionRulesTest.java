@@ -104,7 +104,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
 //        QueryResource queryResource1 = new QueryResource(29L, anyLong(), singletonList(post), FinanceChecksSectionType.ELIGIBILITY,"title", false, ZonedDateTime.now(), competitionFinanceUser, ZonedDateTime.now());
 
 //        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-//        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
+//        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUser.getId())).thenReturn(true);
 //        when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
 //
 //        assertTrue(rules.competitionFinanceUsersCanCreateQueries(queryResource, competitionFinanceUser));

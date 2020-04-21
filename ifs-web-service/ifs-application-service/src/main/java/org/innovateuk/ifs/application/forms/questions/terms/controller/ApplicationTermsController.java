@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/terms-and-conditions")
-@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'comp_finance')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'ifs_administrator', 'comp_admin', 'support', 'innovation_lead', 'monitoring_officer', 'assessor', 'stakeholder', 'external_finance')")
 @SecuredBySpring(value = "Controller",
         description = "Most roles are allowed to view the application terms",
         securedType = ApplicationTermsController.class)

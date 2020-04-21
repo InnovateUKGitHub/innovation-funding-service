@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
@@ -66,7 +66,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
-    private CompetitionFinanceRepository competitionFinanceRepository;
+    private ExternalFinanceRepository externalFinanceRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -129,7 +129,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsCompFinanceInCompetition(long competitionId, long loggedInUserId) {
-        return competitionFinanceRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
+        return externalFinanceRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
     }
 
     protected boolean userIsStakeholderOnCompetitionForProject(long projectId, long loggedInUserId) {

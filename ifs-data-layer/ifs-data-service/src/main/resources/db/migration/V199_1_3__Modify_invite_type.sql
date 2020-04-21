@@ -9,4 +9,4 @@ ALTER TABLE invite
                             'PROJECT_PARTNER',
                             'MONITORING_OFFICER',
                             'APPLICATION',
-                            'COMPETITION_FINANCE');
+                            'EXTERNAL_FINANCE');

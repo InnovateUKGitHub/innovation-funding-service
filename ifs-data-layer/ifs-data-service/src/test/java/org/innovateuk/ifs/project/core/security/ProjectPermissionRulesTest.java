@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -92,7 +92,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     @Test
     public void competitionFinanceUsersCanViewProjects() {
 
-        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(COMPETITION_FINANCE)).build();
+        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
         UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
         Competition competition = newCompetition().build();
 
@@ -100,7 +100,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
                 .withCompetition(competition.getId())
                 .build();
 
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserOnCompetition.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserOnCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanViewProjects(project, competitionFinanceUserResourceOnCompetition));
 

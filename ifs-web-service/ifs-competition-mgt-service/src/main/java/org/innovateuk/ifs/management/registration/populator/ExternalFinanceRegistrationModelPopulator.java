@@ -4,12 +4,12 @@ import org.innovateuk.ifs.management.registration.viewmodel.CompetitionFinanceRe
 import org.springframework.stereotype.Component;
 
 @Component
-public class CompetitionFinanceRegistrationModelPopulator {
+public class ExternalFinanceRegistrationModelPopulator {
 
-    private final String COMPETITION_FINANCE_ROLE = "Competition_finance";
+    private final String EXTERNAL_FINANCE_ROLE = "External_finance";
 
     public CompetitionFinanceRegistrationViewModel populateModel(String email){
 
-        return new CompetitionFinanceRegistrationViewModel(email, COMPETITION_FINANCE_ROLE);
+        return new CompetitionFinanceRegistrationViewModel(email, EXTERNAL_FINANCE_ROLE);
     }
 }

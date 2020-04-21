@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -129,7 +129,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "A Competition finance user can see project finances for organisations")
     public boolean competitionFinanceUserCanSeeProjectFinancesForOrganisations(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
-        return user.hasRole(COMPETITION_FINANCE);
+        return user.hasRole(EXTERNAL_FINANCE);
     }
 
     @PermissionRule(value = "UPDATE_PROJECT_FINANCE", description = "Project partners can update the project finances of their own project")

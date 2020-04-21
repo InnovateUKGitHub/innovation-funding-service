@@ -29,7 +29,7 @@ public class NavigationUtils {
                     SUPPORT, "management/dashboard",
                     MONITORING_OFFICER, "project-setup/monitoring-officer/dashboard",
                     STAKEHOLDER, "management/dashboard",
-                    COMPETITION_FINANCE, "management/dashboard"
+                    EXTERNAL_FINANCE, "management/dashboard"
             );
 
     @Value("${ifs.live.projects.landing.page.url}")

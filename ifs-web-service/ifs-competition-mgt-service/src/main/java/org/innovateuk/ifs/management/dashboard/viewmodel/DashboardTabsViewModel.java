@@ -24,11 +24,11 @@ public class DashboardTabsViewModel {
     }
 
     public boolean projectSetup() {
-        return isInternal(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource);
+        return isInternal(userResource) || isStakeholder(userResource) || isExternalFinanceUser(userResource);
     }
 
     public boolean previous() {
-        return isInternal(userResource) || isStakeholder(userResource) || isCompetitionFinance(userResource);
+        return isInternal(userResource) || isStakeholder(userResource) || isExternalFinanceUser(userResource);
     }
 
     public boolean support() {

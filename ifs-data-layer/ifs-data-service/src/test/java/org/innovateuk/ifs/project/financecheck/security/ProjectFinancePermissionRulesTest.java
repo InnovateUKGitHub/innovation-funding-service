@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJ
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.COMPETITION_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 import static org.junit.Assert.assertTrue;
@@ -75,14 +75,14 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     public void competitionFinanceUserCanViewViability() {
 
         Long organisationId = 1L;
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUserCanViewViability(projectOrganisationCompositeId, userResource));
         assertFalse(rules.competitionFinanceUserCanViewViability(projectOrganisationCompositeId, userResourceNotInCompetition));
@@ -92,14 +92,14 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     public void competitionFinanceUserCanSaveViability() {
 
         Long organisationId = 1L;
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
         when(projectProcessRepository.findOneByTargetId(competitionFinanceProject.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.competitionFinanceUserCanSaveViability(projectOrganisationCompositeId, userResource));
@@ -144,14 +144,14 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     public void competitionFinanceUserCanViewEligibility() {
 
         Long organisationId = 1L;
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUserCanViewEligibility(projectOrganisationCompositeId, userResource));
         assertFalse(rules.competitionFinanceUserCanViewEligibility(projectOrganisationCompositeId, userResourceNotInCompetition));
@@ -161,14 +161,14 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     public void competitionFinanceUserCanSaveEligibility() {
 
         Long organisationId = 1L;
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisationId);
 
         when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
         when(projectProcessRepository.findOneByTargetId(competitionFinanceProject.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.competitionFinanceUserCanSaveEligibility(projectOrganisationCompositeId, userResource));
@@ -215,11 +215,11 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
 
         when(projectRepository.findById(projectId.id())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
         when(projectProcessRepository.findOneByTargetId(competitionFinanceProject.getId())).thenReturn(projectProcess);
 
         assertTrue(rules.competitionFinanceUserCanSaveCreditReport(projectId, userResource));
@@ -232,11 +232,11 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
 
         when(projectRepository.findById(projectId.id())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUserCanViewCreditReport(projectId, userResource));
         assertFalse(rules.competitionFinanceUserCanViewCreditReport(projectId, userResourceNotInCompetition));
@@ -267,11 +267,11 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
-        UserResource userResource = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userResourceNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
 
         when(projectRepository.findById(projectId.id())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, userResource));
         assertFalse(rules.competitionFinanceUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, userResourceNotInCompetition));
@@ -440,14 +440,14 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation() {
-        UserResource user = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
-        UserResource userNotInCompetition = newUserResource().withRoleGlobal(COMPETITION_FINANCE).build();
+        UserResource user = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        UserResource userNotInCompetition = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withProjectId(project.getId()).build();
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
 
         when(projectRepository.findById(competitionFinanceProject.getId())).thenReturn(Optional.of(competitionFinanceProject));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
 
         setupUserAsPartner(project, user);
         assertTrue(rules.competitionFinanceUsersCanSeeTheProjectFinancesForTheirOrganisation(financeCheckEligibilityResource, user));

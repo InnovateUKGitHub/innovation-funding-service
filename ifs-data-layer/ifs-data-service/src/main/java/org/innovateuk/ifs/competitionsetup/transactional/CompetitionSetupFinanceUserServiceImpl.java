@@ -7,9 +7,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinance;
-import org.innovateuk.ifs.competition.domain.CompetitionFinanceInvite;
-import org.innovateuk.ifs.competition.mapper.CompetitionFinanceRepository;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
+import org.innovateuk.ifs.competition.domain.ExternalFinanceInvite;
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteRepository;
 import org.innovateuk.ifs.invite.mapper.CompetitionFinanceInviteMapper;
 import org.innovateuk.ifs.invite.resource.CompetitionFinanceInviteResource;
@@ -55,7 +55,7 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
     private static final Log LOG = LogFactory.getLog(CompetitionSetupFinanceUserServiceImpl.class);
 
     @Autowired
-    private CompetitionFinanceRepository competitionFinanceRepository;
+    private ExternalFinanceRepository externalFinanceRepository;
 
     @Autowired
     private CompetitionFinanceInviteRepository competitionFinanceInviteRepository;
@@ -87,8 +87,8 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
     private static final String WEB_CONTEXT = "/management/finance-user";
 
     enum Notifications {
-        COMPETITION_FINANCE_INVITE,
-        ADD_COMPETITION_FINANCE
+        EXTERNAL_FINANCE_INVITE,
+        ADD_EXTERNAL_FINANCE
     }
 
     @Override
@@ -104,15 +104,15 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
 
     @Override
     public ServiceResult<List<UserResource>> findFinanceUser(long competitionId) {
-        List<CompetitionFinance> competitionFinanceUsers = competitionFinanceRepository.findCompetitionFinance(competitionId);
-        List<UserResource> users = simpleMap(competitionFinanceUsers, user -> userMapper.mapToResource(user.getUser()));
+        List<ExternalFinance> externalFinanceUsers = externalFinanceRepository.findCompetitionFinance(competitionId);
+        List<UserResource> users = simpleMap(externalFinanceUsers, user -> userMapper.mapToResource(user.getUser()));
         return serviceSuccess(users);
     }
 
     @Override
     public ServiceResult<CompetitionFinanceInviteResource> getInviteByHash(String hash) {
-        CompetitionFinanceInvite competitionFinanceInvite = competitionFinanceInviteRepository.getByHash(hash);
-        return serviceSuccess(competitionFinanceInviteMapper.mapToResource(competitionFinanceInvite));
+        ExternalFinanceInvite externalFinanceInvite = competitionFinanceInviteRepository.getByHash(hash);
+        return serviceSuccess(competitionFinanceInviteMapper.mapToResource(externalFinanceInvite));
     }
 
     @Override
@@ -123,8 +123,8 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
                         find(userRepository.findById(userId),
                                 notFoundError(User.class, userId))
                                 .andOnSuccess(compFinance -> {
-                                    CompetitionFinance competitionFinance = competitionFinanceRepository.save(new CompetitionFinance(competition, compFinance));
-                                    return sendAddCompFinanceNotification(competitionFinance, competition);
+                                    ExternalFinance externalFinance = externalFinanceRepository.save(new ExternalFinance(competition, compFinance));
+                                    return sendAddCompFinanceNotification(externalFinance, competition);
                                 })
                 );
     }
@@ -132,13 +132,13 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
     @Override
     @Transactional
     public ServiceResult<Void> removeFinanceUser(long competitionId, long userId) {
-        competitionFinanceRepository.deleteCompetitionFinance(competitionId, userId);
+        externalFinanceRepository.deleteCompetitionFinance(competitionId, userId);
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<List<UserResource>> findPendingFinanceUseInvites(long competitionId) {
-        List<CompetitionFinanceInvite> pendingCompFinanceInvites = competitionFinanceInviteRepository.findByCompetitionIdAndStatus(competitionId, SENT);
+        List<ExternalFinanceInvite> pendingCompFinanceInvites = competitionFinanceInviteRepository.findByCompetitionIdAndStatus(competitionId, SENT);
 
         List<UserResource> pendingCompFinanceInviteUsers = simpleMap(pendingCompFinanceInvites,
                 pendingCompFinanceInvite -> convert(pendingCompFinanceInvite));
@@ -146,10 +146,10 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
         return serviceSuccess(pendingCompFinanceInviteUsers);
     }
 
-    private UserResource convert(CompetitionFinanceInvite competitionFinanceInvite) {
+    private UserResource convert(ExternalFinanceInvite externalFinanceInvite) {
         UserResource userResource = new UserResource();
-        userResource.setFirstName(competitionFinanceInvite.getName());
-        userResource.setEmail(competitionFinanceInvite.getEmail());
+        userResource.setFirstName(externalFinanceInvite.getName());
+        userResource.setEmail(externalFinanceInvite.getEmail());
         return userResource;
     }
 
@@ -157,26 +157,26 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName())) {
-            return serviceFailure(COMPETITION_FINANCE_INVITE_INVALID);
+            return serviceFailure(EXTERNAL_FINANCE_INVITE_INVALID);
         }
         return serviceSuccess();
     }
 
     private ServiceResult<Void> validateUserInviteNotPending(long competitionId, UserResource invitedUser) {
         boolean foundPendingInvite = competitionFinanceInviteRepository.existsByCompetitionIdAndStatusAndEmail(competitionId, SENT, invitedUser.getEmail());
-        return foundPendingInvite ? serviceFailure(COMPETITION_FINANCE_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
+        return foundPendingInvite ? serviceFailure(EXTERNAL_FINANCE_INVITE_TARGET_USER_ALREADY_INVITED) : serviceSuccess();
     }
 
     private ServiceResult<Void> validateUserNotAlreadyCompFinanceOnCompetition(long competitionId, String email) {
-        boolean isUserCompFinanceOnCompetition = competitionFinanceRepository.existsByCompetitionIdAndCompetitionFinanceEmail(competitionId, email);
-        return isUserCompFinanceOnCompetition ? serviceFailure(COMPETITION_FINANCE_HAS_ACCEPTED_INVITE) : serviceSuccess();
+        boolean isUserCompFinanceOnCompetition = externalFinanceRepository.existsByCompetitionIdAndCompetitionFinanceEmail(competitionId, email);
+        return isUserCompFinanceOnCompetition ? serviceFailure(EXTERNAL_FINANCE_HAS_ACCEPTED_INVITE) : serviceSuccess();
     }
 
     private ServiceResult<Void> addOrInviteUser(Competition competition, UserResource invitedUser) {
         Optional<User> user = userRepository.findByEmail(invitedUser.getEmail());
 
         if (user.isPresent()) {
-            if (!user.get().hasRole(Role.COMPETITION_FINANCE)) {
+            if (!user.get().hasRole(Role.EXTERNAL_FINANCE)) {
                 addCompetitionFinanceRoleToUser(user.get());
             }
             return addFinanceUser(competition.getId(), user.get().getId());
@@ -186,83 +186,83 @@ public class CompetitionSetupFinanceUserServiceImpl extends BaseTransactionalSer
         }
     }
 
-    private ServiceResult<Void> sendCompFinanceInviteNotification(CompetitionFinanceInvite competitionFinanceInvite, Competition competition) {
+    private ServiceResult<Void> sendCompFinanceInviteNotification(ExternalFinanceInvite externalFinanceInvite, Competition competition) {
 
-        Map<String, Object> globalArgs = createGlobalArgsForCompetitionFinanceInvite(competitionFinanceInvite, competition);
+        Map<String, Object> globalArgs = createGlobalArgsForCompetitionFinanceInvite(externalFinanceInvite, competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                singletonList(createCompetitionFinanceInviteNotificationTarget(competitionFinanceInvite)),
-                Notifications.COMPETITION_FINANCE_INVITE, globalArgs);
+                singletonList(createCompetitionFinanceInviteNotificationTarget(externalFinanceInvite)),
+                Notifications.EXTERNAL_FINANCE_INVITE, globalArgs);
 
         ServiceResult<Void> compFinanceInviteEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
 
         compFinanceInviteEmailSendResult.handleSuccessOrFailure(
-                failure -> handleInviteError(competitionFinanceInvite, failure),
-                success -> handleInviteSuccess(competitionFinanceInvite)
+                failure -> handleInviteError(externalFinanceInvite, failure),
+                success -> handleInviteSuccess(externalFinanceInvite)
         );
 
         return compFinanceInviteEmailSendResult;
     }
 
-    private NotificationTarget createCompetitionFinanceInviteNotificationTarget(CompetitionFinanceInvite competitionFinanceInvite) {
-        return new UserNotificationTarget(competitionFinanceInvite.getName(), competitionFinanceInvite.getEmail());
+    private NotificationTarget createCompetitionFinanceInviteNotificationTarget(ExternalFinanceInvite externalFinanceInvite) {
+        return new UserNotificationTarget(externalFinanceInvite.getName(), externalFinanceInvite.getEmail());
     }
 
-    private Map<String, Object> createGlobalArgsForCompetitionFinanceInvite(CompetitionFinanceInvite competitionFinanceInvite, Competition competition) {
+    private Map<String, Object> createGlobalArgsForCompetitionFinanceInvite(ExternalFinanceInvite externalFinanceInvite, Competition competition) {
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("competitionName", competition.getName());
-        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, competitionFinanceInvite));
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, externalFinanceInvite));
         return globalArguments;
     }
 
-    private String getInviteUrl(String baseUrl, CompetitionFinanceInvite competitionFinanceInvite) {
-        return String.format("%s/%s/%s", baseUrl, competitionFinanceInvite.getHash(), "register");
+    private String getInviteUrl(String baseUrl, ExternalFinanceInvite externalFinanceInvite) {
+        return String.format("%s/%s/%s", baseUrl, externalFinanceInvite.getHash(), "register");
     }
 
-    private ServiceResult<Void> handleInviteSuccess(CompetitionFinanceInvite competitionFinanceInvite) {
-        competitionFinanceInviteRepository.save(competitionFinanceInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
+    private ServiceResult<Void> handleInviteSuccess(ExternalFinanceInvite externalFinanceInvite) {
+        competitionFinanceInviteRepository.save(externalFinanceInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return serviceSuccess();
     }
 
 
-    private ServiceResult<Void> handleInviteError(CompetitionFinanceInvite i, ServiceFailure failure) {
+    private ServiceResult<Void> handleInviteError(ExternalFinanceInvite i, ServiceFailure failure) {
         LOG.error(String.format("Invite failed %s, %s, %s (error count: %s)", i.getId(), i.getEmail(), i.getTarget().getName(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
     }
 
-    private ServiceResult<CompetitionFinanceInvite> saveInvite(UserResource invitedUser, Competition competition) {
+    private ServiceResult<ExternalFinanceInvite> saveInvite(UserResource invitedUser, Competition competition) {
 
-        CompetitionFinanceInvite competitionFinanceInvite = new CompetitionFinanceInvite(competition,
+        ExternalFinanceInvite externalFinanceInvite = new ExternalFinanceInvite(competition,
                 invitedUser.getFirstName() + " " + invitedUser.getLastName(),
                 invitedUser.getEmail(),
                 generateInviteHash(),
                 CREATED);
 
-        CompetitionFinanceInvite savedInvite = competitionFinanceInviteRepository.save(competitionFinanceInvite);
+        ExternalFinanceInvite savedInvite = competitionFinanceInviteRepository.save(externalFinanceInvite);
 
         return serviceSuccess(savedInvite);
     }
 
     private void addCompetitionFinanceRoleToUser(User user) {
-        user.addRole(Role.COMPETITION_FINANCE);
+        user.addRole(Role.EXTERNAL_FINANCE);
         userRepository.save(user);
         userService.evictUserCache(user.getUid());
     }
 
-    private ServiceResult<Void> sendAddCompFinanceNotification(CompetitionFinance competitionFinance, Competition competition) {
+    private ServiceResult<Void> sendAddCompFinanceNotification(ExternalFinance externalFinance, Competition competition) {
 
         Map<String, Object> globalArgs = createGlobalArgsForAddCompFinance(competition);
 
         Notification notification = new Notification(systemNotificationSource,
-                singletonList(createAddCompFinanceNotificationTarget(competitionFinance)),
-                Notifications.ADD_COMPETITION_FINANCE, globalArgs);
+                singletonList(createAddCompFinanceNotificationTarget(externalFinance)),
+                Notifications.ADD_EXTERNAL_FINANCE, globalArgs);
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
-    private NotificationTarget createAddCompFinanceNotificationTarget(CompetitionFinance competitionFinance) {
-        return new UserNotificationTarget(competitionFinance.getUser().getName(), competitionFinance.getUser().getEmail());
+    private NotificationTarget createAddCompFinanceNotificationTarget(ExternalFinance externalFinance) {
+        return new UserNotificationTarget(externalFinance.getUser().getName(), externalFinance.getUser().getEmail());
     }
 
     private Map<String, Object> createGlobalArgsForAddCompFinance(Competition competition) {

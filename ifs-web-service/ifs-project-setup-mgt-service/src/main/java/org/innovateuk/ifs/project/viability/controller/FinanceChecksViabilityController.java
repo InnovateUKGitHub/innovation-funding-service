@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * financial position on a Project
  */
 @Controller
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'comp_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'external_finance')")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = FinanceChecksViabilityController.class)
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/viability")
 public class FinanceChecksViabilityController {

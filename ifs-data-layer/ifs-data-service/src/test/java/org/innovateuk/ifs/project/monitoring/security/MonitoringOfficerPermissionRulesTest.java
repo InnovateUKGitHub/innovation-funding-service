@@ -83,15 +83,15 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
     @Test
     public void competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions() {
 
-        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(COMPETITION_FINANCE)).build();
-        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
+        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
         Competition competition = newCompetition().build();
 
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
                 .build();
 
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, competitionFinanceUserResourceOnCompetition));
 

@@ -29,7 +29,7 @@ public interface OverheadFileService {
     ServiceResult<FileEntryResource> getFileEntryDetails(long overheadId);
 
     @SecuredBySpring(value = "PROJECT_OVERHEAD_CALCULATION_FILE_DETAILS", description = "Project finance users can access overhead calucation spreadsheet file details for any project")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'external_finance')")
     ServiceResult<FileEntryResource> getProjectFileEntryDetails(long overheadId);
 
     @PreAuthorize("hasPermission(#overheadId, 'org.innovateuk.ifs.finance.domain.ApplicationFinanceRow', 'UPDATE_OVERHEAD_FILE')")

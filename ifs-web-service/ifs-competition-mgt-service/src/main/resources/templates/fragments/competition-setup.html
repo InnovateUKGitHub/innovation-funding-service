@@ -68,9 +68,9 @@
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <th:block th:if="${model.general.initialComplete}">
-                                        <a th:href="@{/competition/setup/{competitionId}/manage-finance-users(competitionId=${competition.id})}" class="govuk-link">Finance users</a>
+                                        <a th:href="@{/competition/setup/{competitionId}/manage-finance-users(competitionId=${competition.id})}" class="govuk-link">External finance reviewers</a>
                                     </th:block>
-                                    <th:block th:unless="${model.general.initialComplete}">Finance users</th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">External finance reviewers</th:block>
                                 </h3>
                             </div>
                         </li>

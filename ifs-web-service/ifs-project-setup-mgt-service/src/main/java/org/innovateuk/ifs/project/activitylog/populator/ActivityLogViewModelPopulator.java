@@ -126,7 +126,7 @@ public class ActivityLogViewModelPopulator {
     }
 
     private String userText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
-        if (log.isInternalUser()) {
+        if (log.isInternalUser() || log.isExternalFinanceUser()) {
             return internalUserText(log);
         } else {
             return externalUserText(log, projectUserResources, partnerOrganisationResources);

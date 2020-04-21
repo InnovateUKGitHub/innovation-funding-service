@@ -165,8 +165,8 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findProjectSetupCompetitionsWhenLoggedInAsCompetitionFinance() {
         int page = 0;
         int size = 20;
-        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
-        User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(COMPETITION_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(EXTERNAL_FINANCE)).build();
         setLoggedInUser(competitionFinanceUser);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
@@ -228,8 +228,8 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     public void findPreviousCompetitionsWhenLoggedInAsCompetitionFinanceUser() {
         int page = 0;
         int size = 20;
-        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(COMPETITION_FINANCE)).build();
-        User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(COMPETITION_FINANCE)).build();
+        UserResource competitionFinanceUser = newUserResource().withId(1L).withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        User user = newUser().withId(competitionFinanceUser.getId()).withRoles(singleton(EXTERNAL_FINANCE)).build();
         setLoggedInUser(competitionFinanceUser);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 

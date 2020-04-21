@@ -48,7 +48,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<CompetitionSearchResult> findProjectSetupCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasRole(COMPETITION_FINANCE)
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasRole(EXTERNAL_FINANCE)
                     ? competitionRepository.findProjectSetupForInnovationLeadOrStakeholderOrCompetitionFinance(user.getId(), PageRequest.of(page, size))
                     : competitionRepository.findProjectSetup(PageRequest.of(page, size));
 
@@ -74,7 +74,7 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<CompetitionSearchResult> findPreviousCompetitions(int page, int size) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasRole(COMPETITION_FINANCE)
+            Page<Competition> competitions = user.hasRole(INNOVATION_LEAD) || user.hasRole(STAKEHOLDER) || user.hasRole(EXTERNAL_FINANCE)
                     ? competitionRepository.findPreviousForInnovationLeadOrStakeholderOrCompetitionFinance(user.getId(), PageRequest.of(page, size))
                     : competitionRepository.findPrevious(PageRequest.of(page, size));
 

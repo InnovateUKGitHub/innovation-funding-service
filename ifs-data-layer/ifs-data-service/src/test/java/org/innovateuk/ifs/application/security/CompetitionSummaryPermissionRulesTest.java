@@ -74,11 +74,11 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
     @Test
     public void competitionFinanceUsersCanViewCompetitionSummaryOnAssignedComps() {
         CompetitionResource competitionResource = newCompetitionResource().build();
-        List<Role> competitionFinanceRole = singletonList(COMPETITION_FINANCE);
+        List<Role> competitionFinanceRole = singletonList(EXTERNAL_FINANCE);
         UserResource competitionFinanceUserAssignedToCompetition = newUserResource().withRolesGlobal(competitionFinanceRole).build();
         UserResource competitionFinanceUserNotAssignedToCompetition = newUserResource().withRolesGlobal(competitionFinanceRole).build();
 
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competitionResource.getId(), competitionFinanceUserAssignedToCompetition.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competitionResource.getId(), competitionFinanceUserAssignedToCompetition.getId())).thenReturn(true);
 
         assertTrue(rules.competitionFinanceUsersCanViewCompetitionSummaryOnAssignedComps(competitionResource, competitionFinanceUserAssignedToCompetition));
         assertFalse(rules.competitionFinanceUsersCanViewCompetitionSummaryOnAssignedComps(competitionResource, competitionFinanceUserNotAssignedToCompetition));

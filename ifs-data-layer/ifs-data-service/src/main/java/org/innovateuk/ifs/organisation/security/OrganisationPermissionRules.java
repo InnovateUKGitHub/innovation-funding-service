@@ -55,7 +55,7 @@ public class OrganisationPermissionRules {
 
     @PermissionRule(value = "READ", description = "Competition finance users can see all Organisations")
     public boolean competitionFinanceUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isCompetitionFinance(user);
+        return isExternalFinanceUser(user);
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see Organisations on their projects")

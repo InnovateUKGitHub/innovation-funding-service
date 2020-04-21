@@ -140,7 +140,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
         NoteResource noteResource1 = newNoteResource().withContextClassPk(project.getId()).build();
 
         when(projectRepository.findById(project.getId())).thenReturn(Optional.of(project));
-        when(competitionFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), userResource.getId())).thenReturn(true);
 
         assertTrue(rules.compFinanceUsersCanViewNotes(noteResource1, userResource));
         assertTrue(rules.compFinanceUsersCanViewNotes(noteResource1, userResource));
