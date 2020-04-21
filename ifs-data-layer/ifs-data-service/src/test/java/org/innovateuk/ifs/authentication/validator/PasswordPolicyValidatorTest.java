@@ -178,11 +178,9 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 build();
         Organisation org1 = newOrganisation().withId(123L).withName("Empire Ltd").build();
         Organisation org2 = newOrganisation().withId(456L).withName("EGGS").build();
-        org1.addUser(user);
-        org2.addUser(user);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
                 withId(13L).
@@ -212,10 +210,9 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
                 withLastName("Smith").
                 build();
         Organisation org1 = newOrganisation().withId(123L).withName("(((£&").build();
-        org1.addUser(user);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1));
 
         UserResource userResource = newUserResource().
                 withId(13L).
@@ -231,11 +228,9 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         User user = newUser().withId(13L).withFirstName("William").withLastName("Lo").build();
         Organisation org1 = newOrganisation().withId(123L).withName("Hi").build();
         Organisation org2 = newOrganisation().withId(456L).withName("lo").build();
-        org1.addUser(user);
-        org2.addUser(user);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
                 withId(13L).
@@ -254,7 +249,7 @@ public class PasswordPolicyValidatorTest extends BaseUnitTestMocksTest {
         Organisation org2 = newOrganisation().withName().withId(456L).build();
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(organisationRepositoryMock.findDistinctByUsersId(user.getId())).thenReturn(asList(org1, org2));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUserId(user.getId())).thenReturn(asList(org1, org2));
 
         UserResource userResource = newUserResource().
                 withId(13L).

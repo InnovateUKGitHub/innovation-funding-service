@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.core.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.domain.InvitedParticipant;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.organisation.domain.Organisation;
@@ -34,8 +34,8 @@ public class ProjectUser extends ProjectParticipant implements InvitedParticipan
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "projectId", referencedColumnName = "project_id", insertable = false, updatable = false),
-        @JoinColumn(name = "organisationId", referencedColumnName = "organisation_id", insertable = false, updatable = false)
+            @JoinColumn(name = "projectId", referencedColumnName = "project_id", insertable = false, updatable = false),
+            @JoinColumn(name = "organisationId", referencedColumnName = "organisation_id", insertable = false, updatable = false)
     })
     private PartnerOrganisation partnerOrganisation;
 

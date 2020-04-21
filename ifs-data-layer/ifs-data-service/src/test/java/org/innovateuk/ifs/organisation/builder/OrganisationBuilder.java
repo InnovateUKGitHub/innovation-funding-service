@@ -5,7 +5,6 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.domain.User;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -58,10 +57,6 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
 
     public OrganisationBuilder withOrganisationType(OrganisationTypeEnum... type) {
         return withOrganisationType(newOrganisationType().withOrganisationType(type).buildArray(type.length, OrganisationType.class));
-    }
-
-    public OrganisationBuilder withUser(List<User> users) {
-        return withList(users, (userList, org) -> org.setUsers(users));
     }
 
     public OrganisationBuilder withAddress(List<OrganisationAddress> addresses) {
