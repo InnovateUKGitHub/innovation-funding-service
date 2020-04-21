@@ -55,7 +55,7 @@ public class AttachmentPermissionsRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Competition Finance can upload attachments.")
     public boolean competitionFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
-        return userIsCompFinanceOnCompetitionForProject(project.getId(), user.getId());
+        return userIsExternalFinanceOnCompetitionForProject(project.getId(), user.getId());
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project partners can upload attachments.")

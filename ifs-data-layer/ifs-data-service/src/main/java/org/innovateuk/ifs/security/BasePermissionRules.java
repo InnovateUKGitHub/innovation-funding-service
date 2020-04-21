@@ -129,7 +129,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
     }
 
-    protected boolean userIsCompFinanceInCompetition(long competitionId, long loggedInUserId) {
+    protected boolean userIsExternalFinanceInCompetition(long competitionId, long loggedInUserId) {
         return externalFinanceRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
     }
 
@@ -142,13 +142,13 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return userIsStakeholderInCompetition(application.getCompetition().getId(), loggedInUserId);
     }
 
-    protected boolean userIsCompFinanceOnCompetitionForProject(long projectId, long loggedInUserId) {
+    protected boolean userIsExternalFinanceOnCompetitionForProject(long projectId, long loggedInUserId) {
         Optional<Project> project = projectRepository.findById(projectId);
         if(!project.isPresent()) {
             return false;
         }
         Application application = project.get().getApplication();
-        return userIsCompFinanceInCompetition(application.getCompetition().getId(), loggedInUserId);
+        return userIsExternalFinanceInCompetition(application.getCompetition().getId(), loggedInUserId);
     }
 
     protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {

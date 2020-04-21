@@ -48,7 +48,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Competition finance users can view competitions that are assigned to them")
     public boolean compFinanceCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
-        return userIsCompFinanceInCompetition(competition.getId(), user.getId());
+        return userIsExternalFinanceInCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can view competitions that are assigned to them")

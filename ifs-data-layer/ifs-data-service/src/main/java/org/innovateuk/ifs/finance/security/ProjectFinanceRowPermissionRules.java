@@ -38,7 +38,7 @@ public class ProjectFinanceRowPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "CRUD", description = "The comp finance user can edit finances")
     public boolean compFinanceCanCrudProjectFinanceRows(final ProjectFinanceRow cost, final UserResource user) {
-        return userIsCompFinanceOnCompetitionForProject(cost.getTarget().getProject().getId(),  user.getId());
+        return userIsExternalFinanceOnCompetitionForProject(cost.getTarget().getProject().getId(),  user.getId());
     }
 
     @PermissionRule(value = "ADD_ROW", description = "The consortium can update the cost for their application and organisation")

@@ -31,6 +31,11 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
+    @PermissionRule(value = "PF_CREATE", description = "Only External Finance Users can create notes")
+    public boolean externalFinanceUsersCanCreateQueries(final NoteResource note, final UserResource user) {
+        return userIsExternalFinanceOnCompetitionForProject(note.contextClassPk, user.getId()) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+    }
+
     private boolean noteHasInitialPostWithAuthorBeingCurrentUser(NoteResource note, UserResource user) {
         return note.posts.size() == 1 && note.posts.get(0).author.getId().equals(user.getId());
     }
@@ -52,7 +57,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "NOTES_READ", description = "Comp finance users are able to see notes")
     public boolean compFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
-        return userIsCompFinanceOnCompetitionForProject(note.contextClassPk, user.getId());
+        return userIsExternalFinanceOnCompetitionForProject(note.contextClassPk, user.getId());
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {

@@ -35,9 +35,9 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
-    @PermissionRule(value = "PF_CREATE", description = "Only Competition Finance Users can create Queries")
-    public boolean competitionFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
-        return userIsCompFinanceOnCompetitionForProject(query.contextClassPk, user.getId()) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
+    @PermissionRule(value = "PF_CREATE", description = "Only External Finance Users can create Queries")
+    public boolean externalFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
+        return userIsExternalFinanceOnCompetitionForProject(query.contextClassPk, user.getId()) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
     private boolean queryHasOnePostWithAuthorBeingCurrentProjectFinance(QueryResource query, UserResource user) {
@@ -51,7 +51,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_READ", description = "Competition Finance users can view Queries")
     public boolean compFinanceUsersCanViewQueries(final QueryResource query, final UserResource user) {
-        return userIsCompFinanceOnCompetitionForProject(query.contextClassPk, user.getId());
+        return userIsExternalFinanceOnCompetitionForProject(query.contextClassPk, user.getId());
     }
 
     @PermissionRule(value = "PF_READ", description = "Project partners can view Queries")
@@ -66,7 +66,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_ADD_POST", description = "Comp Finance users can add posts to a query")
     public boolean compFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return userIsCompFinanceOnCompetitionForProject(query.contextClassPk, user.getId()) && isProjectInSetup(query.contextClassPk);
+        return userIsExternalFinanceOnCompetitionForProject(query.contextClassPk, user.getId()) && isProjectInSetup(query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project partners can add posts to a query")

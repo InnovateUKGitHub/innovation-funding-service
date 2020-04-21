@@ -31,7 +31,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Competition finance users can see project resources")
     public boolean competitionFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user) {
-        return userIsCompFinanceInCompetition(project.getCompetition(), user.getId());
+        return userIsExternalFinanceInCompetition(project.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "A monitoring officer can see projects that they are assigned to")

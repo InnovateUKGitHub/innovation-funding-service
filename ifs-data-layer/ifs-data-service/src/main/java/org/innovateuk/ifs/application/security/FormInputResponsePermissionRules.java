@@ -85,7 +85,7 @@ public class FormInputResponsePermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Competition finance users can see form input responses for applications they are assigned to")
     public boolean competitionFinanceUsersCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
         Application application = applicationRepository.findById(response.getApplication()).get();
-        return userIsCompFinanceInCompetition(application.getCompetition().getId(), user.getId());
+        return userIsExternalFinanceInCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "SAVE",

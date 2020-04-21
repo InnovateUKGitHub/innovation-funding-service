@@ -60,7 +60,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Competition finance users can see the participation percentage for applications they are assigned to")
     public boolean competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(final ApplicationResource applicationResource, UserResource user) {
-        return userIsCompFinanceInCompetition(applicationResource.getCompetition(), user.getId());
+        return userIsExternalFinanceInCompetition(applicationResource.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "Monitoring officers can see the participation percentage for applications they are assigned to")
@@ -100,7 +100,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             description = "Competition finance users can view the finance totals.",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
     public boolean competitionFinanceUserCanSeeApplicationFinancesTotals(final ApplicationResource applicationResource, final UserResource user) {
-        return userIsCompFinanceInCompetition(applicationResource.getCompetition(), user.getId());
+        return userIsExternalFinanceInCompetition(applicationResource.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ_FINANCE_TOTALS",
@@ -143,7 +143,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ", description = "Competition finance users can see application resources for competitions assigned to them.")
     public boolean competitionFinanceUsersAssignedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
-        return application != null && application.getCompetition() != null && userIsCompFinanceInCompetition(application.getCompetition(), user.getId());
+        return application != null && application.getCompetition() != null && userIsExternalFinanceInCompetition(application.getCompetition(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can see application resources for projects assigned to them.")

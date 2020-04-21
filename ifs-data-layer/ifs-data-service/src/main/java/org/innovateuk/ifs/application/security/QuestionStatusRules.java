@@ -47,7 +47,7 @@ public class QuestionStatusRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Competition finance user can read statuses of all questions")
     public boolean competitionFinanceUserCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         Optional<Application> app = applicationRepository.findById(questionStatusResource.getApplication());
-        return userIsCompFinanceInCompetition(app.get().getCompetition().getId(), user.getId());
+        return userIsExternalFinanceInCompetition(app.get().getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
