@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,9 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    @Cacheable(cacheNames="formInputByQuestionAndScope",
+            key = "T(java.lang.String).format('formInputByQuestionAndScope:%d:%s', #questionId, #scope.name())",
+            unless = "!T(org.innovateuk.ifs.cache.CacheHelper).cacheResultIfCompetitionIsOpen(#result)")
     public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(long questionId, FormInputScope scope) {
         return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(questionId, scope)));
     }

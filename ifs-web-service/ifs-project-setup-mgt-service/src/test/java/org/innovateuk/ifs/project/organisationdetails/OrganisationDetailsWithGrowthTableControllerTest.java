@@ -10,8 +10,8 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
@@ -33,16 +33,17 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.organisation.builder.OrganisationSearchResultBuilder.newOrganisationSearchResult;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,6 +71,9 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
 
     @Mock
     private FinanceCheckService financeCheckService;
+
+    @Mock
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @Override
     protected OrganisationDetailsWithGrowthTableController supplyControllerUnderTest() {
@@ -127,7 +131,6 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         ProjectYourOrganisationViewModel yourOrganisation = (ProjectYourOrganisationViewModel) result.getModelAndView().getModel().get("yourOrganisation");
         YourOrganisationWithGrowthTableForm actualForm = (YourOrganisationWithGrowthTableForm) result.getModelAndView().getModel().get("form");
 
-        sharedAssertions(result, organisation.getAddresses().get(0).getAddress());
         assertEquals(yourOrganisation, result.getModelAndView().getModel().get("yourOrganisation"));
 
         assertEquals(organisationId, yourOrganisation.getOrganisationId());
@@ -160,8 +163,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         competition.setIncludeJesForm(true);
         competition.setFundingType(GRANT);
         organisation.setOrganisationType(2L);
-
-        organisation.setAddresses(new ArrayList());
+        organisation.setCompaniesHouseNumber(null);
 
         MvcResult result = callEndpoint();
 
@@ -188,9 +190,7 @@ public class OrganisationDetailsWithGrowthTableControllerTest extends BaseContro
         organisation.setOrganisationTypeName("orgType");
         organisation.setCompaniesHouseNumber("1234");
         AddressResource address = new AddressResource("A", "B", "C", "D", "E", "F");
-        OrganisationAddressResource orgAddress = new OrganisationAddressResource();
-        orgAddress.setAddress(address);
-        organisation.setAddresses(Arrays.asList(orgAddress));
+        when(companiesHouseRestService.getOrganisationById("1234")).thenReturn(restSuccess(newOrganisationSearchResult().withAddressResource(address).build()));
 
         return organisation;
     }

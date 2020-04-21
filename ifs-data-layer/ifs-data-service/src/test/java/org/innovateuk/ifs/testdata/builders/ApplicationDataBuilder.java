@@ -188,7 +188,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
 
-        List<Organisation> organisations = organisationRepository.findDistinctByUsersId(data.getLeadApplicant().getId());
+        List<Organisation> organisations = organisationRepository.findDistinctByProcessRolesUserId(data.getLeadApplicant().getId());
         Organisation leadOrganisation = organisations.get(0);
 
         List<ApplicationInviteResource> applicationInvite = baseApplicationInviteBuilder.

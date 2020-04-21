@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.applicationdetails.model;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
@@ -8,7 +9,7 @@ import java.util.Set;
 /**
  * View model for application details.
  */
-public class ApplicationDetailsViewModel {
+public class ApplicationDetailsViewModel implements BaseAnalyticsViewModel {
 
     private ApplicationResource application;
 
@@ -35,6 +36,16 @@ public class ApplicationDetailsViewModel {
         this.procurementCompetition = competition.isProcurement();
         this.open = open;
         this.complete = complete;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return application.getCompetitionName();
     }
 
     public ApplicationResource getApplication() {

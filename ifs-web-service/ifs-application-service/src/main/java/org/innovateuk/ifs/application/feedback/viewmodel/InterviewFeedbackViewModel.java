@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.feedback.viewmodel;
 
-public class InterviewFeedbackViewModel {
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+
+public class InterviewFeedbackViewModel implements BaseAnalyticsViewModel {
     static final String LEAD_WITH_RESPONSE_BANNER =  "Your response has been uploaded." +
             " This response will be noted by the interview panel.";
     static final String LEAD_WITHOUT_RESPONSE_BANNER =  "If you are asked to respond to feedback you can upload your response below.";
@@ -17,13 +19,27 @@ public class InterviewFeedbackViewModel {
     private final boolean leadApplicant;
     private final boolean feedbackReleased;
     private final boolean assessorOrAdmin;
+    private final long applicationId;
+    private final String competitionName;
 
-    public InterviewFeedbackViewModel(String responseFilename, String feedbackFilename, boolean leadApplicant,  boolean feedbackReleased, boolean assessorOrAdmin) {
+    public InterviewFeedbackViewModel(long applicationId, String competitiionName, String responseFilename, String feedbackFilename, boolean leadApplicant,  boolean feedbackReleased, boolean assessorOrAdmin) {
+        this.applicationId = applicationId;
+        this.competitionName = competitiionName;
         this.feedbackFilename = feedbackFilename;
         this.responseFilename = responseFilename;
         this.leadApplicant = leadApplicant;
         this.feedbackReleased = feedbackReleased;
         this.assessorOrAdmin = assessorOrAdmin;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getResponseFilename() {

@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-public class AcceptRejectApplicationInviteViewModel {
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 
+public class AcceptRejectApplicationInviteViewModel implements BaseAnalyticsViewModel {
+
+    private long applicationId;
     private long competitionId;
     private String competitionName;
     private String leadOrganisationName;
@@ -11,7 +14,8 @@ public class AcceptRejectApplicationInviteViewModel {
     private boolean inviteOrganisationExists;
     private boolean leadOrganisation;
 
-    public AcceptRejectApplicationInviteViewModel(final long competitionId, final String competitionName,
+    public AcceptRejectApplicationInviteViewModel(final long applicationId,
+                                                  final long competitionId, final String competitionName,
                                                   final String leadOrganisationName, final String leadApplicantName,
                                                   final String inviteOrganisationName,
                                                   final String leadApplicantEmail,
@@ -25,6 +29,16 @@ public class AcceptRejectApplicationInviteViewModel {
         this.leadApplicantEmail = leadApplicantEmail;
         this.inviteOrganisationExists = inviteOrganisationExists;
         this.leadOrganisation = leadOrganisation;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getLeadOrganisationName() {
@@ -41,10 +55,6 @@ public class AcceptRejectApplicationInviteViewModel {
 
     public String getLeadApplicantEmail() {
         return leadApplicantEmail;
-    }
-
-    public String getCompetitionName() {
-        return competitionName;
     }
 
     public long getCompetitionId() {

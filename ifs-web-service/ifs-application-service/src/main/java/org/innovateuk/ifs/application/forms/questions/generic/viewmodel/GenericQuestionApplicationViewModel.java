@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.generic.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -9,11 +10,12 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
-public class GenericQuestionApplicationViewModel {
+public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewModel {
 
-    private final long applicationId;
     private final long questionId;
     private final long currentUser;
+    private final long applicationId;
+    private final String competitionName;
 
     private final String applicationName;
     private final String questionName;
@@ -48,8 +50,9 @@ public class GenericQuestionApplicationViewModel {
 
     private final AssignButtonsViewModel assignButtonsViewModel;
 
-    public GenericQuestionApplicationViewModel(long applicationId, long questionId, long currentUser, String applicationName, String questionName, String questionNumber, String questionSubtitle, String questionDescription, String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType, Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, String appendixFilename, Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename, String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel) {
+    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser, String applicationName, String questionName, String questionNumber, String questionSubtitle, String questionDescription, String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType, Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, String appendixFilename, Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename, String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel) {
         this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.questionId = questionId;
         this.currentUser = currentUser;
         this.applicationName = applicationName;
@@ -80,8 +83,14 @@ public class GenericQuestionApplicationViewModel {
         this.assignButtonsViewModel = assignButtonsViewModel;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public long getQuestionId() {
@@ -236,6 +245,7 @@ public class GenericQuestionApplicationViewModel {
 
     public static final class GenericQuestionApplicationViewModelBuilder {
         private long applicationId;
+        private String competitionName;
         private long questionId;
         private long currentUser;
         private String applicationName;
@@ -289,6 +299,11 @@ public class GenericQuestionApplicationViewModel {
 
         public GenericQuestionApplicationViewModelBuilder withApplicationName(String applicationName) {
             this.applicationName = applicationName;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withCompetitionName(String competitionName) {
+            this.competitionName = competitionName;
             return this;
         }
 
@@ -418,7 +433,7 @@ public class GenericQuestionApplicationViewModel {
         }
 
         public GenericQuestionApplicationViewModel build() {
-            return new GenericQuestionApplicationViewModel(applicationId, questionId, currentUser, applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename, templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant, assignButtonsViewModel);
+            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename, templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant, assignButtonsViewModel);
         }
     }
 }

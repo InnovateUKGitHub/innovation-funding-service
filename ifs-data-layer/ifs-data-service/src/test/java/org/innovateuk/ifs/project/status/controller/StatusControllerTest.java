@@ -2,13 +2,12 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.transactional.InternalUserProjectStatusService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
@@ -31,15 +30,13 @@ public class StatusControllerTest extends BaseControllerMockMVCTest<StatusContro
     public void getCompetitionStatus() throws Exception {
         final Long competitionId = 123L;
         String applicationSearchString = "12";
-        List<ProjectStatusResource> projectStatusResources = newProjectStatusResource().withProjectNumber().build(3);
-        ServiceResult<List<ProjectStatusResource>> expected = serviceSuccess(projectStatusResources);
-        when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString)).thenReturn(expected);
+        ServiceResult<ProjectStatusPageResource> expected = serviceSuccess(new ProjectStatusPageResource());
+        when(internalUserProjectStatusService.getCompetitionStatus(competitionId, applicationSearchString, 0, 5)).thenReturn(expected);
 
         mockMvc.perform(get("/project/competition/{competitionId}?applicationSearchString=" + applicationSearchString, 123L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(projectStatusResources)));
+                andExpect(status().isOk());
 
-        verify(internalUserProjectStatusService).getCompetitionStatus(competitionId, applicationSearchString);
+        verify(internalUserProjectStatusService).getCompetitionStatus(competitionId, applicationSearchString, 0, 5);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.commons.security.evaluator;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * An alias for a map that maps protected classes (e.g. ApplicationResource) to the permissions methods that
@@ -10,5 +11,5 @@ import java.util.HashMap;
  * protect an ApplicationResource against a "READ" action.
  */
 public class PermissionedObjectClassToPermissionsToPermissionsMethods
-        extends HashMap<Class<?>, PermissionsToPermissionsMethods> {
+        extends LinkedHashMap<Class<?>, PermissionsToPermissionsMethods> {
 }

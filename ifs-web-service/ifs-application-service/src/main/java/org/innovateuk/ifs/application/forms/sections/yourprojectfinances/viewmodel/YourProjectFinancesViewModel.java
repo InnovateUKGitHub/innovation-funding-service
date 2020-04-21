@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -9,8 +10,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public class YourProjectFinancesViewModel {
+public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
     private final long applicationId;
+    private final String competitionName;
     private final String applicationName;
     private final boolean h2020;
     private final boolean collaborativeProject;
@@ -27,6 +29,7 @@ public class YourProjectFinancesViewModel {
 
     public YourProjectFinancesViewModel(long applicationId, String applicationName, CompetitionResource competition, ApplicationFinanceResource organisationFinance, List<YourFinancesRowViewModel> rows) {
         this.applicationId = applicationId;
+        this.competitionName = competition.getName();
         this.applicationName = applicationName;
         this.h2020 = competition.isH2020();
         this.collaborativeProject = !CollaborationLevel.SINGLE.equals(competition.getCollaborationLevel());
@@ -40,8 +43,14 @@ public class YourProjectFinancesViewModel {
         this.rows = rows;
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getApplicationName() {

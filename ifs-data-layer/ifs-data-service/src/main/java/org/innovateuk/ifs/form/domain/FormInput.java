@@ -13,6 +13,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
+
 /**
  * FormInput represents an Input field and associated value on a Form (e.g. an Application Form, a piece of Recommendation Feedback etc).
  * <p>
@@ -228,5 +230,9 @@ public class FormInput {
 
     public void setFile(FileEntry file) {
         this.file = file;
+    }
+
+    public boolean isCompetitionOpen() {
+        return competition.getCompetitionStatus().isLaterThan(READY_TO_OPEN);
     }
 }

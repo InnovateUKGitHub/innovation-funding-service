@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.FormOption;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
@@ -10,18 +11,32 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * View model to support "Your organisation" pages
  */
-public class YourOrganisationViewModel {
+public class YourOrganisationViewModel implements BaseAnalyticsViewModel {
 
+    private long applicationId;
+    private String competitionName;
     private boolean showStateAidAgreement;
     private boolean fundingSectionComplete;
     private boolean h2020;
     private boolean procurementCompetition;
 
-    public YourOrganisationViewModel(boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, boolean procurementCompetition) {
+    public YourOrganisationViewModel(long applicationId, String competitionName, boolean showStateAidAgreement, boolean fundingSectionComplete, boolean h2020, boolean procurementCompetition) {
+        this.applicationId = applicationId;
+        this.competitionName = competitionName;
         this.showStateAidAgreement = showStateAidAgreement;
         this.fundingSectionComplete = fundingSectionComplete;
         this.h2020 = h2020;
         this.procurementCompetition = procurementCompetition;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public List<FormOption> getOrganisationSizeOptions() {

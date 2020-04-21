@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
 
-public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
 
     private final long applicationId;
     private final boolean fullyFunded;
@@ -26,8 +27,14 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         this.open = !applicationFinanceSummaryViewModel.isReadOnly();
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return applicationFinanceSummaryViewModel.getCompetitionName();
     }
 
     public boolean isFullyFunded() {

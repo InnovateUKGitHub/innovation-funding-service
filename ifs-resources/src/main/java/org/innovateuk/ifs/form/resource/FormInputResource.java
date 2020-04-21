@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
@@ -8,12 +10,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class FormInputResource {
+public class FormInputResource implements CacheableWhenCompetitionOpen {
     private Long id;
     private Integer wordCount;
     private FormInputType type;
     private Long question;
-    private Long competition;
     private Set<Long> inputValidators;
     private String description;
     private Boolean includedInApplicationSummary = false;
@@ -24,6 +25,9 @@ public class FormInputResource {
     private FormInputScope scope;
     private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
     private FileEntryResource file;
+    //Used by @Cacheable
+    @JsonIgnore
+    private boolean competitionOpen;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -71,14 +75,6 @@ public class FormInputResource {
 
     public void setType(FormInputType type) {
         this.type = type;
-    }
-
-    public Long getCompetition() {
-        return this.competition;
-    }
-
-    public void setCompetition(Long competition) {
-        this.competition = competition;
     }
 
     public Set<Long> getInputValidators() {
@@ -163,5 +159,14 @@ public class FormInputResource {
 
     public void setFile(FileEntryResource file) {
         this.file = file;
+    }
+
+    @Override
+    public boolean isCompetitionOpen() {
+        return competitionOpen;
+    }
+
+    public void setCompetitionOpen(boolean competitionOpen) {
+        this.competitionOpen = competitionOpen;
     }
 }
