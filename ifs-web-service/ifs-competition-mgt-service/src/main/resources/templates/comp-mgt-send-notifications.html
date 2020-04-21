@@ -97,24 +97,14 @@
 
                 </div>
 
-                <div class="govuk-form-group" th:with="assessorScore=${model.averageAssessorScores.values()}">
+                <div class="govuk-form-group">
                     <span class="govuk-label govuk-label--s">Message</span>
-                    <p class="govuk-hint" th:if="${model.isH2020()}">
+                    <p class="govuk-hint">
                         Dear [recipient name] <br/>
-                        Innovate UK, part of UK Research and Innovation <br/>
+                        Innovate UK <th:block th:if="${model.isH2020()}">, part of UK Research and Innovation</th:block><br/>
                         [competition name] <br/>
                         [application title] <br/>
-                        <span th:unless="${!model.showAverageAssessorScore()}"
-                              th:text="|[Average assessor score: ${#numbers.formatDecimal(assessorScore,0,1)}%]|"></span>
-
-                    </p>
-                    <p class="govuk-hint" th:unless="${model.isH2020()}">
-                        Dear [recipient name] <br/>
-                        Innovate UK <br/>
-                        [competition name] <br/>
-                        [application title] <br/>
-                        <span th:unless="${!model.showAverageAssessorScore()}"
-                              th:text="|[Average assessor score: ${#numbers.formatDecimal(assessorScore,0,1)}%]|"></span>
+                        <th:block th:if="${model.includeAssessorsScore}">Average assessor score: [assessor score]%</th:block>
                     </p>
                 </div>
 

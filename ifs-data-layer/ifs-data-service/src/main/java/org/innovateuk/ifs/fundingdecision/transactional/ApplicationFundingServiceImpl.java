@@ -7,8 +7,11 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
+import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
@@ -26,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -67,6 +69,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private AssessorFormInputResponseService assessorFormInputResponseService;
+
+    @Autowired
+    private AverageAssessorScoreRepository averageAssessorScoreRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -184,6 +189,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             FundingNotificationResource fundingNotificationResource,
             List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId
     ) {
+        Competition competition = applications.get(0)
+                        .getCompetition();
+        boolean includeAsesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getAverageAssessorScore());
         Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
@@ -197,8 +205,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     perNotificationTargetArguments.put("applicationName", application.getName());
                     perNotificationTargetArguments.put("applicationId", applicationId);
                     perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
-                    if (showScore(application.getId())!=null && showScore(application.getId()).equals(true)) {
-                        perNotificationTargetArguments.put("averageAssessorScore", "Average assessor score: " + getAssessorAverageScore(applicationId).get() + "%");
+                    if (includeAsesssorScore) {
+                        Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(applicationId);
+                        averageAssessorScore.ifPresent(score -> perNotificationTargetArguments.put("averageAssessorScore", "Average assessor score: " + score.getScore() + "%"));
                     }
 
                     return Pair.of(pair.getValue(), perNotificationTargetArguments);
@@ -209,14 +218,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
         Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
         return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
-    }
-
-    private Boolean showScore(long applicationId) {
-        return applicationService.getCompetitionByApplicationId(applicationId).getSuccess().getCompetitionAssessmentConfig().getAverageAssessorScore();
-    }
-
-    private Optional<BigDecimal> getAssessorAverageScore(long applicationId) {
-        return Optional.of(assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccess().getAveragePercentage());
     }
 
     private List<ServiceResult<Pair<Long, NotificationTarget>>> getApplicantNotificationTargets(List<Long> applicationIds) {

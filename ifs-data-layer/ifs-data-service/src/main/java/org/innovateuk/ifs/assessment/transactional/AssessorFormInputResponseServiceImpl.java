@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
@@ -73,6 +74,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private FormInputService formInputService;
 
+    @Autowired
+    private AverageAssessorScoreRepository averageAssessorScoreRepository;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -116,11 +120,11 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private BigDecimal getAveragePercentage(List<AssessorFormInputResponse> responses) {
         return BigDecimal.valueOf(responses.stream()
-                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
-                    .filter(response -> response.getValue() != null)
-                    .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
-                    .average()
-                    .orElse(0.0)).setScale(1, BigDecimal.ROUND_HALF_UP);
+                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                .filter(response -> response.getValue() != null)
+                .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
+                .average()
+                .orElse(0.0)).setScale(1, BigDecimal.ROUND_HALF_UP);
     }
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {

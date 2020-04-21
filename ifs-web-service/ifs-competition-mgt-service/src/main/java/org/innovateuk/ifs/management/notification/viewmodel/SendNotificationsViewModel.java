@@ -3,9 +3,7 @@ package org.innovateuk.ifs.management.notification.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +18,7 @@ public class SendNotificationsViewModel {
     private long unsuccessfulRecipientsCount;
     private long onHoldRecipientsCount;
     private boolean h2020;
-    private Map<Long, BigDecimal> averageAssessorScores;
-    private CompetitionResource competitionResource;
+    private boolean includeAssessorsScore;
 
     public SendNotificationsViewModel(List<ApplicationSummaryResource> applications,
                                       long successfulRecipientsCount,
@@ -30,8 +27,7 @@ public class SendNotificationsViewModel {
                                       long competitionId,
                                       String competitionName,
                                       boolean h2020,
-                                      Map<Long, BigDecimal> averageAssessorScores,
-                                      CompetitionResource competitionResource) {
+                                      boolean includeAssessorsScore) {
 
         this.successfulRecipientsCount = successfulRecipientsCount;
         this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
@@ -40,8 +36,7 @@ public class SendNotificationsViewModel {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.h2020 = h2020;
-        this.averageAssessorScores = averageAssessorScores;
-        this.competitionResource = competitionResource;
+        this.includeAssessorsScore = includeAssessorsScore;
     }
 
     public long getCompetitionId() {
@@ -72,8 +67,8 @@ public class SendNotificationsViewModel {
         return h2020;
     }
 
-    public Map<Long, BigDecimal> getAverageAssessorScores() {
-        return averageAssessorScores;
+    public boolean isIncludeAssessorsScore() {
+        return includeAssessorsScore;
     }
 
     public Map<Long, FundingDecision> getFundingDecisions() {
@@ -84,14 +79,5 @@ public class SendNotificationsViewModel {
                         ApplicationSummaryResource::getId,
                         ApplicationSummaryResource::getFundingDecision
                 ));
-    }
-
-    public CompetitionResource getCompetitionResource() {
-        return competitionResource;
-    }
-
-    public boolean showAverageAssessorScore() {
-
-        return getCompetitionResource().getCompetitionAssessmentConfig().getAverageAssessorScore() !=null && getCompetitionResource().getCompetitionAssessmentConfig().getAverageAssessorScore();
     }
 }
