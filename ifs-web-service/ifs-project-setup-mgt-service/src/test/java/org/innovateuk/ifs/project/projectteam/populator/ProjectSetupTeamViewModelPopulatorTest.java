@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -42,7 +43,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectTeamViewModelPopulatorTest {
+public class ProjectSetupTeamViewModelPopulatorTest {
 
     @InjectMocks
     private ProjectTeamViewModelPopulator service;
@@ -55,6 +56,9 @@ public class ProjectTeamViewModelPopulatorTest {
 
     @Mock
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
+
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
 
     @Test
     public void populate() {
@@ -127,13 +131,9 @@ public class ProjectTeamViewModelPopulatorTest {
                         .findAny()
                         .get();
 
-        assertEquals(2, partnerOneViewModel.getUsers().size());
-        assertNotNull(partnerOneViewModel.getProjectManager());
+        assertEquals(1, partnerOneViewModel.getUsers().size());
 
-        AbstractProjectTeamRowViewModel partnerOneUser = partnerOneViewModel.getUsers().get(0);
-        assertEquals(partnerOneUser.getId(), 123L);
-
-        AbstractProjectTeamRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(1);
+        AbstractProjectTeamRowViewModel partnerOneInvitee = partnerOneViewModel.getUsers().get(0);
         assertEquals((long) invites.get(0).getId(), partnerOneInvitee.getId());
         assertEquals("Mr Invite (pending for 10 days)", partnerOneInvitee.getName());
 

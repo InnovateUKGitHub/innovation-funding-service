@@ -20,6 +20,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertFalse;
@@ -31,8 +32,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -72,7 +72,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void competitionFinanceUserCanViewViability() {
+    public void externalFinanceUserCanViewViability() {
 
         Long organisationId = 1L;
         UserResource userResource = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
@@ -210,7 +210,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void competitionFinanceCanSaveCreditReport() {
+    public void externalFinanceCanSaveCreditReport() {
 
         Competition competition = newCompetition().build();
         Project competitionFinanceProject = newProject().withId(project.getId()).withApplication(newApplication().withCompetition(competition).build()).build();
@@ -301,7 +301,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     private void setupFinanceContactExpectations(ProjectResource project, UserResource user) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(project.getId(), user.getId(), PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(partnerProjectUser);
 
         when(projectUserRepository.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(partnerProjectUser);
     }
@@ -345,7 +345,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void competitionFinanceUserCanSeeProjectFinancesForOrganisations() {
+    public void externalFinanceUserCanSeeProjectFinancesForOrganisations() {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(project.getId()).build();
 

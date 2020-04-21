@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 
@@ -69,7 +70,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private ExternalFinanceRepository externalFinanceRepository;
 
     protected boolean isPartner(long projectId, long userId) {
-        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
+        List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();
     }
 
@@ -89,7 +90,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean partnerBelongsToOrganisation(long projectId, long userId, long organisationId){
-        ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, organisationId, PROJECT_PARTNER);
+        ProjectUser partnerProjectUser = projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, userId, organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return partnerProjectUser != null;
     }
 

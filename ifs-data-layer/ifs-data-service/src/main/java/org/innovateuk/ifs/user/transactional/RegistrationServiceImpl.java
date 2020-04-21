@@ -148,6 +148,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
                     .andOnSuccessReturn(() -> user);
         }
+
         return serviceFailure(GENERAL_NOT_FOUND);
     }
 

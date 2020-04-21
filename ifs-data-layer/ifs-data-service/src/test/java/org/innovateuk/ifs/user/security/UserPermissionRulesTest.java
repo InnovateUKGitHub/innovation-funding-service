@@ -644,7 +644,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         final long userId = 11L;
         final long applicationId = 1L;
 
-        ProjectParticipantRole.PROJECT_USER_ROLES
+        ProjectParticipantRole.DISPLAY_PROJECT_TEAM_ROLES
                 .forEach(roleType -> {
 
                     UserResource userResource = newUserResource().withId(userId).build();

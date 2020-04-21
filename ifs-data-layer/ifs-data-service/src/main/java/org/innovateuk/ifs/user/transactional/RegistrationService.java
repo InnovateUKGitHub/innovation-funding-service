@@ -31,7 +31,6 @@ public interface RegistrationService {
     @PreAuthorize("hasAuthority('system_registrar')")
     ServiceResult<User> activatePendingUser(User user, String password, String hash);
 
-
     @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, long organisationId, @P("user") UserResource userResource);
 

@@ -106,8 +106,6 @@ public class RegistrationServiceImplRegApiAvailabilityTest extends BaseAuthentic
         return testService.doWithinTransaction(() -> {
             Organisation organisation = organisationRepository.findOneByName("Empire Ltd");
             Hibernate.initialize(organisation);
-            Hibernate.initialize(organisation.getUsers());
-            Hibernate.initialize(organisation.getProcessRoles());
             return organisation;
         });
     }
