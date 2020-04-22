@@ -206,32 +206,12 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withList(projectSetupStages, (projectSetupStage, section) -> section.setProjectSetupStages(projectSetupStages));
     }
 
-    public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
-        return withArraySetFieldByReflection("assessorCount", assessorCount);
-    }
-
-//    public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
-//        return withArraySetFieldByReflection("assessorPay", assessorPay);
-//    }
-
     public CompetitionResourceBuilder withNonIfs(Boolean... nonIfs) {
         return withArraySetFieldByReflection("nonIfs", nonIfs);
     }
 
     public CompetitionResourceBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
-    }
-
-    public CompetitionResourceBuilder withHasAssessmentPanel(Boolean... hasAssessmentPanel) {
-        return withArraySetFieldByReflection("hasAssessmentPanel", hasAssessmentPanel);
-    }
-
-    public CompetitionResourceBuilder withHasInterviewStage(Boolean... hasInterviewStage) {
-        return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
-    }
-
-    public CompetitionResourceBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
-        return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
     public CompetitionResourceBuilder withTermsAndConditions(GrantTermsAndConditionsResource... value) {

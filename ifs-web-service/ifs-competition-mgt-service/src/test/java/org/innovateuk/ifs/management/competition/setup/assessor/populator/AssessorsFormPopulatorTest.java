@@ -7,9 +7,11 @@ import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestSer
 import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.fixtures.CompetitionFundersFixture;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
@@ -22,17 +24,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class AssessorsFormPopulatorTest {
 
+	@InjectMocks
 	private AssessorsFormPopulator populator;
 
 	@Mock
 	private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
-	
-	@Before
-	public void setUp() {
-		populator = new AssessorsFormPopulator();
-	}
 
 	@Test
 	public void populateForm() {

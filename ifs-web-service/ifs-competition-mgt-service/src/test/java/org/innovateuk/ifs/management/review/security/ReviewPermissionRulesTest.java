@@ -43,6 +43,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(true)
+                    .withHasInterviewStage(true)
                     .withAssessorFinanceView(DETAILED)
                     .build();
 
@@ -55,6 +56,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(false)
+                    .withHasInterviewStage(false)
                     .withAssessorFinanceView(DETAILED)
                     .build();
 
@@ -84,17 +86,35 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
             final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
-                    .withHasAssessmentPanel(true)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithInterviewStage = newCompetitionAssessmentConfigResource()
+                    .withAverageAssessorScore(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(true)
+                    .withHasInterviewStage(true)
+                    .withAssessorFinanceView(DETAILED)
+                    .build();
+
             final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasAssessmentPanel(false)
                     .withCompetitionStatus(competitionStatus)
+                    .build();
+
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithoutInterviewStage = newCompetitionAssessmentConfigResource()
+                    .withAverageAssessorScore(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(false)
+                    .withHasInterviewStage(false)
+                    .withAssessorFinanceView(DETAILED)
                     .build();
 
             when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
             when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionAssessmentConfigResourceWithInterviewStage));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionAssessmentConfigResourceWithoutInterviewStage));
 
             if (competitionStatus == CompetitionStatus.FUNDERS_PANEL) {
                 assertTrue(rules.reviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
