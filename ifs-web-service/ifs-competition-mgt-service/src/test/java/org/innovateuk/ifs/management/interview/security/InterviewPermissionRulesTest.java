@@ -11,9 +11,12 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -37,27 +40,35 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
             final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(true)
                     .withCompetitionStatus(competitionStatus)
+                    .build();
+
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithInterviewStage = newCompetitionAssessmentConfigResource()
+                    .withAverageAssessorScore(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(true)
+                    .withHasInterviewStage(true)
+                    .withAssessorFinanceView(DETAILED)
                     .build();
 
             final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(false)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
-            final CompetitionAssessmentConfigResource configResourceWithInterview = newCompetitionAssessmentConfigResource()
-                    .withHasInterviewStage(true)
-                    .build();
-            final CompetitionAssessmentConfigResource configResourceWithoutInterview = newCompetitionAssessmentConfigResource()
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithoutInterviewStage = newCompetitionAssessmentConfigResource()
+                    .withAverageAssessorScore(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(false)
                     .withHasInterviewStage(false)
+                    .withAssessorFinanceView(DETAILED)
                     .build();
-
 
             when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
             when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
-            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithInterviewStage.getId())).thenReturn(restSuccess(configResourceWithInterview));
-            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(configResourceWithoutInterview));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionAssessmentConfigResourceWithInterviewStage));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionAssessmentConfigResourceWithoutInterviewStage));
 
             switch (competitionStatus) {
                 case ASSESSOR_FEEDBACK: case PROJECT_SETUP: case PREVIOUS:
@@ -79,22 +90,35 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
             final CompetitionResource competitionWithInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(true)
                     .withCompetitionStatus(competitionStatus)
+                    .build();
+
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithInterviewStage = newCompetitionAssessmentConfigResource()
+                    .withAverageAssessorScore(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(false)
+                    .withHasInterviewStage(true)
+                    .withAssessorFinanceView(DETAILED)
                     .build();
 
             final CompetitionResource competitionWithoutInterviewStage = newCompetitionResource()
-                    .withHasInterviewStage(false)
                     .withCompetitionStatus(competitionStatus)
                     .build();
-            final CompetitionAssessmentConfigResource configResourceWithInterview = newCompetitionAssessmentConfigResource().withHasInterviewStage(true).build();
-            final CompetitionAssessmentConfigResource configResourceWithoutInterview = newCompetitionAssessmentConfigResource().withHasInterviewStage(false).build();
 
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithoutInterviewStage = newCompetitionAssessmentConfigResource()
+                    .withAverageAssessorScore(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(false)
+                    .withHasInterviewStage(false)
+                    .withAssessorFinanceView(DETAILED)
+                    .build();
 
             when(competitionRestService.getCompetitionById(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionWithInterviewStage));
             when(competitionRestService.getCompetitionById(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionWithoutInterviewStage));
-            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithInterviewStage.getId())).thenReturn(restSuccess(configResourceWithInterview));
-            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(configResourceWithoutInterview));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithInterviewStage.getId())).thenReturn(restSuccess(competitionAssessmentConfigResourceWithInterviewStage));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionWithoutInterviewStage.getId())).thenReturn(restSuccess(competitionAssessmentConfigResourceWithoutInterviewStage));
 
             if (competitionStatus == CompetitionStatus.FUNDERS_PANEL) {
                 assertTrue(rules.interviewPanelApplications(CompetitionCompositeId.id(competitionWithInterviewStage.getId()), loggedInUser));
