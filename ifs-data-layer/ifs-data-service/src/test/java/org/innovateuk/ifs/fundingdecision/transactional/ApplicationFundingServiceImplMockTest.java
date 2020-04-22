@@ -9,9 +9,12 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
+import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -36,10 +39,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.math.BigDecimal;
 import java.text.Collator;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
@@ -66,6 +71,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Mock
     private CompetitionRepository competitionRepository;
+
+    @Mock
+    private AverageAssessorScoreRepository averageAssessorScoreRepository;
 
     @Mock
     private FundingDecisionMapper fundingDecisionMapper;
@@ -183,7 +191,94 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         when(notificationService.sendNotificationWithFlush(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
-//        when(assessorFormInputResponseService.getApplicationAggregateScores(any(Long.class)).getSuccess().getAveragePercentage()).thenReturn(any(BigDecimal.class));
+
+        when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.notifyApplicantsOfFundingDecisions(fundingNotificationResource);
+        assertTrue(result.isSuccess());
+
+        verify(notificationService).sendNotificationWithFlush(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL));
+        verifyNoMoreInteractions(notificationService);
+
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
+        verify(applicationService).setApplicationFundingEmailDateTime(eq(application3.getId()), any(ZonedDateTime.class));
+        verifyNoMoreInteractions(applicationService);
+    }
+
+    @Test
+    public void testNotifyLeadApplicantsOfFundingDecisionsWithAverageAssessorScore() {
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        competitionAssessmentConfig.setAverageAssessorScore(TRUE);
+
+        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
+        Application application3 = newApplication().withCompetition(competition).build();
+
+        User application1LeadApplicant = newUser().build();
+        User application2LeadApplicant = newUser().build();
+        User application3LeadApplicant = newUser().build();
+
+        List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
+                withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant).
+                withApplication(application1, application2, application3).
+                withRole(Role.LEADAPPLICANT).
+                build(3);
+
+        UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
+        UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
+        UserNotificationTarget application3LeadApplicantTarget = new UserNotificationTarget(application3LeadApplicant.getName(), application3LeadApplicant.getEmail());
+        List<NotificationTarget> expectedLeadApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application3LeadApplicantTarget);
+
+        AverageAssessorScore averageAssessorScore1 = new AverageAssessorScore(application1, BigDecimal.valueOf(90));
+        AverageAssessorScore averageAssessorScore2 = new AverageAssessorScore(application2, BigDecimal.valueOf(60));
+        AverageAssessorScore averageAssessorScore3 = new AverageAssessorScore(application3, BigDecimal.valueOf(70));
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(
+                application1.getId(), FundingDecision.FUNDED,
+                application2.getId(), FundingDecision.UNFUNDED,
+                application3.getId(), FundingDecision.ON_HOLD);
+
+        FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("The message body.", decisions);
+
+        Map<String, Object> expectedGlobalNotificationArguments = asMap("message", fundingNotificationResource.getMessageBody());
+
+        Map<NotificationTarget, Map<String, Object>> expectedTargetSpecificNotificationArguments = asMap(
+                application1LeadApplicantTarget, asMap(
+                        "applicationName", application1.getName(),
+                        "competitionName", application1.getCompetition().getName(),
+                        "applicationId", application1.getId(),
+                        "averageAssessorScore", "Average assessor score: " + averageAssessorScore1.getScore() + "%"),
+
+                application2LeadApplicantTarget, asMap(
+                        "applicationName", application2.getName(),
+                        "competitionName", application2.getCompetition().getName(),
+                        "applicationId", application2.getId(),
+                        "averageAssessorScore", "Average assessor score: " + averageAssessorScore2.getScore() + "%"),
+
+                application3LeadApplicantTarget, asMap(
+                        "applicationName", application3.getName(),
+                        "competitionName", application3.getCompetition().getName(),
+                        "applicationId", application3.getId(),
+                        "averageAssessorScore", "Average assessor score: " + averageAssessorScore3.getScore() + "%"));
+
+        Notification expectedFundingNotification = new Notification(systemNotificationSource, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments, expectedTargetSpecificNotificationArguments);
+
+        List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
+        List<Application> applications = asList(application1, application2, application3);
+        when(applicationRepository.findAllById(applicationIds)).thenReturn(applications);
+
+        leadApplicantProcessRoles.forEach(processRole ->
+                when(processRoleRepository.findByApplicationIdAndRole(processRole.getApplicationId(), processRole.getRole())).thenReturn(singletonList(processRole))
+        );
+
+        when(averageAssessorScoreRepository.findByApplicationId(application1.getId())).thenReturn(Optional.of(averageAssessorScore1));
+        when(averageAssessorScoreRepository.findByApplicationId(application2.getId())).thenReturn(Optional.of(averageAssessorScore2));
+        when(averageAssessorScoreRepository.findByApplicationId(application3.getId())).thenReturn(Optional.of(averageAssessorScore3));
+        when(notificationService.sendNotificationWithFlush(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(applicationService.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
 
         when(competitionService.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 

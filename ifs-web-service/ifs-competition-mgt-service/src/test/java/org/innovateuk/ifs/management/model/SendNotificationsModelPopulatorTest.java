@@ -6,12 +6,13 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
-import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.management.funding.form.NotificationEmailsForm;
 import org.innovateuk.ifs.management.notification.populator.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.notification.viewmodel.SendNotificationsViewModel;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -46,7 +48,8 @@ public class SendNotificationsModelPopulatorTest {
     @Mock
     private ApplicationSummaryRestService applicationSummaryRestServiceMock;
 
-
+    @Mock
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     @Test
     public void populateModel() {
@@ -62,9 +65,11 @@ public class SendNotificationsModelPopulatorTest {
 
         ApplicationSummaryPageResource applicationResults = new ApplicationSummaryPageResource();
         applicationResults.setContent(Arrays.asList(application1, application2, application3));
+        CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withAverageAssessorScore(Boolean.FALSE).build();
 
         when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, empty())).thenReturn(restSuccess(applicationResults));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(assessmentConfig));
 
         List<Long> requestedIds = Arrays.asList(application1.getId(), application3.getId());
         List<ApplicationSummaryResource> expectedApplications = Arrays.asList(application1, application3);
