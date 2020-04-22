@@ -49,7 +49,7 @@
                         <small>
                             <th:block th:text="${row.numberOfPartners > 1 ? row.numberOfPartners+' partners' : row.numberOfPartners+' partner'}" /><br/>
                             <th:block th:text="${'Lead: '+row.projectLeadOrganisationName}" />
-                            <a th:if="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
+                            <a th:unless="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
                             class="govuk-link">View activity log</a>
                         </small>
                     </th>
