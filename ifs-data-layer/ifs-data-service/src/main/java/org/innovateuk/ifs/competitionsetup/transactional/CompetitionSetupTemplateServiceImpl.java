@@ -86,7 +86,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         Competition competition = competitionOptional.get();
 
         competition.setCompetitionType(competitionType.get());
-        setDefaultAssessorPayAndCount(competition);
+        setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
@@ -160,17 +160,18 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         return competition;
     }
 
-    private Competition setDefaultAssessorPayAndCount(Competition competition) {
-        Optional<CompetitionAssessmentConfig> competitionAssessmentConfig = competitionAssessmentConfigRepository.findOneByCompetitionId(competition.getId());
+    private Competition setDefaultAssessorPayAndCountAndAverageAssessorScore(Competition competition) {
 
-        if (competitionAssessmentConfig.get().getAssessorCount() == null) {
+        if (competition.getCompetitionAssessmentConfig() == null) {
+            CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+            competitionAssessmentConfig.setCompetition(competition);
+
             Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-            defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.get().setAssessorCount(assessorCountOption.getOptionValue()));
+            defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.setAssessorCount(assessorCountOption.getOptionValue()));
+            competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+            competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         }
 
-        if (competitionAssessmentConfig.get().getAssessorPay() == null) {
-            competitionAssessmentConfig.get().setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
-        }
         return competition;
     }
 

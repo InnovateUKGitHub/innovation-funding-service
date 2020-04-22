@@ -7,7 +7,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
@@ -211,9 +210,9 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("assessorCount", assessorCount);
     }
 
-    public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
-        return withArraySetFieldByReflection("assessorPay", assessorPay);
-    }
+//    public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
+//        return withArraySetFieldByReflection("assessorPay", assessorPay);
+//    }
 
     public CompetitionResourceBuilder withNonIfs(Boolean... nonIfs) {
         return withArraySetFieldByReflection("nonIfs", nonIfs);

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
@@ -22,7 +21,6 @@ import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -63,11 +61,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionTypeId", referencedColumnName = "id")
     private CompetitionType competitionType;
 
-    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
-    private Integer assessorCount;
-
-    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
-    private BigDecimal assessorPay;
+//    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
+//    private Integer assessorCount;
+//
+//    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
+//    private BigDecimal assessorPay;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST)
     private List<Milestone> milestones = new ArrayList<>();
@@ -110,19 +108,19 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private boolean multiStream;
     private Boolean resubmission;
 
-    @ZeroDowntime(reference = "IFS-7369", description = "Assessment Panel")
-    private Boolean hasAssessmentPanel;
-
-    @ZeroDowntime(reference = "IFS-7369", description = "Interview Stage")
-    private Boolean hasInterviewStage;
+//    @ZeroDowntime(reference = "IFS-7369", description = "Assessment Panel")
+//    private Boolean hasAssessmentPanel;
+//
+//    @ZeroDowntime(reference = "IFS-7369", description = "Interview Stage")
+//    private Boolean hasInterviewStage;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionAssessmentConfigId", referencedColumnName = "id")
-    private CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+    private CompetitionAssessmentConfig competitionAssessmentConfig;
 
-    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
-    @Enumerated(EnumType.STRING)
-    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
+//    @ZeroDowntime(reference = "IFS-7369", description = "TODO")
+//    @Enumerated(EnumType.STRING)
+//    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -693,21 +691,21 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         return "";
     }
 
-    public Integer getAssessorCount() {
-        return competitionAssessmentConfig.getAssessorCount();
-    }
+//    public Integer getAssessorCount() {
+//        return competitionAssessmentConfig.getAssessorCount();
+//    }
+//
+//    public void setAssessorCount(Integer assessorCount) {
+//        this.assessorCount = assessorCount;
+//    }
 
-    public void setAssessorCount(Integer assessorCount) {
-        this.assessorCount = assessorCount;
-    }
-
-    public BigDecimal getAssessorPay() {
-        return competitionAssessmentConfig.getAssessorPay();
-    }
-
-    public void setAssessorPay(BigDecimal assessorPay) {
-        this.assessorPay = assessorPay;
-    }
+//    public BigDecimal getAssessorPay() {
+//        return competitionAssessmentConfig.getAssessorPay();
+//    }
+//
+//    public void setAssessorPay(BigDecimal assessorPay) {
+//        this.assessorPay = assessorPay;
+//    }
 
     public boolean isTemplate() {
         return template;
@@ -792,29 +790,29 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.nonIfsUrl = nonIfsUrl;
     }
 
-    public Boolean isHasAssessmentPanel() {
-        return competitionAssessmentConfig.getHasAssessmentPanel();
-    }
+//    public Boolean isHasAssessmentPanel() {
+//        return competitionAssessmentConfig.getHasAssessmentPanel();
+//    }
 
-    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
-        this.hasAssessmentPanel = hasAssessmentPanel;
-    }
+//    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+//        this.hasAssessmentPanel = hasAssessmentPanel;
+//    }
+//
+//    public Boolean isHasInterviewStage() {
+//        return competitionAssessmentConfig.getHasInterviewStage();
+//    }
 
-    public Boolean isHasInterviewStage() {
-        return competitionAssessmentConfig.getHasInterviewStage();
-    }
-
-    public void setHasInterviewStage(Boolean hasInterviewStage) {
-        this.hasInterviewStage = hasInterviewStage;
-    }
-
-    public AssessorFinanceView getAssessorFinanceView() {
-        return competitionAssessmentConfig.getAssessorFinanceView();
-    }
-
-    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
-        this.assessorFinanceView = assessorFinanceView;
-    }
+//    public void setHasInterviewStage(Boolean hasInterviewStage) {
+//        this.hasInterviewStage = hasInterviewStage;
+//    }
+//
+//    public AssessorFinanceView getAssessorFinanceView() {
+//        return competitionAssessmentConfig.getAssessorFinanceView();
+//    }
+//
+//    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
+//        this.assessorFinanceView = assessorFinanceView;
+//    }
 
     public List<GrantClaimMaximum> getGrantClaimMaximums() {
         return grantClaimMaximums;
