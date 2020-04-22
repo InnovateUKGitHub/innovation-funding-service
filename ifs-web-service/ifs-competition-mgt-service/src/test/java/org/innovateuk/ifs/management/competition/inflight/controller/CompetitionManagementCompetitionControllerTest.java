@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionKeyAssessmentStatisticsRestService;
 import org.innovateuk.ifs.commons.exception.IncorrectStateForPageException;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInAssessmentKeyAssessmentStatisticsResourceBuilder.newCompetitionInAssessmentKeyAssessmentStatisticsResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
@@ -74,6 +77,9 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Mock
     private AssessorRestService assessorRestService;
 
+    @Mock
+    CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
     @Spy
     private NavigationUtils navigationUtilsMock;
 
@@ -91,14 +97,21 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         CompetitionResource competitionResource = newCompetitionResource()
                 .withName(expectedCompetitionName)
                 .withCompetitionStatus(expectedCompetitionStatus)
+                .withCompetitionTypeName("Programme")
+                .build();
+
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
+                .withAverageAssessorScore(false)
+                .withAssessorCount(5)
+                .withAssessorPay(BigDecimal.valueOf(100))
                 .withHasAssessmentPanel(true)
                 .withHasInterviewStage(true)
                 .withAssessorFinanceView(DETAILED)
-                .withCompetitionTypeName("Programme")
                 .build();
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionAssessmentConfigResource));
         competitionResource.setMilestones(singletonList(10L));
 
         MilestoneResource milestone = newMilestoneResource()
