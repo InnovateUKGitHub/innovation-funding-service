@@ -17,6 +17,8 @@ import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionReposit
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,8 @@ import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.in
  */
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
+
+    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
 
     @Autowired
     private CompetitionTemplatePersistorImpl competitionTemplatePersistor;
@@ -89,12 +93,27 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
+        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition);
+
         setDefaultProjectDocuments(competition);
 
         initialiseFinanceTypes(competition);
         initialiseProjectSetupColumns(competition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+    }
+
+    private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(Competition competition) {
+        if (FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType()) {
+            Optional<Section> termsSection = competition.getSections().stream().filter(s -> s.isType(SectionType.TERMS_AND_CONDITIONS)).findAny();
+            if (termsSection.isPresent()) {
+                termsSection.get().getQuestions().forEach(q -> {
+                    q.setDescription(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
+                    q.setName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
+                    q.setShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
+                });
+            }
+        }
     }
 
     private void setDefaultProjectDocuments(Competition competition) {
