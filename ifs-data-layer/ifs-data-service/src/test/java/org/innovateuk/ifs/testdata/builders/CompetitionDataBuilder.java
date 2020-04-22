@@ -17,7 +17,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -98,11 +97,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 String pafCode,
                                                 String code,
                                                 String activityCode,
-                                                Integer assessorCount,
-                                                BigDecimal assessorPay,
-                                                Boolean hasAssessmentPanel,
-                                                Boolean hasInterviewStage,
-                                                AssessorFinanceView assessorFinanceView,
                                                 Boolean multiStream,
                                                 String collaborationLevelCode,
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
@@ -159,11 +153,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
-                competition.setAssessorPay(assessorPay);
-                competition.setAssessorCount(assessorCount);
-                competition.setHasAssessmentPanel(hasAssessmentPanel);
-                competition.setHasInterviewStage(hasInterviewStage);
-                competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
                 competition.setIncludeJesForm(includeJesForm);
                 competition.setApplicationFinanceType(applicationFinanceType);

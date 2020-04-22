@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.upcoming.viewmodel.UpcomingCompetitionViewModel;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
@@ -16,6 +17,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -61,12 +63,17 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
 
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
                 .withAverageAssessorScore(false)
+                .withAssessorCount(5)
+                .withAssessorPay(BigDecimal.valueOf(100))
+                .withHasAssessmentPanel(false)
+                .withHasInterviewStage(false)
+                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .build();
 
         UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource, competitionAssessmentConfigResource);
 
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
-        when(competitionAssessmentConfigRestService.findOneByCompetitionId(1L)).thenReturn(restSuccess(competitionAssessmentConfigResource));
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
                 .andExpect(model().attribute("model", expectedViewModel))
