@@ -11,6 +11,7 @@ import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsFo
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -114,6 +115,7 @@ public class AssessorSectionSaverTest {
 				.withSetupComplete(true)
 				.withStartDate(yesterday)
 				.withFundersPanelDate(tomorrow)
+				.withCompetitionType(1L)
 				.build();
 
 		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
@@ -126,22 +128,27 @@ public class AssessorSectionSaverTest {
 				.build();
 
 		List<AssessorCountOptionResource> assessorCounts = newAssessorCountOptionResource()
+				.withCompetitionType(competition.getCompetitionType())
                 .withAssessorOptionName("1", "3", "5")
                 .withAssessorOptionValue(1, 3, 5)
                 .build(3);
 
+		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
+
 		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
 				.thenReturn(restSuccess(assessorCounts));
-		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 		when(competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource)).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
 		saver.saveSection(competition, assessorsForm);
 
-		assertEquals(oldAssessorPay, competitionAssessmentConfigResource.getAssessorPay());
-		assertEquals(newAssessorCount, competitionAssessmentConfigResource.getAssessorCount());
-
+		ArgumentCaptor<CompetitionAssessmentConfigResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionAssessmentConfigResource.class);
 		verify(assessorCountOptionsRestService).findAllByCompetitionType(competition.getCompetitionType());
-		verify(competitionAssessmentConfigRestService).update(competition.getId(), competitionAssessmentConfigResource);
+		verify(competitionAssessmentConfigRestService).findOneByCompetitionId(competition.getId());
+		verify(competitionAssessmentConfigRestService).update(anyLong(), argumentCaptor.capture());
+		assertEquals(newAssessorCount, argumentCaptor.getValue().getAssessorCount());
+
+		assertEquals(oldAssessorPay, argumentCaptor.getValue().getAssessorPay());
+		assertEquals(newAssessorCount, argumentCaptor.getValue().getAssessorCount());
 	}
 
 	@Test
