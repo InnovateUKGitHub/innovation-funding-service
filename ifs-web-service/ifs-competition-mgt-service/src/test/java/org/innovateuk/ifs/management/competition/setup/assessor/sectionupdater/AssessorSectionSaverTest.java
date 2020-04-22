@@ -109,7 +109,6 @@ public class AssessorSectionSaverTest {
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L)
-				.withAssessorCount(oldAssessorCount)
 				.withSetupComplete(true)
 				.withStartDate(yesterday)
 				.withFundersPanelDate(tomorrow)
