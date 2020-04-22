@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
@@ -25,6 +26,9 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
     @Autowired
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
+    @Autowired
+    private CompetitionAssessmentConfigRepository competitionAssessmentConfigRepository;
+
     @Override
     public ServiceResult<CompetitionOpenKeyApplicationStatisticsResource> getOpenKeyStatisticsByCompetition(
             long competitionId) {
@@ -32,7 +36,7 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
 
         CompetitionOpenKeyApplicationStatisticsResource competitionOpenKeyApplicationStatisticsResource = new
                 CompetitionOpenKeyApplicationStatisticsResource();
-        competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById
+        competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findById
                 (competitionId).get().getAssessorCount());
         competitionOpenKeyApplicationStatisticsResource.setApplicationsStarted(applicationRepository
                 .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
@@ -51,7 +55,7 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
             long competitionId) {
         CompetitionClosedKeyApplicationStatisticsResource competitionClosedKeyApplicationStatisticsResource = new
                 CompetitionClosedKeyApplicationStatisticsResource();
-        competitionClosedKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById
+        competitionClosedKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findById
                 (competitionId).get().getAssessorCount());
         competitionClosedKeyApplicationStatisticsResource.setApplicationsRequiringAssessors
                 (applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId,

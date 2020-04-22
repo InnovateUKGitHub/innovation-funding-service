@@ -42,11 +42,11 @@ public class CompetitionAssessmentConfigServiceImpl extends RootTransactionalSer
                     config.setHasInterviewStage(competitionAssessmentConfigResource.getHasInterviewStage());
                     config.setAssessorFinanceView(competitionAssessmentConfigResource.getAssessorFinanceView());
 
-                    config.getCompetition().setAssessorPay(competitionAssessmentConfigResource.getAssessorPay());
-                    config.getCompetition().setAssessorCount(competitionAssessmentConfigResource.getAssessorCount());
-                    config.getCompetition().setHasAssessmentPanel(competitionAssessmentConfigResource.getHasAssessmentPanel());
-                    config.getCompetition().setHasInterviewStage(competitionAssessmentConfigResource.getHasInterviewStage());
-                    config.getCompetition().setAssessorFinanceView(competitionAssessmentConfigResource.getAssessorFinanceView());
+//                    config.getCompetition().setAssessorPay(competitionAssessmentConfigResource.getAssessorPay());
+//                    config.getCompetition().setAssessorCount(competitionAssessmentConfigResource.getAssessorCount());
+//                    config.getCompetition().setHasAssessmentPanel(competitionAssessmentConfigResource.getHasAssessmentPanel());
+//                    config.getCompetition().setHasInterviewStage(competitionAssessmentConfigResource.getHasInterviewStage());
+//                    config.getCompetition().setAssessorFinanceView(competitionAssessmentConfigResource.getAssessorFinanceView());
                 });
     }
 }
