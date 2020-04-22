@@ -11,7 +11,6 @@ import org.innovateuk.ifs.management.competition.setup.assessor.form.AssessorsFo
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -51,14 +50,15 @@ public class AssessorSectionSaverTest {
 		competitionSetupForm.setHasAssessmentPanel(Boolean.FALSE);
 		competitionSetupForm.setHasInterviewStage(Boolean.FALSE);
 		competitionSetupForm.setAssessorFinanceView(OVERVIEW);
+		competitionSetupForm.setAverageAssessorScore(Boolean.FALSE);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
 
 		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
 				.withAverageAssessorScore(false)
-				.withAssessorCount(5)
-				.withAssessorPay(BigDecimal.valueOf(100))
+				.withAssessorCount(3)
+				.withAssessorPay(BigDecimal.valueOf(10))
 				.withHasAssessmentPanel(false)
 				.withHasInterviewStage(false)
 				.withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
@@ -69,10 +69,10 @@ public class AssessorSectionSaverTest {
                 .withAssessorOptionValue(1, 3, 5)
                 .build(3);
 
-        when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
-        when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
+		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
 				.thenReturn(restSuccess(assessorCounts));
-        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
+        when(competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource)).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
         saver.saveSection(competition, competitionSetupForm);
 
@@ -83,7 +83,7 @@ public class AssessorSectionSaverTest {
 		assertEquals(OVERVIEW, competitionAssessmentConfigResource.getAssessorFinanceView());
 
         verify(assessorCountOptionsRestService).findAllByCompetitionType(competition.getCompetitionType());
-		verify(competitionSetupRestService).update(competition);
+		verify(competitionAssessmentConfigRestService).update(competition.getId(), competitionAssessmentConfigResource);
 	}
 
 	@Test
@@ -96,8 +96,6 @@ public class AssessorSectionSaverTest {
 	public void testOnlyAssessorCountIsUpdatedAfterSetupAndLive() {
 		Integer newAssessorCount = 5;
 		BigDecimal newAssessorPay = new BigDecimal("10000");
-
-		Integer oldAssessorCount = 3;
 		BigDecimal oldAssessorPay = new BigDecimal("15000");
 
 		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
@@ -106,6 +104,10 @@ public class AssessorSectionSaverTest {
 		AssessorsForm assessorsForm = new AssessorsForm();
 		assessorsForm.setAssessorCount(newAssessorCount);
 		assessorsForm.setAssessorPay(newAssessorPay);
+		assessorsForm.setAverageAssessorScore(Boolean.FALSE);
+		assessorsForm.setHasInterviewStage(Boolean.FALSE);
+		assessorsForm.setAssessorFinanceView(OVERVIEW);
+		assessorsForm.setHasAssessmentPanel(Boolean.FALSE);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L)
@@ -116,8 +118,8 @@ public class AssessorSectionSaverTest {
 
 		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
 				.withAverageAssessorScore(false)
-				.withAssessorCount(5)
-				.withAssessorPay(oldAssessorPay)
+				.withAssessorCount(newAssessorCount)
+				.withAssessorPay(BigDecimal.valueOf(15000))
 				.withHasAssessmentPanel(false)
 				.withHasInterviewStage(false)
 				.withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
@@ -128,20 +130,18 @@ public class AssessorSectionSaverTest {
                 .withAssessorOptionValue(1, 3, 5)
                 .build(3);
 
-		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 		when(assessorCountOptionsRestService.findAllByCompetitionType(competition.getCompetitionType()))
 				.thenReturn(restSuccess(assessorCounts));
-		when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+		when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
+		when(competitionAssessmentConfigRestService.update(competition.getId(), competitionAssessmentConfigResource)).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
 		saver.saveSection(competition, assessorsForm);
 
-		ArgumentCaptor<CompetitionAssessmentConfigResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionAssessmentConfigResource.class);
+		assertEquals(oldAssessorPay, competitionAssessmentConfigResource.getAssessorPay());
+		assertEquals(newAssessorCount, competitionAssessmentConfigResource.getAssessorCount());
+
 		verify(assessorCountOptionsRestService).findAllByCompetitionType(competition.getCompetitionType());
-
-		assertEquals(oldAssessorPay, argumentCaptor.getValue().getAssessorPay());
-		assertEquals(newAssessorCount, argumentCaptor.getValue().getAssessorCount());
-
-		verify(competitionSetupRestService).update(competition);
+		verify(competitionAssessmentConfigRestService).update(competition.getId(), competitionAssessmentConfigResource);
 	}
 
 	@Test
