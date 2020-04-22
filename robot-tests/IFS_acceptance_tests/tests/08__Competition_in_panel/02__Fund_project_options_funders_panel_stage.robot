@@ -126,6 +126,26 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
     When the user navigates to the page                  ${CA_Live}
     Then the user should see the element                 jQuery = section:contains("Inform") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
 
+Comp Admin can set the notification email to include assessor average score
+    [Documentation]  IFS-7369
+    Given the user clicks the button/link  link = Living models for the future
+    When the user set assessor score notification to yes
+    Then the user should see the element   jQuery = dt:contains("average assessor score") + dd:contains("Yes")
+
+Notification email template includes assessor score
+    [Documentation]  IFS-7370
+    [Setup]  Assess the application and move to in notification
+    Given the user clicks the button/link  link = Manage funding notifications
+    When the user selects the checkbox     app-row-225
+    And the user clicks the button/link    id = write-and-send-email
+    Then the user should see the element   jQuery = p:contains("Average assessor score")
+
+Email to external user contains average assessor score
+    [Documentation]  IFS-7370
+    Given the user clicks the button/link        jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
+    When the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
+    Then the user reads his email                nancy.peters@gmail.com   Successful  Average assessor score
+
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
@@ -170,6 +190,7 @@ the internal user sends an email notification
     the user should see the element         jQuery = td:contains("${application}") ~ td:contains("${decision}")
     the user selects the checkbox           app-row-${id}
     the user clicks the button/link         jQuery = button:contains("Write and send email")
+    the user should not see the element     jQuery = p:contains("Average assessor score")
     the user enters text to a text field    css = .editor  ${message}
     the user clicks the button/link         jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
     the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
@@ -234,7 +255,6 @@ external lead applicant reads his email and checks status on his dashboard
     log in as a different user                      ${test_mailbox_one}+fundsuccess@gmail.com   ${short_password}
     the user should see the element                 jQuery = .task:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ .status:contains("Application submitted")
 
-
 external collaborators read their email
     verify the user has received the on hold email    ${lead_applicant}
     verify the user has received the on hold email    ${collaborator1_credentials["email"]}
@@ -242,3 +262,22 @@ external collaborators read their email
     verify the user has received the on hold email    ${lead_applicant_alternative_user_credentials["email"]}
     verify the user has received the on hold email    ${collaborator1_alternative_user_credentials["email"]}
     verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
+
+Assess the application and move to in notification
+    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Competition
+    the user clicks the button/link    id = close-assessment-button
+    the user clicks the button/link    link = Input and review funding decision
+    the user selects the checkbox      app-row-1
+    the user clicks the button/link    jQuery = button:contains("Successful")
+    the user clicks the button/link    link = Competition
+
+the user set assessor score notification to yes
+    the user clicks the button/link         link = View and update competition setup
+    the user clicks the button/link         link = Assessors
+    the user clicks the button/link         jQuery = button:contains("Edit")
+    the user selects the radio button       assessorCount   5
+    the user selects the radio button       hasAssessmentPanel  hasAssessmentPanel-0
+    the user selects the radio button       hasInterviewStage  hasInterviewStage-0
+    the user selects the radio button       averageAssessorScore  averageAssessorScore-0
+    the user clicks the button/link         jQuery = button:contains("Done")
