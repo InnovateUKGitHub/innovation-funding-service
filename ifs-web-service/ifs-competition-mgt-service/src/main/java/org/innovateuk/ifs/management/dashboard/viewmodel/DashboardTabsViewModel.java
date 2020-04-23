@@ -28,7 +28,7 @@ public class DashboardTabsViewModel {
     }
 
     public boolean previous() {
-        return isInternal(userResource) || isStakeholder(userResource) || isExternalFinanceUser(userResource);
+        return isInternal(userResource) || isStakeholder(userResource);
     }
 
     public boolean support() {
