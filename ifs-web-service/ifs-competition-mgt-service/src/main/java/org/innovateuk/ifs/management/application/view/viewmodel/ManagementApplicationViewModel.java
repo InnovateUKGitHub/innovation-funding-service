@@ -111,6 +111,9 @@ public class ManagementApplicationViewModel {
         return projectId != null;
     }
 
+    public boolean canViewActivityLog() {
+        return projectId != null && !isExternalFinanceUser();
+    }
     public LocalDate getStartDate() {
         return startDate;
     }

@@ -106,7 +106,7 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li th:if="${model.hasProject()}">
+                    <li th:if="${model.canViewActivityLog()}">
                         <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competition.id},projectId=${model.projectId})}" class="govuk-link">
                             view activity log
                         </a>

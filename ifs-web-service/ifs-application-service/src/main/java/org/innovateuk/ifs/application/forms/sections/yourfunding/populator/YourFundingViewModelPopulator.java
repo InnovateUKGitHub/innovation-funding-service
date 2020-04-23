@@ -17,6 +17,7 @@ import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,7 +54,7 @@ public class YourFundingViewModelPopulator {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        if (user.isInternalUser()) {
+        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
             return populateManagement(applicationId, sectionId, organisationId);
         }
         return populate(applicationId, sectionId, user);

@@ -64,6 +64,11 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
+
+        if (isExternalFinanceUser(userResource)) {
+            return NOT_ACCESSIBLE;
+        }
+
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
@@ -99,6 +104,11 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
+
+        if (isExternalFinanceUser(userResource)) {
+            return NOT_ACCESSIBLE;
+        }
+
         if (documentsApproved()
                 && projectSetupProgressChecker.isSpendProfileApproved()
                 && projectSetupProgressChecker.isBankDetailsApproved()) {
