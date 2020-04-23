@@ -437,7 +437,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     public ServiceResult<StringResource> getDocusignUrl(long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> {
             User projectManager = getExistingProjectManager(project).get().getUser();
-            //String envelopeId, String userId, String name, String email, String redirect
             return new StringResource(docusignService.getDocusignUrl(project.getSignedGolDocusignDocument().getEnvelopeId(), projectManager.getId(),
                     projectManager.getName(), projectManager.getEmail(), String.format("/project-setup/project/%d/offer", projectId)));
         });

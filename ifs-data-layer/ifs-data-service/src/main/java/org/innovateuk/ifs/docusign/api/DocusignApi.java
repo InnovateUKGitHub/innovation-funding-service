@@ -35,7 +35,6 @@ public class DocusignApi {
     private long expiresIn;
     private ApiClient apiClient;
 
-
     public ApiClient getApiClient() {
         if (apiClient == null) {
             apiClient = new ApiClient(apiBasePath);
@@ -47,13 +46,13 @@ public class DocusignApi {
             throw new IFSRuntimeException(e);
         }
     }
+
     private void checkToken() throws IOException, ApiException {
         if(this.oAuthToken == null
                 || (System.currentTimeMillis() + TOKEN_REPLACEMENT_IN_MILLISECONDS) > this.expiresIn) {
             updateToken();
         }
     }
-
 
     private void updateToken() throws IOException, ApiException {
         List<String> scopes = new ArrayList<>();
