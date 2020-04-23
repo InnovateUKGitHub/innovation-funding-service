@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -92,7 +91,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
     @Test
     @Transactional
     @Rollback
-    public void testApcMaximumGrantClaimsForBusiness() {
+    public void apcMaximumGrantClaimsForBusiness() {
 
         // For speed, all of these tests are combined in the same test method so that we don't have to continually recreate the
         // APC competition
@@ -213,8 +212,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         singletonList("Digital manufacturing"), "Materials and manufacturing", true,
                         researchCategory, "ian.cooper@innovateuk.test",
                         "john.doe@innovateuk.test", "DET1536/1537", "875",
-                        "CCCC", "16014", 1, BigDecimal.valueOf(100L),
-                        false, false, AssessorFinanceView.OVERVIEW,false,
+                        "CCCC", "16014", false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
                         true, STANDARD, true, true).

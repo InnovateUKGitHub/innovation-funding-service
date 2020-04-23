@@ -36,7 +36,7 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
 
         CompetitionOpenKeyApplicationStatisticsResource competitionOpenKeyApplicationStatisticsResource = new
                 CompetitionOpenKeyApplicationStatisticsResource();
-        competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findById
+        competitionOpenKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findOneByCompetitionId
                 (competitionId).get().getAssessorCount());
         competitionOpenKeyApplicationStatisticsResource.setApplicationsStarted(applicationRepository
                 .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
@@ -55,7 +55,7 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
             long competitionId) {
         CompetitionClosedKeyApplicationStatisticsResource competitionClosedKeyApplicationStatisticsResource = new
                 CompetitionClosedKeyApplicationStatisticsResource();
-        competitionClosedKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findById
+        competitionClosedKeyApplicationStatisticsResource.setApplicationsPerAssessor(competitionAssessmentConfigRepository.findOneByCompetitionId
                 (competitionId).get().getAssessorCount());
         competitionClosedKeyApplicationStatisticsResource.setApplicationsRequiringAssessors
                 (applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateIn(competitionId,

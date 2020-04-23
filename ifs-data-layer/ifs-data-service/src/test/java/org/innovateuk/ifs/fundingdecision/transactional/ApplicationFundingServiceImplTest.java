@@ -65,7 +65,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<ApplicationFundingService> {
+public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<ApplicationFundingService> {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
 
@@ -133,7 +133,11 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisions() {
-        Competition competition = newCompetition().build();
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+
+        Competition competition = newCompetition()
+                .withCompetitionAssessmentConfig(competitionAssessmentConfig)
+                .build();
 
         Application application1 = newApplication().withCompetition(competition).build();
         Application application2 = newApplication().withCompetition(competition).build();
@@ -296,8 +300,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testNotifyAllApplicantsOfFundingDecisions() {
-
-        Competition competition = newCompetition().build();
+        CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+        Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
 
         Application application1 = newApplication().withCompetition(competition).build();
         Application application2 = newApplication().withCompetition(competition).build();

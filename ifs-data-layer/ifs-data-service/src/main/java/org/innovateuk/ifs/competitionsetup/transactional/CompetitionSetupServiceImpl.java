@@ -151,7 +151,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private Competition saveAssessmentConfig(Competition existingCompetition, Competition newCompetition) {
         newCompetition.setCompetitionAssessmentConfig(existingCompetition.getCompetitionAssessmentConfig());
-//        existingCompetition.getCompetitionAssessmentConfig().setCompetition(newCompetition);
         return newCompetition;
     }
 
