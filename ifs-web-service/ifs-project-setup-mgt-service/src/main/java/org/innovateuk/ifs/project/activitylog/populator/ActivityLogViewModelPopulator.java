@@ -93,7 +93,7 @@ public class ActivityLogViewModelPopulator {
     private boolean userCanSeeLink(ActivityLogResource activity, UserResource user) {
         if (activity.isOrganisationRemoved() && ActivityLogUrlHelper.linkInvalidIfOrganisationRemoved(activity)) {
             return false;
-        } else  if (user.hasRole(PROJECT_FINANCE)) {
+        } else if (user.hasRole(PROJECT_FINANCE)) {
             return true;
         } else if (user.hasRole(COMP_ADMIN)) {
             return COMP_ADMIN_TYPES.contains(activity.getActivityType());
@@ -126,11 +126,17 @@ public class ActivityLogViewModelPopulator {
     }
 
     private String userText(ActivityLogResource log, List<ProjectUserResource> projectUserResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
-        if (log.isInternalUser() || log.isExternalFinanceUser()) {
+        if (log.isInternalUser()) {
             return internalUserText(log);
+        } else if (log.isExternalFinanceUser()) {
+            return externalFinanceUserText(log);
         } else {
             return externalUserText(log, projectUserResources, partnerOrganisationResources);
         }
+    }
+
+    private String externalFinanceUserText(ActivityLogResource log) {
+        return log.getAuthoredByName() + ", " + EXTERNAL_FINANCE.getDisplayName();
     }
 
     private String internalUserText(ActivityLogResource log) {

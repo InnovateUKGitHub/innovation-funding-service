@@ -9,9 +9,10 @@
   </th:block>
 </th:block>
 
-<th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
+<th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs, isExternalFinanceUser)">
     <div class="alignright">
         <a class="govuk-link alignright"
+           th:unless="isExternalFinanceUser"
            th:href="@{~/management/competition/{competitionId}/previous(competitionId=${competitionId})}">View only completed projects for this competition</a>
     </div>
     <ul class="govuk-tabs__list">

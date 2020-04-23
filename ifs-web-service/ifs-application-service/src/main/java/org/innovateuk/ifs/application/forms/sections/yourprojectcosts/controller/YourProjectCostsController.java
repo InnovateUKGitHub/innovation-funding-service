@@ -24,6 +24,7 @@ import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -246,7 +247,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
 
     private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
         recalculateTotals(form);
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser());
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE));
         model.addAttribute("model", viewModel);
         return VIEW;
     }

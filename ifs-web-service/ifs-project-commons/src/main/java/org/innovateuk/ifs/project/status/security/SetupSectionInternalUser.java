@@ -88,7 +88,11 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessDocumentsSection(UserResource userResource) {
 
-        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource) || isExternalFinanceUser(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
+        if (isExternalFinanceUser(userResource))  {
+            return NOT_ACCESSIBLE;
+        }
+
+        if ((isSupport(userResource) || isInnovationLead(userResource) || isStakeholder(userResource)) && !projectSetupProgressChecker.allDocumentsApproved()) {
             return NOT_ACCESSIBLE;
         }
 
