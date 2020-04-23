@@ -46,7 +46,7 @@ public class SendNotificationsModelPopulator {
                 .collect(toList());
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        CompetitionAssessmentConfigResource assessmentConfig = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
 
         long successfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.FUNDED);
         long unsuccessfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.UNFUNDED);
@@ -63,7 +63,7 @@ public class SendNotificationsModelPopulator {
                                               competitionId,
                                               competitionResource.getName(),
                                               competitionResource.isH2020(),
-                                              assessmentConfig.getAverageAssessorScore());
+                                              competitionAssessmentConfigResource.getAverageAssessorScore());
     }
 
 

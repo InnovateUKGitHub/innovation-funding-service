@@ -169,6 +169,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
             defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.setAssessorCount(assessorCountOption.getOptionValue()));
             competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+            competitionAssessmentConfig.setAverageAssessorScore(false);
             competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         }
 
