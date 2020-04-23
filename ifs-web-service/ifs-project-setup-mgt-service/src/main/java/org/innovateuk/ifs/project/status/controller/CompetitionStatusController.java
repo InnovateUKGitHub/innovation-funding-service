@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.status.populator.CompetitionStatusViewModelPop
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -79,7 +80,8 @@ public class CompetitionStatusController {
                         competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId).getSuccess(),
                         competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess(),
                         competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess(),
-                        true));
+                        true,
+                        loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
         return "project/competition-status-queries";
     }
 
