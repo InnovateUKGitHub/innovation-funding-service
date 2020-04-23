@@ -1,3 +1,4 @@
+-- IFS-7369: Make assessor score available in notifications: Domain for config & internal comp setup journey
 CREATE TABLE competition_assessment_config (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   temporary_competition_id bigint(20) NOT NULL,
