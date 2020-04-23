@@ -63,7 +63,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
                     .build();
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
-                    .withAverageAssessorScore(false)
+                    .withIncludeAverageAssessorScoreInNotifications(false)
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(true)

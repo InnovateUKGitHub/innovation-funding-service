@@ -44,7 +44,7 @@ public class ReviewPermissionRules {
 
     private boolean competitionHasReviewPanel(CompetitionResource competition) {
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
-        return competitionAssessmentConfigResource.getHasInterviewStage();
+        return competitionAssessmentConfigResource.getHasAssessmentPanel();
     }
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {

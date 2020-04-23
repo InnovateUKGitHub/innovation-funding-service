@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 
 public class CompetitionAssessmentConfigResource {
 
-    private Boolean averageAssessorScore;
-
+    private Boolean includeAverageAssessorScoreInNotifications;
     private Integer assessorCount;
     private BigDecimal assessorPay;
     private Boolean hasAssessmentPanel;
@@ -15,13 +14,13 @@ public class CompetitionAssessmentConfigResource {
     public CompetitionAssessmentConfigResource() {
     }
 
-    public CompetitionAssessmentConfigResource(Boolean averageAssessorScore,
+    public CompetitionAssessmentConfigResource(Boolean includeAverageAssessorScoreInNotifications,
                                                Integer assessorCount,
                                                BigDecimal assessorPay,
                                                Boolean hasAssessmentPanel,
                                                Boolean hasInterviewStage,
                                                AssessorFinanceView assessorFinanceView) {
-        this.averageAssessorScore = averageAssessorScore;
+        this.includeAverageAssessorScoreInNotifications = includeAverageAssessorScoreInNotifications;
         this.assessorCount = assessorCount;
         this.assessorPay = assessorPay;
         this.hasAssessmentPanel = hasAssessmentPanel;
@@ -29,12 +28,12 @@ public class CompetitionAssessmentConfigResource {
         this.assessorFinanceView = assessorFinanceView;
     }
 
-    public Boolean getAverageAssessorScore() {
-        return averageAssessorScore;
+    public Boolean getIncludeAverageAssessorScoreInNotifications() {
+        return includeAverageAssessorScoreInNotifications;
     }
 
-    public void setAverageAssessorScore(Boolean averageAssessorScore) {
-        this.averageAssessorScore = averageAssessorScore;
+    public void setIncludeAverageAssessorScoreInNotifications(Boolean includeAverageAssessorScoreInNotifications) {
+        this.includeAverageAssessorScoreInNotifications = includeAverageAssessorScoreInNotifications;
     }
 
     public Integer getAssessorCount() {

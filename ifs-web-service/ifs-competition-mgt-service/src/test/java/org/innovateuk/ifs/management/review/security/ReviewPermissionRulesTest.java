@@ -39,7 +39,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                     .build();
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithInterviewStage = newCompetitionAssessmentConfigResource()
-                    .withAverageAssessorScore(false)
+                    .withIncludeAverageAssessorScoreInNotifications(false)
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(true)
@@ -52,7 +52,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                     .build();
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithoutInterviewStage = newCompetitionAssessmentConfigResource()
-                    .withAverageAssessorScore(false)
+                    .withIncludeAverageAssessorScoreInNotifications(false)
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(false)
@@ -90,7 +90,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                     .build();
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithInterviewStage = newCompetitionAssessmentConfigResource()
-                    .withAverageAssessorScore(false)
+                    .withIncludeAverageAssessorScoreInNotifications(false)
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(true)
@@ -103,7 +103,7 @@ public class ReviewPermissionRulesTest extends BasePermissionRulesTest<ReviewPer
                     .build();
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResourceWithoutInterviewStage = newCompetitionAssessmentConfigResource()
-                    .withAverageAssessorScore(false)
+                    .withIncludeAverageAssessorScoreInNotifications(false)
                     .withAssessorCount(5)
                     .withAssessorPay(BigDecimal.valueOf(100))
                     .withHasAssessmentPanel(false)

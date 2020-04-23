@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.notification.populator;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-import static java.util.Optional.empty;
-import static java.util.stream.Collectors.toList;
 
 @Component
 public class SendNotificationsModelPopulator {
@@ -34,16 +31,12 @@ public class SendNotificationsModelPopulator {
     @Autowired
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
+    @Autowired
+    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
+
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds, NotificationEmailsForm form) {
-
-        ApplicationSummaryPageResource pagedApplications = applicationSummaryRestService
-                .getAllApplications(competitionId, null, 0, Integer.MAX_VALUE, empty())
-                .getSuccess();
-
-        List<ApplicationSummaryResource> filteredApplications = pagedApplications.getContent().stream()
-                .filter(application -> applicationIds.contains(application.getId()) )
-                .collect(toList());
+        List<FundingDecisionToSendApplicationResource> filteredApplications = applicationFundingDecisionRestService.getNotificationResourceForApplications(applicationIds).getSuccess();
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId).getSuccess();
@@ -63,11 +56,11 @@ public class SendNotificationsModelPopulator {
                                               competitionId,
                                               competitionResource.getName(),
                                               competitionResource.isH2020(),
-                                              competitionAssessmentConfigResource.getAverageAssessorScore());
+                                              Boolean.TRUE.equals(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications()));
     }
 
 
-    private long getApplicationCountByFundingDecision(List<ApplicationSummaryResource> filteredApplications, FundingDecision fundingDecision) {
+    private long getApplicationCountByFundingDecision(List<FundingDecisionToSendApplicationResource> filteredApplications, FundingDecision fundingDecision) {
         return filteredApplications.stream()
                 .filter(application -> application.getFundingDecision() == fundingDecision)
                 .count();

@@ -35,7 +35,7 @@ public class CompetitionAssessmentConfigServiceImpl extends RootTransactionalSer
     public ServiceResult<Void> update(long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         return find(competitionAssessmentConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionAssessmentConfig.class, competitionId))
                 .andOnSuccessReturnVoid((config) -> {
-                    config.setAverageAssessorScore(competitionAssessmentConfigResource.getAverageAssessorScore());
+                    config.setIncludeAverageAssessorScoreInNotifications(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications());
                     config.setAssessorPay(competitionAssessmentConfigResource.getAssessorPay());
                     config.setAssessorCount(competitionAssessmentConfigResource.getAssessorCount());
                     config.setHasAssessmentPanel(competitionAssessmentConfigResource.getHasAssessmentPanel());

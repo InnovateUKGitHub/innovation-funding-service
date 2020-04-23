@@ -187,7 +187,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .build();
 
         competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
-                .withAverageAssessorScore(false)
+                .withIncludeAverageAssessorScoreInNotifications(false)
                 .withAssessorCount(5)
                 .withAssessorPay(BigDecimal.valueOf(100))
                 .withHasAssessmentPanel(false)

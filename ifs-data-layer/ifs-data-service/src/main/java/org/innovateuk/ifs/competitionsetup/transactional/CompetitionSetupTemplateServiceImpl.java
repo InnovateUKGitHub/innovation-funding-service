@@ -2,10 +2,7 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -87,6 +84,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competition.setCompetitionType(competitionType.get());
         setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
+        setDefaultOrganisationConfig(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
@@ -100,6 +98,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         initialiseProjectSetupColumns(competition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+    }
+
+    private void setDefaultOrganisationConfig(Competition competition) {
+        if (competition.getCompetitionOrganisationConfig() == null) {
+            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
+            competitionOrganisationConfig.setCompetition(competition);
+            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
+        }
     }
 
     private void setDefaultProjectDocuments(Competition competition) {
@@ -169,7 +175,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
             defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.setAssessorCount(assessorCountOption.getOptionValue()));
             competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
-            competitionAssessmentConfig.setAverageAssessorScore(false);
             competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         }
 

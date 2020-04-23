@@ -65,7 +65,7 @@ public class SendNotificationsModelPopulatorTest {
 
         ApplicationSummaryPageResource applicationResults = new ApplicationSummaryPageResource();
         applicationResults.setContent(Arrays.asList(application1, application2, application3));
-        CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withAverageAssessorScore(Boolean.FALSE).build();
+        CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withIncludeAverageAssessorScoreInNotifications(Boolean.FALSE).build();
 
         when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, empty())).thenReturn(restSuccess(applicationResults));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));

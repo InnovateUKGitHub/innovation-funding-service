@@ -44,7 +44,6 @@ import java.text.Collator;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
@@ -213,7 +212,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisionsWithAverageAssessorScore() {
         CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
-        competitionAssessmentConfig.setAverageAssessorScore(TRUE);
+        competitionAssessmentConfig.setIncludeAverageAssessorScoreInNotifications(true);
 
         Competition competition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
 

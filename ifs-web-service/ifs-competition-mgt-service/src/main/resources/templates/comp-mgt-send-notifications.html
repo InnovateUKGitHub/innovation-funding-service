@@ -74,7 +74,7 @@
                             <tbody class="govuk-table__body">
                             <tr class="govuk-table__row" th:each="applicationSummary, stat : ${model.applications}">
                                 <td class="govuk-table__cell" th:text="${applicationSummary.id}">Application number</td>
-                                <td class="govuk-table__cell" th:text="${applicationSummary.name}">Project title</td>
+                                <td class="govuk-table__cell" th:text="${applicationSummary.title}">Project title</td>
                                 <td class="govuk-table__cell" th:text="${applicationSummary.lead}">Lead</td>
                                 <td class="govuk-table__cell" th:text="${applicationSummary.fundingDecision?.name}">-</td>
                             </tr>

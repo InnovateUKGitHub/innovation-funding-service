@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.notification.viewmodel;
 
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class SendNotificationsViewModel {
 
-    private List<ApplicationSummaryResource> applications;
+    private List<FundingDecisionToSendApplicationResource> applications;
     private long competitionId;
     private String competitionName;
     private long successfulRecipientsCount;
@@ -20,7 +20,7 @@ public class SendNotificationsViewModel {
     private boolean h2020;
     private boolean includeAssessorsScore;
 
-    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications,
+    public SendNotificationsViewModel(List<FundingDecisionToSendApplicationResource> applications,
                                       long successfulRecipientsCount,
                                       long unsuccessfulRecipientsCount,
                                       long onHoldRecipientsCount,
@@ -47,7 +47,7 @@ public class SendNotificationsViewModel {
         return competitionName;
     }
 
-    public List<ApplicationSummaryResource> getApplications() {
+    public List<FundingDecisionToSendApplicationResource> getApplications() {
         return applications != null ? applications : Collections.emptyList();
     }
 
@@ -72,12 +72,11 @@ public class SendNotificationsViewModel {
     }
 
     public Map<Long, FundingDecision> getFundingDecisions() {
-
         return getApplications()
                 .stream()
                 .collect(Collectors.toMap(
-                        ApplicationSummaryResource::getId,
-                        ApplicationSummaryResource::getFundingDecision
+                        FundingDecisionToSendApplicationResource::getId,
+                        FundingDecisionToSendApplicationResource::getFundingDecision
                 ));
     }
 }

@@ -20,8 +20,8 @@ public class CompetitionAssessmentConfigResourceBuilder extends BaseBuilder<Comp
         return new CompetitionAssessmentConfigResourceBuilder(emptyList());
     }
 
-    public CompetitionAssessmentConfigResourceBuilder withAverageAssessorScore(Boolean... averageAssessorScore) {
-        return withArraySetFieldByReflection("averageAssessorScore", averageAssessorScore);
+    public CompetitionAssessmentConfigResourceBuilder withIncludeAverageAssessorScoreInNotifications(Boolean... averageAssessorScore) {
+        return withArraySetFieldByReflection("includeAverageAssessorScoreInNotifications", averageAssessorScore);
     }
 
     public CompetitionAssessmentConfigResourceBuilder withAssessorCount(Integer... assessorCount) {

@@ -24,7 +24,7 @@ public class CompetitionAssessmentConfigResourceBuilderTest {
                 .withAssessorPay(expectedAssessorPay)
                 .withHasAssessmentPanel(false)
                 .withHasInterviewStage(false)
-                .withAverageAssessorScore(true)
+                .withIncludeAverageAssessorScoreInNotifications(true)
                 .build();
 
         assertEquals(expectedAssessorCount, competitionAssessmentConfigResource.getAssessorCount());
@@ -32,7 +32,7 @@ public class CompetitionAssessmentConfigResourceBuilderTest {
         assertEquals(OVERVIEW, competitionAssessmentConfigResource.getAssessorFinanceView());
         assertFalse(competitionAssessmentConfigResource.getHasAssessmentPanel());
         assertFalse(competitionAssessmentConfigResource.getHasInterviewStage());
-        assertTrue(competitionAssessmentConfigResource.getAverageAssessorScore());
+        assertTrue(competitionAssessmentConfigResource.getIncludeAverageAssessorScoreInNotifications());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class CompetitionAssessmentConfigResourceBuilderTest {
                 .withAssessorPay(expectedAssessorPay)
                 .withHasAssessmentPanel(false)
                 .withHasInterviewStage(false)
-                .withAverageAssessorScore(true)
+                .withIncludeAverageAssessorScoreInNotifications(true)
                 .build(2);
 
         for(int i=0; i<competitionAssessmentConfigResources.size(); i++) {
@@ -56,7 +56,7 @@ public class CompetitionAssessmentConfigResourceBuilderTest {
             assertEquals(OVERVIEW, competitionAssessmentConfigResources.get(i).getAssessorFinanceView());
             assertFalse(competitionAssessmentConfigResources.get(i).getHasAssessmentPanel());
             assertFalse(competitionAssessmentConfigResources.get(i).getHasInterviewStage());
-            assertTrue(competitionAssessmentConfigResources.get(i).getAverageAssessorScore());
+            assertTrue(competitionAssessmentConfigResources.get(i).getIncludeAverageAssessorScoreInNotifications());
         }
     }
 }

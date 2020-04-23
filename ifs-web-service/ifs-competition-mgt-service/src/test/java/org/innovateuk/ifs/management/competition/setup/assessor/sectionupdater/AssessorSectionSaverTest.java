@@ -57,7 +57,7 @@ public class AssessorSectionSaverTest {
 				.withId(1L).build();
 
 		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
-				.withAverageAssessorScore(false)
+				.withIncludeAverageAssessorScoreInNotifications(false)
 				.withAssessorCount(3)
 				.withAssessorPay(BigDecimal.valueOf(10))
 				.withHasAssessmentPanel(false)
@@ -119,7 +119,7 @@ public class AssessorSectionSaverTest {
 				.build();
 
 		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
-				.withAverageAssessorScore(false)
+				.withIncludeAverageAssessorScoreInNotifications(false)
 				.withAssessorCount(newAssessorCount)
 				.withAssessorPay(BigDecimal.valueOf(15000))
 				.withHasAssessmentPanel(false)

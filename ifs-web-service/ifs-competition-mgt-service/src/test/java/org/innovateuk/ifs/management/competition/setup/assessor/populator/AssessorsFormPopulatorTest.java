@@ -45,7 +45,7 @@ public class AssessorsFormPopulatorTest {
 				.build();
 
 		CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
-				.withAverageAssessorScore(false)
+				.withIncludeAverageAssessorScoreInNotifications(false)
 				.withAssessorCount(1)
 				.withAssessorPay(BigDecimal.TEN)
 				.withHasAssessmentPanel(FALSE)

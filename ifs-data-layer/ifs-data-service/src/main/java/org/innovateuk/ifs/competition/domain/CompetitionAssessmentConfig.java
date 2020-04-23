@@ -16,9 +16,7 @@ public class CompetitionAssessmentConfig {
     @OneToOne(mappedBy = "competitionAssessmentConfig", fetch = FetchType.LAZY)
     private Competition competition;
 
-    @Column(name = "average_assessor_score")
-    private Boolean averageAssessorScore;
-
+    private Boolean includeAverageAssessorScoreInNotifications;
     private Integer assessorCount;
     private BigDecimal assessorPay;
     private Boolean hasAssessmentPanel;
@@ -31,14 +29,14 @@ public class CompetitionAssessmentConfig {
     }
 
     public CompetitionAssessmentConfig(Competition competition,
-                                       Boolean averageAssessorScore,
+                                       Boolean includeAverageAssessorScoreInNotifications,
                                        Integer assessorCount,
                                        BigDecimal assessorPay,
                                        Boolean hasAssessmentPanel,
                                        Boolean hasInterviewStage,
                                        AssessorFinanceView assessorFinanceView) {
         this.competition = competition;
-        this.averageAssessorScore = averageAssessorScore;
+        this.includeAverageAssessorScoreInNotifications = includeAverageAssessorScoreInNotifications;
         this.assessorCount = assessorCount;
         this.assessorPay = assessorPay;
         this.hasAssessmentPanel = hasAssessmentPanel;
@@ -62,12 +60,12 @@ public class CompetitionAssessmentConfig {
         this.competition = competition;
     }
 
-    public Boolean getAverageAssessorScore() {
-        return averageAssessorScore;
+    public Boolean getIncludeAverageAssessorScoreInNotifications() {
+        return includeAverageAssessorScoreInNotifications;
     }
 
-    public void setAverageAssessorScore(Boolean averageAssessorScore) {
-        this.averageAssessorScore = averageAssessorScore;
+    public void setIncludeAverageAssessorScoreInNotifications(Boolean includeAverageAssessorScoreInNotifications) {
+        this.includeAverageAssessorScoreInNotifications = includeAverageAssessorScoreInNotifications;
     }
 
     public Integer getAssessorCount() {

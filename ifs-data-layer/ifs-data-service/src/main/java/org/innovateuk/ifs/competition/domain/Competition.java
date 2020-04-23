@@ -188,7 +188,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
-    private CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
+    private CompetitionOrganisationConfig competitionOrganisationConfig;
 
     public Competition() {
         setupComplete = false;
