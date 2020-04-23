@@ -26,7 +26,7 @@ public class ApplicationFundingTemplateRenderTest extends BaseIntegrationTest {
                 new UserNotificationSource("", ""),
                 new UserNotificationTarget("", ""),
                 getTemplatePath("application_funding_text_html.html"),
-                asMap("message", htmlMessage, "applicationNumber", "123", "applicationName", "something", "competitionName", "competition", "averageAssessorScore")
+                asMap("message", htmlMessage, "applicationNumber", "123", "applicationName", "something", "competitionName", "competition")
         )
         .getSuccess();
 
