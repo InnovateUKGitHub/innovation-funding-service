@@ -9,5 +9,5 @@ SET @system_maintenance_user_id = (
 SET @new_terms_id = 30;
 
 INSERT INTO terms_and_conditions (id, name, template, version, type, created_by, created_on, modified_by, modified_on)
-VALUES (@new_terms_id, 'Investor Partnerships', 'default-terms-and-conditions-v5', 1, 'GRANT',
+VALUES (@new_terms_id, 'Investor Partnerships', 'investor-partnership-terms-and-conditions', 1, 'GRANT',
         @system_maintenance_user_id, now(), @system_maintenance_user_id, now());
