@@ -38,7 +38,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null, null, null);
         assertAccessDenied(
                 () -> classUnderTest.create(queryResource),
@@ -50,7 +50,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void findOne() throws Exception {
+    public void findOne() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -67,7 +67,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void findAll() throws Exception {
+    public void findAll() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -88,7 +88,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
-    public void addPost() throws Exception {
+    public void addPost() {
         UserResource user = new UserResource();
         setLoggedInUser(user);
 
@@ -100,6 +100,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
             verify(queryRules).projectFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
             verify(queryRules).projectPartnersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
             verify(queryRules).compFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
+            verify(queryRules).externalFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), eq(user));
 
             verifyNoMoreInteractions(queryRules);
         });

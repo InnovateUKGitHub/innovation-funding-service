@@ -81,6 +81,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         verify(noteRules, times(2)).onlyInternalUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verify(noteRules, times(2)).compFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
+        verify(noteRules, times(2)).externalFinanceUsersCanViewNotes(isA(NoteResource.class), eq(user));
         verifyNoMoreInteractions(noteRules);
     }
 
@@ -94,6 +95,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
             verify(noteRules).onlyProjectFinanceUsersCanAddPosts(isA(NoteResource.class), eq(user));
+            verify(noteRules).externalFinanceUsersCanAddPosts(isA(NoteResource.class), eq(user));
             verifyNoMoreInteractions(noteRules);
         });
     }
