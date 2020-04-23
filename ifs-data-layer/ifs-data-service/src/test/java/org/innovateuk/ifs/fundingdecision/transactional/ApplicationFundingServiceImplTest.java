@@ -21,7 +21,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
-import org.innovateuk.ifs.fundingdecision.validator.ApplicationFundingDecisionValidator;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -76,9 +75,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
     @Mock
     private FundingDecisionMapper fundingDecisionMapper;
-
-    @Mock
-    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
 
     @Mock
     private SystemNotificationSource systemNotificationSource;
@@ -367,7 +363,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
     	when(applicationRepository.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
-        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
@@ -389,8 +384,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepository.findByCompetitionId(competitionId)).thenReturn(singletonList(application1));
-        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
-
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, UNDECIDED);
 
@@ -414,8 +407,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         when(applicationRepository.findByCompetitionId(competitionId))
                 .thenReturn(singletonList(application1));
-        when(applicationFundingDecisionValidator.isValid(any()))
-                .thenReturn(true);
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
         ServiceResult<Void> result = service.saveFundingDecisionData(competitionId, applicationDecisions);
@@ -438,7 +429,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
         when(applicationRepository.findByCompetitionId(competitionId)).thenReturn(singletonList(application1));
-        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
 
@@ -477,7 +467,6 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         assertTrue(projectSetupCompetition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP));
 
         when(applicationRepository.findByCompetitionId(projectSetupCompetitionId)).thenReturn(singletonList(unsuccessfulApplication));
-        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
         when(applicationWorkflowHandler.approve(unsuccessfulApplication)).thenReturn(true);
 
         Map<Long, FundingDecision> applicationDecision = asMap(unsuccessfulApplicationId, FUNDED);

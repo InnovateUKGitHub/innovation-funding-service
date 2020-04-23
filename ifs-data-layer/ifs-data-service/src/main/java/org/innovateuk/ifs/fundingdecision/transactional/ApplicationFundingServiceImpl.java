@@ -2,7 +2,10 @@ package org.innovateuk.ifs.fundingdecision.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
@@ -13,7 +16,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
-import org.innovateuk.ifs.fundingdecision.validator.ApplicationFundingDecisionValidator;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -42,7 +44,8 @@ import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundin
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
@@ -58,9 +61,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
 
     @Autowired
     private CompetitionService competitionService;
@@ -85,9 +85,8 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
-
-            return saveFundingDecisionData(allowedApplicationForCompetition, applicationFundingDecisions);
+            List<Application> applications = findApplicationsFromIds(applicationFundingDecisions);
+            return saveFundingDecisionData(applications, applicationFundingDecisions);
         });
     }
 
@@ -150,15 +149,13 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         });
     }
 
-    private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {
-
-        return simpleFilter(applicationRepository.findByCompetitionId(competitionId),
-                            application -> applicationFundingDecisionValidator.isValid(application));
+    private List<Application> findApplicationsFromIds(Map<Long, FundingDecision> applicationFundingDecisions) {
+        return applicationRepository.findAllByIdIn(applicationFundingDecisions.keySet());
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
         applicationDecisions.forEach((applicationId, decisionValue) -> {
-            Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findFirst();
+            Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findAny();
             if (applicationForDecision.isPresent()) {
                 Application application = applicationForDecision.get();
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
