@@ -13,7 +13,7 @@ FROM assessor_form_input_response afir
     INNER JOIN question q
     ON q.id = fi.question_id
     INNER JOIN milestone assessment_milestone
-    on q.competition_id = assessment_milestone.compeitition_id and assessment_milestone.type='ASSESSORS_NOTIFIED'
+    on q.competition_id = assessment_milestone.competition_id and assessment_milestone.type='ASSESSORS_NOTIFIED'
     INNER JOIN milestone notifications_milestone
     on q.competition_id = notifications_milestone.competition_id and notifications_milestone.type='NOTIFICATIONS'
 WHERE
