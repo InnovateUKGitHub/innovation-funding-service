@@ -155,8 +155,8 @@ External project finance can approve viabilty
     the user clicks the button/link  id = submit-gol-for-review
     Log in as a different user              ${exfinanceemail}  Passw0rd
     the user clicks the button/link             link = ${externalReviewerComp}
-    the user should not see the element       jQuery = td.action:nth-of-type(8)
-    the user should not see the element       jQuery = td.ok:nth-of-type(7)
+    the user should not see the element       jQuery = td.action:nth-of-type(8) a
+    the user should not see the element       jQuery = td.ok:nth-of-type(7) a
 
 
 
