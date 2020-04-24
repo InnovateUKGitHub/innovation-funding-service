@@ -126,4 +126,26 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
             }
         });
     }
+
+    @Test
+    public void projectFinanceCanViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.projectFinanceCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void nonProjectFinanceCannotViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.projectFinanceCanViewFinanceReviewer(project, user));
+    }
 }
