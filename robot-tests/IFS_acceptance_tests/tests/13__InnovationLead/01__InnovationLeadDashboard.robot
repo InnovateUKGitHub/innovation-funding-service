@@ -7,8 +7,7 @@ Documentation   IFS-984 Innovation Leads user journey navigation
 ...
 ...             IFS-7429 Innovation lead has access to Project Details after Finance reviewer is assigned
 Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
-Suite Teardown
-#the user closes the browser
+Suite Teardown  the user closes the browser
 Force Tags      InnovationLead  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/Competition_Commons.robot
