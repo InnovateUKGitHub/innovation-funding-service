@@ -362,14 +362,14 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
     	
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
-    	when(applicationRepository.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
+    	when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(asList(application1, application2));
 
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
     	ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
     	
     	assertTrue(result.isSuccess());
-    	verify(applicationRepository).findByCompetitionId(competition.getId());
+    	verify(applicationRepository).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)), competition.getId());
     	assertEquals(ApplicationState.OPENED, application1.getApplicationProcess().getProcessState());
     	assertEquals(ApplicationState.OPENED, application2.getApplicationProcess().getProcessState());
     	assertEquals(FundingDecisionStatus.UNDECIDED, application1.getFundingDecision());
@@ -383,14 +383,14 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Long applicationId = 1L;
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
-        when(applicationRepository.findByCompetitionId(competitionId)).thenReturn(singletonList(application1));
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId)).thenReturn(singletonList(application1));
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, UNDECIDED);
 
         ServiceResult<Void> result = service.saveFundingDecisionData(competitionId, applicationDecisions);
 
         assertTrue(result.isSuccess());
-        verify(applicationRepository).findByCompetitionId(competitionId);
+        verify(applicationRepository).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId);
         verify(applicationService).setApplicationFundingEmailDateTime(applicationId, null);
     }
 
@@ -405,7 +405,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
                 .withApplicationState(ApplicationState.OPENED)
                 .build();
 
-        when(applicationRepository.findByCompetitionId(competitionId))
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId))
                 .thenReturn(singletonList(application1));
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
@@ -416,7 +416,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         assertTrue(result.isSuccess());
         assertTrue(changedResult.isSuccess());
-        verify(applicationRepository, times(2)).findByCompetitionId(competitionId);
+        verify(applicationRepository, times(2)).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId);
         verify(applicationService, times(2)).setApplicationFundingEmailDateTime(applicationId, null);
         verifyZeroInteractions(applicationWorkflowHandler);
 
@@ -428,14 +428,14 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         Long applicationId = 1L;
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
-        when(applicationRepository.findByCompetitionId(competitionId)).thenReturn(singletonList(application1));
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId)).thenReturn(singletonList(application1));
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
 
         ServiceResult<Void> result = service.saveFundingDecisionData(competitionId, applicationDecisions);
 
         assertTrue(result.isSuccess());
-        verify(applicationRepository).findByCompetitionId(competitionId);
+        verify(applicationRepository).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(applicationId)), competitionId);
         verify(applicationService, never()).setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class));
     }
 
@@ -466,7 +466,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         assertTrue(projectSetupCompetition.getCompetitionStatus().equals(CompetitionStatus.PROJECT_SETUP));
 
-        when(applicationRepository.findByCompetitionId(projectSetupCompetitionId)).thenReturn(singletonList(unsuccessfulApplication));
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(unsuccessfulApplicationId)), projectSetupCompetitionId)).thenReturn(singletonList(unsuccessfulApplication));
         when(applicationWorkflowHandler.approve(unsuccessfulApplication)).thenReturn(true);
 
         Map<Long, FundingDecision> applicationDecision = asMap(unsuccessfulApplicationId, FUNDED);
@@ -474,7 +474,7 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         ServiceResult<Void> result = service.saveFundingDecisionData(projectSetupCompetitionId, applicationDecision);
 
         assertTrue(result.isSuccess());
-        verify(applicationRepository).findByCompetitionId(projectSetupCompetitionId);
+        verify(applicationRepository).findAllowedApplicationsForCompetition(new HashSet<>(singletonList(unsuccessfulApplicationId)), projectSetupCompetitionId);
         verify(applicationService).setApplicationFundingEmailDateTime(unsuccessfulApplicationId, null);
         verify(applicationWorkflowHandler).approve(any(Application.class));
         assertTrue(FundingDecisionStatus.FUNDED.equals(unsuccessfulApplication.getFundingDecision()));
