@@ -11,6 +11,7 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewViewMo
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.*;
@@ -48,6 +49,9 @@ public class AssessmentOverviewModelPopulator {
 
     public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
+    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
+    private static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
+
     @Autowired
     private CompetitionRestService competitionRestService;
 
@@ -76,6 +80,8 @@ public class AssessmentOverviewModelPopulator {
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
+        String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
+
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),
                 assessment.getApplicationName(),
@@ -84,7 +90,8 @@ public class AssessmentOverviewModelPopulator {
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
                 getSections(assessment, assessorViewQuestions),
-                getAppendices(assessment.getApplication(), assessorViewQuestions)
+                getAppendices(assessment.getApplication(), assessorViewQuestions),
+                termsAndConditionsTerminology
         );
     }
 
@@ -199,5 +206,12 @@ public class AssessmentOverviewModelPopulator {
                 formInputResponse.getFilename(),
                 size
         );
+    }
+
+    private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
+        if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        return TERMS_AND_CONDITIONS_OTHER;
     }
 }

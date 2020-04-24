@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -41,8 +40,6 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QU
  */
 @Component
 public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
-
-    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
 
     private final CompetitionRestService competitionRestService;
     private final SectionRestService sectionRestService;
@@ -130,13 +127,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 rows);
     }
 
-    private static String termsAndConditionsTerminology(FundingType fundingType, SectionResource section, QuestionResource question) {
-        if (FundingType.INVESTOR_PARTNERSHIPS == fundingType && section.isTermsAndConditions()) {
-            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-        }
-        return getQuestionTitle(question);
-    }
-
     private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
         boolean complete = section.isTermsAndConditions() ?
                 isTermsAndConditionsComplete(data, question, section) :
@@ -149,14 +139,14 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return getAssignableViewModel(question, data)
                 .map(avm ->
                         new ApplicationOverviewRowViewModel(
-                                termsAndConditionsTerminology(data.getCompetition().getFundingType(), section, question),
+                                getQuestionTitle(question),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 avm,
                                 showStatus)
                 ).orElse(
                         new ApplicationOverviewRowViewModel(
-                                termsAndConditionsTerminology(data.getCompetition().getFundingType(), section, question),
+                                getQuestionTitle(question),
                                 getRowUrlFromQuestion(question, data),
                                 complete,
                                 showStatus)
