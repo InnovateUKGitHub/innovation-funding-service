@@ -6,11 +6,11 @@ Resource          ../../resources/common/PS_Common.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
-${externalReviewerComp}    Project Setup Comp 18
-${externalReviewerCompId}   ${competition_ids['${externalReviewerComp}']}
-${externalReviewerApplication}  PSC application 18
+${externalReviewerComp}            Project Setup Comp 18
+${externalReviewerCompId}          ${competition_ids['${externalReviewerComp}']}
+${externalReviewerApplication}     PSC application 18
 ${externalReviewerApplicationId}   ${application_ids['${externalReviewerApplication}']}
-${exfinanceemail}    exfinance@example.com
+${exfinanceemail}                  exfinance@example.com
 
 *** Test Cases ***
 IFS admin is able to invite an external PF
@@ -54,7 +54,6 @@ External project finance cannot access documents or MO
     And the user should not see the element   jQuery = td.action:nth-of-type(4) a
     And the user should not see the element   jQuery = td.action:nth-of-type(5) a
     [Teardown]  the project finance approves all steps before finance
-
 
 External project finance can raise a query
     Given log in as a different user           ${exfinanceemail}  Passw0rd
@@ -151,7 +150,7 @@ External project finance can approve viabilty
     Log in as a different user              troy.ward@gmail.com  Passw0rd
     the user clicks the button/link    link = ${externalReviewerApplication}
     the user clicks the button/link     link = Grant offer letter
-    the user uploads a file               signedGrantOfferLetter    ${valid_pdf}
+    the user uploads the file               signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link  id = submit-gol-for-review
     Log in as a different user              ${exfinanceemail}  Passw0rd
