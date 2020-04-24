@@ -1,1 +1,1 @@
-Invite to view a competition: ${competitionName}
+Invitation to review an Innovation Funding Service competition
