@@ -242,8 +242,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     @Query("select a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
             "where a.id in :ids" +
             " and  a.competition.id = :competitionId " +
-            " and a.submittedDate is not null " +
-            " and (a.manageFundingEmailDate is null and p.activityState in :activityStates)")
-    List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId, Set<ApplicationState> activityStates);
+            " and (a.submittedDate is not null " +
+            " or (a.fundingDecision != org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is null))")
+    List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
 
 }
