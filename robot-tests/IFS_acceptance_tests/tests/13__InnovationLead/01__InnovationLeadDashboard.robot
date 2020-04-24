@@ -34,9 +34,9 @@ Innovation lead can see competitions assigned to him only
 Innovation lead is able to access Project details once a finance contact is assigned
     [Documentation]  IFS-7429
     Given finance reviewer is added to the project
-    When log in as a different user  &{innovation_lead_two}
-    Then the user navigates to the page            ${server}/project-setup-management/competition/${ConnectedCompId}/project/${Elbow_Grease_Project_Id}/details
-    [Teardown]  The user clicks the button/link  link = Dashboard
+    When log in as a different user                   &{innovation_lead_two}
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${ConnectedCompId}/project/${Elbow_Grease_Project_Id}/details
+    [Teardown]  The user clicks the button/link       link = Dashboard
 
 Innovation lead can only search for applications assigned to them
     [Documentation]  IFS-4564
