@@ -27,6 +27,6 @@ public interface FinanceReviewerService {
 
     @SecuredBySpring(value = "GET_FINANCE_USER_FOR_PROJECT",
             description = "Only project finance view a projects finance reviewer")
-    @PreAuthorize("hasAnyAuthority('project_finance','innovation_lead')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_FINANCE_REVIEWER')")
     ServiceResult<SimpleUserResource> getFinanceReviewerForProject(long projectId);
 }
