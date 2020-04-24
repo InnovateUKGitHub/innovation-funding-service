@@ -24,6 +24,9 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
+${assessorScoreComp}         Living models for the future
+${assessorScoreApplication}  Models with Virtual Reality
+${assessorScoreApplicationId}   ${application_ids['${assessorScoreApplication}']}
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}
 ${application1Subject}    ${FUNDERS_PANEL_COMPETITION_NAME}: Notification regarding your application ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
 ${application2Subject}    Notification regarding your application ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
@@ -128,7 +131,7 @@ Once all final decisions have been made and emails are sent Comp moves to Inform
 
 Comp Admin can set the notification email to include assessor average score
     [Documentation]  IFS-7369
-    Given the user clicks the button/link  link = Living models for the future
+    Given the user clicks the button/link  link = ${assessorScoreComp}
     When the user set assessor score notification to yes
     Then the user should see the element   jQuery = dt:contains("average assessor score") + dd:contains("Yes")
 
@@ -136,7 +139,7 @@ Notification email template includes assessor score
     [Documentation]  IFS-7370
     [Setup]  Assess the application and move to in notification
     Given the user clicks the button/link  link = Manage funding notifications
-    When the user selects the checkbox     app-row-225
+    When the user selects the checkbox     app-row-${assessorScoreApplicationId}
     And the user clicks the button/link    id = write-and-send-email
     Then the user should see the element   jQuery = p:contains("Average assessor score")
 
@@ -144,7 +147,7 @@ Email to external user contains average assessor score
     [Documentation]  IFS-7370
     Given the user clicks the button/link        jQuery = button:contains("Send email")[data-js-modal = "send-to-all-applicants-modal"]
     When the user clicks the button/link         jQuery = .send-to-all-applicants-modal button:contains("Send email")
-    Then the user reads his email                nancy.peters@gmail.com   Successful  Average assessor score
+    Then the user reads his email                nancy.peterson@gmail.com   	${assessorScoreComp}: Notification regarding your application ${assessorScoreApplicationId}: ${assessorScoreApplication}  Average assessor score
 
 *** Keywords ***
 Custom Suite Setup
