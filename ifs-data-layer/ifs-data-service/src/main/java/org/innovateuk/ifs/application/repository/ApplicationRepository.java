@@ -87,8 +87,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     @Override
     List<Application> findAll();
 
-    List<Application> findAllByIdIn(Set<Long> ids);
-
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
 
     @Query(SEARCH_BY_ID_LIKE)
@@ -240,5 +238,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
+
+    @Query("select a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
+            "where a.id in :ids" +
+            " and  a.competition.id = :competitionId " +
+            " and a.submittedDate is not null " +
+            " and (a.manageFundingEmailDate is null and p.activityState in :activityStates)")
+    List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId, Set<ApplicationState> activityStates);
 
 }
