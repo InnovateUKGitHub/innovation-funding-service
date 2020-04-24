@@ -34,6 +34,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
@@ -44,8 +45,7 @@ import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundin
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
 public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
@@ -85,7 +85,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> applications = findApplicationsFromIds(applicationFundingDecisions);
+            List<Application> applications = findValidApplications(applicationFundingDecisions, competitionId);
             return saveFundingDecisionData(applications, applicationFundingDecisions);
         });
     }
@@ -149,8 +149,14 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         });
     }
 
-    private List<Application> findApplicationsFromIds(Map<Long, FundingDecision> applicationFundingDecisions) {
-        return applicationRepository.findAllByIdIn(applicationFundingDecisions.keySet());
+    private List<Application> findValidApplications(Map<Long, FundingDecision> applicationFundingDecisions, long competitionId) {
+
+        Set<ApplicationState> SUBMITTED_APPLICATION_STATES = unmodifiableSet(asLinkedSet(
+                ApplicationState.APPROVED,
+                ApplicationState.REJECTED,
+                ApplicationState.SUBMITTED));
+
+        return applicationRepository.findAllowedApplicationsForCompetition(applicationFundingDecisions.keySet(), competitionId, SUBMITTED_APPLICATION_STATES);
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
