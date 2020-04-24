@@ -10,7 +10,7 @@ public class CompetitionOrganisationConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "competitionOrganisationConfig",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "competitionOrganisationConfig",fetch = FetchType.LAZY)
     private Competition competition;
 
     @Column(name = "international_organisations_allowed")

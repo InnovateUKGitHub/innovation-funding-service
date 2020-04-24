@@ -452,11 +452,6 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
         when(organisationRestService.getOrganisationsByApplicationId(applications.get(4).getId())).thenReturn
                 (restSuccess(application5Organisations));
 
-        organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4,
-                processRole7, processRole8, processRole8), ProcessRoleResource::getId));
-        organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
-        organisation3.setProcessRoles(simpleMap(singletonList(processRole11), ProcessRoleResource::getId));
-
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
         when(sectionService.getCompleted(applications.get(0).getId(), organisation1.getId())).thenReturn(asList(1L,
                 2L));

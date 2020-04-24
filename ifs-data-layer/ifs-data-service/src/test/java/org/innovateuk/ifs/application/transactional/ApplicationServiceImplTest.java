@@ -227,7 +227,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(processRole));
-        when(organisationRepositoryMock.findDistinctByUsers(user)).thenReturn(singletonList(organisation));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
@@ -431,7 +431,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
                 newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
         ));
-        when(organisationRepositoryMock.findDistinctByUsers(user)).thenReturn(singletonList(organisation));
+        when(organisationRepositoryMock.findDistinctByProcessRolesUser(user)).thenReturn(singletonList(organisation));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
         when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
 

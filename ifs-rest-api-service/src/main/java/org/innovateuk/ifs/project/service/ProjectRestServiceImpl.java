@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.project.service;
 
-import java.util.List;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
@@ -29,6 +30,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     @Override
     public RestResult<List<ProjectUserResource>> getProjectUsersForProject(long projectId) {
         return getWithRestResult(format(PROJECT_REST_URL + "%d/project-users", projectId), projectUserResourceList());
+    }
+
+    @Override
+    public RestResult<List<ProjectUserResource>> getDisplayProjectUsersForProject(long projectId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/display-project-users", projectId), projectUserResourceList());
     }
 
     @Override

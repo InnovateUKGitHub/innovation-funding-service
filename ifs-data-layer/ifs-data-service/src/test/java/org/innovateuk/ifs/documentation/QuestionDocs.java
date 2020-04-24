@@ -18,6 +18,7 @@ public class QuestionDocs {
             fieldWithPath("priority").description("priority of the question, used for rendering purposes only").optional(),
             fieldWithPath("questionNumber").description("number of the question").optional(),
             fieldWithPath("section").description("Id of the section of which the question is part of").optional(),
+            fieldWithPath("competition").description("Id of the competition").optional(),
             fieldWithPath("type").description("The type of question").optional(),
             fieldWithPath("questionSetupType").description("The setup type of question").optional(),
             fieldWithPath("assessorMaximumScore").description("Maximum score that can be awarded to this question by an assessor").optional()
