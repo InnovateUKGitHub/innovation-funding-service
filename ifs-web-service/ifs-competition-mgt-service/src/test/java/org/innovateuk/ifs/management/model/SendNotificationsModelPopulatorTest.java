@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
@@ -18,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +49,7 @@ public class SendNotificationsModelPopulatorTest {
     private CompetitionRestService competitionRestService;
 
     @Mock
-    private ApplicationSummaryRestService applicationSummaryRestServiceMock;
+    private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
     @Mock
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
@@ -56,23 +59,21 @@ public class SendNotificationsModelPopulatorTest {
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withName(COMPETITION_NAME).build();
 
-        ApplicationSummaryResource application1
-                = ApplicationSummaryResourceBuilder.newApplicationSummaryResource().withId(1L).withFundingDecision(ON_HOLD).build();
-        ApplicationSummaryResource application2
-                = ApplicationSummaryResourceBuilder.newApplicationSummaryResource().withId(2L).withFundingDecision(FUNDED).build();
-        ApplicationSummaryResource application3
-                = ApplicationSummaryResourceBuilder.newApplicationSummaryResource().withId(3L).withFundingDecision(UNFUNDED).build();
+        FundingDecisionToSendApplicationResource application1
+                = new FundingDecisionToSendApplicationResource(1L, "", "", ON_HOLD);
+        FundingDecisionToSendApplicationResource application3
+                = new FundingDecisionToSendApplicationResource(3L, "", "", UNFUNDED);
 
-        ApplicationSummaryPageResource applicationResults = new ApplicationSummaryPageResource();
-        applicationResults.setContent(Arrays.asList(application1, application2, application3));
+        List<FundingDecisionToSendApplicationResource> applicationResults = Arrays.asList(application1, application3);
         CompetitionAssessmentConfigResource assessmentConfig = newCompetitionAssessmentConfigResource().withIncludeAverageAssessorScoreInNotifications(Boolean.FALSE).build();
 
-        when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, empty())).thenReturn(restSuccess(applicationResults));
+        List<Long> requestedIds = Arrays.asList(application1.getId(), application3.getId());
+
+        when(applicationFundingDecisionRestService.getNotificationResourceForApplications(requestedIds)).thenReturn(restSuccess(applicationResults));
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(assessmentConfig));
 
-        List<Long> requestedIds = Arrays.asList(application1.getId(), application3.getId());
-        List<ApplicationSummaryResource> expectedApplications = Arrays.asList(application1, application3);
+        List<FundingDecisionToSendApplicationResource> expectedApplications = Arrays.asList(application1, application3);
         Map<Long, FundingDecision> expectedDecisions = asMap(application1.getId(), ON_HOLD, application3.getId(), UNFUNDED);
 
         SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds, new NotificationEmailsForm());

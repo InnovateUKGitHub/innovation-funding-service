@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
 import org.innovateuk.ifs.application.service.ApplicationNotificationTemplateRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
@@ -18,9 +17,6 @@ import java.util.List;
 
 @Component
 public class SendNotificationsModelPopulator {
-
-    @Autowired
-    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
