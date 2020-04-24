@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -21,6 +22,9 @@ import java.util.Optional;
  */
 @Component
 public class AssessmentReviewApplicationSummaryModelPopulator {
+
+    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
+    private static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     @Autowired
     private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;
@@ -49,7 +53,15 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
                 application.getName(),
                 readOnlyViewModel,
                 competition,
-                assessment.orElse(null));
+                assessment.orElse(null),
+                termsAndConditionsTerminology(competition));
+    }
+
+    private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
+        if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        return TERMS_AND_CONDITIONS_OTHER;
     }
 
 }
