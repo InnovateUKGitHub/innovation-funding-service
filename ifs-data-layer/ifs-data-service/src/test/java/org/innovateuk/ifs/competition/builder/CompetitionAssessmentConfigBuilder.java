@@ -22,8 +22,8 @@ public class CompetitionAssessmentConfigBuilder extends BaseBuilder<CompetitionA
         return new CompetitionAssessmentConfigBuilder(emptyList()).with(uniqueIds());
     }
 
-    public CompetitionAssessmentConfigBuilder withAverageAssessorScore(Boolean... averageAssessorScore) {
-        return withArraySetFieldByReflection("averageAssessorScore", averageAssessorScore);
+    public CompetitionAssessmentConfigBuilder withIncludeAverageAssessorScoreInNotifications(Boolean... averageAssessorScore) {
+        return withArraySetFieldByReflection("includeAverageAssessorScoreInNotifications", averageAssessorScore);
     }
 
     public CompetitionAssessmentConfigBuilder withCompetition(Competition... competition) {
