@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -20,16 +16,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Optional.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.innovateuk.ifs.application.resource.FundingDecision.*;
+import static org.innovateuk.ifs.application.resource.FundingDecision.ON_HOLD;
+import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
