@@ -4,9 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +24,8 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 
     private static final Log LOG = LogFactory.getLog(ApplicationFundingDecisionServiceImpl.class);
 
+    @Autowired
     private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
-    private ApplicationSummaryRestService applicationSummaryRestService;
-
-    public ApplicationFundingDecisionServiceImpl(ApplicationFundingDecisionRestService applicationFundingDecisionRestService,
-                                                 ApplicationSummaryRestService applicationSummaryRestService) {
-        this.applicationFundingDecisionRestService = applicationFundingDecisionRestService;
-        this.applicationSummaryRestService = applicationSummaryRestService;
-    }
 
     @Override
     public ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds) {
