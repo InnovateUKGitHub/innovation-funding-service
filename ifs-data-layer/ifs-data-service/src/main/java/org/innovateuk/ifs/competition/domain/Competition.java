@@ -179,7 +179,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
-    private boolean hasAssessmentStage;
+    private boolean hasAssessmentStage = true;
 
     public Competition() {
         setupComplete = false;
