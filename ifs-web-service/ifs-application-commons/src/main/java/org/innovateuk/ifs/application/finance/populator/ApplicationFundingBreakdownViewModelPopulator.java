@@ -149,9 +149,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-        if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER)) {
+        if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
             if (!application.isSubmitted()) {
-                if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)) {
+                if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
                     return Optional.of(internalLink(application.getId(), organisation));
                 }
             } else {

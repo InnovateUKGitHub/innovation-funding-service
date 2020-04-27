@@ -44,6 +44,8 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
                     .monitoringOfficersUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verify(partnerOrganisationPermissionRules, times(3))
                     .stakeholdersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+            verify(partnerOrganisationPermissionRules, times(3))
+                    .competitionFinanceUsersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
 
             verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         });
@@ -67,6 +69,8 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
                 .monitoringOfficersUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verify(partnerOrganisationPermissionRules, times(3))
                 .stakeholdersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+        verify(partnerOrganisationPermissionRules, times(3))
+                .competitionFinanceUsersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
 
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
 
