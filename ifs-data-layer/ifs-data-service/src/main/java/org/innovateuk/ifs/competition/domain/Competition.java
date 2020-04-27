@@ -809,7 +809,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public AssessorFinanceView getAssessorFinanceView() {
-        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorFinanceView).orElse(null);
+        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorFinanceView).orElse(AssessorFinanceView.OVERVIEW);
     }
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
