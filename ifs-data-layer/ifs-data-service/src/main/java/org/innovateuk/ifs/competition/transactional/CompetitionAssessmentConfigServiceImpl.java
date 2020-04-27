@@ -1,4 +1,4 @@
-]package org.innovateuk.ifs.competition.transactional;
+package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
