@@ -1,1 +1,0 @@
-UPDATE competition SET has_assessment_stage=false WHERE name = 'Covid-19 competition';
