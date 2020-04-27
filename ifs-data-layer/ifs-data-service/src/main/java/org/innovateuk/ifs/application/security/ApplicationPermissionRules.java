@@ -175,9 +175,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isCompAdmin(user);
     }
 
-    @PermissionRule(value = "UNSUBMIT_APPLICATION",
-            description = "A lead applicant can unsubmit their application if competition is open and they have not revieved a funding decision")
-    public boolean leadApplicantCanUnsubmitTheirApplication(final ApplicationResource applicationResource, final UserResource user) {
+    @PermissionRule(value = "REOPEN_APPLICATION",
+            description = "A lead applicant can reopen their application if competition is open and they have not revieved a funding decision")
+    public boolean leadApplicantCanReopenTheirApplication(final ApplicationResource applicationResource, final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
     }
 

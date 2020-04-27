@@ -38,12 +38,6 @@
             </div>
         </div>
 
-        <!--just put in to send on front end, delete-->
-        <form method="post" th:action="@{/application/{id}/unsubmit(id=${model.currentApplication.getId()})}">
-            <input type="submit" tabindex="0" class="govuk-button" value="Unsubmit application" />
-            <a role="button" tabindex="1" class="button-clear" th:href="@{/application/{id}/track(id=${applicationId})}">Cancel</a>
-        </form>
-
         <h2 class="govuk-heading-l">What happens next?</h2>
 
         <th:block th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">

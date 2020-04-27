@@ -11,7 +11,7 @@ public enum ApplicationEvent implements ProcessEvent {
     INFORM_INELIGIBLE("inform-ineligible"),
     REINSTATE_INELIGIBLE("reinstate-ineligible"),
     WITHDRAW("withdraw-application"),
-    UNSUBMIT("unsubmit-application");
+    REOPEN("reopen-application");
 
     private final String event;
 

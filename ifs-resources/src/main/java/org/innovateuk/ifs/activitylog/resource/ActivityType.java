@@ -3,7 +3,7 @@ package org.innovateuk.ifs.activitylog.resource;
 public enum ActivityType {
 
     APPLICATION_SUBMITTED,
-    APPLICATION_UNSUBMITTED,
+    APPLICATION_REOPENED,
     APPLICATION_INTO_PROJECT_SETUP,
     PROJECT_DETAILS_COMPLETE,
     PROJECT_MANAGER_NOMINATED,

@@ -80,8 +80,8 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         return fireEvent(applicationMessage(application, ApplicationEvent.SUBMIT), application);
     }
 
-    public boolean unsubmit(Application application) {
-        return fireEvent(applicationMessage(application, ApplicationEvent.UNSUBMIT), application);
+    public boolean reopen(Application application) {
+        return fireEvent(applicationMessage(application, ApplicationEvent.REOPEN), application);
     }
 
     public boolean markIneligible(Application application, IneligibleOutcome ineligibleOutcome) {
@@ -120,7 +120,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
                 return reject(application);
             case OPENED:
                 if (application.isSubmitted()) {
-                    return unsubmit(application);
+                    return reopen(application);
                 } else {
                     return open(application);
                 }

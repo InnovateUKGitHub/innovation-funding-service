@@ -191,7 +191,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> unsubmitApplication(long applicationId) {
+    public ServiceResult<Void> reopenApplication(long applicationId) {
         return find(application(applicationId)).andOnSuccess((application) -> {
             validateCompetitionIsOpen(application).andOnSuccess(() -> {
                 validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
@@ -217,7 +217,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Void> validateFundingDecisionHasNotBeSent(Application application) {
-        return application.getFundingDecision() == null ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_UNSUBMITTED);
+        return application.getFundingDecision() == null ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_REOPENED);
     }
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,

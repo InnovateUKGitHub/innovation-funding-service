@@ -100,7 +100,7 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .and()
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.UNSUBMIT)
+                    .event(ApplicationEvent.REOPEN)
                     .target(ApplicationState.OPENED);
     }
 }

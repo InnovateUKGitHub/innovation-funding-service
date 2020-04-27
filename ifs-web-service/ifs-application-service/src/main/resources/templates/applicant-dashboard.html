@@ -134,6 +134,11 @@
                                     </th:block>
                                 </th:block>
                             </div>
+                            <div class="action alignright">
+                                <th:block th:if="${inProgressView.showReopenLink}">
+                                    <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link">Reopen</a>
+                                </th:block>
+                            </div>
                         </li>
                     </ul>
                 </div>

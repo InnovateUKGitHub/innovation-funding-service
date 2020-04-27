@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
-import org.innovateuk.ifs.application.forms.form.ApplicationUnsubmitForm;
+import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -56,8 +56,6 @@ public class ReviewAndSubmitController {
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
     private UserRestService userRestService;
-    @Autowired
-    private QuestionRestService questionRestService;
 
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
@@ -187,16 +185,38 @@ public class ReviewAndSubmitController {
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%d/track", applicationId));
     }
 
-    @SecuredBySpring(value = "APPLICANT_UNSUBMIT", description = "Applicants can unsubmit their applications")
+    @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can confirm they wish to reopen their applications")
     @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping("/{applicationId}/unsubmit")
-    public String applicationUnsubmit(Model model,
-                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationUnsubmitForm form,
+    @GetMapping("/{applicationId}/confirm-reopen")
+    public String applicationConfirmReopen(@PathVariable long applicationId,
+                                           @ModelAttribute(FORM_ATTR_NAME) ApplicationReopenForm form,
+                                           Model model,
+                                           UserResource userResource) {
+        if (!canReopenApplication(applicationId, userResource)) {
+            return "redirect:/application/" + applicationId + "/track";
+        }
+
+        return "application-confirm-reopen";
+    }
+
+    private boolean canReopenApplication(long applicationId, UserResource user) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+        return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
+                && applicationResource.canBeReopened()
+                && userService.isLeadApplicant(user.getId(), applicationResource);
+    }
+
+    @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can reopen their applications")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping("/{applicationId}/confirm-reopen")
+    public String applicationReopen(Model model,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationReopenForm form,
                                     @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     @PathVariable("applicationId") long applicationId) {
 
-        RestResult<Void> updateResult = applicationRestService.unsubmitApplication(applicationId);
+        RestResult<Void> updateResult = applicationRestService.reopenApplication(applicationId);
 
         // change this
         Supplier<String> failureView = () -> format("redirect:/application/%d/track", applicationId);

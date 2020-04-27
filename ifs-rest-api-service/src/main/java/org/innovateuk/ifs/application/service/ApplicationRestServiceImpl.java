@@ -131,8 +131,8 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Void> unsubmitApplication(long applicationId) {
-        return putWithRestResult(format("%s/%d/%s", applicationRestURL, applicationId, "unsubmit-application"), Void.class);
+    public RestResult<Void> reopenApplication(long applicationId) {
+        return putWithRestResult(format("%s/%d/%s", applicationRestURL, applicationId, "reopen-application"), Void.class);
     }
 
 }
