@@ -179,6 +179,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    private boolean hasAssessmentStage;
+
     public Competition() {
         setupComplete = false;
     }
@@ -928,6 +930,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
         this.competitionOrganisationConfig = competitionOrganisationConfig;
+    }
+
+    public boolean isHasAssessmentStage() {
+        return hasAssessmentStage && !isH2020();
+    }
+
+    public void setHasAssessmentStage(boolean hasAssessmentStage) {
+        this.hasAssessmentStage = hasAssessmentStage;
     }
 
     @Override
