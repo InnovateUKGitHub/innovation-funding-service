@@ -8,8 +8,11 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
@@ -47,6 +50,7 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.SMALL;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -95,12 +99,12 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     protected CompetitionRestService competitionRestService;
     @Mock
     protected OrganisationRestService organisationRestService;
-
     @Mock
     private OrganisationTypeRestService organisationTypeRestService;
-
     @Mock
     private FormInputResponseService formInputResponseService;
+    @Mock
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     public List<ApplicationResource> applications = new ArrayList<>();
     public List<SectionResource> sectionResources;
@@ -109,6 +113,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
     public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<CompetitionResource> competitionResources;
     public CompetitionResource competitionResource;
+    public CompetitionAssessmentConfigResource competitionAssessmentConfigResource;
     public List<OrganisationResource> organisations = new ArrayList<>();
     TreeSet<OrganisationResource> organisationSet;
     public List<ProcessRoleResource> assessorProcessRoleResources;
@@ -179,6 +184,15 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withMaxProjectDuration(36)
                 .withIncludeJesForm(true)
                 .withFundingType(FundingType.GRANT)
+                .build();
+
+        competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
+                .withIncludeAverageAssessorScoreInNotifications(false)
+                .withAssessorCount(5)
+                .withAssessorPay(BigDecimal.valueOf(100))
+                .withHasAssessmentPanel(false)
+                .withHasInterviewStage(false)
+                .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .build();
 
         competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
@@ -287,15 +301,13 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                     when(sectionService.getById(s.getId())).thenReturn(s);
                 }
         );
-        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FINANCE)).thenReturn(Arrays.asList
-                (sectionResource7));
+
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionAssessmentConfigResource));
+        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FINANCE)).thenReturn(singletonList(sectionResource7));
         when(sectionService.getFinanceSection(1L)).thenReturn(sectionResource7);
-        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays
-                .asList(sectionResource9));
-        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FUNDING_FINANCES)).thenReturn(Arrays
-                .asList(sectionResource10));
-        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.OVERVIEW_FINANCES)).thenReturn(Arrays
-                .asList(sectionResource11));
+        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.ORGANISATION_FINANCES)).thenReturn(singletonList(sectionResource9));
+        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.FUNDING_FINANCES)).thenReturn(singletonList(sectionResource10));
+        when(sectionService.getSectionsForCompetitionByType(1L, SectionType.OVERVIEW_FINANCES)).thenReturn(singletonList(sectionResource11));
 
         when(questionRestService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(restSuccess(Arrays.asList
                 (q21Resource, q22Resource, q23Resource)));

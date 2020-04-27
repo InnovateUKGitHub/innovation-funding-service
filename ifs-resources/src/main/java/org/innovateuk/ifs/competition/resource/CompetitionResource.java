@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -82,13 +83,18 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Set<Long> researchCategories;
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Integer assessorCount;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private BigDecimal assessorPay;
     private String activityCode;
     private boolean setupComplete = false;
     private Boolean useResubmissionQuestion;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Boolean hasAssessmentPanel;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private Boolean hasInterviewStage;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -856,13 +862,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(researchCategories, that.researchCategories)
                 .append(minProjectDuration, that.minProjectDuration)
                 .append(maxProjectDuration, that.maxProjectDuration)
-                .append(assessorCount, that.assessorCount)
-                .append(assessorPay, that.assessorPay)
                 .append(activityCode, that.activityCode)
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
-                .append(hasAssessmentPanel, that.hasAssessmentPanel)
-                .append(hasInterviewStage, that.hasInterviewStage)
-                .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
@@ -922,14 +923,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(researchCategories)
                 .append(minProjectDuration)
                 .append(maxProjectDuration)
-                .append(assessorCount)
-                .append(assessorPay)
                 .append(activityCode)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)
-                .append(hasAssessmentPanel)
-                .append(hasInterviewStage)
-                .append(assessorFinanceView)
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)

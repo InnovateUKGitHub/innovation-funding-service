@@ -767,7 +767,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testCoFundersForCompetition() throws Exception {
+    public void coFundersForCompetition() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withActivityCode("Activity Code")
@@ -918,7 +918,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSetCompetitionAsReadyToOpen() throws Exception {
+    public void setCompetitionAsReadyToOpen() throws Exception {
         when(competitionSetupService.setCompetitionAsReadyToOpen(COMPETITION_ID)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/ready-to-open"))
@@ -929,7 +929,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSetCompetitionAsReadyToOpen_failure() throws Exception {
+    public void setCompetitionAsReadyToOpen_failure() throws Exception {
         when(competitionSetupService.setCompetitionAsReadyToOpen(COMPETITION_ID)).thenReturn(
                 serviceFailure(new Error("competition.setup.not.ready.to.open", HttpStatus.BAD_REQUEST)));
 
@@ -957,7 +957,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSubmitAssessorsSectionDetailsWithErrors() throws Exception {
+    public void submitAssessorsSectionDetailsWithErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -974,7 +974,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSubmitAssessorsSectionDetailsWithoutErrors() throws Exception {
+    public void submitAssessorsSectionDetailsWithoutErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -988,6 +988,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         );
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
+                .param("averageAssessorScore", "0")
                 .param("assessorCount", "1")
                 .param("assessorPay", "10")
                 .param("hasAssessmentPanel", "0")
@@ -1003,7 +1004,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorCount() throws Exception {
+    public void submitAssessorsSectionDetailsWithInvalidAssessorCount() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -1023,7 +1024,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay() throws Exception {
+    public void submitAssessorsSectionDetailsWithInvalidAssessorPay() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -1042,7 +1043,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_Bignumber() throws Exception {
+    public void submitAssessorsSectionDetailsWithInvalidAssessorPay_Bignumber() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
