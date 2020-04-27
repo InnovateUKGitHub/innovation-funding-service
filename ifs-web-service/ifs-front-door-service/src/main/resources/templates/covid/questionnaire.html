@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Find coronavirus financial support for your business'" />
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-configured-partner-document" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" /> <!-- backlink -->
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find coronavirus financial support for your business',size='govuk-heading-xl'" />
+
+        <th:block th:if="${questionType == null}">
+            Start here
+            <a th:href="@{/covid-19/questionnaire/BUSINESS}">Start HERE</a>
+        </th:block>
+
+
+        <th:block th:unless="${questionType == null}">
+            <th:block th:if="${form.decisionMade}">
+                Decision has been made
+            </th:block>
+            <th:block th:unless="${form.decisionMade}">
+                <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input id="yes" type="radio" th:field="*{__${questionType.field}__}" value="true" class="govuk-radios__input">
+                                    <label for="yes" class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input id="no" type="radio" th:field="*{__${questionType.field}__}" value="false" class="govuk-radios__input">
+                                    <label for="no" class="govuk-label govuk-radios__label">No</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <button class="govuk-button" type="submit">Next step</button>
+
+                        <table class="govuk-table" th:unless="${questionType.ordinal() == 0}">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m">Previous answers</h2>
+                                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">Start again</a></p>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header">Question</th>
+                                <th scope="col" class="govuk-table__header">Answer</th>
+                                <th scope="col" class="govuk-table__header">Change answer</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr th:each="question : ${T(org.innovateuk.ifs.covid.CovidQuestionnaireType).values()}"
+                                class="govuk-table__row"
+                                th:unless="${question.getValue(form) == null}">
+                                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${question.question}">Where is your business based?</td>
+                                <td class="govuk-table__cell" th:text="${question.getValue(form)  ? 'Yes' : 'No'}"></td>
+                                <td class="govuk-table__cell">
+                                    <a class="govuk-link" th:href="@{/covid-19/questionnaire/{questionType}(questionType=${question})}">Change</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </th:block>
+        </th:block>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
