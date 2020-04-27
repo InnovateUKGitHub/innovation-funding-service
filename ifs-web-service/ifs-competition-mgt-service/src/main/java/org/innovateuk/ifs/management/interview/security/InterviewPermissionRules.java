@@ -44,7 +44,7 @@ public class InterviewPermissionRules {
 
     private boolean competitionHasInterviewPanel(CompetitionResource competition) {
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
-        return competitionAssessmentConfigResource.getHasInterviewStage();
+        return Boolean.TRUE.equals(competitionAssessmentConfigResource.getHasInterviewStage());
     }
 
     private boolean competitionIsInFundersPanel(CompetitionResource competition) {

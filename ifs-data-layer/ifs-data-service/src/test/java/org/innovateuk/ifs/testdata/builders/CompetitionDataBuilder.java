@@ -17,6 +17,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -454,6 +455,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
             competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
+    }
+
+    public CompetitionDataBuilder withAssessmentConfig(Integer assessorCount,
+                                                       BigDecimal assessorPay,
+                                                       Boolean hasAssessmentPanel,
+                                                       Boolean hasInterviewStage,
+                                                       AssessorFinanceView assessorFinanceView) {
+        return asCompAdmin(data -> {
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
+        competitionAssessmentConfigResource.setAssessorCount(assessorCount);
+        competitionAssessmentConfigResource.setAssessorPay(assessorPay);
+        competitionAssessmentConfigResource.setHasAssessmentPanel(hasAssessmentPanel);
+        competitionAssessmentConfigResource.setHasInterviewStage(hasInterviewStage);
+        competitionAssessmentConfigResource.setAssessorFinanceView(assessorFinanceView);
+        competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }
 
