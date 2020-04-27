@@ -694,7 +694,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public Integer getAssessorCount() {
-        return competitionAssessmentConfig.getAssessorCount();
+        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorCount).orElse(null);
     }
 
     public void setAssessorCount(Integer assessorCount) {
@@ -702,7 +702,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public BigDecimal getAssessorPay() {
-        return competitionAssessmentConfig.getAssessorPay();
+        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorPay).orElse(null);
     }
 
     public void setAssessorPay(BigDecimal assessorPay) {
@@ -793,7 +793,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public Boolean isHasAssessmentPanel() {
-        return competitionAssessmentConfig.getHasAssessmentPanel();
+        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getHasAssessmentPanel).orElse(null);
     }
 
     public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
@@ -801,7 +801,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public Boolean isHasInterviewStage() {
-        return competitionAssessmentConfig.getHasInterviewStage();
+        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getHasInterviewStage).orElse(null);
     }
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
@@ -809,7 +809,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public AssessorFinanceView getAssessorFinanceView() {
-        return competitionAssessmentConfig.getAssessorFinanceView();
+        return ofNullable(competitionAssessmentConfig).map(CompetitionAssessmentConfig::getAssessorFinanceView).orElse(null);
     }
 
     public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
