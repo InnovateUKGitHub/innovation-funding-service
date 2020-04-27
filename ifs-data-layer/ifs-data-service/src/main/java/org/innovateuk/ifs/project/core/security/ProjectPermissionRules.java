@@ -45,7 +45,22 @@ public class ProjectPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
+    public boolean stakeholderCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return project != null && userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
     public boolean projectFinanceCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
         return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
+    public boolean compAdminCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
+    public boolean supportCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return isSupport(user);
     }
 }

@@ -148,4 +148,48 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         assertFalse(rules.projectFinanceCanViewFinanceReviewer(project, user));
     }
+
+    @Test
+    public void compAdminCanViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.compAdminCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void nonCompAdminCannotViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.compAdminCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void supportCanViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserAsSupport(project, user);
+
+        assertTrue(rules.supportCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void nonSupportCannotViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserNotAsSupport(project, user);
+
+        assertFalse(rules.supportCanViewFinanceReviewer(project, user));
+    }
 }
