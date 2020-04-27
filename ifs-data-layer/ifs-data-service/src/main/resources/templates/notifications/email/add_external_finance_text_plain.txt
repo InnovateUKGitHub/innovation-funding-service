@@ -1,0 +1,15 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name}
+
+You have been invited to review the finance details for this Innovation Funding Service competition:
+${competitionName}
+
+You need to create an account before you can start your review.
+
+Create account: ${dashboardUrl}
+
+Yours sincerely
+
+Innovation Funding Service Team
+</@layout.defaultPlainText>

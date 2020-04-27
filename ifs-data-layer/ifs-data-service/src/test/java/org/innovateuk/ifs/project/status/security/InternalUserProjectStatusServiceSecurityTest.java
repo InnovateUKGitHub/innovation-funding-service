@@ -41,6 +41,7 @@ public class InternalUserProjectStatusServiceSecurityTest extends BaseServiceSec
             verify(statusPermissionRules).supportCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).assignedInnovationLeadCanViewCompetitionStatus(competition, getLoggedInUser());
             verify(statusPermissionRules).assignedStakeholderCanViewCompetitionStatus(competition, getLoggedInUser());
+            verify(statusPermissionRules).assignedCompetitionFinanceCanViewCompetitionStatus(competition, getLoggedInUser());
             verifyNoMoreInteractions(statusPermissionRules);
         });
     }

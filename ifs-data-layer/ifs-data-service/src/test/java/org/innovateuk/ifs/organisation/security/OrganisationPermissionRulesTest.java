@@ -24,8 +24,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.monitoring.builder.MonitoringOfficerBuilder.newMonitoringOfficer;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -71,6 +70,17 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
                 assertTrue(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
                 assertFalse(rules.stakeholdersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void competitionFinanceUsersCanSeeAllOrganisations() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.hasRole(EXTERNAL_FINANCE)) {
+                assertTrue(rules.competitionFinanceUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            } else {
+                assertFalse(rules.competitionFinanceUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
         });
     }

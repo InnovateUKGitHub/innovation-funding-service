@@ -35,6 +35,7 @@ import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.M
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,6 +101,9 @@ public class CompetitionSetupController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
+    @Value("${ifs.covid19.competitions}")
+    private List<Long> covid19Competitions;
+
     @GetMapping("/{competitionId}")
     public String initCompetitionSetupSection(Model model,
                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -110,6 +114,10 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
+
+        boolean canAssignFinanceUsers = covid19Competitions.contains(competitionId) ? true : false;
+
+        model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
         model.addAttribute(SETUP_READY_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         model.addAttribute(READY_TO_OPEN_KEY, competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
