@@ -16,7 +16,6 @@ Resource        ../../resources/common/PS_Common.robot
 *** Test Cases ***
 Innovation Lead should see Submitted and Ineligible Applications
     [Documentation]  IFS-984
-    [Tags]
     Given the user navigates to submitted application page
     And the user navigates to ineligible application page
     When the user clicks the button/link       jQuery = a:contains("Back")
@@ -34,7 +33,7 @@ Innovation lead is able to access Project details once a finance contact is assi
     [Documentation]  IFS-7429
     Given finance reviewer is added to the project
     When log in as a different user                   &{innovation_lead_two}
-    Then the user navigates to the page               ${server}/project-setup-management/competition/${ConnectedCompId}/project/${Elbow_Grease_Project_Id}/details
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
     [Teardown]  The user clicks the button/link       link = Dashboard
 
 Innovation lead can only search for applications assigned to them
@@ -55,7 +54,7 @@ Innovation lead cannot search for unassigned applications
 *** Keywords ***
 Finance reviewer is added to the project
     log in as a different user                &{ifs_admin_user_credentials}
-    the user navigates to the page            ${server}/project-setup-management/competition/${ConnectedCompId}/project/${Elbow_Grease_Project_Id}/details
+    the user navigates to the page            ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
     the user clicks the button/link           jQuery = a:contains("Edit")
     the user selects finance reviewer         Rianne Almeida
     the user clicks the button/link           jQuery = button:contains("Update finance reviewer")
