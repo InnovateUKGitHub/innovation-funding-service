@@ -119,6 +119,16 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
         user.setRoles(projectFinanceUser);
     }
 
+    protected void setUpUserAsSupport(ProjectResource project, UserResource user) {
+        List<Role> supportUser = singletonList(Role.SUPPORT);
+        user.setRoles(supportUser);
+    }
+
+    protected void setUpUserNotAsSupport(ProjectResource project, UserResource user) {
+        List<Role> supportUser = emptyList();
+        user.setRoles(supportUser);
+    }
+
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 

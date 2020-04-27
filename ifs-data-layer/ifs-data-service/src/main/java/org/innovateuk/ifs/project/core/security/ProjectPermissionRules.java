@@ -7,8 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 @PermissionRules
 @Component
@@ -43,5 +42,30 @@ public class ProjectPermissionRules extends BasePermissionRules {
     public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
         return isSystemRegistrationUser(user)
                 && isProjectActive(project.getId());
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Innovation leads on project competition can view finance reviewer.")
+    public boolean innovationLeadAssignedCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return project != null && userIsInnovationLeadOnCompetition(project.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Stakeholders can view finance reviewer.")
+    public boolean stakeholderCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return project != null && userIsStakeholderInCompetition(project.getCompetition(), user.getId());
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Project finance users can view finance reviewer.")
+    public boolean projectFinanceCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Comp admin users can view finance reviewer.")
+    public boolean compAdminCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Support users can view finance reviewer.")
+    public boolean supportCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
+        return isSupport(user);
     }
 }

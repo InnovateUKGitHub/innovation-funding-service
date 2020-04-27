@@ -163,7 +163,6 @@ The user adds a new team member
   the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
-
 internal user generates the GOL
     [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
@@ -171,6 +170,11 @@ internal user generates the GOL
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send to project team")
     the user clicks the button/link    jQuery = button:contains("Publish to project team")
+
+The user selects finance reviewer
+    [Arguments]   ${FlName}
+    input text                          id = userId    ${FlName}
+    the user clicks the button/link     jQuery = ul li:contains("${FlName}")
 
 Applicant uploads the GOL
     [Arguments]  ${projectID}
