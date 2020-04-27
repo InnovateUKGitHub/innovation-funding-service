@@ -139,6 +139,49 @@
 
                 </fieldset>
             </div>
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('averageAssessorScore')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        <h2 class="govuk-fieldset__heading">Include the average assessor score in funding decision notifications?</h2>
+                    </legend>
+                    <th:block th:if="${#fields.hasErrors('averageAssessorScore')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('averageAssessorScore')}" th:text="${err}" />
+                    </th:block>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            <input id="averageAssessorScore-0"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.averageAssessorScore}"
+                                   value="1"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.competitionAssessmentConfig.required}" />
+                            <label for="averageAssessorScore-0"
+                                   class="govuk-label govuk-radios__label">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input id="averageAssessorScore-1"
+                                   class="govuk-radios__input"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.averageAssessorScore}"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   value="0"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.competitionAssessmentConfig.required}" />
+                            <label for="averageAssessorScore-1"
+                                   class="govuk-label govuk-radios__label">
+                                No
+                            </label>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('assessorFinanceView')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -203,6 +246,9 @@
 
                 <dt>Enable interview stage for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
+
+                <dt>Include the average assessor score in funding decision notifications?</dt>
+                <dd th:text="${competitionSetupForm.averageAssessorScore} ? 'Yes' : 'No' "/>
 
                 <dt>Assessor view of finances?</dt>
                 <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}"/>
