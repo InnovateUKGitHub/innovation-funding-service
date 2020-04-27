@@ -32,6 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -116,6 +117,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Before
     public void setUp() {
+
+        ReflectionTestUtils.setField(controller, "covid19Competitions", asList(1l));
 
         when(userRestService.findByUserRole(COMP_ADMIN))
                 .thenReturn(

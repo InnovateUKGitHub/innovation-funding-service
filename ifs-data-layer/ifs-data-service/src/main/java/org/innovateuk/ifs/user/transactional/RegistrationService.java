@@ -3,10 +3,7 @@ package org.innovateuk.ifs.user.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
-import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
-import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
-import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.registration.resource.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -66,4 +63,8 @@ public interface RegistrationService {
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CREATE", securedType = StakeholderRegistrationResource.class, description = "A System Registration User can create new Stakeholders on behalf of non-logged in users with invite hash")
     ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "CREATE", securedType = CompetitionFinanceRegistrationResource.class, description = "A System Registration User can create new competition finance users on behalf of non-logged in users with invite hash")
+    ServiceResult<Void> createCompetitionFinanceUser(String hash, CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource);
 }

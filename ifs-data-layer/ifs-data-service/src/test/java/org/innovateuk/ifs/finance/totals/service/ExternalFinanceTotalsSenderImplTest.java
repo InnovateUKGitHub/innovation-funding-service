@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class CompetitionFinanceTotalsSenderImplTest {
+public class ExternalFinanceTotalsSenderImplTest {
 
     @Mock
     private ApplicationFinanceTotalsSender applicationFinanceTotalsSender;
