@@ -55,6 +55,10 @@ public interface ApplicationService {
         return Optional.empty();
     }
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UNSUBMIT_APPLICATION')")
+    @Activity(type = ActivityType.APPLICATION_UNSUBMITTED, applicationId = "applicationId")
+    ServiceResult<Void> unsubmitApplication(long applicationId);
+
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_AS_INELIGIBLE')")
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason);
 

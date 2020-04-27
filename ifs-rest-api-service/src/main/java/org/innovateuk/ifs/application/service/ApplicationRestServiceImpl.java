@@ -130,4 +130,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return deleteWithRestResult(format("%s/%d", applicationRestURL, applicationId), Void.class);
     }
 
+    @Override
+    public RestResult<Void> unsubmitApplication(long applicationId) {
+        return putWithRestResult(format("%s/%d/%s", applicationRestURL, applicationId, "unsubmit-application"), Void.class);
+    }
+
 }

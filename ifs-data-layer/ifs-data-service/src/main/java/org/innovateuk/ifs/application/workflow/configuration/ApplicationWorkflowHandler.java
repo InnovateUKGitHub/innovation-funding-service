@@ -80,6 +80,10 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
         return fireEvent(applicationMessage(application, ApplicationEvent.SUBMIT), application);
     }
 
+    public boolean unsubmit(Application application) {
+        return fireEvent(applicationMessage(application, ApplicationEvent.UNSUBMIT), application);
+    }
+
     public boolean markIneligible(Application application, IneligibleOutcome ineligibleOutcome) {
         return fireEvent(markIneligibleMessage(application, ineligibleOutcome), application);
     }
@@ -115,7 +119,11 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
             case REJECTED:
                 return reject(application);
             case OPENED:
-                return open(application);
+                if (application.isSubmitted()) {
+                    return unsubmit(application);
+                } else {
+                    return open(application);
+                }
             default:
                 throw new IllegalArgumentException("unknown applicationState: " + applicationState);
         }

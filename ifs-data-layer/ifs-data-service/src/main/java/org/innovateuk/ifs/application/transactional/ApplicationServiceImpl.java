@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -28,8 +29,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
@@ -118,7 +118,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ValidationMessages> saveApplicationDetails(final Long applicationId,
-                                                                     ApplicationResource applicationResource) {
+                                                                    ApplicationResource applicationResource) {
         return find(() -> getApplication(applicationId)).andOnSuccessReturn(foundApplication
                 -> saveApplication(foundApplication, applicationResource));
     }
@@ -132,9 +132,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private ValidationMessages validateApplication(Application application) {
-       return applicationValidationUtil.isApplicationDetailsValid(application)
-               .stream()
-               .reduce(ValidationMessages.noErrors(), (vm1, vm2) -> {vm1.addAll(vm2); return vm1;});
+        return applicationValidationUtil.isApplicationDetailsValid(application)
+                .stream()
+                .reduce(ValidationMessages.noErrors(), (vm1, vm2) -> {
+                    vm1.addAll(vm2);
+                    return vm1;
+                });
     }
 
     private void saveApplicationDetails(Application application, ApplicationResource resource) {
@@ -184,6 +187,37 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> unsubmitApplication(long applicationId) {
+        return find(application(applicationId)).andOnSuccess((application) -> {
+            validateCompetitionIsOpen(application).andOnSuccess(() -> {
+                validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
+                    validateApplicationIsSubmitted(application).andOnSuccess(() -> {
+                        applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
+                        application.setSubmittedDate(null);
+                        applicationRepository.save(application);
+//                        do we  want to send notifications
+                        return serviceSuccess();
+                    });
+                });
+            });
+            return serviceSuccess();
+        });
+    }
+
+    private ServiceResult<Void> validateCompetitionIsOpen(Application application) {
+        return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) ? serviceSuccess() : serviceFailure(COMPETITION_NOT_OPEN);
+    }
+
+    private ServiceResult<Void> validateApplicationIsSubmitted(Application application) {
+        return application.isSubmitted() ? serviceSuccess() : serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
+    }
+
+    private ServiceResult<Void> validateFundingDecisionHasNotBeSent(Application application) {
+        return application.getFundingDecision() == null ? serviceSuccess() : serviceFailure(APPLICATION_CANNOT_BE_UNSUBMITTED);
     }
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
+import org.innovateuk.ifs.application.forms.form.ApplicationUnsubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
@@ -184,6 +185,25 @@ public class ReviewAndSubmitController {
 
         return validationHandler.addAnyErrors(updateResult)
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%d/track", applicationId));
+    }
+
+    @SecuredBySpring(value = "APPLICANT_UNSUBMIT", description = "Applicants can unsubmit their applications")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping("/{applicationId}/unsubmit")
+    public String applicationUnsubmit(Model model,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationUnsubmitForm form,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    @PathVariable("applicationId") long applicationId) {
+
+        RestResult<Void> updateResult = applicationRestService.unsubmitApplication(applicationId);
+
+        // change this
+        Supplier<String> failureView = () -> format("redirect:/application/%d/track", applicationId);
+        Supplier<String> successView = () -> format("redirect:/application/%d/", applicationId);
+
+        return validationHandler.addAnyErrors(updateResult)
+                .failNowOrSucceedWith(failureView, successView);
     }
 
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")

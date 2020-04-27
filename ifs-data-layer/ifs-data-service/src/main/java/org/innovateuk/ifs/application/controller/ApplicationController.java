@@ -105,6 +105,11 @@ public class ApplicationController {
         return updateStatusResult.toPutResponse();
     }
 
+    @PutMapping("/{applicationId}/unsubmit-application")
+    public RestResult<Void> unsubmitApplication(@PathVariable("applicationId") final Long applicationId) {
+        return applicationService.unsubmitApplication(applicationId).toPutResponse();
+    }
+
     @GetMapping("/application-ready-for-submit/{applicationId}")
     public RestResult<Boolean> applicationReadyForSubmit(@PathVariable("applicationId") final Long applicationId) {
         return RestResult.toGetResponse(applicationProgressService.applicationReadyForSubmit(applicationId));
