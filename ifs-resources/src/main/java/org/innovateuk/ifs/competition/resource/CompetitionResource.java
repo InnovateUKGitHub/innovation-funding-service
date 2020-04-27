@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -81,19 +83,19 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Set<Long> researchCategories;
     private Integer minProjectDuration;
     private Integer maxProjectDuration;
-//    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-//    private Integer assessorCount;
-//    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-//    private BigDecimal assessorPay;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
+    private Integer assessorCount;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
+    private BigDecimal assessorPay;
     private String activityCode;
     private boolean setupComplete = false;
     private Boolean useResubmissionQuestion;
-//    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-//    private Boolean hasAssessmentPanel;
-//    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-//    private Boolean hasInterviewStage;
-//    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
-//    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
+    private Boolean hasAssessmentPanel;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
+    private Boolean hasInterviewStage;
+    @ZeroDowntime(description = "Remove from resource", reference = "IFS-7369")
+    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
     private boolean nonIfs = false;
     private String nonIfsUrl;
     private GrantTermsAndConditionsResource termsAndConditions;
@@ -594,21 +596,21 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-//    public Integer getAssessorCount() {
-//        return assessorCount;
-//    }
-//
-//    public void setAssessorCount(Integer assessorCount) {
-//        this.assessorCount = assessorCount;
-//    }
-//
-//    public BigDecimal getAssessorPay() {
-//        return assessorPay;
-//    }
-//
-//    public void setAssessorPay(BigDecimal assessorPay) {
-//        this.assessorPay = assessorPay;
-//    }
+    public Integer getAssessorCount() {
+        return assessorCount;
+    }
+
+    public void setAssessorCount(Integer assessorCount) {
+        this.assessorCount = assessorCount;
+    }
+
+    public BigDecimal getAssessorPay() {
+        return assessorPay;
+    }
+
+    public void setAssessorPay(BigDecimal assessorPay) {
+        this.assessorPay = assessorPay;
+    }
 
     public boolean getSetupComplete() {
         return setupComplete;
@@ -634,29 +636,29 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.nonIfsUrl = nonIfsUrl;
     }
 
-//    public Boolean isHasAssessmentPanel() {
-//        return hasAssessmentPanel;
-//    }
-//
-//    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
-//        this.hasAssessmentPanel = hasAssessmentPanel;
-//    }
-//
-//    public Boolean isHasInterviewStage() {
-//        return hasInterviewStage;
-//    }
-//
-//    public void setHasInterviewStage(Boolean hasInterviewStage) {
-//        this.hasInterviewStage = hasInterviewStage;
-//    }
+    public Boolean isHasAssessmentPanel() {
+        return hasAssessmentPanel;
+    }
 
-//    public AssessorFinanceView getAssessorFinanceView() {
-//        return assessorFinanceView;
-//    }
-//
-//    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
-//        this.assessorFinanceView = assessorFinanceView;
-//    }
+    public void setHasAssessmentPanel(Boolean hasAssessmentPanel) {
+        this.hasAssessmentPanel = hasAssessmentPanel;
+    }
+
+    public Boolean isHasInterviewStage() {
+        return hasInterviewStage;
+    }
+
+    public void setHasInterviewStage(Boolean hasInterviewStage) {
+        this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public AssessorFinanceView getAssessorFinanceView() {
+        return assessorFinanceView;
+    }
+
+    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
+        this.assessorFinanceView = assessorFinanceView;
+    }
 
     @JsonIgnore
     public boolean isFinanceType() {
@@ -860,13 +862,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(researchCategories, that.researchCategories)
                 .append(minProjectDuration, that.minProjectDuration)
                 .append(maxProjectDuration, that.maxProjectDuration)
-//                .append(assessorCount, that.assessorCount)
-//                .append(assessorPay, that.assessorPay)
                 .append(activityCode, that.activityCode)
                 .append(useResubmissionQuestion, that.useResubmissionQuestion)
-//                .append(hasAssessmentPanel, that.hasAssessmentPanel)
-//                .append(hasInterviewStage, that.hasInterviewStage)
-//                .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .append(stateAid, that.stateAid)
@@ -926,14 +923,9 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(researchCategories)
                 .append(minProjectDuration)
                 .append(maxProjectDuration)
-//                .append(assessorCount)
-//                .append(assessorPay)
                 .append(activityCode)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)
-//                .append(hasAssessmentPanel)
-//                .append(hasInterviewStage)
-//                .append(assessorFinanceView)
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
