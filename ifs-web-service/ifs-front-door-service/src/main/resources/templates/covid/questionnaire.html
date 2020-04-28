@@ -22,55 +22,49 @@
 
 
         <th:block th:unless="${questionType == null}">
-            <th:block th:if="${form.decisionMade}">
-                Decision has been made
-            </th:block>
-            <th:block th:unless="${form.decisionMade}">
-                <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
-                            <div class="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input id="yes" type="radio" th:field="*{__${questionType.field}__}" value="true" class="govuk-radios__input">
-                                    <label for="yes" class="govuk-label govuk-radios__label">Yes</label>
-                                </div>
-
-                                <div class="govuk-radios__item">
-                                    <input id="no" type="radio" th:field="*{__${questionType.field}__}" value="false" class="govuk-radios__input">
-                                    <label for="no" class="govuk-label govuk-radios__label">No</label>
-                                </div>
+            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input id="yes" type="radio" th:field="*{answer}" value="true" class="govuk-radios__input">
+                                <label for="yes" class="govuk-label govuk-radios__label">Yes</label>
                             </div>
-                        </fieldset>
 
-                        <button class="govuk-button" type="submit">Next step</button>
+                            <div class="govuk-radios__item">
+                                <input id="no" type="radio" th:field="*{answer}" value="false" class="govuk-radios__input">
+                                <label for="no" class="govuk-label govuk-radios__label">No</label>
+                            </div>
+                        </div>
+                    </fieldset>
 
-                        <table class="govuk-table" th:unless="${questionType.ordinal() == 0}">
-                            <caption class="govuk-table__caption">
-                                <h2 class="govuk-heading-m">Previous answers</h2>
-                                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">Start again</a></p>
-                            </caption>
-                            <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th scope="col" class="govuk-table__header">Question</th>
-                                <th scope="col" class="govuk-table__header">Answer</th>
-                                <th scope="col" class="govuk-table__header">Change answer</th>
-                            </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
-                            <tr th:each="question : ${T(org.innovateuk.ifs.covid.CovidQuestionnaireType).values()}"
-                                class="govuk-table__row"
-                                th:unless="${question.getValue(form) == null}">
-                                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${question.question}">Where is your business based?</td>
-                                <td class="govuk-table__cell" th:text="${question.getValue(form)  ? 'Yes' : 'No'}"></td>
-                                <td class="govuk-table__cell">
-                                    <a class="govuk-link" th:href="@{/covid-19/questionnaire/{questionType}(questionType=${question})}">Change</a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </form>
-            </th:block>
+                    <button class="govuk-button govuk-!-margin-top-3" type="submit">Next step</button>
+
+                    <table class="govuk-table" th:unless="${questionType.ordinal() == 0}">
+                        <caption class="govuk-table__caption">
+                            <h2 class="govuk-heading-m">Previous answers</h2>
+                            <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">Start again</a></p>
+                        </caption>
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Question</th>
+                            <th scope="col" class="govuk-table__header">Answer</th>
+                            <th scope="col" class="govuk-table__header">Change answer</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr th:each="answer : ${previousAnswers}"
+                            class="govuk-table__row">
+                            <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.left.question}">Where is your business based?</td>
+                            <td class="govuk-table__cell" th:text="${answer.right  ? 'Yes' : 'No'}"></td>
+                            <td class="govuk-table__cell">
+                                <a class="govuk-link" th:href="@{/covid-19/questionnaire/{questionType}(questionType=${answer.left})}">Change</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
         </th:block>
     </main>
 </div>
