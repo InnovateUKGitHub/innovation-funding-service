@@ -31,7 +31,7 @@ Innovation lead can see competitions assigned to him only
 
 Innovation lead is able to access Project details once a finance contact is assigned
     [Documentation]  IFS-7429
-    Given finance reviewer is added to the project
+    Given finance reviewer is added to the project    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
     When log in as a different user                   &{innovation_lead_two}
     Then the user navigates to the page               ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
     [Teardown]  The user clicks the button/link       link = Dashboard
@@ -52,14 +52,6 @@ Innovation lead cannot search for unassigned applications
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 *** Keywords ***
-Finance reviewer is added to the project
-    log in as a different user                &{ifs_admin_user_credentials}
-    the user navigates to the page            ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
-    the user clicks the button/link           jQuery = a:contains("Edit")
-    the user selects finance reviewer         Rianne Almeida
-    the user clicks the button/link           jQuery = button:contains("Update finance reviewer")
-    the user should see the element           jQuery = tr:contains("Rianne Almeida")
-
 the total calculation in dashboard should be correct
     [Arguments]    ${TEXT}    ${Section_Xpath}
     [Documentation]    This keyword uses 2 arguments. The first one is about the page's text (competition or application) and the second is about the Xpath selector.
