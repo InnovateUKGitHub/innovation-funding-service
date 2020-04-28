@@ -23,10 +23,20 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='This is the page title',size='govuk-heading-m'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Reopen the application',size='govuk-heading-xl'" />
+
+        <p class="govuk-heading-s">Application:</p>
+        <p class="govuk-body" th:text="|${applicationId}: ${applicationName}|"/>
+
+        <p class="govuk-heading-s">Competition:</p>
+        <p class="govuk-body" th:text="${competitionName}"/>
+
+        <p class="govuk-body">You will be able to make changes to this application when you reopen it. After you have made  all your changes,
+            you must resubmit the application.</p>
+
         <form method="post" th:action="@{/application/{id}/confirm-reopen(id=${applicationId})}">
-            <input type="submit" tabindex="0" class="govuk-button" value="Yes, I want to reopen my application" />
-            <a role="button" tabindex="1" class="button-clear" th:href="@{/application/{id}/summary(id=${applicationId})}">Cancel</a>
+            <input type="submit" tabindex="0" class="govuk-button" value="Reopen the application" />
+            <a role="button" tabindex="1" class="button-clear" th:href="@{/application/{id}/track(id=${applicationId})}">Cancel</a>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

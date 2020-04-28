@@ -72,7 +72,7 @@ public class ReviewAndSubmitController {
                                   @PathVariable long applicationId,
                                   Model model,
                                   UserResource user) {
-        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
+        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user, covid19Competitions));
 
         return "application/review-and-submit";
     }
@@ -198,6 +198,12 @@ public class ReviewAndSubmitController {
             return "redirect:/application/" + applicationId + "/track";
         }
 
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+        model.addAttribute("applicationId", applicationResource.getId());
+        model.addAttribute("applicationName", applicationResource.getName());
+        model.addAttribute("competitionName", applicationResource.getCompetitionName());
+
         return "application-confirm-reopen";
     }
 
@@ -224,8 +230,7 @@ public class ReviewAndSubmitController {
 
         RestResult<Void> updateResult = applicationRestService.reopenApplication(applicationId);
 
-        // change this
-        Supplier<String> failureView = () -> format("redirect:/application/%d/track", applicationId);
+        Supplier<String> failureView = () -> applicationReopen(model, form,  bindingResult, validationHandler, applicationId);
         Supplier<String> successView = () -> format("redirect:/application/%d/", applicationId);
 
         return validationHandler.addAnyErrors(updateResult)
@@ -245,7 +250,7 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion()));
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId())));
 
         return getTrackingPage(competition);
     }
