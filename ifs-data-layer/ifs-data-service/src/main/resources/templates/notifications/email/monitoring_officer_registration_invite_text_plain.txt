@@ -15,7 +15,7 @@ If you have a problem signing in, please contact support@innovateuk.ukri.org. If
 Yours sincerely,
 Innovate UK, part of UK Research and Innovation
 Tel: 0300 321 4357
-Email: support@innovateuk.ukri.org
+Email: competitions@innovateuk.ukri.org
 
-<@layout.innovateSenderPlainText />
+<@layout.monitoringSenderPlainText />
 </@layout.defaultPlainText>

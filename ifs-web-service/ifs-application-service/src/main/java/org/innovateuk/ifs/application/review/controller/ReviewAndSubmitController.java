@@ -1,17 +1,18 @@
 package org.innovateuk.ifs.application.review.controller;
 
 import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
+import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -55,12 +56,12 @@ public class ReviewAndSubmitController {
     private QuestionStatusRestService questionStatusRestService;
     @Autowired
     private UserRestService userRestService;
-    @Autowired
-    private QuestionRestService questionRestService;
 
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
 
+    @Value("${ifs.covid19.competitions}")
+    private List<Long> covid19Competitions;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -71,7 +72,7 @@ public class ReviewAndSubmitController {
                                   @PathVariable long applicationId,
                                   Model model,
                                   UserResource user) {
-        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user));
+        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user, covid19Competitions));
 
         return "application/review-and-submit";
     }
@@ -186,6 +187,56 @@ public class ReviewAndSubmitController {
                 .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%d/track", applicationId));
     }
 
+    @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can confirm they wish to reopen their applications")
+    @PreAuthorize("hasAuthority('applicant')")
+    @GetMapping("/{applicationId}/confirm-reopen")
+    public String applicationConfirmReopen(@PathVariable long applicationId,
+                                           @ModelAttribute(FORM_ATTR_NAME) ApplicationReopenForm form,
+                                           Model model,
+                                           UserResource userResource) {
+        if (!canReopenApplication(applicationId, userResource)) {
+            return "redirect:/application/" + applicationId + "/track";
+        }
+
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+        model.addAttribute("applicationId", applicationResource.getId());
+        model.addAttribute("applicationName", applicationResource.getName());
+        model.addAttribute("competitionName", applicationResource.getCompetitionName());
+
+        return "application-confirm-reopen";
+    }
+
+    private boolean canReopenApplication(long applicationId, UserResource user) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+        if (covid19Competitions.contains(applicationResource.getCompetition()))  {
+            return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
+                    && applicationResource.canBeReopened()
+                    && userService.isLeadApplicant(user.getId(), applicationResource);
+        }
+
+        return false;
+    }
+
+    @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can reopen their applications")
+    @PreAuthorize("hasAuthority('applicant')")
+    @PostMapping("/{applicationId}/confirm-reopen")
+    public String applicationReopen(Model model,
+                                    @ModelAttribute(FORM_ATTR_NAME) ApplicationReopenForm form,
+                                    @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    @PathVariable("applicationId") long applicationId) {
+
+        RestResult<Void> updateResult = applicationRestService.reopenApplication(applicationId);
+
+        Supplier<String> failureView = () -> applicationReopen(model, form,  bindingResult, validationHandler, applicationId);
+        Supplier<String> successView = () -> format("redirect:/application/%d/", applicationId);
+
+        return validationHandler.addAnyErrors(updateResult)
+                .failNowOrSucceedWith(failureView, successView);
+    }
+
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants can track their application after submitting.")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
@@ -199,7 +250,7 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion()));
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId())));
 
         return getTrackingPage(competition);
     }

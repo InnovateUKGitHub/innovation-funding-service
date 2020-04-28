@@ -98,11 +98,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 String pafCode,
                                                 String code,
                                                 String activityCode,
-                                                Integer assessorCount,
-                                                BigDecimal assessorPay,
-                                                Boolean hasAssessmentPanel,
-                                                Boolean hasInterviewStage,
-                                                AssessorFinanceView assessorFinanceView,
                                                 Boolean multiStream,
                                                 String collaborationLevelCode,
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
@@ -159,11 +154,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
-                competition.setAssessorPay(assessorPay);
-                competition.setAssessorCount(assessorCount);
-                competition.setHasAssessmentPanel(hasAssessmentPanel);
-                competition.setHasInterviewStage(hasInterviewStage);
-                competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
                 competition.setIncludeJesForm(includeJesForm);
                 competition.setApplicationFinanceType(applicationFinanceType);
@@ -465,6 +455,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
             competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
+    }
+
+    public CompetitionDataBuilder withAssessmentConfig(Integer assessorCount,
+                                                       BigDecimal assessorPay,
+                                                       Boolean hasAssessmentPanel,
+                                                       Boolean hasInterviewStage,
+                                                       AssessorFinanceView assessorFinanceView) {
+        return asCompAdmin(data -> {
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
+        competitionAssessmentConfigResource.setAssessorCount(assessorCount);
+        competitionAssessmentConfigResource.setAssessorPay(assessorPay);
+        competitionAssessmentConfigResource.setHasAssessmentPanel(hasAssessmentPanel);
+        competitionAssessmentConfigResource.setHasInterviewStage(hasInterviewStage);
+        competitionAssessmentConfigResource.setAssessorFinanceView(assessorFinanceView);
+        competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }
 

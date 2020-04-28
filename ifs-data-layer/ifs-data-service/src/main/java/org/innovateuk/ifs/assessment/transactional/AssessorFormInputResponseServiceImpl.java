@@ -116,11 +116,11 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private BigDecimal getAveragePercentage(List<AssessorFormInputResponse> responses) {
         return BigDecimal.valueOf(responses.stream()
-                    .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
-                    .filter(response -> response.getValue() != null)
-                    .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
-                    .average()
-                    .orElse(0.0)).setScale(1, BigDecimal.ROUND_HALF_UP);
+                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
+                .filter(response -> response.getValue() != null)
+                .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
+                .average()
+                .orElse(0.0)).setScale(1, BigDecimal.ROUND_HALF_UP);
     }
 
     private Map<Long, BigDecimal> calculateAverageScorePerQuestion(List<AssessorFormInputResponse> responses) {

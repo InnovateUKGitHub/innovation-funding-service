@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm application reopen'" />
+</head>
+<body class="govuk-template__body app-confirm-reopen">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to reopen</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Reopen the application',size='govuk-heading-xl'" />
+
+        <p class="govuk-heading-s">Application:</p>
+        <p class="govuk-body" th:text="|${applicationId}: ${applicationName}|"/>
+
+        <p class="govuk-heading-s">Competition:</p>
+        <p class="govuk-body" th:text="${competitionName}"/>
+
+        <p class="govuk-body">You will be able to make changes to this application when you reopen it. After you have made  all your changes,
+            you must resubmit the application.</p>
+
+        <form method="post" th:action="@{/application/{id}/confirm-reopen(id=${applicationId})}">
+            <input type="submit" tabindex="0" class="govuk-button" value="Reopen the application" />
+            <a role="button" tabindex="1" class="button-clear" th:href="@{/application/{id}/track(id=${applicationId})}">Cancel</a>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

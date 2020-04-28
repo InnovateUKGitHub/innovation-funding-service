@@ -4,6 +4,8 @@ Documentation   IFS-984 Innovation Leads user journey navigation
 ...             IFS-191 Innovation Lead Stakeholder view filtered dashboard
 ...
 ...             IFS-1308 Innovation Leads: Project Setup
+...
+...             IFS-7429 Innovation lead has access to Project Details after Finance reviewer is assigned
 Suite Setup     The user logs-in in new browser  &{innovation_lead_one}
 Suite Teardown  the user closes the browser
 Force Tags      InnovationLead  HappyPath
@@ -14,7 +16,6 @@ Resource        ../../resources/common/PS_Common.robot
 *** Test Cases ***
 Innovation Lead should see Submitted and Ineligible Applications
     [Documentation]  IFS-984
-    [Tags]
     Given the user navigates to submitted application page
     And the user navigates to ineligible application page
     When the user clicks the button/link       jQuery = a:contains("Back")
@@ -27,7 +28,13 @@ Innovation lead can see competitions assigned to him only
     When The Competition Admin assigns the Innovation Lead to a competition
     Then Innovation lead see the assigned competitions
     And the total calculation in dashboard should be correct    Project setup  //section[1]/ul/li
-    [Teardown]  The user clicks the button/link  link = Dashboard
+
+Innovation lead is able to access Project details once a finance contact is assigned
+    [Documentation]  IFS-7429
+    Given finance reviewer is added to the project
+    When log in as a different user                   &{innovation_lead_two}
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    [Teardown]  The user clicks the button/link       link = Dashboard
 
 Innovation lead can only search for applications assigned to them
     [Documentation]  IFS-4564
@@ -45,6 +52,14 @@ Innovation lead cannot search for unassigned applications
     [Teardown]  The user clicks the button/link   link = Dashboard
 
 *** Keywords ***
+Finance reviewer is added to the project
+    log in as a different user                &{ifs_admin_user_credentials}
+    the user navigates to the page            ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    the user clicks the button/link           jQuery = a:contains("Edit")
+    the user selects finance reviewer         Rianne Almeida
+    the user clicks the button/link           jQuery = button:contains("Update finance reviewer")
+    the user should see the element           jQuery = tr:contains("Rianne Almeida")
+
 the total calculation in dashboard should be correct
     [Arguments]    ${TEXT}    ${Section_Xpath}
     [Documentation]    This keyword uses 2 arguments. The first one is about the page's text (competition or application) and the second is about the Xpath selector.

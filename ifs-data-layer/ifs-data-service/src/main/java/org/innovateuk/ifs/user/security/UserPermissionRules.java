@@ -5,7 +5,9 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.ExternalFinance;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -55,6 +57,9 @@ public class UserPermissionRules {
     private StakeholderRepository stakeholderRepository;
 
     @Autowired
+    private ExternalFinanceRepository externalFinanceRepository;
+
+    @Autowired
     private MonitoringOfficerRepository projectMonitoringOfficerRepository;
 
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
@@ -98,6 +103,11 @@ public class UserPermissionRules {
     @PermissionRule(value = "READ", description = "Stakeholders can view users in competitions they are assigned to")
     public boolean stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
         return userIsInCompetitionAssignedToStakeholder(userToView, user);
+    }
+
+    @PermissionRule(value = "READ", description = "Competition finance users can view users in competitions they are assigned to")
+    public boolean competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(UserResource userToView, UserResource user) {
+        return userIsInCompetitionAssignedToCompetitionFinance(userToView, user);
     }
 
     @PermissionRule(value = "READ", description = "Monitoring officers can view users in projects they are assigned to")
@@ -319,6 +329,19 @@ public class UserPermissionRules {
         List<Competition> userCompetitions = getUserCompetitions(applicationsWhereThisUserIsInConsortium, projectsThisUserIsAMemberOf);
 
         return !disjoint(stakeholderCompetitions, userCompetitions);
+    }
+
+    private boolean userIsInCompetitionAssignedToCompetitionFinance(UserResource userToView, UserResource compFinance) {
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(userToView, consortiumProcessRoleFilter);
+        List<Project> projectsThisUserIsAMemberOf =
+                simpleMap(getFilteredProjectUsers(userToView, projectUserFilter), ProjectUser::getProject);
+
+        List<Competition> competitions =
+                simpleMap(externalFinanceRepository.findByCompetitionFinanceId(compFinance.getId()), ExternalFinance::getProcess);
+
+        List<Competition> userCompetitions = getUserCompetitions(applicationsWhereThisUserIsInConsortium, projectsThisUserIsAMemberOf);
+
+        return !disjoint(competitions, userCompetitions);
     }
 
     private boolean userIsInProjectAssignedToMonitoringOfficer(UserResource userToView, UserResource monitoringOfficer) {

@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.management.competition.inflight.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -37,6 +34,7 @@ public class CompetitionInFlightViewModel {
     private AssessorFinanceView assessorFinanceView;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
+                                        CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
                                         List<MilestonesRowViewModel> milestones,
                                         long changesSinceLastNotify,
                                         CompetitionInFlightStatsViewModel keyStatistics,

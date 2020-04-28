@@ -64,6 +64,16 @@
                                 </h3>
                             </div>
                         </li>
+                        <li th:if="${canAssignFinanceUsers}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/manage-finance-users(competitionId=${competition.id})}" class="govuk-link">External finance reviewers</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">External finance reviewers</th:block>
+                                </h3>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div class="highlight-panel govuk-!-margin-top-6 govuk-!-padding-6 govuk-!-padding-top-3">

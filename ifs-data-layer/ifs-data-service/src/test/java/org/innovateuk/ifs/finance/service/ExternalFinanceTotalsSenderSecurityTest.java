@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 
-public class CompetitionFinanceTotalsSenderSecurityTest extends
+public class ExternalFinanceTotalsSenderSecurityTest extends
         BaseServiceSecurityTest<CompetitionFinanceTotalsSender> {
     @Override
     protected Class<? extends CompetitionFinanceTotalsSender> getClassUnderTest() {

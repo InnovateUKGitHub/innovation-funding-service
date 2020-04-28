@@ -1,0 +1,11 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+<p style="margin: 0 0 1em 0;">Dear ${name},</p>
+<p style="margin: 0 0 1em 0;">The application was reopened by ${leadApplicant}, the lead applicant on ${date}:</p>
+<p style="margin: 0 0 1em 0;">${applicationNumber} : ${applicationName}</p>
+<p style="margin: 0 0 1em 0;">You can now make changes assigned to you.</p>
+<@layout.button href="${link}" text="Edit the application" />
+<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+<@layout.senderHTML />
+</@layout.default>

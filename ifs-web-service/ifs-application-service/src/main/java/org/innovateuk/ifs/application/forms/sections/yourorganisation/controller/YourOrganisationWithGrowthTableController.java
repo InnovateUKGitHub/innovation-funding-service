@@ -2,9 +2,6 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.controlle
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
-import javax.validation.Valid;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
@@ -20,6 +17,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.concurrent.Future;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 
@@ -70,7 +72,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
 
     @GetMapping
     @AsyncMethod
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
     @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
@@ -81,7 +83,7 @@ public class YourOrganisationWithGrowthTableController extends AsyncAdaptor {
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser()));
+                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
