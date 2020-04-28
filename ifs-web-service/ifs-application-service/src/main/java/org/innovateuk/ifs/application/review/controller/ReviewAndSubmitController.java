@@ -61,7 +61,7 @@ public class ReviewAndSubmitController {
     private String earlyMetricsUrl;
 
     @Value("${ifs.covid19.competitions}")
-    private List<Long> covid19Competitions;
+    private List<String> covid19Competitions;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -250,7 +250,7 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId())));
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId().toString())));
 
         return getTrackingPage(competition);
     }

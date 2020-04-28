@@ -102,11 +102,11 @@ public class CompetitionSetupController {
     private Validator validator;
 
     @Value("${ifs.covid19.competitions}")
-    private List<Long> covid19Competitions;
+    private List<String> covid19Competitions;
 
     @GetMapping("/{competitionId}")
     public String initCompetitionSetupSection(Model model,
-                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
                                               @SuppressWarnings("UnusedParameters") BindingResult bindingResult) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -115,7 +115,7 @@ public class CompetitionSetupController {
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
 
-        boolean canAssignFinanceUsers = covid19Competitions.contains(competitionId) ? true : false;
+        boolean canAssignFinanceUsers = covid19Competitions.contains(competitionId.toString());
 
         model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));

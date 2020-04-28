@@ -47,7 +47,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private ApplicationRepository applicationRepository;
 
     @Value("${ifs.covid19.competitions}")
-    private List<Long> covid19Competitions;
+    private List<String> covid19Competitions;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {

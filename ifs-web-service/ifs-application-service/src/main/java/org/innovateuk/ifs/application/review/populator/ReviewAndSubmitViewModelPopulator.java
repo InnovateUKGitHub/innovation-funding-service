@@ -31,12 +31,12 @@ public class ReviewAndSubmitViewModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ReviewAndSubmitViewModel populate(long applicationId, UserResource user, List<Long> covid19Competitions) {
+    public ReviewAndSubmitViewModel populate(long applicationId, UserResource user, List<String> covid19Competitions) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         boolean isApplicationReadyForSubmit = applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess();
-        boolean displaySubmitWarning = !covid19Competitions.contains(competition.getId());
+        boolean displaySubmitWarning = !covid19Competitions.contains(competition.getId().toString());
 
         ApplicationReadOnlyViewModel applicationSummaryViewModel = applicationRowsSummaryViewModelPopulator.populate(application, competition, user, defaultSettings()
                 .setIncludeQuestionLinks(true)
