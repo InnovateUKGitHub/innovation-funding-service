@@ -50,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -102,7 +103,7 @@ public class CompetitionSetupController {
     private Validator validator;
 
     @Value("${ifs.covid19.competitions}")
-    private List<String> covid19Competitions;
+    private String covid19Competitions;
 
     @GetMapping("/{competitionId}")
     public String initCompetitionSetupSection(Model model,
@@ -115,7 +116,8 @@ public class CompetitionSetupController {
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
 
-        boolean canAssignFinanceUsers = covid19Competitions.contains(competitionId.toString());
+        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
+        boolean canAssignFinanceUsers = covidCompetitionIds.contains(competitionId.toString());
 
         model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));

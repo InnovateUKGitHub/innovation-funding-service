@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.review.controller;
 
-import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.forms.form.ApplicationReopenForm;
+import org.innovateuk.ifs.application.forms.form.ApplicationSubmitForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.review.viewmodel.TrackViewModel;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -61,7 +62,7 @@ public class ReviewAndSubmitController {
     private String earlyMetricsUrl;
 
     @Value("${ifs.covid19.competitions}")
-    private List<String> covid19Competitions;
+    private String covid19Competitions;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -72,7 +73,9 @@ public class ReviewAndSubmitController {
                                   @PathVariable long applicationId,
                                   Model model,
                                   UserResource user) {
-        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user, covid19Competitions));
+
+        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
+        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user, covidCompetitionIds));
 
         return "application/review-and-submit";
     }
@@ -103,7 +106,7 @@ public class ReviewAndSubmitController {
     @PostMapping(value = "/{applicationId}/review-and-submit", params = "complete")
     public String completeQuestion(@PathVariable long applicationId,
                                    @RequestParam("complete") long questionId,
-                                     UserResource user) {
+                                   UserResource user) {
         ProcessRoleResource processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
         List<ValidationMessages> messages = questionStatusRestService.markAsComplete(questionId, applicationId, processRole.getId()).getSuccess();
         if (messages.isEmpty()) {
@@ -112,12 +115,13 @@ public class ReviewAndSubmitController {
             return handleMarkAsCompleteFailure(applicationId, questionId, processRole);
         }
     }
+
     @SecuredBySpring(value = "APPLICATION_REVIEW_AND_SUBMIT_ASSIGN",
             description = "Applicants can assign questions from the review and submit page")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(value = "/{applicationId}/review-and-submit", params = "assign")
     public String assignQuestionToLead(@PathVariable long applicationId,
-                                 @RequestParam("assign") long questionId,
+                                       @RequestParam("assign") long questionId,
                                        UserResource user) {
 
         ProcessRoleResource assignTo = userService.getLeadApplicantProcessRole(applicationId);
@@ -210,7 +214,7 @@ public class ReviewAndSubmitController {
     private boolean canReopenApplication(long applicationId, UserResource user) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
 
-        if (covid19Competitions.contains(applicationResource.getCompetition()))  {
+        if (covid19Competitions.contains(applicationResource.getCompetition().toString())) {
             return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
                     && applicationResource.canBeReopened()
                     && userService.isLeadApplicant(user.getId(), applicationResource);
@@ -230,7 +234,7 @@ public class ReviewAndSubmitController {
 
         RestResult<Void> updateResult = applicationRestService.reopenApplication(applicationId);
 
-        Supplier<String> failureView = () -> applicationReopen(model, form,  bindingResult, validationHandler, applicationId);
+        Supplier<String> failureView = () -> applicationReopen(model, form, bindingResult, validationHandler, applicationId);
         Supplier<String> successView = () -> format("redirect:/application/%d/", applicationId);
 
         return validationHandler.addAnyErrors(updateResult)
@@ -250,8 +254,9 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId().toString())));
+        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
 
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covidCompetitionIds.contains(competition.getId().toString())));
         return getTrackingPage(competition);
     }
 
