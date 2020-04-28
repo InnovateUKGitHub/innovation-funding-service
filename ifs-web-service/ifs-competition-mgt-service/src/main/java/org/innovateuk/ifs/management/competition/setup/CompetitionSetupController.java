@@ -103,7 +103,7 @@ public class CompetitionSetupController {
     private Validator validator;
 
     @Value("${ifs.covid19.competitions}")
-    private String covid19Competitions;
+    private List<Long> covid19Competitions;
 
     @GetMapping("/{competitionId}")
     public String initCompetitionSetupSection(Model model,
@@ -116,8 +116,7 @@ public class CompetitionSetupController {
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
 
-        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
-        boolean canAssignFinanceUsers = covidCompetitionIds.contains(competitionId.toString());
+        boolean canAssignFinanceUsers = covid19Competitions.contains(competitionId.toString());
 
         model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));

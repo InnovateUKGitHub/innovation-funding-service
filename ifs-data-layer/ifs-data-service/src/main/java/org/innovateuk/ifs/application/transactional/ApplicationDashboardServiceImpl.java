@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private ApplicationRepository applicationRepository;
 
     @Value("${ifs.covid19.competitions}")
-    private String covid19Competitions;
+    private List<Long> covid19Competitions;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -197,8 +196,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
-        if (covidCompetitionIds.contains(application.getCompetition().getId().toString())) {
+        if (covid19Competitions.contains(application.getCompetition().getId().toString())) {
             return application.getLeadApplicant().getId().equals(userId) &&
                     CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                     application.getFundingDecision() == null &&

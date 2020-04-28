@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -62,7 +61,7 @@ public class ReviewAndSubmitController {
     private String earlyMetricsUrl;
 
     @Value("${ifs.covid19.competitions}")
-    private String covid19Competitions;
+    private List<Long> covid19Competitions;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -74,8 +73,7 @@ public class ReviewAndSubmitController {
                                   Model model,
                                   UserResource user) {
 
-        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
-        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user, covidCompetitionIds));
+        model.addAttribute("model", reviewAndSubmitViewModelPopulator.populate(applicationId, user, covid19Competitions));
 
         return "application/review-and-submit";
     }
@@ -214,7 +212,7 @@ public class ReviewAndSubmitController {
     private boolean canReopenApplication(long applicationId, UserResource user) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
 
-        if (covid19Competitions.contains(applicationResource.getCompetition().toString())) {
+        if (covid19Competitions.contains(applicationResource.getCompetition())) {
             return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
                     && applicationResource.canBeReopened()
                     && userService.isLeadApplicant(user.getId(), applicationResource);
@@ -254,9 +252,7 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        List<String> covidCompetitionIds = Arrays.asList(covid19Competitions.split(","));
-
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covidCompetitionIds.contains(competition.getId().toString())));
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId())));
         return getTrackingPage(competition);
     }
 
