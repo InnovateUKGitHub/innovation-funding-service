@@ -32,12 +32,12 @@
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">Total costs</th>
-                <th:block th:if="${model.loanCompetition}">
+                <th:block th:unless="${model.hasGrantClaimPercentage}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding Sought (&pound;)</th>
                 </th:block>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Funding level (%)</th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total project cost</th>
-                <th:block th:unless="${model.loanCompetition}">
+                <th:block th:if="${model.hasGrantClaimPercentage}">
                     <th class="govuk-table__header govuk-table__header--numeric" scope="col">Grant applied for (&pound;)</th>
                 </th:block>
                 <th:block th:unless="${model.loanCompetition}">
@@ -51,12 +51,12 @@
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
-                <th:block th:if="${model.loanCompetition}">
+                <th:block th:unless="${model.hasGrantClaimPercentage}">
                     <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
                 </th:block>
                 <td th:text="${#numbers.formatDecimal(model.percentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}" class="govuk-table__cell govuk-table__cell--numeric"></td>
                 <td class="govuk-table__cell govuk-table__cell--numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
-                <th:block th:unless="${model.loanCompetition}">
+                <th:block th:if="${model.hasGrantClaimPercentage}">
                     <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
                 </th:block>
                 <td class="govuk-table__cell govuk-table__cell--numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
