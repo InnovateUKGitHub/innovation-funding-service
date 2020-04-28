@@ -60,6 +60,8 @@ public class ReviewAndSubmitController {
     @Value("${ifs.early.metrics.url}")
     private String earlyMetricsUrl;
 
+    @Value("${ifs.covid19.competitions}")
+    private List<Long> covid19Competitions;
 
     @SecuredBySpring(value = "READ", description = "Applicants can review and submit their applications")
     @PreAuthorize("hasAnyAuthority('applicant')")
@@ -202,9 +204,13 @@ public class ReviewAndSubmitController {
     private boolean canReopenApplication(long applicationId, UserResource user) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
 
-        return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
-                && applicationResource.canBeReopened()
-                && userService.isLeadApplicant(user.getId(), applicationResource);
+        if (covid19Competitions.contains(applicationResource.getCompetition()))  {
+            return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
+                    && applicationResource.canBeReopened()
+                    && userService.isLeadApplicant(user.getId(), applicationResource);
+        }
+
+        return false;
     }
 
     @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can reopen their applications")

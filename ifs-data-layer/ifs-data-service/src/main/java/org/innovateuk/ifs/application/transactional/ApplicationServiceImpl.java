@@ -13,12 +13,16 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,10 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -59,6 +66,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationValidationUtil applicationValidationUtil;
+
+    @Autowired
+    private ApplicationNotificationService applicationNotificationService;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -193,18 +203,16 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> reopenApplication(long applicationId) {
         return find(application(applicationId)).andOnSuccess((application) -> {
-            validateCompetitionIsOpen(application).andOnSuccess(() -> {
+            return validateCompetitionIsOpen(application).andOnSuccess(() -> {
                 validateFundingDecisionHasNotBeSent(application).andOnSuccess(() -> {
                     validateApplicationIsSubmitted(application).andOnSuccess(() -> {
                         applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.OPENED);
                         application.setSubmittedDate(null);
                         applicationRepository.save(application);
-//                        do we  want to send notifications
-                        return serviceSuccess();
+                        return applicationNotificationService.sendNotificationApplicationReopened(application.getId());
                     });
                 });
             });
-            return serviceSuccess();
         });
     }
 
