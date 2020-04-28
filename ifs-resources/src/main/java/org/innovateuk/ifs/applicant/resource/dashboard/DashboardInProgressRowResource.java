@@ -22,6 +22,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private int applicationProgress;
     private boolean assignedToInterview;
     private LocalDate startDate;
+    private boolean showReopenLink;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -60,6 +61,10 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return startDate;
     }
 
+    public boolean isShowReopenLink() {
+        return showReopenLink;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +83,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(competitionTitle, that.competitionTitle)
                 .append(dashboardSection, that.dashboardSection)
                 .append(startDate, that.startDate)
+                .append(showReopenLink, that.showReopenLink)
                 .isEquals();
     }
 
@@ -96,6 +102,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(competitionTitle)
                 .append(dashboardSection)
                 .append(startDate)
+                .append(showReopenLink)
                 .toHashCode();
     }
 
@@ -112,6 +119,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private int applicationProgress;
         private boolean assignedToInterview;
         private LocalDate startDate;
+        private boolean showReopenLink;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
             this.title = title;
@@ -168,6 +176,11 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
+        public DashboardApplicationInProgressResourceBuilder withShowReopenLink(boolean showReopenLink) {
+            this.showReopenLink = showReopenLink;
+            return this;
+        }
+
         public DashboardInProgressRowResource build(){
             DashboardInProgressRowResource result = new DashboardInProgressRowResource();
             result.title = this.title;
@@ -181,6 +194,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.applicationProgress = this.applicationProgress;
             result.assignedToInterview = this.assignedToInterview;
             result.startDate = this.startDate;
+            result.showReopenLink = this.showReopenLink;
 
             return result;
         }

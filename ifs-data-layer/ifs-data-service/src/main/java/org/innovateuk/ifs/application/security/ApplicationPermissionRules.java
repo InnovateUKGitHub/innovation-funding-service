@@ -192,6 +192,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isCompAdmin(user);
     }
 
+    @PermissionRule(value = "REOPEN_APPLICATION",
+            description = "A lead applicant can reopen their application if competition is open and they have not revieved a funding decision")
+    public boolean leadApplicantCanReopenTheirApplication(final ApplicationResource applicationResource, final UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
+
     @PermissionRule(value = "UPDATE_APPLICATION_STATE", description = "A project finance user can update the state of an application")
     public boolean projectFinanceCanUpdateApplicationState(final ApplicationResource applicationResource, final UserResource user) {
         return isProjectFinanceUser(user);
