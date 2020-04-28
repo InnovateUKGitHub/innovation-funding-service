@@ -74,15 +74,17 @@ public class FinanceOverviewController {
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean canChangeFundingSought =
                 competition.getFinanceRowTypes().contains(FinanceRowType.GRANT_CLAIM_AMOUNT) && !financeCheckSummary.isSpendProfilesGenerated();
-        return
-                new FinanceCheckOverviewViewModel(
+        boolean canChangeFundingLevel =
+                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE) && financeCheckSummary.isAllEligibilityAndViabilityInReview();
+        return new FinanceCheckOverviewViewModel(
                         getProjectFinanceOverviewViewModel(projectId),
                         getProjectFinanceSummaries(project, sortedOrganisations, competition),
                         getProjectFinanceCostBreakdown(projectId, sortedOrganisations, competition),
                         applicationId,
                         canChangeFundingSought,
                         competition.isLoan(),
-                        !competition.isLoan() && financeCheckSummary.isAllEligibilityAndViabilityInReview());
+                        canChangeFundingLevel,
+                        competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE));
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(long projectId) {

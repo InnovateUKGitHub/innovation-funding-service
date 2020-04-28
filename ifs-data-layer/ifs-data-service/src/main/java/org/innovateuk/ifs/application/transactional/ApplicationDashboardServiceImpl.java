@@ -175,6 +175,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withLeadApplicant(isLead(role))
                 .withEndDate(application.getCompetition().getEndDate())
                 .withDaysLeft(application.getCompetition().getDaysLeft())
+                .withHasAssessmentStage(application.getCompetition().isHasAssessmentStage())
                 .withApplicationProgress(application.getCompletion().intValue())
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())

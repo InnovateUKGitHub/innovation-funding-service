@@ -23,6 +23,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
     private boolean assignedToInterview;
     private LocalDate startDate;
     private boolean showReopenLink;
+    private boolean hasAssessmentStage;
 
     // Private constructor to enforce immutability
     private DashboardInProgressRowResource() {
@@ -65,6 +66,10 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         return showReopenLink;
     }
 
+    public boolean isHasAssessmentStage() {
+        return hasAssessmentStage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +88,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(competitionTitle, that.competitionTitle)
                 .append(dashboardSection, that.dashboardSection)
                 .append(startDate, that.startDate)
+                .append(hasAssessmentStage, that.hasAssessmentStage)
                 .append(showReopenLink, that.showReopenLink)
                 .isEquals();
     }
@@ -102,6 +108,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
                 .append(competitionTitle)
                 .append(dashboardSection)
                 .append(startDate)
+                .append(hasAssessmentStage)
                 .append(showReopenLink)
                 .toHashCode();
     }
@@ -119,6 +126,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
         private int applicationProgress;
         private boolean assignedToInterview;
         private LocalDate startDate;
+        private boolean hasAssessmentStage;
         private boolean showReopenLink;
 
         public DashboardApplicationInProgressResourceBuilder withTitle(String title) {
@@ -181,6 +189,11 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             return this;
         }
 
+        public DashboardApplicationInProgressResourceBuilder withHasAssessmentStage(boolean hasAssessmentStage) {
+            this.hasAssessmentStage = hasAssessmentStage;
+            return this;
+        }
+
         public DashboardInProgressRowResource build(){
             DashboardInProgressRowResource result = new DashboardInProgressRowResource();
             result.title = this.title;
@@ -196,6 +209,7 @@ public class DashboardInProgressRowResource extends DashboardRowResource {
             result.startDate = this.startDate;
             result.showReopenLink = this.showReopenLink;
 
+            result.hasAssessmentStage = this.hasAssessmentStage;
             return result;
         }
     }
