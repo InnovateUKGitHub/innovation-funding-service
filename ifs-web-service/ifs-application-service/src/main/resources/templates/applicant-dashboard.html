@@ -88,7 +88,7 @@
                     <h2 class="govuk-heading-m" th:text="${model.applicationInProgressText}"/>
                     <ul>
                         <li th:each="inProgressView : ${model.inProgress}"
-                            th:classappend="|${inProgressView.assignedToMe ? 'assigned-to-me' : '' } ${!inProgressView.submitted and !inProgressView.hasAssessmentStage ? '' : 'status-2-col'}|">
+                            th:classappend="|${inProgressView.assignedToMe ? 'assigned-to-me' : '' } ${inProgressView.hasAssessmentStage ? 'status-2-col' : ''}|">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" class="govuk-link" />
