@@ -11,7 +11,6 @@ public class FinanceCheckOverviewViewModel {
 
     private final long applicationId;
     private final boolean canChangeFundingSought;
-
     private final boolean canChangeFundingLevelPercentages;
 
     public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel overview, FinanceCheckSummariesViewModel summaries, ProjectFinanceCostBreakdownViewModel breakdown, long applicationId,
