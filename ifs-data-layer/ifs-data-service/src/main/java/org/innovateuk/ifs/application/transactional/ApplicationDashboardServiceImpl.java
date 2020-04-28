@@ -8,9 +8,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,6 +170,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withLeadApplicant(isLead(role))
                 .withEndDate(application.getCompetition().getEndDate())
                 .withDaysLeft(application.getCompetition().getDaysLeft())
+                .withHasAssessmentStage(application.getCompetition().isHasAssessmentStage())
                 .withApplicationProgress(application.getCompletion().intValue())
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())
