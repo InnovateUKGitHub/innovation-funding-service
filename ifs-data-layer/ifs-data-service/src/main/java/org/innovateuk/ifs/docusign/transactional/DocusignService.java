@@ -13,10 +13,11 @@ public interface DocusignService {
     ServiceResult<DocusignDocument> send(DocusignRequest request);
     ServiceResult<DocusignDocument> resend(long docusignDocumentId, DocusignRequest request);
 
+    @PreAuthorize("hasAuthority('system_maintainer')")
     void downloadFileIfSigned() throws ApiException, IOException;
 
     String getDocusignUrl(String envelopeId, long userId, String name, String email, String redirect);
 
-    @PreAuthorize("hasAnyAuthority('applicant')")
+    @PreAuthorize("hasAuthority('applicant')")
     ServiceResult<Void> importDocument(String envelopeId);
 }
