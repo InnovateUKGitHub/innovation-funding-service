@@ -35,7 +35,6 @@ import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.M
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +49,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -102,9 +100,6 @@ public class CompetitionSetupController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    @Value("${ifs.covid19.competitions}")
-    private List<Long> covid19Competitions;
-
     @GetMapping("/{competitionId}")
     public String initCompetitionSetupSection(Model model,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
@@ -116,7 +111,7 @@ public class CompetitionSetupController {
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
 
-        boolean canAssignFinanceUsers = covid19Competitions.contains(competitionId.toString());
+        boolean canAssignFinanceUsers = competition.getCovidType() != null;
 
         model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));

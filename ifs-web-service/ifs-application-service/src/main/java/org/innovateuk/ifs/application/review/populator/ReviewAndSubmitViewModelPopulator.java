@@ -12,8 +12,6 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 
 @Component
@@ -31,12 +29,12 @@ public class ReviewAndSubmitViewModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ReviewAndSubmitViewModel populate(long applicationId, UserResource user, List<Long> covid19Competitions) {
+    public ReviewAndSubmitViewModel populate(long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         boolean isApplicationReadyForSubmit = applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess();
-        boolean displaySubmitWarning = !covid19Competitions.contains(competition.getId());
+        boolean displaySubmitWarning = competition.getCovidType() == null;
 
         ApplicationReadOnlyViewModel applicationSummaryViewModel = applicationRowsSummaryViewModelPopulator.populate(application, competition, user, defaultSettings()
                 .setIncludeQuestionLinks(true)

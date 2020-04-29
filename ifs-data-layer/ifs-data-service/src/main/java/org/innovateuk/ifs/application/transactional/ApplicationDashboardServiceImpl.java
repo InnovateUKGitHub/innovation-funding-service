@@ -14,7 +14,6 @@ import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,9 +44,6 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     private QuestionStatusService questionStatusService;
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Value("${ifs.covid19.competitions}")
-    private List<Long> covid19Competitions;
 
     @Override
     public ServiceResult<ApplicantDashboardResource> getApplicantDashboard(long userId) {
@@ -196,7 +192,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        if (covid19Competitions.contains(application.getCompetition().getId())) {
+        if (application.getCompetition().getCovidType() != null) {
             return application.getLeadApplicant().getId().equals(userId) &&
                     CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                     application.getFundingDecision() == null &&

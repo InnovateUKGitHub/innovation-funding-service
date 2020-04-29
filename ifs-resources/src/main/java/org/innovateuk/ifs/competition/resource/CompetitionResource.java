@@ -962,4 +962,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }
+
+    @JsonIgnore
+    public boolean isOverheadsAlwaysTwenty() {
+        return covidType != null && (
+                covidType == CovidType.DE_MINIMIS ||
+                        covidType == CovidType.DE_MINIMIS_ROUND_2
+                );
+    }
 }

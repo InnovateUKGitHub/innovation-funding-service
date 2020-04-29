@@ -45,11 +45,6 @@ items:
                 failureThreshold: 3
               imagePullPolicy: Always
               env:
-                - name: IFS_COVID19_COMPETITIONS
-                  valueFrom:
-                    configMapKeyRef:
-                      name: web-config
-                      key: IFS_COVID19_COMPETITIONS
                 - name: SPRING_DATASOURCE_URL
                   valueFrom:
                     configMapKeyRef:
