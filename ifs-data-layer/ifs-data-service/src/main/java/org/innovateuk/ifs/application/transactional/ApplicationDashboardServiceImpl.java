@@ -196,7 +196,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        if (covid19Competitions.contains(application.getCompetition().getId().toString())) {
+        if (covid19Competitions.contains(application.getCompetition().getId())) {
             return application.getLeadApplicant().getId().equals(userId) &&
                     CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
                     application.getFundingDecision() == null &&
