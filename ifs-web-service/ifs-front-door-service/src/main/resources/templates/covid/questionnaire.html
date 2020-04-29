@@ -15,56 +15,132 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find coronavirus financial support for your business',size='govuk-heading-xl'" />
 
-        <th:block th:if="${questionType == null}">
-            Start here
-            <a th:href="@{/covid-19/questionnaire/BUSINESS}">Start HERE</a>
+        <th:block th:if="${decision == null}">
+
+            <th:block th:if="${questionType == null}">
+                Start here
+                <a th:href="@{/covid-19/questionnaire/business}">Start HERE</a>
+            </th:block>
+
+
+            <th:block th:unless="${questionType == null}">
+                <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
+                            <th:block th:if="${#fields.hasErrors('answer')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input id="yes"
+                                           type="radio"
+                                           th:field="*{answer}"
+                                           value="true"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.covid.questionnaire.required}">
+                                    <label for="yes" class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input id="no"
+                                           type="radio"
+                                           th:field="*{answer}"
+                                           value="false"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.covid.questionnaire.required}">
+                                    <label for="no" class="govuk-label govuk-radios__label">No</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <button class="govuk-button govuk-!-margin-top-3" type="submit">Next step</button>
+
+                        <table class="govuk-table" th:unless="${questionType.ordinal() == 0}">
+                            <caption class="govuk-table__caption">
+                                <h2 class="govuk-heading-m">Previous answers</h2>
+                                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">Start again</a></p>
+                            </caption>
+                            <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header">Question</th>
+                                <th scope="col" class="govuk-table__header">Answer</th>
+                                <th scope="col" class="govuk-table__header">Change answer</th>
+                            </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                            <tr th:each="answer : ${previousAnswers}"
+                                class="govuk-table__row">
+                                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.left.question}">Where is your business based?</td>
+                                <td class="govuk-table__cell" th:text="${answer.right  ? 'Yes' : 'No'}"></td>
+                                <td class="govuk-table__cell">
+                                    <a class="govuk-link" th:href="@{/covid-19/questionnaire/{questionType}(questionType=${answer.left})}">Change</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </th:block>
         </th:block>
 
+        <th:block th:unless="${decision == null}">
+            <th:block th:if="${decision == 'default'}">
+                <p class="govuk-body">
+                    If you need overall business support: link to existing government support for
+                    businesses (https://www.businesssupport.gov.uk/coronavirus/)
+                    If you are a SME that needs financial support because you are losing revenue,
+                    and seeing your cashflow disrupted, as a result of the COVID-19 outbreak: link
+                    to CBILS (https://www.british-business-bank.co.uk/ourpartners/coronavirus-
+                    business-interruption-loan-scheme-cbils-2/)
+                    If you are a SME that needs investment: link to Future Fund
+                    (https://www.british-business-bank.co.uk/ourpartners/future-fund/)
+                    If you want funding support for a new innovation project: link to IFS
+                    (https://apply-for-innovation-funding.service.gov.uk/competition/search)
+                </p>
+            </th:block>
+            <th:block th:if="${decision == 'non-business'}">
+                <p class="govuk-body">
+                    (Direct to offer for academic / research partners eg universities / centres /
+                    RTOs?)
+                </p>
+            </th:block>
+            <th:block th:if="${decision == 'contact-monitoring-officer'}">
+                <p class="govuk-body">
+                    contact your Innovate UK monitoring officer to discuss a Project
+                    Change Request
+                </p>
+            </th:block>
+            <th:block th:if="${decision == 'monthly-funding'}">
+                <p class="govuk-body">
+                    We may be able to provide you with monthly funding to accelerate the
+                    grant towards your eligible project costs rather than the standard quarterly
+                    reimbursement. You will still have to fund your costs that are not covered
+                    by the grant.
+                </p>
+            </th:block>
+            <th:block th:if="${decision == 'continuity-loan'}">
+                <p class="govuk-body">
+                    We may be able to provide you with an Innovation Continuity Loan of
+                    between £250,000 and £1,600,000 for a period of up to 7 years to support
+                    your project costs that are not covered by your grant. You will have to pay
+                    interest on the amount that you borrow and you will have to repay the loan.
+                    You will also have to provide us with financial information so that we can
+                    assess the continued financial viability of your business. Link to Innovation
+                    Continuity Loan application.
+                </p>
+            </th:block>
+            <th:block th:if="${decision == 'continuity-grant'}">
+                <p class="govuk-body">
+                    We may be able to provide you with a Continuity Grant up to £250,000
+                    to support your project and reasonable business costs that are not covered
+                    by your grant.
+                    [Link to continuity grant
+                    application].
+                </p>
+            </th:block>
 
-        <th:block th:unless="${questionType == null}">
-            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                <input id="yes" type="radio" th:field="*{answer}" value="true" class="govuk-radios__input">
-                                <label for="yes" class="govuk-label govuk-radios__label">Yes</label>
-                            </div>
-
-                            <div class="govuk-radios__item">
-                                <input id="no" type="radio" th:field="*{answer}" value="false" class="govuk-radios__input">
-                                <label for="no" class="govuk-label govuk-radios__label">No</label>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <button class="govuk-button govuk-!-margin-top-3" type="submit">Next step</button>
-
-                    <table class="govuk-table" th:unless="${questionType.ordinal() == 0}">
-                        <caption class="govuk-table__caption">
-                            <h2 class="govuk-heading-m">Previous answers</h2>
-                            <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">Start again</a></p>
-                        </caption>
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header">Question</th>
-                            <th scope="col" class="govuk-table__header">Answer</th>
-                            <th scope="col" class="govuk-table__header">Change answer</th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <tr th:each="answer : ${previousAnswers}"
-                            class="govuk-table__row">
-                            <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.left.question}">Where is your business based?</td>
-                            <td class="govuk-table__cell" th:text="${answer.right  ? 'Yes' : 'No'}"></td>
-                            <td class="govuk-table__cell">
-                                <a class="govuk-link" th:href="@{/covid-19/questionnaire/{questionType}(questionType=${answer.left})}">Change</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </form>
         </th:block>
     </main>
 </div>
