@@ -39,7 +39,7 @@ public class ProjectTeamViewModelPopulator {
 
         ProjectResource project = projectService.getById(projectId);
 
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
+        List<ProjectUserResource> projectUsers = projectService.getDisplayProjectUsersForProject(project.getId());
         List<OrganisationResource> projectOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 

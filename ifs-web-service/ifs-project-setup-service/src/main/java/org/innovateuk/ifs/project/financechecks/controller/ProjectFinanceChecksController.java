@@ -113,22 +113,10 @@ public class ProjectFinanceChecksController {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private SectionService sectionService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     @Autowired
     private EncryptedCookieService cookieUtil;
-
-    @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
-    private ApplicantRestService applicantRestService;
 
     @Autowired
     private ThreadViewModelPopulator threadViewModelPopulator;

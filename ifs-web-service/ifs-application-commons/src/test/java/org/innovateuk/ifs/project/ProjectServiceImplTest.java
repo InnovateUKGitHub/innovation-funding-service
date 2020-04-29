@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -22,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -241,19 +239,4 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertEquals(expectedOrgId, organisationId);
     }
 
-    @Test(expected = ForbiddenActionException.class)
-    public void getOrganisationIdFromUser_noProjects() {
-        long projectId = 1L;
-        long userId = 2L;
-        long expectedOrgId = 3L;
-        UserResource userResource = newUserResource().withId(userId).build();
-
-        setLoggedInUser(userResource);
-
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(emptyList());
-
-        long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
-
-        assertEquals(expectedOrgId, organisationId);
-    }
 }

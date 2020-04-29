@@ -18,6 +18,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -89,6 +90,24 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
+    public void competitionFinanceUsersCanViewProjects() {
+
+        User competitionFinanceUserOnCompetition = newUser().withRoles(singleton(EXTERNAL_FINANCE)).build();
+        UserResource competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
+        Competition competition = newCompetition().build();
+
+        ProjectResource project = newProjectResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanViewProjects(project, competitionFinanceUserResourceOnCompetition));
+
+        allInternalUsers.forEach(user -> assertFalse(rules.competitionFinanceUsersCanViewProjects(newProjectResource().build(), user)));
+    }
+
+    @Test
     public void monitoringOfficerOnProjectCanView() {
 
         UserResource user = newUserResource().build();
@@ -125,5 +144,71 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
                 assertFalse(rules.systemRegistrarCanAddPartnersToProject(project, user));
             }
         });
+    }
+
+    @Test
+    public void projectFinanceCanViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.projectFinanceCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void nonProjectFinanceCannotViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.projectFinanceCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void compAdminCanViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserAsCompAdmin(project, user);
+
+        assertTrue(rules.compAdminCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void nonCompAdminCannotViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserNotAsCompAdmin(project, user);
+
+        assertFalse(rules.compAdminCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void supportCanViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserAsSupport(project, user);
+
+        assertTrue(rules.supportCanViewFinanceReviewer(project, user));
+    }
+
+    @Test
+    public void nonSupportCannotViewFinanceReviewer() {
+
+        UserResource user = newUserResource().build();
+
+        ProjectResource project = newProjectResource().build();
+        setUpUserNotAsSupport(project, user);
+
+        assertFalse(rules.supportCanViewFinanceReviewer(project, user));
     }
 }

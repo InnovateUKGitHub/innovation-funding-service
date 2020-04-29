@@ -36,7 +36,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
 
     @Test
     public void findOne() throws Exception {
-        final Long competitionId = 1L;
+        final long competitionId = 1L;
 
         when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResourceBuilder.build()));
 

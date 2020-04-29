@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
@@ -49,18 +48,6 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
 
     public OrganisationResourceBuilder withOrganisationType(Long... organisationTypeIds) {
         return withArray((organisationTypeId, organisation) -> setField("organisationType", organisationTypeId, organisation), organisationTypeIds);
-    }
-
-    public OrganisationResourceBuilder withUsers(List<Long>... users) {
-        return withArray((user, organisation) -> setField("users", user, organisation), users);
-    }
-
-    public OrganisationResourceBuilder withProcessRoles(List<Long>... processRoles) {
-        return withArray((processRoleList, organisation) -> organisation.setProcessRoles(processRoleList), processRoles);
-    }
-
-    public OrganisationResourceBuilder withAddress(List<OrganisationAddressResource>... organisationAddressResource) {
-    	return withArray((orgAddress, organisation) -> setField("addresses", orgAddress, organisation), organisationAddressResource);
     }
 
     public OrganisationResourceBuilder withOrganisationTypeName(String... organisationTypeNames) {

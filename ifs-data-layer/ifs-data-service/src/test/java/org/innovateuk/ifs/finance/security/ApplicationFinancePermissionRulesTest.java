@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -21,7 +21,9 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
@@ -68,8 +70,14 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             final long applicationId = 1L;
             final long organisationId = 2L;
 
+            CompetitionAssessmentConfig competitionAssessmentConfig = newCompetitionAssessmentConfig()
+                    .withAssessorFinanceView(DETAILED)
+                    .build();
+
             Competition competition = newCompetition()
-                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+                    .withCompetitionAssessmentConfig(competitionAssessmentConfig)
+                    .build();
+
             application = newApplication().with(id(applicationId)).withCompetition(competition).build();
 
             OrganisationResource organisation = newOrganisationResource().with(id(organisationId)).build();
@@ -99,7 +107,12 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             final long otherApplicationId = 3L;
             final long otherOrganisationId = 4L;
             OrganisationResource otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
-            Competition otherCompetition = newCompetition().withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+
+            CompetitionAssessmentConfig competitionAssessmentConfig = newCompetitionAssessmentConfig()
+                    .withAssessorFinanceView(DETAILED)
+                    .build();
+
+            Competition otherCompetition = newCompetition().withCompetitionAssessmentConfig(competitionAssessmentConfig).build();
             Application otherApplication = newApplication().with(id(otherApplicationId)).withCompetition(otherCompetition).build();
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();

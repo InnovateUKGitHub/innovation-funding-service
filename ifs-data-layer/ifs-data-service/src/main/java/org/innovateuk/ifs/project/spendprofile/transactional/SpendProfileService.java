@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
  */
 public interface SpendProfileService {
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'external_finance')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can generate a Spend Profile for any Project" )
     @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_GENERATED)
     ServiceResult<Void> generateSpendProfile(Long projectId);
