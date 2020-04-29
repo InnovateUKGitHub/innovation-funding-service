@@ -1,7 +1,6 @@
-UPDATE competition SET covid_type='DE_MINIMIS' WHERE name = '583 Covid deminis round 1';
+UPDATE competition SET covid_type='DE_MINIMIS' WHERE name = '583 Covid deminis round 1' or name = '583 Covid deminis round 1 project setup';
 UPDATE competition SET covid_type='ADDITIONAL_FUNDING' WHERE name = '596 Covid grants framework group';
 UPDATE competition SET covid_type='DE_MINIMIS_ROUND_2' WHERE name = '599 Covid de minimis round 2';
-
 
 -- ADDITIONAL_FUNDING
 UPDATE competition SET has_assessment_stage=false WHERE covid_type = 'ADDITIONAL_FUNDING';
@@ -19,4 +18,7 @@ INSERT INTO competition_finance_row_types(competition_id, finance_row_type) VALU
 
 -- TODO
 -- docusign
+
+-- TODO remove this. Quick fix for ATs.
+UPDATE competition SET covid_type='DE_MINIMIS' WHERE name = 'Project Setup Comp 18';
 
