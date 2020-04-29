@@ -161,6 +161,7 @@ task generateCertificates {
     dependsOn prepareIDPProxySecrets
     dependsOn prepareIDPSigningSecrets
     dependsOn prepareIDPEncryptionSecrets
+    dependsOn prepareSPSecrets
     dependsOn prepareLDAPEncryptionSecrets
     dependsOn replicateSecrets
     replicateSecrets.mustRunAfter prepareLDAPEncryptionSecrets, prepareIDPEncryptionSecrets, prepareIDPSigningSecrets, prepareIDPProxySecrets
