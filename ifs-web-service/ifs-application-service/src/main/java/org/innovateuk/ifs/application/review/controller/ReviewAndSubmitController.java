@@ -243,7 +243,8 @@ public class ReviewAndSubmitController {
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
-                                   @PathVariable long applicationId) {
+                                   @PathVariable long applicationId,
+                                   UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         if (!application.isSubmitted()) {
@@ -252,7 +253,7 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), covid19Competitions.contains(competition.getId())));
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), canReopenApplication(applicationId, user)));
         return getTrackingPage(competition);
     }
 
