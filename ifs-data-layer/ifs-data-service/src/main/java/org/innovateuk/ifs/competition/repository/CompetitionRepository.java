@@ -49,12 +49,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String PREVIOUS_APPLICATION_CLAUSE = " EXISTS " +
             "(SELECT a.id FROM Application a " +
             "WHERE a.competition.id = c.id AND " +
-            "a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.REJECTED OR " +
-            "(c.competition.completionStage = 'RELEASE_FEEDBACK' AND a.applicationProcess.activityState != org.innovateuk.ifs.application.resource.ApplicationState.APPROVED)";
+            "a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.REJECTED OR " +
+            "(a.competition.completionStage = 'RELEASE_FEEDBACK' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED))";
 
     /* Filters competitions to those in feedback released state */
     String PREVIOUS_WHERE_CLAUSE = "WHERE " +
-            "( " + PREVIOUS_PROJECT_CLAUSE + " OR " + PREVIOUS_APPLICATION_CLAUSE + ") " +
+            "( " + PREVIOUS_PROJECT_CLAUSE + " OR " + PREVIOUS_APPLICATION_CLAUSE + " OR " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id)) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     /* Filters by innovation lead id or stakeholder id and in project setup state */
