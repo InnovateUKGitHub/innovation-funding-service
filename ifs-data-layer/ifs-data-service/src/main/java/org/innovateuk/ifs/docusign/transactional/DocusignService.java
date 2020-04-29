@@ -4,6 +4,7 @@ import com.docusign.esign.client.ApiException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.docusign.resource.DocusignRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.IOException;
 
@@ -16,5 +17,6 @@ public interface DocusignService {
 
     String getDocusignUrl(String envelopeId, long userId, String name, String email, String redirect);
 
+    @PreAuthorize("hasAnyAuthority('applicant')")
     ServiceResult<Void> importDocument(String envelopeId);
 }
