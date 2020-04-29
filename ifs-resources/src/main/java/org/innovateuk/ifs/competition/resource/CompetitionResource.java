@@ -116,6 +116,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private Set<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
+    private CovidType covidType;
 
     public CompetitionResource() {
     }
@@ -803,6 +804,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
 
     public void setCompetitionTerms(FileEntryResource competitionTerms) {
         this.competitionTerms = competitionTerms;
+    }
+
+    public CovidType getCovidType() {
+        return covidType;
+    }
+
+    public void setCovidType(CovidType covidType) {
+        this.covidType = covidType;
     }
 
     @JsonIgnore

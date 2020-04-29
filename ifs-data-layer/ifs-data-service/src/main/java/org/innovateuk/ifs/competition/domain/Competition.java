@@ -194,6 +194,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     private boolean hasAssessmentStage = true;
 
+    @Enumerated(EnumType.STRING)
+    private CovidType covidType;
+
     public Competition() {
         setupComplete = false;
     }
@@ -245,6 +248,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         } else {
             return COMPETITION_SETUP;
         }
+    }
+
+    public CovidType getCovidType() {
+        return covidType;
+    }
+
+    public void setCovidType(CovidType covidType) {
+        this.covidType = covidType;
     }
 
     public Set<FinanceRowType> getFinanceRowTypes() {
