@@ -36,6 +36,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean overheadAlwaysTwenty;
 
+    private final boolean showCovidGuidance;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -49,7 +51,8 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      String financesUrl,
                                      boolean procurementCompetition,
                                      Set<FinanceRowType> financeRowTypes,
-                                     boolean overheadAlwaysTwenty) {
+                                     boolean overheadAlwaysTwenty,
+                                     boolean showCovidGuidance) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -65,6 +68,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
         this.overheadAlwaysTwenty = overheadAlwaysTwenty;
+        this.showCovidGuidance = showCovidGuidance;
     }
 
     public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
@@ -84,6 +88,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.organisationName = null;
         this.financesUrl = null;
         this.includeVat = false;
+        this.showCovidGuidance = false;
     }
 
     @Override
@@ -142,6 +147,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isOverheadAlwaysTwenty() {
         return overheadAlwaysTwenty;
+    }
+
+    public boolean isShowCovidGuidance() {
+        return showCovidGuidance;
     }
 
     /* view logic */

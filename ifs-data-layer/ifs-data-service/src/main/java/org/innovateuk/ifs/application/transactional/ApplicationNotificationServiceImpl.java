@@ -179,7 +179,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     String leadApplicantName = applicationTeam.stream()
                             .filter(ProcessRole::isLeadApplicant)
                             .map(processRole -> processRole.getUser().getName())
-                            .toString();
+                            .findAny()
+                            .orElse("");
 
                     applicationTeam.forEach(applicant -> {
 

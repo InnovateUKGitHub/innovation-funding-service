@@ -970,4 +970,5 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                         covidType == CovidType.DE_MINIMIS_ROUND_2
                 );
     }
+
 }
