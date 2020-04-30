@@ -95,7 +95,7 @@ Competition is in Live and PS tabs
 
 Complete PS
     Log in as a different user           &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDcompetitionTitle}
+    the user clicks the button/link    link = ${COVIDapplicationTitle1}
     the user clicks the button/link    link = Project details
     the user clicks the button/link    link = Correspondence address
     the user enter the Correspondence address
@@ -106,10 +106,13 @@ Complete PS
     the user clicks the button/link    id = save-project-manager-button
     The user selects their finance contact  financeContact1
     the user clicks the button/link    link = Set up your project
-    PM uploads the project documents   39
-    the user clicks the button/link    link = Back to document overview
-    PM submits both documents          39
-    the user clicks the button/link    link = Back to document overview
+    the user clicks the button/link      link = Documents
+    the user clicks the button/link        link = Exploitation plan
+    the user uploads the file              css = .inputfile  ${valid_pdf}
+    the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
+        the user clicks the button/link     id = submit-document-button
+        the user clicks the button/link     id = submitDocumentButtonConfirm
+        the user clicks the button/link    link = Back to document overview
     the user fills in bank details
     the project finance approves all steps before finance
 
@@ -150,25 +153,23 @@ the user fills in bank details
 
 the project finance approves all steps before finance
     log in as a different user                   &{ifs_admin_user_credentials}
-    the user navigates to the page               ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
+    the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(3) a
-    the user clicks the button/link              link = Collaboration agreement
+    the user clicks the button/link              link = Exploitation plan
     internal user approve uploaded documents
-    the user goes to documents page              Return to documents  Exploitation plan
-    internal user approve uploaded documents
-    the user navigates to the page               ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
+    the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(4)
     search for MO                                Orvill  Orville Gibbs
-    And the internal user assign project to MO   ${externalReviewerApplicationId}  ${externalReviewerApplication}
-    the user navigates to the page               ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
+    And the internal user assign project to MO   ${application_id}  ${COVIDapplicationTitle1}
+    the user navigates to the page               ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link              jQuery = td.action:nth-of-type(5)
-    approve bank account details                 Empire Ltd
+    approve bank account details
     the user clicks the button/link   jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
     confirm viability    0
         confirm eligibility  0
         all external users send spend profile
             log in as a different user         &{lead_applicant_credentials}
-            the user clicks the button/link    link = ${externalReviewerApplication}
+            the user clicks the button/link    link = ${COVIDapplicationTitle1}
             the user clicks the button/link    link = Spend profile
             the user clicks the button/link    link = Empire Ltd
             the user clicks the button/link    id = spend-profile-mark-as-complete-button
@@ -194,3 +195,9 @@ confirm eligibility
     the user clicks the button/link                      css = #confirm-button        #Page confirmation button
     the user clicks the button/link                      name = confirm-eligibility   #Pop-up confirmation button
     the user clicks the button/link                      link = Return to finance checks
+
+approve bank account details
+    the user clicks the button/link    jQuery = button:contains("Approve bank account details")
+    the user clicks the button/link    jQuery = button:contains("Approve account")
+    the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
+    the user clicks the button/link    link = Back to project setup
