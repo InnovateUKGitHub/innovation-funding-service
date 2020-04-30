@@ -92,7 +92,7 @@ External project finance can generate spend profile and complete PS
     Then the internal user can complete PS
 
 Competition goes into previous
-    the user clicks the button/link  link = Dashboard
+    [Setup]  the user clicks the button/link  link = Dashboard
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDdeminimuscompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
