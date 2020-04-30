@@ -256,7 +256,7 @@ public class ReviewAndSubmitController {
     }
 
     private String getTrackingPage(CompetitionResource competition) {
-        if (competition.getCovidType() == CovidType.ADDITIONAL_FUNDING) {
+        if (competition.getCovidType() == CovidType.ADDITIONAL_FUNDING || competition.getCovidType() == CovidType.DE_MINIMIS_ROUND_2) {
             return "covid-additional-funding-application-track";
         } else if (competition.isH2020()) {
             return "h2020-grant-transfer-track";
