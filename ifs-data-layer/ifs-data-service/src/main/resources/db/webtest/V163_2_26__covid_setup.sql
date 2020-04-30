@@ -18,7 +18,7 @@ INSERT INTO competition_finance_row_types(competition_id, finance_row_type) VALU
 -- TODO
 -- docusign
 
--- TODO remove this. Quick fix for ATs.
+-- These following queries will not be needed on prod.
 UPDATE competition SET covid_type='DE_MINIMIS' WHERE name = 'Project Setup Comp 18';
 
 -- This will be done by comp admin
@@ -45,3 +45,7 @@ FROM competition c
 INNER JOIN grant_claim_maximum m
 WHERE m.id > @current_max_grant_id
 AND c.covid_type IS NOT NULL;
+
+-- question score, no feedback
+update form_input set active = 0 where competition_id = @de_minimis_round_2 and form_input_type_id=2 and scope='ASSESSMENT';
+update question set assessor_maximum_score = 25 where competition_id = @de_minimis_round_2;

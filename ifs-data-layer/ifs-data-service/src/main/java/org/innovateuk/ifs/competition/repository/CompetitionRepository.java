@@ -54,7 +54,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     /* Filters competitions to those in feedback released state */
     String PREVIOUS_WHERE_CLAUSE = "WHERE " +
-            "( " + PREVIOUS_PROJECT_CLAUSE + " OR " + PREVIOUS_APPLICATION_CLAUSE + " OR " +
+            "( " + PREVIOUS_PROJECT_CLAUSE + " OR " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id)) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
