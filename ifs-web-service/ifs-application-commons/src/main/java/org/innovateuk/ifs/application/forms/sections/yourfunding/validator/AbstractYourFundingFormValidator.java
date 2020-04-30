@@ -26,7 +26,7 @@ public class AbstractYourFundingFormValidator {
             validateYourFundingPercentageForm((YourFundingPercentageForm) form, errors, financeSupplier);
         }
         if (form instanceof YourFundingAmountForm) {
-            validateYourFundingAmountForm((YourFundingAmountForm) form, errors);
+            validateYourFundingAmountForm((YourFundingAmountForm) form, errors, financeSupplier);
         }
 
         ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
@@ -84,11 +84,19 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors) {
+    private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier) {
         ValidationUtils.rejectIfEmpty(errors, "amount", "validation.finance.funding.sought.required");
-        if (form.getAmount() != null && form.getAmount().compareTo(BigDecimal.ONE) < 0) {
-            errors.rejectValue("amount", "validation.finance.funding.sought.min");
+        if (form.getAmount() != null ) {
+            if (form.getAmount().compareTo(BigDecimal.ONE) < 0) {
+                errors.rejectValue("amount", "validation.finance.funding.sought.min");
+            } else {
+                BaseFinanceResource finance = financeSupplier.get();
+                if (form.getAmount().compareTo(finance.getTotal()) > 0) {
+                    errors.rejectValue("amount", "validation.finance.funding.sought.more.than.costs");
+                }
+            }
         }
+
     }
 
     private void validateYourFundingPercentageForm(YourFundingPercentageForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier) {
