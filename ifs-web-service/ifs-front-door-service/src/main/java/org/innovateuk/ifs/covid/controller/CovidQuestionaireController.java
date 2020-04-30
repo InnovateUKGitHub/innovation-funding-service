@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.covid.controller;
 
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -51,7 +52,15 @@ public class CovidQuestionaireController {
             model.addAttribute("questionType", questionType);
             model.addAttribute("previousAnswers", getPreviousAnswers(questionType));
         }
-        return getNextPage(questionType, model, webForm.getAnswer());
+        return "redirect:/covid-19/questionnaire/" + questionType.getUrl() + "/" + BooleanUtils.toStringYesNo(webForm.getAnswer());
+    }
+
+    @GetMapping("/{questionType}/{yesNo}")
+    public String form(@PathVariable CovidQuestionnaireType questionType,
+                       @PathVariable String yesNo,
+                       Model model) {
+        boolean answer = BooleanUtils.toBoolean(yesNo);
+        return getNextPage(questionType, model, answer);
     }
 
     private String getNextPage(CovidQuestionnaireType type, Model model, boolean answer) {
@@ -60,23 +69,23 @@ public class CovidQuestionaireController {
                 if (answer) {
                     return redirectToQuestion(AWARD_RECIPIENT);
                 } else {
-                    return decision(model, "non-business");
+                    return decision(model, type, answer, "non-business");
                 }
             case AWARD_RECIPIENT:
                 if (answer) {
                     return redirectToQuestion(CHALLENGE_TIMING);
                 } else {
-                    return decision(model, "default");
+                    return decision(model, type, answer, "default");
                 }
             case CHALLENGE_TIMING:
                 if (answer) {
-                    return decision(model, "contact-monitoring-officer");
+                    return decision(model, type, answer, "contact-monitoring-officer");
                 } else {
                     return redirectToQuestion(CHALLENGE_CASHFLOW);
                 }
             case CHALLENGE_CASHFLOW:
                 if (answer) {
-                    return decision(model, "monthly-funding");
+                    return decision(model, type, answer, "monthly-funding");
                 } else {
                     return redirectToQuestion(CHALLENGE_LARGE_FUNDING_GAP);
                 }
@@ -88,21 +97,24 @@ public class CovidQuestionaireController {
                 }
             case CHALLENGE_SIGNIFICANT_FUNDING_GAP:
                 if (answer) {
-                    return decision(model, "continuity-loan");
+                    return decision(model, type, answer, "continuity-loan");
                 } else {
-                    return decision(model, "default");
+                    return decision(model, type, answer, "default");
                 }
             case CHALLENGE_ELIGIBILTY:
                 if (answer) {
-                    return decision(model, "continuity-grant");
+                    return decision(model, type, answer, "continuity-grant");
                 } else {
-                    return decision(model, "default");
+                    return decision(model, type, answer, "default");
                 }
         }
         throw new IFSRuntimeException("Unkown question type");
     }
 
-    private String decision(Model model, String decision) {
+    private String decision(Model model, CovidQuestionnaireType type, boolean answer, String decision) {
+        List<Pair<CovidQuestionnaireType, Boolean>> previousAnswers = getPreviousAnswers(type);
+        previousAnswers.add(Pair.of(type, answer));
+        model.addAttribute("previousAnswers", previousAnswers);
         model.addAttribute("decision", decision);
         return "covid/questionnaire";
     }
