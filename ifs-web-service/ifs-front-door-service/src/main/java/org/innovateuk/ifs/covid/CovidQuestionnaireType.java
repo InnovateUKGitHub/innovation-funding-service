@@ -5,14 +5,12 @@ import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import static java.util.Arrays.stream;
 
 public enum CovidQuestionnaireType {
-    BUSINESS("business", "Are you a business?"),
+    BUSINESS("business", "Are you a business or third sector?"),
     AWARD_RECIPIENT("award-recipient", "Are you an Innovate UK award recipient?"),
-    CHALLENGE_TIMING("challenge-timing", "Is your challenge in the timing of your project activity?", "For example, do you need to extend the blah?"),
-    CHALLENGE_CASHFLOW("challenge-cashflow", "Is your challenge in managing your cashflow, so that you can meet your project costs to continue your project activity up to £250,000 in the next [x] quarters? "),
-    CHALLENGE_LARGE_FUNDING_GAP("challenge-large-funding", "Is the challenge in meeting a larger funding gap (up to somthi???n"),
-    CHALLENGE_SIGNIFICANT_FUNDING_GAP("challenge-significant-funding",  "Is the challnege in meeting a significant one?"),
-    CHALLENGE_ELIGIBILTY("challenge-eligibilty", "Are you eligibile?");
-
+    CHALLENGE_TIMING("challenge-timing", "Is your challenge in the timing of your project activity?", "For example, do you need to extend the project period, without incurring additional costs?"),
+    CHALLENGE_CASHFLOW("challenge-cashflow", "Is your challenge in managing your cashflow, so that you can meet your project costs to continue your project activity?"),
+    CHALLENGE_LARGE_FUNDING_GAP("challenge-large-funding", "Is your challenge in meeting a larger funding gap (up to £250,000)?"),
+    CHALLENGE_SIGNIFICANT_FUNDING_GAP("challenge-significant-funding",  "Is your challenge in meeting a significant funding gap (over £250,000)?");
     private String url;
     private String question;
     private String hint;

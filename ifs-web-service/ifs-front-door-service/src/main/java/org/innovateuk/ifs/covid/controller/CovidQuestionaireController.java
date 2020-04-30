@@ -15,10 +15,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.covid.CovidQuestionnaireType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
@@ -91,19 +91,13 @@ public class CovidQuestionaireController {
                 }
             case CHALLENGE_LARGE_FUNDING_GAP:
                 if (answer) {
-                    return redirectToQuestion(CHALLENGE_ELIGIBILTY);
+                    return decision(model, type, answer, "continuity-grant");
                 } else {
                     return redirectToQuestion(CHALLENGE_SIGNIFICANT_FUNDING_GAP);
                 }
             case CHALLENGE_SIGNIFICANT_FUNDING_GAP:
                 if (answer) {
                     return decision(model, type, answer, "continuity-loan");
-                } else {
-                    return decision(model, type, answer, "default");
-                }
-            case CHALLENGE_ELIGIBILTY:
-                if (answer) {
-                    return decision(model, type, answer, "continuity-grant");
                 } else {
                     return decision(model, type, answer, "default");
                 }
@@ -122,9 +116,9 @@ public class CovidQuestionaireController {
     private List<Pair<CovidQuestionnaireType, Boolean>> getPreviousAnswers(CovidQuestionnaireType type) {
         switch(type) {
             case BUSINESS:
-                return emptyList();
+                return new ArrayList<>();
             case AWARD_RECIPIENT:
-                return singletonList(Pair.of(BUSINESS, true));
+                return newArrayList(Pair.of(BUSINESS, true));
             case CHALLENGE_TIMING:
                 return combineLists(getPreviousAnswers(AWARD_RECIPIENT), Pair.of(AWARD_RECIPIENT, true));
             case CHALLENGE_CASHFLOW:
@@ -132,7 +126,6 @@ public class CovidQuestionaireController {
             case CHALLENGE_LARGE_FUNDING_GAP:
                 return combineLists(getPreviousAnswers(CHALLENGE_CASHFLOW), Pair.of(CHALLENGE_CASHFLOW, false));
             case CHALLENGE_SIGNIFICANT_FUNDING_GAP:
-            case CHALLENGE_ELIGIBILTY:
                 return combineLists(getPreviousAnswers(CHALLENGE_LARGE_FUNDING_GAP), Pair.of(CHALLENGE_LARGE_FUNDING_GAP, false));
         }
         throw new IFSRuntimeException("Unkown question type");
