@@ -13,6 +13,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -255,7 +256,9 @@ public class ReviewAndSubmitController {
     }
 
     private String getTrackingPage(CompetitionResource competition) {
-        if (competition.isH2020()) {
+        if (competition.getCovidType() == CovidType.ADDITIONAL_FUNDING) {
+            return "covid-additional-funding-application-track";
+        } else if (competition.isH2020()) {
             return "h2020-grant-transfer-track";
         } else if (competition.isLoan()) {
             return "loan-application-track";
