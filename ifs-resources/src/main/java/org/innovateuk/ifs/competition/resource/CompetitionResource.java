@@ -964,6 +964,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isCovidCompetition() {
+        return covidType != null;
+    }
+
+    @JsonIgnore
     public boolean isOverheadsAlwaysTwenty() {
         return covidType != null && (
                 covidType == CovidType.DE_MINIMIS ||
