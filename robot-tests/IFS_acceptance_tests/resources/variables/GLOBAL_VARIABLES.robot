@@ -175,6 +175,11 @@ ${LARGE_ORGANISATION_SIZE}     LARGE
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
+${valid_xls}    testing.xls
+${valid_odt}    testing.odt
+${valid_doc}    testing.doc
+${valid_docx}    testing.docx
+${valid_jpeg}   testing.jpeg
 ${5mb_pdf}        testing_5MB.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
