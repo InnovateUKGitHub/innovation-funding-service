@@ -22,3 +22,27 @@ INSERT INTO competition_finance_row_types(competition_id, finance_row_type) VALU
 -- TODO remove this. Quick fix for ATs.
 UPDATE competition SET covid_type='DE_MINIMIS' WHERE name = 'Project Setup Comp 18';
 
+-- This will be done by comp admin
+SET @current_max_grant_id = (select max(id) from grant_claim_maximum);
+
+INSERT INTO grant_claim_maximum (organisation_size_id, category_id, maximum)
+SELECT s.id   AS organisation_size_id,
+       c.id   AS category_id,
+       100    AS maximum
+FROM category c
+INNER JOIN organisation_size s
+WHERE c.type='RESEARCH_CATEGORY';
+
+
+DELETE g FROM grant_claim_maximum_competition g
+INNER JOIN competition c
+    ON c.id = g.competition_id
+WHERE c.covid_type IS NOT NULL;
+
+INSERT INTO grant_claim_maximum_competition (grant_claim_maximum_id, competition_id)
+SELECT m.id as grant_claim_maximum_id,
+       c.id as competition_id
+FROM competition c
+INNER JOIN grant_claim_maximum m
+WHERE m.id > @current_max_grant_id
+AND c.covid_type IS NOT NULL;
