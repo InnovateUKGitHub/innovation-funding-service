@@ -180,9 +180,19 @@ The user adds a new team member
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
-    [Arguments]  ${projectID}
+    [Arguments]  ${setDocusign}  ${projectID}
+    run keyword if                     '${setDocusign}' == 'YES'     Set Docusign for GOL  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user uploads the file          grantOfferLetter  ${valid_pdf}
+    the user uploads the file          grantOfferLetter  ${gol_pdf}
+    the user reloads the page
+    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
+    the user clicks the button/link    link = Back to project setup
+    the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user reloads the page
+    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
+    the user clicks the button/link    link = Back to project setup
+    the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user reloads the page
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send to project team")
     the user clicks the button/link    jQuery = button:contains("Publish to project team")
@@ -195,6 +205,20 @@ Applicant uploads the GOL
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
 
+Applicant uploads the GOL using Docusign
+    [Arguments]  ${projectID}
+    the user navigates to the page            ${server}/project-setup/project/${projectID}
+    the user clicks the button/link           link = Grant offer letter
+    the user clicks the button/link           link = docusign
+    the user should see the element           jQuery = span:contains("Please Review & Act on These Documents")
+    the user selects the checkbox             disclosureAccepted
+    the user clicks the button/link           jQuery = button:contains("Continue")
+    the user clicks the button/link           jQuery = span:contains("Start")
+    the user clicks the button/link           css = div.initials-tab-content
+    the user clicks the button/link           css = div.signature-tab-content
+    the user clicks the button/link           css = div.documents-finish-button-decoration
+    the user should see the element           jQuery = h1:contains("Grant offer letter")
+
 the internal user approve the GOL
     [Arguments]  ${projectID}
     log in as a different user          &{internal_finance_credentials}
@@ -203,6 +227,22 @@ the internal user approve the GOL
     the user clicks the button/link     id = submit-button
     the user clicks the button/link     id = accept-signed-gol
     the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+
+the internal user rejects the GOL
+    [Arguments]  ${projectID}
+    log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button     REJECTED  rejectGOL
+    the user enters text to a text field  id = gol-reject-reason   Rejected
+    the user clicks the button/link       id = submit-button
+    the user clicks the button/link       jQuery = button:contains("Reject signed grant offer letter")
+    the user should see the element       jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
+
+the applicant is able to see the rejected GOL
+    [Arguments]  ${projectID}
+    the user navigates to the page            ${server}/project-setup/project/${projectID}
+    the user clicks the button/link           link = Grant offer letter
+    the user should see the element           jQuery = .fail-alert h2:contains("Your grant offer letter has been rejected by Innovate UK")
 
 the user enters bank details
     the user clicks the button/link                      link = Bank details

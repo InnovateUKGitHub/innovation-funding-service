@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     IFS-7357   Allowing external users to complete viability & eligibility checks
+...
+...               IFS-7365  DocuSign Integration
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        Project Setup
@@ -11,12 +13,15 @@ ${externalReviewerComp}            Project Setup Comp 18
 ${externalReviewerCompId}          ${competition_ids['${externalReviewerComp}']}
 ${externalReviewerApplication}     PSC application 18
 ${externalReviewerApplicationId}   ${application_ids['${externalReviewerApplication}']}
+${externalReviewerProject}         PSC application 18
+${externalReviewerProjectId}       ${project_ids['${externalReviewerApplication}']}
 ${exfinanceemail}                  exfinance@example.com
+&{leadApplicantLogin}              email=troy.ward@gmail.com    password=Passw0rd
 
 *** Test Cases ***
 IFS admin is able to invite an external PF
     [Documentation]  IFS-7357
-    [Setup]  Log in as a different user  &{ifs_admin_user_credentials}
+    [Setup]  Log in as a different user         &{ifs_admin_user_credentials}
     Given the user navigates to the page        ${server}/management/competition/setup/${externalReviewerCompId}
     When the user clicks the button/link        link = External finance reviewers
     And the user clicks the button/link         jQuery = span:contains("Invite a new external finance reviewer")
@@ -60,11 +65,11 @@ External project finance cannot access documents or MO
 
 External project finance can raise a query
     [Documentation]  IFS-7357
-    [Setup]    log in as a different user      ${exfinanceemail}  ${short_password}
-    Given the user clicks the button/link      link = ${externalReviewerComp}
-    And the user clicks the button/link        jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
+    [Setup]    log in as a different user         ${exfinanceemail}  ${short_password}
+    Given the user clicks the button/link         link = ${externalReviewerComp}
+    And the user clicks the button/link           jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
     When the user raises a query
-    Then the user should see the element       jQuery = button:contains("a viability query's title")
+    Then the user should see the element          jQuery = button:contains("a viability query's title")
     [Teardown]  the user clicks the button/link   link = Finance checks
 
 External project finance can raise a note
@@ -75,21 +80,45 @@ External project finance can raise a note
 
 External project finance can approve viabilty
     [Documentation]  IFS-7357
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
-    When the user clicks the button/link   jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
+    When the user clicks the button/link    jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
     Then the user can confirm all viability and eligibility
 
 External project finance can generate spend profile
     [Documentation]  IFS-7357
     Given the user clicks the button/link    css = .generate-spend-profile-main-button
-    And the user clicks the button/link    css = #generate-spend-profile-modal-button
+    And the user clicks the button/link      css = #generate-spend-profile-modal-button
     When all external users send spend profile
     Then the external finance cannot access spend profile
 
+Internal user is able to approve Spend profile and generates the GOL
+    [Documentation]  IFS-7365
+    Given proj finance approves the spend profiles  ${externalReviewerProjectId}
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And internal user generates the GOL             YES  ${externalReviewerProjectId}
+
+Applicant is able to upload the GOL
+    [Documentation]  IFS-7365
+    Given log in as a different user               &{leadApplicantLogin}
+    When applicant uploads the GOL using Docusign  ${externalReviewerProjectId}
+
+Internal user is able to reject the GOL and applicant can re-upload
+    [Documentation]  IFS-7365
+    Given the internal user rejects the GOL             ${externalReviewerProjectId}
+    When log in as a different user                     &{leadApplicantLogin}
+    Then the applicant is able to see the rejected GOL  ${externalReviewerProjectId}
+    And applicant uploads the GOL using Docusign        ${externalReviewerProjectId}
+
+Internal user is able to approve the GOL and the project is now Live
+      [Documentation]  IFS-7365
+      Given the internal user approve the GOL  ${externalReviewerProjectId}
+      When log in as a different user          &{leadApplicantLogin}
+      And the user navigates to the page       ${server}/project-setup/project/${externalReviewerProjectId}
+      Then the user should see the element     jQuery = p:contains("The project is live")
+
 External project finance cannot access GOL
     [Documentation]  IFS-7357
-    [Setup]  Log in as a different user  &{ifs_admin_user_credentials}
-    Given send and approve gol
+    Given Log in as a different user  &{ifs_admin_user_credentials}
     Then the external finance cannot access GOL section
 
 *** Keywords ***
@@ -163,7 +192,6 @@ the project finance approves all steps before finance
     approve bank account details                 Red Planet
     approve bank account details                 SmithZone
 
-
 the user should not have access to documents MO or bank details
     the user should not see the element  jQuery = td.action:nth-of-type(3) a
     the user should not see the element   jQuery = td.action:nth-of-type(4) a
@@ -235,24 +263,6 @@ the external finance cannot access spend profile
     the user navigates to the page        ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
     the user should see the element       jQuery = td.action:nth-of-type(7)
     the user should not see the element   jQuery = td.action:nth-of-type(7) a
-
-send and approve gol
-    the user navigates to the page     ${server}/project-setup-management/competition/${externalReviewerCompId}/status/all
-    the user clicks the button/link    jQuery = td.action:nth-of-type(7) a
-    the user selects the checkbox      approvedByLeadTechnologist
-    the user clicks the button/link    jQuery = button:contains("Approved")
-    the user clicks the button/link    jQuery = .modal-accept-profile button:contains("Approve")
-    the user clicks the button/link    jQuery = td.action:nth-of-type(8) a
-    the user uploads the file          grantOfferLetter  ${valid_pdf}
-    the user selects the checkbox      confirmation
-    the user clicks the button/link    id = send-gol
-    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
-    Log in as a different user         troy.ward@gmail.com  ${short_password}
-    the user clicks the button/link    link = ${externalReviewerApplication}
-    the user clicks the button/link    link = Grant offer letter
-    the user uploads the file          signedGrantOfferLetter    ${valid_pdf}
-    the user clicks the button/link    css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
-    the user clicks the button/link    id = submit-gol-for-review
 
 the external finance cannot access GOL section
     Log in as a different user              ${exfinanceemail}  ${short_password}
