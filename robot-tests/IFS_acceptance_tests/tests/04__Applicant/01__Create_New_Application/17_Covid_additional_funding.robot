@@ -59,6 +59,8 @@ Lead can reopen application
    When the user clicks the button/link   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
    And the user clicks the button/link    css = input[type="submit"]
    Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
+   And the user reads his email           collaborator@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
+   And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
     Given the user clicks the button/link  id = application-overview-submit-cta
@@ -244,6 +246,10 @@ approve bank account details
 send and approve gol
     log in as a different user         &{ifs_admin_user_credentials}
     the user navigates to the page     ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
+    the user clicks the button/link    link = View activity log
+    the user clicks the button/link    jQuery = li:contains("Application reopened") a:contains("View application overview")
+    the user should see the element    jQuery = h1:contains("Application overview")
+    the user navigates to the page     ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link    jQuery = td.action:nth-of-type(7) a
     the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery = button:contains("Approved")
@@ -304,6 +310,7 @@ the user completes covid application
     the user accept the competition terms and conditions     Return to application overview
     the user navigates to Your-finances page                 ${COVIDapplicationTitle1}
     the user clicks the button/link                          link = Your project costs
+    the user should see the element                          jQuery = .message-alert:contains("Covid-19 pandemic")
     the user fills in Other costs
     the user clicks the button/link                          css = label[for="stateAidAgreed"]
     the user clicks the button/link                          jQuery = button:contains("Mark as complete")
