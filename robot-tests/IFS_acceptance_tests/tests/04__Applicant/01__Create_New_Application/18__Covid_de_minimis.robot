@@ -58,12 +58,19 @@ Non lead cannot reopen competition
     When the user should see the element       link = ${COVIDdeminimusapplicationTitle1}
     Then the user should not see the element   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
 
+Non lead does not see reopen on submitted page
+    Given the user clicks the button/link      link = ${COVIDdeminimusapplicationTitle1}
+    When the user should see the element       jQuery = h2:contains("Application submitted")
+    Then the user should not see the element   link = Reopen
+
 Lead can reopen application
     [Setup]  log in as a different user   &{lead_applicant_credentials}
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
     And the user clicks the button/link    css = input[type="submit"]
     Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
+    And the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
     Given the user clicks the button/link     id = application-overview-submit-cta
@@ -76,13 +83,14 @@ Internal user can invite to assesment
     When the user clicks the button/link   link = ${COVIDdeminimuscompetitionTitle}
     Then the user completes assessment and moves to PS
 
-External project finance can approve finances
+External project finance can edit funding sought
     [Documentation]  IFS-7357
     [Setup]  the project finance approves all steps before finance
     Given Log in as a different user      ${exfinanceemail}  ${short_password}
     When the user navigates to the page   ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
     And the user clicks the button/link   jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
-    Then confirm viability                0
+    Then the user can change funding sought
+    And confirm viability                 0
     And confirm eligibility               0
 
 External project finance can generate spend profile and complete PS
@@ -194,6 +202,10 @@ approve bank account details
 
 send and approve gol
     log in as a different user         &{ifs_admin_user_credentials}
+    the user navigates to the page     ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
+    the user clicks the button/link    link = View activity log
+    the user clicks the button/link    jQuery = li:contains("Application reopened") a:contains("View application overview")
+    the user should see the element    jQuery = h1:contains("Application overview")
     the user navigates to the page     ${server}/project-setup-management/competition/${COVIDdeminimuscompetitionId}/status/all
     the user clicks the button/link    jQuery = td.action:nth-of-type(7) a
     the user selects the checkbox      approvedByLeadTechnologist
@@ -334,4 +346,12 @@ the internal user can complete PS
     the user clicks the button/link    id = submit-send-all-spend-profiles
     the external finance cannot access spend profile
     send and approve gol
+
+the user can change funding sought
+    the user clicks the button/link        link = View finances
+    the user clicks the button/link        link = Change funding sought
+    the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  2100
+    the user clicks the button/link        jQuery = button:contains("Save and return to finances")
+    the user should see the element        jQuery = h3:contains("Finances summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
+    the user clicks the button/link        link = Finance checks
 
