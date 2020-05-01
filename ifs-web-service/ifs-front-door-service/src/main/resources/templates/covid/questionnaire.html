@@ -14,6 +14,11 @@
     <th:block th:unless="${previousAnswers == null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/covid-19/questionnaire/{questionType}(questionType=${previousAnswers.isEmpty() ? '' : previousAnswers.get(previousAnswers.size() - 1).left})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Support for Innovate UK award recipients',size='govuk-heading-xl'" />
 
         <th:block th:if="${decision == null}">
@@ -39,7 +44,7 @@
 
             <th:block th:unless="${questionType == null}">
                 <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
                             <span th:if="${questionType.hint != null}" th:text="${questionType.hint}" class="govuk-hint">Hint text.</span>
@@ -70,8 +75,8 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <button class="govuk-button govuk-!-margin-top-5" type="submit">Next</button>
                     </div>
+                    <button class="govuk-button govuk-!-margin-top-5" type="submit">Next</button>
                 </form>
             </th:block>
         </th:block>
