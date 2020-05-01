@@ -111,6 +111,7 @@ public class CovidQuestionaireController {
         previousAnswers.add(Pair.of(type, answer));
         model.addAttribute("previousAnswers", previousAnswers);
         model.addAttribute("decision", decision);
+        model.addAttribute("form", new CovidQuestionaireForm());
         return "covid/questionnaire";
     }
 
