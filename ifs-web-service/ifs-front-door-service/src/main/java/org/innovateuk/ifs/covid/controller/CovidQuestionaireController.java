@@ -51,6 +51,7 @@ public class CovidQuestionaireController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("questionType", questionType);
             model.addAttribute("previousAnswers", getPreviousAnswers(questionType));
+            return "covid/questionnaire";
         }
         return "redirect:/covid-19/questionnaire/" + questionType.getUrl() + "/" + BooleanUtils.toStringYesNo(webForm.getAnswer());
     }
