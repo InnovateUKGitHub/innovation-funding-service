@@ -29,7 +29,7 @@ public enum CovidQuestionnaireType {
         return stream(CovidQuestionnaireType.values())
                 .filter(type -> type.getUrl().equals(from))
                 .findFirst()
-                .orElseThrow(() -> new IFSRuntimeException("Unkown url " + from));
+                .orElseThrow(() -> new IFSRuntimeException("Unknown url " + from));
     }
 
     public String getUrl() {

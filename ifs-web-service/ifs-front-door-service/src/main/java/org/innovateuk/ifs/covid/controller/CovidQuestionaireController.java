@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 @Controller
 @RequestMapping("/covid-19/questionnaire")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionController.class)
+@SecuredBySpring(value = "Controller", description = "Anyone can do covid questionnaire", securedType = CompetitionController.class)
 @PreAuthorize("permitAll")
 public class CovidQuestionaireController {
 
@@ -103,7 +103,7 @@ public class CovidQuestionaireController {
                     return decision(model, type, answer, "default");
                 }
         }
-        throw new IFSRuntimeException("Unkown question type");
+        throw new IFSRuntimeException("Unknown question type");
     }
 
     private String decision(Model model, CovidQuestionnaireType type, boolean answer, String decision) {
@@ -130,7 +130,7 @@ public class CovidQuestionaireController {
             case CHALLENGE_SIGNIFICANT_FUNDING_GAP:
                 return combineLists(getPreviousAnswers(CHALLENGE_LARGE_FUNDING_GAP), Pair.of(CHALLENGE_LARGE_FUNDING_GAP, false));
         }
-        throw new IFSRuntimeException("Unkown question type");
+        throw new IFSRuntimeException("Unknown question type");
     }
 
     private String redirectToQuestion(CovidQuestionnaireType type) {
