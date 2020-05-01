@@ -275,6 +275,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArray((competitionTerms, competitionResource) -> competitionResource.setCompetitionTerms(competitionTerms), competitionTermsItems);
     }
 
+    public CompetitionResourceBuilder withHasAssessmentStage(Boolean... hasAssessmentStages) {
+        return withArray((hasAssessmentStage, competitionResource) -> competitionResource.setHasAssessmentStage(hasAssessmentStage), hasAssessmentStages);
+    }
+
     @SafeVarargs
     public final CompetitionResourceBuilder withProjectSetupStages(List<ProjectSetupStage>... projectSetupStages) {
         return withArray((projectSetupStage, competitionResource) -> competitionResource.setProjectSetupStages(projectSetupStage), projectSetupStages);

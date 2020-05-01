@@ -192,6 +192,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    private boolean hasAssessmentStage = true;
+
+    @Enumerated(EnumType.STRING)
+    private CovidType covidType;
+
     public Competition() {
         setupComplete = false;
     }
@@ -243,6 +248,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         } else {
             return COMPETITION_SETUP;
         }
+    }
+
+    public CovidType getCovidType() {
+        return covidType;
+    }
+
+    public void setCovidType(CovidType covidType) {
+        this.covidType = covidType;
     }
 
     public Set<FinanceRowType> getFinanceRowTypes() {
@@ -941,6 +954,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
         this.competitionOrganisationConfig = competitionOrganisationConfig;
+    }
+
+    public boolean isHasAssessmentStage() {
+        return hasAssessmentStage && !isH2020();
+    }
+
+    public void setHasAssessmentStage(boolean hasAssessmentStage) {
+        this.hasAssessmentStage = hasAssessmentStage;
     }
 
     public CompetitionAssessmentConfig getCompetitionAssessmentConfig() {

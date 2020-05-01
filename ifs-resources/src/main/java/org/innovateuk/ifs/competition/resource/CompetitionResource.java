@@ -115,6 +115,8 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FundingType fundingType;
     private Set<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
+    private boolean hasAssessmentStage;
+    private CovidType covidType;
 
     public CompetitionResource() {
     }
@@ -149,11 +151,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isExpressionOfInterest() {
         return EXPRESSION_OF_INTEREST_TYPE_NAME.equals(competitionTypeName);
-    }
-
-    @JsonIgnore
-    public boolean hasAssessmentStage() {
-        return !isH2020();
     }
 
     @JsonIgnore
@@ -278,6 +275,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
             return toUkTimeZone(date).format(formatter);
         }
         return "";
+    }
+
+    public boolean isHasAssessmentStage() {
+        return hasAssessmentStage;
+    }
+
+    public void setHasAssessmentStage(boolean hasAssessmentStage) {
+        this.hasAssessmentStage = hasAssessmentStage;
     }
 
     public ZonedDateTime getAssessorAcceptsDate() {
@@ -801,6 +806,14 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.competitionTerms = competitionTerms;
     }
 
+    public CovidType getCovidType() {
+        return covidType;
+    }
+
+    public void setCovidType(CovidType covidType) {
+        this.covidType = covidType;
+    }
+
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -949,4 +962,18 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }
+
+    @JsonIgnore
+    public boolean isCovidCompetition() {
+        return covidType != null;
+    }
+
+    @JsonIgnore
+    public boolean isOverheadsAlwaysTwenty() {
+        return covidType != null && (
+                covidType == CovidType.DE_MINIMIS ||
+                        covidType == CovidType.DE_MINIMIS_ROUND_2
+                );
+    }
+
 }

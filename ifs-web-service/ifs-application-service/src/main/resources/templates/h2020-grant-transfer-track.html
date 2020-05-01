@@ -25,7 +25,7 @@
                 We have received your submission for funding
                 <th:block th:if="${model.currentApplication.submittedDate}">
                     on
-                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
+                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>
                     at
                     <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}" />.
                 </th:block><br />

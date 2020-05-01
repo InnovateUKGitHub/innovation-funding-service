@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -221,7 +222,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private void markSetupSectionsAndSubsectionsAsComplete(CompetitionData data) {
-        asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+        Arrays.stream(CompetitionSetupSection.values())
+                .filter(section -> section != CompetitionSetupSection.PROJECT_DOCUMENT)
+                .forEach(competitionSetupSection -> {
             competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
             competitionSetupSection.getSubsections().forEach(subsection -> {
                 competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
