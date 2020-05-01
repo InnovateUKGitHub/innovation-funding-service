@@ -45,7 +45,7 @@
         <th:block th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
             <th:block th:unless="${procurementCompetition}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
-                <p class="govuk-body">Your application will be assessed if it meets our eligibility requirements. We will then make a funding
+                <p class="govuk-body">Your application will be assessed, if it meets our eligibility requirements. We will then make a funding
                     decision.</p>
                 <p class="govuk-body"> If you reopen it, you must resubmit your application before we can assess it.</p>
 
@@ -55,22 +55,22 @@
                 </p>
 
                 <h3 class="govuk-heading-m">If your application is successful</h3>
-                <p class="govuk-body">If you are successful with this application you
-                    will be asked to set up your project. The Project Manager and finance contacts for each organisation in your project will be asked for further information including:</p>
+                <p class="govuk-body">You will be asked to set up your project. The project manager and each organisation's finance contacts will be asked
+                    for more information, including:</p>
                 <ul class="govuk-list govuk-list--bullet">
-                    <li>project location</li>
+                    <li>the project's location</li>
                     <li>your organisation’s bank (BACS) details</li>
                     <li>a profile of your project spend</li>
-                    <li>collaboration agreement (collaborative projects only)</li>
-                    <li>exploitation plan</li>
+                    <li>a collaboration agreement (collaborative projects only)</li>
+                    <li>an exploitation plan</li>
                 </ul>
                 <h3 class="govuk-heading-m">If your application is unsuccessful</h3>
                 <p class="govuk-body">You can review and resubmit your application.</p>
             </th:block>
         </th:block>
 
-
         <div class="govuk-!-margin-top-6">
+            <h3 class="govuk-heading-m">Feedback</h3>
             <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
             <a th:href="@{/survey/{competitionId}/feedback(competitionId=${model.currentCompetition.id})}" class="govuk-button">Give us feedback</a>
         </div>
