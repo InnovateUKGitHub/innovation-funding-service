@@ -21,6 +21,9 @@
 
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',size='govuk-heading-l'" />
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showCovidQuestionnaireLink}">
+                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">You may be eligible for additional funding</a> if your organisation is facing significant challenges due to the COVID-19 outbreak.</p>
+            </div>
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Set up your project</h2>
