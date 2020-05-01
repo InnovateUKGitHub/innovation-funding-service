@@ -1,11 +1,11 @@
 <#ftl output_format="HTML" auto_esc=true>
 <#import "layout/default.html" as layout>
 <@layout.default>
-<p style="margin: 0 0 1em 0;">Dear ${name},</p>
+<p style="margin: 0 0 1em 0;">Dear ${name}</p>
 <p style="margin: 0 0 1em 0;">You reopened this application on ${date}:</p>
 <p style="margin: 0 0 1em 0;">${applicationNumber} : ${applicationName}</p>
-<p style="margin: 0 0 1em 0;">You can now make any changes to the application until you resubmit it.</p>
+<p style="margin: 0 0 1em 0;">You can now make changes to the application until you resubmit it.</p>
 <@layout.button href="${link}" text="Edit the application" />
-<p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+<p style="margin: 0 0 1em 0;">Yours sincerely</p>
 <@layout.senderHTML />
 </@layout.default>

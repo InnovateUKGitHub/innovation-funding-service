@@ -15,11 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -38,6 +40,7 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 public class ApplicationNotificationServiceImpl implements ApplicationNotificationService {
+    private static final DateTimeFormatter formatter = ofPattern("d MMMM yyyy");
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -189,7 +192,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                         Map<String, Object> notificationArguments = new HashMap<>();
 
                         notificationArguments.put("name", applicant.getUser().getName());
-                        notificationArguments.put("date", ZonedDateTime.now().toLocalDate());
+                        notificationArguments.put("date", ZonedDateTime.now().format(formatter));
                         notificationArguments.put("applicationNumber", application.getId());
                         notificationArguments.put("applicationName", application.getName());
                         notificationArguments.put("leadApplicant", leadApplicantName);

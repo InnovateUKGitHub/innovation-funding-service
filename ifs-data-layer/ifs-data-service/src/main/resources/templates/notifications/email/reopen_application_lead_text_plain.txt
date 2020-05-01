@@ -1,16 +1,16 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear ${name},
+Dear ${name}
 
 The application was reopened by ${leadApplicant}, the lead applicant on ${date}:
 
 ${applicationNumber} : ${applicationName}
 
-You can now make changes assigned to you.
+You can now make changes to the application until you resubmit it.
 
 ${link}
 
-Yours sincerely,
+Yours sincerely
 
 Innovate UK, part of UK Research and Innovation
 Tel: 0300 321 4357
