@@ -82,7 +82,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
-            fieldWithPath("modifiedOn").description("when the competition was modified").optional()
+            fieldWithPath("modifiedOn").description("when the competition was modified").optional(),
+            fieldWithPath("hasAssessmentStage").description("Does the competition has assessors.").optional(),
+            fieldWithPath("covidType").description("The type of covid comp if any").optional(),
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

@@ -121,6 +121,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isLeadApplicant(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "APPLICATION_REOPENED_NOTIFICATION", description = "A lead applicant can send the notification of a reopened application")
+    public boolean aLeadApplicantCanSendApplicationReopenedNotification(final ApplicationResource applicationResource, final UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
     @PermissionRule(value = "READ", description = "Internal users (other than innovation lead) can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
         return !isInnovationLead(user) && isInternal(user);
@@ -191,6 +196,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     public boolean compAdminCanUpdateApplicationState(final ApplicationResource applicationResource, final UserResource user) {
         return isCompAdmin(user);
     }
+
+    @PermissionRule(value = "REOPEN_APPLICATION",
+            description = "A lead applicant can reopen their application if competition is open and they have not revieved a funding decision")
+    public boolean leadApplicantCanReopenTheirApplication(final ApplicationResource applicationResource, final UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
 
     @PermissionRule(value = "UPDATE_APPLICATION_STATE", description = "A project finance user can update the state of an application")
     public boolean projectFinanceCanUpdateApplicationState(final ApplicationResource applicationResource, final UserResource user) {

@@ -25,18 +25,21 @@
                 Your application for the competition '<span th:text="${model.currentCompetition.name}" />' was submitted
                 <th:block th:if="${model.currentApplication.submittedDate}">
                     on
-                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
+                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>
                     at
                     <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}" />.
                 </th:block><br />
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View application</a>
+                    <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
+                       class="govuk-link govuk-!-margin-right-6">Reopen application</a>
                     <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
                        class="govuk-link">Print application</a>
                 </div>
             </div>
         </div>
+
         <h2 class="govuk-heading-l">What happens next?</h2>
 
         <th:block th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
@@ -49,6 +52,7 @@
                     <li>the assessor will score each question and provide feedback to justify those scores</li>
                     <li>a panel process is held to moderate and ratify the outcome of the decision</li>
                 </ul>
+                <p class="govuk-body" th:if=${model.reopenLinkVisible}>If you reopen it, you must resubmit your application before we can assess it.</p>
 
                 <h3 class="govuk-heading-m">Decision notification</h3>
                 <p class="govuk-body">You and your project partners will be emailed notification of the decision by

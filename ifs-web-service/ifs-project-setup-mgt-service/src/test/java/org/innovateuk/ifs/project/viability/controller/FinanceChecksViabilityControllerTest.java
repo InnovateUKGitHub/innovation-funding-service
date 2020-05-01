@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +86,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
     private CompetitionResource competitionResource = newCompetitionResource()
             .withName("Competition")
+            .withFinanceRowTypes(Collections.singleton(FinanceRowType.FINANCE))
             .build();
 
     private ApplicationResource app = newApplicationResource()
