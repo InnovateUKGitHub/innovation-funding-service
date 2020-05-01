@@ -114,4 +114,7 @@ ext.IFS_DATA_SERVICE_CACHE_TTL=18000000
 // Used by the idp, location of resources
 ext.RESOURCE_DOMAIN=""
 
+//covid 19
+ext.IFS_COVID19_COMPETITIONS="76"
+
 ext.IFS_SHOW_COVID_QUESTIONNAIRE_LINKS=true

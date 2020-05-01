@@ -48,7 +48,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
+            if (role == PROJECT_FINANCE || role == COMP_ADMIN ||  role == EXTERNAL_FINANCE) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {

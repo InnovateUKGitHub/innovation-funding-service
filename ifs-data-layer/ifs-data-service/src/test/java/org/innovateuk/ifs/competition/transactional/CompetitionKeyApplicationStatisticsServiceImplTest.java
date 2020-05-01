@@ -8,8 +8,8 @@ import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
+import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyApplicationStatisticsResource;
@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilde
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigBuilder.newCompetitionAssessmentConfig;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyApplicationStatisticsResourceBuilder.newCompetitionClosedKeyApplicationStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyApplicationStatisticsResourceBuilder.newCompetitionOpenKeyApplicationStatisticsResource;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
         BaseServiceUnitTest<CompetitionKeyApplicationStatisticsServiceImpl> {
 
     @Mock
-    private CompetitionRepository competitionRepositoryMock;
+    private CompetitionAssessmentConfigRepository competitionAssessmentConfigRepository;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -61,13 +61,10 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
                         .withApplicationsSubmitted(4)
                         .build();
 
-        Competition competition = newCompetition()
-                .withAssessorCount(2)
-                .build();
-
+        CompetitionAssessmentConfig config = newCompetitionAssessmentConfig().withAssessorCount(2).build();
         BigDecimal limit = new BigDecimal(50L);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionAssessmentConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(config));
         when(applicationRepositoryMock
                 .countByCompetitionIdAndApplicationProcessActivityStateInAndCompletionLessThanEqual(competitionId,
                         CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
@@ -94,9 +91,7 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
                         .withAssignmentCount(3)
                         .build();
 
-        Competition competition = newCompetition()
-                .withAssessorCount(2)
-                .build();
+        CompetitionAssessmentConfig config = newCompetitionAssessmentConfig().withAssessorCount(2).build();
 
         List<Assessment> assessments = newAssessment()
                 .withProcessState(AssessmentState.PENDING, REJECTED, AssessmentState.OPEN)
@@ -110,7 +105,7 @@ public class CompetitionKeyApplicationStatisticsServiceImplTest extends
                 .withAssessments(assessments, assessmentList, emptyList())
                 .build(3);
 
-        when(competitionRepositoryMock.findById(competitionId)).thenReturn(Optional.of(competition));
+        when(competitionAssessmentConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(config));
         when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateIn(competitionId,
                 SUBMITTED_STATES)).thenReturn(applicationStatistics);
 

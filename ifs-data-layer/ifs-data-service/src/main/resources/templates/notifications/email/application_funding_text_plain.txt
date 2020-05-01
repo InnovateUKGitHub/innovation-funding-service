@@ -4,6 +4,7 @@ Dear ${notificationTarget.name},
 Innovate UK
 ${competitionName}
 ${applicationName}
+<#if averageAssessorScore??>${averageAssessorScore}</#if>
 
 ${message}
 

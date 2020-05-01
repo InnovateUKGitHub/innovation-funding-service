@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.management.assessment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.assessment.security.AssessmentPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -20,6 +21,9 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
     @Override
     protected AssessmentPermissionRules supplyPermissionRulesUnderTest() {
@@ -55,11 +59,19 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
         for (CompetitionStatus competitionStatus : CompetitionStatus.values()) {
             final CompetitionResource competition = newCompetitionResource()
-                    .withHasAssessmentPanel(true)
                     .withCompetitionStatus(competitionStatus)
                     .build();
 
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
+                    .withIncludeAverageAssessorScoreInNotifications(false)
+                    .withAssessorCount(5)
+                    .withAssessorPay(BigDecimal.valueOf(100))
+                    .withHasAssessmentPanel(true)
+                    .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
+                    .build();
+
             when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+            when(competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId())).thenReturn(restSuccess(competitionAssessmentConfigResource));
 
             switch (competitionStatus) {
                 case ASSESSOR_FEEDBACK: case PROJECT_SETUP: case PREVIOUS:

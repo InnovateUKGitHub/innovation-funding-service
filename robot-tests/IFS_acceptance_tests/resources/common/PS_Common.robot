@@ -6,6 +6,8 @@ Resource    Applicant_Commons.robot
 
 ${PS_Competition_Name}     Rolling stock future developments
 ${PS_Competition_Id}       ${competition_ids["${PS_Competition_Name}"]}
+${PS_Point_Project_Name}   Point control and automated monitoring
+${PS_Point_Project_Id}     ${project_ids["${PS_Point_Project_Name}"]}
 
 #Project: London underground – enhancements to existing stock and logistics
 # EF = Experian feedback
@@ -157,12 +159,25 @@ ${MobileProjectName}  Mobile Phone Data for Logistics Analytics
 ${MobileProjectId}    ${project_ids["${MobileProjectName}"]}
 
 *** Keywords ***
+Finance reviewer is added to the project
+    [Arguments]  ${projectURL}
+    log in as a different user                &{ifs_admin_user_credentials}
+    the user navigates to the page            ${projectURL}
+    the user clicks the button/link           jQuery = a:contains("Edit")
+    the user selects finance reviewer         Rianne Almeida
+    the user clicks the button/link           jQuery = button:contains("Update finance reviewer")
+    the user should see the element           jQuery = tr:contains("Rianne Almeida")
+
+The user selects finance reviewer
+    [Arguments]   ${FlName}
+    input text                          id = userId    ${FlName}
+    the user clicks the button/link     jQuery = ul li:contains("${FlName}")
+
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
   the user enters text to a text field   css = input[name=name]   ${firstName}
   the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to")
-
 
 internal user generates the GOL
     [Arguments]  ${projectID}
