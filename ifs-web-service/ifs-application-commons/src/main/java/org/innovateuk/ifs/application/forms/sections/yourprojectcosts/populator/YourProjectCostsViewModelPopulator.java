@@ -68,7 +68,7 @@ public class YourProjectCostsViewModelPopulator {
                 procurementCompetition,
                 competition.getFinanceRowTypes(),
                 competition.isOverheadsAlwaysTwenty(),
-                competition.getCovidType() == CovidType.ADDITIONAL_FUNDING);
+                CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()));
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

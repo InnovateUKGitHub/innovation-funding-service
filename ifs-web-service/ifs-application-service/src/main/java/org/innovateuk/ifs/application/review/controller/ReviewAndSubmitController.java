@@ -194,11 +194,12 @@ public class ReviewAndSubmitController {
                                            @ModelAttribute(FORM_ATTR_NAME) ApplicationReopenForm form,
                                            Model model,
                                            UserResource userResource) {
-        if (!canReopenApplication(applicationId, userResource)) {
-            return "redirect:/application/" + applicationId + "/track";
-        }
 
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+        if (!canReopenApplication(applicationResource, userResource)) {
+            return "redirect:/application/" + applicationId + "/track";
+        }
 
         model.addAttribute("applicationId", applicationResource.getId());
         model.addAttribute("applicationName", applicationResource.getName());
@@ -207,13 +208,12 @@ public class ReviewAndSubmitController {
         return "application-confirm-reopen";
     }
 
-    private boolean canReopenApplication(long applicationId, UserResource user) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+    private boolean canReopenApplication(ApplicationResource application, UserResource user) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         if (competition.getCovidType() != null) {
-            return CompetitionStatus.OPEN.equals(applicationResource.getCompetitionStatus())
-                    && applicationResource.canBeReopened()
-                    && userService.isLeadApplicant(user.getId(), applicationResource);
+            return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
+                    && application.canBeReopened()
+                    && userService.isLeadApplicant(user.getId(), application);
         }
 
         return false;
@@ -251,12 +251,12 @@ public class ReviewAndSubmitController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), canReopenApplication(applicationId, user)));
+        model.addAttribute("model", new TrackViewModel(competition, application, earlyMetricsUrl, application.getCompletion(), canReopenApplication(application, user)));
         return getTrackingPage(competition);
     }
 
     private String getTrackingPage(CompetitionResource competition) {
-        if (competition.getCovidType() == CovidType.ADDITIONAL_FUNDING) {
+        if (CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType())) {
             return "covid-additional-funding-application-track";
         } else if (competition.isH2020()) {
             return "h2020-grant-transfer-track";

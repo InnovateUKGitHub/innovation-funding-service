@@ -34,7 +34,7 @@
         <p class="govuk-body">You will be able to make changes to this application when you reopen it. After you have made  all your changes,
             you must resubmit the application.</p>
 
-        <form method="post" th:action="@{/application/{id}/confirm-reopen(id=${applicationId})}">
+        <form method="post" id="reopen-application" th:action="@{/application/{id}/confirm-reopen(id=${applicationId})}">
             <input type="submit" tabindex="0" class="govuk-button" value="Reopen the application" />
             <a role="button" tabindex="1" class="button-clear" th:href="@{/application/{id}/track(id=${applicationId})}">Cancel</a>
         </form>

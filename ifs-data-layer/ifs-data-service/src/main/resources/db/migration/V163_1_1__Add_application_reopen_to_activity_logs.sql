@@ -1,5 +1,3 @@
--- jira rubbish
-
 ALTER TABLE activity_log MODIFY type ENUM(
     'APPLICATION_SUBMITTED',
     'APPLICATION_REOPENED',
