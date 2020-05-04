@@ -151,28 +151,31 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
 
         SignHere anchor = new SignHere();
         anchor.setAnchorString("Signed: _");
-        anchor.setAnchorXOffset("50");
+        anchor.setAnchorHorizontalAlignment("right");
         anchor.setAnchorYOffset("-8");
+        anchor.setAnchorIgnoreIfNotPresent("false");
 
         FullName print = new FullName();
         print.anchorString("Print name: _");
-        print.setAnchorXOffset("55");
+        print.setAnchorHorizontalAlignment("right");
         print.setAnchorYOffset("-8");
 
         DateSigned date = new DateSigned();
         date.anchorString("Date: _");
-        date.setAnchorXOffset("30");
+        date.setAnchorHorizontalAlignment("right");
         date.setAnchorYOffset("-8");
 
         Text projectStartDate = new Text();
         projectStartDate.anchorString("Project start date _");
-        projectStartDate.setAnchorXOffset("70");
+        projectStartDate.setAnchorHorizontalAlignment("right");
+        projectStartDate.setWidth("200");
         projectStartDate.setAnchorYOffset("-8");
         projectStartDate.setTabLabel("start date");
 
         Text projectEndDate = new Text();
         projectEndDate.anchorString("Project end date _");
-        projectEndDate.setAnchorXOffset("70");
+        projectEndDate.setAnchorHorizontalAlignment("right");
+        projectEndDate.setWidth("200");
         projectEndDate.setAnchorYOffset("-8");
         projectEndDate.setTabLabel("end date");
 
