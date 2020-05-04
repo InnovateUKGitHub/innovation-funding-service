@@ -96,7 +96,7 @@ task prepareConfigDeployment(dependsOn: [prepareConfig, prepareRoutes, prepareGl
     println "Preparing Config"
 }
 
-task prepareDeployAndUpgrade(type: Copy) {
+task prepareDeployAndUpgrade(type: Copy, dependsOn: createSecretsFromAws) {
 
     destinationDir = file('build/resources/main')
     from('os-files/') {
