@@ -2,6 +2,8 @@ UPDATE competition SET covid_type='DE_MINIMIS' WHERE name = '583 Covid deminis r
 UPDATE competition SET covid_type='ADDITIONAL_FUNDING' WHERE name = '596 Covid grants framework group';
 UPDATE competition SET covid_type='DE_MINIMIS_ROUND_2' WHERE name = '599 Covid de minimis round 2';
 
+UPDATE competition SET use_docusign_for_grant_offer_letter=1 WHERE covid_type IS NOT NULL;
+
 -- ADDITIONAL_FUNDING
 SET @additional_funding_id = (SELECT id FROM competition WHERE covid_type = 'ADDITIONAL_FUNDING');
 UPDATE competition SET has_assessment_stage=false WHERE id = @additional_funding_id;
