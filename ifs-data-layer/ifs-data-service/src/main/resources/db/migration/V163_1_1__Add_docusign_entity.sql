@@ -21,3 +21,6 @@ ALTER TABLE project ADD CONSTRAINT fk_project_to_docusign_documnet FOREIGN KEY (
 
 ALTER TABLE competition ADD COLUMN use_docusign_for_grant_offer_letter BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE project ADD COLUMN use_docusign_for_grant_offer_letter BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- IFS-3998 Insert scheduled job for DOI expiry.
+insert into schedule_status (job_name, version) VALUES ('DOCUSIGN_IMPORT', now());
