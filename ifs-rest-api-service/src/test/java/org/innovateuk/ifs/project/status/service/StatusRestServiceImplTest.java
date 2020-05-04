@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.junit.Test;
@@ -31,11 +32,11 @@ public class StatusRestServiceImplTest extends BaseRestServiceUnitTest<StatusRes
         Long competitionId = 1L;
         String applicationSearchString = "12";
 
-        List<ProjectStatusResource> returnedResponse = asList(new ProjectStatusResource());
+        ProjectStatusPageResource returnedResponse = new ProjectStatusPageResource();
 
-        setupGetWithRestResultExpectations(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString, projectStatusResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionURL + "/" + competitionId + "?applicationSearchString=" + applicationSearchString + "&page=1", ProjectStatusPageResource.class, returnedResponse);
 
-        RestResult<List<ProjectStatusResource>> result = service.getCompetitionStatus(competitionId, applicationSearchString);
+        RestResult<ProjectStatusPageResource> result = service.getCompetitionStatus(competitionId, applicationSearchString, 1);
 
         assertTrue(result.isSuccess());
 

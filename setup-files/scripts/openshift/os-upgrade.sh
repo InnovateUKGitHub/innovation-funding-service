@@ -166,11 +166,3 @@ if [[ ${bamboo_openshift_force_reload} == "true" ]]
 then
     forceReload
 fi
-
-if [[ ${TARGET} == "ifs-prod" || ${TARGET} == "ifs-uat" || ${TARGET} == "ifs-perf" ]]
-then
-    # We only scale up data-serviced once started up and performed the Flyway migrations on one thread
-    scaleDataService
-    scaleFinanceDataService
-    scaleSurveyDataService
-fi

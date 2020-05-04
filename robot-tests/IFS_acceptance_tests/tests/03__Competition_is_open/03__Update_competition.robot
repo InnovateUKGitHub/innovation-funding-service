@@ -229,6 +229,7 @@ Assessors editable before Notifications Date (Open)
     Then the user selects the radio button    assessorCount    5
     And the user selects the radio button     hasAssessmentPanel    0
     And the user selects the radio button     hasInterviewStage    0
+    And the user selects the radio button     averageAssessorScore    0
     And the user should see the element       css = #assessorPay[readonly="readonly"]
     When the user clicks the button/link      jQuery = button:contains("Done")
     And the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("5")

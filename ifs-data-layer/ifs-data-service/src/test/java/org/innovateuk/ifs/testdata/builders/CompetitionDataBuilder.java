@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -98,11 +99,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                                                 String pafCode,
                                                 String code,
                                                 String activityCode,
-                                                Integer assessorCount,
-                                                BigDecimal assessorPay,
-                                                Boolean hasAssessmentPanel,
-                                                Boolean hasInterviewStage,
-                                                AssessorFinanceView assessorFinanceView,
                                                 Boolean multiStream,
                                                 String collaborationLevelCode,
                                                 List<OrganisationTypeEnum> leadApplicantTypes,
@@ -159,11 +155,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMaxResearchRatio(researchRatio);
                 competition.setResubmission(resubmission);
                 competition.setMultiStream(multiStream);
-                competition.setAssessorPay(assessorPay);
-                competition.setAssessorCount(assessorCount);
-                competition.setHasAssessmentPanel(hasAssessmentPanel);
-                competition.setHasInterviewStage(hasInterviewStage);
-                competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
                 competition.setIncludeJesForm(includeJesForm);
                 competition.setApplicationFinanceType(applicationFinanceType);
@@ -231,7 +222,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private void markSetupSectionsAndSubsectionsAsComplete(CompetitionData data) {
-        asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+        Arrays.stream(CompetitionSetupSection.values())
+                .filter(section -> section != CompetitionSetupSection.PROJECT_DOCUMENT)
+                .forEach(competitionSetupSection -> {
             competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
             competitionSetupSection.getSubsections().forEach(subsection -> {
                 competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
@@ -465,6 +458,22 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             competitionSetupFinanceResource.setIncludeYourOrganisationSection(includeYourOrganisation);
             competitionSetupFinanceResource.setIncludeJesForm(includeJesForm);
             competitionSetupFinanceService.save(competitionSetupFinanceResource);
+        });
+    }
+
+    public CompetitionDataBuilder withAssessmentConfig(Integer assessorCount,
+                                                       BigDecimal assessorPay,
+                                                       Boolean hasAssessmentPanel,
+                                                       Boolean hasInterviewStage,
+                                                       AssessorFinanceView assessorFinanceView) {
+        return asCompAdmin(data -> {
+        CompetitionAssessmentConfigResource competitionAssessmentConfigResource = new CompetitionAssessmentConfigResource();
+        competitionAssessmentConfigResource.setAssessorCount(assessorCount);
+        competitionAssessmentConfigResource.setAssessorPay(assessorPay);
+        competitionAssessmentConfigResource.setHasAssessmentPanel(hasAssessmentPanel);
+        competitionAssessmentConfigResource.setHasInterviewStage(hasInterviewStage);
+        competitionAssessmentConfigResource.setAssessorFinanceView(assessorFinanceView);
+        competitionAssessmentConfigService.update(data.getCompetition().getId(), competitionAssessmentConfigResource);
         });
     }
 

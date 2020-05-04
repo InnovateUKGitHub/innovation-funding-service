@@ -47,6 +47,10 @@ public final class SecurityRuleUtil {
         return user.hasRole(STAKEHOLDER);
     }
 
+    public static boolean isExternalFinanceUser(UserResource user) {
+        return user.hasRole(EXTERNAL_FINANCE);
+    }
+
     public static boolean isMonitoringOfficer(UserResource user) {
         return user.hasRole(MONITORING_OFFICER);
     }

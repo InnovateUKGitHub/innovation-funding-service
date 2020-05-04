@@ -17,6 +17,7 @@ import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,7 +54,7 @@ public class YourFundingViewModelPopulator {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        if (user.isInternalUser()) {
+        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
             return populateManagement(applicationId, sectionId, organisationId);
         }
         return populate(applicationId, sectionId, user);
@@ -79,6 +80,7 @@ public class YourFundingViewModelPopulator {
         boolean overridingFundingRules = isMaximumFundingLevelOverridden(section);
 
         return new YourFundingViewModel(applicationId,
+                section.getCompetition().getName(),
                 section.getSection().getId(),
                 section.getCurrentApplicant().getOrganisation().getId(),
                 section.getCompetition().getId(),
@@ -99,7 +101,7 @@ public class YourFundingViewModelPopulator {
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        return new ManagementYourFundingViewModel(applicationId, sectionId, organisationId, application.getCompetition(), application.getName(),
+        return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
                 format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
 
     }

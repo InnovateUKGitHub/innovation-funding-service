@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.financechecks.form.FinanceCheckSummaryForm;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceCheckSummaryViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.spendprofile.SpendProfileService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.function.Supplier;
+
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 
 /**
  * This controller is for allowing internal users to view and update application finances entered by applicants.
@@ -56,8 +59,9 @@ public class FinanceCheckController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
-                                          @ModelAttribute(binding = false, value = "form") FinanceCheckSummaryForm form) {
-        return doViewFinanceCheckSummary(projectId, model);
+                                          @ModelAttribute(binding = false, value = "form") FinanceCheckSummaryForm form,
+                                          UserResource userResource) {
+        return doViewFinanceCheckSummary(projectId, model, userResource);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -65,9 +69,10 @@ public class FinanceCheckController {
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute("form") FinanceCheckSummaryForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
-                                       ValidationHandler validationHandler) {
+                                       ValidationHandler validationHandler,
+                                       UserResource userResource) {
 
-        Supplier<String> failureView = () -> doViewFinanceCheckSummary(projectId, model);
+        Supplier<String> failureView = () -> doViewFinanceCheckSummary(projectId, model, userResource);
         ServiceResult<Void> generateResult = spendProfileService.generateSpendProfile(projectId);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
@@ -95,11 +100,16 @@ public class FinanceCheckController {
 
     }
 
-    private String doViewFinanceCheckSummary(Long projectId, Model model) {
+    private String doViewFinanceCheckSummary(Long projectId, Model model, UserResource userResource) {
+
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         ProjectResource project = projectService.getById(projectId);
 
-        model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource, project.getProjectState().isActive(), project.isCollaborativeProject(), hasOrganisationSizeChanged(projectId)));
+        model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource,
+                project.getProjectState().isActive(),
+                project.isCollaborativeProject(),
+                hasOrganisationSizeChanged(projectId),
+                userResource.hasRole(EXTERNAL_FINANCE)));
         return "project/financecheck/summary";
     }
 

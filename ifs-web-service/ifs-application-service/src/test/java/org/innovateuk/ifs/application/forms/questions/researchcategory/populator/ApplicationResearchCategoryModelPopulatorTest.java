@@ -82,6 +82,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withCompetition(competitionResource).withCategory(researchCategoryTwo).build();
 
         ApplicationResource applicationResource = newApplicationResource()
+                .withId(1L)
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
                 .withResearchCategory(researchCategoryOne).build();
@@ -142,6 +143,7 @@ public class ApplicationResearchCategoryModelPopulatorTest extends BaseUnitTest 
                 .withCompetition(competitionResource).withCategory(researchCategory).build();
 
         ApplicationResource applicationResource = newApplicationResource()
+                .withId(1L)
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName(competitionResource.getName())
                 .withResearchCategory(researchCategory).build();

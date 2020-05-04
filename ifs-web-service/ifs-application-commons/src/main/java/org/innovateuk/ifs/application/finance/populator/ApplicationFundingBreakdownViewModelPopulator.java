@@ -6,7 +6,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -68,6 +70,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     @Autowired
     private HttpServletUtil httpServletUtil;
 
+    @Autowired
+    private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
+
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -89,6 +94,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         }
 
         return new ApplicationFundingBreakdownViewModel(applicationId,
+                competition.getName(),
                 rows,
                 application.isCollaborativeProject(),
                 competition.getFinanceRowTypes(),
@@ -148,9 +154,9 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-        if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER)) {
+        if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
             if (!application.isSubmitted()) {
-                if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)) {
+                if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
                     return Optional.of(internalLink(application.getId(), organisation));
                 }
             } else {
@@ -163,8 +169,10 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 return Optional.of(applicantLink(application.getId()));
             }
 
+            CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
+
             if (assessorProcessRoles().contains(currentUserRole.get().getRole())
-                    && DETAILED.equals(competition.getAssessorFinanceView())) {
+                    && DETAILED.equals(competitionAssessmentConfigResource.getAssessorFinanceView())) {
                 return Optional.of(assessorLink(application, organisation));
             }
         }

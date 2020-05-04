@@ -6,7 +6,8 @@ import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestServi
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
 import org.innovateuk.ifs.internal.populator.InternalProjectSetupRowPopulator;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
@@ -42,22 +44,24 @@ public class CompetitionStatusViewModelPopulator {
         this.internalProjectSetupRowPopulator = internalProjectSetupRowPopulator;
     }
 
-    public CompetitionStatusViewModel populate(UserResource user, Long competitionId, String applicationSearchString) {
+    public CompetitionStatusViewModel populate(UserResource user, Long competitionId, String applicationSearchString, int page) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         final boolean hasProjectFinanceRole = user.hasRole(PROJECT_FINANCE);
         long openQueryCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess() : 0L;
         long pendingSpendProfilesCount = hasProjectFinanceRole ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0;
-        List<ProjectStatusResource> projectStatusResources = statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString)).getSuccess();
+        ProjectStatusPageResource projectStatusResources = statusRestService.getCompetitionStatus(competitionId, StringUtils.trim(applicationSearchString), page).getSuccess();
 
-        List<InternalProjectSetupRow> internalProjectSetupRows = internalProjectSetupRowPopulator.populate(projectStatusResources, competition, user);
+        List<InternalProjectSetupRow> internalProjectSetupRows = internalProjectSetupRowPopulator.populate(projectStatusResources.getContent(), competition, user);
 
         return new CompetitionStatusViewModel(competition,
                 hasProjectFinanceRole,
                 openQueryCount,
                 pendingSpendProfilesCount,
                 applicationSearchString,
-                internalProjectSetupRows);
+                internalProjectSetupRows,
+                new PaginationViewModel(projectStatusResources),
+                user.hasRole(EXTERNAL_FINANCE));
     }
 
 }

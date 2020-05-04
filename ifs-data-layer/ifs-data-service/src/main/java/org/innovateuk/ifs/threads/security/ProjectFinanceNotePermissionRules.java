@@ -31,6 +31,20 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
+    @PermissionRule(value = "PF_CREATE", description = "Only External Finance Users can create notes")
+    public boolean externalFinanceUsersCanCreateQueries(final NoteResource note, final UserResource user) {
+        return userIsExternalFinanceOnProject(note.contextClassPk, user.getId()) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+    }
+
+    private boolean userIsExternalFinanceOnProject(long projectFinance, long userId) {
+        Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
+        if (pf.isPresent()){
+            long projectId = pf.get().getProject().getId();
+            return userIsExternalFinanceOnCompetitionForProject(projectId, userId);
+        }
+        return false;
+    }
+
     private boolean noteHasInitialPostWithAuthorBeingCurrentUser(NoteResource note, UserResource user) {
         return note.posts.size() == 1 && note.posts.get(0).author.getId().equals(user.getId());
     }
@@ -38,6 +52,11 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
     public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user) && isProjectActive(note.contextClassPk);
+    }
+
+    @PermissionRule(value = "PF_ADD_POST", description = "External Finance users can add posts to a note")
+    public boolean externalFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
+        return userIsExternalFinanceOnProject(note.contextClassPk, user.getId());
     }
 
     @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
@@ -48,6 +67,16 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
     @PermissionRule(value = "NOTES_READ", description = "All internal users are able to see notes")
     public boolean onlyInternalUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "NOTES_READ", description = "Comp finance users are able to see notes")
+    public boolean compFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
+        return userIsExternalFinanceOnCompetitionForProject(note.contextClassPk, user.getId());
+    }
+
+    @PermissionRule(value = "NOTES_READ", description = "External finance users are able to see notes")
+    public boolean externalFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
+        return userIsExternalFinanceOnProject(note.contextClassPk, user.getId());
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {

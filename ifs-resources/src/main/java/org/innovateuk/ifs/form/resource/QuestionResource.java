@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.cache.CacheableWhenCompetitionOpen;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 /**
  * Question defines database relations and a model to use client side and server side.
  */
-public class QuestionResource implements Comparable<QuestionResource> {
+public class QuestionResource implements Comparable<QuestionResource>, CacheableWhenCompetitionOpen {
     private Long id;
     private String name;
     private String shortName;
@@ -23,6 +25,10 @@ public class QuestionResource implements Comparable<QuestionResource> {
     private QuestionType type;
     private QuestionSetupType questionSetupType;
     private Integer assessorMaximumScore;
+    //Used by @Cacheable
+    @JsonIgnore
+
+    private boolean competitionOpen;
 
     public QuestionResource() {
         //default constructor
@@ -50,10 +56,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
 
     public String getDescription() {
         return this.description;
-    }
-
-    public Long getCompetition() {
-        return this.competition;
     }
 
     public Long getSection() {
@@ -130,10 +132,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
         this.priority = priority;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
-    }
-
     public void setSection(Long section) {
         this.section = section;
     }
@@ -158,6 +156,22 @@ public class QuestionResource implements Comparable<QuestionResource> {
         this.questionSetupType = questionSetupType;
     }
 
+    public Long getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Long competition) {
+        this.competition = competition;
+    }
+
+    @Override
+    public boolean isCompetitionOpen() {
+        return competitionOpen;
+    }
+
+    public void setCompetitionOpen(boolean competitionOpen) {
+        this.competitionOpen = competitionOpen;
+    }
 
     @Override
     public int compareTo(QuestionResource o) {
@@ -181,7 +195,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(assignEnabled, that.assignEnabled)
                 .append(multipleStatuses, that.multipleStatuses)
                 .append(priority, that.priority)
-                .append(competition, that.competition)
                 .append(section, that.section)
                 .append(questionNumber, that.questionNumber)
                 .append(type, that.type)
@@ -201,7 +214,6 @@ public class QuestionResource implements Comparable<QuestionResource> {
                 .append(assignEnabled)
                 .append(multipleStatuses)
                 .append(priority)
-                .append(competition)
                 .append(section)
                 .append(questionNumber)
                 .append(type)

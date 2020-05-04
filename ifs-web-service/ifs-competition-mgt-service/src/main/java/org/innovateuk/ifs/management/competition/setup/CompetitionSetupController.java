@@ -102,7 +102,7 @@ public class CompetitionSetupController {
 
     @GetMapping("/{competitionId}")
     public String initCompetitionSetupSection(Model model,
-                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
                                               @SuppressWarnings("UnusedParameters") BindingResult bindingResult) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -110,6 +110,10 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
+
+        boolean canAssignFinanceUsers = competition.getCovidType() != null;
+
+        model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
         model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
         model.addAttribute(SETUP_READY_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         model.addAttribute(READY_TO_OPEN_KEY, competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));

@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -35,6 +36,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -59,6 +62,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
     private UserResource stakeholderUserResourceOnCompetition;
+    private UserResource competitionFinanceUserResourceOnCompetition;
     private UserResource monitoringOfficerOnProjectForApplication1;
     private UserResource user2;
     private UserResource user3;
@@ -90,6 +94,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User stakeholderUserOnCompetition = newUser().build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRoleGlobal(STAKEHOLDER).build();
         Stakeholder stakeholder = StakeholderBuilder.newStakeholder().withUser(stakeholderUserOnCompetition).build();
+
+        User competitionFinanceUserOnCompetition = newUser().build();
+        competitionFinanceUserResourceOnCompetition = newUserResource().withId(competitionFinanceUserOnCompetition.getId()).withRoleGlobal(EXTERNAL_FINANCE).build();
 
         monitoringOfficerOnProjectForApplication1 = newUserResource().build();
 
@@ -180,6 +187,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void onlyCompetitionFinanceUserAssignedToCompetitionForApplicationCanAccessApplication() {
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersAssignedToCompetitionCanViewApplications(applicationResource1, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.competitionFinanceUsersAssignedToCompetitionCanViewApplications(applicationResource1, monitoringOfficerUser()));
+    }
+
+    @Test
     public void monitoringOfficerAssignedToProjectCanViewApplications() {
         assertTrue(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, monitoringOfficerOnProjectForApplication1));
         assertFalse(rules.monitoringOfficerAssignedToProjectCanViewApplications(applicationResource1, stakeholderUser()));
@@ -239,6 +254,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user2));
+        assertFalse(rules.competitionFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource, user3));
+    }
+
+    @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
         when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);
@@ -265,6 +293,19 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, stakeholderUserResourceOnCompetition));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user2));
         assertFalse(rules.stakeholdersCanSeeApplicationFinancesTotals(applicationResource, user3));
+    }
+
+    @Test
+    public void competitionFinanceUserCanSeeApplicationFinancesTotals() {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competition.getId())
+                .build();
+
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), competitionFinanceUserResourceOnCompetition.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, competitionFinanceUserResourceOnCompetition));
+        assertFalse(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user2));
+        assertFalse(rules.competitionFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user3));
     }
 
     @Test
@@ -534,5 +575,58 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, leadOnApplication1));
         assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user2));
         assertFalse(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user3));
+    }
+
+    @Test
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjects() {
+
+        UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+        List<ProjectParticipantRole> roles = new ArrayList<>(PROJECT_USER_ROLES);
+
+
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles)).
+                thenReturn(newProjectUser().build(1));
+
+        assertTrue(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles);
+    }
+
+    @Test
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNoProjectForApplication() {
+
+        UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+        List<ProjectParticipantRole> roles = new ArrayList<>(PROJECT_USER_ROLES);
+
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(null);
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository, never()).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles);
+    }
+
+    @Test
+    public void projectPartnerCanViewApplicationsLinkedToTheirProjectsButNotPartnerOnLinkedProject() {
+
+        UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();
+        ApplicationResource application = newApplicationResource().build();
+        Project linkedProject = newProject().build();
+        List<ProjectParticipantRole> roles = new ArrayList<>(PROJECT_USER_ROLES);
+
+        when(projectRepository.findOneByApplicationId(application.getId())).thenReturn(linkedProject);
+        when(projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles)).
+                thenReturn(emptyList());
+
+        assertFalse(rules.projectPartnerCanViewApplicationsLinkedToTheirProjects(application, user));
+
+        verify(projectRepository).findOneByApplicationId(application.getId());
+        verify(projectUserRepository).findByProjectIdAndUserIdAndRoleIsIn(linkedProject.getId(), user.getId(), roles);
     }
 }

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 
 @Controller
 public class CompetitionManagementDashboardController {
@@ -58,9 +58,12 @@ public class CompetitionManagementDashboardController {
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the competition management dashboard")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(UserResource user) {
+        if (user.hasRole(EXTERNAL_FINANCE)) {
+            return "redirect:/dashboard/project-setup";
+        }
         return "redirect:/dashboard/live";
     }
 
@@ -80,7 +83,7 @@ public class CompetitionManagementDashboardController {
 
     @SecuredBySpring(value = "READ", description = "The competition admin, project finance," +
             " support, innovation lead and stakeholder roles are allowed to view the list of competitions in project setup")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/dashboard/project-setup")
     @NavigationRoot
     public String projectSetup(@RequestParam(defaultValue = DEFAULT_PAGE) int page, Model model, UserResource user) {
@@ -98,7 +101,8 @@ public class CompetitionManagementDashboardController {
                         competitionDashboardSearchService.getCompetitionCounts(),
                         countBankDetails,
                         new DashboardTabsViewModel(user),
-                        projectFinanceUser));
+                        projectFinanceUser,
+                        SecurityRuleUtil.isExternalFinanceUser(user)));
 
         return TEMPLATE_PATH + "projectSetup";
     }

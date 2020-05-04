@@ -42,6 +42,11 @@
             <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.includeVat}">
                 <p class="govuk-body">You must include VAT in all figures where appropriate.</p>
             </div>
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showCovidGuidance}">
+                <p class="govuk-body">Only use the 'Other costs' category to enter the details of costs you have incurred as a direct result
+                 of the Covid-19 pandemic, which threaten the delivery of your project. Leave all other categories as &pound;0.</p>
+            </div>
+
 
             <h2 class="govuk-heading-m govuk-!-margin-0"
                 th:text="|Provide the project costs for '${model.organisationName}'|"></h2>
@@ -194,16 +199,18 @@
                                class="govuk-label govuk-checkboxes__label">
                             By ticking this box you are accepting that the project costs for your organisation are
                             eligible as defined in the
-                            <a th:unless="${model.procurementCompetition}" target="_blank"
+                            <th:block th:unless="${model.procurementCompetition or model.showCovidGuidance}"><a target="_blank"
                                href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance"
                                class="govuk-link"
-                               aria-describedby="project-costs-hint">project costs guidance(opens in a new window)</a>
-                            <a th:if="${model.procurementCompetition}"
-                               target="_blank"
+                               aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
+                            <th:block th:if="${model.showCovidGuidance}"><a target="_blank"
+                               th:href="@{/competition/{competitionId}/overview#how-to-apply(competitionId=${model.competitionId})}"
+                               class="govuk-link"
+                               aria-describedby="project-costs-hint">competition brief (opens in a new window)</a>.</th:block>
+                            <th:block th:if="${model.procurementCompetition}"><a target="_blank"
                                href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/small-business-research-initiative-sbri-project-costs-guidance"
                                class="govuk-link"
-                               aria-describedby="project-costs-hint">project costs guidance(opens in a new window)</a>
-                            .
+                               aria-describedby="project-costs-hint">project costs guidance (opens in a new window)</a>.</th:block>
                         </label>
                     </div>
                 </div>

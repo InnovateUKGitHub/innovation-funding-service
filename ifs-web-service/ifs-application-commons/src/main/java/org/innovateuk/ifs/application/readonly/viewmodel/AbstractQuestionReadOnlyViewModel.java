@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.application.readonly.viewmodel;
 
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
+import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -9,9 +10,10 @@ import org.innovateuk.ifs.user.resource.Role;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel {
+public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
 
     private final long applicationId;
+    private final String competitionName;
     private final long questionId;
     private final String name;
     private final boolean complete;
@@ -19,6 +21,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean lead;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
+        this.competitionName = data.getCompetition().getName();
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();
@@ -44,8 +47,14 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         return status ->  processRole.isPresent() && status.getAssignee().equals(processRole.get().getId());
     }
 
-    public long getApplicationId() {
+    @Override
+    public Long getApplicationId() {
         return applicationId;
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public long getQuestionId() {

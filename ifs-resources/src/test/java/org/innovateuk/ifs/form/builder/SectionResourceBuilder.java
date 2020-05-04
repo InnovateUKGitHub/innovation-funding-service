@@ -24,8 +24,7 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
     public static SectionResourceBuilder newSectionResource() {
         return new SectionResourceBuilder(emptyList())
                 .with(uniqueIds())
-                .with(idBasedNames("Section "))
-                .withDisplayInAssessmentApplicationSummary(true);
+                .with(idBasedNames("Section "));
     }
 
     public SectionResourceBuilder withQuestions(List<Long>... questions) {

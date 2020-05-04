@@ -116,6 +116,25 @@ the user fills in the project costs
     the user clicks the button/link  link = Your project costs
     the user has read only view once section is marked complete
 
+the user fills in project costs no overheads
+    the user clicks the button/link  link = Your project costs
+    the user fills in Labour
+    the user checks overhead is not editable
+    the user fills in Material
+    the user fills in Capital usage
+    the user fills in Subcontracting costs
+    the user fills in Travel and subsistence
+    the user fills in Other costs
+    the user clicks the button/link  css = label[for="stateAidAgreed"]
+    the user clicks the button/link  jQuery = button:contains("Mark as complete")
+    the user clicks the button/link  link = Your project costs
+    the user has read only view once section is marked complete
+
+the user checks overhead is not editable
+    the user expands the section         Overhead costs
+    the user should see the element      jQuery = p:contains("Overheads are calculated as 20% of labour costs")
+    the user should not see the element  jQuery = input[name="overhead.rateType"]
+
 the user has read only view once section is marked complete
     the user should not see the element   css = input
     the user should see the element       jQuery = button:contains("Edit")
