@@ -243,3 +243,8 @@ Set global date variables
 Delete user from terms and conditions database
     [Arguments]    ${user_id}
     execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';
+
+Set Docusign for GOL
+    [Arguments]  ${projectId}
+    Connect to Database    @{database}
+    execute sql string     UPDATE `${database_name}`.`project` SET `use_docusign_for_grant_offer_letter` = '1' WHERE (`id` = '${projectId}');

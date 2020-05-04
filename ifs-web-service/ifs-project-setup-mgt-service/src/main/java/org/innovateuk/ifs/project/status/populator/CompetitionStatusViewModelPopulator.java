@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 /**
@@ -59,7 +60,8 @@ public class CompetitionStatusViewModelPopulator {
                 pendingSpendProfilesCount,
                 applicationSearchString,
                 internalProjectSetupRows,
-                new PaginationViewModel(projectStatusResources));
+                new PaginationViewModel(projectStatusResources),
+                user.hasRole(EXTERNAL_FINANCE));
     }
 
 }

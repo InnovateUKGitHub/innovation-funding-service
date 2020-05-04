@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.upcoming.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.math.BigDecimal;
@@ -19,12 +20,12 @@ public class UpcomingCompetitionViewModel {
     private ZonedDateTime assessorBriefingDate;
     private BigDecimal assessorPay;
 
-    public UpcomingCompetitionViewModel(CompetitionResource competitionResource) {
+    public UpcomingCompetitionViewModel(CompetitionResource competitionResource, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
-        this.assessorPay = competitionResource.getAssessorPay();
+        this.assessorPay = competitionAssessmentConfigResource.getAssessorPay();
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
     }
 

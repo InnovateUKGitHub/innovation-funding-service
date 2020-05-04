@@ -175,6 +175,7 @@ ${LARGE_ORGANISATION_SIZE}     LARGE
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
+${gol_pdf}        GOL_template.pdf
 ${5mb_pdf}        testing_5MB.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt

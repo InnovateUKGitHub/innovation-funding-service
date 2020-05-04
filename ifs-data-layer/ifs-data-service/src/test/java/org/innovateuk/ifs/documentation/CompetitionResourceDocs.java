@@ -2,7 +2,6 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -116,9 +115,6 @@ public class CompetitionResourceDocs {
             .withNonIfs(true)
             .withNonIfsUrl("https://google.co.uk")
             .withMilestones(asList(1L, 2L, 3L))
-            .withHasAssessmentPanel(false)
-            .withHasInterviewStage(false)
-            .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
             .withStateAid(true)
             .withIncludeJesForm(true)

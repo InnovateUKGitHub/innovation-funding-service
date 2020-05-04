@@ -81,6 +81,7 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
             verify(rules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verify(rules).stakeholdersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verify(rules).monitoringOfficersCanViewThemselves(project, getLoggedInUser());
+            verify(rules).competitionFinanceUsersCanViewMonitoringOfficersForAProjectOnTheirCompetitions(project, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }

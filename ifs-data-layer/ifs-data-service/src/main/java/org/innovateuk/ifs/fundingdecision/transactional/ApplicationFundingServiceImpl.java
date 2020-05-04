@@ -4,19 +4,24 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.domain.AverageAssessorScore;
+import org.innovateuk.ifs.assessment.repository.AverageAssessorScoreRepository;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.fundingdecision.mapper.FundingDecisionMapper;
-import org.innovateuk.ifs.fundingdecision.validator.ApplicationFundingDecisionValidator;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
@@ -27,8 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
@@ -39,7 +45,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
@@ -58,13 +63,16 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
-
-    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
     private ApplicationWorkflowHandler applicationWorkflowHandler;
+
+    @Autowired
+    private AssessorFormInputResponseService assessorFormInputResponseService;
+
+    @Autowired
+    private AverageAssessorScoreRepository averageAssessorScoreRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -77,10 +85,19 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
-
-            return saveFundingDecisionData(allowedApplicationForCompetition, applicationFundingDecisions);
+            List<Application> applications = findValidApplications(applicationFundingDecisions, competitionId);
+            return saveFundingDecisionData(applications, applicationFundingDecisions);
         });
+    }
+
+    @Override
+    public ServiceResult<List<FundingDecisionToSendApplicationResource>> getNotificationResourceForApplications(List<Long> applicationIds) {
+        return serviceSuccess(StreamSupport.stream( applicationRepository.findAllById(applicationIds).spliterator(), false)
+                .map(application -> {
+                    Organisation organisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
+                    return new FundingDecisionToSendApplicationResource(application.getId(), application.getName(), organisation.getName(), FundingDecision.valueOf(application.getFundingDecision().name()));
+                }).collect(toList()));
+
     }
 
     @Override
@@ -117,7 +134,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 });
     }
 
-
     private List<Application> getFundingApplications(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
@@ -133,15 +149,13 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         });
     }
 
-    private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {
-
-        return simpleFilter(applicationRepository.findByCompetitionId(competitionId),
-                            application -> applicationFundingDecisionValidator.isValid(application));
+    private List<Application> findValidApplications(Map<Long, FundingDecision> applicationFundingDecisions, long competitionId) {
+        return applicationRepository.findAllowedApplicationsForCompetition(applicationFundingDecisions.keySet(), competitionId);
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
         applicationDecisions.forEach((applicationId, decisionValue) -> {
-            Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findFirst();
+            Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findAny();
             if (applicationForDecision.isPresent()) {
                 Application application = applicationForDecision.get();
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
@@ -183,6 +197,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
             FundingNotificationResource fundingNotificationResource,
             List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId
     ) {
+        Competition competition = applications.get(0)
+                        .getCompetition();
+        boolean includeAsesssorScore = Boolean.TRUE.equals(competition.getCompetitionAssessmentConfig().getIncludeAverageAssessorScoreInNotifications());
         Notifications notificationType = isH2020Competition(applications) ? HORIZON_2020_FUNDING : APPLICATION_FUNDING;
         Map<String, Object> globalArguments = new HashMap<>();
 
@@ -196,9 +213,13 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                     perNotificationTargetArguments.put("applicationName", application.getName());
                     perNotificationTargetArguments.put("applicationId", applicationId);
                     perNotificationTargetArguments.put("competitionName", application.getCompetition().getName());
+                    if (includeAsesssorScore) {
+                        Optional<AverageAssessorScore> averageAssessorScore = averageAssessorScoreRepository.findByApplicationId(applicationId);
+                        averageAssessorScore.ifPresent(score -> perNotificationTargetArguments.put("averageAssessorScore", "Average assessor score: " + score.getScore() + "%"));
+                    }
+
                     return Pair.of(pair.getValue(), perNotificationTargetArguments);
                 });
-
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);

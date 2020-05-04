@@ -203,7 +203,6 @@ public class AcceptApplicationInviteServiceImplTest {
 
     private Organisation createAndExpectUsersCurrentOrganisation(User user) {
         Organisation usersOrganisation = newOrganisation()
-                .withUser(singletonList(user))
                 .build();
         when(organisationRepositoryMock.findById(usersOrganisation.getId())).thenReturn(Optional.of(usersOrganisation));
         return usersOrganisation;
