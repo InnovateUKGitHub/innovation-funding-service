@@ -41,9 +41,21 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
             "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
 
+    String PREVIOUS_PROJECT_CLAUSE = " EXISTS " +
+            "(SELECT p.id FROM Project p " +
+            "WHERE p.application.competition.id = c.id AND " +
+            "p.projectProcess.activityState NOT IN " + IN_FLIGHT_PROJECT_STATES + ")";
+
+    String PREVIOUS_APPLICATION_CLAUSE = " EXISTS " +
+            "(SELECT a.id FROM Application a " +
+            "WHERE a.competition.id = c.id AND " +
+            "a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.REJECTED OR " +
+            "(a.competition.completionStage = 'RELEASE_FEEDBACK' AND a.applicationProcess.activityState = org.innovateuk.ifs.application.resource.ApplicationState.APPROVED))";
+
     /* Filters competitions to those in feedback released state */
     String PREVIOUS_WHERE_CLAUSE = "WHERE " +
-            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
+            "( " + PREVIOUS_PROJECT_CLAUSE + " OR " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id)) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     /* Filters by innovation lead id or stakeholder id and in project setup state */

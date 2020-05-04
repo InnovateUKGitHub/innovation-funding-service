@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.ProjectFinanceService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckOverviewViewModel;
 import org.innovateuk.ifs.financecheck.viewmodel.FinanceCheckSummariesViewModel;
@@ -74,7 +75,7 @@ public class ProjectFinanceChecksOverviewController {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(project, partnerOrgs, competition),
-                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), false);
+                getProjectFinanceCostBreakdown(project.getId(), partnerOrgs, competition), project.getApplication(), false, competition.isLoan(), false, competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE));
     }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(ProjectResource project, List<PartnerOrganisationResource> partnerOrgs, CompetitionResource competition) {

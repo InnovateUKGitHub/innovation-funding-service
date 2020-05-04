@@ -98,6 +98,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withName(expectedCompetitionName)
                 .withCompetitionStatus(expectedCompetitionStatus)
                 .withCompetitionTypeName("Programme")
+                .withHasAssessmentStage(true)
                 .build();
 
         CompetitionAssessmentConfigResource competitionAssessmentConfigResource = newCompetitionAssessmentConfigResource()
@@ -109,7 +110,6 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withAssessorFinanceView(DETAILED)
                 .build();
 
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
         when(competitionAssessmentConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionAssessmentConfigResource));
         competitionResource.setMilestones(singletonList(10L));

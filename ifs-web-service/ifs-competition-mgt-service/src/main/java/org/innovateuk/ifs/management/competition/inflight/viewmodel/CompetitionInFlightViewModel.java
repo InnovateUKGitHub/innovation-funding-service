@@ -43,7 +43,7 @@ public class CompetitionInFlightViewModel {
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
-        this.fundingDecisionAllowedBeforeAssessment = !competitionResource.hasAssessmentStage();
+        this.fundingDecisionAllowedBeforeAssessment = !competitionResource.isHasAssessmentStage();
         this.innovationSector = competitionResource.getInnovationSectorName();
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
@@ -56,7 +56,7 @@ public class CompetitionInFlightViewModel {
         this.assessmentPanelEnabled = competitionAssessmentConfigResource.getHasAssessmentPanel() != null ? competitionAssessmentConfigResource.getHasAssessmentPanel() : false;
         this.interviewPanelEnabled = competitionAssessmentConfigResource.getHasInterviewStage() != null ? competitionAssessmentConfigResource.getHasInterviewStage() : false;
         this.assessorFinanceView = competitionAssessmentConfigResource.getAssessorFinanceView();
-        this.competitionHasAssessmentStage = competitionResource.hasAssessmentStage();
+        this.competitionHasAssessmentStage = competitionResource.isHasAssessmentStage();
     }
 
     public Long getCompetitionId() {

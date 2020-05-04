@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -60,7 +61,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                     inSetup.add(toSetupResource(application, userId));
                     break;
                 case EU_GRANT_TRANSFER:
-                    euGrantTransfer.add(toEuGrantResource(application));
+                    euGrantTransfer.add(toEuGrantResource(application, userId));
                     break;
                 case IN_PROGRESS:
                     inProgress.add(toInProgressResource(application, userId));
@@ -170,13 +171,15 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withLeadApplicant(isLead(role))
                 .withEndDate(application.getCompetition().getEndDate())
                 .withDaysLeft(application.getCompetition().getDaysLeft())
+                .withHasAssessmentStage(application.getCompetition().isHasAssessmentStage())
                 .withApplicationProgress(application.getCompletion().intValue())
                 .withAssignedToInterview(invitedToInterview)
                 .withStartDate(application.getStartDate())
+                .withShowReopenLink(showReopenLinkVisible(application, userId))
                 .build();
     }
 
-    private DashboardEuGrantTransferRowResource toEuGrantResource(Application application) {
+    private DashboardEuGrantTransferRowResource toEuGrantResource(Application application, long userId) {
         return new DashboardEuGrantTransferRowResource.DashboardApplicationForEuGrantTransferResourceBuilder()
                 .withTitle(application.getName())
                 .withApplicationId(application.getId())
@@ -187,6 +190,18 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withStartDate(application.getStartDate())
                 .build();
     }
+
+    private boolean showReopenLinkVisible(Application application, long userId) {
+        if (application.getCompetition().getCovidType() != null) {
+            return application.getLeadApplicant().getId().equals(userId) &&
+                    CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
+                    application.getFundingDecision() == null &&
+                    application.isSubmitted();
+        }
+
+        return false;
+    }
+
 
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {
         PartnerOrganisation partnerOrganisation = getPartnerOrganisation(application, userId);
