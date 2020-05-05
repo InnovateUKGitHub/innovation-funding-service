@@ -46,7 +46,6 @@ ext.IFS_DATA_SERVICE_CACHE_PREFIX="providedByEnv:"
 ext.IFS_DATA_SERVICE_REDIS_PASSWORD="providedByEnv"
 ext.IFS_DATA_SERVICE_REDIS_CLUSTER_NODES="providedByEnv:8888"
 
-ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN="innovateuk.ukri.test"
 ext.IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS="innovateuk.ukri.test,innovateuk.test"
 
 ext.RESOURCE_DOMAIN=""
