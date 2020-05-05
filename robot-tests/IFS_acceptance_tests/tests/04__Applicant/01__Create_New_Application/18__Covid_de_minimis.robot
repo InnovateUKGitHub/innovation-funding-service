@@ -126,12 +126,11 @@ Internal user is able to approve the GOL and the project is now Live
       Then the user should see the element     jQuery = p:contains("The project is live")
 
 Competition goes into previous
-    [Setup]  the user clicks the button/link  link = Dashboard
+    [Setup]  log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDdeminimuscompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
     Then the user should see the element     link = ${COVIDdeminimuscompetitionTitle}
-    And check activity log
 
 *** Keywords ***
 Custom Suite Setup
@@ -353,5 +352,5 @@ the user can change funding sought
     the user clicks the button/link        link = Finance checks
 
 Requesting Project ID of this Project
-    ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}
+    ${ProjectID} =  get project id by name   ${COVIDdeminimusapplicationTitle1}
     Set suite variable    ${ProjectID}
