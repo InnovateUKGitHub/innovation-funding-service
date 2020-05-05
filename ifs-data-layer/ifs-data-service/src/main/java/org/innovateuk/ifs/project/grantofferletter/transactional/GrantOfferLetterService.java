@@ -85,8 +85,13 @@ public interface GrantOfferLetterService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
     ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
 
+
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "GET_DOCUSIGN_URL", description = "Applicants can get the url to access docusign" )
     ServiceResult<StringResource> getDocusignUrl(long projectId);
 
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "IMPORT_DOCUMENT", description = "Applicants can request their signed documents" )
     ServiceResult<Void> importGrantOfferLetter(long projectId);
 
 }

@@ -21,11 +21,9 @@ public interface DocusignService {
     @SecuredBySpring(value = "DOWNLOAD_FILE_IF_SIGNED", description = "System maintainer will import files on schedule" )
     void downloadFileIfSigned() throws ApiException, IOException;
 
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "GET_DOCUSIGN_URL", description = "Applicants can get the url to access docusign" )
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     String getDocusignUrl(String envelopeId, long userId, String name, String email, String redirect);
 
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "IMPORT_DOCUMENT", description = "Applicants can request their signed documents" )
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Void> importDocument(String envelopeId);
 }
