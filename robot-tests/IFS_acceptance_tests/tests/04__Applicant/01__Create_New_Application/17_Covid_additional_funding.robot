@@ -154,6 +154,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Setup]  Requesting Project ID of this Project
     Given proj finance approves the spend profiles  ${ProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And check activity log
     And internal user generates the GOL             YES  ${ProjectID}
 
 Applicant is able to upload the GOL
@@ -181,7 +182,6 @@ Competition goes into previous
     And The user should not see the element  link = ${COVIDcompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
     Then the user should see the element     link = ${COVIDcompetitionTitle}
-    And check activity log
 
 *** Keywords ***
 Custom Suite Setup
