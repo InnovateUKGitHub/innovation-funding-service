@@ -184,7 +184,8 @@ internal user generates the GOL
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
-    and the user reloads the page
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send to project team")
     the user clicks the button/link    jQuery = button:contains("Publish to project team")
