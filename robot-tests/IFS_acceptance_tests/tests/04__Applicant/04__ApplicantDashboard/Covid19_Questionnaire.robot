@@ -53,8 +53,7 @@ Applicant cannot apply for additional funding if he is an Innovate UK award reci
     [Tags]  HappyPath
     Given the user clicks the button/link     link = Back
     When the user does not have any challenge mentioned in the questionnaire
-    Then the user should see the element      jquery = p:contains(${no_support_message})
-    And the user is able to see other relevant links for award recipients
+    Then the user is able to see other relevant links for award recipients
 
 Applicant applying for additional funding changes his answers
     [Documentation]  IFS-7435
