@@ -31,7 +31,7 @@ function applyProperties() {
 
 #   Copy values to a file, this is needed  as multiline values for properties mess up if using --from-literal
     echo "$(valueFromAws)" >> "unformatted-properties.gradle"
-    gsed 's/ext/\n&/g' unformatted-properties.gradle > formatted-properties.gradle
+    sed 's/ext/\'$'\n''&/g' unformatted-properties.gradle > formatted-properties.gradle
 
     oc create secret generic properties \
         --from-file=properties=formatted-properties.gradle \
