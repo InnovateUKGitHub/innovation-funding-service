@@ -30,10 +30,11 @@ fi
 function applyProperties() {
 
 #   Copy values to a file, this is needed  as multiline values for properties mess up if using --from-literal
-    echo "$(valueFromAws)" >> "properties.gradle"
+    echo "$(valueFromAws)" >> "unformatted-properties.gradle"
+    sed 's/ext/\'$'\n''&/g' unformatted-properties.gradle > formatted-properties.gradle
 
     oc create secret generic properties \
-        --from-file=properties=properties.gradle \
+        --from-file=properties=formatted-properties.gradle \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
