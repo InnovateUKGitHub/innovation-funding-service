@@ -181,18 +181,9 @@ The user adds a new team member
 
 internal user generates the GOL
     [Arguments]  ${setDocusign}  ${projectID}
-    run keyword if                     '${setDocusign}' == 'YES'     Set Docusign for GOL  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
-    the user reloads the page
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
-    the user clicks the button/link    link = Back to project setup
-    the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user reloads the page
-    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
-    the user clicks the button/link    link = Back to project setup
-    the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user reloads the page
     the user selects the checkbox      confirmation
     the user clicks the button/link    jQuery = button:contains("Send to project team")
     the user clicks the button/link    jQuery = button:contains("Publish to project team")
