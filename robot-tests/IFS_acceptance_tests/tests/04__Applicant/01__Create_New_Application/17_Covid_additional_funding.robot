@@ -81,9 +81,9 @@ Lead can reopen application
 
 Lead can make changes and resubmit
     [Documentation]  IFS-7440
-    Given the user clicks the button/link  id = application-overview-submit-cta
+    Given the user clicks the button/link      id = application-overview-submit-cta
     And the user should not see the element    jQuery = .message-alert:contains("You will not be able to make changes")
-    Then the user clicks the button/link   id = submit-application-button
+    Then the user clicks the button/link       id = submit-application-button
 
 Internal user cannot invite to assesment
     [Documentation]  IFS-7441
