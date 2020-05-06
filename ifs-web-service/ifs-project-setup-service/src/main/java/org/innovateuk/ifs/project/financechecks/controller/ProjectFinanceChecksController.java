@@ -250,6 +250,7 @@ public class ProjectFinanceChecksController {
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
+            model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
             return "project/finance-checks";
         };
 
