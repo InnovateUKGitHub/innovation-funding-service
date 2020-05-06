@@ -95,9 +95,14 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         return serviceSuccess(StreamSupport.stream( applicationRepository.findAllById(applicationIds).spliterator(), false)
                 .map(application -> {
                     Organisation organisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
-                    return new FundingDecisionToSendApplicationResource(application.getId(), application.getName(), organisation.getName(), FundingDecision.valueOf(application.getFundingDecision().name()));
+                    FundingDecision fundingDecision;
+                    if (application.getFundingDecision() == null) {
+                        fundingDecision = FundingDecision.UNDECIDED;
+                    } else {
+                        fundingDecision = FundingDecision.valueOf(application.getFundingDecision().name());
+                    }
+                    return new FundingDecisionToSendApplicationResource(application.getId(), application.getName(), organisation.getName(), fundingDecision);
                 }).collect(toList()));
-
     }
 
     @Override
@@ -150,6 +155,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     }
 
     private List<Application> findValidApplications(Map<Long, FundingDecision> applicationFundingDecisions, long competitionId) {
+        if (applicationFundingDecisions.isEmpty()) {
+            return Collections.emptyList();
+        }
         return applicationRepository.findAllowedApplicationsForCompetition(applicationFundingDecisions.keySet(), competitionId);
     }
 

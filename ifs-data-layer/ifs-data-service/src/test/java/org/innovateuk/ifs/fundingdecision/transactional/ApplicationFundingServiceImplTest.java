@@ -482,6 +482,21 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
     }
 
+    @Test
+    public void testSaveFundingDecisionDataWithNoDecisions() {
+
+        Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
+        Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(asList(application1, application2));
+
+        Map<Long, FundingDecision> decision = new HashMap<>();
+
+        ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
+
+        assertTrue(result.isSuccess());
+        verify(applicationRepository, never()).findAllowedApplicationsForCompetition(anySet(), anyLong());
+    }
+
     public static Notification createNotificationExpectationsWithGlobalArgs(Notification expectedNotification) {
 
         return createLambdaMatcher(notification -> {
