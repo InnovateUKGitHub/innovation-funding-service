@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectProcess;
@@ -78,6 +77,10 @@ public class ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
 
     public ProjectBuilder withApplication(Application... application){
         return withArray((app, project) -> project.setApplication(app), application);
+    }
+
+    public ProjectBuilder withUseDocusignForGrantOfferLetter(boolean... useDocusignForGrantOfferLetters){
+        return withArray((useDocusignForGrantOfferLetter, project) -> project.setUseDocusignForGrantOfferLetter(useDocusignForGrantOfferLetter), useDocusignForGrantOfferLetters);
     }
 
     @SafeVarargs
