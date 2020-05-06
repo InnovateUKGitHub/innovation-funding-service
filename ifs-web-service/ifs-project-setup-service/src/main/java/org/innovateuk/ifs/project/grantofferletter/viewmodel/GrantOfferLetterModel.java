@@ -17,10 +17,12 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
     private GrantOfferLetterStateResource golState;
+    private boolean useDocusign;
+    private String docusignUrl;
 
     public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 boolean projectManager, GrantOfferLetterStateResource golState) {
+                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign, String docusignUrl) {
 
         this.projectId = projectId;
         this.projectName = projectName;
@@ -30,6 +32,8 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.additionalContractFile = additionalContractFile;
         this.projectManager = projectManager;
         this.golState = golState;
+        this.useDocusign = useDocusign;
+        this.docusignUrl = docusignUrl;
     }
 
     @Override
@@ -44,6 +48,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isLeadPartner() {
         return leadPartner;
+    }
+
+    public GrantOfferLetterStateResource getGolState() {
+        return golState;
     }
 
     public boolean isSubmitted() {
@@ -68,6 +76,14 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public FileDetailsViewModel getSignedGrantOfferLetterFile() {
         return signedGrantOfferLetterFile;
+    }
+
+    public boolean isUseDocusign() {
+        return useDocusign;
+    }
+
+    public String getDocusignUrl() {
+        return docusignUrl;
     }
 
     public boolean isShowSubmitButton() {
@@ -158,4 +174,5 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
         return isGrantOfferLetterApproved();
     }
+
 }
