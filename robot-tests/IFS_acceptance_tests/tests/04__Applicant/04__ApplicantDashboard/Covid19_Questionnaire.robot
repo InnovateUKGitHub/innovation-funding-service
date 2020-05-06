@@ -17,9 +17,8 @@ Applicant goes through the queries to apply for additional funding
     [Documentation]  IFS-7435
     [Tags]  HappyPath
     Given The user clicks the button/link     link = You may be eligible for additional funding
-    When the user should see the element      link = Start now
-    Then the user clicks the button/link      link = Start now
-    And the user should not see an error in the page
+    When the user clicks the button/link      link = Start now
+    Then the user should not see an error in the page
 
 Applicant applying for additional funding is a business or third sector
     [Documentation]  IFS-7435
@@ -46,7 +45,7 @@ Applicant applying for additional funding is an Innovate UK award recipient and 
     [Documentation]  IFS-7435
     [Tags]  HappyPath
     Given the user goes to the next query     yes
-    Then the user should see the element      jquery = p:contains(${project_change_request_message})
+    Then the user should see the element      jQuery = p:contains("${project_change_request_message}")
 
 Applicant cannot apply for additional funding if he is an Innovate UK award recipient but does not have any challenge
     [Documentation]  IFS-7435
@@ -58,26 +57,26 @@ Applicant cannot apply for additional funding if he is an Innovate UK award reci
 Applicant applying for additional funding changes his answers
     [Documentation]  IFS-7435
     [Tags]  HappyPath
-    Given the user clicks the button/link     jquery = td:contains("Is your challenge in managing your cashflow") ~ td a
+    Given the user clicks the button/link     jQuery = td:contains("Is your challenge in managing your cashflow") ~ td a
     When the user goes to the next query      yes
     Then the user should see the element      link = Start again
-    Then the user should see the element      jquery = h3:contains("Cashflow")
+    Then the user should see the element      jQuery = h3:contains("Cashflow")
 
 Applicant applying for additional funding has challenge in meeting a larger funding gap
     [Documentation]  IFS-7435
     [Tags]  HappyPath
-    Given the user clicks the button/link      jquery = td:contains("Is your challenge in managing your cashflow") ~ td a
+    Given the user clicks the button/link      jQuery = td:contains("Is your challenge in managing your cashflow") ~ td a
     When the user goes to the next query       no
     And the user goes to the next query        yes
-    Then the user should see the element       jquery = p:contains(${continuity_grant_message})
+    Then the user should see the element       jQuery = p:contains("${continuity_grant_message}")
 
 Applicant applying for additional funding has challenge in meeting a significant funding gap
     [Documentation]  IFS-7435
     [Tags]  HappyPath
-    Given the user clicks the button/link      jquery = td:contains("Is your challenge in meeting a larger funding gap") ~ td a
+    Given the user clicks the button/link      jQuery = td:contains("Is your challenge in meeting a larger funding gap") ~ td a
     When the user goes to the next query       no
     And the user goes to the next query        yes
-    Then the user should see the element       jquery = p:contains(${continuity_loan_message})
+    Then the user should see the element       jQuery = p:contains("${continuity_loan_message}")
 
 Applicant can start the questionnaire all over again
     [Documentation]  IFS-7435
@@ -100,12 +99,10 @@ the user does not have any challenge mentioned in the questionnaire
 the user goes to the next query
     [Arguments]  ${radio_button_choice}
     the user selects the radio button   govuk-radios__item  ${radio_button_choice}
-    the user clicks the button/link     jquery = button:contains("Next")
+    the user clicks the button/link     jQuery = button:contains("Next")
 
 Custom suite setup
     the user logs-in in new browser    &{lead_applicant_credentials}
-    Connect to database  @{database}
 
 Custom suite teardown
-    Disconnect from database
     The user closes the browser

@@ -7,7 +7,6 @@ Suite Teardown    Custom suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
-
 *** Test Cases ***
 Milestone date for application in progress is visible
     [Documentation]  INFUND-37 INFUND-5485
@@ -53,12 +52,6 @@ Application is no longer visible to anyone
     And the user reads his email              ${collaborator2_credentials["email"]}  Successful deletion of application  All the application information has been deleted
 
 *** Keywords ***
-the user is able to see relevant links for award recipients
-    the user should see the element  jquery = a:contains("Visit GOV.UK (opens in a new window)")
-    the user should see the element  jquery = a:contains("Visit the British Business Bank (opens in a new window)")
-    the user should see the element  jquery = a:contains("Apply for funding with Innovate UK (opens in a new window)")
-
-
 Custom setup
     ${TIME}=    Get Current Date    UTC    + 3 hours    exclude_millis=true    # This line gets the current date/time and adds 3 hours
     Connect to Database    @{database}
