@@ -92,44 +92,50 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         DocusignDocument docusignDocument = docusignDocumentRepository.save(new DocusignDocument(request.getRecipientUserId(), request.getDocusignType()));
 
         byte[] data = ByteStreams.toByteArray(request.getFileAndContents().getContentsSupplier().get());
-        String docBase64 = new String(Base64.encode(data));
 
-        // Create the DocuSign document object
-        Document document = new Document();
-        document.setDocumentBase64(docBase64);
-        document.setName(request.getDocumentName());
-        document.setFileExtension("pdf");
-        document.setDocumentId(String.valueOf(docusignDocument.getId()));
+        Document document = createDocusignDocument(data,
+                request.getDocumentName(),
+                docusignDocument.getId());
 
-        // The signer object
-        // Create a signer recipient to sign the document, identified by name and email
-        Signer signer = new Signer();
-        signer.setEmail(request.getEmail());
-        signer.setName(request.getName());
-        signer.recipientId(String.valueOf(request.getRecipientUserId()));
-        signer.setClientUserId(String.valueOf(request.getRecipientUserId()));
-        signer.setEmbeddedRecipientStartURL(webBaseUrl + request.getRedirectUrl());
+        Signer signer = createDocusignSigner(request.getEmail(),
+                request.getName(),
+                request.getRecipientUserId(),
+                webBaseUrl + request.getRedirectUrl());
 
         Tabs tabs = createDefaultTabs(data, document, signer);
         signer.setTabs(tabs);
 
-        // Next, create the top level envelope definition and populate it.
         EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition();
         envelopeDefinition.setEmailSubject("Please sign " + request.getDocumentName());
         envelopeDefinition.setDocuments(asList(document));
-        // Add the recipient to the envelope object
         Recipients recipients = new Recipients();
         recipients.setSigners(asList(signer));
         envelopeDefinition.setRecipients(recipients);
-        envelopeDefinition.setStatus("sent"); // requests that the envelope be created and sent.
+        envelopeDefinition.setStatus("sent");
         envelopeDefinition.setEmailBlurb("<p>Here is some stuff</p><p>Some more</p><p>With a new line \n After new line </p>");
 
-        // Step 2. Call DocuSign to create and send the envelope
         EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
         EnvelopeSummary results = envelopesApi.createEnvelope(accountId, envelopeDefinition);
 
         docusignDocument.setEnvelopeId(results.getEnvelopeId());
         return docusignDocument;
+    }
+
+    private Signer createDocusignSigner(String email, String name, long recipientUserId, String redirectUrl) {
+        return new Signer()
+                .email(email)
+                .name(name)
+                .recipientId(String.valueOf(recipientUserId))
+                .clientUserId(String.valueOf(recipientUserId))
+                .embeddedRecipientStartURL(redirectUrl);
+    }
+
+    private Document createDocusignDocument(byte[] data, String documentName, Long documentId) {
+        String docBase64 = new String(Base64.encode(data));
+        return new Document().documentBase64(docBase64)
+                .name(documentName)
+                .fileExtension("pdf")
+                .documentId(String.valueOf(documentId));
     }
 
     private Tabs createDefaultTabs(byte[] data, Document document, Signer signer) throws IOException {
