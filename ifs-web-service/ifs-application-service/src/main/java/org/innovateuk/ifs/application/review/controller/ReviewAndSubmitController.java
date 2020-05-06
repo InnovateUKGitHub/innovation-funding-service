@@ -176,7 +176,7 @@ public class ReviewAndSubmitController {
 
         if (!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-            return "redirect:/application/" + applicationId + "/confirm-submit";
+            return "redirect:/application/" + applicationId + "/confirm-submit?termsAgreed=true";
         }
 
         RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
