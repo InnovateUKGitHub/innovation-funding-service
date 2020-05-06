@@ -317,15 +317,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
             if (project.isUseDocusignForGrantOfferLetter()) {
                 return sendGrantOfferLetterSuccess(project).andOnSuccess(() ->
-                     docusignService.send(aDocusignRequest()
-                             .withRecipientUserId(projectManager.getId())
-                             .withName(projectManager.getName())
-                             .withEmail(projectManager.getEmail())
-                             .withSubject("")
-                             .withEmailBody(getEmailBody(projectManager.getName(), project.getApplication().getId(), project.getName()))
-                             .withFileAndContents(getGrantOfferLetterFileAndContents(projectId).getSuccess())
-                             .withDocusignType(DocusignType.SIGNED_GRANT_OFFER_LETTER)
-                             .withRedirectUrl(String.format("/project-setup/project/%d/offer", projectId)).build())
+                     docusignService.send(docusignRequest(projectManager, project))
                     .andOnSuccessReturnVoid((project::setSignedGolDocusignDocument)));
             } else {
                 NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
@@ -425,7 +417,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 project.setGrantOfferLetterRejectionReason(golRejectionReason);
                 if (project.isUseDocusignForGrantOfferLetter()) {
                     User projectManager = getExistingProjectManager(project).get().getUser();
-                    docusignService.resend(project.getSignedGolDocusignDocument().getId(), new DocusignRequest(projectManager.getId(), projectManager.getName(), projectManager.getEmail(), String.format("Sign Grant Offer Letter %d:%s", project.getApplication().getId(), project.getName()), getGrantOfferLetterFileAndContents(project.getId()).getSuccess(), DocusignType.SIGNED_GRANT_OFFER_LETTER, String.format("/project-setup/project/%d/offer", project.getId())))
+                    docusignService.resend(project.getSignedGolDocusignDocument().getId(), docusignRequest(projectManager, project))
                             .andOnSuccessReturnVoid((project::setSignedGolDocusignDocument));
                 }
                 return serviceSuccess();
@@ -509,6 +501,18 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
+    private DocusignRequest docusignRequest(User projectManager, Project project) {
+        return aDocusignRequest()
+            .withRecipientUserId(projectManager.getId())
+            .withName(projectManager.getName())
+            .withEmail(projectManager.getEmail())
+            .withSubject("Innovate UK sent you a document to review and sign")
+            .withEmailBody(getEmailBody(projectManager.getName(), project.getApplication().getId(), project.getName()))
+            .withFileAndContents(getGrantOfferLetterFileAndContents(project.getId()).getSuccess())
+            .withDocusignType(DocusignType.SIGNED_GRANT_OFFER_LETTER)
+            .withRedirectUrl(String.format("/project-setup/project/%d/offer", project.getId())).build();
+
+    }
     private String getEmailBody(String name, long applicationId, String projectName) {
        return String.format("<p>Dear %s</p>" +
                "<p>Please sign the grant offer letter %d: %s.</p>" +
