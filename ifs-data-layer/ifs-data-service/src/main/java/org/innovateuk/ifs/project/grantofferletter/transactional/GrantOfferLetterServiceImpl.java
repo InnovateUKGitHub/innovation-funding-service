@@ -47,6 +47,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.docusign.resource.DocusignRequest.DocusignRequestBuilder.aDocusignRequest;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
@@ -316,7 +317,15 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
             if (project.isUseDocusignForGrantOfferLetter()) {
                 return sendGrantOfferLetterSuccess(project).andOnSuccess(() ->
-                     docusignService.send(new DocusignRequest(projectManager.getId(), projectManager.getName(), projectManager.getEmail(), String.format("Sign Grant Offer Letter %d:%s", project.getApplication().getId(), project.getName()), getGrantOfferLetterFileAndContents(projectId).getSuccess(), DocusignType.SIGNED_GRANT_OFFER_LETTER, String.format("/project-setup/project/%d/offer", projectId)))
+                     docusignService.send(aDocusignRequest()
+                             .withRecipientUserId(projectManager.getId())
+                             .withName(projectManager.getName())
+                             .withEmail(projectManager.getEmail())
+                             .withSubject("")
+                             .withEmailBody(getEmailBody(projectManager.getName(), project.getApplication().getId(), project.getName()))
+                             .withFileAndContents(getGrantOfferLetterFileAndContents(projectId).getSuccess())
+                             .withDocusignType(DocusignType.SIGNED_GRANT_OFFER_LETTER)
+                             .withRedirectUrl(String.format("/project-setup/project/%d/offer", projectId)).build())
                     .andOnSuccessReturnVoid((project::setSignedGolDocusignDocument)));
             } else {
                 NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
@@ -498,5 +507,15 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
+    private String getEmailBody(String name, long applicationId, String projectName) {
+       return String.format("<p>Dear %s</p>" +
+               "<p>Please sign the grant offer letter %d: %s.</p>" +
+               "<p>The 'Review Document' link will take you to DocuSign's secure website, where you can safely sign the letter. It will then be submitted to us for approval and you will be notified when it has been approved.</p>" +
+               "<p>Yours sincerely</p>" +
+               "Innovate UK, part of UK Research and Innovation<br/>" +
+               "Tel: 0300 321 4357<br/>" +
+               "Email: competitions@innovateuk.ukri.org", name, applicationId, projectName);
     }
 }

@@ -55,6 +55,9 @@
             </th:block>
         </th:block>
 
+        <th:block th:if="${model.useDocusignForGrantOfferLetter and model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
+            <p class="govuk-body">Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
+        </th:block>
         <h2 class="govuk-heading-m">Grant offer letter</h2>
 
         <p class="govuk-body">
@@ -70,7 +73,7 @@
             <li>Edit it only if your changes have been fully approved.</li>
             <li>Use the additional information box to get details for your edits.</li>
             <li>Delete the additional information box.</li>
-            <li>Save the document as a PDF.</li>
+            <li>Save the document in portable document format (.pdf).</li>
         </ol>
 
         <h2 class="govuk-heading-m">Grant offer letter upload</h2>
@@ -185,9 +188,8 @@
                         <a class="govuk-link"
                            target="_blank"
                            th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}"
-                           th:text="${model.signedGrantOfferLetterFile?.filename}"
-                           aria-describedby="signed-gol-hint">signed-offer-letter.PDF</a>
-                        <span id="signed-gol-hint">(opens in a new window)</span>.
+                           th:text="|${model.signedGrantOfferLetterFile?.filename}| (opens in a new window)"
+                           aria-describedby="signed-gol-hint">signed-offer-letter.PDF</a>.
                     </p>
                 </th:block>
                 <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">

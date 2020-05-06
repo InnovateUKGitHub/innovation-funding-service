@@ -34,7 +34,7 @@ public class GrantOfferLetterModelPopulator {
         GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
         String docusignUrl = null;
-        if(state.getState().equals(GrantOfferLetterState.SENT) && project.isUseDocusignForGrantOfferLetter()) {
+        if(state.getState().equals(GrantOfferLetterState.SENT) && project.isUseDocusignForGrantOfferLetter() && projectManager) {
             docusignUrl = grantOfferLetterService.getDocusignUrl(projectId).getSuccess().getContent();
         }
 
