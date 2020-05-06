@@ -1,4 +1,16 @@
 *** Settings ***
+Documentation     IFS-7365 DocuSign Integration
+...
+...               IFS-7460 Enter funding sought, not funding level
+...
+...               IFS-7357 Allowing external users to complete viability & eligibility checks
+...
+...               IFS-7441 Allow a competition to remain open whilst applicants proceed through PS
+...
+...               IFS-7452 COVID-19 continuity awards - project costs
+...
+...               IFS-7440 Allow applicants to edit a submitted application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -30,11 +42,13 @@ New external project finance can create account
     Then The user should not see the element                 link = ${COVIDdeminimuscompetitionTitle}
 
 Create application to covid deminimus comp
+    [Documentation]  IFS-7441
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page   ${server}/competition/${COVIDdeminimuscompetitionId}/overview
     Then the user completes the covid deminimus application
 
 Funding sought validation
+    [Documentation]  IFS-7460
     Given the user clicks the button/link               link = Your funding
     When the user enters text to a text field           id = amount   210000
     And the user selects the radio button               otherFunding  false
@@ -42,28 +56,33 @@ Funding sought validation
     Then the user should see a field and summary error  Funding sought cannot be higher than your project costs.
 
 Applicant can add funding sought
+    [Documentation]  IFS-7460
     Given the user enters text to a text field           id = amount   21000
     When the user clicks the button/link                 id = mark-all-as-complete
     Then the user should see all finance subsections complete
     [Teardown]  the user clicks the button/link   link = Back to application overview
 
 Submit application
+    [Documentation]  IFS-7440
     Given the user clicks the button/link      id = application-overview-submit-cta
     And the user should not see the element    jQuery = .message-alert:contains("You will not be able to make changes")
     When the user clicks the button/link       id = submit-application-button
     Then the user should see the element       link = Reopen application
 
 Non lead cannot reopen competition
+    [Documentation]  IFS-7440
     Given log in as a different user           collaborator1@example.com  ${correct_password}
     When the user should see the element       link = ${COVIDdeminimusapplicationTitle1}
     Then the user should not see the element   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
 
 Non lead does not see reopen on submitted page
+    [Documentation]  IFS-7440
     Given the user clicks the button/link      link = ${COVIDdeminimusapplicationTitle1}
     When the user should see the element       jQuery = h2:contains("Application submitted")
     Then the user should not see the element   link = Reopen
 
 Lead can reopen application
+    [Documentation]  IFS-7440
     [Setup]  log in as a different user   &{lead_applicant_credentials}
     Given the user clicks the button/link  link = Dashboard
     When the user clicks the button/link   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
@@ -73,11 +92,13 @@ Lead can reopen application
     And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
+    [Documentation]  IFS-7440
     Given the user clicks the button/link     id = application-overview-submit-cta
     When the user should not see the element  jQuery = .message-alert:contains("You will not be able to make changes")
     Then the user clicks the button/link      id = submit-application-button
 
 Internal user can invite to assesment
+    [Documentation]  IFS-7441
     [Setup]  get application id by name and set as suite variable   ${COVIDdeminimusapplicationTitle1}
     Given Log in as a different user       &{Comp_admin1_credentials}
     When the user clicks the button/link   link = ${COVIDdeminimuscompetitionTitle}
@@ -109,23 +130,24 @@ Internal user is able to approve Spend profile and generates the GOL
 Applicant is able to upload the GOL
     [Documentation]  IFS-7365
     Given log in as a different user               &{lead_applicant_credentials}
-    When applicant uploads the GOL using Docusign  ${ProjectID}
+    When applicant uploads the GOL using Docusign  ${ProjectID}   ${tomorrowday}/${nextmonth}/${nextyear}
 
 Internal user is able to reject the GOL and applicant can re-upload
     [Documentation]  IFS-7365
     Given the internal user rejects the GOL             ${ProjectID}
     When log in as a different user                     &{lead_applicant_credentials}
     Then the applicant is able to see the rejected GOL  ${ProjectID}
-    And applicant uploads the GOL using Docusign        ${ProjectID}
+    And applicant uploads the GOL using Docusign        ${ProjectID}   ${tomorrowday}/${nextmonth}/${nextyear}
 
 Internal user is able to approve the GOL and the project is now Live
-      [Documentation]  IFS-7365
-      Given the internal user approve the GOL  ${ProjectID}
-      When log in as a different user          &{lead_applicant_credentials}
-      And the user navigates to the page       ${server}/project-setup/project/${ProjectID}
-      Then the user should see the element     jQuery = p:contains("The project is live")
+    [Documentation]  IFS-7365
+    Given the internal user approve the GOL  ${ProjectID}
+    When log in as a different user          &{lead_applicant_credentials}
+    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}
+    Then the user should see the element     jQuery = p:contains("The project is live")
 
 Competition goes into previous
+    [Documentation]   IFS-7441
     [Setup]  log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDdeminimuscompetitionTitle}
