@@ -95,7 +95,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         byte[] data = ByteStreams.toByteArray(request.getFileAndContents().getContentsSupplier().get());
 
         Document document = createDocusignDocument(data,
-                request.getSubject(),
+                request.getFileAndContents().getFileEntry().getName(),
                 docusignDocument.getId());
 
         Signer signer = createDocusignSigner(request.getEmail(),
@@ -107,7 +107,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         signer.setTabs(tabs);
 
         EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition();
-        envelopeDefinition.setEmailSubject("Please sign " + request.getSubject());
+        envelopeDefinition.setEmailSubject(request.getSubject());
         envelopeDefinition.setDocuments(asList(document));
         Recipients recipients = new Recipients();
         recipients.setSigners(asList(signer));
