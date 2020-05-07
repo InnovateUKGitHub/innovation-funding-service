@@ -84,6 +84,13 @@ Project finance user can upload a text document(.odt) file and remove it
     Then the user should see the element    jQuery = a:contains("${valid_odt}")+ .button-clear:contains("Remove")
     And the user can remove an attachment   ${valid_odt}
 
+Project finance user cannot upload a document type that is not allowed
+    [Documentation]    IFS-7215
+    [Tags]  HappyPath
+    Given the user uploads the file                 name = attachment  ${text_file}
+    Then the user should see a field error          ${finance_query_notes_filetype_error}
+    And the user clicks the button/link             jQuery = button:contains("Remove")
+
 Project finance user can upload more than one file and remove them
     [Documentation]    INFUND-4840, IFS-7215
     [Tags]
@@ -187,20 +194,20 @@ Applicant - Query response can be posted
     And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") small:contains("${today}")
     And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documentation")
 
-#Applicant - Respond to older query and cannot upload any file other than allowed file formats(.xls, .pdf and .docx) to the response
-#    [Documentation]    IFS-7215
-#    [Tags]
-#    When the user clicks the button/link        jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
-#    And the user uploads the file               name = attachment    ${text_file}
-#    Then the user should see a field error      ${wrong_filetype_validation_error}
+Applicant - Respond to older query and cannot upload any file other than allowed file formats(.xls, .pdf and .docx) to the response
+    [Documentation]    IFS-7215
+    [Tags]
+    Given the user clicks the button/link        jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
+    When the user uploads the file               name = attachment    ${text_file}
+    Then the user should see a field error       ${applicant_query_response_filetype_error}
+    And the user clicks the button/link          jQuery = button:contains("Remove")
 
-Applicant - Respond to older query and upload files.xls, .pdf and .docx) to the response
+Applicant - Respond to older query and upload files(.xls, .pdf and .docx) to the response
     [Documentation]    INFUND-4843, IFS-7215
     [Tags]
-    Given the user clicks the button/link         jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
-    And the user enters a query response details  ${valid_pdf}  ${valid_docx}  ${excel_file}
-    Then the user clicks the button/link          jQuery = .govuk-button:contains("Post response")
-    And the user should see the element           jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
+    Given the user enters a query response details  ${valid_pdf}  ${valid_docx}  ${excel_file}
+    When the user clicks the button/link            jQuery = .govuk-button:contains("Post response")
+    And the user should see the element             jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
 
 Applicant - Repond to Viability query
     [Documentation]  IFS-2746
@@ -378,7 +385,7 @@ Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user uploads the file                  name = attachment    ${text_file}
-    Then the user should see a field error           ${wrong_filetype_validation_error}
+    Then the user should see a field error           ${finance_query_notes_filetype_error}
 
 Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
