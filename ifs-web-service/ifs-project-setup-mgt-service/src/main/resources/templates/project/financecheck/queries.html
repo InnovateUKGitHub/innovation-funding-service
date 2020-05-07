@@ -123,11 +123,9 @@
                             <ul class="govuk-list">
                                 <li th:each="attachment : ${post.attachments}">
                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
-                                       th:text="${attachment.name}"
+                                       th:text="|${attachment.name} (opens in a new window)|"
                                        class="govuk-link"
-                                       target="_blank"
-                                       aria-describedby="supporting-documentation-hint">file</a>
-                                    <span id="supporting-documentation-hint">(opens in a new window)</span>
+                                       target="_blank">file</a>
                                 </li>
                             </ul>
                         </div>
@@ -197,8 +195,7 @@
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
                                                    th:text="|${model.newAttachmentLinks.get(attachmentId)} (opens in a new window)|"
                                                    target="_blank"
-                                                   class="govuk-link"
-                                                   aria-describedby="file-hint">File</a>
+                                                   class="govuk-link">File</a>
                                                 <button name="removeAttachment" th:value="${attachmentId}"
                                                         class="button-clear remove-file"
                                                         aria-label="Remove uploaded document">Remove

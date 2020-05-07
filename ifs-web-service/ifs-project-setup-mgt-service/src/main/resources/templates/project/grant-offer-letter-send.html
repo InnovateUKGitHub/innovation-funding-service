@@ -61,8 +61,8 @@
             <a class="govuk-link"
                target="_blank"
                th:href="@{/project/{id}/grant-offer-letter/template(id=${model.projectId})}"
-               aria-describedby="grant-offer-letter-hint">View the grant offer letter page</a>
-            <span id="grant-offer-letter-hint">(opens in a new window)</span>
+               aria-describedby="grant-offer-letter-hint">View the grant offer letter page (opens in a new window)
+            </a>
         </p>
 
         <ol class="govuk-list govuk-list--number">
@@ -185,9 +185,7 @@
                         <a class="govuk-link"
                            target="_blank"
                            th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}"
-                           th:text="${model.signedGrantOfferLetterFile?.filename}"
-                           aria-describedby="signed-gol-hint">signed-offer-letter.PDF</a>
-                        <span id="signed-gol-hint">(opens in a new window)</span>.
+                           th:text="|${model.signedGrantOfferLetterFile?.filename} (opens in a new window)|">signed-offer-letter.PDF</a>.
                     </p>
                 </th:block>
                 <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
