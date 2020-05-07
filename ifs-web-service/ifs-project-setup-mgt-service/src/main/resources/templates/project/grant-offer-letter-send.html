@@ -188,7 +188,7 @@
                         <a class="govuk-link"
                            target="_blank"
                            th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}"
-                           th:text="|${model.signedGrantOfferLetterFile?.filename}| (opens in a new window)"
+                           th:text="|${model.signedGrantOfferLetterFile?.filename} (opens in a new window)|"
                            aria-describedby="signed-gol-hint">signed-offer-letter.PDF</a>.
                     </p>
                 </th:block>
