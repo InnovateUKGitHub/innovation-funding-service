@@ -269,8 +269,6 @@ The user should be able to see change start date instructions
     the user should not see the element         css = input.govuk-input[name="projectStartDate.year"]
     the user should see the element             jQuery = p:contains("To request a change to the project start date please contact Innovate UK.")
 
-
-
 All the fields are completed
     the user should see the element   jQuery = td:contains("Correspondence address")~ td strong:contains("Complete")
 

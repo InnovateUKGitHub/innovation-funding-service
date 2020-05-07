@@ -63,6 +63,12 @@ ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companiesHouseLookupEnabled = ext.has('ifs.companies.house.enabled') ? ext.get('ifs.companies.house.enabled') : false
 ext.companiesHouseKey = ext.has('ifs.companies.house.key') ? ext.get('ifs.companies.house.key') : 'mock-key'
 
+ext.docusignAccountId = ext.has('ifs.docusign.api.account') ? ext.get('ifs.docusign.api.account') : 'mock-key'
+ext.docusignUserId = ext.has('ifs.docusign.auth.user') ? ext.get('ifs.docusign.auth.user') : 'mock-key'
+ext.docusignClientId = ext.has('ifs.docusign.auth.client') ? ext.get('ifs.docusign.auth.client') : 'mock-key'
+ext.docusignAuthKey = ext.has('ifs.docusign.auth.key') ? ext.get('ifs.docusign.auth.key') : 'mock-key'
+
+
 ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
@@ -110,6 +116,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.12'
     compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1"
+    compile 'com.docusign:docusign-esign-java:3.2.0'
 
     compile 'javax.mail:mail:1.4.7'
     compile "org.apache.httpcomponents:httpasyncclient"
