@@ -55,9 +55,6 @@
             </th:block>
         </th:block>
 
-        <th:block th:if="${model.useDocusignForGrantOfferLetter and model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true and model.projectIsActive}">
-            <p class="govuk-body">Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
-        </th:block>
         <h2 class="govuk-heading-m">Grant offer letter</h2>
 
         <p class="govuk-body">
