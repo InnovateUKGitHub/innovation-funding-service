@@ -117,14 +117,14 @@
 
             <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
                   th:object="${form}" method="post" enctype="multipart/form-data">
-                <p class="govuk-body">Any additional supporting materials should be uploaded to the Annex.</p>
+                <p class="govuk-body">Any additional supporting materials should be uploaded to the annex.</p>
                 <details th:unless="${model.isSentToProjectTeam()}"
                          class="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">What are the requirements for upload?</span>
                     </summary>
                     <div class="govuk-details__text">
-                        <p class="govuk-body">The Annex should:</p>
+                        <p class="govuk-body">The annex should:</p>
                         <ul class="govuk-list govuk-list--bullet">
                             <li>be in portable document format (.pdf)</li>
                             <li>be less than 10MB in size</li>
