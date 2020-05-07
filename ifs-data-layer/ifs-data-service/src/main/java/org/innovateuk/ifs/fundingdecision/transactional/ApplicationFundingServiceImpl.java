@@ -37,6 +37,7 @@ import java.util.stream.StreamSupport;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NONE_PROVIDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
@@ -84,6 +85,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+        if (applicationFundingDecisions.isEmpty()) {
+            return serviceFailure(FUNDING_PANEL_DECISION_NONE_PROVIDED);
+        }
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Application> applications = findValidApplications(applicationFundingDecisions, competitionId);
             return saveFundingDecisionData(applications, applicationFundingDecisions);
@@ -95,14 +99,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         return serviceSuccess(StreamSupport.stream( applicationRepository.findAllById(applicationIds).spliterator(), false)
                 .map(application -> {
                     Organisation organisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
-                    FundingDecision fundingDecision;
-                    if (application.getFundingDecision() == null) {
-                        fundingDecision = FundingDecision.UNDECIDED;
-                    } else {
-                        fundingDecision = FundingDecision.valueOf(application.getFundingDecision().name());
-                    }
-                    return new FundingDecisionToSendApplicationResource(application.getId(), application.getName(), organisation.getName(), fundingDecision);
+                    return new FundingDecisionToSendApplicationResource(application.getId(), application.getName(), organisation.getName(), FundingDecision.valueOf(application.getFundingDecision().name()));
                 }).collect(toList()));
+
     }
 
     @Override
@@ -155,9 +154,6 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     }
 
     private List<Application> findValidApplications(Map<Long, FundingDecision> applicationFundingDecisions, long competitionId) {
-        if (applicationFundingDecisions.isEmpty()) {
-            return Collections.emptyList();
-        }
         return applicationRepository.findAllowedApplicationsForCompetition(applicationFundingDecisions.keySet(), competitionId);
     }
 

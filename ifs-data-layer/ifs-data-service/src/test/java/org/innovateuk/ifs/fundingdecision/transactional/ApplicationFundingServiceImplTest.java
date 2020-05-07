@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
@@ -493,7 +494,10 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
 
         ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
 
-        assertTrue(result.isSuccess());
+        assertTrue(result.isFailure());
+        assertEquals(1, result.getFailure().getErrors().size());
+        assertEquals("FUNDING_PANEL_DECISION_NONE_PROVIDED", result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals(HttpStatus.BAD_REQUEST, result.getFailure().getErrors().get(0).getStatusCode());
         verify(applicationRepository, never()).findAllowedApplicationsForCompetition(anySet(), anyLong());
     }
 
