@@ -33,9 +33,8 @@
             <a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}"
                class="govuk-link"
                target="_blank"
-               rel="external noopener noreferrer"
-               aria-describedby="competition-details-hint">details of this competition (opens in a new window)</a>
-            before the interview panel.</p>
+               rel="external noopener noreferrer">details of this competition (opens in a new window)</a>before the interview panel.
+        </p>
         <br>
 
         <form th:action="@{/invite/interview/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
