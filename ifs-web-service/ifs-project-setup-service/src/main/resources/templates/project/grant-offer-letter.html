@@ -59,11 +59,9 @@
                 <th:block th:if="${model.grantOfferLetterSent}">
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
-                           th:text="${model.grantOfferLetterFile?.filename}"
+                           th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
                            target="_blank"
-                           class="govuk-link grant-offer-download"
-                           aria-describedby="gol-download-hint">Grant offer letter 2016-07-28a.PDF</a>
-                        <span id="gol-download-hint">(opens in a new window)</span>.
+                           class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>.
                     </p>
                 </th:block>
 
@@ -71,11 +69,9 @@
                     <h2 class="govuk-heading-m">Signed grant offer letter</h2>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}"
-                           th:text="${model.signedGrantOfferLetterFile.filename}"
+                           th:text="|${model.signedGrantOfferLetterFile.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank"
-                           aria-describedby="signed-gol-hint">Signed grant offer letter 2016-07-28a.PDF</a>
-                        <span id="signed-gol-hint">(opens in a new window)</span>.
+                           target="_blank">Signed grant offer letter 2016-07-28a.PDF</a>.
                     </p>
                 </th:block>
 
@@ -84,14 +80,11 @@
                     <p class="govuk-body">The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
-                           th:text="${model.additionalContractFile?.filename}"
+                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank"
-                           aria-describedby="gol-hint">Grant offer letter 2016-07-28a.PDF</a>
-                        <span id="gol-hint">(opens in a new window)</span>.
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>.
                     </p>
                 </th:block>
-
 
                 <th:block th:if="${model.useDocusign and !model.submitted}">
                     <h2 class="govuk-heading-m">Grant offer letter</h2>
@@ -157,11 +150,9 @@
                 <h2 class="govuk-heading-m">Grant offer letter</h2>
                 <p class="govuk-body">
                     <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
-                       th:text="${model.grantOfferLetterFile?.filename}"
+                       th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
                        target="_blank"
-                       class="govuk-link grant-offer-download"
-                       aria-describedby="gol-hint">Grant offer letter 2016-07-28a.PDF</a>
-                    <span id="gol-hint">(opens in a new window)</span>.
+                       class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>.
                 </p>
 
                 <th:block th:if="${model.additionalContractFile}">
@@ -169,11 +160,9 @@
                     <p class="govuk-body">The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
-                           th:text="${model.additionalContractFile?.filename}"
+                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank"
-                           aria-describedby="gol-hint">Grant offer letter 2016-07-28a.PDF</a>
-                        <span id="gol-hint">(opens in a new window)</span>.
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>.
                     </p>
                 </th:block>
             </th:block>
