@@ -187,13 +187,13 @@ internal user generates the GOL
     #horrible hack but we need to wait for virus scanning
     sleep  5s
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send to project team")
-    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
+    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
 
 Applicant uploads the GOL
     [Arguments]  ${projectID}
     the user navigates to the page        ${server}/project-setup/project/${projectID}
-    the user clicks the button/link       link = Grant offer letter
+    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
@@ -201,9 +201,9 @@ Applicant uploads the GOL
 Applicant uploads the GOL using Docusign
     [Arguments]  ${projectID}  ${date}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
-    the user clicks the button/link           link = Grant offer letter
-    the user clicks the button/link           link = docusign
-    the user should see the element           jQuery = span:contains("Please Review & Act on These Documents")
+    the user clicks the button/link           jquery = a:contains("Grant offer letter")
+    the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           jQuery = span:contains("Please review the documents below.")
     the user selects the checkbox             disclosureAccepted
     the user clicks the button/link           jQuery = button:contains("Continue")
     the user clicks the button/link           jQuery = span:contains("Start")
