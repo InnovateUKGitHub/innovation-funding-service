@@ -213,7 +213,7 @@ PM should be able upload a file and then access the Send button
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     And the user clicks the button/link              link = Grant offer letter
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
-    Then the user should see the element             link = ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf} (opens in a new window)
     When the user reloads the page
     Then the user should see the element             css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     And the user clicks the button/link              link = Set up your project
