@@ -39,7 +39,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     @Override
     public CompetitionSetupSection sectionToFill() {
-        return CompetitionSetupSection.ELIGIBILITY;
+        return CompetitionSetupSection.PROJECT_ELIGIBILITY;
     }
 
     @Override

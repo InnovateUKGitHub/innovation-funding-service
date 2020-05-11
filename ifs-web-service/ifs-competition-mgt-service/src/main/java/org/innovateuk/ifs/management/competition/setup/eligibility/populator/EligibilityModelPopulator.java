@@ -41,7 +41,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
-        return CompetitionSetupSection.ELIGIBILITY;
+        return CompetitionSetupSection.PROJECT_ELIGIBILITY;
     }
 
     @Override

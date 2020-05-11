@@ -43,7 +43,7 @@ public class CompetitionSetupSectionTest {
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
 		
-		assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
+		assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, result);
 	}
 	
 	@Test
@@ -76,7 +76,7 @@ public class CompetitionSetupSectionTest {
 	@Test
 	public void testAllSectionsEditableWhenSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
-		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.ELIGIBILITY;
+		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
 		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
 		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
 		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
@@ -124,7 +124,7 @@ public class CompetitionSetupSectionTest {
 	@Test
 	public void testSectionsNotEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
-		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.ELIGIBILITY;
+		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
 		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
 		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
 		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;

@@ -48,7 +48,7 @@ public class EligibilityModelPopulatorTest {
     public void testSectionToPopulateModel() {
         CompetitionSetupSection result = populator.sectionToPopulateModel();
 
-        assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
+        assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, result);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class EligibilityModelPopulatorTest {
         assertEquals(researchCategories, viewModel.getResearchCategories());
         assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
         assertEquals("formattedcategories", viewModel.getResearchCategoriesFormatted());
-        assertEquals(CompetitionSetupSection.ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
+        assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class EligibilityModelPopulatorTest {
         return new GeneralSetupViewModel(
                 Boolean.FALSE,
                 competition,
-                CompetitionSetupSection.ELIGIBILITY,
+                CompetitionSetupSection.PROJECT_ELIGIBILITY,
                 CompetitionSetupSection.values(),
                 Boolean.TRUE
         );

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount.NONE;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.PROJECT_ELIGIBILITY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 
 /**
@@ -55,7 +55,7 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     @Override
     public CompetitionSetupSection sectionToSave() {
-        return ELIGIBILITY;
+        return PROJECT_ELIGIBILITY;
     }
 
     @Override

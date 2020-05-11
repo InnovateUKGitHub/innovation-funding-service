@@ -254,7 +254,7 @@ public class CompetitionSetupController {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.PROJECT_ELIGIBILITY, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")

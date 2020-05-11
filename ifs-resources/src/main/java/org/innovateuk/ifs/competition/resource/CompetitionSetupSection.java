@@ -22,7 +22,7 @@ public enum CompetitionSetupSection {
     INITIAL_DETAILS(2L, "initial", "Initial details", emptyList(), true),
     TERMS_AND_CONDITIONS(9L, "terms-and-conditions", "Terms and conditions", emptyList(), false),
     ADDITIONAL_INFO(3L, "additional", "Funding information", emptyList(), true),
-    ELIGIBILITY(4L, "eligibility", "Eligibility", emptyList(), false),
+    PROJECT_ELIGIBILITY(4L, "project-eligibility", "Project eligibility", emptyList(), false),
     COMPLETION_STAGE(11L, "completion-stage", "Milestones", emptyList(), false, Optional.empty()),
     MILESTONES(5L, "milestones", "Milestones", emptyList(), true, Optional.of(COMPLETION_STAGE)),
     APPLICATION_FORM(6L, "application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),

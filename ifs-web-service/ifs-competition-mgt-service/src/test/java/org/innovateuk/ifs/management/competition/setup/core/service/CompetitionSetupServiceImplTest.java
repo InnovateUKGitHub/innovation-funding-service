@@ -108,16 +108,16 @@ public class CompetitionSetupServiceImplTest {
                 .build();
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
-        when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.PROJECT_ELIGIBILITY);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
-                .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
+                .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.PROJECT_ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
                         new CollaborationLevel[]{}, emptyList(), "", new FundingLevel[]{}, emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
 
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator, notMatchingPopulator));
 
-        CompetitionSetupSection section = CompetitionSetupSection.ELIGIBILITY;
+        CompetitionSetupSection section = CompetitionSetupSection.PROJECT_ELIGIBILITY;
 
         CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
 
@@ -232,7 +232,7 @@ public class CompetitionSetupServiceImplTest {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = asMap(
                 INITIAL_DETAILS, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE),
-                CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
@@ -250,7 +250,7 @@ public class CompetitionSetupServiceImplTest {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.FALSE));
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));
@@ -285,7 +285,7 @@ public class CompetitionSetupServiceImplTest {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE));
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
@@ -313,7 +313,7 @@ public class CompetitionSetupServiceImplTest {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.empty());
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM,Optional.of( Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.TERMS_AND_CONDITIONS, Optional.of(Boolean.TRUE));

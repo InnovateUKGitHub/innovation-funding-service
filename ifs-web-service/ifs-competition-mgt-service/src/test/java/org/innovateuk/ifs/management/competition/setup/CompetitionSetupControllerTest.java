@@ -607,7 +607,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         List<CompetitionSetupSection> sections = asList(
                 CompetitionSetupSection.ADDITIONAL_INFO,
-                CompetitionSetupSection.ELIGIBILITY,
+                CompetitionSetupSection.PROJECT_ELIGIBILITY,
                 CompetitionSetupSection.COMPLETION_STAGE,
                 CompetitionSetupSection.MILESTONES,
                 CompetitionSetupSection.APPLICATION_FORM,
@@ -648,7 +648,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ELIGIBILITY))
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY))
         )
                 .thenReturn(serviceSuccess());
 
@@ -667,7 +667,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ELIGIBILITY));
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY));
     }
 
     @Test
@@ -695,7 +695,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ELIGIBILITY)
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
         );
     }
 
@@ -724,7 +724,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ELIGIBILITY)
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
         );
     }
 
@@ -740,7 +740,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupService.saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ELIGIBILITY))
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY))
         )
                 .thenReturn(serviceSuccess());
 
@@ -759,7 +759,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         verify(competitionSetupService).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
-                eq(CompetitionSetupSection.ELIGIBILITY)
+                eq(CompetitionSetupSection.PROJECT_ELIGIBILITY)
         );
     }
 

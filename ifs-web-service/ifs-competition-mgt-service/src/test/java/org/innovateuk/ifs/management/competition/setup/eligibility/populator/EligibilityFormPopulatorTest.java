@@ -49,7 +49,7 @@ public class EligibilityFormPopulatorTest {
     @Test
     public void testSectionToFill() {
         CompetitionSetupSection result = service.sectionToFill();
-        assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
+        assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, result);
     }
 
     @Test

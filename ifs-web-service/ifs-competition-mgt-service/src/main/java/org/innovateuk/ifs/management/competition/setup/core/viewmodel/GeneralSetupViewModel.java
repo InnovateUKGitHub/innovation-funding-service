@@ -18,7 +18,7 @@ public class GeneralSetupViewModel {
     private static final List<CompetitionSetupSection> COMPETITION_SETUP_SECTIONS = asList(
             CompetitionSetupSection.TERMS_AND_CONDITIONS,
             CompetitionSetupSection.ADDITIONAL_INFO,
-            CompetitionSetupSection.ELIGIBILITY,
+            CompetitionSetupSection.PROJECT_ELIGIBILITY,
             CompetitionSetupSection.APPLICATION_FORM);
 
     private static final List<CompetitionSetupSection> ASSESSMENT_SECTIONS = singletonList(
