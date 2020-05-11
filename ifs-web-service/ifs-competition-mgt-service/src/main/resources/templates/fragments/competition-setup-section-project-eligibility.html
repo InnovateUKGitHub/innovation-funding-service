@@ -7,10 +7,10 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project Eligibility',size='govuk-heading-xl'" />
 
-    <form th:action="@{(${model.general.editable} ? '' : 'eligibility/edit')}" method="post"
+    <form th:action="@{(${model.general.editable} ? '' : 'project-eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id}"
-          data-section="eligibility">
+          data-section="project-eligibility">
 
         <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />
