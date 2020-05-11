@@ -277,7 +277,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
 
     private void linkGrantOfferLetterFileToProject(byte[] results, Project project) throws IOException {
         InputStream stream = ByteSource.wrap(results).openStream();
-        FileEntryResource fileEntryResource = new FileEntryResource("SignedGrantOfferLetter", MediaType.APPLICATION_PDF.toString(), results.length);
+        FileEntryResource fileEntryResource = new FileEntryResource("SignedGrantOfferLetter.pdf", MediaType.APPLICATION_PDF.toString(), results.length);
 
         fileService.createFile(fileEntryResource, () -> stream)
                 .andOnSuccessReturnVoid(fileDetails -> {
