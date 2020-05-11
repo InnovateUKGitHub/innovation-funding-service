@@ -76,7 +76,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
+    public void populateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionCode("code")
@@ -100,7 +100,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testPopulateCompetitionSectionModelAttributesEligibility() {
+    public void populateCompetitionSectionModelAttributesEligibility() {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
                 .withSetupComplete(false)
@@ -122,7 +122,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
 
         verifyCommonModelAttributes(viewModel, competition, section);
-        assertEquals("section-eligibility", viewModel.getGeneral().getCurrentSectionFragment());
+        assertEquals("section-project-eligibility", viewModel.getGeneral().getCurrentSectionFragment());
 
         verify(matchingPopulator).populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class));
         verify(notMatchingPopulator, never()).populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class));
@@ -142,7 +142,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testGetSectionFormData() {
+    public void getSectionFormData() {
         CompetitionResource competitionResource = newCompetitionResource().build();
 
         CompetitionSetupFormPopulator matchingPopulator = mock(CompetitionSetupFormPopulator.class);
@@ -165,7 +165,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testSaveSection() {
+    public void saveSection() {
         CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
@@ -223,7 +223,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testIsCompetitionReadyToOpen() {
+    public void isCompetitionReadyToOpen() {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -246,7 +246,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testIsCompetitionReadyToOpenFailure() {
+    public void isCompetitionReadyToOpenFailure() {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.FALSE));
@@ -266,7 +266,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testSetCompetitionAsReadyToOpenWhenReadyToOpen() {
+    public void setCompetitionAsReadyToOpenWhenReadyToOpen() {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.READY_TO_OPEN)
@@ -281,7 +281,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testSetCompetitionAsReadyToOpenSuccess() {
+    public void setCompetitionAsReadyToOpenSuccess() {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE));
@@ -309,7 +309,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testSetCompetitionAsReadyToOpenFail() {
+    public void setCompetitionAsReadyToOpenFail() {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.empty());
@@ -337,7 +337,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testPopulateModel() {
+    public void populateModel() {
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
         CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
@@ -364,7 +364,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
-    public void testPopulateModel_competitionNotSetupAndLive() {
+    public void populateModel_competitionNotSetupAndLive() {
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 

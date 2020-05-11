@@ -242,7 +242,7 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
 
-    @PostMapping("/{competitionId}/section/eligibility")
+    @PostMapping("/{competitionId}/section/project-eligibility")
     public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,

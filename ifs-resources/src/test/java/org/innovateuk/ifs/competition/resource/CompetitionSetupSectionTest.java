@@ -39,7 +39,7 @@ public class CompetitionSetupSectionTest {
 	
 	@Test
 	public void testFromPathEligibility() {
-		String path = "eligibility";
+		String path = "project-eligibility";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
 		

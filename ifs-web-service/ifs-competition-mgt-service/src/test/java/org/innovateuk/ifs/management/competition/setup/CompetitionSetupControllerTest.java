@@ -630,7 +630,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"))
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"));
 
@@ -652,7 +652,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         )
                 .thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility")
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
@@ -663,7 +663,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("resubmission", "yes")
                 .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility"));
 
         verify(competitionSetupService).saveCompetitionSetupSection(isA(CompetitionSetupForm.class),
                 eq(competition),
@@ -679,7 +679,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility")
                 .param("multipleStream", "yes")
                 .param("streamName", "")
                 .param("researchCategoryId", "1", "2", "3")
@@ -709,7 +709,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
 
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility")
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
@@ -744,7 +744,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         )
                 .thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility")
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
@@ -754,7 +754,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("resubmission", "no")
                 .param("overrideFundingRules", "false"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
+                .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/project-eligibility"));
 
         verify(competitionSetupService).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
