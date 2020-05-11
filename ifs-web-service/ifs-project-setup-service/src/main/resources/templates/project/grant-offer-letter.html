@@ -88,7 +88,7 @@
 
                 <th:block th:if="${model.useDocusign and !model.submitted}">
                     <h2 class="govuk-heading-m">Grant offer letter</h2>
-                    <p class="govuk-body">The project manager must <a th:if="${model.projectManager and model.docusignUrl != null}" class="govuk-link" th:href="${model.docusignUrl}">review and sign the grant offer letter</a><th:block th:if="${!model.projectManager or model.docusignUrl == null}">review and sign the grant offer letter</th:block> on DocuSign, our secure electronic signature partner</p>
+                    <p class="govuk-body">The project manager must <a th:if="${model.projectManager}" class="govuk-link" th:href="@{/project/{projectId}/offer/docusign(projectId=${model.projectId})}">review and sign the grant offer letter</a><th:block th:unless="${model.projectManager}">review and sign the grant offer letter</th:block> on DocuSign, our secure electronic signature partner</p>
                     <p class="govuk-body">Please <a href="/info/contact">contact us</a> if you have any accessibility issues with the DocSign process.</p>
                     <details class="govuk-details">
                         <summary class="govuk-details__summary">
