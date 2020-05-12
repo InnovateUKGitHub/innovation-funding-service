@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -96,6 +97,16 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     public RestResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
         String url = projectRestURL + "/" + projectId + "/additional-contract?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<StringResource> getDocusignUrl(long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/docusign-url", StringResource.class);
+    }
+
+    @Override
+    public RestResult<Void> importSignedOfferLetter(long projectId) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/docusign-import-document");
     }
 
 }

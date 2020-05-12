@@ -60,9 +60,7 @@
         <p class="govuk-body">
             <a class="govuk-link"
                target="_blank"
-               th:href="@{/project/{id}/grant-offer-letter/template(id=${model.projectId})}"
-               aria-describedby="grant-offer-letter-hint">View the grant offer letter page</a>
-            <span id="grant-offer-letter-hint">(opens in a new window)</span>
+               th:href="@{/project/{id}/grant-offer-letter/template(id=${model.projectId})}">View the grant offer letter page (opens in a new window)</a>
         </p>
 
         <ol class="govuk-list govuk-list--number">
@@ -70,7 +68,7 @@
             <li>Edit it only if your changes have been fully approved.</li>
             <li>Use the additional information box to get details for your edits.</li>
             <li>Delete the additional information box.</li>
-            <li>Save the document as a PDF.</li>
+            <li>Save the document in portable document format (.pdf).</li>
         </ol>
 
         <h2 class="govuk-heading-m">Grant offer letter upload</h2>
@@ -88,7 +86,7 @@
                     <div class="govuk-details__text">
                         <p class="govuk-body">The grant offer letter should:</p>
                         <ul class="govuk-list govuk-list--bullet">
-                            <li>be in a portable document format (.pdf)</li>
+                            <li>be in portable document format (.pdf)</li>
                             <li>be less than 10MB in size</li>
                         </ul>
                     </div>
@@ -108,7 +106,7 @@
         </div>
 
         <h2 class="govuk-heading-m">Annex</h2>
-        <p class="govuk-body" th:unless="${model.additionalContractFile}">The Annex contains any additional contracts
+        <p class="govuk-body" th:unless="${model.additionalContractFile}">The annex contains any additional contracts
             that were agreed upon during the application. In signing the grant offer letter you also agree to any
             conditions stated in the annex.</p>
 
@@ -116,16 +114,16 @@
 
             <form th:action="@{/project/{id}/grant-offer-letter/upload-annex(id=${model.projectId})}"
                   th:object="${form}" method="post" enctype="multipart/form-data">
-                <p class="govuk-body">Any additional supporting materials should be uploaded to the Annex.</p>
+                <p class="govuk-body">Any additional supporting materials should be uploaded to the annex.</p>
                 <details th:unless="${model.isSentToProjectTeam()}"
                          class="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">What are the requirements for upload?</span>
                     </summary>
                     <div class="govuk-details__text">
-                        <p class="govuk-body">The Annex should:</p>
+                        <p class="govuk-body">The annex should:</p>
                         <ul class="govuk-list govuk-list--bullet">
-                            <li>be in a portable document format (.pdf)</li>
+                            <li>be in portable document format (.pdf)</li>
                             <li>be less than 10MB in size</li>
                         </ul>
                     </div>
@@ -172,7 +170,7 @@
                     </div>
                 </form>
                 <button data-js-modal="modal-accept-send-gol" id="send-gol" class="govuk-button">
-                    Send to project team
+                    Send letter to project team
                 </button>
             </div>
         </th:block>
@@ -185,9 +183,7 @@
                         <a class="govuk-link"
                            target="_blank"
                            th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}"
-                           th:text="${model.signedGrantOfferLetterFile?.filename}"
-                           aria-describedby="signed-gol-hint">signed-offer-letter.PDF</a>
-                        <span id="signed-gol-hint">(opens in a new window)</span>.
+                           th:text="|${model.signedGrantOfferLetterFile?.filename} (opens in a new window)|">signed-offer-letter.PDF</a>
                     </p>
                 </th:block>
                 <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">

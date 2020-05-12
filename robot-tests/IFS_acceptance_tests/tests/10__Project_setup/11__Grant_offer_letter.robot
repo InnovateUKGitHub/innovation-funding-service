@@ -96,7 +96,6 @@ GOL not generated before spend profiles have been approved
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
-    [Tags]
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page     ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the element    css = #table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok       # Project details
@@ -130,7 +129,6 @@ Non lead should not be able to see GOL until it is sent by IUK
 
 Comp Admin cannot upload big or non-pdf grant offer letter
     [Documentation]  INFUND-7049
-    [Tags]
     [Setup]  log in as a different user                 &{Comp_admin1_credentials}
     Given the user navigates to the page                ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     When the user uploads a file                        grantOfferLetter  ${too_large_pdf}
@@ -141,15 +139,15 @@ Comp Admin cannot upload big or non-pdf grant offer letter
 Comp Admin is able to navigate to the Grant Offer letter page
     [Documentation]  IFS-5865
     Given the user navigates to the page         ${server}/project-setup-management/project/${PS_LP_Application_Project_Id}/grant-offer-letter/send
-    When the user clicks the button/link         link = View the grant offer letter page
+    When the user clicks the button/link         jQuery = a:contains("View the grant offer letter page")
     Then the user is able to see the Grant Offer letter page
 
 Validating GOL page error message
     [Documentation]  IFS-5865
     [Setup]  the user navigates to the page              ${server}/project-setup-management/project/${Elbow_Grease_Project_Id}/grant-offer-letter/send
     Given the user uploads a file                        grantOfferLetter  ${valid_pdf}
-    When the user clicks the button/link                 jQuery = button:contains("Send to project team")
-    And the user clicks the button/link                  jQuery = button:contains("Publish to project team")
+    When the user clicks the button/link                 jQuery = button:contains("Send letter to project team")
+    And the user clicks the button/link                  jQuery = button:contains("Send grant offer letter")
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
 
 Comp Admin user uploads new grant offer letter
@@ -159,7 +157,7 @@ Comp Admin user uploads new grant offer letter
     When the user uploads a file                annex  ${valid_pdf}
     And the user selects the checkbox           confirmation
     And the user clicks the button/link         id = send-gol
-    And the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
+    And the user clicks the button/link         jQuery = .modal-accept-send-gol .govuk-button:contains("Send grant offer letter")
     Then the user should not see the element    css = [name = "removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the element        jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.waiting   # GOL
@@ -215,7 +213,7 @@ PM should be able upload a file and then access the Send button
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     And the user clicks the button/link              link = Grant offer letter
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
-    Then the user should see the element             link = ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf} (opens in a new window)
     When the user reloads the page
     Then the user should see the element             css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     And the user clicks the button/link              link = Set up your project
