@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -97,6 +98,12 @@ public class Project implements ProcessActivity {
 
     @OneToOne(mappedBy = "target", cascade = CascadeType.ALL, optional=true, fetch = FetchType.LAZY)
     private ProjectProcess projectProcess;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="signed_gol_docusign_document_id", referencedColumnName = "id")
+    private DocusignDocument signedGolDocusignDocument;
+
+    private boolean useDocusignForGrantOfferLetter;
 
     public Project() {}
 
@@ -357,5 +364,25 @@ public class Project implements ProcessActivity {
 
     public ProjectState getProjectState() {
         return getProjectProcess().getProcessState();
+    }
+
+    public DocusignDocument getSignedGolDocusignDocument() {
+        return signedGolDocusignDocument;
+    }
+
+    public void setSignedGolDocusignDocument(DocusignDocument signedGolDocusignDocument) {
+        this.signedGolDocusignDocument = signedGolDocusignDocument;
+    }
+
+    public void setProjectProcess(ProjectProcess projectProcess) {
+        this.projectProcess = projectProcess;
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
+    }
+
+    public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
 }

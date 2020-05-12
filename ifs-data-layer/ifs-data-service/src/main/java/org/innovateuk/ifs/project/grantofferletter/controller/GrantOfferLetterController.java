@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +34,9 @@ public class GrantOfferLetterController {
 
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
+
+    @Autowired
+    private DocusignService docusignService;
 
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
@@ -164,5 +169,16 @@ public class GrantOfferLetterController {
     @GetMapping("/{projectId}/grant-offer-letter/current-state")
     public RestResult<GrantOfferLetterStateResource> getGrantOfferLetterState(@PathVariable("projectId") final Long projectId) {
         return grantOfferLetterService.getGrantOfferLetterState(projectId).toGetResponse();
+    }
+    @GetMapping("/{projectId}/grant-offer-letter/docusign-url")
+    public RestResult<StringResource> getDocusignUrl(
+            @PathVariable long projectId) {
+        return grantOfferLetterService.getDocusignUrl(projectId).toGetResponse();
+    }
+
+    @PostMapping("/{projectId}/grant-offer-letter/docusign-import-document")
+    public RestResult<Void> importSignedOfferLetter(
+            @PathVariable long projectId) {
+        return grantOfferLetterService.importGrantOfferLetter(projectId).toPostResponse();
     }
 }
