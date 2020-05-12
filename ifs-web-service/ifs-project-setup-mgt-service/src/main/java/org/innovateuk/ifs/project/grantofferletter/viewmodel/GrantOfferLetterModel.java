@@ -26,6 +26,7 @@ public class GrantOfferLetterModel {
     private final GrantOfferLetterStateResource grantOfferState;
     private final String grantOfferLetterRejectionReason;
     private final ProjectState projectState;
+    private final boolean useDocusignForGrantOfferLetter;
 
     public GrantOfferLetterModel(long competitionId,
                                  boolean h2020,
@@ -39,7 +40,8 @@ public class GrantOfferLetterModel {
                                  FileDetailsViewModel signedGrantOfferLetterFile,
                                  GrantOfferLetterStateResource grantOfferState,
                                  String grantOfferLetterRejectionReason,
-                                 ProjectState projectState) {
+                                 ProjectState projectState,
+                                 boolean useDocusignForGrantOfferLetter) {
         this.competitionId = competitionId;
         this.h2020 = h2020;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -53,6 +55,7 @@ public class GrantOfferLetterModel {
         this.grantOfferState = grantOfferState;
         this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
         this.projectState = projectState;
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
     }
 
     public long getCompetitionId() {
@@ -115,6 +118,10 @@ public class GrantOfferLetterModel {
 
     public boolean isProjectIsActive() {
         return projectState.isActive();
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
     }
 
     @Override
