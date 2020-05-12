@@ -88,7 +88,7 @@ public class ApplicationTeamPopulator {
 
         sort(organisationViewModels);
 
-        return new ApplicationTeamViewModel(applicationId, application.getName(), questionId, organisationViewModels, user.getId(),
+        return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),
                 leadApplicant,
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
                 application.isOpen() && competition.isOpen(),

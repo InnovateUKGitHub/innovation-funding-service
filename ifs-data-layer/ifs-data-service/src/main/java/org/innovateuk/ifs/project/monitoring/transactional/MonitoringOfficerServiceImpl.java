@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -106,14 +108,17 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
 
     @Override
     public ServiceResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId) {
-        return find(projectRepository.findById(projectId), notFoundError(Project.class))
-                .andOnSuccess(project -> {
-                    if (project.getProjectMonitoringOfficer().isPresent()) {
-                        return toMonitoringOfficerResource(project.getProjectMonitoringOfficer().get(), projectId);
-                    } else {
-                        return legacyMonitoringOfficer(projectId);
-                    }
-                });
+        Optional<MonitoringOfficer> monitoringOfficer = monitoringOfficerRepository.findOneByProjectIdAndRole(projectId, ProjectParticipantRole.MONITORING_OFFICER);
+        if (monitoringOfficer.isPresent()) {
+            return toMonitoringOfficerResource(monitoringOfficer.get(), projectId);
+        } else {
+            return legacyMonitoringOfficer(projectId);
+        }
+    }
+
+    @Override
+    public ServiceResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId) {
+        return serviceSuccess(monitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId));
     }
 
 

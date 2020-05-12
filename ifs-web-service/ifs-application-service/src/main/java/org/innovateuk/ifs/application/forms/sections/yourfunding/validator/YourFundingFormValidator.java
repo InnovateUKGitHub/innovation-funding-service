@@ -24,7 +24,7 @@ public class YourFundingFormValidator extends AbstractYourFundingFormValidator {
     public void validate(AbstractYourFundingForm form, Errors errors, UserResource user, long applicationId) {
         Supplier<BaseFinanceResource> financeSupplier = () -> {
             OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-            return applicationFinanceRestService.getApplicationFinance(applicationId, organisation.getId()).getSuccess();
+            return applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId()).getSuccess();
         };
         validate(form, errors, financeSupplier);
     }

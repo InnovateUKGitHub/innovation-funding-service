@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -40,7 +41,7 @@ public interface ProjectService {
     ServiceResult<List<ProjectResource>> findByUserId(long userId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
-    ServiceResult<List<ProjectUserResource>> getProjectUsers(long projectId);
+    ServiceResult<List<ProjectUserResource>> getProjectUsersByProjectIdAndRoleIn(long projectId, List<ProjectParticipantRole> projectParticipantRoles);
 
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(long projectId, long userId);

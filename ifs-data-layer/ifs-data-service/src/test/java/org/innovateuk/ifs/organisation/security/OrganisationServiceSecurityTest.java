@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.organisation.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
@@ -11,11 +13,11 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
+import static org.innovateuk.ifs.application.transactional.ApplicationServiceSecurityTest.verifyApplicationRead;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
@@ -32,11 +34,15 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
     private OrganisationPermissionRules rules;
     private OrganisationLookupStrategies lookup;
+    ApplicationPermissionRules applicationPermissionRules;
+    ApplicationLookupStrategy applicationLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         rules = getMockPermissionRulesBean(OrganisationPermissionRules.class);
         lookup = getMockPermissionEntityLookupStrategiesBean(OrganisationLookupStrategies.class);
+        applicationPermissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 
     @Override
@@ -46,14 +52,8 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
     @Test
     public void findByApplicationId() {
-        when(classUnderTestMock.findByApplicationId(1L))
-                .thenReturn(serviceSuccess(newOrganisationResource().buildSet(2)));
-
-        ServiceResult<Set<OrganisationResource>> results = classUnderTest.findByApplicationId(1L);
-        assertEquals(0, results.getSuccess().size());
-
-        verifyUserHasAccessToOrganisation(2);
-        verifyNoMoreInteractions(rules);
+        verifyApplicationRead(applicationLookupStrategy, applicationPermissionRules,
+                (applicationId) -> classUnderTest.findByApplicationId(applicationId));
     }
 
     @Test
@@ -83,6 +83,8 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
                 .stakeholdersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(times))
                 .monitoringOfficersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
+        verify(rules, times(times))
+                .competitionFinanceUsersCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);
     }
 

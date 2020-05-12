@@ -52,7 +52,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping
     public String bankDetails(Model model,
-                              @P("projectId")@PathVariable("projectId") final Long projectId,
+                              @PathVariable("projectId") final Long projectId,
                               UserResource loggedInUser,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);

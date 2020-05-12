@@ -32,7 +32,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-Resource          CompAdmin_Commons.robot
+Resource          ../../resources/common/Competition_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
@@ -221,8 +221,10 @@ Assessor: Server-side validation
     Then the user should see a field error       Please enter how much assessors will be paid.
     And the user should see a field error        Please select an assessment panel option.
     And the user should see a field error        Please select an interview stage option.
+    And the user should see a field error        You must select an option about the average assessor score in funding decision notifications.
     When the user selects the radio button       hasAssessmentPanel  hasAssessmentPanel-0
     Then the user selects the radio button       hasInterviewStage  hasInterviewStage-0
+    Then the user selects the radio button       averageAssessorScore  averageAssessorScore-0
     And the user clicks the button/link          jQuery = button:contains("Done")
 
 Assessor: Client-side validation

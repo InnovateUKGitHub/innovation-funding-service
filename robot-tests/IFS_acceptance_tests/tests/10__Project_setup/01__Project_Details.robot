@@ -60,8 +60,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Project Setup  Applicant
-Resource          PS_Common.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
+Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
@@ -150,7 +150,7 @@ IFS Admin is able to edit the Start Date
     [Setup]  log in as a different user    &{ifs_admin_user_credentials}
     Given the user navigates to the page   ${projectSetupCompMgtDetailsPage}
     When the user checks for target start date validation
-    Then the user shouldn't be able to edit the day field as all projects start on the first of the month
+    Then the user should see the element    css = .day [readonly]
     And the user save the target start date
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
@@ -160,21 +160,21 @@ Non lead partner not eligible for funding
     [Tags]
     Given log in as a different user            &{collaborator1_credentials}
     When the user navigates to the page         ${Project_In_Setup_Page}
-    And the user should see the element         css = ul li.complete:nth-child(1)
-    Then the user should not see the element    css = ul li.require-action:nth-child(3)
+    And the user should see the element         jQuery = li:contains("Project details") .status-complete
+    Then the user should not see the element    jQuery = li:contains("Documents") .status-action-required
     When The user navigates to the page and gets a custom error message     ${Project_In_Setup_Page}/bank-details    ${403_error_message}
     When the user navigates to the page         ${Project_In_Setup_Page}
     And the user clicks the button/link         link = View the status of partners
     Then the user should be redirected to the correct page    ${Project_In_Setup_Team_Status_Page}
-    And the user should see the element         css = #table-project-status tr:nth-child(3) td.status.na:nth-child(4)
+    And the user should see the element         jQuery = th:contains("Ludlow") + .ok + .action +.na
 
 Other partners can see who needs to provide Bank Details
     [Documentation]    INFUND-7090
     [Tags]  HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${Project_In_Setup_Team_Status_Page}
-    Then the user should see the element    css = #table-project-status tr:nth-child(3) td.status.na:nth-child(4)
-    And the user should see the element     jQuery = #table-project-status tr:nth-child(2) td:nth-child(4):contains("")
+    Then the user should see the element    jQuery = th:contains("Ludlow") + .ok + .action +.na
+    And the user should see the element     jQuery = th:contains("EGGS") + .ok + .action +.na
 
 Non-lead partner cannot change start date or project address
     [Documentation]    INFUND-3157
@@ -201,16 +201,16 @@ Project details submission flow
     And the user clicks the button/link   link = Project details
     When all the fields are completed
     Then the user navigates to the page    ${Project_In_Setup_Page}
-    And the user should see the element  css = li.complete:nth-of-type(1)
+    And the user should see the element  jQuery = li:contains("Project details") .status-complete
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
     [Tags]
     Given the user navigates to the page    ${Project_In_Setup_Page}
-    And the user should see the element     css = ul li.complete:nth-child(1)
+    And the user should see the element     jQuery = li:contains("Project details") .status-complete
     When the user clicks the button/link    link = View the status of partners
     Then the user should see the element    id = table-project-status
-    And the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    And the user should see the element     jQuery = th:contains("Empire") + .ok
 
 Project details links are still enabled after submission
     [Documentation]    INFUND-3381
@@ -269,51 +269,14 @@ The user should be able to see change start date instructions
     the user should not see the element         css = input.govuk-input[name="projectStartDate.year"]
     the user should see the element             jQuery = p:contains("To request a change to the project start date please contact Innovate UK.")
 
-The user selects finance reviewer
-    [Arguments]   ${FlName}
-    input text                          id = userId    ${FlName}
-    the user clicks the button/link     jQuery = ul li:contains("${FlName}")
-
 All the fields are completed
     the user should see the element   jQuery = td:contains("Correspondence address")~ td strong:contains("Complete")
-
-the user should see a validation error
-    [Arguments]    ${ERROR1}
-    Set Focus To Element    jQuery = button:contains("Save")
-    wait for autosave
-    Then the user should see a field error    ${ERROR1}
-
-the user shouldn't be able to edit the day field as all projects start on the first of the month
-    the user should see the element    css = .day [readonly]
-
-the user should not see duplicated select options
-    ${NO_OPTIONs} =     Get Element Count    //*[@class="govuk-radios__item"]
-    Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
-
-the user can see all project details completed
-    the user should see the element  jQuery = #start-date:contains("1 Jan ${nextyear}")
-    the user should see the element  jQuery = #project-address:contains("Montrose House 1, Neston, CH64 3RU")
-    the user should see the element  jQuery = #project-manager:contains("Elmo Chenault")
-
-the user can see all finance contacts completed
-    the user should see the element  jQuery = #project-details-finance tr:nth-child(1) td:nth-child(2):contains("Elmo Chenault")
-    the user should see the element  jQuery = #project-details-finance tr:nth-child(2) td:nth-child(2):contains("Pete Tom")
-    the user should see the element  jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Ludlow")
 
 Custom suite setup
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     Connect to database  @{database}
     the user logs-in in new browser          &{internal_finance_credentials}
-
-the invitee is able to assign himself as Finance Contact
-    [Arguments]  ${email}  ${title}  ${pattern}  ${name}  ${famName}
-    the user accepts invitation                     ${email}  ${title}  ${pattern}
-    the invited user fills the create account form  ${name}  ${famName}
-    the invited user signs in                       ${email}  ${name}  ${famName}
-    the user navigates to the page                  ${server}/project-setup/project/${PS_PD_Project_Id}/details/finance-contact?organisation=${organisationLudlowId}
-    the user selects the radio button               financeContact  financeContact3
-    the user clicks the button/link                 jQuery = button:contains("Save finance contact")
 
 the user accepts invitation
     [Arguments]  ${email}  ${title}  ${pattern}
@@ -344,28 +307,20 @@ the user should see the project setup stages
     the user should see the element    jQuery = h2:contains("Grant offer letter")
 
 the competition admin should see the status of each project setup stage
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(3)                       # Documents
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(4)                       # Monitoring Officer
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(5)                       # Bank details
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td.govuk-table__cell.status.action    # Finance checks
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(7)                       # Spend Profile
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(8)                       # GOL
-
-the competition admin should see that their Project details aren't completed
-    the user should see the element    jQuery = p:contains("These project details were supplied by the lead partner on behalf of the project.")
-    the user should see the element    jQuery = p:contains("Each partner must provide a project location.")
-    the user should see the element    css = #project-details
-    the user should see the element    jQuery = #project-address:contains("Not yet completed")
-    the user should see the element    css = #project-details-finance
-    the user should see the element    jQuery = #project-details-finance tr:nth-child(1) td:nth-child(2):contains("Not yet completed")
-    the user should see the element    jQuery = #project-details-finance tr:nth-child(2) td:nth-child(2):contains("Not yet completed")
-    the user should see the element    jQuery = #project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td.waiting:nth-child(2)                                  # Project details
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td.waiting:nth-child(3)                                  # Project Team
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td.waiting:nth-child(4)                                  # Documents
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td:nth-child(5):contains("Stage is not yet available")   # MO
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td:nth-child(6):contains("Stage is not yet available")   # Bank details
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td.action:nth-child(7)                                   # Finance checks
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td:nth-child(8):contains("Stage is not yet available")                         # Spend Profile
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td:nth-child(9):contains("Stage is not yet available")                         # GOL
 
 Internal user can view project details via the clickable 'hour glass' for Project details
-    the user clicks the button/link    css = #table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.waiting a
+    the user clicks the button/link    jQuery = tr:contains("${PS_PD_Application_Title}") td.waiting:nth-child(2) a
     the user should see the element    jQuery = h1:contains("Project details")
     the user clicks the button/link    link = Back to project setup
-    the user should see the element    css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(2)  # Project details
+    the user should see the element    jQuery = tr:contains("${PS_PD_Application_Title}") td.waiting:nth-child(2)  # Project details
 
 the user should see the grant award terms and conditions
     the user clicks the button/link        link = ${PS_PD_Application_Title}
@@ -378,7 +333,7 @@ the user checks for project detail status on team status page
     the user clicks the button/link            link = View the status of partners
     the user should be redirected to the correct page    ${Project_In_Setup_Page}/team-status
     the user should see the element            jQuery = h1:contains("Project team status")
-    the user should see the element            jQuery = #table-project-status tr:contains("${partner}") td.status.action:nth-of-type(2)
+    the user should see the element            jQuery = tr:contains("${partner}") td.action:nth-of-type(2)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     the user should not see the element    link = Monitoring Officer
@@ -449,7 +404,7 @@ the non-lead partner see the completed project details
     all the fields are completed
     the user navigates to the page                      ${Project_In_Setup_Page}
     the user clicks the button/link                     link = View the status of partners
-    the user should see the element                     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    the user should see the element                     jQuery = tr:contains("Empire") td.ok:nth-of-type(1)
 
 the lead partner see the completed project details
     the user logs in and navigates to project details      &{lead_applicant_credentials}
@@ -457,7 +412,7 @@ the lead partner see the completed project details
     all the fields are completed
     the user navigates to the page               ${Project_In_Setup_Page}
     the user clicks the button/link              link = View the status of partners
-    the user should see the element              css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    the user should see the element              jQuery = tr:contains("Empire") td.ok:nth-of-type(1)
 
 the non-lead partner cannot changes any project details
     the user clicks the button/link             link = Project details

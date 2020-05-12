@@ -32,7 +32,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Assessor_Commons.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${Invitation_existing_assessor1}           ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7

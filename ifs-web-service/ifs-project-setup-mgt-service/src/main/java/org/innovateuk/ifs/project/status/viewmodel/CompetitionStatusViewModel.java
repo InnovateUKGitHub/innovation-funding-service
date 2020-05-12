@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.internal.InternalProjectSetupRow;
+import org.innovateuk.ifs.pagination.PaginationViewModel;
 import org.innovateuk.ifs.status.viewmodel.BaseCompetitionStatusTableViewModel;
 
 import java.util.List;
@@ -12,18 +13,22 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
     private long openQueryCount;
     private long pendingSpendProfilesCount;
     private String applicationSearchString;
+    private PaginationViewModel paginationViewModel;
 
     public CompetitionStatusViewModel(CompetitionResource competition,
                                       boolean hasProjectFinanceRole,
                                       long openQueryCount,
                                       long pendingSpendProfilesCount,
                                       String applicationSearchString,
-                                      List<InternalProjectSetupRow> rows) {
-        super(competition, rows, hasProjectFinanceRole);
+                                      List<InternalProjectSetupRow> rows,
+                                      PaginationViewModel paginationViewModel,
+                                      boolean externalFinanceUser) {
+        super(competition, rows, hasProjectFinanceRole, externalFinanceUser);
         this.showTabs = hasProjectFinanceRole;
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.applicationSearchString = applicationSearchString;
+        this.paginationViewModel = paginationViewModel;
     }
 
     @Override
@@ -41,4 +46,7 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         return applicationSearchString;
     }
 
+    public PaginationViewModel getPaginationViewModel() {
+        return paginationViewModel;
+    }
 }

@@ -11,6 +11,7 @@ public class ActivityLogUrlHelper {
     public static String url(ActivityLogResource log, ProjectResource project) {
         switch (log.getActivityType()) {
             case APPLICATION_SUBMITTED:
+            case APPLICATION_REOPENED:
                 return format("/management/competition/%d/application/%d", project.getCompetition(), project.getApplication());
             case APPLICATION_INTO_PROJECT_SETUP:
                 return format("/project-setup-management/competition/%d/status/all?applicationSearchString=%d", project.getCompetition(), project.getApplication());
@@ -58,6 +59,11 @@ public class ActivityLogUrlHelper {
             case GRANT_OFFER_LETTER_APPROVED:
             case GRANT_OFFER_LETTER_REJECTED:
                 return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());
+            case GRANTS_PROJECT_MANAGER_INVITED:
+            case GRANTS_FINANCE_CONTACT_INVITED:
+            case GRANTS_MONITORING_OFFICER_INVITED:
+                // change to pending page when done
+                return format("/project-setup-management/competition/%d/project/%d/team", project.getCompetition(), project.getId());
             default:
                 return null;
         }

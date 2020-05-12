@@ -74,7 +74,7 @@ public class AcademicCostViewModelPopulatorTest extends BaseServiceUnitTest<Acad
         AcademicCostViewModel viewModel = service.populate(ORGANISATION_ID, APPLICATION_ID, SECTION_ID, true);
 
         assertEquals(viewModel.getApplicationFinanceId(), (long) finance.getId());
-        assertEquals(viewModel.getApplicationId(), (long) application.getId());
+        assertEquals(viewModel.getApplicationId(), (Long) application.getId());
         assertEquals(viewModel.getSectionId(), SECTION_ID);
         assertEquals(viewModel.getOrganisationId(), ORGANISATION_ID);
         assertEquals(viewModel.getApplicationName(), application.getName());

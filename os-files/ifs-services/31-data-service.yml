@@ -31,7 +31,7 @@ items:
                   port: 8080
                 initialDelaySeconds: 120
                 periodSeconds: 31
-                timeoutSeconds: 5
+                timeoutSeconds: 25
                 successThreshold: 1
                 failureThreshold: 3
               readinessProbe:
@@ -40,9 +40,9 @@ items:
                   port: 8080
                 initialDelaySeconds: 120
                 periodSeconds: 5
-                timeoutSeconds: 5
+                timeoutSeconds: 25
                 successThreshold: 1
-                failureThreshold: 1
+                failureThreshold: 3
               imagePullPolicy: Always
               env:
                 - name: SPRING_DATASOURCE_URL
@@ -200,6 +200,36 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
+                - name: IFS_DOCUSIGN_API_ACCOUNT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: docusign-config
+                      key: IFS_DOCUSIGN_API_ACCOUNT
+                - name: IFS_DOCUSIGN_API_BASE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: docusign-config
+                      key: IFS_DOCUSIGN_API_BASE
+                - name: IFS_DOCUSIGN_AUTH_BASE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: docusign-config
+                      key: IFS_DOCUSIGN_AUTH_BASE
+                - name: IFS_DOCUSIGN_AUTH_USER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: docusign-config
+                      key: IFS_DOCUSIGN_AUTH_USER
+                - name: IFS_DOCUSIGN_AUTH_CLIENT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: docusign-config
+                      key: IFS_DOCUSIGN_AUTH_CLIENT
+                - name: IFS_DOCUSIGN_AUTH_KEY
+                  valueFrom:
+                    configMapKeyRef:
+                      name: docusign-config
+                      key: IFS_DOCUSIGN_AUTH_KEY
                 - name: JAVA_OPTS
                   value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME

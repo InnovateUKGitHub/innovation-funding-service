@@ -29,8 +29,8 @@ Documentation   IFS-6237 Loans - Application submitted screen
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
-Resource        ../Applicant_Commons.robot
-Resource        ../../10__Project_setup/PS_Common.robot
+Resource        ../../../resources/common/Applicant_Commons.robot
+Resource        ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${loan_comp_PS}              Project setup loan comp
@@ -160,7 +160,7 @@ the user enters empty funding amount
 the user submits the loan application
     the user clicks the button/link           link = Application overview
     the user clicks the button/link           link = Review and submit
-    the user clicks the button/link           id = submit-application-button
+    the user clicks the button/link           id = submit-application-button-modal
     the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
 
 the user completes the project details

@@ -7,9 +7,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.user.resource.Role.internalRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class YourProjectLocationControllerSecurityTest extends BaseControllerSecurityTest<YourProjectLocationController> {
 
@@ -23,6 +21,7 @@ public class YourProjectLocationControllerSecurityTest extends BaseControllerSec
         List<Role> roles = new ArrayList<>(internalRoles());
         roles.add(APPLICANT);
         roles.add(STAKEHOLDER);
+        roles.add(EXTERNAL_FINANCE);
 
         assertRolesCanPerform(() -> classUnderTest.viewPage(0L, 0L, 0L, null, null), roles);
     }

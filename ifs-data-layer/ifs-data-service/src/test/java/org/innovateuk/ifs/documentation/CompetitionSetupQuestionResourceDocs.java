@@ -38,7 +38,6 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidanceRows[].id").description("The id of the guidance row in the database"),
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),
             fieldWithPath("guidanceRows[].justification").description("The justification of the guidance"),
-            fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to"),
             fieldWithPath("guidanceRows[].priority").description("The priority of the form input the guidance is linked to")
     };
 
@@ -60,7 +59,6 @@ public class CompetitionSetupQuestionResourceDocs {
             .withScoreTotal(1)
             .withGuidanceRows(
                     newFormInputGuidanceRowResourceBuilder()
-                        .withFormInput(1L)
                         .withSubject("Subject")
                         .withJustification("justi")
                         .withId(2L)

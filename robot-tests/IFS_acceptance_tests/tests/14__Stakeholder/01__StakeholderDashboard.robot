@@ -9,9 +9,12 @@ Documentation   IFS-4189 Add/Remove Stakeholders
 ...
 ...             IFS-6632 Stakeholders are able to access T&C's
 ...
+...             IFS-7429 The stakeholder has access to Project Details after Finance reviewer is assigned
+...
 Force Tags      HappyPath
 Resource        ../../resources/defaultResources.robot
-Resource        ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource        ../../resources/common/Competition_Commons.robot
+Resource        ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${openProgrammeCompetitionName}  Photonics for All
@@ -123,6 +126,14 @@ The Stakeholder can search for a competition
     And the user clicks the button/link           link = ${openProgrammeCompetitionName}
     Then the user should see the element          jQuery = h1:contains("${openProgrammeCompetitionId}: ${openProgrammeCompetitionName}")
     [Teardown]  The user clicks the button/link   link = Dashboard
+
+
+The Stakeholder is able to access Project details once a finance contact is assigned
+    [Documentation]  IFS-7429
+    Given finance reviewer is added to the project    ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_Point_Project_Id}/details
+    When log in as a different user                   &{stakeholder_user}
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${PS_Point_Project_Id}/details
+    [Teardown]  The user clicks the button/link       link = Dashboard
 
 The Stakeholder can search for application
     [Documentation]  IFS-4564

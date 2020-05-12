@@ -11,8 +11,8 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 # This Suite moves competition Photonics for Public to Project Setup
 # This suite is using Generic Type Competitions
@@ -146,7 +146,7 @@ the lead is able to submit the application
     the applicant completes application team
     the user clicks the button/link  link = Review and submit
     the user should see the element  jQuery = .message-alert:contains("You will not be able to make changes")
-    the user clicks the button/link  css = #submit-application-button
+    the user clicks the button/link  id = submit-application-button-modal
     the user clicks the button/link  css = button[type="submit"][data-submitted-text]
     the user clicks the button/link  link = Give us feedback
 

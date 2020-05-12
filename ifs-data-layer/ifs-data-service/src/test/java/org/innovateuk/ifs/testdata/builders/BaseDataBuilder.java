@@ -23,9 +23,8 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.transactional.CompetitionAssessmentConfigService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
@@ -214,6 +213,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected GrantOfferLetterService grantOfferLetterService;
     protected RoleProfileStatusService roleProfileStatusService;
     protected RoleProfileStatusRepository roleProfileStatusRepository;
+    protected CompetitionOrganisationConfigRepository competitionOrganisationConfigRepository;
+    protected CompetitionAssessmentConfigService competitionAssessmentConfigService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -329,6 +330,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         roleProfileStatusRepository = serviceLocator.getBean((RoleProfileStatusRepository.class));
         compAdminEmail = serviceLocator.getCompAdminEmail();
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
+        competitionOrganisationConfigRepository = serviceLocator.getBean((CompetitionOrganisationConfigRepository.class));
+        competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
     }
 
     protected UserResource compAdmin() {

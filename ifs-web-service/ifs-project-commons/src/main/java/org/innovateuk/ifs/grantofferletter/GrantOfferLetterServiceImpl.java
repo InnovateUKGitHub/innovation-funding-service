@@ -5,6 +5,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,16 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     @Override
     public ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes) {
         return grantOfferLetterRestService.addAdditionalContractFile(projectId, contentType, fileSize, originalFilename, bytes).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<StringResource> getDocusignUrl(long projectId) {
+        return grantOfferLetterRestService.getDocusignUrl(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> importSignedOfferLetter(long projectId) {
+        return grantOfferLetterRestService.importSignedOfferLetter(projectId).toServiceResult();
     }
 
 }

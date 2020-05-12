@@ -71,6 +71,14 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_DOCUMENT_TITLE_HAS_BEEN_USED(BAD_REQUEST),
 
     /**
+     * External finance users
+     */
+    EXTERNAL_FINANCE_INVITE_INVALID(BAD_REQUEST),
+    EXTERNAL_FINANCE_INVITE_TARGET_USER_ALREADY_INVITED(BAD_REQUEST),
+    EXTERNAL_FINANCE_HAS_ACCEPTED_INVITE(BAD_REQUEST),
+
+
+    /**
      * Monitoring officer
      */
     MONITORING_OFFICER_INVITE_INVALID(BAD_REQUEST),
@@ -85,6 +93,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     APPLICATION_MUST_BE_APPROVED(BAD_REQUEST),
     APPLICATION_MUST_BE_INELIGIBLE(BAD_REQUEST),
     APPLICATION_NOT_READY_TO_BE_SUBMITTED(FORBIDDEN),
+    APPLICATION_CANNOT_BE_REOPENED(FORBIDDEN),
 
     /**
      * Finance
@@ -129,6 +138,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED(BAD_REQUEST),
     FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET(BAD_REQUEST),
     FUNDING_PANEL_DECISION_WRONG_STATUS(BAD_REQUEST),
+    FUNDING_PANEL_DECISION_NONE_PROVIDED(BAD_REQUEST),
 
     /**
      * Assessor Journey
@@ -363,7 +373,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * External user search
      */
-    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST);
+    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST),
+
+    /**
+     * Docusign errors.
+     */
+    COULD_NOT_SEND_FILE_TO_DOCUSIGN(INTERNAL_SERVER_ERROR);
 
     private ErrorTemplate errorTemplate;
 

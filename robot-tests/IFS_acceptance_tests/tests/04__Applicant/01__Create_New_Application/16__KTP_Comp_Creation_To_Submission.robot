@@ -8,9 +8,9 @@ Documentation  IFS-7146  KTP - New funding type
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
-Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../../10__Project_setup/PS_Common.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
+Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${KTPcompetitionTitle}  KTP Competition
@@ -122,7 +122,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given proj finance approves the spend profiles  ${ProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             ${ProjectID}
+    And internal user generates the GOL             NO  ${ProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148

@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-6376 As a partner I want to be shown information in IFS when I have successfully completed Project Setup so I am clear on what steps to take now the project is live
-Resource          PS_Common.robot
+Resource          ../../resources/common/PS_Common.robot
 Suite Setup       Project fiance approves the grant offer letter
 Suite Teardown    Close browser and delete emails
 
@@ -234,7 +234,7 @@ grant offer letter is sent to users
     the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
     the user clicks the button/link    id = send-gol
-    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Send grant offer letter")
 
 users upload signed grant offer letter and submit
     the lead partner logs in and navigate to applications dashboard

@@ -5,8 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
-public class GuidanceRowResource {
+public class GuidanceRowResource implements Serializable {
     public interface GuidanceRowGroup { }
 
     private Long id;
@@ -19,7 +20,6 @@ public class GuidanceRowResource {
     @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String justification;
 
-    private Long formInput;
     private Integer priority;
 
     public Long getId() {
@@ -46,14 +46,6 @@ public class GuidanceRowResource {
         this.justification = justification;
     }
 
-    public Long getFormInput() {
-        return formInput;
-    }
-
-    public void setFormInput(Long formInput) {
-        this.formInput = formInput;
-    }
-
     public Integer getPriority() {
         return priority;
     }
@@ -74,7 +66,6 @@ public class GuidanceRowResource {
                 .append(id, that.id)
                 .append(subject, that.subject)
                 .append(justification, that.justification)
-                .append(formInput, that.formInput)
                 .isEquals();
     }
 
@@ -84,7 +75,6 @@ public class GuidanceRowResource {
                 .append(id)
                 .append(subject)
                 .append(justification)
-                .append(formInput)
                 .toHashCode();
     }
 }

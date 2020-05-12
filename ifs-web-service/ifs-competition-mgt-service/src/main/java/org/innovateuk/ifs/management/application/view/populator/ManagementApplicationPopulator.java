@@ -87,7 +87,8 @@ public class ManagementApplicationPopulator {
                 canMarkAsIneligible(application, user),
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
                 support,
-                projectId
+                projectId,
+                user.hasRole(Role.EXTERNAL_FINANCE)
         );
 
     }

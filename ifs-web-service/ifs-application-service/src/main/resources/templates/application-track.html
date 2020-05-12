@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
-      th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
+      th:with="applicationName=${#strings.isEmpty(model.currentApplication.name)} ? #{ifs.application.no_title} : ${model.currentApplication.name}">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application Status - ${applicationName}|" />
 </head>
@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Applications',linkUrl=@{/applicant/dashboard}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.currentApplication},linkTitle='Applications',linkUrl=@{/applicant/dashboard}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -21,25 +21,28 @@
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-9">
             <h2 class="govuk-panel__title">Application submitted</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
-                Application number: <span th:text="${currentApplication.id}" /><br/>
-                Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
-                <th:block th:if="${currentApplication.submittedDate}">
+                Application number: <span th:text="${model.currentApplication.id}" /><br/>
+                Your application for the competition '<span th:text="${model.currentCompetition.name}" />' was submitted
+                <th:block th:if="${model.currentApplication.submittedDate}">
                     on
-                    <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
+                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"></th:block>
                     at
-                    <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}" />.
+                    <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}" />.
                 </th:block><br />
                 <div class="govuk-!-margin-top-6">
-                    <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}"
+                    <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View application</a>
-                    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}"
+                    <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
+                       class="govuk-link govuk-!-margin-right-6">Reopen application</a>
+                    <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
                        class="govuk-link">Print application</a>
                 </div>
             </div>
         </div>
+
         <h2 class="govuk-heading-l">What happens next?</h2>
 
-        <th:block th:with="procurementCompetition=${currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
+        <th:block th:with="procurementCompetition=${model.currentCompetition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).PROCUREMENT}">
             <th:block th:unless="${procurementCompetition}">
                 <h3 class="govuk-heading-m">Assessment process</h3>
                 <p class="govuk-body">Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
@@ -49,10 +52,11 @@
                     <li>the assessor will score each question and provide feedback to justify those scores</li>
                     <li>a panel process is held to moderate and ratify the outcome of the decision</li>
                 </ul>
+                <p class="govuk-body" th:if=${model.reopenLinkVisible}>If you reopen it, you must resubmit your application before we can assess it.</p>
 
                 <h3 class="govuk-heading-m">Decision notification</h3>
                 <p class="govuk-body">You and your project partners will be emailed notification of the decision by
-                    <strong th:if="${currentCompetition.fundersPanelEndDate}" th:text="${#temporals.format(currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
+                    <strong th:if="${model.currentCompetition.fundersPanelEndDate}" th:text="${#temporals.format(model.currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
                 </p>
 
                 <div class="govuk-grid-row">
@@ -77,7 +81,7 @@
 
                 <h3 class="govuk-heading-m">Application feedback</h3>
                 <p class="govuk-body">Application feedback will be provided by
-                    <strong th:if="${currentCompetition.releaseFeedbackDate}" th:text="${#temporals.format(currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
+                    <strong th:if="${model.currentCompetition.releaseFeedbackDate}" th:text="${#temporals.format(model.currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
                     <br />We will email you when this becomes available.
                 </p>
             </th:block>
@@ -101,7 +105,7 @@
 
         <div class="govuk-!-margin-top-6">
             <p class="govuk-body">You can give feedback to help us improve this service. This should take no more than 2 minutes.</p>
-            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${currentCompetition.id})}" class="govuk-button">Give us feedback</a>
+            <a th:href="@{/survey/{competitionId}/feedback(competitionId=${model.currentCompetition.id})}" class="govuk-button">Give us feedback</a>
         </div>
 
         <p class="govuk-body govuk-!-margin-bottom-6">

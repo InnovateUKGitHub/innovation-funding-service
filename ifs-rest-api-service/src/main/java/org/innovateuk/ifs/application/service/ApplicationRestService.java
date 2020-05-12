@@ -30,4 +30,5 @@ public interface ApplicationRestService {
     RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<Void> hideApplication(long applicationId, long userId);
     RestResult<Void> deleteApplication(long applicationId);
+    RestResult<Void> reopenApplication(long applicationId);
 }

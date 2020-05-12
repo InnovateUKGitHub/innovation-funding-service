@@ -7,10 +7,10 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
-Resource        ../Applicant_Commons.robot
-Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource        ../../07__Assessor/Assessor_Commons.robot
-Resource        ../../10__Project_setup/PS_Common.robot
+Resource        ../../../resources/common/Applicant_Commons.robot
+Resource        ../../../resources/common/Competition_Commons.robot
+Resource        ../../../resources/common/Assessor_Commons.robot
+Resource        ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${comp_name}         Procurement AT Comp
@@ -289,13 +289,13 @@ the internal user approve SP and issue GOL
     the user navigates to the page    ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send to project team")
-    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
+    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
 
 applicant upload the GOL
     Log in as a different user            &{RTO_lead_applicant_credentials}
     the user navigates to the page        ${server}/project-setup/project/${ProjectID}
-    the user clicks the button/link       link = Grant offer letter
+    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review

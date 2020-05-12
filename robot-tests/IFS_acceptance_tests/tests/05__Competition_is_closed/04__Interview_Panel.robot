@@ -74,7 +74,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
-Resource          ../07__Assessor/Assessor_Commons.robot
+Resource          ../../resources/common/Assessor_Commons.robot
 
 
 *** Test Cases ***
@@ -237,12 +237,12 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     Connect to database  @{database}
     the Interview Panel is activated in the db
-    execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view` = 'DETAILED' WHERE `name` = '${CLOSED_COMPETITION_NAME}';
+    Execute sql string     UPDATE ${database_name}.competition_assessment_config conf INNER JOIN competition c on c.competition_assessment_config_id=conf.id SET conf.assessor_finance_view= 'DETAILED'  WHERE c.name='${CLOSED_COMPETITION_NAME}';
     ${today} =  get today short month
     set suite variable  ${today}
 
 the Interview Panel is activated in the db
-    Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
+    Execute sql string     UPDATE ${database_name}.competition_assessment_config conf INNER JOIN competition c on c.competition_assessment_config_id=conf.id SET conf.has_interview_stage=1 WHERE c.id='${CLOSED_COMPETITION}';
 
 the competition admin selects the applications and adds them to the invite list
 #compadmin selecting the applications checkbox

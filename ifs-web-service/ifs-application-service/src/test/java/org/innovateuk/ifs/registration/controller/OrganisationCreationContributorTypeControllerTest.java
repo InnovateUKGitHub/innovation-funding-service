@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
@@ -63,7 +62,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
     }
 
     @Test
-    public void testChooseOrganisationType() throws Exception {
+    public void chooseOrganisationType() throws Exception {
         mockMvc.perform(
                 get("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
@@ -78,7 +77,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
      */
     @Test
     public void chooseOrganisationTypePostBusiness() throws Exception {
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "1")
@@ -97,7 +96,7 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
      */
     @Test
     public void chooseOrganisationTypePostResearch() throws Exception {
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 post("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
                         .param("organisationType", "2")

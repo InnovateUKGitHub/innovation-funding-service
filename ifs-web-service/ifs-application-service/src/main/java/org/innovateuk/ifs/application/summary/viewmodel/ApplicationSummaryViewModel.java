@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application.summary.viewmodel;
 
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
 
-public class ApplicationSummaryViewModel {
+public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
     private final ApplicationReadOnlyViewModel applicationReadOnlyViewModel;
     private final ApplicationResource application;
     private final CompetitionResource competition;
@@ -36,6 +37,11 @@ public class ApplicationSummaryViewModel {
         this.innovationAreaName = application.getInnovationArea().getName();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
     }
 
     public ApplicationReadOnlyViewModel getApplicationReadOnlyViewModel() {

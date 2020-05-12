@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.feedback.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * View model for the individual question assessor feedback page
  */
-public class AssessQuestionFeedbackViewModel {
+public class AssessQuestionFeedbackViewModel implements BaseAnalyticsViewModel {
 
     private ApplicationResource application;
     private QuestionResource question;
@@ -37,6 +38,16 @@ public class AssessQuestionFeedbackViewModel {
         this.inputs = inputs;
         this.aggregateResource = aggregateResource;
         this.navigation = navigationViewModel;
+    }
+
+    @Override
+    public Long getApplicationId() {
+        return application.getId();
+    }
+
+    @Override
+    public String getCompetitionName() {
+        return application.getCompetitionName();
     }
 
     public ApplicationResource getApplication() {

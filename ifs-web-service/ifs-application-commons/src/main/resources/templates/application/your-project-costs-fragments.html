@@ -313,148 +313,169 @@
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
                 <input type="hidden" th:field="*{overhead.costId}"/>
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-visually-hidden">Overhead costs</legend>
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item" data-target="overhead-none">
-                                <input id="overhead-rate-type-none"
-                                       class="govuk-radios__input overhead-radio"
-                                       type="radio"
-                                       required="required"
-                                       th:field="*{overhead.rateType}"
-                                       th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE}"/>
-                                <label th:for="overhead-rate-type-none"
-                                       class="govuk-label govuk-radios__label">
-                                    No overhead costs
-                                </label>
-                            </div>
+                <th:block th:unless="${model.overheadAlwaysTwenty}">
+                        <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-visually-hidden">Overhead costs</legend>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item" data-target="overhead-none">
+                                    <input id="overhead-rate-type-none"
+                                           class="govuk-radios__input overhead-radio"
+                                           type="radio"
+                                           required="required"
+                                           th:field="*{overhead.rateType}"
+                                           th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE}"/>
+                                    <label th:for="overhead-rate-type-none"
+                                           class="govuk-label govuk-radios__label">
+                                        No overhead costs
+                                    </label>
+                                </div>
 
-                            <div class="govuk-radios__item" data-target="overhead-default-percentage">
-                                <input id="overhead-rate-type-default-percentage"
-                                       class="govuk-radios__input overhead-radio"
-                                       type="radio"
-                                       required="required"
-                                       th:field="*{overhead.rateType}"
-                                       th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"/>
-                                <label for="overhead-rate-type-default-percentage"
-                                       class="govuk-label govuk-radios__label">
-                                    20% of labour costs
-                                </label>
-                            </div>
+                                <div class="govuk-radios__item" data-target="overhead-default-percentage">
+                                    <input id="overhead-rate-type-default-percentage"
+                                           class="govuk-radios__input overhead-radio"
+                                           type="radio"
+                                           required="required"
+                                           th:field="*{overhead.rateType}"
+                                           th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE}"/>
+                                    <label for="overhead-rate-type-default-percentage"
+                                           class="govuk-label govuk-radios__label">
+                                        20% of labour costs
+                                    </label>
+                                </div>
 
-                            <div class="govuk-radios__item" data-target="overhead-total">
-                                <input id="overhead-rate-type-total"
-                                       class="govuk-radios__input overhead-radio"
-                                       type="radio"
-                                       required="required"
-                                       th:field="*{overhead.rateType}"
-                                       th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"/>
-                                <label for="overhead-rate-type-total"
-                                       class="govuk-label govuk-radios__label">
-                                    Calculate overheads
+                                <div class="govuk-radios__item" data-target="overhead-total">
+                                    <input id="overhead-rate-type-total"
+                                           class="govuk-radios__input overhead-radio"
+                                           type="radio"
+                                           required="required"
+                                           th:field="*{overhead.rateType}"
+                                           th:value="${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).TOTAL}"/>
+                                    <label for="overhead-rate-type-total"
+                                           class="govuk-label govuk-radios__label">
+                                        Calculate overheads
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <input type="hidden" id="section-total-overhead"
+                        th:value="|£${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}|"/>
+
+                        <div class="govuk-form-group" id="overhead-none">
+                            <p class="govuk-body">You are not currently applying for overhead costs</p>
+                            <input type="hidden" value="£0" data-calculation-rawvalue="0" id="total-overhead-none"/>
+                        </div>
+
+                        <div class="govuk-form-group" id="overhead-default-percentage">
+                            <p class="govuk-body" th:unless="${model.internal}">There is no need to provide any further
+                                supporting documentation or
+                                calculations.
+                                Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                            <h4 class="govuk-heading-s alignright section-total-summary">
+                                Total overhead costs
+                                <span class="govuk-heading-s"
+                                      data-mirror="#total-overhead-default">
+                                              £<th:block
+                                    th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}"></th:block></span>
+                            </h4>
+                            <input type="hidden"
+                                   id="total-overhead-default"
+                                   data-calculation-fields="[id='section-total-labour'],0.2"
+                                   th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                                   data-calculation-operations="*"
+                                   th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
+
+                        </div>
+                        <div class="govuk-form-group" id="overhead-total">
+                            <th:block th:unless="${model.internal}">
+                                <h3 class="govuk-heading-m">Calculate overheads</h3>
+                                <p class="govuk-body">
+                                    If you feel your overheads are higher than 20% you may calculate a value using the Innovate
+                                    UK
+                                    model in the spreadsheet available below.
+                                    The model shows you which types of indirect costs associated with your project you may
+                                    claim.
+                                    For support with this option, please contact our Customer Support Service on 0300 321 4357.
+                                    Any
+                                    value claimed under this model will be subject to a review.
+                                    This will assess the appropriateness of your claim if your grant application is successful.
+                                </p>
+                                <div class="govuk-form-group download">
+                                    <h3 class="govuk-heading-s">Download the overhead calculation spreadsheet</h3>
+                                    <ul class="govuk-list govuk-list--bullet">
+                                        <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
+                                        <li>Download as an Open Office document <a href="/files/overheads.ods"
+                                                                                   class="govuk-link">overhead calculation spreadsheet.ods (10KB)</a></li>
+                                    </ul>
+                                </div>
+                            </th:block>
+                            <div class="upload-section govuk-!-margin-top-6">
+                                <h3 th:unless="${model.internal}" class="govuk-heading-s govuk-!-margin-0">Upload your completed
+                                    spreadsheet</h3>
+
+                                <div class="govuk-form-group">
+                                    <th:block th:if="${model.internal}">
+                                        <p th:if="${form.overhead.filename == null}" class="govuk-body">The applicant has not
+                                            uploaded a file.</p>
+                                        <p th:if="${form.overhead.filename != null}" class="govuk-body">The applicant has
+                                            uploaded a completed overhead costs spreadsheet.</p>
+                                    </th:block>
+                                    <th:block th:unless="${model.internal and form.overhead.filename == null}" th:insert="question-type/types :: fileupload-fragment(${model.internal ? 'readonly' : 'edit'},
+                                    @{/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
+                                    ${form.overhead.filename},
+                                    overhead.file,
+                                    overhead.file,
+                                    true,
+                                    removeOverheadFile,
+                                    uploadOverheadFile)"/>
+                                </div>
+                            </div>
+                            <div class="govuk-form-group alignright inline">
+                                <label for="overhead.totalSpreadsheet"
+                                       class="govuk-label"
+                                       th:text="${model.internal ? 'Total cost of overheads &pound;' : 'Enter the total cost of overheads as calculated in the spreadsheet &pound;' }">
+                                    Enter the total cost of overheads as calculated in the spreadsheet &pound;
                                 </label>
+                                <th:block
+                                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
+                                <input id="overhead.totalSpreadsheet"
+                                       th:field="*{overhead.totalSpreadsheet}"
+                                       th:errorclass="govuk-input--error"
+                                       type="number"
+                                       class="govuk-input govuk-input--width-10 alignright"
+                                       min="0"
+                                       max="999999999"
+                                       step="1"/>
+                                <input type="hidden"
+                                       readonly="readonly"
+                                       id="total-overhead-calculated"
+                                       data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
+                                       data-calculation-operations="*"
+                                       th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                                       th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
                             </div>
                         </div>
-                    </fieldset>
-                </div>
-                <input type="hidden" id="section-total-overhead"
-                       th:value="|£${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}|"/>
-
-                <div class="govuk-form-group" id="overhead-none">
-                    <p class="govuk-body">You are not currently applying for overhead costs</p>
-                    <input type="hidden" value="£0" data-calculation-rawvalue="0" id="total-overhead-none"/>
-                </div>
-
-                <div class="govuk-form-group" id="overhead-default-percentage">
-                    <p class="govuk-body" th:unless="${model.internal}">There is no need to provide any further
-                        supporting documentation or
-                        calculations.
-                        Actual costs can be claimed up to a maximum of this calculated figure.</p>
+                    </th:block>
+                <th:block th:if="${model.overheadAlwaysTwenty}">
+                    <th:block th:with="unused=*{overhead.setRateType(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"></th:block>
+                    <input type="hidden" name="overhead.rateType" value="DEFAULT_PERCENTAGE"/>
+                    <p class="govuk-body">Overheads are calculated as 20% of labour costs</p>
                     <h4 class="govuk-heading-s alignright section-total-summary">
                         Total overhead costs
                         <span class="govuk-heading-s"
-                              data-mirror="#total-overhead-default">
+                              data-mirror="#section-total-overhead">
                                           £<th:block
                             th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}"></th:block></span>
                     </h4>
                     <input type="hidden"
-                           id="total-overhead-default"
+                           id="section-total-overhead"
                            data-calculation-fields="[id='section-total-labour'],0.2"
                            th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
                            data-calculation-operations="*"
                            th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-
-                </div>
-                <div class="govuk-form-group" id="overhead-total">
-                    <th:block th:unless="${model.internal}">
-                        <h3 class="govuk-heading-m">Calculate overheads</h3>
-                        <p class="govuk-body">
-                            If you feel your overheads are higher than 20% you may calculate a value using the Innovate
-                            UK
-                            model in the spreadsheet available below.
-                            The model shows you which types of indirect costs associated with your project you may
-                            claim.
-                            For support with this option, please contact our Customer Support Service on 0300 321 4357.
-                            Any
-                            value claimed under this model will be subject to a review.
-                            This will assess the appropriateness of your claim if your grant application is successful.
-                        </p>
-                        <div class="govuk-form-group download">
-                            <h3 class="govuk-heading-s">Download the overhead calculation spreadsheet</h3>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>Download as an Excel document <a href="/files/overheads.xlsx" class="govuk-link">overhead calculation spreadsheet.xlsx (16KB)</a></li>
-                                <li>Download as an Open Office document <a href="/files/overheads.ods"
-                                                                           class="govuk-link">overhead calculation spreadsheet.ods (10KB)</a></li>
-                            </ul>
-                        </div>
-                    </th:block>
-                    <div class="upload-section govuk-!-margin-top-6">
-                        <h3 th:unless="${model.internal}" class="govuk-heading-s govuk-!-margin-0">Upload your completed
-                            spreadsheet</h3>
-
-                        <div class="govuk-form-group">
-                            <th:block th:if="${model.internal}">
-                                <p th:if="${form.overhead.filename == null}" class="govuk-body">The applicant has not
-                                    uploaded a file.</p>
-                                <p th:if="${form.overhead.filename != null}" class="govuk-body">The applicant has
-                                    uploaded a completed overhead costs spreadsheet.</p>
-                            </th:block>
-                            <th:block th:unless="${model.internal and form.overhead.filename == null}" th:insert="question-type/types :: fileupload-fragment(${model.internal ? 'readonly' : 'edit'},
-                                @{/application/download/overheadfile/{overheadId}(overheadId=${form.overhead.costId})},
-                                ${form.overhead.filename},
-                                overhead.file,
-                                overhead.file,
-                                true,
-                                removeOverheadFile,
-                                uploadOverheadFile)"/>
-                        </div>
-                    </div>
-                    <div class="govuk-form-group alignright inline">
-                        <label for="overhead.totalSpreadsheet"
-                               class="govuk-label"
-                               th:text="${model.internal ? 'Total cost of overheads &pound;' : 'Enter the total cost of overheads as calculated in the spreadsheet &pound;' }">
-                            Enter the total cost of overheads as calculated in the spreadsheet &pound;
-                        </label>
-                        <th:block
-                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=overhead.totalSpreadsheet)"/>
-                        <input id="overhead.totalSpreadsheet"
-                               th:field="*{overhead.totalSpreadsheet}"
-                               th:errorclass="govuk-input--error"
-                               type="number"
-                               class="govuk-input govuk-input--width-10 alignright"
-                               min="0"
-                               max="999999999"
-                               step="1"/>
-                        <input type="hidden"
-                               readonly="readonly"
-                               id="total-overhead-calculated"
-                               data-calculation-fields="[id='overhead.totalSpreadsheet'],1"
-                               data-calculation-operations="*"
-                               th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
-                               th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-                    </div>
-                </div>
+                </th:block>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
