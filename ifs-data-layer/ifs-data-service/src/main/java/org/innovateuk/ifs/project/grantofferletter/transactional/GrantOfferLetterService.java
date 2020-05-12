@@ -86,12 +86,12 @@ public interface GrantOfferLetterService {
     ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
 
 
-    @PreAuthorize("hasAuthority('applicant')")
-    @SecuredBySpring(value = "GET_DOCUSIGN_URL", description = "Applicants can get the url to access docusign" )
+    @PreAuthorize("hasPermission(#projectId,'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SUBMIT_GRANT_OFFER_LETTER')")
     ServiceResult<StringResource> getDocusignUrl(long projectId);
 
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasPermission(#projectId,'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SUBMIT_GRANT_OFFER_LETTER')")
     @SecuredBySpring(value = "IMPORT_DOCUMENT", description = "Applicants can request their signed documents" )
+    @Activity(projectId = "projectId", type = ActivityType.GRANT_OFFER_LETTER_SIGNED)
     ServiceResult<Void> importGrantOfferLetter(long projectId);
 
 }

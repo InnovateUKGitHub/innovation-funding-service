@@ -289,13 +289,13 @@ the internal user approve SP and issue GOL
     the user navigates to the page    ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send to project team")
-    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
+    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
 
 applicant upload the GOL
     Log in as a different user            &{RTO_lead_applicant_credentials}
     the user navigates to the page        ${server}/project-setup/project/${ProjectID}
-    the user clicks the button/link       link = Grant offer letter
+    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
