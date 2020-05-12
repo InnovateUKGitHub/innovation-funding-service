@@ -1,5 +1,6 @@
 package org.innovateuk.ifs;
 
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -58,6 +59,9 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     @Mock
     protected StakeholderRepository stakeholderRepository;
 
+    @Mock
+    protected ExternalFinanceRepository externalFinanceRepository;
+
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
 
         List<ProjectUser> projectManagerUser = newProjectUser().build(1);
@@ -113,6 +117,16 @@ public abstract class BasePermissionRulesTest<T> extends RootPermissionRulesTest
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
         List<Role> projectFinanceUser = emptyList();
         user.setRoles(projectFinanceUser);
+    }
+
+    protected void setUpUserAsSupport(ProjectResource project, UserResource user) {
+        List<Role> supportUser = singletonList(Role.SUPPORT);
+        user.setRoles(supportUser);
+    }
+
+    protected void setUpUserNotAsSupport(ProjectResource project, UserResource user) {
+        List<Role> supportUser = emptyList();
+        user.setRoles(supportUser);
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {

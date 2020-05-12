@@ -24,4 +24,7 @@ public interface ApplicationNotificationService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> informIneligible(long applicationId,
                                          ApplicationIneligibleSendResource applicationIneligibleSendResource);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'APPLICATION_REOPENED_NOTIFICATION')")
+    ServiceResult<Void> sendNotificationApplicationReopened(@P("applicationId") Long applicationId);
 }

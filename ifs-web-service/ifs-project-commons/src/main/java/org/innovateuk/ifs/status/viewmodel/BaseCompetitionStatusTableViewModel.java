@@ -16,14 +16,17 @@ public abstract class BaseCompetitionStatusTableViewModel {
     private final List<InternalProjectSetupRow> rows;
     private final boolean canExportBankDetails;
     private final boolean isLoan;
+    private final boolean externalFinanceUser;
 
-    public BaseCompetitionStatusTableViewModel(CompetitionResource competitionResource, List<InternalProjectSetupRow> rows, boolean projectFinanceUser) {
+
+    public BaseCompetitionStatusTableViewModel(CompetitionResource competitionResource, List<InternalProjectSetupRow> rows, boolean projectFinanceUser, boolean externalFinanceUser) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.columns = competitionResource.getProjectSetupStages();
         this.rows = rows;
         this.canExportBankDetails = projectFinanceUser && columns.contains(BANK_DETAILS);
         this.isLoan = competitionResource.isLoan();
+        this.externalFinanceUser = externalFinanceUser;
     }
 
     public abstract String getEmptyTableText();
@@ -50,5 +53,9 @@ public abstract class BaseCompetitionStatusTableViewModel {
 
     public boolean isIsLoan() {
         return isLoan;
+    }
+
+    public boolean isExternalFinanceUser() {
+        return externalFinanceUser;
     }
 }

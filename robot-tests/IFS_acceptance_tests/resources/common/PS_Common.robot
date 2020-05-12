@@ -6,6 +6,8 @@ Resource    Applicant_Commons.robot
 
 ${PS_Competition_Name}     Rolling stock future developments
 ${PS_Competition_Id}       ${competition_ids["${PS_Competition_Name}"]}
+${PS_Point_Project_Name}   Point control and automated monitoring
+${PS_Point_Project_Id}     ${project_ids["${PS_Point_Project_Name}"]}
 
 #Project: London underground – enhancements to existing stock and logistics
 # EF = Experian feedback
@@ -157,28 +159,60 @@ ${MobileProjectName}  Mobile Phone Data for Logistics Analytics
 ${MobileProjectId}    ${project_ids["${MobileProjectName}"]}
 
 *** Keywords ***
+Finance reviewer is added to the project
+    [Arguments]  ${projectURL}
+    log in as a different user                &{ifs_admin_user_credentials}
+    the user navigates to the page            ${projectURL}
+    the user clicks the button/link           jQuery = a:contains("Edit")
+    the user selects finance reviewer         Rianne Almeida
+    the user clicks the button/link           jQuery = button:contains("Update finance reviewer")
+    the user should see the element           jQuery = tr:contains("Rianne Almeida")
+
+The user selects finance reviewer
+    [Arguments]   ${FlName}
+    input text                          id = userId    ${FlName}
+    the user clicks the button/link     jQuery = ul li:contains("${FlName}")
+
 The user adds a new team member
   [Arguments]  ${firstName}  ${email}
   the user enters text to a text field   css = input[name=name]   ${firstName}
   the user enters text to a text field   css = input[name=email]  ${email}
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
-
 internal user generates the GOL
-    [Arguments]  ${projectID}
+    [Arguments]  ${setDocusign}  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user uploads the file          grantOfferLetter  ${valid_pdf}
+    the user uploads the file          grantOfferLetter  ${gol_pdf}
+    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send to project team")
-    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
+    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
 
 Applicant uploads the GOL
     [Arguments]  ${projectID}
     the user navigates to the page        ${server}/project-setup/project/${projectID}
-    the user clicks the button/link       link = Grant offer letter
+    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
+
+Applicant uploads the GOL using Docusign
+    [Arguments]  ${projectID}  ${date}
+    the user navigates to the page            ${server}/project-setup/project/${projectID}
+    the user clicks the button/link           jquery = a:contains("Grant offer letter")
+    the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           jQuery = span:contains("Please review the documents below.")
+    the user selects the checkbox             disclosureAccepted
+    the user clicks the button/link           jQuery = button:contains("Continue")
+    the user clicks the button/link           jQuery = span:contains("Start")
+    the user clicks the button/link           css = div.initials-tab-content
+    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:first  ${date}
+    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:last   ${date}
+    the user clicks the button/link           css = div.signature-tab-content
+    the user clicks the button/link           css = div.documents-finish-button-decoration
+    the user should see the element           jQuery = h1:contains("Grant offer letter")
 
 the internal user approve the GOL
     [Arguments]  ${projectID}
@@ -188,6 +222,22 @@ the internal user approve the GOL
     the user clicks the button/link     id = submit-button
     the user clicks the button/link     id = accept-signed-gol
     the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+
+the internal user rejects the GOL
+    [Arguments]  ${projectID}
+    log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button     REJECTED  rejectGOL
+    the user enters text to a text field  id = gol-reject-reason   Rejected
+    the user clicks the button/link       id = submit-button
+    the user clicks the button/link       jQuery = button:contains("Reject signed grant offer letter")
+    the user should see the element       jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
+
+the applicant is able to see the rejected GOL
+    [Arguments]  ${projectID}
+    the user navigates to the page            ${server}/project-setup/project/${projectID}
+    the user clicks the button/link           link = Grant offer letter
+    the user should see the element           jQuery = .fail-alert h2:contains("Your grant offer letter has been rejected by Innovate UK")
 
 the user enters bank details
     the user clicks the button/link                      link = Bank details

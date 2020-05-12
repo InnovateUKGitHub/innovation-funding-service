@@ -530,7 +530,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
         when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisations.get(1)));
 
-        MvcResult result = mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("costsViewModel", viewModel))
                 .andExpect(model().attribute("form", instanceOf(AcademicCostForm.class)))

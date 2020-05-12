@@ -135,6 +135,11 @@ public class ApplicationResource {
     }
 
     @JsonIgnore
+    public boolean canBeReopened() {
+        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED || applicationState == ApplicationState.SUBMITTED;
+    }
+
+    @JsonIgnore
     public boolean isApproved() {
         return applicationState == ApplicationState.APPROVED;
     }

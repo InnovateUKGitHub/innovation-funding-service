@@ -28,6 +28,11 @@ public class CompetitionSetupPermissionRules {
         return competitionInitialDetailsSet(competitionCompositeId);
     }
 
+    @PermissionRule(value = "MANAGE_COMP_FINANCE_USERS", description = "Allowed to manage competition finance")
+    public boolean manageCompetitionFinance(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+        return competitionInitialDetailsSet(competitionCompositeId);
+    }
+
     private boolean competitionInitialDetailsSet(CompetitionCompositeId competitionCompositeId) {
         return competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionCompositeId.id());
     }

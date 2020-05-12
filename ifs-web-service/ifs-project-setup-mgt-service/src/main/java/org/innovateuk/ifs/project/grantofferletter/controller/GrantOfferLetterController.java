@@ -255,7 +255,8 @@ public class GrantOfferLetterController {
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 golState,
                 project.getGrantOfferLetterRejectionReason(),
-                project.getProjectState());
+                project.getProjectState(),
+                project.isUseDocusignForGrantOfferLetter());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")

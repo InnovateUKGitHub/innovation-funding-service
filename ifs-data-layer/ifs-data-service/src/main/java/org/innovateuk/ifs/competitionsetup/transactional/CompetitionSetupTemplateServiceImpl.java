@@ -2,10 +2,9 @@ package org.innovateuk.ifs.competitionsetup.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
@@ -62,6 +61,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private CompetitionDocumentConfigRepository competitionDocumentConfigRepository;
 
     @Autowired
+    private CompetitionAssessmentConfigRepository competitionAssessmentConfigRepository;
+
+    @Autowired
     private FileTypeRepository fileTypeRepository;
 
     @Override
@@ -85,7 +87,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         Competition competition = competitionOptional.get();
 
         competition.setCompetitionType(competitionType.get());
-        setDefaultAssessorPayAndCount(competition);
+        setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
+        setDefaultOrganisationConfig(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
@@ -113,6 +116,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                     q.setShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
                 });
             }
+        }
+    }
+
+    private void setDefaultOrganisationConfig(Competition competition) {
+        if (competition.getCompetitionOrganisationConfig() == null) {
+            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
+            competitionOrganisationConfig.setCompetition(competition);
+            competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
         }
     }
 
@@ -174,15 +185,18 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         return competition;
     }
 
-    private Competition setDefaultAssessorPayAndCount(Competition competition) {
-        if (competition.getAssessorCount() == null) {
+    private Competition setDefaultAssessorPayAndCountAndAverageAssessorScore(Competition competition) {
+
+        if (competition.getCompetitionAssessmentConfig() == null) {
+            CompetitionAssessmentConfig competitionAssessmentConfig = new CompetitionAssessmentConfig();
+            competitionAssessmentConfig.setCompetition(competition);
+
             Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-            defaultAssessorOption.ifPresent(assessorCountOption -> competition.setAssessorCount(assessorCountOption.getOptionValue()));
+            defaultAssessorOption.ifPresent(assessorCountOption -> competitionAssessmentConfig.setAssessorCount(assessorCountOption.getOptionValue()));
+            competitionAssessmentConfig.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
+            competition.setCompetitionAssessmentConfig(competitionAssessmentConfig);
         }
 
-        if (competition.getAssessorPay() == null) {
-            competition.setAssessorPay(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY);
-        }
         return competition;
     }
 

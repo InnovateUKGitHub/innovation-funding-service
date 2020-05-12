@@ -289,6 +289,7 @@ the user fills in the CS Assessors
     the user should see the element    css = #assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
+    the user selects the radio button  averageAssessorScore  0
     the user clicks the button/link    jQuery = button:contains("Done")
     the user should see the element    jQuery = dt:contains("How many") + dd:contains("3")
     the user clicks the button/link    link = Competition setup
@@ -459,3 +460,13 @@ The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
+
+the user set assessor score notification to yes
+    the user clicks the button/link         link = View and update competition setup
+    the user clicks the button/link         link = Assessors
+    the user clicks the button/link         jQuery = button:contains("Edit")
+    the user selects the radio button       assessorCount   5
+    the user selects the radio button       hasAssessmentPanel  hasAssessmentPanel-0
+    the user selects the radio button       hasInterviewStage  hasInterviewStage-0
+    the user selects the radio button       averageAssessorScore  averageAssessorScore-0
+    the user clicks the button/link         jQuery = button:contains("Done")

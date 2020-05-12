@@ -235,7 +235,7 @@
     </th:block>
     <p class="govuk-body" th:if="${model.complete}">
         Terms and conditions have been accepted by all partners in this project.
-        <a th:href="@{~/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})} + '?readonly=true'">
+        <a th:href="@{~/application/{applicationId}/form/question/{questionId}/terms-and-conditions(applicationId=${model.applicationId},questionId=${model.questionId})}">
             View terms and conditions</a>
     </p>
 </th:block>

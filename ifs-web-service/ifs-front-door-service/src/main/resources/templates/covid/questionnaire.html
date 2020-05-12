@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Support for Innovate UK award recipients'" />
+</head>
+<body class="govuk-template__body">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-configured-partner-document" />
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:if="${previousAnswers == null}" th:insert="fragments/layout :: header-sub" />
+    <th:block th:unless="${previousAnswers == null}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl=@{/covid-19/questionnaire/{questionType}(questionType=${previousAnswers.isEmpty() ? '' : previousAnswers.get(previousAnswers.size() - 1).left})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Support for Innovate UK award recipients',size='govuk-heading-xl'" />
+
+        <th:block th:if="${decision == null}">
+
+            <th:block th:if="${questionType == null}">
+                <p class="govuk-body">Innovate UK has developed a range of options for supporting its existing customers with current projects through the impacts of the pandemic, including:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>Timing extensions</li>
+                    <li>Monthly grant payments</li>
+                    <li>Continuity Grants</li>
+                    <li>Innovation Continuity Loans</li>
+                    <li>Innovation and Growth Adviser support</li>
+                </ul>
+                <p class="govuk-body">The following questions are designed to help you navigate through the funding support available to find the best fit option for you. Once you have identified this, we will direct you to the appropriate application form. All support is subject to status and our assessment of your application.</p>
+                <p class="govuk-body">If you are looking for funding for a new project, support is also available for innovators pursuing new projects, information on which can be found <a target="_blank" href="/competition/search">here (opens in a new window)</a>.</p>
+                <a th:href="@{/covid-19/questionnaire/business}" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2" data-module="govuk-button">
+                    Start now
+                    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" focusable="false">
+                        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+                    </svg>
+                </a>
+            </th:block>
+
+
+            <th:block th:unless="${questionType == null}">
+                <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                    <div class="govuk-form-group" th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m" th:text="${questionType.question}">Is you a business?</legend>
+                            <span th:if="${questionType.hint != null}" th:text="${questionType.hint}" class="govuk-hint">Hint text.</span>
+                            <th:block th:if="${#fields.hasErrors('answer')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
+                            </th:block>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input id="yes"
+                                           type="radio"
+                                           th:field="*{answer}"
+                                           value="true"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.covid.questionnaire.required}">
+                                    <label for="yes" class="govuk-label govuk-radios__label">Yes</label>
+                                </div>
+
+                                <div class="govuk-radios__item">
+                                    <input id="no"
+                                           type="radio"
+                                           th:field="*{answer}"
+                                           value="false"
+                                           class="govuk-radios__input"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.covid.questionnaire.required}">
+                                    <label for="no" class="govuk-label govuk-radios__label">No</label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <button class="govuk-button govuk-!-margin-top-5" type="submit">Next</button>
+                </form>
+            </th:block>
+        </th:block>
+
+        <th:block th:unless="${decision == null}">
+            <th:block th:if="${decision == 'default'}">
+                <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Innovate UK EEN Innovation and Growth Adviser support</h3>
+                    <p class="govuk-body"><a target="_blank" href=" https://www.enterprise-europe.co.uk/contact-us#no-back">Visit the Innovate UK EEN (opens in a new window)</a> if you are an SME seeking the support of an experienced Innovation and Growth Adviser to help you address short term challenges and focus on future growth.</p>
+                </div>
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-top-4">
+                    <h3 class="govuk-heading-s">Business support</h3>
+                    <p class="govuk-body"><a target="_blank" href="https://www.businesssupport.gov.uk/coronavirus/">Visit GOV.UK (opens in a new window)</a> for Coronavirus business support.</p>
+                </div>
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-top-4">
+                    <h3 class="govuk-heading-s">Financial support</h3>
+                    <p class="govuk-body"><a target="_blank" href="https://www.british-business-bank.co.uk/ourpartners/coronavirus-business-interruption-loan-scheme-cbils-2/">Visit the British Business Bank (opens in a new window)</a> if you are an SME that needs financial support, because you are losing revenue and your cashflow is being disrupted due to the Covid-19 pandemic.
+                    </p>
+                </div>
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-top-4">
+                    <h3 class="govuk-heading-s">Investment</h3>
+                    <p class="govuk-body"><a target="_blank" href="https://www.british-business-bank.co.uk/ourpartners/future-fund/"> Visit the British Business Bank (opens in a new window)</a> if you are an SME that needs investment.</p>
+                </div>
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-top-4">
+                    <h3 class="govuk-heading-s">New innovation project</h3>
+                    <p class="govuk-body"><a target="_blank" href="/competition/search">Apply for funding with Innovate UK (opens in a new window)</a> if you want funding support for a new innovation project.</p>
+                </div>
+            </th:block>
+            <th:block th:if="${decision == 'non-business'}">
+                <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Business support</h3>
+                    <p class="govuk-body"><a target="_blank" href="https://www.businesssupport.gov.uk/coronavirus/">Visit GOV.UK (opens in a new window)</a> for Coronavirus business support.</p>
+                </div>
+            </th:block>
+            <th:block th:if="${decision == 'contact-monitoring-officer'}">
+                <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Project change request</h3>
+                    <p class="govuk-body">Contact your Innovate UK monitoring officer to discuss a project change request.</p>
+                </div>
+            </th:block>
+            <th:block th:if="${decision == 'monthly-funding'}">
+                <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Cashflow</h3>
+                    <p class="govuk-body">We may be able to provide you with monthly rather than quarterly payments to accelerate the grant towards
+                        your eligible project costs. You will still have to fund the costs not covered by your grant.</p>
+                    <p class="govuk-body">Contact your Innovate UK monitoring officer for more information.</p>
+                </div>
+            </th:block>
+            <th:block th:if="${decision == 'continuity-loan'}">
+                <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Loan</h3>
+                    <p class="govuk-body">We may be able to offer you an innovation continuity loan of between £250,000 and £1,600,000 for a period of up to 7 years, to support project costs not covered by your grant. You will have to repay the loan with interest. You must provide us with your financial information so that we can assess the continued financial viability of your business.</p>
+                    <p class="govuk-body"><a target="_blank" href="https://earlymetrics.fra1.qualtrics.com/jfe/form/SV_8Ag4hfhZTndA2Et">Apply for an innovation continuity loan (opens in a new window)</a></p>
+                </div>
+            </th:block>
+            <th:block th:if="${decision == 'continuity-grant'}">
+                <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Continuity grant application</h3>
+                    <p class="govuk-body">We may be able to offer you a continuity grant of up to £250,000 to support your project and reasonable business costs not covered by your grant. We will need you to provide confirmation of your eligibility. We will also take publicly available financial information into account to assess the continued financial viability of your business.</p>
+                    <p class="govuk-body"><a target="_blank" href="https://apply-for-innovation-funding.service.gov.uk/competition/596/overview">Apply for a continuity grant (opens in a new window)</a></p>
+                </div>
+            </th:block>
+
+
+        </th:block>
+        <table class="govuk-table govuk-!-margin-top-3" th:unless="${previousAnswers == null or previousAnswers.isEmpty()}">
+            <caption class="govuk-table__caption">
+                <h2 class="govuk-heading-m">Previous answers</h2>
+                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">Start again</a></p>
+            </caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Question</th>
+                <th scope="col" class="govuk-table__header">Answer</th>
+                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Change answer</span></th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr th:each="answer : ${previousAnswers}"
+                class="govuk-table__row">
+                <td scope="row" class="govuk-table__cell govuk-!-width-one-half" th:text="${answer.left.question}">Where is your business based?</td>
+                <td class="govuk-table__cell" th:text="${answer.right  ? 'Yes' : 'No'}"></td>
+                <td class="govuk-table__cell alignright">
+                    <a class="govuk-link" th:href="@{/covid-19/questionnaire/{questionType}(questionType=${answer.left})}">Change answer</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
