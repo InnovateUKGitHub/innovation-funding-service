@@ -30,7 +30,7 @@ public class OrganisationCreationLeadInitializationController extends AbstractOr
     public String initializeLeadRegistrationJourney(HttpServletRequest request, HttpServletResponse response) {
         //This is the first endpoint when creating a new account as lead applicant.
         registrationCookieService.deleteOrganisationCreationCookie(response);
-        // Implement properly once IFS-7194 has done in, for now set to true for all
+
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
         CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 

@@ -106,7 +106,7 @@ public class OrganisationSelectionController {
     private String nextPageInFlow(HttpServletRequest request) {
 
         Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-//tidy this
+
         if (organisationInternationalForm.isPresent()) {
             if (organisationInternationalForm.get().getInternational()) {
                 return "/organisation/create/lead-organisation-type";
