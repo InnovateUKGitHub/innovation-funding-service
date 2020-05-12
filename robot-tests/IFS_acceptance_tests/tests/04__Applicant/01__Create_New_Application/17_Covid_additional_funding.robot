@@ -1,4 +1,16 @@
 *** Settings ***
+Documentation     IFS-7365 DocuSign Integration
+...
+...               IFS-7460 Enter funding sought, not funding level
+...
+...               IFS-7357 Allowing external users to complete viability & eligibility checks
+...
+...               IFS-7441 Allow a competition to remain open whilst applicants proceed through PS
+...
+...               IFS-7452 COVID-19 continuity awards - project costs
+...
+...               IFS-7440 Allow applicants to edit a submitted application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -27,14 +39,16 @@ New external project finance can create account
     [Documentation]  IFS-7357
     Given the user reads his email and clicks the link   ${exfinanceemail}  Invitation to review an Innovation Funding Service competition  You have been invited  1
     When external project finance creates account
-    Then The user should not see the element                 link = ${COVIDcompetitionTitle}
+    Then The user should not see the element             link = ${COVIDcompetitionTitle}
 
 Create application to covid comp
+    [Documentation]  IFS-7441
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page   ${server}/competition/${COVIDcompetitionId}/overview
     Then the user completes covid application
 
 Applicant is asked for funding sought
+    [Documentation]  IFS-7460
     Given the user clicks the button/link        link = Your funding
     And the user enters text to a text field     id = amount   21
     When the user selects the radio button       otherFunding  false
@@ -43,17 +57,20 @@ Applicant is asked for funding sought
     [Teardown]  the user clicks the button/link  link = Back to application overview
 
 Submit application
+    [Documentation]  IFS-7440
     Given the user clicks the button/link    id = application-overview-submit-cta
     And the user should not see the element  jQuery = .message-alert:contains("You will not be able to make changes")
     When the user clicks the button/link     id = submit-application-button
     Then the user should see the element     link = Reopen application
 
 Non lead cannot reopen competition
+    [Documentation]  IFS-7440
     Given log in as a different user           collaborator@example.com  ${correct_password}
     When the user should see the element       link = ${COVIDapplicationTitle1}
     Then the user should not see the element   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
 
 Lead can reopen application
+   [Documentation]  IFS-7440
    [Setup]  log in as a different user   &{lead_applicant_credentials}
    Given the user clicks the button/link  link = Dashboard
    When the user clicks the button/link   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
@@ -63,27 +80,32 @@ Lead can reopen application
    And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
-    Given the user clicks the button/link  id = application-overview-submit-cta
+    [Documentation]  IFS-7440
+    Given the user clicks the button/link      id = application-overview-submit-cta
     And the user should not see the element    jQuery = .message-alert:contains("You will not be able to make changes")
-    Then the user clicks the button/link   id = submit-application-button
+    Then the user clicks the button/link       id = submit-application-button
 
 Internal user cannot invite to assesment
+    [Documentation]  IFS-7441
     Given Log in as a different user       &{Comp_admin1_credentials}
     When The user clicks the button/link   link = ${COVIDcompetitionTitle}
     Then The user should see the element   jQuery = .disabled:contains("Invite assessors to assess the competition")
     And The user should see the element    jQuery = .disabled:contains("Manage assessments")
 
 Internal user can send funding notification
+    [Documentation]  IFS-7441
     [Setup]  get application id by name and set as suite variable   ${COVIDapplicationTitle1}
     Given the user clicks the button/link    link = Input and review funding decision
     Then the user can send successful funding notification
 
 Applicant can no longer reopen the competition
+    [Documentation]  IFS-7440
     Given Log in as a different user           &{lead_applicant_credentials}
     When The user should see the element       link = ${COVIDapplicationTitle1}
     Then the user should not see the element   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
 
 Competition is in Live and PS tabs
+    [Documentation]   IFS-7441
     [Setup]  log in as a different user     &{Comp_admin1_credentials}
     Given the user clicks the button/link   jQuery = a:contains("Live (")
     And the user should see the element     link = ${COVIDcompetitionTitle}
@@ -149,8 +171,36 @@ External project finance can generate spend profile
     And the user clicks the button/link    css = #generate-spend-profile-modal-button
     Then the internal user can complete PS
 
+Internal user is able to approve Spend profile and generates the GOL
+    [Documentation]  IFS-7365
+    [Setup]  Requesting Project ID of this Project
+    Given proj finance approves the spend profiles  ${ProjectID}
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And check activity log
+    And internal user generates the GOL             YES  ${ProjectID}
+
+Applicant is able to upload the GOL
+    [Documentation]  IFS-7365
+    Given log in as a different user               &{lead_applicant_credentials}
+    When applicant uploads the GOL using Docusign  ${ProjectID}  ${tomorrowday}/${nextmonth}/${nextyear}
+
+Internal user is able to reject the GOL and applicant can re-upload
+    [Documentation]  IFS-7365
+    Given the internal user rejects the GOL             ${ProjectID}
+    When log in as a different user                     &{lead_applicant_credentials}
+    Then the applicant is able to see the rejected GOL  ${ProjectID}
+    And applicant uploads the GOL using Docusign        ${ProjectID}  ${tomorrowday}/${nextmonth}/${nextyear}
+
+Internal user is able to approve the GOL and the project is now Live
+    [Documentation]  IFS-7365
+    Given the internal user approve the GOL  ${ProjectID}
+    When log in as a different user          &{lead_applicant_credentials}
+    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}
+    Then the user should see the element     jQuery = p:contains("The project is live")
+
 Competition goes into previous
-    [Setup]  the user clicks the button/link  link = Dashboard
+    [Documentation]   IFS-7441
+    [Setup]  log in as a different user  &{Comp_admin1_credentials}
     Given the user clicks the button/link    jQuery = a:contains("Project setup (")
     And The user should not see the element  link = ${COVIDcompetitionTitle}
     when the user clicks the button/link     jQuery = a:contains("Previous (")
@@ -203,22 +253,6 @@ the project finance approves all steps before finance
     the user clicks the button/link              jQuery = td.action:nth-of-type(5)
     approve bank account details
 
-
-Approve finance
-    the user clicks the button/link   jQuery = td.ok + td.ok + td.ok + td.ok + td.ok + td.action a
-    confirm viability    0
-        confirm eligibility  0
-            Given the user clicks the button/link    css = .generate-spend-profile-main-button
-            And the user clicks the button/link    css = #generate-spend-profile-modal-button
-            log in as a different user         &{lead_applicant_credentials}
-            the user clicks the button/link    link = ${COVIDapplicationTitle1}
-            the user clicks the button/link    link = Spend profile
-            the user clicks the button/link    link = Empire Ltd
-            the user clicks the button/link    id = spend-profile-mark-as-complete-button
-            the user clicks the button/link    jQuery = a:contains("Review and submit project spend profile")
-            the user clicks the button/link    jQuery = a:contains("Submit project spend profile")
-            the user clicks the button/link    id = submit-send-all-spend-profiles
-
 confirm viability
     [Arguments]  ${viability}
     the user clicks the button/link   css = .viability-${viability}
@@ -243,46 +277,17 @@ approve bank account details
     the user should see the element    jQuery = h2:contains("The bank details provided have been approved.")
     the user clicks the button/link    link = Back to project setup
 
-send and approve gol
-    log in as a different user         &{ifs_admin_user_credentials}
+check activity log
     the user navigates to the page     ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user clicks the button/link    link = View activity log
     the user clicks the button/link    jQuery = li:contains("Application reopened") a:contains("View application overview")
     the user should see the element    jQuery = h1:contains("Application overview")
-    the user navigates to the page     ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
-    the user clicks the button/link    jQuery = td.action:nth-of-type(7) a
-    the user selects the checkbox      approvedByLeadTechnologist
-    the user clicks the button/link    jQuery = button:contains("Approved")
-    the user clicks the button/link    jQuery = .modal-accept-profile button:contains("Approve")
-    the user clicks the button/link    jQuery = td.action:nth-of-type(8) a
-    the user uploads the file          grantOfferLetter  ${valid_pdf}
-    the user selects the checkbox      confirmation
-    the user clicks the button/link    id = send-gol
-    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
-    Log in as a different user         &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDapplicationTitle1}
-    the user clicks the button/link    link = Grant offer letter
-    the user uploads the file          signedGrantOfferLetter    ${valid_pdf}
-    the user clicks the button/link    css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
-    the user clicks the button/link    id = submit-gol-for-review
-    log in as a different user                   &{ifs_admin_user_credentials}
-    the user navigates to the page     ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
-    the user clicks the button/link    jQuery = td.action:nth-of-type(8) a
-    the user selects the radio button  approvalType  acceptGOL
-        And the user clicks the button/link    jQuery = button:contains("Submit")
-        And the user clicks the button/link    jQuery = button[type = "submit"]:contains("Accept signed grant offer letter")
 
 the external finance cannot access spend profile
     log in as a different user            ${exfinanceemail}  ${short_password}
     the user navigates to the page        ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     the user should see the element       jQuery = td.action:nth-of-type(7)
     the user should not see the element   jQuery = td.action:nth-of-type(7) a
-
-the external finance cannot access GOL section
-    Log in as a different user              ${exfinanceemail}  ${short_password}
-    the user clicks the button/link         link = ${COVIDcompetitionId}
-    the user should not see the element     jQuery = td.action:nth-of-type(8) a
-    the user should not see the element     jQuery = td.ok:nth-of-type(7) a
 
 Complete external project finance details
     the user enters text to a text field    id = firstName     External
@@ -380,4 +385,8 @@ the internal user can complete PS
     the user clicks the button/link    jQuery = a:contains("Submit project spend profile")
     the user clicks the button/link    id = submit-send-all-spend-profiles
     the external finance cannot access spend profile
-    send and approve gol
+    log in as a different user         &{ifs_admin_user_credentials}
+
+Requesting Project ID of this Project
+    ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}
+    Set suite variable    ${ProjectID}

@@ -2,9 +2,13 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.validator;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -15,10 +19,13 @@ import org.springframework.validation.DataBinder;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundingFormValidator> {
 
@@ -65,5 +72,30 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].source"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].date"));
         assertTrue(bindingResult.hasFieldErrors("otherFundingRows[20].fundingAmount"));
+    }
+
+    @Test
+    public void validateYourFundingAmountForm() {
+        YourFundingAmountForm form =  new YourFundingAmountForm();
+        form.setAmount(new BigDecimal("100"));
+
+        form.setOtherFunding(false);
+
+        BindingResult bindingResult = new DataBinder(form).getBindingResult();
+        UserResource user = newUserResource().build();
+        long applicationId = 2L;
+        OrganisationResource organisation = OrganisationResourceBuilder.newOrganisationResource().build();
+        ApplicationFinanceResource baseFinanceResource = mock(ApplicationFinanceResource.class);
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
+        when(applicationFinanceRestService.getFinanceDetails(applicationId, organisation.getId())).thenReturn(restSuccess(baseFinanceResource));
+
+        when(baseFinanceResource.getTotal()).thenReturn(new BigDecimal("99.9"));
+        service.validate(form, bindingResult, user, applicationId);
+        assertFalse(bindingResult.hasErrors());
+
+        when(baseFinanceResource.getTotal()).thenReturn(new BigDecimal("50"));
+        service.validate(form, bindingResult, user, applicationId);
+        assertTrue(bindingResult.hasErrors());
+        assertTrue(bindingResult.hasFieldErrors("amount"));
     }
 }

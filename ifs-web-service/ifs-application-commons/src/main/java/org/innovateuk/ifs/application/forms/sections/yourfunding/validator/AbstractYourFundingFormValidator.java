@@ -91,7 +91,8 @@ public class AbstractYourFundingFormValidator {
                 errors.rejectValue("amount", "validation.finance.funding.sought.min");
             } else {
                 BaseFinanceResource finance = financeSupplier.get();
-                if (form.getAmount().compareTo(finance.getTotal()) > 0) {
+                BigDecimal roundedCosts =  finance.getTotal().setScale(0, BigDecimal.ROUND_HALF_EVEN); //Same as thymeleaf
+                if (form.getAmount().compareTo(roundedCosts) > 0) {
                     errors.rejectValue("amount", "validation.finance.funding.sought.more.than.costs");
                 }
             }
