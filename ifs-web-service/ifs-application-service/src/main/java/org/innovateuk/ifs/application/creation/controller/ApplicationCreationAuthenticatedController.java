@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -78,8 +77,8 @@ public class ApplicationCreationAuthenticatedController {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
-        Optional<CompetitionOrganisationConfigResource> organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
-        if (organisationConfig.isPresent() && organisationConfig.get().getInternationalOrganisationsAllowed()) {
+        CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
+        if (organisationConfig.getInternationalOrganisationsAllowed()) {
             return "redirect:/organisation/create/international-organisation";
         }
         return "redirect:/organisation/select";

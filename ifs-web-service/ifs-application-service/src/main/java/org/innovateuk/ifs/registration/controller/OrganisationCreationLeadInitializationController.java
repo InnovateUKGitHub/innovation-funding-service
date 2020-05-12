@@ -32,13 +32,13 @@ public class OrganisationCreationLeadInitializationController extends AbstractOr
         registrationCookieService.deleteOrganisationCreationCookie(response);
         // Implement properly once IFS-7194 has done in, for now set to true for all
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        Optional<CompetitionOrganisationConfigResource> organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
+        CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
 
-        if (organisationConfig.isPresent() && organisationConfig.get().getInternationalLeadOrganisationAllowed()) {
+        if (organisationConfig.getInternationalLeadOrganisationAllowed()) {
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
         }
 
