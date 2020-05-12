@@ -138,6 +138,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     FUNDING_PANEL_DECISION_NOT_ALL_APPLICATIONS_REPRESENTED(BAD_REQUEST),
     FUNDING_PANEL_DECISION_NO_ASSESSOR_FEEDBACK_DATE_SET(BAD_REQUEST),
     FUNDING_PANEL_DECISION_WRONG_STATUS(BAD_REQUEST),
+    FUNDING_PANEL_DECISION_NONE_PROVIDED(BAD_REQUEST),
 
     /**
      * Assessor Journey
@@ -372,7 +373,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * External user search
      */
-    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST);
+    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST),
+
+    /**
+     * Docusign errors.
+     */
+    COULD_NOT_SEND_FILE_TO_DOCUSIGN(INTERNAL_SERVER_ERROR);
 
     private ErrorTemplate errorTemplate;
 
