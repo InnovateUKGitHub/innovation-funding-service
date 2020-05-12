@@ -168,7 +168,7 @@
                     <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
                        th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
                        target="_blank"
-                       class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>.
+                       class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>
                 </p>
 
                 <th:block th:if="${model.additionalContractFile}">
@@ -176,9 +176,9 @@
                     <p class="govuk-body">The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
-                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)"
+                           th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>.
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
                     </p>
                 </th:block>
             </th:block>
