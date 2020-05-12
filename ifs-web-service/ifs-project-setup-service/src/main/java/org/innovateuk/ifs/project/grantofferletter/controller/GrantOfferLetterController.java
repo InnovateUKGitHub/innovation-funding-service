@@ -57,6 +57,12 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+    @GetMapping("/docusign")
+    public String viewGrantOfferLetterPage(@PathVariable("projectId") long projectId) {
+        return "redirect:" + grantOfferLetterService.getDocusignUrl(projectId).getSuccess().getContent();
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping("/confirmation")
     public String confirmation(@P("projectId")@PathVariable("projectId") Long projectId, Model model) {
         model.addAttribute("projectId", projectId);

@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     IFS-7435 As an applicant I should be able to see the COVID-19 additional funding questionnaire
 ...
+...               IFS-7499 Content changes to screening questions
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Force Tags        Applicant
@@ -28,7 +29,7 @@ Applicant applying for additional funding is a business or third sector
     And the user should not see an error in the page
 
 Applicant applying for additional funding is a business but not an Innovate UK award recipient
-    [Documentation]  IFS-7435
+    [Documentation]  IFS-7435  IFS-7499
     [Tags]  HappyPath
     Given the user goes to the next query     no
     When the user is able to see other relevant links for award recipients
@@ -86,6 +87,7 @@ Applicant can start the questionnaire all over again
 
 *** Keywords ***
 the user is able to see other relevant links for award recipients
+    the user should see the element     link = Visit the Innovate UK EEN (opens in a new window)
     the user should see the element     link = Visit GOV.UK (opens in a new window)
     the user should see the element     link = Visit the British Business Bank (opens in a new window)
     the user should see the element     link = Apply for funding with Innovate UK (opens in a new window)

@@ -648,7 +648,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withUseDocusignForGrantOfferLetter(true)
                 .build();
 
-        when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(p));
+        when(projectRepositoryMock.findById(p.getId())).thenReturn(Optional.of(p));
 
         User projectManagerUser = pu.get(0).getUser();
         DocusignDocument document = new DocusignDocument(projectManagerUser.getId(), DocusignType.SIGNED_GRANT_OFFER_LETTER);
@@ -667,7 +667,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(fileServiceMock.getFileByFileEntryId(golFile.getId())).thenReturn(ServiceResult.serviceSuccess(contentSupplier));
         when(fileEntryMapperMock.mapToResource(golFile)).thenReturn(fileEntryResource);
 
-        ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
+        ServiceResult<Void> result = service.sendGrantOfferLetter(p.getId());
 
         assertTrue(result.isSuccess());
 

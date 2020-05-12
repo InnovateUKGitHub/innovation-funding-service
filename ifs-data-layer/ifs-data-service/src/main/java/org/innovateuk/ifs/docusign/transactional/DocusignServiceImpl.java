@@ -41,6 +41,8 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COULD_NOT_SEND_FILE_TO_DOCUSIGN;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -72,7 +74,8 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         try {
             return serviceSuccess(doSend(request));
         } catch (ApiException | IOException e) {
-            throw new IFSRuntimeException("Unable to send docusign doc", e);
+            LOG.error(e);
+            return serviceFailure(COULD_NOT_SEND_FILE_TO_DOCUSIGN);
         }
     }
 
@@ -93,7 +96,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         byte[] data = ByteStreams.toByteArray(request.getFileAndContents().getContentsSupplier().get());
 
         Document document = createDocusignDocument(data,
-                request.getDocumentName(),
+                request.getFileAndContents().getFileEntry().getName(),
                 docusignDocument.getId());
 
         Signer signer = createDocusignSigner(request.getEmail(),
@@ -105,13 +108,13 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
         signer.setTabs(tabs);
 
         EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition();
-        envelopeDefinition.setEmailSubject("Please sign " + request.getDocumentName());
+        envelopeDefinition.setEmailSubject(request.getSubject());
         envelopeDefinition.setDocuments(asList(document));
         Recipients recipients = new Recipients();
         recipients.setSigners(asList(signer));
         envelopeDefinition.setRecipients(recipients);
         envelopeDefinition.setStatus("sent");
-        envelopeDefinition.setEmailBlurb("<p>Here is some stuff</p><p>Some more</p><p>With a new line \n After new line </p>");
+        envelopeDefinition.setEmailBlurb(request.getEmailBody());
 
         EnvelopesApi envelopesApi = new EnvelopesApi(docusignApi.getApiClient());
         EnvelopeSummary results = envelopesApi.createEnvelope(accountId, envelopeDefinition);
@@ -275,7 +278,7 @@ public class DocusignServiceImpl extends RootTransactionalService implements Doc
 
     private void linkGrantOfferLetterFileToProject(byte[] results, Project project) throws IOException {
         InputStream stream = ByteSource.wrap(results).openStream();
-        FileEntryResource fileEntryResource = new FileEntryResource(project.getName() + " signed grant offer letter", MediaType.APPLICATION_PDF.toString(), results.length);
+        FileEntryResource fileEntryResource = new FileEntryResource("SignedGrantOfferLetter.pdf", MediaType.APPLICATION_PDF.toString(), results.length);
 
         fileService.createFile(fileEntryResource, () -> stream)
                 .andOnSuccessReturnVoid(fileDetails -> {

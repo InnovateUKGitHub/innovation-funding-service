@@ -373,7 +373,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * External user search
      */
-    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST);
+    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST),
+
+    /**
+     * Docusign errors.
+     */
+    COULD_NOT_SEND_FILE_TO_DOCUSIGN(INTERNAL_SERVER_ERROR);
 
     private ErrorTemplate errorTemplate;
 
