@@ -515,7 +515,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
     private String getEmailBody(String name, long applicationId, String projectName) {
        return String.format("<p>Dear %s</p>" +
-               "<p>Please sign the grant offer letter %d: %s.</p>" +
+               "<p>Please sign the grant offer letter for application %d: %s.</p>" +
                "<p>The 'Review Document' link will take you to DocuSign's secure website, where you can safely sign the letter. It will then be submitted to us for approval and you will be notified when it has been approved.</p>" +
                "<p>Yours sincerely</p>" +
                "Innovate UK, part of UK Research and Innovation<br/>" +
