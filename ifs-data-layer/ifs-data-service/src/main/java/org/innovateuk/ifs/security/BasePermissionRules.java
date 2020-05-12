@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
+import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
@@ -65,6 +66,9 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     @Autowired
     private MonitoringOfficerRepository monitoringOfficerRepository;
 
+    @Autowired
+    private ExternalFinanceRepository externalFinanceRepository;
+
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRoleIsIn(projectId, userId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
         return !partnerProjectUser.isEmpty();
@@ -125,6 +129,10 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return stakeholderRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
     }
 
+    protected boolean userIsExternalFinanceInCompetition(long competitionId, long loggedInUserId) {
+        return externalFinanceRepository.existsByCompetitionIdAndUserId(competitionId, loggedInUserId);
+    }
+
     protected boolean userIsStakeholderOnCompetitionForProject(long projectId, long loggedInUserId) {
         Optional<Project> project = projectRepository.findById(projectId);
         if(!project.isPresent()) {
@@ -132,6 +140,15 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         }
         Application application = project.get().getApplication();
         return userIsStakeholderInCompetition(application.getCompetition().getId(), loggedInUserId);
+    }
+
+    protected boolean userIsExternalFinanceOnCompetitionForProject(long projectId, long loggedInUserId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if(!project.isPresent()) {
+            return false;
+        }
+        Application application = project.get().getApplication();
+        return userIsExternalFinanceInCompetition(application.getCompetition().getId(), loggedInUserId);
     }
 
     protected boolean userIsMonitoringOfficerInCompetition(long competitionId, long loggedInUserId) {

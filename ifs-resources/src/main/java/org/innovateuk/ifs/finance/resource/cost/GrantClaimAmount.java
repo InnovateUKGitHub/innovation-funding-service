@@ -69,9 +69,10 @@ public class GrantClaimAmount extends AbstractFinanceRowItem implements GrantCla
         if (amount == null || total.compareTo(totalOtherFunding) == 0) {
             return BigDecimal.ZERO;
         }
+        BigDecimal roundedCosts = total.setScale(0, BigDecimal.ROUND_HALF_EVEN); //Same as thymeleaf
         return amount.add(totalOtherFunding)
                 .multiply(new BigDecimal(100))
-                .divide(total, 2, RoundingMode.HALF_UP);
+                .divide(roundedCosts, 2, RoundingMode.HALF_UP);
     }
 
     @Override

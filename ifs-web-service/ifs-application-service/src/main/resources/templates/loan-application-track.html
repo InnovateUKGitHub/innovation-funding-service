@@ -31,7 +31,7 @@
             <div class="govuk-panel__body govuk-!-font-size-19">
                 Application number: <span th:text="${model.currentApplication.id}"/><br/>
                 You completed part A on
-                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMM yyyy')}"/>
+                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"/>
                     at
                     <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}"/>.
                 <div class="govuk-!-margin-top-6">

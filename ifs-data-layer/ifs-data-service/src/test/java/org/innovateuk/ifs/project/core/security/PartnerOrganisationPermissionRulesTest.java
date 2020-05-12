@@ -1,16 +1,23 @@
 package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
@@ -134,6 +141,24 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
+    public void externalFinanceUserCanView() {
+
+        long projectId = 1L;
+        Competition competition = newCompetition().build();
+        Organisation organisation = newOrganisation().build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(EXTERNAL_FINANCE)).build();
+        Project project = newProject().withId(projectId).withApplication(newApplication()
+                .withCompetition(competition).build()).build();
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(organisation.getId()).withProject(projectId).build();
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanViewProjects(partnerOrg, user));
+    }
+
+
+    @Test
     public void externalUsersCannotView() {
 
         UserResource user = newUserResource().withRolesGlobal(singletonList(PARTNER)).build();
@@ -192,6 +217,23 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
             .build();
 
         assertFalse(rules.internalUsersCanReadPendingPartnerProgress(partnerOrg, user));
+    }
+
+    @Test
+    public void externalFinanceUsersCanViewPendingPartnerProgress() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        Competition competition = newCompetition().build();
+        UserResource user = newUserResource().withRoleGlobal(EXTERNAL_FINANCE).build();
+        Project project = newProject().withId(projectId).withApplication(newApplication()
+                .withCompetition(competition).build()).build();
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(organisationId).withProject(project.getId()).build();
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+
+        assertTrue(rules.competitionFinanceUsersCanReadPendingPartnerProgress(partnerOrg, user));
     }
 
     @Test

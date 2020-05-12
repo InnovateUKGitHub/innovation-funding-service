@@ -8,11 +8,14 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-2904 CSS Search by application number
 ...
 ...               IFS-3072 Search by either application number or competition name across each Competition management tab
+...
+...               IFS-7429 Support user has access to Project Details after Finance reviewer is assigned
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Support  CompAdmin  HappyPath
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
+Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com
@@ -47,6 +50,13 @@ Support user is able to search for an Application
     [Documentation]  IFS-2904
     When the user navigates to the page       ${server}/management/dashboard/live
     Then the user enters the application id into the search field
+
+Support user is able to access Project details once a finance contact is assigned
+    [Documentation]  IFS-7429
+    Given finance reviewer is added to the project    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    When log in as a different user                   &{support_user_credentials}
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    [Teardown]  The user clicks the button/link       link = Dashboard
 
 Support user is able to search active external users
     [Documentation]  IFS-1986 IFS-1841

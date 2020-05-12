@@ -2,6 +2,7 @@ package org.innovateuk.ifs.fundingdecision.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -13,6 +14,7 @@ import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +52,11 @@ public class ApplicationFundingDecisionController {
     public RestResult<Void> saveFundingDecisionData(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.saveFundingDecisionData(competitionId, applicationFundingDecisions).
                 toPutResponse();
+    }
+
+    @GetMapping("/notifications-to-send")
+    public RestResult<List<FundingDecisionToSendApplicationResource>> getNotificationResourceForApplications(@RequestParam("applicationIds") List<Long> applicationIds) {
+        return applicationFundingService.getNotificationResourceForApplications(applicationIds).toGetResponse();
     }
 
     private boolean isReleaseFeedbackCompletionStage(Map<Long, FundingDecision> fundingDecisions) {

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -64,7 +63,7 @@ public class CompetitionManagementApplicationController {
     private ManagementApplicationPopulator managementApplicationPopulator;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}")
     @AsyncMethod
     public String newApplicationSummary(@PathVariable("applicationId") final Long applicationId,
@@ -134,7 +133,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(

@@ -30,7 +30,7 @@ import static java.util.stream.Collectors.toMap;
 @Controller
 @RequestMapping("/project/{projectId}/funding-sought")
 @SecuredBySpring(value = "PROJECT_FINANCE_FUNDING", description = "Project finance team can amend funding levels in project setup.")
-@PreAuthorize("hasAuthority('project_finance')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'external_finance')")
 public class ProjectFinanceFundingSoughtController {
 
     @Autowired

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -38,6 +39,7 @@ public class GrantOfferLetterModelPopulator {
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectManager,
-                state);
+                state,
+                project.isUseDocusignForGrantOfferLetter());
     }
 }

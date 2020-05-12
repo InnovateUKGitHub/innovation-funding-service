@@ -72,8 +72,3 @@ do
   addUserToShibboleth $u $'\t'
 done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
 
-while read -a csv_line;
-do
-  addUserToShibboleth $csv_line ','
-done < emailsAndUUids.csv | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
-

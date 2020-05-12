@@ -313,9 +313,7 @@
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
                 <input type="hidden" th:field="*{overhead.costId}"/>
-                <!--/* Hacky way to set overheads in covid-19 comp. Remove when closed */-->
-                <th:block th:with="covid19=${model.competitionId.equals(583L)}">
-                    <th:block th:unless="${covid19}">
+                <th:block th:unless="${model.overheadAlwaysTwenty}">
                         <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-visually-hidden">Overhead costs</legend>
@@ -460,24 +458,23 @@
                             </div>
                         </div>
                     </th:block>
-                    <th:block th:if="${covid19}">
-                        <th:block th:with="unused=*{overhead.setRateType(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"></th:block>
-                        <input type="hidden" name="overhead.rateType" value="DEFAULT_PERCENTAGE"/>
-                        <p class="govuk-body">Overheads are calculated as 20% of labour costs</p>
-                        <h4 class="govuk-heading-s alignright section-total-summary">
-                            Total overhead costs
-                            <span class="govuk-heading-s"
-                                  data-mirror="#section-total-overhead">
-                                              £<th:block
-                                th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}"></th:block></span>
-                        </h4>
-                        <input type="hidden"
-                               id="section-total-overhead"
-                               data-calculation-fields="[id='section-total-labour'],0.2"
-                               th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
-                               data-calculation-operations="*"
-                               th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
-                    </th:block>
+                <th:block th:if="${model.overheadAlwaysTwenty}">
+                    <th:block th:with="unused=*{overhead.setRateType(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)}"></th:block>
+                    <input type="hidden" name="overhead.rateType" value="DEFAULT_PERCENTAGE"/>
+                    <p class="govuk-body">Overheads are calculated as 20% of labour costs</p>
+                    <h4 class="govuk-heading-s alignright section-total-summary">
+                        Total overhead costs
+                        <span class="govuk-heading-s"
+                              data-mirror="#section-total-overhead">
+                                          £<th:block
+                            th:text="${#numbers.formatInteger(form.totalOverheadCosts,0, 'DEFAULT')}"></th:block></span>
+                    </h4>
+                    <input type="hidden"
+                           id="section-total-overhead"
+                           data-calculation-fields="[id='section-total-labour'],0.2"
+                           th:attr="data-calculation-rawvalue=${form.totalOverheadCosts}"
+                           data-calculation-operations="*"
+                           th:value="|£${#numbers.formatInteger(form.totalOverheadCosts, 0, 'DEFAULT')}|"/>
                 </th:block>
             </th:block>
             <th:block th:if="${model.internal}"

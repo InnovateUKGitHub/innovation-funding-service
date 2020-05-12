@@ -106,7 +106,7 @@
             </div>
             <div class="govuk-grid-column-one-half">
                 <ul class="govuk-list govuk-list--bullet">
-                    <li th:if="${model.hasProject()}">
+                    <li th:if="${model.canViewActivityLog()}">
                         <a th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${model.competition.id},projectId=${model.projectId})}" class="govuk-link">
                             view activity log
                         </a>
@@ -117,7 +117,7 @@
 
         <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
 
-        <div class="govuk-body govuk-!-margin-top-6">
+        <div th:unless="${model.externalFinanceUser}" class="govuk-body govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${model.application.competition},appId=${model.application.id})}"
                class="govuk-link"
                rel="nofollow"

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.string.resource.StringResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
@@ -43,4 +44,7 @@ public interface GrantOfferLetterService {
 
     ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
+    ServiceResult<StringResource> getDocusignUrl(long projectId);
+
+    ServiceResult<Void> importSignedOfferLetter(long projectId);
 }
