@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @SecuredBySpring(value = "Controller", description = "Controller for managing innovation leads", securedType = CompetitionSetupInnovationLeadController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupInnovationLeadController {
-
     private static final String COMPETITION_ID_KEY = "competitionId";
     private static final String MODEL = "model";
 
@@ -43,7 +42,6 @@ public class CompetitionSetupInnovationLeadController {
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
     public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model) {
-
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 

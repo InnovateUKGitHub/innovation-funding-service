@@ -19,13 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CompetitionSetupInnovationLeadControllerTest extends BaseControllerMockMVCTest<CompetitionSetupInnovationLeadController> {
 
+    @Mock
+    private CompetitionSetupInnovationLeadService competitionSetupInnovationLeadService;
+
     @Override
     protected CompetitionSetupInnovationLeadController supplyControllerUnderTest() {
         return new CompetitionSetupInnovationLeadController();
     }
-
-    @Mock
-    private CompetitionSetupInnovationLeadService competitionSetupInnovationLeadService;
 
     @Test
     public void findAvailableInnovationLeadsNotAssignedToCompetition() throws Exception {

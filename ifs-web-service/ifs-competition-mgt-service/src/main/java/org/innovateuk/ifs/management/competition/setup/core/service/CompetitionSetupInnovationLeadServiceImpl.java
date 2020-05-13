@@ -3,7 +3,9 @@ package org.innovateuk.ifs.management.competition.setup.core.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionSetupInnovationLeadRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CompetitionSetupInnovationLeadServiceImpl implements CompetitionSetupInnovationLeadService {
 
     @Autowired

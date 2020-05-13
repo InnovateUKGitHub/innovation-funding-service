@@ -31,7 +31,6 @@ import org.innovateuk.ifs.management.competition.setup.eligibility.form.Eligibil
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
-import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -83,9 +82,6 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
-
-    @Autowired
-    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;

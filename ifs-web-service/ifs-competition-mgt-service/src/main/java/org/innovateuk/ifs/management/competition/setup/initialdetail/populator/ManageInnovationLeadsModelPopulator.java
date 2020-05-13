@@ -18,7 +18,6 @@ public class ManageInnovationLeadsModelPopulator {
     private CompetitionSetupInnovationLeadRestService competitionSetupInnovationLeadRestService;
 
     public ManageInnovationLeadsViewModel populateModel(CompetitionResource competition) {
-
         List<UserResource> availableInnovationLeadsNotAssignedToCompetition = competitionSetupInnovationLeadRestService.findAvailableInnovationLeadsNotAssignedToCompetition(competition.getId()).getSuccess();
         List<UserResource> innovationLeadsAssignedToCompetition = competitionSetupInnovationLeadRestService.findInnovationLeadsAssignedToCompetition(competition.getId()).getSuccess();
 
