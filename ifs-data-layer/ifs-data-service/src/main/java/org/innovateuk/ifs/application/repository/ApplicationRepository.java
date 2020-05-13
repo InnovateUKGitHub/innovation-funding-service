@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
@@ -159,6 +160,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                      @Param("funding") FundingDecisionStatus funding);
 
     int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(long competitionId);
+
+    int countByCompetitionIdAndFundingDecision(long competitionId, FundingDecisionStatus fundingDecision);
 
     int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(long competitionId);
 
