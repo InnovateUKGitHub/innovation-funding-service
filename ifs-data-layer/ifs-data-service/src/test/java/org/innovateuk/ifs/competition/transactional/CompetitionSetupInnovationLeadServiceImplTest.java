@@ -2,12 +2,10 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
-import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -19,8 +17,13 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -51,36 +54,20 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
     public void findInnovationLeads() {
         Long competitionId = 1L;
 
-        User user = UserBuilder.newUser().build();
-        UserResource userResource = UserResourceBuilder.newUserResource().build();
-        List<InnovationLead> innovationLeads = newInnovationLead()
-                .withUser(user)
-                .build(4);
+        User innovationLead1 = newUser().withRoles(singleton(INNOVATION_LEAD)).build();
+        User innovationLead2 = newUser().withRoles(singleton(INNOVATION_LEAD)).build();
+        List<User> innovationLeads = asList(innovationLead1, innovationLead2);
+
+        UserResource userResource1 = UserResourceBuilder.newUserResource().build();
+        UserResource userResource2 = UserResourceBuilder.newUserResource().build();
 
         when(innovationLeadRepository.findAvailableInnovationLeadsNotAssignedToCompetition(competitionId)).thenReturn(innovationLeads);
-        when(userMapper.mapToResource(user)).thenReturn(userResource);
+        when(userMapper.mapToResource(innovationLead1)).thenReturn(userResource1);
+        when(userMapper.mapToResource(innovationLead2)).thenReturn(userResource2);
         List<UserResource> result = service.findInnovationLeads(competitionId).getSuccess();
 
-        assertEquals(4, result.size());
-        assertEquals(userResource, result.get(0));
-    }
-
-    @Test
-    public void findAddedInnovationLeads() {
-        long competitionId = 1L;
-
-        User user = UserBuilder.newUser().build();
-        UserResource userResource = UserResourceBuilder.newUserResource().build();
-        List<InnovationLead> innovationLeads = newInnovationLead()
-                .withUser(user)
-                .build(4);
-
-        when(innovationLeadRepository.findAvailableInnovationLeadsNotAssignedToCompetition(competitionId)).thenReturn(innovationLeads);
-        when(userMapper.mapToResource(user)).thenReturn(userResource);
-        List<UserResource> result = service.findInnovationLeads(competitionId).getSuccess();
-
-        assertEquals(4, result.size());
-        assertEquals(userResource, result.get(0));
+        assertEquals(2, result.size());
+        assertEquals(userResource1, result.get(0));
     }
 
     @Test
@@ -96,8 +83,8 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
     public void addInnovationLead() {
         Long innovationLeadUserId = 2L;
 
-        Competition competition = CompetitionBuilder.newCompetition().build();
-        User innovationLead = UserBuilder.newUser().build();
+        Competition competition = newCompetition().build();
+        User innovationLead = newUser().build();
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
         when(userRepository.findById(innovationLeadUserId)).thenReturn(Optional.of(innovationLead));
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
