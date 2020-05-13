@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
-import javafx.util.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
@@ -22,6 +21,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 import static java.lang.String.format;
@@ -108,7 +109,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     public void updateWithoutGrowthTable() throws Exception {
         returnSuccessForUpdateWithoutGrowthTable();
 
-        mockMvc.perform(postAllFormParameters(new Pair("ignoredParameter","")))
+        mockMvc.perform(postAllFormParameters(new Pair<String, String>("ignoredParameter","")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -121,7 +122,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         returnSuccessForUpdateWithoutGrowthTable();
         when(pendingPartnerProgressRestService.markYourOrganisationComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        mockMvc.perform(postAllFormParameters(new Pair("mark-as-complete", "")))
+        mockMvc.perform(postAllFormParameters(new Pair<String, String>("mark-as-complete", "")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -161,7 +162,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         verify(pendingPartnerProgressRestService).markYourOrganisationIncomplete(projectId, organisationId);
     }
 
-    private RequestBuilder postAllFormParameters(Pair<String, String> param) {
+    private RequestBuilder postAllFormParameters(Pair<String, String> pair) {
         setupResource();
         return post(viewPageUrl())
             .param("organisationSize", organisationFinancesWithoutGrowthTableResource.getOrganisationSize().toString())
@@ -169,7 +170,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
                 organisationFinancesWithoutGrowthTableResource.getHeadCount().toString())
             .param("turnover",
                 organisationFinancesWithoutGrowthTableResource.getTurnover().toString())
-            .param(param.getKey(), param.getValue());
+            .param(pair.getKey(), pair.getValue());
     }
 
     private void returnSuccessForUpdateWithoutGrowthTable() {
