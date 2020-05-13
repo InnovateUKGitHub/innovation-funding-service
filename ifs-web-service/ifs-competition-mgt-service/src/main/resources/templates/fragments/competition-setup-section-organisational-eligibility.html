@@ -1,12 +1,13 @@
-
 <!-- =================== Comp setup section - Organisational Eligibility (12) ============================== -->
 <th:block th:fragment="section-content" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="govuk-error-summary" role="alert"
+         aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)"/>
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Organisational eligibility',size='govuk-heading-xl'" />
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Organisational eligibility',size='govuk-heading-xl'"/>
 
     <form th:action="@{(${model.general.editable} ? '' : 'organisational-eligibility/edit')}"
           method="post"
@@ -17,11 +18,13 @@
             <div id="international-organisations-applicable" class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('internationalOrganisationsApplicable')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="internationalOrganisationsApplicable">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
+                            id="internationalOrganisationsApplicable">
                         <h2 class="govuk-fieldset__heading">Can international organisations apply?</h2>
                     </legend>
                     <span class="govuk-hint">Is this competition open to organisations based outside the UK?</span>
-                    <span th:if="${#fields.hasErrors('internationalOrganisationsApplicable')}" class="govuk-error-message"
+                    <span th:if="${#fields.hasErrors('internationalOrganisationsApplicable')}"
+                          class="govuk-error-message"
                           th:each="err : ${#fields.errors('internationalOrganisationsApplicable')}" th:text="${err}"/>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
@@ -59,13 +62,9 @@
         </th:block>
 
         <th:block th:if="${!model.general.editable}">
-
             <dl class="standard-definition-list">
-                <th:block th:if="${competitionSetupForm.internationalOrganisationsApplicable != null}">
-                    <dt>Can international organisations apply?</dt>
-                    <dd th:text="${#bools.isTrue(competitionSetupForm.internationalOrganisationsApplicable) ? 'Yes' : 'No'}"></dd>
-                </th:block>
-
+                <dt>Can international organisations apply?</dt>
+                <dd th:text="${#bools.isTrue(competitionSetupForm.internationalOrganisationsApplicable) ? 'Yes' : 'No'}"></dd>
             </dl>
 
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="govuk-button">Edit</button>
@@ -74,7 +73,8 @@
     </form>
     <ul class="govuk-list pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to previous part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-eligibility')}">
+            <a rel="prev" title="Navigate to previous part"
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='project-eligibility')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Project eligibility</span>
             </a>

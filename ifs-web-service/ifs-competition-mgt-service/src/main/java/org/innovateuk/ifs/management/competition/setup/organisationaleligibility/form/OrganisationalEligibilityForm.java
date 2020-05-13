@@ -4,6 +4,9 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Form for the organisational eligibility competition setup section.
+ */
 public class OrganisationalEligibilityForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.organisationaleligibilityform.internationalOrganisationsApplicable.required}")
