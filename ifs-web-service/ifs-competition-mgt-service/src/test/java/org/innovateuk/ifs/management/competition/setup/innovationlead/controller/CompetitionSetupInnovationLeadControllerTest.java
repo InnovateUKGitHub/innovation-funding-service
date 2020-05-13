@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import static java.lang.Boolean.*;
 import static java.lang.Boolean.FALSE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -46,7 +47,6 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
     @Mock
     private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
-
     @Override
     protected CompetitionSetupInnovationLeadController supplyControllerUnderTest() {
         return new CompetitionSetupInnovationLeadController();
@@ -75,6 +75,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(TRUE);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/find"))
                 .andExpect(status().isOk())
@@ -89,7 +90,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
         CompetitionResource competitionResource = newCompetitionResource().build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(Boolean.FALSE);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(FALSE);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/overview"))
                 .andExpect(status().is3xxRedirection())
@@ -105,6 +106,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(TRUE);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/overview"))
                 .andExpect(status().isOk())
@@ -119,7 +121,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
         CompetitionResource competitionResource = newCompetitionResource().build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(Boolean.FALSE);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(FALSE);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
                 .andExpect(status().is3xxRedirection())
@@ -137,6 +139,8 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(competitionSetupInnovationLeadService.addInnovationLead(COMPETITION_ID, innovationLeadUserId)).thenReturn(serviceSuccess());
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(TRUE);
+
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
                 .andExpect(status().isOk())
@@ -151,7 +155,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
 
         CompetitionResource competitionResource = newCompetitionResource().build();
 
-        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(Boolean.FALSE);
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(FALSE);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
 
         Long innovationLeadUserId = 2L;
@@ -171,6 +175,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
         when(competitionSetupInnovationLeadService.removeInnovationLead(COMPETITION_ID, innovationLeadUserId)).thenReturn(serviceSuccess());
+        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(TRUE);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/remove-innovation-lead/" + innovationLeadUserId))
                 .andExpect(status().isOk())

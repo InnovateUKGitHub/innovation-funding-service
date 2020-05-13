@@ -19,6 +19,7 @@ import static java.util.Collections.EMPTY_SET;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -32,14 +33,12 @@ public class ManageInnovationLeadsModelPopulatorTest {
     private CompetitionSetupInnovationLeadRestService competitionSetupInnovationLeadRestService;
 
     private List<UserResource> availableInnovationLeads;
-
     private List<UserResource> innovationLeadsAssignedToCompetition;
 
     private UserResource innLead1;
     private UserResource innLead2;
     private UserResource innLead3;
     private UserResource innLead4;
-    private UserResource innLead5;
 
     @Before
     public void setUp() {
@@ -48,33 +47,31 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .withId(1L)
                 .withFirstName("Zach")
                 .withLastName("Noah")
+                .withStatus(ACTIVE)
                 .build();
 
         innLead2 = UserResourceBuilder.newUserResource()
                 .withId(2L)
                 .withFirstName("Lucas")
                 .withLastName("Oliver")
+                .withStatus(ACTIVE)
                 .build();
 
         innLead3 = UserResourceBuilder.newUserResource()
                 .withId(3L)
                 .withFirstName("Aiden")
                 .withLastName("James")
+                .withStatus(ACTIVE)
                 .build();
 
         innLead4 = UserResourceBuilder.newUserResource()
                 .withId(4L)
                 .withFirstName("Joshua")
                 .withLastName("Ethan")
+                .withStatus(ACTIVE)
                 .build();
 
-        innLead5 = UserResourceBuilder.newUserResource()
-                .withId(5L)
-                .withFirstName("Egon")
-                .withLastName("Spengler")
-                .build();
-
-        availableInnovationLeads = asList(innLead1, innLead2, innLead3, innLead4, innLead5);
+        availableInnovationLeads = asList(innLead1, innLead3, innLead4);
         innovationLeadsAssignedToCompetition = singletonList(innLead2);
     }
 
@@ -98,11 +95,11 @@ public class ManageInnovationLeadsModelPopulatorTest {
         ManageInnovationLeadsViewModel viewModel = populator.populateModel(competitionResource);
 
         // Only two innovation leads should be available
-        assertEquals(2, viewModel.getAvailableInnovationLeads().size());
+        assertEquals(3, viewModel.getAvailableInnovationLeads().size());
 
         // Should be sorted by their names
         assertEquals(innLead3, viewModel.getAvailableInnovationLeads().get(0));
-        assertEquals(innLead1, viewModel.getAvailableInnovationLeads().get(1));
+        assertEquals(innLead4, viewModel.getAvailableInnovationLeads().get(1));
 
         // One should be assigned to competition
         assertEquals(1, viewModel.getInnovationLeadsAssignedToCompetition().size());
