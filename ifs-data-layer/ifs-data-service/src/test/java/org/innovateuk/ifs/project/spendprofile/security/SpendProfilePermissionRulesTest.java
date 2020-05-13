@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -34,7 +33,6 @@ import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -70,7 +68,6 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
-        InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
@@ -90,7 +87,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
         when(projectRepository.findById(projectResource1.getId())).thenReturn(Optional.of(project));
         when(projectProcessRepository.findOneByTargetId(anyLong())).thenReturn(projectProcess);
         when(applicationRepository.findById(application1.getId())).thenReturn(Optional.of(application1));
-        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
+        when(innovationLeadRepository.findInnovationsLeadsAssignedToCompetition(competition.getId())).thenReturn(singletonList(innovationLeadUserOnProject1));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 

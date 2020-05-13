@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -13,7 +13,6 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -49,10 +48,10 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
         List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
-        List<InnovationLead> innovationLeads = newInnovationLead().withUser(newUser().withId
-                (innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        List<User> innovationLeads = newUser().withId
+                (innovationLeadAssignedToCompetition.getId()).build(1);
 
-        when(innovationLeadRepository.findInnovationsLeads(competitionResource.getId())).thenReturn(innovationLeads);
+        when(innovationLeadRepository.findInnovationsLeadsAssignedToCompetition(competitionResource.getId())).thenReturn(innovationLeads);
 
         assertTrue(rules.innovationLeadsCanViewCompetitionSummaryOnAssignedComps(competitionResource, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadsCanViewCompetitionSummaryOnAssignedComps(competitionResource, innovationLeadNotAssignedToCompetition));

@@ -2,12 +2,12 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -20,10 +20,9 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -61,10 +60,10 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
         List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
-        List<InnovationLead> innovationLeads = newInnovationLead().withUser(newUser().withId
-                (innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        List<User> innovationLeads = newUser().withId
+                (innovationLeadAssignedToCompetition.getId()).build(1);
 
-        when(innovationLeadRepository.findInnovationsLeads(competitionId)).thenReturn(innovationLeads);
+        when(innovationLeadRepository.findInnovationsLeadsAssignedToCompetition(competitionId)).thenReturn(innovationLeads);
 
         assertTrue(rules.innovationLeadsCanViewMilestonesOnAssignedComps(compositeId, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadsCanViewMilestonesOnAssignedComps(compositeId, innovationLeadNotAssignedToCompetition));

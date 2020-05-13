@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.domain.Stakeholder;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -25,7 +24,6 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.StakeholderBuilder.newStakeholder;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -58,7 +56,6 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
-        InnovationLead innovationLead = newInnovationLead().withUser(innovationLeadUserOnProject1).build();
 
         User stakeholderUserOnCompetition = newUser().withRoles(singleton(STAKEHOLDER)).build();
         stakeholderUserResourceOnCompetition = newUserResource().withId(stakeholderUserOnCompetition.getId()).withRolesGlobal(singletonList(STAKEHOLDER)).build();
@@ -73,7 +70,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();
         projectResource1 = newProjectResource().withCompetition(competition.getId()).withApplication(applicationResource1).build();
 
-        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(Collections.singletonList(innovationLead));
+        when(innovationLeadRepository.findInnovationsLeadsAssignedToCompetition(competition.getId())).thenReturn(Collections.singletonList(innovationLeadUserOnProject1));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
     }
 

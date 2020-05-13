@@ -3,7 +3,6 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
 import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
@@ -19,6 +18,7 @@ import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -121,8 +121,8 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId) {
-        List<InnovationLead> competitionParticipants = innovationLeadRepository.findInnovationsLeads(competitionId);
-        return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
+        List<User> competitionParticipants = innovationLeadRepository.findInnovationsLeadsAssignedToCompetition(competitionId);
+        return competitionParticipants.stream().anyMatch(cp -> cp.getId().equals(loggedInUserId));
     }
 
     protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
