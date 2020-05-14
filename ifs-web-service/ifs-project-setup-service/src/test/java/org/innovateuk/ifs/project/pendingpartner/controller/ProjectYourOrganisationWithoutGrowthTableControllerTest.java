@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.pendingpartner.controller;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
@@ -109,7 +110,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
     public void updateWithoutGrowthTable() throws Exception {
         returnSuccessForUpdateWithoutGrowthTable();
 
-        mockMvc.perform(postAllFormParameters(new Pair<String, String>("ignoredParameter","")))
+        mockMvc.perform(postAllFormParameters(Pair.of("ignoredParameter","")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
@@ -122,7 +123,7 @@ public class ProjectYourOrganisationWithoutGrowthTableControllerTest extends Bas
         returnSuccessForUpdateWithoutGrowthTable();
         when(pendingPartnerProgressRestService.markYourOrganisationComplete(projectId, organisationId)).thenReturn(restSuccess());
 
-        mockMvc.perform(postAllFormParameters(new Pair<String, String>("mark-as-complete", "")))
+        mockMvc.perform(postAllFormParameters(Pair.of("mark-as-complete", "")))
             .andExpect(status().is3xxRedirection())
             .andExpect(view().name(landingPageUrl()))
             .andReturn();
