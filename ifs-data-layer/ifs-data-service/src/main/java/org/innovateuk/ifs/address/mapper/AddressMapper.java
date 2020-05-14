@@ -6,12 +6,14 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
         OrganisationApplicationAddressMapper.class
-    }
+    },
+    nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class AddressMapper  extends BaseMapper<Address, AddressResource, Long> {
 
