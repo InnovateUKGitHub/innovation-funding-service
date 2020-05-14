@@ -8,4 +8,7 @@ public interface CompetitionOrganisationConfigService {
 
     @NotSecured(value = "Any user can find the international competitions", mustBeSecuredByOtherServices = false)
     ServiceResult<CompetitionOrganisationConfigResource> findOneByCompetitionId(long competitionId);
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    ServiceResult<Void> update(long competitionId, CompetitionOrganisationConfigResource competitionOrganisationConfigResource);
 }

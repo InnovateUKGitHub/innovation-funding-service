@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.sectionupdater;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -17,6 +19,9 @@ public class OrganisationalEligibilitySectionUpdater extends AbstractSectionUpda
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
+    @Autowired
+    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+
     @Override
     public CompetitionSetupSection sectionToSave() {
         return CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
@@ -26,9 +31,11 @@ public class OrganisationalEligibilitySectionUpdater extends AbstractSectionUpda
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
         OrganisationalEligibilityForm organisationalEligibilityForm = (OrganisationalEligibilityForm) competitionSetupForm;
-        competition.setInternationalOrganisationsAllowed(organisationalEligibilityForm.getInternationalOrganisationsApplicable());
 
-        return competitionSetupRestService.update(competition).toServiceResult();
+        CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
+        competitionOrganisationConfigResource.setInternationalOrganisationsAllowed(organisationalEligibilityForm.getInternationalOrganisationsApplicable());
+
+        return competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource).toServiceResult().andOnSuccessReturnVoid();
     }
 
     @Override
