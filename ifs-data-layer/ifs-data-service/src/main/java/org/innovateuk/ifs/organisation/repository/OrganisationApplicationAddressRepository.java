@@ -12,6 +12,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface OrganisationApplicationAddressRepository extends PagingAndSortingRepository<OrganisationApplicationAddress, Long> {
-    List<OrganisationApplicationAddress> findByOrganisationIdAndAddressType(Long organisationId, AddressType addressType);
+    List<OrganisationApplicationAddress> findByOrganisationIdAndAddressType(long organisationId, AddressType addressType);
+    OrganisationApplicationAddress findByOrganisationIdAndApplicationIdAndAddressTypeId(long organisationId, long applicationId, long addressTypeId);
     OrganisationApplicationAddress findByOrganisationIdAndApplicationIdAndAddressId(long organisationId, long applicationId, long addressId);
 }

@@ -10,13 +10,13 @@ public enum OrganisationAddressType {
     OPERATING(2L),                          // No longer capturing operating address as part of organisation creation
     INTERNATIONAL(5L);                      // Used for international organisations as part of organisation creation
 
-    private final long ordinal;
+    private final long id;
 
-    OrganisationAddressType(long ordinal) {
-        this.ordinal = ordinal;
+    OrganisationAddressType(long id) {
+        this.id = id;
     }
 
-    public long getOrdinal() {
-        return ordinal;
+    public long getId() {
+        return id;
     }
 }

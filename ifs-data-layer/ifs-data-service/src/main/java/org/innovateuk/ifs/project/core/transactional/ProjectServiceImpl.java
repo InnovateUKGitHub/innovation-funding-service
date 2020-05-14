@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
@@ -10,7 +11,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
+import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -42,6 +45,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -92,6 +96,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ActivityLogService activityLogService;
+
+    @Autowired
+    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -272,7 +279,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId()));
 
         simpleFindFirst(application.getApplicationFinances(), applicationFinance -> applicationFinance.getOrganisation().getId().equals(org.getId()))
-                .ifPresent(applicationFinance -> partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode()));
+                .ifPresent(applicationFinance -> {
+                    partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode());
+                    partnerOrganisation.setInternationalLocation(applicationFinance.getInternationalLocation());
+                });
+
+        if (org.isInternational()) {
+            OrganisationApplicationAddress applicationAddress = organisationApplicationAddressRepository.findByOrganisationIdAndApplicationIdAndAddressTypeId(org.getId(), application.getId(), INTERNATIONAL.getId());
+            Address internationalAddress = new Address(applicationAddress.getAddress());
+            partnerOrganisation.setInternationalAddress(internationalAddress);
+        }
 
         return partnerOrganisation;
     }

@@ -1,19 +1,5 @@
-ALTER TABLE bank_details
-  ADD COLUMN address_id bigint(20);
-
-UPDATE bank_details bd
-    JOIN organisation_address oa ON
-        oa.id=bd.organisation_address_id
-    SET bd.address_id = oa.address_id;
-
-ALTER TABLE bank_details MODIFY COLUMN address_id bigint(20) NOT NULL;
-ALTER TABLE bank_details ADD CONSTRAINT bank_details_to_address_id_fk FOREIGN KEY (address_id) REFERENCES address (id);
-ALTER TABLE bank_details DROP FOREIGN KEY bank_details_to_organisation_address_fk;
-ALTER TABLE bank_details DROP COLUMN organisation_address_id;
-
-DELETE FROM organisation_address WHERE address_type_id in (3,4);
-DELETE FROM address_type where id in (3,4);
-
+-- Change organisation_address table to also be linked to an application. This will be used to store international organisation
+-- addresses and the historic operating/registered addresses.
 RENAME TABLE organisation_address TO organisation_application_address;
 
 ALTER TABLE organisation_application_address
@@ -39,9 +25,3 @@ DELETE FROM organisation_application_address WHERE application_id IS NULL;
 ALTER TABLE organisation_application_address MODIFY COLUMN application_id bigint(20) NOT NULL;
 ALTER TABLE organisation_application_address ADD CONSTRAINT organisation_application_address_to_application_id FOREIGN KEY (application_id) REFERENCES application (id);
 ALTER TABLE organisation_application_address MODIFY COLUMN created_on DATETIME NOT NULL;
-
-
-ALTER TABLE partner_organisation
-  ADD COLUMN international_address_id bigint(20),
-  ADD CONSTRAINT partner_organisations_to_international_address_id_fk FOREIGN KEY (international_address_id) REFERENCES address (id);
-
