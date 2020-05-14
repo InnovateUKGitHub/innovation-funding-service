@@ -15,7 +15,7 @@ public interface OrganisationRestService {
     RestResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId);
     RestResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId);
     RestResult<List<OrganisationResource>> getAllByUserId(long userId);
-    RestResult<List<OrganisationResource>> getAllInternationalByUserId(long userId);
+    RestResult<List<OrganisationResource>> getOrganisations(long userId, boolean international);
     RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);
 

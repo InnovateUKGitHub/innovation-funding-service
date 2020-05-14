@@ -95,12 +95,9 @@ public class OrganisationSelectionController {
     private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request) {
         Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
 
-        if (organisationInternationalForm.isPresent()) {
-            if (organisationInternationalForm.get().getInternational()) {
-                return organisationRestService.getAllInternationalByUserId(userId).getSuccess().isEmpty();
-            }
-        }
-        return organisationRestService.getAllByUserId(userId).getSuccess().isEmpty();
+        final boolean international = organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
+
+        return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
     }
 
     private String nextPageInFlow(HttpServletRequest request) {

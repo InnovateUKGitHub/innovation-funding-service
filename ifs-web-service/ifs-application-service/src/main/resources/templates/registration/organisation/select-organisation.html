@@ -49,6 +49,13 @@
                     </div>
                 </div>
             </th:block>
+            <th:block th:unless="${model.canSelectOrganisation()}" th:with="organisation=${model.onlyOrganisation()}">
+                <dl class="govuk-list readonly-data">
+                    <dt th:text="${organisation.name}"></dt>
+                    <dd th:text="${organisation.type}"></dd>
+                </dl>
+                <input name="selectedOrganisationId" th:value="${organisation.id}" type="hidden" />
+            </th:block>
 
             <p class="govuk-body">
                 <a class="govuk-link" th:unless="${model.collaboratorJourney}" th:href="${model.newOrganisationUrl}">Apply with a different organisation</a>
