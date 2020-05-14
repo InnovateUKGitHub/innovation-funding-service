@@ -38,7 +38,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentation extends BaseC
         List<UserResource> innovationLeads = new ArrayList<>();
         when(competitionSetupInnovationLeadService.findInnovationLeads(competitionId)).thenReturn(serviceSuccess(innovationLeads));
 
-        mockMvc.perform(get("/competition/{id}/innovation-leads", competitionId)
+        mockMvc.perform(get("/competition/setup/{id}/innovation-leads", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(innovationLeads)))
@@ -57,7 +57,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentation extends BaseC
         List<UserResource> innovationLeads = new ArrayList<>();
         when(competitionSetupInnovationLeadService.findAddedInnovationLeads(competitionId)).thenReturn(serviceSuccess(innovationLeads));
 
-        mockMvc.perform(get("/competition/{id}/innovation-leads/find-added", competitionId)
+        mockMvc.perform(get("/competition/setup/{id}/innovation-leads/find-added", competitionId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(innovationLeads)))
@@ -76,7 +76,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentation extends BaseC
 
         when(competitionSetupInnovationLeadService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
+        mockMvc.perform(post("/competition/setup/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
@@ -97,7 +97,7 @@ public class CompetitionSetupInnovationLeadControllerDocumentation extends BaseC
 
         when(competitionSetupInnovationLeadService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
+        mockMvc.perform(post("/competition/setup/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andExpect(status().isOk())
                 .andDo(document(
