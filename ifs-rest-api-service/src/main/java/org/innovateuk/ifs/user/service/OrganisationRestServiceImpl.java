@@ -19,8 +19,8 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.org
  */
 @Service
 public class OrganisationRestServiceImpl extends BaseRestService implements OrganisationRestService {
-    private static final Log log = LogFactory.getLog(OrganisationRestServiceImpl.class);
 
+    private static final Log log = LogFactory.getLog(OrganisationRestServiceImpl.class);
     private static final String ORGANISATION_BASE_URL = "/organisation";
 
     @Override
