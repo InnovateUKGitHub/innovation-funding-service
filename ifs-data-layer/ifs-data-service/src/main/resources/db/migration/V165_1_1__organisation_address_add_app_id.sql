@@ -39,3 +39,9 @@ DELETE FROM organisation_application_address WHERE application_id IS NULL;
 ALTER TABLE organisation_application_address MODIFY COLUMN application_id bigint(20) NOT NULL;
 ALTER TABLE organisation_application_address ADD CONSTRAINT organisation_application_address_to_application_id FOREIGN KEY (application_id) REFERENCES application (id);
 ALTER TABLE organisation_application_address MODIFY COLUMN created_on DATETIME NOT NULL;
+
+
+ALTER TABLE partner_organisation
+  ADD COLUMN international_address_id bigint(20),
+  ADD CONSTRAINT partner_organisations_to_international_address_id_fk FOREIGN KEY (international_address_id) REFERENCES address (id);
+
