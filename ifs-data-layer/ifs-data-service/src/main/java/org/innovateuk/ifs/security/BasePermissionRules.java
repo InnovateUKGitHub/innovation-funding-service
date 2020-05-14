@@ -122,7 +122,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId) {
         List<InnovationLead> competitionParticipants = innovationLeadRepository.findInnovationsLeads(competitionId);
-        return competitionParticipants.stream().anyMatch(cp -> cp.getId().equals(loggedInUserId));
+        return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 
     protected boolean userIsStakeholderInCompetition(long competitionId, long loggedInUserId) {
