@@ -87,9 +87,9 @@ Project finance user can upload a text document(.odt) file and remove it
 Project finance user cannot upload a document type that is not allowed
     [Documentation]    IFS-7215
     [Tags]  HappyPath
-    Given the user uploads the file                 name = attachment  ${text_file}
-    Then the user should see a field error          ${finance_query_notes_filetype_error}
-    And the user clicks the button/link             jQuery = button:contains("Remove")
+    Given the user uploads the file          name = attachment  ${text_file}
+    Then the user should see a field error   ${finance_query_notes_filetype_error}
+    And the user clicks the button/link      jQuery = button:contains("Remove")
 
 Project finance user can upload more than one file and remove them
     [Documentation]    INFUND-4840, IFS-7215
@@ -170,10 +170,8 @@ Applicant - Finance contact can view query and download attachments
     When the user navigates to the page             ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
     Then The user clicks the button/link            jQuery = h2:contains("an eligibility query's title")
     And the user should see the element             jQuery = h2:contains("a viability query's title")
-    And the user should see the element             jQuery = a:contains("${valid_pdf}")
-    And open pdf link                        jQuery = a:contains("${valid_pdf}")
-    And the user should see the element             jQuery = a:contains("${ods_file}")
-    And the user should see the element             jQuery = a:contains("${valid_odt}")
+    And the user should see all the attachments
+    And open pdf link                               jQuery = a:contains("${valid_pdf}")
     And the user is able to download attachments    ${ods_file}  ${valid_odt}
 
 Applicant - Response to query validations
@@ -437,6 +435,11 @@ Custom Suite Setup
     ${today} =  get today
     set suite variable  ${today}
     The guest user opens the browser
+
+the user should see all the attachments
+    the user should see the element     jQuery = a:contains("${valid_pdf}")
+    the user should see the element     jQuery = a:contains("${ods_file}")
+    the user should see the element     jQuery = a:contains("${valid_odt}")
 
 the user can remove an attachment
     [Arguments]  ${attachment_file}
