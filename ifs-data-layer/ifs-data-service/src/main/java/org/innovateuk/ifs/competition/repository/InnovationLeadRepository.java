@@ -15,6 +15,12 @@ import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.I
  */
 public interface InnovationLeadRepository extends CompetitionParticipantRepository<InnovationLead> {
 
+    String INNOVATION_LEAD_IN_COMPETITION =
+            "(SELECT competitionParticipant.user " +
+                    "FROM CompetitionParticipant competitionParticipant " +
+                    "WHERE competitionParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD " +
+                    "AND competitionParticipant.competition.id = :competitionId)";
+
     String INNOVATION_LEADS_ASSIGNED_T0_COMPETITION =
             "FROM User user " +
                     "JOIN user.roles roles " +
@@ -24,10 +30,7 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
                     "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
                     "AND user.id != competition.leadTechnologist.id " +
                     "AND user.id IN " +
-                    "(SELECT competitionParticipant.user " +
-                    "FROM CompetitionParticipant competitionParticipant " +
-                    "WHERE competitionParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD " +
-                    "AND competitionParticipant.competition.id = :competitionId)";
+                    INNOVATION_LEAD_IN_COMPETITION;
 
     String AVAILABLE_INNOVATION_LEADS =
             "FROM User user " +
@@ -38,16 +41,17 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
                     "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
                     "AND user.id != competition.leadTechnologist.id " +
                     "AND user.id NOT in " +
-                    "(SELECT competitionParticipant.user " +
-                    "FROM CompetitionParticipant competitionParticipant " +
-                    "WHERE competitionParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD " +
-                    "AND competitionParticipant.competition.id = :competitionId)";
+                    INNOVATION_LEAD_IN_COMPETITION;
 
     @Query(AVAILABLE_INNOVATION_LEADS)
     List<User> findAvailableInnovationLeadsNotAssignedToCompetition(long competitionId);
 
     @Query(INNOVATION_LEADS_ASSIGNED_T0_COMPETITION)
     List<User> findInnovationsLeadsAssignedToCompetition(long competitionId);
+
+    default List<InnovationLead> findInnovationsLeads(long competitionId) {
+        return getByCompetitionIdAndRole(competitionId, INNOVATION_LEAD);
+    }
 
     default InnovationLead findInnovationLead(long competitionId, long userId) {
         return getByCompetitionIdAndUserIdAndRole(competitionId, userId, INNOVATION_LEAD);
