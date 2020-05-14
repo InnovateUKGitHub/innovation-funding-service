@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -29,7 +30,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "AND (a.applicationProcess.activityState NOT IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
-    String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
+    String APPLICATION_SELECT = "SELECT a FROM Application a ";
+
+    String APPLICATION_ID_SELECT = "SELECT a.id FROM Application a ";
+
+    String COMP_STATUS_FILTER_WHERE = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.applicationProcess.activityState IN :states) " +
             "AND (:filter IS NULL OR str(a.id) LIKE CONCAT('%', :filter, '%') ) " +
@@ -101,7 +106,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     Application findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
-    @Query(COMP_STATUS_FILTER)
+    @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     Page<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
@@ -109,8 +114,15 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
                                                                Pageable pageable);
 
-    @Query(COMP_STATUS_FILTER)
+    @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     List<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
+                                                               @Param("states") Collection<ApplicationState> applicationStates,
+                                                               @Param("filter") String filter,
+                                                               @Param("funding") FundingDecisionStatus funding,
+                                                               @Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
+
+    @Query(APPLICATION_ID_SELECT + COMP_STATUS_FILTER_WHERE)
+    List<Long> findApplicationIdsByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
                                                                @Param("states") Collection<ApplicationState> applicationStates,
                                                                @Param("filter") String filter,
                                                                @Param("funding") FundingDecisionStatus funding,
@@ -226,4 +238,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findApplicationsForDashboard(long userId);
 
     boolean existsByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
+
+    @Query("select a from Application a inner join ApplicationProcess p on p.target.id = a.id " +
+            "where a.id in :ids" +
+            " and  a.competition.id = :competitionId " +
+            " and (a.submittedDate is not null " +
+            " or (a.fundingDecision != org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED and a.manageFundingEmailDate is null))")
+    List<Application> findAllowedApplicationsForCompetition(Set<Long> ids, long competitionId);
+
 }

@@ -115,6 +115,8 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
                 .stakeholdersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verify(userRules, times(numberOfUsers))
                 .monitoringOfficersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .competitionFinanceUsersCanViewUsersInCompetitionsTheyAreAssignedTo(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 

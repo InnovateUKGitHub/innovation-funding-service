@@ -152,7 +152,7 @@ public class CompetitionSetupControllerDocumentation extends BaseFileControllerM
 
     @Test
     public void updateCompetitionInitialDetails() throws Exception {
-        final Long competitionId = 1L;
+        final long competitionId = 1L;
 
         CompetitionResource competitionResource = competitionResourceBuilder.build();
 

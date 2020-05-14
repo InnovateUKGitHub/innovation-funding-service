@@ -2,7 +2,6 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.GrantTermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -83,7 +82,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("createdBy").description("user who created this competition").optional(),
             fieldWithPath("createdOn").description("when the competition was created").optional(),
             fieldWithPath("modifiedBy").description("user who modified this competition").optional(),
-            fieldWithPath("modifiedOn").description("when the competition was modified").optional()
+            fieldWithPath("modifiedOn").description("when the competition was modified").optional(),
+            fieldWithPath("hasAssessmentStage").description("Does the competition has assessors.").optional(),
+            fieldWithPath("covidType").description("The type of covid comp if any").optional(),
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -116,9 +117,6 @@ public class CompetitionResourceDocs {
             .withNonIfs(true)
             .withNonIfsUrl("https://google.co.uk")
             .withMilestones(asList(1L, 2L, 3L))
-            .withHasAssessmentPanel(false)
-            .withHasInterviewStage(false)
-            .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
             .withTermsAndConditions(new GrantTermsAndConditionsResource("T&C", "terms-and-conditions-template", 1))
             .withStateAid(true)
             .withIncludeJesForm(true)

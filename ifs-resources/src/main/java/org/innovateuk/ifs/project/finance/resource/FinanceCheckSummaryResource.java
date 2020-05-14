@@ -35,13 +35,14 @@ public class FinanceCheckSummaryResource {
     private Long applicationId;
     private boolean h2020;
     private FundingType fundingType;
+    private boolean hasGrantClaimPercentage;
 
     public FinanceCheckSummaryResource() {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
                                        List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean bankDetailsApproved,
-                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId, boolean h2020, FundingType fundingType) {
+                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId, boolean h2020, FundingType fundingType, boolean hasGrantClaimPercentage) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
@@ -63,6 +64,7 @@ public class FinanceCheckSummaryResource {
         this.applicationId = applicationId;
         this.h2020 = h2020;
         this.fundingType = fundingType;
+        this.hasGrantClaimPercentage = hasGrantClaimPercentage;
     }
 
     public Long getProjectId() {
@@ -175,6 +177,14 @@ public class FinanceCheckSummaryResource {
 
     public void setFundingType(FundingType fundingType) {
         this.fundingType = fundingType;
+    }
+
+    public boolean isHasGrantClaimPercentage() {
+        return hasGrantClaimPercentage;
+    }
+
+    public void setHasGrantClaimPercentage(boolean hasGrantClaimPercentage) {
+        this.hasGrantClaimPercentage = hasGrantClaimPercentage;
     }
 
     @JsonIgnore

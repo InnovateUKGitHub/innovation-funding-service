@@ -137,6 +137,7 @@ ${NON_IFS_COMPETITION}          ${competition_ids['${NON_IFS_COMPETITION_NAME}']
 ${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
 
 ${APPLICANT_DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICANT_ADDITIONAL_FUNDING_QUERIES_URL}   ${SERVER}/covid-19/questionnaire
 ${APPLICANT_DASHBOARD_TITLE}  Applications
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
@@ -175,6 +176,7 @@ ${LARGE_ORGANISATION_SIZE}     LARGE
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
+${gol_pdf}        GOL_template.pdf
 ${valid_xls}    testing.xls
 ${valid_odt}    testing.odt
 ${valid_doc}    testing.doc

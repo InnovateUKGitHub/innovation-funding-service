@@ -145,7 +145,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-5700
     Given proj finance approves the spend profiles  ${HProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             ${HProjectID}
+    And internal user generates the GOL             NO  ${HProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-5700
@@ -461,7 +461,7 @@ The user is able to validate conversion spredsheet links works
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user clicks the button/link           id = submit-application-button
+    the user clicks the button/link           id = submit-application-button-modal
     the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
 
 The user is able to verify validation on each page

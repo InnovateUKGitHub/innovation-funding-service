@@ -646,6 +646,7 @@ Assessor: Mark as Done then Edit again
     Given the user selects the radio button    assessorCount   5
     And the user selects the radio button      hasInterviewStage  hasInterviewStage-1
     And the user selects the radio button      hasAssessmentPanel  0
+    And the user selects the radio button      averageAssessorScore  0
     Then the user enters text to a text field  id = assessorPay  100
     When the user clicks the button/link       jQuery = button:contains("Done")
     Then the user should see the element       jQuery = dt:contains("How many assessors") + dd:contains("5")

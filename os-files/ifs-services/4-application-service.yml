@@ -95,6 +95,11 @@ items:
                     configMapKeyRef:
                       name: web-config
                       key: IFS_EARLY_METRICS_URL
+                - name: IFS_SHOW_COVID_QUESTIONNAIRE_LINKS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_SHOW_COVID_QUESTIONNAIRE_LINKS
                 - name: NEW_RELIC_LICENSE_KEY
                   valueFrom:
                     configMapKeyRef:

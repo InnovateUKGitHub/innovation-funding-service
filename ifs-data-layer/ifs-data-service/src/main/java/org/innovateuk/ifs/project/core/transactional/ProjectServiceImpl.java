@@ -226,6 +226,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             project.setDurationInMonths(application.getDurationInMonths());
             project.setName(application.getName());
             project.setTargetStartDate(application.getStartDate());
+            project.setUseDocusignForGrantOfferLetter(application.getCompetition().isUseDocusignForGrantOfferLetter());
 
             ProcessRole leadApplicantRole = simpleFindFirst(application.getProcessRoles(), ProcessRole::isLeadApplicant).get();
             List<ProcessRole> collaborativeRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isCollaborator);

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -15,10 +14,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -37,6 +40,7 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 public class ApplicationNotificationServiceImpl implements ApplicationNotificationService {
+    private static final DateTimeFormatter formatter = ofPattern("d MMMM yyyy");
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -166,6 +170,56 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 });
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ServiceResult<Void> sendNotificationApplicationReopened(Long applicationId) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturnVoid(application -> {
+                    NotificationSource from = systemNotificationSource;
+
+                    List<ProcessRole> applicationTeam = application.getApplicantProcessRoles();
+
+                    String leadApplicantName = applicationTeam.stream()
+                            .filter(ProcessRole::isLeadApplicant)
+                            .map(processRole -> processRole.getUser().getName())
+                            .findAny()
+                            .orElse("");
+
+                    applicationTeam.forEach(applicant -> {
+
+                        NotificationTarget to = new UserNotificationTarget(applicant.getUser().getName(), applicant.getUser().getEmail());
+
+                        Map<String, Object> notificationArguments = new HashMap<>();
+
+                        notificationArguments.put("name", applicant.getUser().getName());
+                        notificationArguments.put("date", ZonedDateTime.now().format(formatter));
+                        notificationArguments.put("applicationNumber", application.getId());
+                        notificationArguments.put("applicationName", application.getName());
+                        notificationArguments.put("leadApplicant", leadApplicantName);
+                        notificationArguments.put("link", format("%s/application/%d", webBaseUrl, application.getId()));
+
+                        if (applicant.isLeadApplicant()) {
+                            sendNotificationToLeadApplicant(from, to, notificationArguments);
+                        }
+                        else {
+                            sendNotificationToPartner(from, to, notificationArguments);
+                        }
+                    });
+
+                });
+    }
+
+    private void sendNotificationToLeadApplicant(NotificationSource from, NotificationTarget to, Map<String, Object> notificationArguments) {
+        Notification notification = new Notification(from, singletonList(to), Notifications.REOPEN_APPLICATION_LEAD, notificationArguments);
+        notificationService.sendNotificationWithFlush(notification, EMAIL);
+
+    }
+
+    private void sendNotificationToPartner(NotificationSource from, NotificationTarget to, Map<String, Object> notificationArguments) {
+        Notification notification = new Notification(from, singletonList(to), Notifications.REOPEN_APPLICATION_PARTNER, notificationArguments);
+        notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
     private Notification loanApplicationSubmitNotification(NotificationSource from, NotificationTarget to, Application application, Competition competition) {
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
@@ -213,6 +267,8 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         HORIZON_2020_APPLICATION_SUBMITTED,
         APPLICATION_INELIGIBLE,
-        LOANS_APPLICATION_SUBMITTED;
+        LOANS_APPLICATION_SUBMITTED,
+        REOPEN_APPLICATION_PARTNER,
+        REOPEN_APPLICATION_LEAD
     }
 }

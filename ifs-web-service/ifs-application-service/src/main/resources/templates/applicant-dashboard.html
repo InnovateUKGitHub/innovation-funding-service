@@ -21,6 +21,9 @@
 
         <div class="my-applications">
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Applications',size='govuk-heading-l'" />
+            <div class="message-alert govuk-!-margin-bottom-6" th:if="${model.showCovidQuestionnaireLink}">
+                <p class="govuk-body"><a class="govuk-link" href="/covid-19/questionnaire">You may be eligible for additional funding</a> if your organisation is facing significant challenges due to the COVID-19 outbreak.</p>
+            </div>
             <section th:unless="${model.projects.empty}" class="projects-in-setup">
                 <div class="progress-list">
                     <h2 class="govuk-heading-m">Set up your project</h2>
@@ -87,7 +90,8 @@
                 <div class="progress-list">
                     <h2 class="govuk-heading-m" th:text="${model.applicationInProgressText}"/>
                     <ul>
-                        <li class="status-2-col" th:each="inProgressView : ${model.inProgress}" th:classappend="${inProgressView.assignedToMe ? 'assigned-to-me' : '' }">
+                        <li th:each="inProgressView : ${model.inProgress}"
+                            th:classappend="|${inProgressView.assignedToMe ? 'assigned-to-me' : '' } ${inProgressView.hasAssessmentStage ? 'status-2-col' : ''}|">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <a th:href="${inProgressView.linkUrl}" th:text="${inProgressView.title}" class="govuk-link" />
@@ -104,20 +108,22 @@
                             </div>
                             <div class="status">
                                 <th:block th:unless="${inProgressView.submitted}">
-                                    <div class="status-msg msg-deadline" th:unless="${inProgressView.within24Hours}">
-                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
-                                        days left <br />
-                                        Deadline
-                                        <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
-                                        <span class="month" th:text="${#temporals.monthNameShort(inProgressView.endDate)}">END MONTH</span>
-                                        <span class="year" th:text="${#temporals.year(inProgressView.endDate)}">END YEAR</span>
-                                    </div>
-                                    <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
-                                        <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
-                                        hours left<br/>
-                                        Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
-                                        <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
-                                    </div>
+                                    <th:block th:if="${inProgressView.hasAssessmentStage}">
+                                        <div class="status-msg msg-deadline" th:unless="${inProgressView.within24Hours}">
+                                            <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold days-remaining" th:text="${inProgressView.daysLeft}">DAYS LEFT</strong> <br />
+                                            days left <br />
+                                            Deadline
+                                            <span class="day" th:text="${#temporals.day(inProgressView.endDate)}">END DAY</span>
+                                            <span class="month" th:text="${#temporals.monthNameShort(inProgressView.endDate)}">END MONTH</span>
+                                            <span class="year" th:text="${#temporals.year(inProgressView.endDate)}">END YEAR</span>
+                                        </div>
+                                        <div class="status-msg msg-deadline-today" th:if="${inProgressView.within24Hours}">
+                                            <strong class="govuk-!-font-size-24 govuk-!-font-weight-bold" th:text="${inProgressView.hoursLeftBeforeSubmit}"></strong><br/>
+                                            hours left<br/>
+                                            Deadline <th:block th:text="${#temporals.format(inProgressView.endDate, 'hh:mm a')}"/>
+                                            <th:block th:text="${inProgressView.closingToday ? 'today' : 'tomorrow'}"/>
+                                        </div>
+                                    </th:block>
                                     <span class="status-msg msg-progress"
                                           th:classappend="${inProgressView.isApplicationComplete()} ? 'msg-positive'"
                                           th:text="${inProgressView.getProgressMessage()}">PERCENTAGE COMPLETE
@@ -129,9 +135,16 @@
                                         <span class="status-msg msg-progress">Invited to interview</span>
                                     </th:block>
                                     <th:block th:unless="${inProgressView.assignedToInterview}">
-                                        <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
+                                        <th:block th:if="${inProgressView.hasAssessmentStage}">
+                                            <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
+                                        </th:block>
                                         <span class="status-msg msg-progress">Application submitted</span>
                                     </th:block>
+                                </th:block>
+                            </div>
+                            <div class="action alignright">
+                                <th:block th:if="${inProgressView.showReopenLink}">
+                                    <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link govuk-body govuk-!-margin-right-3">Reopen</a>
                                 </th:block>
                             </div>
                         </li>
