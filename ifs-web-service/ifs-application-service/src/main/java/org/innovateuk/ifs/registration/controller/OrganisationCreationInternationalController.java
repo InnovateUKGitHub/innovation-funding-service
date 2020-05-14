@@ -25,7 +25,6 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.Countries.COUNTRIES;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 
@@ -150,5 +149,4 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
 
         return null;
     }
-
 }
