@@ -219,7 +219,7 @@ The status of the appllications should be correct
 
 The user sets the finance option to detailed
     [Arguments]  ${competition}
-    execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view` = 'DETAILED' WHERE `name` = '${competition}';
+    execute sql string   UPDATE `${database_name}`.`competition_assessment_config` AS cag INNER JOIN `${database_name}`.`competition` AS c ON cag.id = c.competition_assessment_config_id SET cag.`assessor_finance_view` = 'DETAILED' WHERE c.`name` = '${competition}';
 
 The project costs are correct in the overview
     The user should see the element       jQuery = span:contains("£3,081") + button:contains("Labour")

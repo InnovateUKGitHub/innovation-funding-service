@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -552,8 +553,10 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .withFundingDecision(UNFUNDED)
                 .build(2);
 
-        when(applicationRepositoryMock.findByApplicationStateAndFundingDecision(
-                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(applications);
+        List<Long> ids = applications.stream().map(Application::getId).collect(Collectors.toList());
+
+        when(applicationRepositoryMock.findApplicationIdsByApplicationStateAndFundingDecision(
+                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(ids);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
         assertTrue(result.isSuccess());

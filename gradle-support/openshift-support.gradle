@@ -14,12 +14,48 @@ if (project.hasProperty('openshiftEnv')) {
     ext.openshiftEnv = openshiftEnv.replaceAll('/', '-')
 }
 
-if (!isNamedEnv()) {
-    apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
-} else {
-    apply from: rootProject.file("gradle-support/named-env-properties.gradle")
-    if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
-        apply from: openshiftEnv + "-named-env-properties.gradle"
+task osApplyNonNamedEnvProperties(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-apply-properties-from-secrets.sh'
+    args = [openshiftEnv, "NON-NAMED", project.version, project.findProperty("use_iam") ?: "true"]
+}
+
+task osApplyNamedEnvProperties(type: Exec) {
+    def envName = openshiftEnv.replaceAll("([a-z])", "\$1").toUpperCase()
+    executable = 'setup-files/scripts/openshift/os-apply-properties-from-secrets.sh'
+    args = [openshiftEnv, envName, project.version, project.findProperty("use_iam") ?: "true"]
+}
+
+task osApplyEnvProperties(){
+    if (isNamedEnv()) {
+        dependsOn osApplyNamedEnvProperties
+    } else {
+        dependsOn osApplyNonNamedEnvProperties
+    }
+}
+
+task getProperties(type: Exec, dependsOn: osApplyEnvProperties) {
+    executable = 'setup-files/scripts/openshift/generate-gradle-properties.sh'
+    args = [openshiftEnv, openshiftEnv]
+}
+
+task applyNonNamedEnvProperties(dependsOn: getProperties) {
+    doLast {
+        apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
+    }
+}
+
+task applyNamedEnvProperties(dependsOn: getProperties) {
+    doLast {
+        apply from: rootProject.file("gradle-support/" + openshiftEnv + "-named-env-properties.gradle")
+    }
+}
+
+task createSecretsFromAws() {
+    if (!isNamedEnv()) {
+        dependsOn applyNonNamedEnvProperties
+    } else {
+        apply from: rootProject.file("gradle-support/named-env-properties.gradle")
+        dependsOn applyNamedEnvProperties
     }
 }
 
@@ -34,7 +70,7 @@ task prepareRoutes(type: Copy) {
     }
 }
 
-task prepareConfig(type: Copy) {
+task prepareConfig(type: Copy, dependsOn: createSecretsFromAws) {
 
     destinationDir = file('build/resources/main/config-maps')
     from('os-files/config-maps/') {
@@ -60,7 +96,7 @@ task prepareConfigDeployment(dependsOn: [prepareConfig, prepareRoutes, prepareGl
     println "Preparing Config"
 }
 
-task prepareDeployAndUpgrade(type: Copy) {
+task prepareDeployAndUpgrade(type: Copy, dependsOn: createSecretsFromAws) {
 
     destinationDir = file('build/resources/main')
     from('os-files/') {
@@ -87,13 +123,15 @@ task prepareBaseline(type: Copy) {
 
 task prepareAnonDump(type: Copy) {
 
-    destinationDir = file('build/resources/main')
+    destinationDir = file('build/resources/main/db-anonymised-data/')
+    
     from('os-files/db-anonymised-data/') {
         include '**/*.yml'
     }
     filesMatching("**/**.*") {
         expand project.properties
     }
+    into destinationDir
 }
 
 task prepareFinanceDataSync(type: Copy) {

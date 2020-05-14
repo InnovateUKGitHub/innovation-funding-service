@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.viability.viewmodel;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 import java.math.BigDecimal;
@@ -38,6 +39,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean collaborativeProject;
     private final boolean loanCompetition;
     private final boolean viabilityReadyToConfirm;
+    private final boolean hasGrantClaimPercentage;
 
 
     public FinanceChecksViabilityViewModel(ProjectResource project,
@@ -84,6 +86,7 @@ public class FinanceChecksViabilityViewModel {
         this.collaborativeProject = project.isCollaborativeProject();
         this.loanCompetition = competition.isLoan();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
+        this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
     }
 
     public String getOrganisationName() {
@@ -197,6 +200,10 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isViabilityReadyToConfirm() {
         return viabilityReadyToConfirm;
+    }
+
+    public boolean isHasGrantClaimPercentage() {
+        return hasGrantClaimPercentage;
     }
 
     private boolean hasAllFundingLevelsWithinMaximum(List<ProjectFinanceResource> finances) {

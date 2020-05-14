@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.organisation.service.CompaniesHouseRestService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.organisationdetails.view.viewmodel.OrganisationDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -33,6 +35,9 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private CompaniesHouseRestService companiesHouseRestService;
 
     @GetMapping
     public String viewOrganisationDetails(@PathVariable long competitionId,
@@ -80,9 +85,13 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
     }
 
     private AddressResource getAddress(OrganisationResource organisation) {
-        return organisation.getAddresses().size() > 0
-                ? organisation.getAddresses().get(0).getAddress()
-                : createNewAddress();
+        if (organisation.getCompaniesHouseNumber() != null) {
+            Optional<OrganisationSearchResult> maybeResult = companiesHouseRestService.getOrganisationById(organisation.getCompaniesHouseNumber()).getOptionalSuccessObject();
+            if (maybeResult.isPresent()) {
+                return maybeResult.get().getOrganisationAddress();
+            }
+        }
+        return createNewAddress();
     }
 
     private AddressResource createNewAddress() {

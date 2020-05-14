@@ -88,6 +88,11 @@ public class ApplicationResource {
         return applicationState;
     }
 
+    @JsonIgnore
+    public String getApplicationStateDisplayName() {
+        return applicationState.getDisplayName();
+    }
+
     public void setApplicationState(ApplicationState applicationState) {
         this.applicationState = applicationState;
     }
@@ -127,6 +132,11 @@ public class ApplicationResource {
     @JsonIgnore
     public boolean isOpen() {
         return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED;
+    }
+
+    @JsonIgnore
+    public boolean canBeReopened() {
+        return applicationState == ApplicationState.OPENED || applicationState == ApplicationState.CREATED || applicationState == ApplicationState.SUBMITTED;
     }
 
     @JsonIgnore

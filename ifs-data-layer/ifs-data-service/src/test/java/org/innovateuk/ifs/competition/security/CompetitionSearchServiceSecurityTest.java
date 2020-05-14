@@ -60,6 +60,7 @@ public class CompetitionSearchServiceSecurityTest extends BaseServiceSecurityTes
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
         verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
         verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
+        verify(rules, times(2)).compFinanceCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
         verifyNoMoreInteractions(rules);
     }
 
@@ -76,19 +77,20 @@ public class CompetitionSearchServiceSecurityTest extends BaseServiceSecurityTes
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), eq(user));
         verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
         verify(rules, times(2)).stakeholderCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
+        verify(rules, times(2)).compFinanceCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), eq(user));
         verifyNoMoreInteractions(rules);
     }
 
     @Test
     public void countCompetitions() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countCompetitions(),
-                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
+                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, EXTERNAL_FINANCE);
     }
 
     @Test
     public void searchCompetitions() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.searchCompetitions("", 0, 0),
-                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
+                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, EXTERNAL_FINANCE);
     }
 
     @Test
@@ -100,12 +102,12 @@ public class CompetitionSearchServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void findPreviousCompetitions() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findPreviousCompetitions(0, 0),
-                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
+                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, EXTERNAL_FINANCE);
     }
 
     @Test
     public void findProjectSetupCompetitions() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findProjectSetupCompetitions(0, 0),
-                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER);
+                COMP_ADMIN, PROJECT_FINANCE, SUPPORT, INNOVATION_LEAD, STAKEHOLDER, EXTERNAL_FINANCE);
     }
 }

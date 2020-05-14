@@ -34,6 +34,10 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final Set<FinanceRowType> financeRowTypes;
 
+    private final boolean overheadAlwaysTwenty;
+
+    private final boolean showCovidGuidance;
+
     public YourProjectCostsViewModel(long applicationId,
                                      String competitionName,
                                      long sectionId,
@@ -46,7 +50,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      String organisationName,
                                      String financesUrl,
                                      boolean procurementCompetition,
-                                     Set<FinanceRowType> financeRowTypes) {
+                                     Set<FinanceRowType> financeRowTypes,
+                                     boolean overheadAlwaysTwenty,
+                                     boolean showCovidGuidance) {
         this.internal = false;
         this.organisationId = organisationId;
         this.applicationId = applicationId;
@@ -61,17 +67,20 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.financesUrl = financesUrl;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
+        this.overheadAlwaysTwenty = overheadAlwaysTwenty;
+        this.showCovidGuidance = showCovidGuidance;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, long competitionId, String competitionName, long applicationId) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
         this.financeRowTypes = financeRowTypes;
-        this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applicationId = applicationId;
+        this.overheadAlwaysTwenty = overheadAlwaysTwenty;
 
+        this.competitionId = null;
         this.sectionId = null;
         this.organisationId = null;
         this.complete = false;
@@ -79,6 +88,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.organisationName = null;
         this.financesUrl = null;
         this.includeVat = false;
+        this.showCovidGuidance = false;
     }
 
     @Override
@@ -133,6 +143,14 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public Set<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
+    }
+
+    public boolean isOverheadAlwaysTwenty() {
+        return overheadAlwaysTwenty;
+    }
+
+    public boolean isShowCovidGuidance() {
+        return showCovidGuidance;
     }
 
     /* view logic */

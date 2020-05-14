@@ -234,7 +234,7 @@ grant offer letter is sent to users
     the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
     the user clicks the button/link    id = send-gol
-    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Send grant offer letter")
 
 users upload signed grant offer letter and submit
     the lead partner logs in and navigate to applications dashboard

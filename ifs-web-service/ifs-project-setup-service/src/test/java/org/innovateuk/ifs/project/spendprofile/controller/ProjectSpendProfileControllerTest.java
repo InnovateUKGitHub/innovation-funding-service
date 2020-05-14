@@ -12,6 +12,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -94,6 +95,9 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Mock
+    private MonitoringOfficerRestService monitoringOfficerRestService;
+
     @Override
     protected ProjectSpendProfileController supplyControllerUnderTest() {
         return new ProjectSpendProfileController();
@@ -125,6 +129,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).
                 thenThrow(new ObjectNotFoundException("SpendProfile not found", null));
 
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectResource.getId(), organisationId))
                 .andExpect(status().isNotFound())
@@ -157,6 +162,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationId)).thenReturn(expectedTable);
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
@@ -630,6 +636,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
 
@@ -698,6 +705,8 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
         when(projectService.getLeadPartners(projectId)).thenReturn(leadUserResources);
 
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(true));
+
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         when(spendProfileService.getSpendProfile(projectResource.getId(), organisationId)).thenReturn(Optional.of(spendProfileResource));
@@ -746,6 +755,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         when(statusService.getProjectTeamStatus(projectResource.getId(), Optional.empty())).thenReturn(teamStatus);
 
         when(projectService.getLeadPartners(projectResource.getId())).thenReturn(Collections.emptyList());
+        when(monitoringOfficerRestService.isMonitoringOfficerOnProject(projectResource.getId(), loggedInUser.getId())).thenReturn(restSuccess(false));
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 

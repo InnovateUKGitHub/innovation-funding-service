@@ -2,10 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.domain.InnovationSector;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -13,7 +10,6 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -158,6 +154,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
         return withArray((collaborationLevel, competition) ->
                 competition.setCollaborationLevel(collaborationLevel), collaborationLevels);
+    }
+
+    public CompetitionBuilder withCompetitionAssessmentConfig(CompetitionAssessmentConfig... competitionAssessmentConfigs) {
+        return withArray((competitionAssessmentConfig, competition) -> competition.setCompetitionAssessmentConfig(competitionAssessmentConfig), competitionAssessmentConfigs);
     }
 
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {

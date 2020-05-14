@@ -21,4 +21,6 @@ public interface MonitoringOfficerRestService {
     RestResult<List<ProjectResource>> getProjectsForMonitoringOfficer(long userId);
 
     RestResult<MonitoringOfficerResource> findMonitoringOfficerForProject(long projectId);
+
+    RestResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId);
 }

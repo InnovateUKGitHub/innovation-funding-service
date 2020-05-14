@@ -12,12 +12,14 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
     private ApplicationResource currentApplication;
     private String earlyMetricsUrl;
     private BigDecimal completedQuestionsPercentage;
+    private boolean reopenLinkVisible;
 
-    public TrackViewModel(CompetitionResource currentCompetition, ApplicationResource currentApplication, String earlyMetricsUrl, BigDecimal completedQuestionsPercentage) {
+    public TrackViewModel(CompetitionResource currentCompetition, ApplicationResource currentApplication, String earlyMetricsUrl, BigDecimal completedQuestionsPercentage, boolean reopenLinkVisible) {
         this.currentCompetition = currentCompetition;
         this.currentApplication = currentApplication;
         this.earlyMetricsUrl = earlyMetricsUrl;
         this.completedQuestionsPercentage = completedQuestionsPercentage;
+        this.reopenLinkVisible = reopenLinkVisible;
     }
 
     @Override
@@ -60,5 +62,9 @@ public class TrackViewModel implements BaseAnalyticsViewModel {
 
     public void setCompletedQuestionsPercentage(BigDecimal completedQuestionsPercentage) {
         this.completedQuestionsPercentage = completedQuestionsPercentage;
+    }
+
+    public boolean isReopenLinkVisible() {
+        return reopenLinkVisible;
     }
 }

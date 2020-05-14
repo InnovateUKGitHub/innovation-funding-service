@@ -29,6 +29,8 @@ public class FinanceCheckDocs {
             fieldWithPath("h2020").description("Whether the project is a horizon 2020 grant transfer"),
             fieldWithPath("fundingType").description("Funding type of the competition that the project is from"),
             fieldWithPath("allEligibilityAndViabilityInReview").description("True if all partner finances are in review, or not applicable"),
+            fieldWithPath("hasGrantClaimPercentage").description("Does then project have a claim percentage rather than funding sought"),
+
     };
 
     public static final FieldDescriptor[] financeCheckOverviewResourceFields = {

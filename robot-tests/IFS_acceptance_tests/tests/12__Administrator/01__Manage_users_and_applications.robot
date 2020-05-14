@@ -23,8 +23,10 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7160  CSS & Admins cannot amend email addresses if there are pending invites in the service
 ...
+...               IFS-7429 Administrator has access to Project Details after Finance reviewer is assigned
+...
 Suite Setup       Custom suite setup
-#Suite Teardown    the user closes the browser
+Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
@@ -113,6 +115,13 @@ User can sign in with new email
     [Documentation]  IFS-6380
     Given Logging in and Error Checking    ${adminChangeEmailNew}  ${short_password}
     Then the user should see the element   link = Office Chair for Life
+
+Administrator is able to access Project details once a finance contact is assigned
+    [Documentation]  IFS-7429
+    Given finance reviewer is added to the project    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    When log in as a different user                   &{Comp_admin1_credentials}
+    Then the user navigates to the page               ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/project/${PS_PD_Project_Id}/details
+    [Teardown]  The user clicks the button/link       link = Dashboard
 
 Admin cannot change email to an email which is a pending team member invitation to an organisation in the application
     [Documentation]   IFS-7160

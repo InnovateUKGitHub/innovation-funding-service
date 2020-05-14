@@ -45,7 +45,6 @@ public class MonitoringOfficer extends ProjectParticipant {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(project, that.project)
                 .isEquals();
     }
 
@@ -53,7 +52,6 @@ public class MonitoringOfficer extends ProjectParticipant {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(project)
                 .toHashCode();
     }
 }
