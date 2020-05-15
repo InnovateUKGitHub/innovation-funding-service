@@ -15,7 +15,7 @@ import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.Compe
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionStateSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.eligibility.viewmodel.EligibilityViewModel;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.viewmodel.AdditionalModelViewModel;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.InitialDetailsModelPopulator;
@@ -110,7 +110,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.PROJECT_ELIGIBILITY);
         when(matchingPopulator.populateModel(nullable(GeneralSetupViewModel.class), nullable(CompetitionResource.class)))
-                .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.PROJECT_ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
+                .thenReturn(new ProjectEligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.PROJECT_ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
                         new CollaborationLevel[]{}, emptyList(), "", new FundingLevel[]{}, emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);

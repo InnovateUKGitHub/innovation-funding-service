@@ -117,7 +117,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
     private CovidType covidType;
-    private Boolean internationalOrganisationsAllowed;
 
     public CompetitionResource() {
     }
@@ -815,14 +814,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
-    public Boolean getInternationalOrganisationsAllowed() {
-        return internationalOrganisationsAllowed;
-    }
-
-    public void setInternationalOrganisationsAllowed(Boolean internationalOrganisationsAllowed) {
-        this.internationalOrganisationsAllowed = internationalOrganisationsAllowed;
-    }
-
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -895,7 +886,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(includeProjectGrowthTable, that.includeProjectGrowthTable)
                 .append(fundingType, that.fundingType)
                 .append(competitionTerms, that.competitionTerms)
-                .append(internationalOrganisationsAllowed, that.internationalOrganisationsAllowed)
                 .append(createdBy, that.createdBy)
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
@@ -960,7 +950,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(includeProjectGrowthTable)
                 .append(fundingType)
                 .append(competitionTerms)
-                .append(internationalOrganisationsAllowed)
                 .append(createdBy)
                 .append(createdOn)
                 .append(modifiedBy)

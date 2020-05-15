@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -25,14 +25,14 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
  * Form populator for the eligibility competition setup section.
  */
 @Service
-public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
+public class ProjectEligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     private QuestionRestService questionRestService;
 
-    public EligibilityFormPopulator(GrantClaimMaximumRestService grantClaimMaximumRestService,
-                                    QuestionRestService questionRestService) {
+    public ProjectEligibilityFormPopulator(GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                           QuestionRestService questionRestService) {
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
         this.questionRestService = questionRestService;
     }
@@ -44,7 +44,7 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
 
     @Override
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
 
         competitionSetupForm.setResearchCategoryId(competitionResource.getResearchCategories());
 
@@ -82,8 +82,8 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private Boolean getResearchCategoriesApplicable(CompetitionResource competitionResource,
-                                                    EligibilityForm eligibilityForm) {
-        if (!isFirstTimeInForm(eligibilityForm)) {
+                                                    ProjectEligibilityForm projectEligibilityForm) {
+        if (!isFirstTimeInForm(projectEligibilityForm)) {
             RestResult<QuestionResource> researchCategoryQuestionResult = questionRestService
                     .getQuestionByCompetitionIdAndQuestionSetupType(competitionResource.getId(), RESEARCH_CATEGORY);
             return researchCategoryQuestionResult.isSuccess();
@@ -92,21 +92,21 @@ public class EligibilityFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private Boolean getOverrideFundingRulesSet(CompetitionResource competitionResource,
-                                               EligibilityForm eligibilityForm) {
-        if (!isFirstTimeInForm(eligibilityForm)) {
+                                               ProjectEligibilityForm projectEligibilityForm) {
+        if (!isFirstTimeInForm(projectEligibilityForm)) {
             return grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionResource.getId()).getSuccess();
         }
 
         return null;
     }
 
-    private boolean isFirstTimeInForm(EligibilityForm eligibilityForm) {
-        return  "no".equals(eligibilityForm.getMultipleStream())
-                && eligibilityForm.getResearchCategoryId().isEmpty()
-                && (eligibilityForm.getSingleOrCollaborative() == null)
-                && (eligibilityForm.getLeadApplicantTypes() == null
-                || eligibilityForm.getLeadApplicantTypes().isEmpty())
-                && isBlank(eligibilityForm.getResubmission());
+    private boolean isFirstTimeInForm(ProjectEligibilityForm projectEligibilityForm) {
+        return  "no".equals(projectEligibilityForm.getMultipleStream())
+                && projectEligibilityForm.getResearchCategoryId().isEmpty()
+                && (projectEligibilityForm.getSingleOrCollaborative() == null)
+                && (projectEligibilityForm.getLeadApplicantTypes() == null
+                || projectEligibilityForm.getLeadApplicantTypes().isEmpty())
+                && isBlank(projectEligibilityForm.getResubmission());
     }
 
     private Integer getFundingLevelPercentage(CompetitionResource competition) {

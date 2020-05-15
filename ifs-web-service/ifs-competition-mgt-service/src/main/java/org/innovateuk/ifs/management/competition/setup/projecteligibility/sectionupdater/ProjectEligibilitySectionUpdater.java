@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.sectionupdater;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.sectionupdater;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -12,7 +13,6 @@ import org.innovateuk.ifs.management.competition.setup.application.sectionupdate
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CA
  * Competition setup section saver for the eligibility section.
  */
 @Service
-public class EligibilitySectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
+public class ProjectEligibilitySectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public static final String RESEARCH_CATEGORY_ID = "researchCategoryId";
     public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";
@@ -43,10 +43,10 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
-    public EligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
-                                     GrantClaimMaximumRestService grantClaimMaximumRestService,
-                                     QuestionRestService questionRestService,
-                                     QuestionSetupCompetitionRestService questionSetupCompetitionRestService) {
+    public ProjectEligibilitySectionUpdater(CompetitionSetupRestService competitionSetupRestService,
+                                            GrantClaimMaximumRestService grantClaimMaximumRestService,
+                                            QuestionRestService questionRestService,
+                                            QuestionSetupCompetitionRestService questionSetupCompetitionRestService) {
         this.competitionSetupRestService = competitionSetupRestService;
         this.grantClaimMaximumRestService = grantClaimMaximumRestService;
         this.questionRestService = questionRestService;
@@ -63,49 +63,49 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
             CompetitionResource competition,
             CompetitionSetupForm competitionSetupForm
     ) {
-        EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
+        ProjectEligibilityForm projectEligibilityForm = (ProjectEligibilityForm) competitionSetupForm;
 
-        competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
+        competition.setResearchCategories(projectEligibilityForm.getResearchCategoryId());
 
         if (competition.isNonFinanceType()) {
             competition.setMaxResearchRatio(NONE.getAmount());
         } else {
-            ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());
+            ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(projectEligibilityForm.getResearchParticipationAmountId());
 
             if (amount != null) {
                 competition.setMaxResearchRatio(amount.getAmount());
             }
         }
 
-        boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
+        boolean multiStream = "yes".equals(projectEligibilityForm.getMultipleStream());
         competition.setMultiStream(multiStream);
 
         if (multiStream) {
-            competition.setStreamName(eligibilityForm.getStreamName());
+            competition.setStreamName(projectEligibilityForm.getStreamName());
         } else {
             competition.setStreamName(null);
         }
 
-        handleResearchCategoryApplicableChanges(competition, eligibilityForm);
-        handleGrantClaimMaximumChanges(competition, eligibilityForm);
+        handleResearchCategoryApplicableChanges(competition, projectEligibilityForm);
+        handleGrantClaimMaximumChanges(competition, projectEligibilityForm);
 
-        competition.setResubmission(CompetitionUtils.textToBoolean(eligibilityForm.getResubmission()));
+        competition.setResubmission(CompetitionUtils.textToBoolean(projectEligibilityForm.getResubmission()));
 
-        CollaborationLevel level = CollaborationLevel.fromCode(eligibilityForm.getSingleOrCollaborative());
+        CollaborationLevel level = CollaborationLevel.fromCode(projectEligibilityForm.getSingleOrCollaborative());
         competition.setCollaborationLevel(level);
-        competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
+        competition.setLeadApplicantTypes(projectEligibilityForm.getLeadApplicantTypes());
 
 
         return competitionSetupRestService.update(competition).toServiceResult();
     }
 
     private ServiceResult<Void> handleResearchCategoryApplicableChanges(CompetitionResource competitionResource,
-                                                                        EligibilityForm eligibilityForm) {
+                                                                        ProjectEligibilityForm projectEligibilityForm) {
 
         Optional<QuestionResource> researchCategoryQuestionIfExists = getResearchCategoryQuestionIfExists
                 (competitionResource.getId());
 
-        if (eligibilityForm.getResearchCategoriesApplicable()) {
+        if (projectEligibilityForm.getResearchCategoriesApplicable()) {
             if (!researchCategoryQuestionIfExists.isPresent()) {
                 questionSetupCompetitionRestService.addResearchCategoryQuestionToCompetition(competitionResource
                         .getId());
@@ -121,15 +121,15 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
     }
 
     private void handleGrantClaimMaximumChanges(CompetitionResource competition,
-                                                EligibilityForm eligibilityForm) {
+                                                ProjectEligibilityForm projectEligibilityForm) {
 
-        if (eligibilityForm.getConfiguredFundingLevelPercentage() != null) {
+        if (projectEligibilityForm.getConfiguredFundingLevelPercentage() != null) {
             Set<GrantClaimMaximumResource> grantClaimMaximums = competition.getGrantClaimMaximums().stream()
                     .map(id -> grantClaimMaximumRestService.getGrantClaimMaximumById(id).getSuccess())
                     .collect(Collectors.toSet());
 
             grantClaimMaximums.forEach(oldGCM -> {
-                GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, eligibilityForm.getConfiguredFundingLevelPercentage());
+                GrantClaimMaximumResource toSaveGCM = createNewGCM(oldGCM, projectEligibilityForm.getConfiguredFundingLevelPercentage());
 
                 if (!toSaveGCM.getMaximum().equals(oldGCM.getMaximum())) {
                     // remove the old
@@ -176,7 +176,7 @@ public class EligibilitySectionUpdater extends AbstractSectionUpdater implements
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-        return EligibilityForm.class.equals(clazz);
+        return ProjectEligibilityForm.class.equals(clazz);
     }
 
 }

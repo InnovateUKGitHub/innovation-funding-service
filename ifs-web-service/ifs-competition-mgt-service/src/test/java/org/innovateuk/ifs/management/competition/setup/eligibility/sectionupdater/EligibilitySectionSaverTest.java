@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.management.competition.setup.eligibility.sectionupdater;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.sectionupdater.ProjectEligibilitySectionUpdater;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.*;
 public class EligibilitySectionSaverTest {
 
     @InjectMocks
-    private EligibilitySectionUpdater service;
+    private ProjectEligibilitySectionUpdater service;
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestService;
@@ -56,7 +57,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setSingleOrCollaborative("collaborative");
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchCategoryId(asLinkedSet(1L, 2L, 3L));
@@ -98,7 +99,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_researchCategoriesApplicableIsFalseAndQuestionExists() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setSingleOrCollaborative("single");
         competitionSetupForm.setResearchCategoriesApplicable(false);
         competitionSetupForm.setOverrideFundingRules(false);
@@ -132,7 +133,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_researchCategoriesApplicableIsFalseAndQuestionIsAbsent() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setSingleOrCollaborative("single");
         competitionSetupForm.setResearchCategoriesApplicable(false);
         competitionSetupForm.setOverrideFundingRules(false);
@@ -162,7 +163,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_researchCategoriesApplicableIsTrueAndQuestionExists() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setSingleOrCollaborative("single");
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setOverrideFundingRules(false);
@@ -194,7 +195,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_researchCategoriesApplicableIsTrueAndQuestionIsAbsent() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setSingleOrCollaborative("single");
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setOverrideFundingRules(false);
@@ -222,7 +223,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_withoutResearchParticipationAmountIdDefaultsToNone() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setOverrideFundingRules(true);
         competitionSetupForm.setFundingLevelPercentageOverride(50);
@@ -252,7 +253,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_withoutResearchParticipationAndFundingLevels() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(false);
         competitionSetupForm.setOverrideFundingRules(false);
         competitionSetupForm.setFundingLevelPercentage(50);
@@ -281,7 +282,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNoFinances() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
         competitionSetupForm.setOverrideFundingRules(true);
@@ -312,7 +313,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void saveSection_withoutOverriddenFundingRules() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
         competitionSetupForm.setResearchCategoriesApplicable(true);
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
         competitionSetupForm.setOverrideFundingRules(false);
@@ -343,7 +344,7 @@ public class EligibilitySectionSaverTest {
 
     @Test
     public void supportsForm() {
-        assertTrue(service.supportsForm(EligibilityForm.class));
+        assertTrue(service.supportsForm(ProjectEligibilityForm.class));
         assertFalse(service.supportsForm(CompetitionSetupForm.class));
     }
 }

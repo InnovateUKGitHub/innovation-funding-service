@@ -27,7 +27,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
@@ -244,7 +244,7 @@ public class CompetitionSetupController {
     }
 
     @PostMapping("/{competitionId}/section/project-eligibility")
-    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
+    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectEligibilityForm competitionSetupForm,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,

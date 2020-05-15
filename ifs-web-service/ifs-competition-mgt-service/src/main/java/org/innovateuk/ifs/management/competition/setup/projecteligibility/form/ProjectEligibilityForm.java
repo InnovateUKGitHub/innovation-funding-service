@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.form;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.form;
 
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
@@ -23,13 +23,13 @@ import java.util.function.BiPredicate;
         firstField = "fundingLevelPercentageOverride",
         secondField = "overrideFundingRules",
         message = "{validation.eligibilityform.fundingLevel.max}",
-        predicate = EligibilityForm.FundingLevelMaxPredicateProvider.class)
+        predicate = ProjectEligibilityForm.FundingLevelMaxPredicateProvider.class)
 @FieldComparison(
         firstField = "fundingLevelPercentageOverride",
         secondField = "overrideFundingRules",
         message = "{validation.eligibilityform.fundingLevel.min}",
-        predicate = EligibilityForm.FundingLevelMinPredicateProvider.class)
-public class EligibilityForm extends CompetitionSetupForm {
+        predicate = ProjectEligibilityForm.FundingLevelMinPredicateProvider.class)
+public class ProjectEligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.multiplestream.required}")
     private String multipleStream;
