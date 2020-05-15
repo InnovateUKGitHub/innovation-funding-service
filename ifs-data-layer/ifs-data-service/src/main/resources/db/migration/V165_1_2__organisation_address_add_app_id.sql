@@ -1,14 +1,13 @@
 -- Change organisation_address table to also be linked to an application. This will be used to store international organisation
 -- addresses and the historic operating/registered addresses.
-RENAME TABLE organisation_address TO organisation_application_address;
 
-ALTER TABLE organisation_application_address
+ALTER TABLE organisation_address
   DROP INDEX UK_g3y4ooi9akaq8e98efgmljigm,
   ADD COLUMN application_id bigint(20),
   ADD COLUMN created_on DATETIME,
   ADD UNIQUE KEY UK_organisation_application_address (organisation_id, address_type_id, application_id);
 
-INSERT INTO organisation_application_address (organisation_id, application_id, address_id, address_type_id, created_on)
+INSERT INTO organisation_address (organisation_id, application_id, address_id, address_type_id, created_on)
     SELECT
         pr.organisation_id          AS organisation_id,
         pr.application_id           AS application_id,
@@ -16,12 +15,12 @@ INSERT INTO organisation_application_address (organisation_id, application_id, a
         oaa.address_type_id         AS address_type_id,
         now()                       AS created_on
     FROM process_role pr
-    INNER JOIN organisation_application_address oaa on oaa.organisation_id = pr.organisation_id
+    INNER JOIN organisation_address oaa on oaa.organisation_id = pr.organisation_id
     WHERE pr.organisation_id IS NOT NULL
     GROUP BY pr.organisation_id, pr.application_id;
 
-DELETE FROM organisation_application_address WHERE application_id IS NULL;
+DELETE FROM organisation_address WHERE application_id IS NULL;
 
-ALTER TABLE organisation_application_address MODIFY COLUMN application_id bigint(20) NOT NULL;
-ALTER TABLE organisation_application_address ADD CONSTRAINT organisation_application_address_to_application_id FOREIGN KEY (application_id) REFERENCES application (id);
-ALTER TABLE organisation_application_address MODIFY COLUMN created_on DATETIME NOT NULL;
+ALTER TABLE organisation_address MODIFY COLUMN application_id bigint(20) NOT NULL;
+ALTER TABLE organisation_address ADD CONSTRAINT organisation_application_address_to_application_id FOREIGN KEY (application_id) REFERENCES application (id);
+ALTER TABLE organisation_address MODIFY COLUMN created_on DATETIME NOT NULL;

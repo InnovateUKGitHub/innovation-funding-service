@@ -12,7 +12,7 @@ import javax.validation.Valid;
  * Resource object to store the address details, from the company, from the companies house api.
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"organisation_id", "application_id", "address_type_id"})})
+@Table(name = "organisation_address", uniqueConstraints = {@UniqueConstraint(columnNames = {"organisation_id", "application_id", "address_type_id"})})
 public class OrganisationApplicationAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
