@@ -186,20 +186,10 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
-
-        updateAddressForExistingBankDetails(bankDetailsResource, bankDetails);
-
+        bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
         bankDetailsRepository.save(bankDetails);
 
         return serviceSuccess(accountDetails);
-    }
-
-    private void updateAddressForExistingBankDetails(BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        if (bankDetails.getAddress() != null) {
-            bankDetails.getAddress().copyFrom(bankDetailsResource.getAddress());
-        } else {
-            bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
-        }
     }
 
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
@@ -212,7 +202,18 @@ public class BankDetailsServiceImpl implements BankDetailsService {
         } else {
             return serviceFailure(CommonFailureKeys.BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED);
         }
-        return saveSubmittedBankDetails(accountDetails, bankDetailsResource);
+        updateAddressForExistingBankDetails(bankDetailsResource, existingBankDetails.get());
+        existingBankDetails.get().setAccountNumber(bankDetailsResource.getAccountNumber());
+        existingBankDetails.get().setSortCode(bankDetailsResource.getSortCode());
+        return serviceSuccess(accountDetails);  
+    }
+
+    private void updateAddressForExistingBankDetails(BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
+        if (bankDetails.getAddress() != null) {
+            bankDetails.getAddress().copyFrom(bankDetailsResource.getAddress());
+        } else {
+            bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
+        }
     }
 
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource) {
