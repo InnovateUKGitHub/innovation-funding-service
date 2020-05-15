@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -109,6 +110,9 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Mock
     private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
+    @Mock
+    private AddressMapper addressMapper;
+
     @Before
     public void setUp() {
         organisation = newOrganisation().build();
@@ -136,6 +140,8 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
+        when(addressMapper.mapToDomain(addressResource)).thenReturn(address);
+        when(addressRepositoryMock.save(address)).thenReturn(address);
         when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
     }
 
@@ -234,7 +240,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         ServiceResult<Void> result = service.updateBankDetails(new ProjectOrganisationCompositeId(project.getId(), organisation.getId()),bankDetailsResource);
         assertTrue(result.isSuccess());
-        verify(bankDetailsRepositoryMock).save(bankDetails);
     }
 
     @Test
