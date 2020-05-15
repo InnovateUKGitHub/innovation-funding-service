@@ -233,6 +233,7 @@ public class CompetitionSetupServiceImplTest {
                 INITIAL_DETAILS, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
                 CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
@@ -286,6 +287,7 @@ public class CompetitionSetupServiceImplTest {
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.PROJECT_ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
         testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
