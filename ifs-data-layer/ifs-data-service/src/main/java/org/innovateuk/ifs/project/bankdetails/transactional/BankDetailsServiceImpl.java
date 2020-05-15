@@ -151,7 +151,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org) {
 
-        if (!isOrganisationSeekingFunding(project.getId(), org.getId())) {
+        if (!isOrganisationSeekingFunding(project.getId(), org.getId()) || org.isInternational()) {
             return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
         }
 
