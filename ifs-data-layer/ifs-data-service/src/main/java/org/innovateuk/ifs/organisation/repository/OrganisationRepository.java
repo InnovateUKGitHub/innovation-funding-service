@@ -28,5 +28,5 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     List<Organisation> findAllById(Iterable<Long> ids);
     long countDistinctByProcessRolesApplicationId(long applicationId);
 
-    Optional<Organisation> findFirstByInternationalTrueAndInternationalRegistrationNumber(String internationalRegistrationNumber);
+    Optional<Organisation> findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(String internationalRegistrationNumber, String name);
 }

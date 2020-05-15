@@ -205,6 +205,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
         updateAddressForExistingBankDetails(bankDetailsResource, existingBankDetails.get());
         existingBankDetails.get().setAccountNumber(bankDetailsResource.getAccountNumber());
         existingBankDetails.get().setSortCode(bankDetailsResource.getSortCode());
+        existingBankDetails.get().setManualApproval(bankDetailsResource.isManualApproval());
         return serviceSuccess(accountDetails);  
     }
 
