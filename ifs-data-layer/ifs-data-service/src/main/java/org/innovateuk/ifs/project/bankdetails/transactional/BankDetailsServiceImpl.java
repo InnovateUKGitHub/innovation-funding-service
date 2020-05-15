@@ -195,9 +195,8 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private void updateAddressForExistingBankDetails(BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        Optional<org.innovateuk.ifs.address.domain.Address> matchingAddress = addressRepository.findAddressEqualTo(bankDetailsResource.getAddress());
-        if (matchingAddress.isPresent()) {
-            bankDetails.setAddress(matchingAddress.get());
+        if (bankDetails.getAddress() != null) {
+            bankDetails.getAddress().copyFrom(bankDetailsResource.getAddress());
         } else {
             bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
         }

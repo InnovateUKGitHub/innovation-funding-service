@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -19,11 +18,10 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -60,13 +58,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
@@ -367,9 +361,8 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 andOnSuccess(() ->
                         find(getProject(projectId), getOrganisation(organisationId)).
                                 andOnSuccess((project, organisation) -> {
-                                    Optional<Address> matchingAddress = addressRepository.findAddressEqualTo(address);
-                                    if (matchingAddress.isPresent()) {
-                                        project.setAddress(matchingAddress.get());
+                                    if (project.getAddress() != null) {
+                                        project.getAddress().copyFrom(address);
                                     } else {
                                         project.setAddress(addressRepository.save(addressMapper.mapToDomain(address)));
                                     }
