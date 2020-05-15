@@ -12,11 +12,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -52,7 +50,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -118,7 +115,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         project = newProject().build();
         AddressResource addressResource = newAddressResource().build();
         Address address = newAddress().build();
-        OrganisationApplicationAddress organisationApplicationAddress = newOrganisationAddress().build();
 
         bankDetailsResource = newBankDetailsResource()
                 .withProject(project.getId())
@@ -132,17 +128,16 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
                 .withSortCode(bankDetailsResource.getSortCode())
                 .withAccountNumber(bankDetailsResource.getAccountNumber())
                 .withOrganisation(organisation)
-                .withOrganiationAddress(organisationApplicationAddress)
+                .withAddress(address)
                 .build();
 
         accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
         silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
-//        when(addressRepositoryMock.findById(addressResource.getId())).thenReturn(Optional.of(address));
+        when(addressRepositoryMock.findAddressEqualTo(addressResource)).thenReturn(Optional.of(address));
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
         when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
-        when(organisationApplicationAddressMapper.mapToDomain(any(OrganisationAddressResource.class))).thenReturn(organisationApplicationAddress);
     }
 
     @Test
@@ -219,7 +214,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation())).thenReturn(Optional.empty(), Optional.of(bankDetails));
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
 
-        service.submitBankDetails(new ProjectOrganisationCompositeId(project.getId(), organisation.getId()),bankDetailsResource);
+        service.submitBankDetails(new ProjectOrganisationCompositeId(project.getId(), organisation.getId()), bankDetailsResource);
         verify(silExperianEndpointMock, times(1)).verify(accountDetails);
         verify(bankDetailsRepositoryMock, times(2)).findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
     }
