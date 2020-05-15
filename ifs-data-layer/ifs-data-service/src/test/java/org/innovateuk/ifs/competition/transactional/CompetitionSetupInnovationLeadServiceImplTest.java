@@ -43,7 +43,7 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
     @Mock
     private UserRepository userRepository;
 
-    private Long competitionId = 1L;
+    private long competitionId = 1L;
 
     @Override
     protected CompetitionSetupInnovationLeadServiceImpl supplyServiceUnderTest() {
@@ -52,7 +52,6 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
 
     @Test
     public void findInnovationLeads() {
-        Long competitionId = 1L;
 
         User innovationLead1 = newUser().withRoles(singleton(INNOVATION_LEAD)).build();
         User innovationLead2 = newUser().withRoles(singleton(INNOVATION_LEAD)).build();
@@ -73,15 +72,17 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
     @Test
     public void addInnovationLeadWhenCompetitionNotFound() {
         Long innovationLeadUserId = 2L;
+
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.empty());
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
+
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Competition.class, competitionId)));
     }
 
     @Test
     public void addInnovationLead() {
-        Long innovationLeadUserId = 2L;
+        long innovationLeadUserId = 2L;
 
         Competition competition = newCompetition().build();
         User innovationLead = newUser().build();
@@ -92,13 +93,12 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
 
         InnovationLead savedCompetitionParticipant = new InnovationLead(competition, innovationLead);
 
-        // Verify that the correct CompetitionParticipant is saved
         verify(innovationLeadRepository).save(savedCompetitionParticipant);
     }
 
     @Test
     public void removeInnovationLeadWhenCompetitionParticipantNotFound() {
-        Long innovationLeadUserId = 2L;
+        long innovationLeadUserId = 2L;
 
         when(innovationLeadRepository.findInnovationLead(competitionId, innovationLeadUserId)).thenReturn(null);
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
@@ -109,7 +109,7 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
 
     @Test
     public void removeInnovationLead() {
-        Long innovationLeadUserId = 2L;
+        long innovationLeadUserId = 2L;
 
         InnovationLead innovationLead = newInnovationLead().build();
         when(innovationLeadRepository.findInnovationLead(competitionId, innovationLeadUserId)).thenReturn
@@ -118,7 +118,6 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
         ServiceResult<Void> result = service.removeInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isSuccess());
 
-        //Verify that the entity is deleted
         verify(innovationLeadRepository).delete(innovationLead);
     }
 }

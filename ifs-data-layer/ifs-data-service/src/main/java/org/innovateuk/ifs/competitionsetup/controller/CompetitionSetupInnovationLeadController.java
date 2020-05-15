@@ -25,15 +25,15 @@ public class CompetitionSetupInnovationLeadController {
         return competitionSetupInnovationLeadService.findAddedInnovationLeads(competitionId).toGetResponse();
     }
 
-    @PostMapping("/{id}/add-innovation-lead/{innovationLeadUserId}")
-    public RestResult<Void> addInnovationLead(@PathVariable("id") final long competitionId,
+    @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
+    public RestResult<Void> addInnovationLead(@PathVariable("competitionId") final long competitionId,
                                               @PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
 
         return competitionSetupInnovationLeadService.addInnovationLead(competitionId, innovationLeadUserId).toPostResponse();
     }
 
-    @PostMapping("/{id}/remove-innovation-lead/{innovationLeadUserId}")
-    public RestResult<Void> removeInnovationLead(@PathVariable("id") final long competitionId,
+    @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
+    public RestResult<Void> removeInnovationLead(@PathVariable("competitionId") final long competitionId,
                                                  @PathVariable("innovationLeadUserId") final long innovationLeadUserId) {
 
         return competitionSetupInnovationLeadService.removeInnovationLead(competitionId, innovationLeadUserId).toPostResponse();

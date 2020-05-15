@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.I
  */
 public interface InnovationLeadRepository extends CompetitionParticipantRepository<InnovationLead> {
 
-    String INNOVATION_LEAD_IN_COMPETITION =
+    String INNOVATION_LEADS_IN_COMPETITION =
             "(SELECT competitionParticipant.user " +
                     "FROM CompetitionParticipant competitionParticipant " +
                     "WHERE competitionParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INNOVATION_LEAD " +
@@ -30,7 +30,7 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
                     "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
                     "AND user.id != competition.leadTechnologist.id " +
                     "AND user.id IN " +
-                    INNOVATION_LEAD_IN_COMPETITION;
+                    INNOVATION_LEADS_IN_COMPETITION;
 
     String AVAILABLE_INNOVATION_LEADS =
             "FROM User user " +
@@ -41,7 +41,7 @@ public interface InnovationLeadRepository extends CompetitionParticipantReposito
                     "AND user.status = org.innovateuk.ifs.user.resource.UserStatus.ACTIVE " +
                     "AND user.id != competition.leadTechnologist.id " +
                     "AND user.id NOT in " +
-                    INNOVATION_LEAD_IN_COMPETITION;
+                    INNOVATION_LEADS_IN_COMPETITION;
 
     @Query(AVAILABLE_INNOVATION_LEADS)
     List<User> findAvailableInnovationLeadsNotAssignedToCompetition(long competitionId);
