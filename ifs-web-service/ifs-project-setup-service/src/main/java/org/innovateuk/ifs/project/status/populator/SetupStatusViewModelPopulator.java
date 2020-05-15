@@ -62,6 +62,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
+                .filter(stage -> (ProjectSetupStage.BANK_DETAILS != stage) || showBankDetails(project, loggedInUser))
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
                 .collect(toList());
 
@@ -71,6 +72,18 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 stages,
                 competition.isLoan(),
                 showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
+    }
+
+    private boolean showBankDetails(ProjectResource project, UserResource user) {
+        OrganisationResource organisation = projectRestService.getOrganisationByProjectAndUser(project.getId(), user.getId()).getSuccess();
+
+        if (organisation.isInternational()) {
+            return false;
+        }
+
+        //TODO return false if not requesting any funding
+
+        return true;
     }
 
     private boolean showApplicationFeedbackLink(ProjectResource project,
