@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -48,7 +47,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -141,10 +139,9 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
-        when(addressRepositoryMock.findById(addressResource.getId())).thenReturn(Optional.of(address));
+//        when(addressRepositoryMock.findById(addressResource.getId())).thenReturn(Optional.of(address));
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
         when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
-        when(addressTypeRepository.findById(BANK_DETAILS.getOrdinal())).thenReturn(Optional.of(new AddressType()));
         when(organisationApplicationAddressMapper.mapToDomain(any(OrganisationAddressResource.class))).thenReturn(organisationApplicationAddress);
     }
 

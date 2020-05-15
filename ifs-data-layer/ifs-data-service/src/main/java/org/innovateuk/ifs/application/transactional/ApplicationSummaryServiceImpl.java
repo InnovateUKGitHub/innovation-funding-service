@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -102,9 +101,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Autowired
     private ApplicationSummaryPageMapper applicationSummaryPageMapper;
-
-    @Autowired
-    private OrganisationApplicationAddressMapper organisationApplicationAddressMapper;
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
@@ -35,9 +34,6 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
-
-    @Autowired
-    private OrganisationAddressRestService organisationAddressRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address")
