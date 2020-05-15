@@ -926,6 +926,4 @@ Custom suite teardown
     Disconnect from database
 
 the user check for competition code
-    ${year} =    get current date  result_format=%Y-%m-%d %H:%M:%S.%f
-    ${nextyearintwodigits}=   add time to date    ${year}     370 days   result_format=%y
-    Wait Until Keyword Succeeds Without Screenshots    10     200ms      textfield should contain  name = competitionCode     ${nextyearintwodigits}
+    the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
