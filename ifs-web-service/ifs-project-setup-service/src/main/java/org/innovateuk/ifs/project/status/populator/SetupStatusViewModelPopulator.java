@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
@@ -81,8 +82,12 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             return false;
         }
 
-        //TODO return false if not requesting any funding
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.of(user.getId()));
+        Optional<ProjectPartnerStatusResource> statusForOrg = teamStatus.getPartnerStatusForOrganisation(organisation.getId());
 
+        if (statusForOrg.isPresent() && ProjectActivityStates.NOT_REQUIRED == statusForOrg.get().getBankDetailsStatus()) {
+            return false;
+        }
         return true;
     }
 
