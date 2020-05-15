@@ -5,14 +5,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 
 public class OrganisationalEligibilityViewModel extends CompetitionSetupViewModel {
 
-    private boolean internationalOrganisationsApplicable;
-
     public OrganisationalEligibilityViewModel(GeneralSetupViewModel generalSetupViewModel) {
         this.generalSetupViewModel = generalSetupViewModel;
-//        this.internationalOrganisationsApplicable = internationalOrganisationsApplicable;
-    }
-
-    public boolean isInternationalOrganisationsApplicable() {
-        return internationalOrganisationsApplicable;
     }
 }

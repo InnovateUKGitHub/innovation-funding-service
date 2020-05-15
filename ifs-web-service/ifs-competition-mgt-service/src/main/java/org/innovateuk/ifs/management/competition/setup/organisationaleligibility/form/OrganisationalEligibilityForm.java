@@ -12,9 +12,6 @@ public class OrganisationalEligibilityForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.organisationaleligibilityform.internationalOrganisationsApplicable.required}")
     private Boolean internationalOrganisationsApplicable;
 
-    public OrganisationalEligibilityForm() {
-    }
-
     public Boolean getInternationalOrganisationsApplicable() {
         return internationalOrganisationsApplicable;
     }
