@@ -943,11 +943,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress()
                 .build();
+        project.setAddress(null);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(addressRepositoryMock.findAddressEqualTo(newAddressResource)).thenReturn(Optional.empty());
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
         when(addressRepositoryMock.save(newAddress)).thenReturn(newAddress);
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
@@ -965,21 +965,22 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     public void updateProjectAddressToExistingAddress() {
 
         Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
-        AddressResource newAddressResource = newAddressResource().build();
-        Address existingAddress = newAddress().build();
+        AddressResource newAddressResource = newAddressResource().withAddressLine1("new").build();
+        Address existingAddress = newAddress().withAddressLine1("old").build();
+        project.setAddress(existingAddress);
+
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(addressRepositoryMock.findAddressEqualTo(newAddressResource)).thenReturn(Optional.of(existingAddress));
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
         assertEquals(existingAddress, project.getAddress());
+        assertEquals(existingAddress.getAddressLine1(), "new");
     }
 
     @Test

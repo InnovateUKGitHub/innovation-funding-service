@@ -135,7 +135,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
 
         when(bankDetailsMapperMock.mapToDomain(bankDetailsResource)).thenReturn(bankDetails);
-        when(addressRepositoryMock.findAddressEqualTo(addressResource)).thenReturn(Optional.of(address));
         when(bankDetailsRepositoryMock.save(bankDetails)).thenReturn(bankDetails);
         when(projectRepositoryMock.findById(bankDetailsResource.getProject())).thenReturn(Optional.of(project));
     }
