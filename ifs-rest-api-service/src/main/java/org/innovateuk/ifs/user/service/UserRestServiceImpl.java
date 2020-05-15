@@ -97,6 +97,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<List<UserResource>> findByUserRoleAndUserStatus(Role role, UserStatus userStatus) {
+        return getWithRestResult(USER_REST_URL + "/find-by-role-and-status/" + role + "/" + userStatus, userListType());
+    }
+
+    @Override
     public RestResult<ManageUserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", filter);

@@ -46,13 +46,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserController> {
 
     @Mock
-    private UserService userServiceMock;
+    private UserService userService;
 
     @Mock
-    private RegistrationService registrationServiceMock;
+    private RegistrationService registrationService;
 
     @Mock
-    private BaseUserService baseUserServiceMock;
+    private BaseUserService baseUserService;
 
     @Override
     protected UserController supplyControllerUnderTest() {
@@ -65,7 +65,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         final UserResource userResource = newUserResource().build();
 
-        when(userServiceMock.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
+        when(userService.findInactiveByEmail(emailAddress)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(put("/user/send-email-verification-notification/{emailAddress}/", emailAddress)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -81,7 +81,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final long organisationId = 9999L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationService.createUser(userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -100,7 +100,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void findByRole() throws Exception {
 
         final UserResource userResource = newUserResource().build();
-        when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
+        when(baseUserService.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
         mockMvc.perform(get("/user/find-by-role/{userRole}", INNOVATION_LEAD)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -115,12 +115,31 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
+    public void findByProcessRoleAndUserStatus() throws Exception {
+
+        final UserResource userResource = newUserResource().build();
+        when(baseUserService.findByProcessRoleAndUserStatus(eq(INNOVATION_LEAD), eq(UserStatus.ACTIVE))).thenReturn(serviceSuccess(asList(userResource, userResource)));
+
+        mockMvc.perform(get("/user/find-by-role-and-status/{userRole}/{userStatus}", INNOVATION_LEAD, UserStatus.ACTIVE)
+                .header("IFS_AUTH_TOKEN", "123abc"))
+                .andDo(document("user/{method-name}",
+                        pathParameters(
+                                parameterWithName("userRole").description("The role to get the users by."),
+                                parameterWithName("userStatus").description("The status to get the users by.")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("list of users with the selected role, ordered by first name, last name")
+                        ).andWithPrefix("[].", userResourceFields)
+                ));
+    }
+
+    @Test
     public void createUserWithCompetitionId() throws Exception {
         final long organisationId = 9999L;
         final long competitionId = 8888L;
 
         final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
+        when(registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
 
         mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
@@ -139,7 +158,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void findActive() throws Exception {
         ManageUserPageResource userPageResource = buildManageUserPageResource();
-        when(userServiceMock.findActive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
+        when(userService.findActive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", "filter");
         mockMvc.perform(get(buildPaginationUri("/user/active", 0, 5, null, params))
@@ -154,7 +173,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void findInactive() throws Exception {
         ManageUserPageResource userPageResource = buildManageUserPageResource();
-        when(userServiceMock.findInactive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
+        when(userService.findInactive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("filter", "filter");
         mockMvc.perform(get(buildPaginationUri("/user/inactive", 0, 5, null, params))
@@ -188,7 +207,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .withRoles(roleResources)
                 .build();
 
-        when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
+        when(registrationService.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/internal/create/{inviteHash}", "SomeHashString")
                 .contentType(APPLICATION_JSON)
@@ -206,7 +225,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void agreeNewSiteTermsAndConditions() throws Exception {
         long userId = 1L;
 
-        when(userServiceMock.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess(newUserResource().build()));
+        when(userService.agreeNewTermsAndConditions(1L)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/id/{userId}/agree-new-site-terms-and-conditions", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -223,7 +242,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void editInternalUser() throws Exception {
 
         EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", Role.SUPPORT);
-        when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
+        when(registrationService.editInternalUser(any(), any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/internal/edit")
                 .contentType(APPLICATION_JSON)
@@ -234,14 +253,14 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         requestFields(EditUserResourceDocs.editUserResourceFields)
                 ));
 
-        verify(registrationServiceMock).editInternalUser(any(), any());
+        verify(registrationService).editInternalUser(any(), any());
     }
 
     @Test
     public void deactivateUser() throws Exception {
         final long userId = 9999L;
 
-        when(registrationServiceMock.deactivateUser(userId)).thenReturn(serviceSuccess(newUserResource().build()));
+        when(registrationService.deactivateUser(userId)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(get("/user/id/{userId}/deactivate", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -256,7 +275,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void reactivateUser() throws Exception {
         final long userId = 9999L;
 
-        when(registrationServiceMock.activateUser(userId)).thenReturn(serviceSuccess(newUserResource().build()));
+        when(registrationService.activateUser(userId)).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(get("/user/id/{userId}/reactivate", userId)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -274,7 +293,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userService.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/find-external-users?searchString=" + searchString + "&searchCategory=" + searchCategory)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -293,7 +312,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
                 ));
 
-        verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        verify(userService).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
     }
 
     @Test
@@ -301,7 +320,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         long userId = 1L;
         Role grantRole = Role.APPLICANT;
 
-        when(userServiceMock.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess(newUserResource().build()));
+        when(userService.grantRole(new GrantRoleCommand(userId, grantRole))).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/user/{userId}/grant/{role}", userId, grantRole.name())
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -314,6 +333,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                         )
                 ));
 
-        verify(userServiceMock).grantRole(new GrantRoleCommand(userId, grantRole));
+        verify(userService).grantRole(new GrantRoleCommand(userId, grantRole));
     }
 }

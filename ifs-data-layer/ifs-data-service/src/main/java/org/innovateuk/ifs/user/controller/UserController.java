@@ -77,6 +77,11 @@ public class UserController {
         return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
+    @GetMapping("/find-by-role-and-status/{userRole}/{userStatus}")
+    public RestResult<List<UserResource>> findByRoleAndUserStatus(@PathVariable Role userRole, @PathVariable UserStatus userStatus) {
+        return baseUserService.findByProcessRoleAndUserStatus(userRole, userStatus).toGetResponse();
+    }
+
     @GetMapping("/active")
     public RestResult<ManageUserPageResource> findActiveUsers(@RequestParam(required = false) String filter,
                                                         @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
