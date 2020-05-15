@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static java.lang.String.valueOf;
-import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,11 +47,12 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     public void setup(){
         super.setup();
         setupEncryptedCookieService(cookieUtil);
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
         when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
         when(registrationCookieService.getOrganisationTypeCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
         when(competitionRestService.getCompetitionOrganisationType(1L)).thenReturn(restSuccess(newOrganisationTypeResource().withId(1L, 3L).build(2)));
-        when(organisationCreationSelectTypePopulator.populate()).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4)));
+        when(organisationCreationSelectTypePopulator.populate(request)).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4)));
     }
 
     @Test

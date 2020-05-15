@@ -44,6 +44,7 @@ public class OrganisationSelectionViewModelPopulatorTest {
         List<OrganisationResource> organisations = newOrganisationResource()
                 .withName("Organisation 1", "Organisation 2")
                 .withOrganisationTypeName("Type 1", "Type 2")
+                .withIsInternational(false)
                 .build(2);
 
         when(organisationRestService.getAllByUserId(user.getId())).thenReturn(restSuccess(organisations));
