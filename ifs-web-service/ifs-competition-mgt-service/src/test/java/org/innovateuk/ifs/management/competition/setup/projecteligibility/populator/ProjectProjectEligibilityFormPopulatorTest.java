@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -10,7 +10,6 @@ import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.P
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.management.competition.setup.projecteligibility.populator.ProjectEligibilityFormPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;

@@ -38,12 +38,21 @@ public class CompetitionSetupSectionTest {
 	}
 	
 	@Test
-	public void testFromPathEligibility() {
+	public void testFromPathProjectEligibility() {
 		String path = "project-eligibility";
 		
 		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
 		
 		assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, result);
+	}
+
+	@Test
+	public void testFromPathOrganisationalEligibility() {
+		String path = "organisational-eligibility";
+
+		CompetitionSetupSection result = CompetitionSetupSection.fromPath(path);
+
+		assertEquals(CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, result);
 	}
 	
 	@Test
@@ -76,7 +85,8 @@ public class CompetitionSetupSectionTest {
 	@Test
 	public void testAllSectionsEditableWhenSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
-		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
+		CompetitionSetupSection projectEligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
+		CompetitionSetupSection organisationalEligibilitySection = CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
 		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
 		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
 		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
@@ -94,7 +104,8 @@ public class CompetitionSetupSectionTest {
 				.build();
 
 		assertFalse(homeSection.preventEdit(competitionResource));
-		assertFalse(eligibilitySection.preventEdit(competitionResource));
+		assertFalse(projectEligibilitySection.preventEdit(competitionResource));
+		assertFalse(organisationalEligibilitySection.preventEdit(competitionResource));
 		assertFalse(milestonesSection.preventEdit(competitionResource));
 		assertFalse(applicationFormSection.preventEdit(competitionResource));
 		assertFalse(assessorSection.preventEdit(competitionResource));
@@ -124,7 +135,8 @@ public class CompetitionSetupSectionTest {
 	@Test
 	public void testSectionsNotEditableWhenCompetitionStartedAndSetupIsCompleteAndNotYetInAssessment() {
 		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
-		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
+		CompetitionSetupSection projectEligibilitySection = CompetitionSetupSection.PROJECT_ELIGIBILITY;
+		CompetitionSetupSection organisationalEligibilitySection = CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
 		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
 		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
 		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
@@ -141,7 +153,8 @@ public class CompetitionSetupSectionTest {
 				.build();
 
 		assertTrue(homeSection.preventEdit(competitionResource));
-		assertTrue(eligibilitySection.preventEdit(competitionResource));
+		assertTrue(projectEligibilitySection.preventEdit(competitionResource));
+		assertTrue(organisationalEligibilitySection.preventEdit(competitionResource));
 		assertTrue(milestonesSection.preventEdit(competitionResource));
 		assertTrue(applicationFormSection.preventEdit(competitionResource));
 		assertTrue(assessorSection.preventEdit(competitionResource));

@@ -1,9 +1,8 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.management.competition.setup.projecteligibility.populator.ProjectEligibilityModelPopulator;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;

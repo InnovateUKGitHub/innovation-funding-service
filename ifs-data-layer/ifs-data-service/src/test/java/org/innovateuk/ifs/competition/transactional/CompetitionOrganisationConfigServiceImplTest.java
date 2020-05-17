@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionOrganisationConfigResourceBuilder.newCompetitionOrganisationConfigResource;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +41,23 @@ public class CompetitionOrganisationConfigServiceImplTest extends BaseServiceUni
         when(mapper.mapToResource(config)).thenReturn(resource);
 
         ServiceResult<CompetitionOrganisationConfigResource> result = service.findOneByCompetitionId(competitionId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void update() {
+        long competitionId =100L;
+        CompetitionOrganisationConfig config = new CompetitionOrganisationConfig(newCompetition().withId(competitionId).build(),
+                false,
+                false);
+        CompetitionOrganisationConfigResource resource = newCompetitionOrganisationConfigResource()
+                .withInternationalOrganisationsAllowed(config.getInternationalOrganisationsAllowed())
+                .withInternationalLeadOrganisationAllowed(config.getInternationalLeadOrganisationAllowed())
+                .build();
+
+        when(competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId)).thenReturn(Optional.of(config));
+        ServiceResult<Void> result = service.update(competitionId, resource);
 
         assertTrue(result.isSuccess());
     }

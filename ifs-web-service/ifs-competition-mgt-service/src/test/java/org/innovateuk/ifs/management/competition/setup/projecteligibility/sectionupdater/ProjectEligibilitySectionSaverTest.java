@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.sectionupdater;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.sectionupdater;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.management.competition.setup.projecteligibility.sectionupdater.ProjectEligibilitySectionUpdater;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -38,7 +37,7 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EligibilitySectionSaverTest {
+public class ProjectEligibilitySectionSaverTest {
 
     @InjectMocks
     private ProjectEligibilitySectionUpdater service;
