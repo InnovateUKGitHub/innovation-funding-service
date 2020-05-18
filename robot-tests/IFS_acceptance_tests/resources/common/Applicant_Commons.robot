@@ -5,6 +5,18 @@ Resource    ../../resources/defaultResources.robot
 ${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 
 *** Keywords ***
+the user enters the details and clicks the create account
+    [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
+    Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
+    Input Text                     id=firstName  ${first_name}
+    Input Text                     id=lastName  ${last_name}
+    Input Text                     id=phoneNumber  23232323
+    Input Text                     id=email  ${email}
+    Input Password                 id=password  ${password}
+    the user selects the checkbox    termsAndConditions
+    the user selects the checkbox    allowMarketingEmails
+    Submit Form
+
 the user should see all the Your-Finances Sections
     the user should see the element  link = Your project costs
     the user should see the element  link = Your organisation
@@ -465,7 +477,7 @@ the applicant completes Application Team
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
 
 the user clicks the Not on companies house link
-    the user clicks the button/link       jQuery = summary:contains("Enter details manually")
+    the user clicks the button/link       jQuery = span:contains("Enter details manually")
     The user enters text to a text field  name = organisationName    org2
     the user clicks the button/link       jQuery = button:contains("Continue")
 

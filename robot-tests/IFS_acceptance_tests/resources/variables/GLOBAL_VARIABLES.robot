@@ -70,8 +70,9 @@ ${OPEN_COMPETITION_APPLICATION_6_NUMBER}  ${application_ids['${OPEN_COMPETITION_
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
 
-${createApplicationOpenCompetition}             Home and industrial efficiency programme
-${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetition}                  Home and industrial efficiency programme
+${createApplicationOpenCompetitionId}                ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenInternationalCompetition}     International Competition
 ${createApplicationOpenCompetitionApplication1Name}  Networking home IOT devices
 ${createApplicationOpenCompetitionApplication1Number}  ${application_ids['${createApplicationOpenCompetitionApplication1Name}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
@@ -245,16 +246,17 @@ ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}  ${getSimpleMile
 ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables
-${EMPIRE_LTD_NAME}         Empire Ltd
-${EMPIRE_LTD_ID}            ${organisation_ids["${EMPIRE_LTD_NAME}"]}
-${organisationLudlowName}   Ludlow
-${organisationLudlowId}     ${organisation_ids["${organisationLudlowName}"]}
-${organisationEggsName}     EGGS
-${organisationEggsId}       ${organisation_ids["${organisationEggsName}"]}
-${organisationRedName}      Red Planet
-${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
-${organisationSmithName}    SmithZone
-${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
+${EMPIRE_LTD_NAME}                    Empire Ltd
+${EMPIRE_LTD_ID}                      ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}             Ludlow
+${organisationLudlowId}               ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}               EGGS
+${organisationEggsId}                 ${organisation_ids["${organisationEggsName}"]}
+${organisationRedName}                Red Planet
+${organisationRedId}                  ${organisation_ids["${organisationRedName}"]}
+${organisationSmithName}              SmithZone
+${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
+${internationalOrganisationName}      International Competition Ltd.
 
 
 # Organisation type ids
