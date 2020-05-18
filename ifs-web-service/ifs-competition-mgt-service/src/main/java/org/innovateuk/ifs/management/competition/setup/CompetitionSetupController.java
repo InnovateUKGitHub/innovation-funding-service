@@ -27,6 +27,7 @@ import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.form.LeadInternationalOrganisationForm;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
@@ -267,6 +268,17 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, model);
+    }
+
+    @PostMapping("/{competitionId}/section/lead-international-organisation")
+    public String submitLeadInternationalOrganisationSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LeadInternationalOrganisationForm competitionSetupForm,
+                                                               BindingResult bindingResult,
+                                                               ValidationHandler validationHandler,
+                                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                               Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.LEAD_INTERNATIONAL_ORGANISATION, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")

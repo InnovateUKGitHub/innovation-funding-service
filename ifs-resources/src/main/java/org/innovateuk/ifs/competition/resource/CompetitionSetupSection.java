@@ -29,7 +29,8 @@ public enum CompetitionSetupSection {
     ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
     CONTENT(8L, "content", "Public content", emptyList(), true),
     PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
-    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false);
+    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false),
+    LEAD_INTERNATIONAL_ORGANISATION(13L, "lead-international-organisation", "Lead international organisations", emptyList(), false);
 
     private Long id;
     private String path;
