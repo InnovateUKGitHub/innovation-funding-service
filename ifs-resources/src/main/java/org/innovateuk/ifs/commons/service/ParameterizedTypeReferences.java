@@ -22,15 +22,7 @@ import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuActionTypeResource;
 import org.innovateuk.ifs.interview.resource.InterviewApplicationResource;
 import org.innovateuk.ifs.interview.resource.InterviewResource;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
-import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
-import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
-import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
-import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
@@ -382,5 +374,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ActivityLogResource>> activityLogResourceListType() {
         return new ParameterizedTypeReference<List<ActivityLogResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<CompetitionOrganisationConfigResource> competitionConfigResourceListType() {
+        return new ParameterizedTypeReference<CompetitionOrganisationConfigResource>() {};
     }
 }
