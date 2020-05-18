@@ -5,8 +5,10 @@ import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String LEAD_ORGANISATION_TYPE = "lead-organisation-type";
     protected static final String FIND_ORGANISATION = "find-organisation";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
+    protected static final String INTERNATIONAL_CONFIRM_ORGANISATION = "international-confirm-organisation";
+    protected static final String INTERNATIONAL_ORGANISATION = "international-organisation";
+    protected static final String INTERNATIONAL_ORGANISATION_DETAILS = "international-organisation-details";
 
     protected static final String ORGANISATION_FORM = "organisationForm";
 
@@ -50,6 +55,12 @@ public abstract class AbstractOrganisationCreationController {
 
     @Autowired
     protected AddressRestService addressRestService;
+
+    @Autowired
+    protected OrganisationRestService organisationRestService;
+
+    @Autowired
+    protected OrganisationJourneyEnd organisationJourneyEnd;
 
     protected Validator validator;
 

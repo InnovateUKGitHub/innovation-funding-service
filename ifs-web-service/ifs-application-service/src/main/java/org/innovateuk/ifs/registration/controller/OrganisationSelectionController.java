@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
 import org.innovateuk.ifs.registration.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.registration.controller.AbstractOrganisationCreationController.BASE_URL;
@@ -62,7 +64,7 @@ public class OrganisationSelectionController {
                                             BindingResult bindingResult,
                                             UserResource user,
                                             Model model) {
-        if (cannotSelectOrganisation(user)) {
+        if (cannotSelectOrganisation(user, request)) {
             return "redirect:" + nextPageInFlow(request);
         }
         model.addAttribute("model", organisationSelectionViewModelPopulator.populate(user,
@@ -84,18 +86,36 @@ public class OrganisationSelectionController {
 
     }
 
-    private boolean cannotSelectOrganisation(UserResource user) {
+    private boolean cannotSelectOrganisation(UserResource user, HttpServletRequest request) {
         return user == null
                 || !user.hasRole(Role.APPLICANT)
-                || organisationRestService.getAllByUserId(user.getId()).getSuccess().isEmpty();
+                || isLinkedToPreviousOrganisations(user.getId(), request);
+    }
+
+    private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request) {
+        Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
+
+        final boolean international = organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
+
+        return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
     }
 
     private String nextPageInFlow(HttpServletRequest request) {
+
+        Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
+
+        if (organisationInternationalForm.isPresent()) {
+            if (organisationInternationalForm.get().getInternational()) {
+                return "/organisation/create/lead-organisation-type";
+            }
+        }
+
         if (registrationCookieService.isCollaboratorJourney(request)) {
             return "/organisation/create/contributor-organisation-type";
         } else {
-            return "/organisation/create/initialize";
+            return "/organisation/create/lead-organisation-type";
         }
+
     }
 
     private Supplier<String> validateEligibility(HttpServletRequest request, HttpServletResponse response, UserResource user, OrganisationSelectionForm form) {

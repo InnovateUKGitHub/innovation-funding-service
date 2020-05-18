@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.application.creation.form.ApplicationCreationAuthenticatedForm;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -34,6 +36,9 @@ public class ApplicationCreationAuthenticatedController {
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
+
+    @Autowired
+    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
     @GetMapping("/{competitionId}")
     public String view(Model model,
@@ -71,6 +76,11 @@ public class ApplicationCreationAuthenticatedController {
     private String redirectToOrganisationCreation(long competitionId, HttpServletResponse response) {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
+
+        CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
+        if (organisationConfig.getInternationalOrganisationsAllowed()) {
+            return "redirect:/organisation/create/international-organisation";
+        }
         return "redirect:/organisation/select";
     }
 }

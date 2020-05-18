@@ -32,12 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 @PreAuthorize("permitAll")
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private OrganisationJourneyEnd organisationJourneyEnd;
-
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,
                                  Model model,
