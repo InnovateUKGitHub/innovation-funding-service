@@ -8,7 +8,7 @@ ALTER TABLE organisation_address
   ADD UNIQUE KEY UK_organisation_application_address (organisation_id, address_type_id, application_id);
 
 INSERT INTO organisation_address (organisation_id, application_id, address_id, address_type_id, created_on)
-    SELECT
+    SELECT DISTINCT
         pr.organisation_id          AS organisation_id,
         pr.application_id           AS application_id,
         oaa.address_id              AS address_id,
