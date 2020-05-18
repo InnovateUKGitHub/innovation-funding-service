@@ -210,18 +210,6 @@ the user follows the flow to register their organisation
     the user clicks the button/link         link=INNOVATE LTD
     the user clicks the button/link         jQuery=.govuk-button:contains("Save and continue")
 
-the user enters the details and clicks the create account
-    [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
-    Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
-    Input Text                     id=firstName  ${first_name}
-    Input Text                     id=lastName  ${last_name}
-    Input Text                     id=phoneNumber  23232323
-    Input Text                     id=email  ${email}
-    Input Password                 id=password  ${password}
-    the user selects the checkbox    termsAndConditions
-    the user selects the checkbox    allowMarketingEmails
-    Submit Form
-
 the invited user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
