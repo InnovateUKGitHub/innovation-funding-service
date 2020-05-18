@@ -37,6 +37,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.user.resource.Role.EXTERNAL_FINANCE;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -173,6 +174,6 @@ public class CompetitionManagementApplicationController {
     }
 
     private boolean hasProcessRole(UserResource user) {
-        return !(isInternal(user) || user.hasRole(STAKEHOLDER));
+        return !(isInternal(user) || user.hasRole(STAKEHOLDER) || user.hasRole(EXTERNAL_FINANCE));
     }
 }
