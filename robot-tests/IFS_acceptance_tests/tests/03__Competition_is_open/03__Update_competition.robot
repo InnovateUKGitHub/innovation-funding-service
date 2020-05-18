@@ -90,11 +90,11 @@ Finances are editable (Ready to Open)
     And the user clicks the button/link          jQuery = button:contains("Done")
     [Teardown]  the user clicks the button/link  link = Competition setup
 
-Eligibility is editable (Ready to Open)
+Project eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
     [Tags]
-    When the user clicks the button/link    link = Eligibility
-    Then the user should see the element    jquery = h1:contains("Eligibility")
+    When the user clicks the button/link    link = Project eligibility
+    Then the user should see the element    jquery = h1:contains("Project eligibility")
     And The user clicks the button/link     jQuery = button:contains(Edit)
     And the user selects the radio button   singleOrCollaborative  single
     And The user clicks the button/link     jQuery = button:contains(Done)
@@ -149,12 +149,12 @@ Assessed Questions are not editable (Open)
     Then the user should not see the element         jquery = .govuk-button:contains("Edit")
     [Teardown]    The user clicks the button/link    link = Application
 
-Eligibility is not editable (Open)
+Project eligibility is not editable (Open)
     [Documentation]    INFUND-6792
     [Tags]
     [Setup]    The user clicks the button/link       link = Competition setup
-    When The user clicks the button/link             link = Eligibility
-    And the user should see the element              jquery = h1:contains("Eligibility")
+    When The user clicks the button/link             link = Project eligibility
+    And the user should see the element              jquery = h1:contains("Project eligibility")
     Then The user should not see the element         css = input
     And The user should not see the element          jquery = .govuk-button:contains("Edit")
     And The user should not see the element          jquery = button:contains("Done")

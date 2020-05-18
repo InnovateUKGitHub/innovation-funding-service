@@ -94,7 +94,7 @@ The competition admin creates a competition for
     the user fills in the CS Initial details                ${competition}  ${month}  ${nextyear}  ${compType_Generic}  2  GRANT
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility                    ${orgType}  1  true  collaborative     # 1 means 30%
+    the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%
     the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user removes the Project details questions and marks the Application section as done  yes  Generic

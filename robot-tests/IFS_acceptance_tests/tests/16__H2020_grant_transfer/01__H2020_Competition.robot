@@ -41,12 +41,12 @@ User can populate Terms and Conditions
     Then the user clicks the button/link                    jQuery = button:contains("Done")
     [Teardown]  the user clicks the button/link             link = Return to setup overview
 
-User can populate Funding information and Eligibility
+User can populate Funding information and Project eligibility
     [Documentation]  IFS-5158
     Given the user clicks the button/link                                 link = Funding information
     When the user completes funding information
     Then the user clicks the button/link                                  link = Return to setup overview
-    And the user fills in the Competition Setup Eligibility section       ${BUSINESS_TYPE_ID}  4
+    And the user fills in the Competition Setup Project eligibility section       ${BUSINESS_TYPE_ID}  4
 
 User can complete the Application
     [Documentation]  IFS-5158
@@ -354,9 +354,9 @@ The user is able to go to Application overview
     the user should see the element  link = Public description
     the user should see the element  link = Horizon 2020 grant agreement
 
-The user fills in the Competition Setup Eligibility section
+The user fills in the Competition Setup Project eligibility section
     [Arguments]  ${organisationType}  ${researchParticipation}
-    the user clicks the button/link                      link = Eligibility
+    the user clicks the button/link                      link = Project eligibility
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
     the user selects the radio button                    researchCategoriesApplicable    false
     the user selects the option from the drop-down menu  100%  fundingLevelPercentage
@@ -366,7 +366,7 @@ The user fills in the Competition Setup Eligibility section
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user clicks the button/link                      link = Competition setup
-    the user should see the element                      jQuery = div:contains("Eligibility") ~ .task-status-complete
+    the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
