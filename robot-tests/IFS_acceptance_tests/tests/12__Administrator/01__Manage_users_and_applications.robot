@@ -25,6 +25,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7429 Administrator has access to Project Details after Finance reviewer is assigned
 ...
+...               IFS-7483 Inactive innovation lead appearing in list of available innovation leads
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -328,6 +329,19 @@ Administrator is able to mark as successful an unsuccessful application
     When the user clicks the button/link     jQuery = td:contains("Cleaning Product packaging") ~ td a:contains("Mark as successful")
     And the user clicks the button/link      css = .govuk-button[name="mark-as-successful"]  # I'm sure button
     Then the user should no longer see the application is capable of being marked as successful
+
+Deactivated innovation lead cannot be selected on manage innovation page
+    [Documentation]  IFS-7483
+    Given the user navigates to the page      ${server}/management/competition/setup/${openCompetitionBusinessRTO}/manage-innovation-leads/overview
+    And the user should not see the element   jQuery = tr:contains("Ralph Nunes")
+    When the user clicks the button/link      jQuery = a:contains("Added to competition")
+    Then the user should not see the element  jQuery = tr:contains("Ralph Nunes")
+
+Deactivated innovation lead cannot be selected on inital details
+    [Documentation]  IFS-7483
+    Given the user navigates to the page      ${server}/management/competition/setup/${openCompetitionBusinessRTO}/section/initial
+    When the user clicks the button/link      css = button[type=submit]
+    Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
 *** Keywords ***
 the user adds a new partner organisation in application
