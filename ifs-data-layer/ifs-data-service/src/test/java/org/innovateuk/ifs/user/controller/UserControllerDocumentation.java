@@ -120,7 +120,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(baseUserService.findByProcessRoleAndUserStatus(eq(INNOVATION_LEAD), eq(UserStatus.ACTIVE))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/find-by-role-and-status/{userRole}/{userStatus}", INNOVATION_LEAD, UserStatus.ACTIVE)
+        mockMvc.perform(get("/user/find-by-role-and-status/{userRole}/status/{userStatus}", INNOVATION_LEAD, UserStatus.ACTIVE)
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
                         pathParameters(

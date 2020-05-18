@@ -27,7 +27,7 @@ public class CompetitionSetupInnovationLeadServiceImplTest {
         when(competitionSetupInnovationLeadRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
 
         competitionSetupInnovationLeadService.addInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionSetupInnovationLeadRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionSetupInnovationLeadRestService).addInnovationLead(competitionId, innovationLeadUserId);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class CompetitionSetupInnovationLeadServiceImplTest {
         when(competitionSetupInnovationLeadRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
 
         competitionSetupInnovationLeadService.removeInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionSetupInnovationLeadRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionSetupInnovationLeadRestService).removeInnovationLead(competitionId, innovationLeadUserId);
     }
 
 }

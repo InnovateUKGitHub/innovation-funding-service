@@ -38,7 +38,7 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(innovationLeads)));
 
-        verify(competitionSetupInnovationLeadService, only()).findInnovationLeads(competitionId);
+        verify(competitionSetupInnovationLeadService).findInnovationLeads(competitionId);
     }
 
     @Test
@@ -78,6 +78,6 @@ public class CompetitionSetupInnovationLeadControllerTest extends BaseController
         mockMvc.perform(post("/competition/setup/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
                 .andExpect(status().isOk());
 
-        verify(competitionSetupInnovationLeadService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionSetupInnovationLeadService).removeInnovationLead(competitionId, innovationLeadUserId);
     }
 }
