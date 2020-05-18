@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -76,7 +77,13 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     }
 
     private boolean showBankDetails(ProjectResource project, UserResource user) {
-        OrganisationResource organisation = projectRestService.getOrganisationByProjectAndUser(project.getId(), user.getId()).getSuccess();
+        RestResult<OrganisationResource> organisationResult = projectRestService.getOrganisationByProjectAndUser(project.getId(), user.getId());
+
+        if (organisationResult.isFailure()) {
+            return true;
+        }
+
+        OrganisationResource organisation = organisationResult.getSuccess();
 
         if (organisation.isInternational()) {
             return false;
