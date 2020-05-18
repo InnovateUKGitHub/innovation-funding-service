@@ -337,7 +337,7 @@ Deactivated innovation lead cannot be selected on manage innovation page
     When the user clicks the button/link      jQuery = a:contains("Added to competition")
     Then the user should not see the element  jQuery = tr:contains("Ralph Nunes")
 
-Deactivated innovation lead cannot be selected on inital details
+Deactivated innovation lead cannot be selected on initial details
     [Documentation]  IFS-7483
     Given the user navigates to the page      ${server}/management/competition/setup/${openCompetitionBusinessRTO}/section/initial
     When the user clicks the button/link      css = button[type=submit]
