@@ -16,7 +16,7 @@ The competition admin creates competition
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility                ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
     the user selects the organisational eligibility     true
     the user fills in the CS Milestones                 ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
@@ -116,7 +116,7 @@ the user fills in the CS Funding Information
     the user clicks the button/link       link = Competition setup
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
-the user fills in the CS Eligibility
+the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
     the user clicks the button/link    link = Project eligibility
     the user clicks the button twice   css = label[for="single-or-collaborative-${collaborative}"]
@@ -315,13 +315,13 @@ the user fills in the Public content and publishes
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
-    # Fill in the Eligibility
-    the user clicks the button/link         link = Eligibility
+    # Fill in the Project eligibility
+    the user clicks the button/link         link = Project eligibility
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
-    the user should see the element         jQuery = div:contains("Eligibility") ~ .task-status-complete
+    the user should see the element         jQuery = div:contains("Project eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link = Scope
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
@@ -459,7 +459,7 @@ moving competition to Project Setup
 
 The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
-    the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/project-eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
 
 the user set assessor score notification to yes

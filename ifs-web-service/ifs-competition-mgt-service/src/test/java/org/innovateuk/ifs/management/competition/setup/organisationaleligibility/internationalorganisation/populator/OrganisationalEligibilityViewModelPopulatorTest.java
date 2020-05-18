@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.viewmodel.OrganisationalEligibilityViewModel;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.viewmodel.OrganisationalEligibilityViewModel;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;

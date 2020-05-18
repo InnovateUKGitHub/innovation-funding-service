@@ -132,7 +132,7 @@ the user completes all categories except organisational eligibility category
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility                            ${orgType}    ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
+    the user fills in the CS Project eligibility                    ${orgType}    ${researchParticipation}    ${researchCategory}  ${collaborative}  # 1 means 30%
     the user fills in the CS Milestones                             ${completionStage}     ${month}    ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE  the user marks the application as done               ${projectGrowth}  ${compType}

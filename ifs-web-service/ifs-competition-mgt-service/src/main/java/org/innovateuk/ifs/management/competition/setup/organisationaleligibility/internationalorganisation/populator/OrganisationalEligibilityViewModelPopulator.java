@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.viewmodel.OrganisationalEligibilityViewModel;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.viewmodel.OrganisationalEligibilityViewModel;
 import org.springframework.stereotype.Service;
 
 @Service

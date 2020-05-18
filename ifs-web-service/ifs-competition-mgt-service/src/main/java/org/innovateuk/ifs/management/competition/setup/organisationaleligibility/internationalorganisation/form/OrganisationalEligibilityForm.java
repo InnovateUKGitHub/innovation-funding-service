@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form;
+package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.form;
 
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 
