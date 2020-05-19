@@ -565,6 +565,15 @@ Public content is required for a Competition to be setup
     And the user clicks the button/link                       link = Return to setup overview
     Then the user should see the element                      jQuery = li:contains("Public content") .task-status-complete
 
+Organisational eligibility is required for a Competition to be setup
+    [Documentation]     IFS-7195
+    [Tags]  HappyPath
+    Given the user clicks the button/link                     link = ${OrganisationalEligibilityTitle}
+    When the user selects the radio button                    internationalOrganisationsApplicable       true
+    And the user clicks the button/link                       jQuery = button:contains("Done")
+    And the user clicks the button/link                       link = Competition setup
+    Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
+
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
     [Tags]

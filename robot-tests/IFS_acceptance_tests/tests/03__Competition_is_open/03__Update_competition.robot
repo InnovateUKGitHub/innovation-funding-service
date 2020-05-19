@@ -20,6 +20,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               INFUND-6694 As a Competitions team member I want to be able to update Milestones throughout the life of the competition
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
+...
+...               IFS-7195  Organisational eligibility category in Competition setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -98,6 +100,17 @@ Project eligibility is editable (Ready to Open)
     And The user clicks the button/link     jQuery = button:contains(Edit)
     And the user selects the radio button   singleOrCollaborative  single
     And The user clicks the button/link     jQuery = button:contains(Done)
+
+#when webtest data available we should introduce edit
+Organisational eligibility is editable (Ready to Open)
+    [Documentation]     IFS-7195
+    [Tags]
+    Given the user clicks the button/link                    link = Return to setup overview
+    And the user clicks the button/link                      link = ${OrganisationalEligibilityTitle}
+    When the user selects the radio button                   internationalOrganisationsApplicable       true
+    And the user clicks the button/link                      jQuery = button:contains("Done")
+    And the user clicks the button/link                      link = Competition setup
+    Then the user should see the element                     jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
@@ -260,6 +273,13 @@ Assessors not editable after Notifications Date (Open)
     When the user clicks the button/link        link = Assessors
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit")
     And the user should not see the element     jQuery = button:contains("Done")
+
+Organisational eligibility is not editable (Open)
+     [Documentation]  IFS-7195
+     [Tags]
+     Given the user clicks the button/link            link = Return to setup overview
+     When the user clicks the button/link             link = ${OrganisationalEligibilityTitle}
+     Then the user should not see the element         jQuery = button:contains("Edit")
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future

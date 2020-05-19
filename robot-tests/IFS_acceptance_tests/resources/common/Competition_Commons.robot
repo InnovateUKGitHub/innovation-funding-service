@@ -315,13 +315,13 @@ the user fills in the Public content and publishes
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
-    # Fill in the Project eligibility
-    the user clicks the button/link         link = Project eligibility
+    # Fill in the publick content eligibility
+    the user clicks the button/link         link = Eligibility
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
-    the user should see the element         jQuery = div:contains("Project eligibility") ~ .task-status-complete
+    the user should see the element         jQuery = div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link = Scope
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
@@ -474,7 +474,8 @@ the user set assessor score notification to yes
 
 the user selects the organisational eligibility
     [Arguments]     ${organisationEligibilityOption}
+    the user clicks the button/link        link = ${OrganisationalEligibilityTitle}
     the user selects the radio button      internationalOrganisationsApplicable       ${organisationEligibilityOption}
     the user clicks the button/link        jQuery = button:contains("Done")
-    the user clicks the button/link       link = Competition setup
-    the user should see the element       jQuery = li:contains("Organisational eligibility") .task-status-complete
+    the user clicks the button/link        link = Competition setup
+    the user should see the element        jQuery = li:contains("Organisational eligibility") .task-status-complete

@@ -35,16 +35,17 @@ ${ineligibleMessage}         Your organisation type does not match our eligibili
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
-    [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
+    [Setup]  the user logs-in in new browser                &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
-    Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+    Given the user navigates to the page                    ${CA_UpcomingComp}
+    When the user clicks the button/link                    jQuery = .govuk-button:contains("Create competition")
+    Then the user fills in the CS Initial details           ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Project eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Project eligibility        ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user selects the organisational eligibility     true
+    And the user fills in the CS Milestones                 project-setup-completion-stage   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -123,7 +124,8 @@ Once the project growth table is selected
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Project eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user fills in the CS Project eligibility     ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user selects the organisational eligibility  true
     And the user fills in the CS Milestones              project-setup-completion-stage   ${month}   ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
