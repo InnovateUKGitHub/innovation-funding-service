@@ -3,17 +3,21 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.springframework.data.annotation.CreatedDate;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * Resource object to store the address details, from the company, from the companies house api.
  */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"organisation_id", "address_id"})})
+@EntityListeners(AuditingEntityListener.class)
 public class OrganisationAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +33,21 @@ public class OrganisationAddress {
     @JoinColumn(name = "address_type_id", referencedColumnName = "id")
     private AddressType addressType;
 
-    @CreatedDate
+    @LastModifiedDate
     @Column(nullable = false, updatable = false)
-    private ZonedDateTime createdOn;
+    private ZonedDateTime modifiedOn;
+
+    @OneToMany(mappedBy = "organisationAddress")
+    private List<ApplicationOrganisationAddress> applicationAddresses;
 
     public OrganisationAddress(Organisation organisation, Address address, AddressType addressType) {
         this.organisation = organisation;
         this.address = address;
         this.addressType = addressType;
+    }
+
+    public OrganisationAddress(OrganisationAddress organisationAddress) {
+        this(organisationAddress.getOrganisation(), new Address(organisationAddress.getAddress()), organisationAddress.getAddressType());
     }
 
     public OrganisationAddress() {
@@ -78,7 +89,15 @@ public class OrganisationAddress {
         this.id = id;
     }
 
-    public ZonedDateTime getCreatedOn() {
-        return createdOn;
+    public List<ApplicationOrganisationAddress> getApplicationAddresses() {
+        return applicationAddresses;
+    }
+
+    public void setApplicationAddresses(List<ApplicationOrganisationAddress> applicationAddresses) {
+        this.applicationAddresses = applicationAddresses;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
     }
 }

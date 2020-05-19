@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.Countries.COUNTRIES;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 
@@ -126,7 +127,7 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         organisationResource.setName(organisationInternationalDetailsForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
         organisationResource.setInternational(true);
-//        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, organisationInternationalDetailsForm)));
+        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, organisationInternationalDetailsForm)));
         organisationResource.setInternationalRegistrationNumber(organisationInternationalDetailsForm.get().getCompanyRegistrationNumber());
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
@@ -135,7 +136,7 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
     }
 
     private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm) {
-        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationInternationalDetailsForm), new AddressTypeResource(INTERNATIONAL.getOrdinal(), INTERNATIONAL.name()));
+        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationInternationalDetailsForm), new AddressTypeResource(INTERNATIONAL.getId(), INTERNATIONAL.name()));
     }
 
     private AddressResource createAddressResource(Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm) {

@@ -2,8 +2,10 @@ package org.innovateuk.ifs.application.transactional;
 
 import com.google.common.collect.Sets;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
@@ -17,6 +19,8 @@ import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -34,6 +38,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -69,6 +74,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationNotificationService applicationNotificationService;
+
+    @Autowired
+    private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
+
+    @Autowired
+    private OrganisationAddressRepository organisationAddressRepository;
 
     private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP;
 
@@ -113,6 +124,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         application = applicationRepository.save(application);
         generateProcessRolesForApplication(user, Role.LEADAPPLICANT, application, organisationId);
+
+        linkAddressesToOrganisation(organisationId, application.getId());
 
         return serviceSuccess(applicationMapper.mapToResource(application));
     }
@@ -332,6 +345,29 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
         return find(application(applicationId)).andOnSuccessReturn(application ->
                 competitionMapper.mapToResource(application.getCompetition()));
+    }
+
+    @Override
+    public ServiceResult<Void> linkAddressesToOrganisation(long organisationId, long applicationId) {
+        return find(application(applicationId), organisation(organisationId)).andOnSuccessReturnVoid((application, organisation) -> {
+            if (organisation.isInternational()) {
+                Optional<OrganisationAddress> organisationAddress = organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId());
+                if (organisationAddress.isPresent()) {
+                    OrganisationAddress organisationAddressToLinkToApplication;
+
+                    //if the organisation has an unlinked international address then this will be their first application and this is the address created first.
+                    if (organisationAddress.get().getApplicationAddresses().isEmpty()) {
+                        organisationAddressToLinkToApplication = organisationAddress.get();
+                    } else {
+                        organisationAddressToLinkToApplication = organisationAddressRepository.save(new OrganisationAddress(organisationAddress.get()));
+                    }
+
+                    ApplicationOrganisationAddress applicationOrganisationAddress = new ApplicationOrganisationAddress(organisationAddressToLinkToApplication, application);
+                    applicationOrganisationAddressRepository.save(applicationOrganisationAddress);
+                }
+            }
+        });
+
     }
 
     private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {

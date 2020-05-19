@@ -2,18 +2,17 @@ package org.innovateuk.ifs.project.invite.transactional;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationSource;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -41,10 +40,12 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ORGANISATION_ALREADY_EXISTS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -97,6 +98,9 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
     @Autowired
     private ProjectPartnerChangeService projectPartnerChangeService;
+
+    @Autowired
+    private OrganisationAddressRepository organisationAddressRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -205,6 +209,8 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
 
                                     partnerOrganisation = partnerOrganisationRepository.save(partnerOrganisation);
 
+                                    linkAddressesToOrganisation(organisation, partnerOrganisation);
+
                                     pendingPartnerProgressRepository.save(new PendingPartnerProgress(partnerOrganisation));
 
                                     ProjectUser projectUser = new ProjectUser(invite.getUser(), project, ProjectParticipantRole.PROJECT_PARTNER, organisation);
@@ -212,6 +218,8 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     projectPartnerChangeService.updateProjectWhenPartnersChange(project.getId());
                                     projectFinanceService.createProjectFinance(project.getId(),
                                             organisation.getId());
+
+
 
                                     eligibilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
                                     viabilityWorkflowHandler.projectCreated(partnerOrganisation, projectUser);
@@ -224,5 +232,26 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                                     activityLogService.recordActivityByProjectIdAndOrganisationIdAndAuthorId(project.getId(), organisationId, invite.getSentBy().getId(), ActivityType.ORGANISATION_ADDED);
                                     return serviceSuccess();
                                 }));
+    }
+
+    private void linkAddressesToOrganisation(Organisation organisation, PartnerOrganisation partnerOrganisation) {
+        if (organisation.isInternational()) {
+            Optional<OrganisationAddress> organisationAddress = organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId());
+            if (organisationAddress.isPresent()) {
+                Address addressToLink;
+
+                //if the organisation has an unlinked international address then this will be their first application and this is the address created first.
+                if (organisationAddress.get().getApplicationAddresses().isEmpty()) {
+                    addressToLink = organisationAddress.get().getAddress();
+                    organisationAddress.get().setAddress(null);
+                    organisationAddressRepository.delete(organisationAddress.get());
+                } else {
+                    addressToLink = new Address(organisationAddress.get().getAddress());
+                }
+
+                partnerOrganisation.setInternationalAddress(addressToLink);
+            }
+        }
+
     }
 }

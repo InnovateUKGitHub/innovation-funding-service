@@ -19,6 +19,14 @@ public class ApplicationOrganisationAddress {
     @ManyToOne(fetch = FetchType.LAZY)
     private Application application;
 
+    //for orm
+    ApplicationOrganisationAddress() {}
+
+    public ApplicationOrganisationAddress(OrganisationAddress organisationAddress, Application application) {
+        this.organisationAddress = organisationAddress;
+        this.application = application;
+    }
+
     public Long getId() {
         return id;
     }
