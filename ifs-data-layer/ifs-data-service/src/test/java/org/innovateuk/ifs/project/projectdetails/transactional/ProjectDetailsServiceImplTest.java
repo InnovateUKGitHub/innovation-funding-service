@@ -150,9 +150,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     private AddressMapper addressMapperMock;
 
     @Mock
-    private OrganisationApplicationAddressRepository organisationApplicationAddressRepositoryMock;
-
-    @Mock
     private AddressTypeRepository addressTypeRepositoryMock;
 
     @Mock
@@ -957,7 +954,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         assertNull(project.getAddress());
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationApplicationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationApplicationAddress.class));
         assertEquals(newAddress, project.getAddress());
     }
 
