@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.organisation.domain;
 
+import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -32,6 +34,10 @@ public class Organisation {
 
     @Column(name = "international_registration_number")
     private String internationalRegistrationNumber;
+
+    @OneToMany(mappedBy = "organisation",
+            cascade = CascadeType.ALL)
+    private List<OrganisationAddress> addresses = new ArrayList<>();
 
     //Only used by queries.
     @OneToMany(mappedBy="organisationId")
@@ -70,6 +76,19 @@ public class Organisation {
 
     public void setCompaniesHouseNumber(String companiesHouseNumber) {
         this.companiesHouseNumber = companiesHouseNumber;
+    }
+
+    public List<OrganisationAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<OrganisationAddress> addresses) {
+        this.addresses = addresses;
+    }
+
+    public void addAddress(Address address, AddressType addressType) {
+        OrganisationAddress organisationAddress = new OrganisationAddress(this, address, addressType);
+        this.addresses.add(organisationAddress);
     }
 
     public OrganisationType getOrganisationType() {

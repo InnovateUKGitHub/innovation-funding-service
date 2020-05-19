@@ -8,7 +8,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OrganisationRepository extends PagingAndSortingRepository<Organisation, Long> {
 
@@ -27,6 +26,4 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     Organisation findByUserAndProjectId(long userId, long projectId);
     List<Organisation> findAllById(Iterable<Long> ids);
     long countDistinctByProcessRolesApplicationId(long applicationId);
-
-    Optional<Organisation> findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(String internationalRegistrationNumber, String name);
 }

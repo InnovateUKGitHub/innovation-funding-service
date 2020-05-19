@@ -138,6 +138,19 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
+    public ServiceResult<OrganisationResource> addAddress(final long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
+        return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
+            Address address = addressMapper.mapToDomain(addressResource);
+            AddressType addressType = addressTypeRepository.findById(organisationAddressType.getOrdinal()).orElse(null);
+            organisation.addAddress(address, addressType);
+            Organisation updatedOrganisation = organisationRepository.save(organisation);
+            return organisationMapper.mapToResource(updatedOrganisation);
+        });
+    }
+
+
+    @Override
     public ServiceResult<List<OrganisationSearchResult>> searchAcademic(final String organisationName, int maxItems) {
         List<OrganisationSearchResult> organisations;
         organisations = academicRepository.findByNameContainingIgnoreCase(organisationName, PageRequest.of(0, 10))
