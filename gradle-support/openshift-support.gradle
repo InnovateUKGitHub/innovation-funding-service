@@ -54,7 +54,6 @@ task createSecretsFromAws() {
     if (!isNamedEnv()) {
         dependsOn applyNonNamedEnvProperties
     } else {
-        apply from: rootProject.file("gradle-support/named-env-properties.gradle")
         dependsOn applyNamedEnvProperties
     }
 }
