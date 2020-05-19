@@ -26,11 +26,19 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     private OrganisationPatternMatcher organisationPatternMatcher;
 
     public Optional<Organisation> findOrganisationMatch(OrganisationResource submittedOrganisationResource) {
-        if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
-            return findFirstResearchMatch(submittedOrganisationResource);
+        if (submittedOrganisationResource.isInternational()) {
+            return findFirstInternationalMatch(submittedOrganisationResource);
         } else {
-            return findFirstCompaniesHouseMatch(submittedOrganisationResource);
+            if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
+                return findFirstResearchMatch(submittedOrganisationResource);
+            } else {
+                return findFirstCompaniesHouseMatch(submittedOrganisationResource);
+            }
         }
+    }
+
+    private Optional<Organisation> findFirstInternationalMatch(OrganisationResource submittedOrganisationResource) {
+        return organisationRepository.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(submittedOrganisationResource.getInternationalRegistrationNumber(), submittedOrganisationResource.getName());
     }
 
     private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
