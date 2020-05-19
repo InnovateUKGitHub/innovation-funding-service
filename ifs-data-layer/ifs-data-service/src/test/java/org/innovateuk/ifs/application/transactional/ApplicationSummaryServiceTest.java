@@ -14,7 +14,6 @@ import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -66,9 +65,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationSummaryPageMapper applicationSummaryPageMapper;
-
-    @Mock
-    private OrganisationApplicationAddressMapper organisationApplicationAddressMapper;
 
     @Mock
     private ApplicationRepository applicationRepositoryMock;
