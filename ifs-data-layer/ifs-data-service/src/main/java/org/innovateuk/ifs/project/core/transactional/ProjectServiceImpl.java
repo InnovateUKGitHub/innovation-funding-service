@@ -4,6 +4,8 @@ import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
+import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
@@ -11,9 +13,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationApplicationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
@@ -98,7 +98,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ActivityLogService activityLogService;
 
     @Autowired
-    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
+    private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -285,9 +285,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 });
 
         if (org.isInternational()) {
-            OrganisationApplicationAddress applicationAddress = organisationApplicationAddressRepository.findByOrganisationIdAndApplicationIdAndAddressTypeId(org.getId(), application.getId(), INTERNATIONAL.getId());
-            Address internationalAddress = new Address(applicationAddress.getAddress());
-            partnerOrganisation.setInternationalAddress(internationalAddress);
+            Optional<ApplicationOrganisationAddress> applicationAddress = applicationOrganisationAddressRepository.findByApplicationIdAndOrganisationAddressOrganisationIdAndOrganisationAddressAddressTypeId(application.getId(), org.getId(),INTERNATIONAL.getId());
+            if (applicationAddress.isPresent()) {
+                Address internationalAddress = new Address(applicationAddress.get().getOrganisationAddress().getAddress());
+                partnerOrganisation.setInternationalAddress(internationalAddress);
+            }
         }
 
         return partnerOrganisation;

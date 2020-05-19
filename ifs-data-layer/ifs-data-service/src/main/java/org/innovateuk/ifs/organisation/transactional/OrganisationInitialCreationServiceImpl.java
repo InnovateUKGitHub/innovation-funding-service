@@ -26,7 +26,6 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     @Autowired
     private OrganisationMatchingServiceImpl organisationMatchingService;
 
-
     @Override
     @Transactional
     public ServiceResult<OrganisationResource> createOrMatch(OrganisationResource organisationToCreate) {
@@ -41,6 +40,10 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
 
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
         Organisation mappedOrganisation = organisationMapper.mapToDomain(organisationResource);
+
+        //Add organisation to addresses to persist reference
+        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
+
         return organisationRepository.save(mappedOrganisation);
     }
 }

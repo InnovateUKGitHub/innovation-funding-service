@@ -13,8 +13,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder;
@@ -103,12 +101,6 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
     @Mock
     private AddressTypeRepository addressTypeRepository;
-
-    @Mock
-    private OrganisationApplicationAddressMapper organisationApplicationAddressMapper;
-
-    @Mock
-    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     @Mock
     private AddressMapper addressMapper;

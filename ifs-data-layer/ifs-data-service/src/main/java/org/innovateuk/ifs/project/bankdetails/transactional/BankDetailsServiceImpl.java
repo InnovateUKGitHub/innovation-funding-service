@@ -11,8 +11,6 @@ import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.mapper.OrganisationApplicationAddressMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationApplicationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
@@ -69,13 +67,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     private BankDetailsMapper bankDetailsMapper;
 
     @Autowired
-    private OrganisationApplicationAddressMapper organisationApplicationAddressMapper;
-
-    @Autowired
     private BankDetailsRepository bankDetailsRepository;
-
-    @Autowired
-    private OrganisationApplicationAddressRepository organisationApplicationAddressRepository;
 
     @Autowired
     private AddressRepository addressRepository;
