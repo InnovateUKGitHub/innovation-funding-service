@@ -10,26 +10,27 @@ ${Non_Ifs_Comp}      Webtest Non IFS Comp 20
 *** Keywords ***
 The competition admin creates competition
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}  ${compType}  ${stateAid}  ${fundingType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user navigates to the page              ${CA_UpcomingComp}
-    the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details    ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
+    the user navigates to the page                      ${CA_UpcomingComp}
+    the user clicks the button/link                     jQuery = .govuk-button:contains("Create competition")
+    the user fills in the CS Initial details            ${competition}  ${month}  ${nextyear}  ${compType}  ${stateAid}  ${fundingType}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user selects procurement Terms and Conditions
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user fills in the CS Milestones         ${completionStage}   ${month}   ${nextyear}
+    the user selects the organisational eligibility     true
+    the user fills in the CS Milestones                 ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
-    ...  ELSE  the user marks the application as done      ${projectGrowth}  ${compType}
+    ...  ELSE  the user marks the application as done   ${projectGrowth}  ${compType}
     the user fills in the CS Assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
-    the user clicks the button/link             link = Public content
+    the user clicks the button/link                     link = Public content
     the user fills in the Public content and publishes  ${extraKeyword}
-    the user clicks the button/link             link = Return to setup overview
-    the user clicks the button/link             jQuery = a:contains("Complete")
-    the user clicks the button/link             jQuery = button:contains('Done')
-    the user navigates to the page              ${CA_UpcomingComp}
-    the user should see the element             jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
+    the user clicks the button/link                     link = Return to setup overview
+    the user clicks the button/link                     jQuery = a:contains("Complete")
+    the user clicks the button/link                     jQuery = button:contains('Done')
+    the user navigates to the page                      ${CA_UpcomingComp}
+    the user should see the element                     jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user select no documents
     the user clicks the button/link          link = Documents
@@ -314,13 +315,13 @@ the user fills in the Public content and publishes
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
     the user should see the element         jQuery = div:contains("Summary") ~ .task-status-complete
-    # Fill in the Project eligibility
-    the user clicks the button/link         link = Project eligibility
+    # Fill in the publick content eligibility
+    the user clicks the button/link         link = Eligibility
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
     the user enters text to a text field    jQuery = div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery = button:contains("Save and review")
     the user clicks the button/link         link = Return to public content
-    the user should see the element         jQuery = div:contains("Project eligibility") ~ .task-status-complete
+    the user should see the element         jQuery = div:contains("Eligibility") ~ .task-status-complete
     # Fill in the Scope
     the user clicks the button/link         link = Scope
     the user enters text to a text field    id = contentGroups[0].heading  Heading 1
@@ -470,3 +471,11 @@ the user set assessor score notification to yes
     the user selects the radio button       hasInterviewStage  hasInterviewStage-0
     the user selects the radio button       averageAssessorScore  averageAssessorScore-0
     the user clicks the button/link         jQuery = button:contains("Done")
+
+the user selects the organisational eligibility
+    [Arguments]     ${organisationEligibilityOption}
+    the user clicks the button/link        link = ${OrganisationalEligibilityTitle}
+    the user selects the radio button      internationalOrganisationsApplicable       ${organisationEligibilityOption}
+    the user clicks the button/link        jQuery = button:contains("Done")
+    the user clicks the button/link        link = Competition setup
+    the user should see the element        jQuery = li:contains("Organisational eligibility") .task-status-complete

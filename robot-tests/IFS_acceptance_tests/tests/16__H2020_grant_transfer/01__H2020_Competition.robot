@@ -5,6 +5,7 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-5700 - Create new project team page to manage roles in project setup
 ...
+...            IFS-7195  Organisational eligibility category in Competition setup
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -53,6 +54,15 @@ User can complete the Application
     Given the user clicks the button/link                      link = Application
     When the user completes the application proccess details
     Then the user clicks the button/link                       link = Return to setup overview
+
+User can complete Organisational eligibility
+    [Documentation]     IFS-7195
+    [Tags]  HappyPath
+    Given the user clicks the button/link                     link = ${OrganisationalEligibilityTitle}
+    When the user selects the radio button                    internationalOrganisationsApplicable       true
+    And the user clicks the button/link                       jQuery = button:contains("Done")
+    And the user clicks the button/link                       link = Competition setup
+    Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 User can finish setting up the grant transfer
     [Documentation]  IFS-5158
