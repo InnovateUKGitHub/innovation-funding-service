@@ -22,6 +22,7 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 ...
 ...               IFS-7195  Organisational eligibility category in Competition setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -101,12 +102,12 @@ Project eligibility is editable (Ready to Open)
     And the user selects the radio button   singleOrCollaborative  single
     And The user clicks the button/link     jQuery = button:contains(Done)
 
-#when webtest data available we should introduce edit
 Organisational eligibility is editable (Ready to Open)
     [Documentation]     IFS-7195
     [Tags]
     Given the user clicks the button/link                    link = Return to setup overview
     And the user clicks the button/link                      link = ${OrganisationalEligibilityTitle}
+    And the user clicks the button/link                      jQuery = button:contains("Edit")
     When the user selects the radio button                   internationalOrganisationsApplicable       true
     And the user clicks the button/link                      jQuery = button:contains("Done")
     And the user clicks the button/link                      link = Competition setup

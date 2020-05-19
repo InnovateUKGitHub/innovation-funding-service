@@ -85,16 +85,6 @@ Comp admin sets the international organisation eligibility competition to live
      When the user navigates to the page                                                    ${CA_Live}
      Then the user should see the element                                                   jQuery = h2:contains('Open') ~ ul a:contains('${OrganisationEligibilityCompetitionName}')
 
-#may be not need as this is covered in update competition file
-Comp admin can not update the organisation eligibility category when competition is in open status
-     [Documentation]  IFS-7195
-     When the user clicks the button/link                                                   link = ${OrganisationEligibilityCompetitionName}
-     And the user clicks the button/link                                                    link = View and update competition setup
-     And the user clicks the button/link                                                    link = ${OrganisationalEligibilityTitle}
-     Then the user should not see the element                                               jQuery = button:contains("Edit")
-
-
-
 *** Keywords ***
 Custom Suite Setup
     Connect to Database  @{database}
