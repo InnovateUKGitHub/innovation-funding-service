@@ -151,13 +151,17 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org) {
 
-        if (!isOrganisationSeekingFunding(project.getId(), org.getId()) || org.isInternational()) {
-            return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
+        if (areBankDetailsRequired(project, org)) {
+            return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
+                    failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
+                    success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : ACTION_REQUIRED));
         }
 
-        return getByProjectAndOrganisation(project.getId(), org.getId()).handleSuccessOrFailure(
-                failure -> new BankDetailsStatusResource(org.getId(), org.getName(), NOT_STARTED),
-                success -> new BankDetailsStatusResource(org.getId(), org.getName(), success.isApproved() ? COMPLETE : ACTION_REQUIRED));
+        return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
+    }
+
+    private boolean areBankDetailsRequired(Project project, Organisation org) {
+        return !org.isInternational() && isOrganisationSeekingFunding(project.getId(), org.getId());
     }
 
     @Override

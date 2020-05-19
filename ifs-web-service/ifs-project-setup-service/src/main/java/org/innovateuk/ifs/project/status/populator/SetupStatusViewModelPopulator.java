@@ -63,8 +63,12 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         boolean monitoringOfficer = monitoringOfficerService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+
+        RestResult<OrganisationResource> organisationResult = projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.of(loggedInUser.getId()));
+
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
-                .filter(stage -> (ProjectSetupStage.BANK_DETAILS != stage) || showBankDetails(project, loggedInUser))
+                .filter(stage -> (ProjectSetupStage.BANK_DETAILS != stage) || showBankDetails(organisationResult, teamStatus))
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
                 .collect(toList());
 
@@ -76,8 +80,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
     }
 
-    private boolean showBankDetails(ProjectResource project, UserResource user) {
-        RestResult<OrganisationResource> organisationResult = projectRestService.getOrganisationByProjectAndUser(project.getId(), user.getId());
+    private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {
 
         if (organisationResult.isFailure()) {
             return true;
@@ -89,7 +92,6 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             return false;
         }
 
-        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.of(user.getId()));
         Optional<ProjectPartnerStatusResource> statusForOrg = teamStatus.getPartnerStatusForOrganisation(organisation.getId());
 
         if (statusForOrg.isPresent() && ProjectActivityStates.NOT_REQUIRED == statusForOrg.get().getBankDetailsStatus()) {

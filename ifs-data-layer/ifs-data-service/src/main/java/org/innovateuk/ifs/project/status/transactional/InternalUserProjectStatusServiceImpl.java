@@ -186,7 +186,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         boolean incomplete = false;
         boolean started = false;
         for (Organisation organisation : project.getOrganisations()) {
-            if (!organisation.isInternational() && isOrganisationSeekingFunding(project.getId(), organisation.getId())) {
+            if (areBankDetailsRequired(project, organisation)) {
                 Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
                 ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
                 ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
@@ -209,6 +209,10 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         } else {
             return COMPLETE;
         }
+    }
+
+    private boolean areBankDetailsRequired(Project project, Organisation organisation) {
+        return !organisation.isInternational() && isOrganisationSeekingFunding(project.getId(), organisation.getId());
     }
 
     private boolean isOrganisationSeekingFunding(long projectId, long organisationId) {
