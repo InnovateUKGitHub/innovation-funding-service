@@ -33,16 +33,12 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Mock
     private RegistrationCookieService registrationCookieService;
-
     @Mock
     private OrganisationSelectionViewModelPopulator populator;
-
     @Mock
     private OrganisationRestService organisationRestService;
-
     @Mock
     private CompetitionRestService competitionRestService;
-
     @Mock
     private OrganisationJourneyEnd organisationJourneyEnd;
 
@@ -50,9 +46,8 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
     public void viewPreviousOrganisations() throws Exception {
         OrganisationSelectionViewModel model = mock(OrganisationSelectionViewModel.class);
 
-        when(populator.populate(eq(loggedInUser), any(), eq("/organisation/create/initialize")))
-                .thenReturn(model);
-        when(organisationRestService.getAllByUserId(loggedInUser.getId())).thenReturn(restSuccess(newOrganisationResource().build(1)));
+        when(populator.populate(eq(loggedInUser), any(), eq("/organisation/create/initialize"))).thenReturn(model);
+        when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(newOrganisationResource().build(1)));
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
 
         mockMvc.perform(get("/organisation/select"))
@@ -65,7 +60,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void viewPreviousOrganisations_redirectIfNoAttachedOrganisations() throws Exception {
-        when(organisationRestService.getAllByUserId(loggedInUser.getId())).thenReturn(restSuccess(emptyList()));
+        when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())

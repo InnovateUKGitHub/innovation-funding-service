@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
@@ -26,22 +29,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationLeadTypeController> {
 
+    @Mock
+    private RegistrationCookieService registrationCookieService;
+    @Mock
+    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
+    @Mock
+    private EncryptedCookieService cookieUtil;
+    @Mock
+    private CompetitionRestService competitionRestService;
+    @Mock
+    private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+
     protected OrganisationCreationLeadTypeController supplyControllerUnderTest() {
         return new OrganisationCreationLeadTypeController();
     }
-
-    @Mock
-    private RegistrationCookieService registrationCookieService;
-
-    @Mock
-    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
-
-    @Mock
-    private EncryptedCookieService cookieUtil;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
-
 
     @Before
     public void setup(){
@@ -49,14 +50,21 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
         setupEncryptedCookieService(cookieUtil);
         HttpServletRequest request = mock(HttpServletRequest.class);
 
+        CompetitionOrganisationConfigResource competitionOrganisationConfigResource = new CompetitionOrganisationConfigResource();
+        competitionOrganisationConfigResource.setInternationalOrganisationsAllowed(true);
+        competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(true);
+
         when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
         when(registrationCookieService.getOrganisationTypeCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
         when(competitionRestService.getCompetitionOrganisationType(1L)).thenReturn(restSuccess(newOrganisationTypeResource().withId(1L, 3L).build(2)));
         when(organisationCreationSelectTypePopulator.populate(request)).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4)));
+        when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(competitionOrganisationConfigResource));
     }
 
     @Test
     public void testSelectedLeadOrganisationTypeEligible() throws Exception {
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
+
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", valueOf(OrganisationTypeEnum.RTO.getId())))
                 .andExpect(status().is3xxRedirection())
@@ -65,6 +73,8 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
 
     @Test
     public void testSelectedLeadOrganisationTypeNotEligible() throws Exception {
+        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
+
         mockMvc.perform(post("/organisation/create/lead-organisation-type")
                 .param("organisationTypeId", valueOf(OrganisationTypeEnum.RESEARCH.getId())))
                 .andExpect(status().is3xxRedirection())

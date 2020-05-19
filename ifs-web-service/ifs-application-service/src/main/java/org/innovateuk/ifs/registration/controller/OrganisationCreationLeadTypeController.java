@@ -60,6 +60,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request));
         model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
         } else {
@@ -119,7 +120,6 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
     private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request, Optional<OrganisationInternationalForm> organisationInternationalForm) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-
 
         if (competitionIdOpt.isPresent()) {
 
