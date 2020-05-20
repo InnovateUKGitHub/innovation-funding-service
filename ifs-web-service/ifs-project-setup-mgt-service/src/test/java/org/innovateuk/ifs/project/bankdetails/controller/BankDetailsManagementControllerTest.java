@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.bankdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
@@ -79,17 +77,13 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
 
         bankDetailsResource = newBankDetailsResource().withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(address).withAccountNumber("51406795").withSortCode("404745").withCompanyName(organisationResource.getName()).withRegistrationNumber(organisationResource.getCompaniesHouseNumber()).build();
 
-        AddressTypeResource addressTypeResource = new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name());
-
         AddressResource unmodifiedAddressResource = newAddressResource().withAddressLine1("Montrose House 1").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build();
-        unmodifiedAddressResource.setId(null);
 
         updatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(unmodifiedAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode("404746").withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
         notUpdatedBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(unmodifiedAddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
         AddressResource updatedLine1AddressResource = newAddressResource().withAddressLine1("Montrose House 2").withAddressLine2("Clayhill Park").withAddressLine3("Cheshire West and Chester").withTown("Neston").withCounty("Cheshire").withPostcode("CH64 3RU").build();
-        updatedLine1AddressResource.setId(null);
         updatedAddressBankDetailsResource = newBankDetailsResource().withId(bankDetailsResource.getId()).withProject(project.getId()).withOrganisation(organisationResource.getId()).withAddress(updatedLine1AddressResource).withAccountNumber(bankDetailsResource.getAccountNumber()).withSortCode(bankDetailsResource.getSortCode()).withCompanyName(organisationResource.getName()).withRegistrationNumber(bankDetailsResource.getRegistrationNumber()).build();
 
         projectUsers = newProjectUserResource().build(3);

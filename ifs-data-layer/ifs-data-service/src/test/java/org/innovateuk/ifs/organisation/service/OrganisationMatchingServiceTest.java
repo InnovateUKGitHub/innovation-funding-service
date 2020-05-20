@@ -46,6 +46,10 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     private OrganisationResource submittedBusinessOrganisation;
     private OrganisationResource submittedBusinessNullCompaniesHouseNumber;
 
+    private String internationalIdentifier;
+    private String internationalName;
+    private OrganisationResource internationalOrganisation;
+
     @Before
     public void setUp() {
         companiesHouseNumber = "1234";
@@ -67,6 +71,14 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
         submittedResearchOrganisation = newOrganisationResource()
                 .withName(academicName)
                 .withOrganisationType(OrganisationTypeEnum.RESEARCH.getId()).build();
+
+        internationalName = "international";
+        internationalIdentifier = "int-123-abc";
+        internationalOrganisation = newOrganisationResource()
+                .withName(internationalName)
+                .withInternationalRegistrationNumber(internationalIdentifier)
+                .withIsInternational(true)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
     }
 
     @Test
@@ -140,6 +152,26 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(submittedBusinessOrganisation);
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void findOrganisationMatch_internationalOrganisationShouldMatchWhenMatchingOrganisationIsFound() {
+        when(organisationRepositoryMock.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(eq(internationalIdentifier), eq(internationalName))).thenReturn(Optional.of(matchingBusinessOrganisation));
+        when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
+
+        Optional<Organisation> result = service.findOrganisationMatch(internationalOrganisation);
+
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void findOrganisationMatch_internationalOrganisationShouldNotMatchNoMatchingOrganisationIsFound() {
+        when(organisationRepositoryMock.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(eq(internationalIdentifier), eq(internationalName))).thenReturn(Optional.empty());
+        when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
+
+        Optional<Organisation> result = service.findOrganisationMatch(internationalOrganisation);
 
         assertFalse(result.isPresent());
     }
