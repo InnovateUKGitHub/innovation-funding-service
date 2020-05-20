@@ -33,7 +33,7 @@ public class OrganisationAddress {
 
     @LastModifiedDate
     @Column(nullable = false, updatable = false)
-    private ZonedDateTime createdOn;
+    private ZonedDateTime modifiedOn;
 
     public OrganisationAddress(Organisation organisation, Address address, AddressType addressType) {
         this.organisation = organisation;
@@ -80,7 +80,7 @@ public class OrganisationAddress {
         this.id = id;
     }
 
-    public ZonedDateTime getCreatedOn() {
-        return createdOn;
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
     }
 }
