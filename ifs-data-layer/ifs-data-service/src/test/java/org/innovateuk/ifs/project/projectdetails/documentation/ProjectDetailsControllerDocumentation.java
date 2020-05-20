@@ -168,9 +168,6 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the Project"),
                                 parameterWithName("organisationId").description("Id of the Organisation")
-                        ),
-                        requestParameters(
-                                parameterWithName("postcode").description("The project location which is being set for the given Project and Organisation")
                         ))
                 );
 

@@ -30,6 +30,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -131,7 +133,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             ValidationHandler validationHandler,
             Model model) {
 
-        trimLocationInForm(form);
+        formatLocationInForm(form);
 
         Supplier<String> failureHandler = () -> {
             CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
@@ -170,13 +172,22 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
-    private void trimLocationInForm(YourProjectLocationForm form) {
+    private void formatLocationInForm(YourProjectLocationForm form) {
         if (form.getPostcode() != null) {
             form.setPostcode(form.getPostcode().trim().toUpperCase());
         }
         if(form.getTown() != null) {
-            form.setTown(form.getTown().trim());
-
+            String townFixedCase = Stream.of(form.getTown().split(" "))
+                    .filter(w -> w.length() > 0)
+                    .map(word -> {
+                        String wordCased = word.substring(0, 1).toUpperCase();
+                        if (word.length() > 1) {
+                            wordCased = wordCased + word.substring(1).toLowerCase();
+                        }
+                        return wordCased;
+                    })
+                    .collect(Collectors.joining(" "));
+            form.setTown(townFixedCase);
         }
     }
 
@@ -184,7 +195,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
                                 long organisationId,
                                 YourProjectLocationForm form) {
 
-        trimLocationInForm(form);
+        formatLocationInForm(form);
 
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
