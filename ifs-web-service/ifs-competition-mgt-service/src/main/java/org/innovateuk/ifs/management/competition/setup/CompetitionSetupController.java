@@ -27,14 +27,14 @@ import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.form.LeadInternationalOrganisationForm;
-import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.form.OrganisationalEligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.form.LeadInternationalOrganisationForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -522,16 +522,29 @@ public class CompetitionSetupController {
             return format("redirect:/competition/setup/%d", competition.getId());
         }
 
-        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
             return "competition/setup";
         };
 
+        if (section == CompetitionSetupSection.LEAD_INTERNATIONAL_ORGANISATION) {
+            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () ->
+                        format("redirect:/competition/setup/%d/section/organisational-eligibility", competition.getId()));
+                    }
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, successView);
+                    .failNowOrSucceedWith(failureView, () -> {
+                        if (section == CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY) {
+                            if (((OrganisationalEligibilityForm) competitionSetupForm).getInternationalOrganisationsApplicable()) {
+                                return format("redirect:/competition/setup/%d/section/lead-international-organisation", competition.getId());
+                            }
+                        }
+                        return format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
+                    });
         });
     }
 

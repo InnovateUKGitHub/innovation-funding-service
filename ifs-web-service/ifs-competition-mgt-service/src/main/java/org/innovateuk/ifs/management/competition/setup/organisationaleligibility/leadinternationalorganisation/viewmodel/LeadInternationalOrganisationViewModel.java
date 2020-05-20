@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.viremodel;
+package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.viewmodel;
 
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;

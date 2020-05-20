@@ -14,28 +14,28 @@
           th:object="${competitionSetupForm}"
           novalidate="novalidate">
 
-        <th:block th:if="${model.general.editable}">
+        <th:block>
             <div id="international-organisations-applicable" class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('leadInternationalOrganisationApplicable')} ? 'govuk-form-group--error'">
+                 th:classappend="${#fields.hasErrors('leadInternationalOrganisationsApplicable')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"
-                            id="leadInternationalOrganisationApplicable">
+                            id="leadInternationalOrganisationsApplicable">
                         <h2 class="govuk-fieldset__heading">Can international organisations lead the competition?</h2>
                     </legend>
-                    <span th:if="${#fields.hasErrors('leadInternationalOrganisationApplicable')}"
+                    <span th:if="${#fields.hasErrors('leadInternationalOrganisationsApplicable')}"
                           class="govuk-error-message"
-                          th:each="err : ${#fields.errors('leadInternationalOrganisationApplicable')}" th:text="${err}"/>
+                          th:each="err : ${#fields.errors('leadInternationalOrganisationsApplicable')}" th:text="${err}"/>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   id="comp-leadInternationalOrganisationApplicable-yes"
-                                   th:field="*{leadInternationalOrganisationApplicable}"
+                                   id="comp-leadInternationalOrganisationsApplicable-yes"
+                                   th:field="*{leadInternationalOrganisationsApplicable}"
                                    value="true"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.organisationaleligibilityform.leadInternationalOrganisationApplicable.required}"/>
+                                   th:attr="data-required-errormessage=#{validation.organisationaleligibilityform.leadInternationalOrganisationsApplicable.required}"/>
                             <label class="govuk-radios__label"
-                                   for="comp-leadInternationalOrganisationApplicable-yes">
+                                   for="comp-leadInternationalOrganisationsApplicable-yes">
                                 Yes
                             </label>
                         </div>
@@ -43,13 +43,13 @@
                         <div class="govuk-radios__item">
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   id="comp-leadInternationalOrganisationApplicable-no"
-                                   th:field="*{leadInternationalOrganisationApplicable}"
+                                   id="comp-leadInternationalOrganisationsApplicable-no"
+                                   th:field="*{leadInternationalOrganisationsApplicable}"
                                    value="false"
                                    required="required"
-                                   th:attr="data-required-errormessage=#{validation.organisationaleligibilityform.leadInternationalOrganisationApplicable.required}"/>
+                                   th:attr="data-required-errormessage=#{validation.organisationaleligibilityform.leadInternationalOrganisationsApplicable.required}"/>
                             <label class="govuk-radios__label"
-                                   for="comp-leadInternationalOrganisationApplicable-no">
+                                   for="comp-leadInternationalOrganisationsApplicable-no">
                                 No
                             </label>
                         </div>

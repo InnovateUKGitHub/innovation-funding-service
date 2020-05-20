@@ -30,6 +30,7 @@ public class OrganisationalEligibilityFormPopulator implements CompetitionSetupF
 
         OrganisationalEligibilityForm organisationalEligibilityForm = new OrganisationalEligibilityForm();
         organisationalEligibilityForm.setInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed());
+        organisationalEligibilityForm.setLeadInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
 
         return organisationalEligibilityForm;
     }

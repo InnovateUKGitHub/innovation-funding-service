@@ -40,7 +40,13 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
     @Transactional
     public ServiceResult<Void> update(long competitionId, CompetitionOrganisationConfigResource competitionOrganisationConfigResource) {
         return find(competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionOrganisationConfig.class, competitionId))
-                .andOnSuccessReturnVoid((config) ->
-                        config.setInternationalOrganisationsAllowed(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed()));
+                .andOnSuccessReturnVoid((config) -> {
+                    config.setInternationalOrganisationsAllowed(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed());
+                    if (config.getInternationalOrganisationsAllowed().equals(true)) {
+                        config.setInternationalLeadOrganisationAllowed(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
+                    } else {
+                        config.setInternationalLeadOrganisationAllowed(null);
+                    }
+                });
     }
 }

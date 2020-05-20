@@ -29,7 +29,7 @@ public class LeadInternationalOrganisationFormPopulator implements CompetitionSe
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionResource.getId()).getSuccess();
 
         LeadInternationalOrganisationForm leadInternationalOrganisationForm = new LeadInternationalOrganisationForm();
-        leadInternationalOrganisationForm.setLeadInternationalOrganisationApplicable(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
+        leadInternationalOrganisationForm.setLeadInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
 
         return leadInternationalOrganisationForm;
     }

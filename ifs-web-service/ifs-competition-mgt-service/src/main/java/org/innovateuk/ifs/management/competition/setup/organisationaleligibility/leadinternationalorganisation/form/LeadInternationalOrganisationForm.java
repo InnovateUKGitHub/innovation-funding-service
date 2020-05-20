@@ -9,14 +9,14 @@ import javax.validation.constraints.NotNull;
  */
 public class LeadInternationalOrganisationForm extends CompetitionSetupForm {
 
-    @NotNull(message = "{validation.organisationaleligibilityform.leadInternationalOrganisationApplicable.required}")
-    private Boolean leadInternationalOrganisationApplicable;
+    @NotNull(message = "{validation.organisationaleligibilityform.leadInternationalOrganisationsApplicable.required}")
+    private Boolean leadInternationalOrganisationsApplicable;
 
-    public Boolean getLeadInternationalOrganisationApplicable() {
-        return leadInternationalOrganisationApplicable;
+    public Boolean getLeadInternationalOrganisationsApplicable() {
+        return leadInternationalOrganisationsApplicable;
     }
 
-    public void setLeadInternationalOrganisationApplicable(Boolean leadInternationalOrganisationApplicable) {
-        this.leadInternationalOrganisationApplicable = leadInternationalOrganisationApplicable;
+    public void setLeadInternationalOrganisationsApplicable(Boolean leadInternationalOrganisationsApplicable) {
+        this.leadInternationalOrganisationsApplicable = leadInternationalOrganisationsApplicable;
     }
 }

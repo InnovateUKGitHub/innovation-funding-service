@@ -35,7 +35,7 @@ public class LeadInternationalOrganisationSectionUpdater extends AbstractSection
         LeadInternationalOrganisationForm leadInternationalOrganisationForm = (LeadInternationalOrganisationForm) competitionSetupForm;
 
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
-        competitionOrganisationConfigResource.setInternationalOrganisationsAllowed(leadInternationalOrganisationForm.getLeadInternationalOrganisationApplicable());
+        competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable());
 
         return competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource).toServiceResult().andOnSuccessReturnVoid();
     }
