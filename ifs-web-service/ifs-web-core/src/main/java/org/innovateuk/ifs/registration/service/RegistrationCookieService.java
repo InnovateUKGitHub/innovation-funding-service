@@ -146,4 +146,8 @@ public class RegistrationCookieService {
     public boolean isApplicantJourney(HttpServletRequest request) {
         return !getProjectInviteHashCookieValue(request).isPresent();
     }
+
+    public boolean isInternationalJourney(Optional<OrganisationInternationalForm> organisationInternationalForm) {
+        return organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
+    }
 }

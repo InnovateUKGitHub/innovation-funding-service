@@ -94,10 +94,8 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                 return redirectToNotEligibleUrl();
             }
 
-            if (organisationInternationalForm.isPresent()) {
-                if (organisationInternationalForm.get().getInternational()) {
-                    return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
-                }
+            if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+                return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
             }
 
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
@@ -125,8 +123,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
             CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
-            if(!competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed()
-                    && organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational()) {
+            if(!competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed() && registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
                 return Boolean.FALSE;
             }
 

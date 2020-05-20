@@ -43,7 +43,7 @@ public class OrganisationSelectionViewModelPopulator {
 
     private List<OrganisationResource> getOrganisationResources(long userId, HttpServletRequest request) {
        Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-       final boolean international = organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
+       final boolean international = registrationCookieService.isInternationalJourney(organisationInternationalForm);
 
        return organisationRestService.getOrganisations(userId, international).getSuccess();
     }

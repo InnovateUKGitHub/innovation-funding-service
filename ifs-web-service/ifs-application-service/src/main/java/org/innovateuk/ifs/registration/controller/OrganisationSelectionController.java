@@ -94,8 +94,7 @@ public class OrganisationSelectionController {
 
     private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request) {
         Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-
-        final boolean international = organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
+        final boolean international = registrationCookieService.isInternationalJourney(organisationInternationalForm);
 
         return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
     }
@@ -104,10 +103,8 @@ public class OrganisationSelectionController {
 
         Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
 
-        if (organisationInternationalForm.isPresent()) {
-            if (organisationInternationalForm.get().getInternational()) {
-                return "/organisation/create/lead-organisation-type";
-            }
+        if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+            return "/organisation/create/lead-organisation-type";
         }
 
         if (registrationCookieService.isCollaboratorJourney(request)) {

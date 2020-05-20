@@ -375,8 +375,4 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<ActivityLogResource>> activityLogResourceListType() {
         return new ParameterizedTypeReference<List<ActivityLogResource>>() {};
     }
-
-    public static ParameterizedTypeReference<CompetitionOrganisationConfigResource> competitionConfigResourceListType() {
-        return new ParameterizedTypeReference<CompetitionOrganisationConfigResource>() {};
-    }
 }
