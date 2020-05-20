@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -34,6 +36,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toObject;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -141,7 +144,7 @@ public class ProjectDetailsController {
                                              UserResource loggedInUser) {
 
         PartnerOrganisationResource partnerOrganisation = partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).getSuccess();
-        PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostcode());
+        PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostcode(), partnerOrganisation.getInternationalLocation());
 
         return doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
     }
@@ -159,9 +162,10 @@ public class ProjectDetailsController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, form.getPostcode());
+            PostcodeAndTownResource postcodeAndTownResource = new PostcodeAndTownResource(form.getPostcode(), form.getTown());
+            ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTownResource);
 
-            return validationHandler.addAnyErrors(updateResult, toField("postcode")).
+            return validationHandler.addAnyErrors(updateResult, toObject("postcode")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
     }
@@ -173,8 +177,10 @@ public class ProjectDetailsController {
         }
 
         ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        boolean international = organisationResource.isInternational();
 
-        model.addAttribute("model", new PartnerProjectLocationViewModel(projectId, projectResource.getName(), organisationId));
+        model.addAttribute("model", new PartnerProjectLocationViewModel(projectId, projectResource.getName(), organisationId, international));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/partner-project-location";

@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
@@ -288,7 +290,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         PartnerOrganisationResource partnerOrganisation = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource()
                 .withPostcode("TW14 9QG")
                 .build();
+
+        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource().build();
+
         when(partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId)).thenReturn(restSuccess(partnerOrganisation));
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getById(projectId)).thenReturn(projectResource);
 
@@ -313,16 +319,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         long projectId = 1L;
         long organisationId = 2L;
         String postcode = "UB7 8QF";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(postcode, null);
 
         ProjectResource projectResource = newProjectResource()
                 .withId(projectId)
                 .withName("Project 1")
                 .build();
 
-        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcode))
+        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource().build();
+
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown))
                 .thenReturn(serviceFailure(PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
         when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -332,7 +342,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals(new PartnerProjectLocationForm(postcode), form);
+        assertEquals(new PartnerProjectLocationForm(postcode, null), form);
     }
 
     @Test
@@ -341,9 +351,12 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         long projectId = 1L;
         long organisationId = 2L;
         String postcode = "UB7 8QF";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(postcode, null);
+        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource().build();
 
-        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcode))
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown))
                 .thenReturn(serviceSuccess());
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
 
         MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -353,9 +366,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
-        assertEquals(new PartnerProjectLocationForm(postcode), form);
+        assertEquals(new PartnerProjectLocationForm(postcode, null), form);
 
-        verify(projectDetailsService).updatePartnerProjectLocation(projectId, organisationId, postcode);
+        verify(projectDetailsService).updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown);
 
         verify(projectService, never()).userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId());
         verify(projectService, never()).getById(projectId);
