@@ -3,19 +3,19 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import java.util.List;
-
-import static javax.persistence.CascadeType.REMOVE;
+import java.time.ZonedDateTime;
 
 /**
  * Resource object to store the address details, from the company, from the companies house api.
  */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"organisation_id", "address_id"})})
+@EntityListeners(AuditingEntityListener.class)
 public class OrganisationAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +31,9 @@ public class OrganisationAddress {
     @JoinColumn(name = "address_type_id", referencedColumnName = "id")
     private AddressType addressType;
 
-    @OneToMany(mappedBy = "organisationAddress", fetch = FetchType.LAZY, cascade = REMOVE)
-    private List<BankDetails> bankDetails;
+    @LastModifiedDate
+    @Column(nullable = false, updatable = false)
+    private ZonedDateTime modifiedOn;
 
     public OrganisationAddress(Organisation organisation, Address address, AddressType addressType) {
         this.organisation = organisation;
@@ -44,14 +45,6 @@ public class OrganisationAddress {
         // no-arg constructor
     }
 
-    public List<BankDetails> getBankDetails() {
-        return bankDetails;
-    }
-
-    public void setBankDetails(List<BankDetails> bankDetails) {
-        this.bankDetails = bankDetails;
-    }
-    
     @JsonIgnore
     public Organisation getOrganisation() {
         return organisation;
@@ -85,5 +78,9 @@ public class OrganisationAddress {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public ZonedDateTime getModifiedOn() {
+        return modifiedOn;
     }
 }

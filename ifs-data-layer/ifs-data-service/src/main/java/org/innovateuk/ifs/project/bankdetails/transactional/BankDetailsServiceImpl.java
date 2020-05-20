@@ -1,23 +1,17 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
-import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -49,7 +43,6 @@ import java.util.stream.Collectors;
 import static java.lang.Short.parseShort;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
@@ -74,13 +67,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     private BankDetailsMapper bankDetailsMapper;
 
     @Autowired
-    private OrganisationAddressMapper organisationAddressMapper;
-
-    @Autowired
     private BankDetailsRepository bankDetailsRepository;
-
-    @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -99,6 +86,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private AddressMapper addressMapper;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -188,32 +178,10 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
-        AddressResource addressResource = bankDetailsResource.getAddress();
-
-        updateAddressForExistingBankDetails(addressResource, bankDetailsResource, bankDetails);
-
+        bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
         bankDetailsRepository.save(bankDetails);
 
         return serviceSuccess(accountDetails);
-    }
-
-    private void updateAddressForExistingBankDetails(AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
-        AddressType addressType = addressTypeRepository.findById(BANK_DETAILS.getOrdinal()).get();
-        List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
-
-        OrganisationAddress newOrganisationAddress;
-        if (bankOrganisationAddresses != null && !bankOrganisationAddresses.isEmpty()) {
-            newOrganisationAddress = bankOrganisationAddresses.get(0);
-            newOrganisationAddress.getAddress().updateFrom(addressResource);
-        } else {
-            addressResource.setId(null);
-            OrganisationAddressResource organisationAddressResource = new OrganisationAddressResource();
-            organisationAddressResource.setAddress(addressResource);
-            organisationAddressResource.setOrganisation(bankDetailsResource.getOrganisation());
-            organisationAddressResource.setAddressType(new AddressTypeResource(BANK_DETAILS.getOrdinal()));
-            newOrganisationAddress = organisationAddressRepository.save(organisationAddressMapper.mapToDomain(organisationAddressResource));
-        }
-        bankDetails.setOrganisationAddress(newOrganisationAddress);
     }
 
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
@@ -226,7 +194,19 @@ public class BankDetailsServiceImpl implements BankDetailsService {
         } else {
             return serviceFailure(CommonFailureKeys.BANK_DETAILS_CANNOT_BE_UPDATED_BEFORE_BEING_SUBMITTED);
         }
-        return saveSubmittedBankDetails(accountDetails, bankDetailsResource);
+        updateAddressForExistingBankDetails(bankDetailsResource, existingBankDetails.get());
+        existingBankDetails.get().setAccountNumber(bankDetailsResource.getAccountNumber());
+        existingBankDetails.get().setSortCode(bankDetailsResource.getSortCode());
+        existingBankDetails.get().setManualApproval(bankDetailsResource.isManualApproval());
+        return serviceSuccess(accountDetails);  
+    }
+
+    private void updateAddressForExistingBankDetails(BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
+        if (bankDetails.getAddress() != null) {
+            bankDetails.getAddress().copyFrom(bankDetailsResource.getAddress());
+        } else {
+            bankDetails.setAddress(addressRepository.save(addressMapper.mapToDomain(bankDetailsResource.getAddress())));
+        }
     }
 
     private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource) {

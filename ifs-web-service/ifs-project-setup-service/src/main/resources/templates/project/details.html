@@ -48,12 +48,12 @@
                     <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Correspondence address</th:block>
                 </td>
                 <td class="govuk-table__cell" id="project-address">
-                    <th:block th:if="${model.project.address.id == null}">-</th:block>
-                    <th:block th:unless="${model.project.address.id == null}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
+                    <th:block th:if="${model.project.address == null}">-</th:block>
+                    <th:block th:unless="${model.project.address == null}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
                 </td>
                 <td class="govuk-table__cell alignright">
-                    <strong th:if="${model.project.address.id == null}" id="project-address-status" class="incomplete-status">Incomplete</strong>
-                    <strong th:unless="${model.project.address.id == null}" id="project-address-status" class="complete-status">Complete</strong>
+                    <strong th:if="${model.project.address == null}" id="project-address-status" class="incomplete-status">Incomplete</strong>
+                    <strong th:unless="${model.project.address == null}" id="project-address-status" class="complete-status">Complete</strong>
                 </td>
             </tr>
             </tbody>
