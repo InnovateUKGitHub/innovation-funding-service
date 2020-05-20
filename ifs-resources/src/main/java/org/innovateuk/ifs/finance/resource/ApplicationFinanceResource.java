@@ -7,6 +7,7 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
 
     private Long financeFileEntry;
     private String workPostcode;
+    private String internationalLocation;
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
 
@@ -15,6 +16,7 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         if (applicationFinance != null && applicationFinance.getFinanceFileEntry() != null) {
             this.financeFileEntry = applicationFinance.getFinanceFileEntry();
             this.workPostcode = applicationFinance.getWorkPostcode();
+            this.internationalLocation = applicationFinance.getInternationalLocation();
         }
     }
 
@@ -29,9 +31,11 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
                                       long organisation,
                                       long application,
                                       OrganisationSize organisationSize,
-                                      String workPostcode) {
+                                      String workPostcode,
+                                      String internationalLocation) {
         super(id, organisation, application, organisationSize);
         this.workPostcode = workPostcode;
+        this.internationalLocation = internationalLocation;
     }
 
     public Long getFinanceFileEntry() {
@@ -58,4 +62,11 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.workPostcode = workPostcode;
     }
 
+    public String getInternationalLocation() {
+        return internationalLocation;
+    }
+
+    public void setInternationalLocation(String internationalLocation) {
+        this.internationalLocation = internationalLocation;
+    }
 }
