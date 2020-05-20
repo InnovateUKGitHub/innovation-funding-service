@@ -46,11 +46,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
@@ -335,12 +334,18 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         } else {
             validation = ProjectDetailsServiceImpl::validateTown;
             settingLocation = partnerOrganisation -> {
-                String town = postcodeAndTown.getTown();
-                String townCased = town.substring(0, 1).toUpperCase();
-                if(town.length() > 1) {
-                    townCased = townCased + town.substring(1).toLowerCase();
-                }
-                partnerOrganisation.setInternationalLocation(townCased);
+                        String town = postcodeAndTown.getTown();
+                        String townFixedCase = Stream.of(town.split(" "))
+                                .filter(w -> w.length() > 0)
+                                .map(word -> {
+                                    String wordCased = word.substring(0, 1).toUpperCase();
+                                    if (word.length() > 1) {
+                                        wordCased = wordCased + word.substring(1).toLowerCase();
+                                    }
+                                    return wordCased;
+                                })
+                                .collect(Collectors.joining(" "));
+                partnerOrganisation.setInternationalLocation(townFixedCase);
                 return partnerOrganisation;
             };
         }
