@@ -3,7 +3,8 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import java.time.ZonedDateTime;
  */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"organisation_id", "address_id"})})
+@EntityListeners(AuditingEntityListener.class)
 public class OrganisationAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +31,7 @@ public class OrganisationAddress {
     @JoinColumn(name = "address_type_id", referencedColumnName = "id")
     private AddressType addressType;
 
-    @CreatedDate
+    @LastModifiedDate
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 

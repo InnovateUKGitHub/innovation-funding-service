@@ -1,11 +1,11 @@
 -- Add a date to the organisation_address table to see what the latest date is.
 
 ALTER TABLE organisation_address
-  ADD COLUMN created_on DATETIME;
+  ADD COLUMN modified_on DATETIME;
 
-UPDATE organisation_address set created_on = now();
+UPDATE organisation_address set modified_on = now();
 
-ALTER TABLE organisation_address MODIFY COLUMN created_on DATETIME NOT NULL;
+ALTER TABLE organisation_address MODIFY COLUMN modified_on DATETIME NOT NULL;
 
 -- New table to link organisation addresses with applications.
 CREATE TABLE organisation_application_address (
