@@ -67,6 +67,7 @@ public class CompetitionSetupInnovationLeadServiceImplTest extends BaseServiceUn
 
         assertEquals(2, result.size());
         assertEquals(userResource1, result.get(0));
+        assertEquals(userResource2, result.get(1));
     }
 
     @Test
