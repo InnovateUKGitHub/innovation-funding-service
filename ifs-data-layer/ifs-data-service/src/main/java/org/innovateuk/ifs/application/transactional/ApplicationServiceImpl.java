@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import com.google.common.collect.Sets;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
@@ -359,7 +360,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     if (organisationAddress.get().getApplicationAddresses().isEmpty()) {
                         organisationAddressToLinkToApplication = organisationAddress.get();
                     } else {
-                        organisationAddressToLinkToApplication = organisationAddressRepository.save(new OrganisationAddress(organisationAddress.get()));
+                        organisationAddressToLinkToApplication = organisationAddressRepository.save(copyNewOrganisationAddress(organisationAddress.get()));
                     }
 
                     ApplicationOrganisationAddress applicationOrganisationAddress = new ApplicationOrganisationAddress(organisationAddressToLinkToApplication, application);
@@ -367,7 +368,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 }
             }
         });
+    }
 
+    private OrganisationAddress copyNewOrganisationAddress(OrganisationAddress organisationAddress) {
+        return new OrganisationAddress(organisationAddress.getOrganisation(),
+                new Address(organisationAddress.getAddress()),
+                organisationAddress.getAddressType());
     }
 
     private ServiceResult<ApplicationPageResource> handleApplicationSearchResultPage(Page<Application> pagedResult) {

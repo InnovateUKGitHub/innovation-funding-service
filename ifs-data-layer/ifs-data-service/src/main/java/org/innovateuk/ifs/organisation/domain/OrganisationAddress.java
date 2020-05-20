@@ -46,10 +46,6 @@ public class OrganisationAddress {
         this.addressType = addressType;
     }
 
-    public OrganisationAddress(OrganisationAddress organisationAddress) {
-        this(organisationAddress.getOrganisation(), new Address(organisationAddress.getAddress()), organisationAddress.getAddressType());
-    }
-
     public OrganisationAddress() {
         // no-arg constructor
     }
