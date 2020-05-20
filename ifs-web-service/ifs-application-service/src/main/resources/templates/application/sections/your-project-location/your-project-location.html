@@ -39,7 +39,21 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
-            <div class="govuk-!-margin-top-6">
+            <div th:if="${model.international}" class="govuk-!-margin-top-6">
+
+                <p class="govuk-body" th:if="${!model.readOnly}">Please enter the town or city where most of the project work will take place.</p>
+
+                <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Town',
+                        id='town',
+                        value=${form.town},
+                        readOnly=${model.readOnly},
+                        required=true,
+                        requiredMessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}
+                        )" />
+            </div>
+            <div th:if="${!model.international}" class="govuk-!-margin-top-6">
 
                 <p class="govuk-body" th:if="${!model.readOnly}"
                    th:text="${model.isH2020()? 'Provide us with the postcode of the primary project location.' : 'Where will most of the project work take place?'}"> </p>

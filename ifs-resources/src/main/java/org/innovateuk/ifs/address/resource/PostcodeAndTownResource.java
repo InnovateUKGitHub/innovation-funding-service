@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.address.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostcodeAndTownResource {
@@ -28,5 +30,27 @@ public class PostcodeAndTownResource {
 
     public void setTown(String town) {
         this.town = town;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PostcodeAndTownResource that = (PostcodeAndTownResource) o;
+
+        return new EqualsBuilder()
+                .append(postcode, that.postcode)
+                .append(town, that.town)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(postcode)
+                .append(town)
+                .toHashCode();
     }
 }

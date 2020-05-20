@@ -102,7 +102,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             @PathVariable("organisationId") long organisationId,
             @ModelAttribute YourProjectLocationForm form) {
 
-        updatePostcode(applicationId, organisationId, form);
+        updateLocation(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -131,7 +131,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             ValidationHandler validationHandler,
             Model model) {
 
-        trimPostcodeInForm(form);
+        trimLocationInForm(form);
 
         Supplier<String> failureHandler = () -> {
             CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
@@ -142,7 +142,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
         Supplier<String> successHandler = () -> {
 
-            updatePostcode(applicationId, organisationId, form);
+            updateLocation(applicationId, organisationId, form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
@@ -170,20 +170,27 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
-    private void trimPostcodeInForm(YourProjectLocationForm form) {
-        form.setPostcode(form.getPostcode().trim());
+    private void trimLocationInForm(YourProjectLocationForm form) {
+        if (form.getPostcode() != null) {
+            form.setPostcode(form.getPostcode().trim().toUpperCase());
+        }
+        if(form.getTown() != null) {
+            form.setTown(form.getTown().trim());
+
+        }
     }
 
-    private void updatePostcode(long applicationId,
+    private void updateLocation(long applicationId,
                                 long organisationId,
                                 YourProjectLocationForm form) {
 
-        trimPostcodeInForm(form);
+        trimLocationInForm(form);
 
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         finance.setWorkPostcode(form.getPostcode());
+        finance.setInternationalLocation(form.getTown());
 
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }

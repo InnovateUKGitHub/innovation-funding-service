@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -29,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -36,7 +37,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toObject;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -161,13 +161,20 @@ public class ProjectDetailsController {
         Supplier<String> failureView = () -> doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
             PostcodeAndTownResource postcodeAndTownResource = new PostcodeAndTownResource(form.getPostcode(), form.getTown());
             ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTownResource);
 
-            return validationHandler.addAnyErrors(updateResult, toObject("postcode")).
+            return validationHandler.addAnyErrors(updateResult, this::errorConverter).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
+    }
+
+    private Optional<ObjectError> errorConverter(Error error) {
+        if("postcode".equals(error.getFieldName()) ) {
+            return toField("postcode").apply(error);
+        } else {
+            return toField("town").apply(error);
+        }
     }
 
     private String doViewPartnerProjectLocation(long projectId, long organisationId, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
