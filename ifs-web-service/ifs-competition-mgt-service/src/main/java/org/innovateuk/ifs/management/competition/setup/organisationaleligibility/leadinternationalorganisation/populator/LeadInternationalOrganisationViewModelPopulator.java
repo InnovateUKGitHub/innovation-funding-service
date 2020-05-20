@@ -1,25 +1,21 @@
 package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.populator;
 
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
-import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.viewmodel.LeadInternationalOrganisationViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.LEAD_INTERNATIONAL_ORGANISATION;
-
 @Service
-public class LeadInternationalOrganisationViewModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class LeadInternationalOrganisationViewModelPopulator {
 
-    @Override
-    public CompetitionSetupSection sectionToPopulateModel() {
-        return LEAD_INTERNATIONAL_ORGANISATION;
-    }
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
-    @Override
-    public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-        return new LeadInternationalOrganisationViewModel(generalViewModel);
+    public LeadInternationalOrganisationViewModel populateModel(long competitionId, CompetitionOrganisationConfigResource competitionOrganisationConfigResource) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        return new LeadInternationalOrganisationViewModel(competition, competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
     }
 }
