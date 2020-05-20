@@ -7,7 +7,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import javax.persistence.*;
 
 /**
- * Resource object to store the address details, from the company, from the companies house api.
+ * Entity to link an organisation_address with an application.
  */
 @Entity
 public class ApplicationOrganisationAddress {

@@ -38,7 +38,8 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     }
 
     private Optional<Organisation> findFirstInternationalMatch(OrganisationResource submittedOrganisationResource) {
-        return organisationRepository.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(submittedOrganisationResource.getInternationalRegistrationNumber(), submittedOrganisationResource.getName());
+        return organisationRepository.findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(submittedOrganisationResource.getInternationalRegistrationNumber(), submittedOrganisationResource.getName())
+                .filter(found -> organisationPatternMatcher.organisationTypeMatches(found, submittedOrganisationResource));
     }
 
     private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {

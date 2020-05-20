@@ -111,30 +111,17 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
     }
 
     @Test
-    public void getUkBasedOrganisations() {
+    public void getOrganisations() {
         long userId = 1L;
-        OrganisationResource ukBasedOrganisation = newOrganisationResource().withIsInternational(true).build();
-        List<OrganisationResource> organisationResource = ImmutableList.of(ukBasedOrganisation);
+        OrganisationResource organisationResource = newOrganisationResource().build();
 
-        setupGetWithRestResultExpectations(format("%s?userId=%s&international=%s", ORGANISATION_BASE_URL, userId, "false"), organisationResourceListType(), organisationResource);
+        List<OrganisationResource> organisationResources = ImmutableList.of(organisationResource);
+
+        setupGetWithRestResultExpectations(format("%s?userId=%s&international=%s", ORGANISATION_BASE_URL, userId, "false"), organisationResourceListType(), organisationResources);
 
         List<OrganisationResource> results = service.getOrganisations(userId, false).getSuccess();
 
         assertEquals(1, results.size());
-        assertEquals(results, organisationResource);
-    }
-
-    @Test
-    public void getInternationalOrganisations() {
-        long userId = 1L;
-        OrganisationResource internationalOrganisation = newOrganisationResource().withIsInternational(true).build();
-        List<OrganisationResource> organisationResource = ImmutableList.of(internationalOrganisation);
-
-        setupGetWithRestResultExpectations(format("%s?userId=%s&international=%s", ORGANISATION_BASE_URL, userId, "true"), organisationResourceListType(), organisationResource);
-
-        List<OrganisationResource> results = service.getOrganisations(userId, true).getSuccess();
-
-        assertEquals(1, results.size());
-        assertEquals(results, organisationResource);
+        assertEquals(results, organisationResources);
     }
 }

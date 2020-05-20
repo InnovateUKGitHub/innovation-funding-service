@@ -34,12 +34,10 @@ public class OrganisationCreationSelectTypePopulator {
 
         // change to get them back instead of filter
         Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-        if (organisationInternationalForm.isPresent()) {
-            if (organisationInternationalForm.get().getInternational()) {
-                organisationTypeResourceList = organisationTypeResourceList.stream()
-                        .filter(resource -> !OrganisationTypeEnum.getFromId(resource.getId()).equals(OrganisationTypeEnum.RESEARCH))
-                        .collect(Collectors.toList());
-            }
+        if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+            organisationTypeResourceList = organisationTypeResourceList.stream()
+                    .filter(resource -> !OrganisationTypeEnum.getFromId(resource.getId()).equals(OrganisationTypeEnum.RESEARCH))
+                    .collect(Collectors.toList());
         }
 
         return new OrganisationCreationSelectTypeViewModel(

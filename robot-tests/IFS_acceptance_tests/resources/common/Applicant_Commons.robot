@@ -8,11 +8,11 @@ ${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-co
 the user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
     Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
-    Input Text                     id=firstName  ${first_name}
-    Input Text                     id=lastName  ${last_name}
-    Input Text                     id=phoneNumber  23232323
-    Input Text                     id=email  ${email}
-    Input Password                 id=password  ${password}
+    Input Text                     name = firstName  ${first_name}
+    Input Text                     id = lastName  ${last_name}
+    Input Text                     id = phoneNumber  23232323
+    Input Text                     id = email  ${email}
+    Input Password                 id = password  ${password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
     Submit Form

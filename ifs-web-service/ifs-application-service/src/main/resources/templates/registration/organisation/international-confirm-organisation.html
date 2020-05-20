@@ -20,7 +20,7 @@
         <th:block th:insert="fragments/addresses :: international-organisation-details"/>
 
         <form method="post" th:action="@{/organisation/create/international-organisation/save-organisation}">
-            <button name="save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
+            <button id="international-confirm-organisation-cta" class="govuk-button govuk-!-margin-top-6">Save and continue</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

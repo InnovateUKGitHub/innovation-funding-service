@@ -53,7 +53,7 @@ public class OrganisationController {
         return organisationService.getAllByUserId(userId).toGetResponse();
     }
 
-    @GetMapping("")
+    @GetMapping()
     public RestResult<List<OrganisationResource>> getOrganisations(@RequestParam final long userId, @RequestParam final boolean international) {
         return organisationService.getOrganisations(userId, international).toGetResponse();
     }

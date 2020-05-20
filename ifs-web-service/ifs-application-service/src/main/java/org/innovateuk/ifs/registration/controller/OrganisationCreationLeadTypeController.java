@@ -60,6 +60,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request));
         model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
         } else {
@@ -93,10 +94,8 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                 return redirectToNotEligibleUrl();
             }
 
-            if (organisationInternationalForm.isPresent()) {
-                if (organisationInternationalForm.get().getInternational()) {
-                    return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
-                }
+            if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+                return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
             }
 
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
@@ -120,13 +119,11 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request, Optional<OrganisationInternationalForm> organisationInternationalForm) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
 
-
         if (competitionIdOpt.isPresent()) {
 
             CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
-            if(!competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed()
-                    && organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational()) {
+            if(!competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed() && registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
                 return Boolean.FALSE;
             }
 
