@@ -16,7 +16,7 @@ ALTER TABLE bank_details ADD CONSTRAINT bank_details_to_address_id_fk FOREIGN KE
 ALTER TABLE bank_details DROP FOREIGN KEY bank_details_to_organisation_address_fk;
 ALTER TABLE bank_details MODIFY COLUMN organisation_address_id bigint(20) NOT NULL DEFAULT 0;
 
--- remove unused address types.
+-- remove unused PROJECT and BANK_DETAILS address types. These are now linked to the bank_details and project tables directly.
 DELETE FROM organisation_address WHERE address_type_id in (3,4);
 DELETE FROM address_type where id in (3,4);
 

@@ -161,7 +161,7 @@ public class ProjectDetailsController {
 
             ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, form.getPostcode());
 
-            return validationHandler.addAnyErrors(updateResult, toField("postcode")).
+            return validationHandler.addAnyErrors(updateResult, ("postcode")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
     }
