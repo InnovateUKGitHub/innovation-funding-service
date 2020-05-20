@@ -42,7 +42,7 @@ Comp admin can not complete the competition setup without organisational eligibi
      [Documentation]  IFS-7195
      Given the user clicks the button/link                                                  link = Return to setup overview
      When the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  project-setup-completion-stage  yes  1  true  single
-     Then the user check the element is disabled
+     Then The user should see the element                                                   css = #compCTA[disabled]
 
 Comp admin can access the Organisational eligibility category and check for all required fields
      [Documentation]    IFS-7195
@@ -117,11 +117,6 @@ the user completes all categories except organisational eligibility category
     the user clicks the button/link                                                         link = Public content
     the user fills in the Public content and publishes                                      ${extraKeyword}
     the user clicks the button/link                                                         link = Return to setup overview
-
-the user check the element is disabled
-    the user should not see an error in the page
-    Wait Until Element Is Visible Without Screenshots                                       id = compCTA
-    The user should see the element                                                         css = [disabled="disabled"]
 
 
 
