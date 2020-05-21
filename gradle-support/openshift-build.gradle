@@ -82,7 +82,7 @@ wait.mustRunAfter deploy
 task stageNexus(type: DockerPushImage) {
     dependsOn tagDockerNexus
     registryCredentials = getNexusCredentials()
-    imageName = registryCredentials.url + "/innovateuk/" + project.name.replaceAll(/ifs-/, "")
+    imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
