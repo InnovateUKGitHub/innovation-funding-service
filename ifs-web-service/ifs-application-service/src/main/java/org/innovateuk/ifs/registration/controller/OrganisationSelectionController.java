@@ -100,19 +100,11 @@ public class OrganisationSelectionController {
     }
 
     private String nextPageInFlow(HttpServletRequest request) {
-
-        Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-
-        if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
-            return "/organisation/create/lead-organisation-type";
-        }
-
         if (registrationCookieService.isCollaboratorJourney(request)) {
             return "/organisation/create/contributor-organisation-type";
-        } else {
-            return "/organisation/create/lead-organisation-type";
         }
 
+        return "/organisation/create/lead-organisation-type";
     }
 
     private Supplier<String> validateEligibility(HttpServletRequest request, HttpServletResponse response, UserResource user, OrganisationSelectionForm form) {

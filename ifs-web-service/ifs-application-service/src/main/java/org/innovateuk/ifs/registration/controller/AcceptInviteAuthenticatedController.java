@@ -112,7 +112,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
 
-                    return "redirect:/organisation/select";
+                    return "redirect:/organisation/create/international-organisation";
                 }
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();
