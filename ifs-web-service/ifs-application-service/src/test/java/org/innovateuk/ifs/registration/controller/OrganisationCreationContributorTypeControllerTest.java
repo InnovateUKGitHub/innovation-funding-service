@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.registration.controller;
 
+import com.google.common.collect.ImmutableList;
 import org.innovateuk.ifs.AbstractApplicationMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,15 +36,14 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
 
     @Mock
     private Validator validator;
-
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     @Mock
     private RegistrationCookieService registrationCookieService;
-
     @Mock
     private EncryptedCookieService cookieUtil;
+    @Mock
+    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     @Override
     protected OrganisationCreationContributorTypeController supplyControllerUnderTest() {
@@ -63,6 +66,13 @@ public class OrganisationCreationContributorTypeControllerTest extends AbstractA
 
     @Test
     public void chooseOrganisationType() throws Exception {
+        OrganisationTypeResource organisationTypeResource = new OrganisationTypeResource();
+        organisationTypeResource.setName("org type");
+        organisationTypeResource.setId(1L);
+
+        OrganisationCreationSelectTypeViewModel organisationCreationSelectTypeViewModel = new OrganisationCreationSelectTypeViewModel(ImmutableList.of(organisationTypeResource));
+        when(organisationCreationSelectTypePopulator.populate(any())).thenReturn(organisationCreationSelectTypeViewModel);
+
         mockMvc.perform(
                 get("/organisation/create/contributor-organisation-type")
                         .cookie(new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH)))
