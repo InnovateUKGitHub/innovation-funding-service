@@ -34,6 +34,10 @@ public class Address {
         // no-arg constructor
     }
 
+    public Address(Address address) {
+        this(address.getAddressLine1(), address.getAddressLine2(), address.getAddressLine3(), address.getTown(), address.getCounty(), address.getPostcode(), address.getCountry());
+    }
+
     public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
@@ -152,5 +156,15 @@ public class Address {
                 .append(postcode)
                 .append(country)
                 .toHashCode();
+    }
+
+    public void copyFrom(AddressResource address) {
+        this.addressLine1 = address.getAddressLine1();
+        this.addressLine2 = address.getAddressLine2();
+        this.addressLine3 = address.getAddressLine1();
+        this.town = address.getTown();
+        this.county = address.getCounty();
+        this.postcode = address.getPostcode();
+        this.country = address.getCountry();
     }
 }

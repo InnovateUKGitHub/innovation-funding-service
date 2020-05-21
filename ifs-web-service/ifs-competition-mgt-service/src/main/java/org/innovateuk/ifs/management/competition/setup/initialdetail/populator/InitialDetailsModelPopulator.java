@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 
 /**
  * populates the model for the initial details competition setup section.
@@ -48,7 +49,7 @@ InitialDetailsModelPopulator implements CompetitionSetupSectionModelPopulator<In
                 categoryRestService.getInnovationSectors().getSuccess(),
                 addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionRestService.getCompetitionTypes().getSuccess(),
-                userRestService.findByUserRole(INNOVATION_LEAD).getSuccess(),
+                userRestService.findByUserRoleAndUserStatus(INNOVATION_LEAD, ACTIVE).getSuccess(),
                 competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
     }
 

@@ -88,7 +88,6 @@ public class ProjectDetailsAddressControllerTest extends BaseControllerMockMVCTe
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         AddressResource addressResource = newAddressResource().
-                withId().
                 withAddressLine1("Address Line 1").
                 withAddressLine2().
                 withAddressLine3().
