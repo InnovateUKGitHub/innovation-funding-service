@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+
 import java.util.List;
 
 public class ApplicationTeamOrganisationViewModel implements Comparable<ApplicationTeamOrganisationViewModel> {
@@ -11,10 +13,14 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
     private final List<ApplicationTeamRowViewModel> rows;
     private final boolean editable;
     private final boolean existing;
+    private final AddressResource address;
 
     private boolean openAddTeamMemberForm;
-
     public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
+        this(id, inviteId, name, type, rows, editable, existing, null);
+    }
+
+    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing, AddressResource address) {
         this.id = id;
         this.inviteId = inviteId;
         this.name = name;
@@ -22,6 +28,7 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
         this.rows = rows;
         this.editable = editable;
         this.existing = existing;
+        this.address = address;
         this.openAddTeamMemberForm = false;
     }
 
@@ -51,6 +58,10 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
 
     public boolean isExisting() {
         return existing;
+    }
+
+    public AddressResource getAddress() {
+        return address;
     }
 
     public boolean isOpenAddTeamMemberForm() {

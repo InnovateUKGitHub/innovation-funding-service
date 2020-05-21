@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.application.forms.questions.team.populator;
 
 import com.google.common.collect.Multimap;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamOrganisationViewModel;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamRowViewModel;
 import org.innovateuk.ifs.application.forms.questions.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
@@ -34,6 +36,7 @@ import static java.util.Collections.sort;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 
@@ -58,6 +61,9 @@ public class ApplicationTeamPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
+
     public ApplicationTeamViewModel populate(long applicationId, long questionId, UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -78,7 +84,7 @@ public class ApplicationTeamPopulator {
                 .collect(toMap(InviteOrganisationResource::getOrganisation, Function.identity()));
 
         List<ApplicationTeamOrganisationViewModel> organisationViewModels = organisations.stream()
-                .map(organisation -> toOrganisationTeamViewModel(organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId()), leadApplicant, user))
+                .map(organisation -> toOrganisationTeamViewModel(applicationId, organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId()), leadApplicant, user))
                 .collect(toList());
 
         organisationViewModels.addAll(inviteOrganisationResources.stream()
@@ -103,7 +109,7 @@ public class ApplicationTeamPopulator {
         return new ApplicationTeamOrganisationViewModel(organisationInvite.getId(), organisationInvite.getId(), organisationInvite.getOrganisationName(), null, inviteRows, leadApplicant, false);
     }
 
-    private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
+    private ApplicationTeamOrganisationViewModel toOrganisationTeamViewModel(long applicationId, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean leadApplicant, UserResource user) {
         List<ApplicationTeamRowViewModel> userRows = processRoles.stream()
                 .map(pr -> ApplicationTeamRowViewModel.fromProcessRole(pr, findInviteIdFromProcessRole(pr, organisationInvite)))
                 .collect(toList());
@@ -117,13 +123,19 @@ public class ApplicationTeamPopulator {
                     .collect(toList()));
         }
 
+        AddressResource address = null;
+        if (organisation.isInternational()) {
+            address = applicationOrganisationAddressRestService.getAddress(applicationId, organisation.getId(), INTERNATIONAL).getSuccess();
+        }
+
         return new ApplicationTeamOrganisationViewModel(organisation.getId(),
                 maybeOrganisationInvite.map(InviteOrganisationResource::getId).orElse(null),
                 organisation.getName(),
                 organisation.getOrganisationTypeName(),
                 userRows,
                 applicantCanEditRow(userRows, user, leadApplicant),
-                true);
+                true,
+                address);
     }
 
     private boolean applicantCanEditRow(List<ApplicationTeamRowViewModel> userRows, UserResource user, boolean leadApplicant) {

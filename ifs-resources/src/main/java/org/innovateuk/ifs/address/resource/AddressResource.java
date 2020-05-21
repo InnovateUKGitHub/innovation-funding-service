@@ -132,6 +132,19 @@ public class AddressResource {
     }
 
     @JsonIgnore
+    public String getAsInternationalSingleLine() {
+        if (getAddressLine1() == null && getTown() == null && getPostcode() == null && getCountry() == null) {
+            return "";
+        }
+        String[] location = new String[4];
+        location[0] = getAddressLine1() == null ? "" : getAddressLine1();
+        location[1] = getTown() == null ? "" : getTown();
+        location[2] = getCountry() == null ? "" : getCountry();
+        location[3] = getPostcode() == null ? "" : getPostcode();
+        return String.join(", ", location);
+    }
+
+    @JsonIgnore
     public List<String> getNonEmptyLines() {
         List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode, country);
         return simpleFilterNot(lines, StringUtils::isEmpty);

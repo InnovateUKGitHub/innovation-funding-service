@@ -67,9 +67,27 @@
                     </h2>
 
                     <th:block th:if="${organisation.type != null}">
-                        <h3 class="govuk-heading-s govuk-!-margin-top-2">Organisation type</h3>
-                        <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations
-                            (RTOs)</p>
+                        <table class="govuk-table">
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
+                                <th scope="col" class="govuk-table__header"></th>
+                                <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Edit</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">Organisation type</td>
+                                    <td class="govuk-table__cell"th:text="${organisation.type}">Research and technology organisations</td>
+                                    <td class="govuk-table__cell"></td>
+                                </tr>
+                                <tr class="govuk-table__row" th:if="${organisation.address != null}" >
+                                    <td class="govuk-table__cell">Address</td>
+                                    <td class="govuk-table__cell"th:text="${organisation.address.getAsInternationalSingleLine()}">1 my lane, france, 1234</td>
+                                    <td class="govuk-table__cell alignright"><a class="govuk-link" th:if="${organisation.editable and !model.readOnly}" th:href="@{{base}/organisation/{organisationId}/address(base=${#ifsUtil.formPostUri(#httpServletRequest)},organisationId=${organisation.id})}">Edit</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </th:block>
 
                     <th:block th:if="${#fields.hasErrors(organisationErrorKey)}">
