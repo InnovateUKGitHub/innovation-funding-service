@@ -78,7 +78,7 @@ public class ApplicationCreationAuthenticatedController {
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
         CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
-        if (organisationConfig.getInternationalOrganisationsAllowed()) {
+        if (organisationConfig.getInternationalOrganisationsAllowed() != null && organisationConfig.getInternationalOrganisationsAllowed()) {
             return "redirect:/organisation/create/international-organisation";
         }
         return "redirect:/organisation/select";
