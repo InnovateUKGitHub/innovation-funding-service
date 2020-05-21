@@ -80,10 +80,14 @@ task wait(type: DockerWaitHealthyContainer) {
 wait.mustRunAfter deploy
 
 task stageNexus(type: DockerPushImage) {
-    dependsOn tagDockerNexus
-    registryCredentials = getNexusCredentials()
-    imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
-    tag = project.version
+    if (isNamedEnv()) {
+        dependsOn tagDockerNexus
+        registryCredentials = getNexusCredentials()
+        imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
+        tag = project.version
+    } else {
+        throw new GradleException("Cannot publish to nexus for non named environment")
+    }
 }
 
 task osStageRemote(type: DockerPushImage) {
