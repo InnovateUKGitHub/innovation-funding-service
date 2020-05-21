@@ -66,7 +66,7 @@ Registered users applying for an international competition see only UK based org
     [Tags]  HappyPath
      Given the user clicks the button/link              link = Back
      When user selects where is organisation based      isNotInternational
-     Then the user should see the element               jQuery = span:contains("Empire Ltd")
+     Then the user should see the element               jQuery = dt:contains("Empire Ltd")
      And the user should see the element                link = Apply with a different organisation
 
 Registered UK based user applies for International Competition
@@ -166,7 +166,7 @@ the user verifies their organisation details
     the user should see the element         jQuery = p:contains("This organisation will lead the application.")
     the user should not see the element     jQuery = p:contains("Your organisation must be UK based to receive funding from Innovate UK.")
     the user should see the element         jQuery = h2:contains("Is your organisation based in the UK?")
-    the user clicks the button/link         name = save-organisation
+    the user clicks the button/link         id = international-confirm-organisation-cta
 
 the user gets an error message on not filling mandatory fields
     [Arguments]  ${button_id}
