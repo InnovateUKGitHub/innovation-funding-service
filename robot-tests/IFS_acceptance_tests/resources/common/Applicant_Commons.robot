@@ -416,7 +416,7 @@ the user select the competition and starts application
     [Arguments]  ${competition}
     the user navigates to the page                            ${frontDoor}
     the user clicks the button/link in the paginated list     link = ${competition}
-    the user clicks the button/link                           jQuery = a:contains("Start new application")
+    the user clicks the button/link                           link = Start new application
 
 the user search for organisation name on Companies house
     [Arguments]  ${org}  ${orgName}
