@@ -65,6 +65,10 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                     return "redirect:/organisation/select";
                 }
             }
+            if (registrationCookieService.isCollaboratorJourney(request)) {
+                    return "redirect:" + BASE_URL + "/" + "contributor-organisation-type";
+            }
+
             return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
         };
 

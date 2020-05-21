@@ -14,10 +14,6 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose organisation type',subTitle=${subtitle},size='govuk-heading-xl'" />
 
-        <div class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
-        </div>
-
         <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/contributor-organisation-type}" method="POST">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">

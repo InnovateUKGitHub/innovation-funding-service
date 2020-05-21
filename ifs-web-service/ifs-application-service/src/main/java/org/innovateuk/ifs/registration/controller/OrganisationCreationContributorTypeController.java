@@ -5,7 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.viewmodel.ContributorOrganisationTypeViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/contributor-organisation-type")
@@ -32,6 +34,9 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
 
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
 
     @GetMapping
     public String chooseOrganisationType(HttpServletRequest request,
@@ -48,10 +53,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
             validator.validate(form, bindingResult);
         }
 
-        List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
-        types = types.stream()
-                    .filter(t -> t.getParentOrganisationType() == null)
-                    .collect(Collectors.toList());
+        List<OrganisationTypeResource> types = organisationCreationSelectTypePopulator.populate(request).getTypes();
         model.addAttribute("form", form);
         model.addAttribute("model", new ContributorOrganisationTypeViewModel(types));
         addPageSubtitleToModel(request, user, model);
@@ -60,6 +62,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
 
     @PostMapping
     public String chooseOrganisationType(HttpServletResponse response,
+                                         HttpServletRequest request,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
                                          BindingResult bindingResult) {
         registrationCookieService.deleteOrganisationCreationCookie(response);
@@ -68,7 +71,13 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
             return "redirect:/organisation/create/contributor-organisation-type?invalid";
         } else {
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
+            Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
             LOG.debug("redirect for organisation creation");
+
+            if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+                return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
+            }
+
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         }
     }
