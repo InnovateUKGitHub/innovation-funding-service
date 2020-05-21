@@ -100,26 +100,46 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
     }
 
     @Test
-    public void update() throws Exception {
-        assertUpdateSuccessful(postcode);
+    public void updatePostcode() throws Exception {
+        assertUpdatePostcodeSuccessful(postcode);
     }
 
     @Test
     public void updatePostcodeTooShortButNoValidationYet() throws Exception {
-        assertUpdateSuccessful(postcodeTooShort);
+        assertUpdatePostcodeSuccessful(postcodeTooShort);
     }
 
     @Test
     public void updatePostcodeTooLongButNoValidationYet() throws Exception {
-        assertUpdateSuccessful(postcodeTooLong);
+        assertUpdatePostcodeSuccessful(postcodeTooLong);
     }
 
     @Test
     public void updatePostcodeWithTrimming() throws Exception {
-        assertUpdateSuccessful(postcodeNeedsTrimming);
+        assertUpdatePostcodeSuccessful(postcodeNeedsTrimming);
     }
 
-    private void assertUpdateSuccessful(String postcode) throws Exception {
+    @Test
+    public void updateInternationalTown() throws Exception {
+        assertUpdateInternationalTownSuccessful("Amsterdam", "Amsterdam");
+    }
+
+    @Test
+    public void updateInternationalTownWithTrimming() throws Exception {
+        assertUpdateInternationalTownSuccessful("Amsterdam", "      Amsterdam  ");
+    }
+
+    @Test
+    public void updateInternationalTownFixingCasing() throws Exception {
+        assertUpdateInternationalTownSuccessful("Amsterdam", "aMsTeRdAm");
+    }
+
+    @Test
+    public void updateInternationalTownFixingCasingForMultipleWords() throws Exception {
+        assertUpdateInternationalTownSuccessful("The Hague", "the hague");
+    }
+
+    private void assertUpdatePostcodeSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
@@ -145,27 +165,53 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         verifyNoMoreInteractionsWithMocks();
     }
 
+    private void assertUpdateInternationalTownSuccessful(String persistedTown, String givenTown) throws Exception {
+
+        when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
+                restSuccess(applicationFinance));
+
+        ArgumentCaptor<ApplicationFinanceResource> updatedApplicationFinanceCaptor = ArgumentCaptor.forClass(ApplicationFinanceResource.class);
+
+        when(applicationFinanceRestServiceMock.update(eq(applicationFinance.getId()), updatedApplicationFinanceCaptor.capture())).thenReturn(
+                restSuccess(applicationFinance));
+
+        mockMvc.perform(post("/application/{applicationId}/form/your-project-location/" +
+                "organisation/{organisationId}/section/{sectionId}", applicationId, organisationId, sectionId)
+                .param("town", givenTown))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(yourFinancesRedirectUrl))
+                .andReturn();
+
+        ApplicationFinanceResource applicationFinanceBeingUpdated = updatedApplicationFinanceCaptor.getValue();
+        assertThat(applicationFinanceBeingUpdated.getInternationalLocation()).isEqualTo(persistedTown);
+
+        verify(applicationFinanceRestServiceMock, times(1)).getApplicationFinance(applicationId, organisationId);
+        verify(applicationFinanceRestServiceMock, times(1)).update(applicationFinance.getId(), applicationFinance);
+
+        verifyNoMoreInteractionsWithMocks();
+    }
+
     @Test
     public void autosave() throws Exception {
-        assertAutosaveSuccessful(postcode);
+        assertAutosavePostcodeSuccessful(postcode);
     }
 
     @Test
     public void autosavePostcodeTooShortButNoValidationYet() throws Exception {
-        assertAutosaveSuccessful(postcodeTooShort);
+        assertAutosavePostcodeSuccessful(postcodeTooShort);
     }
 
     @Test
     public void autosavePostcodeTooLongButNoValidationYet() throws Exception {
-        assertAutosaveSuccessful(postcodeTooLong);
+        assertAutosavePostcodeSuccessful(postcodeTooLong);
     }
 
     @Test
     public void autosaveWithTrimming() throws Exception {
-        assertAutosaveSuccessful(postcodeNeedsTrimming);
+        assertAutosavePostcodeSuccessful(postcodeNeedsTrimming);
     }
 
-    private void assertAutosaveSuccessful(String postcode) throws Exception {
+    private void assertAutosavePostcodeSuccessful(String postcode) throws Exception {
 
         when(applicationFinanceRestServiceMock.getApplicationFinance(applicationId, organisationId)).thenReturn(
                 restSuccess(applicationFinance));
