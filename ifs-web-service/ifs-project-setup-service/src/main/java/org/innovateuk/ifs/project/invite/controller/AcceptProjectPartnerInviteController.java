@@ -1,11 +1,5 @@
 package org.innovateuk.ifs.project.invite.controller;
 
-import static java.lang.String.format;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -22,6 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import static java.lang.String.format;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 @Controller
 @RequestMapping("/project/{projectId}/partner-invite")
@@ -110,7 +110,7 @@ public class AcceptProjectPartnerInviteController {
                         return "registration/logged-in-with-another-user-failure";
                     }
                     //Force user to be logged in.
-                    return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/select");
+                    return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/create/international-organisation");
                 }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
     }
