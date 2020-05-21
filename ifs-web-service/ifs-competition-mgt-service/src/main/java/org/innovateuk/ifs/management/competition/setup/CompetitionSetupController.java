@@ -33,6 +33,7 @@ import org.innovateuk.ifs.management.competition.setup.initialdetail.form.Initia
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.internationalorganisation.form.OrganisationalEligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.form.LeadInternationalOrganisationForm;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -260,21 +261,32 @@ public class CompetitionSetupController {
 
     @PostMapping("/{competitionId}/section/organisational-eligibility")
     public String submitOrganistionalEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) OrganisationalEligibilityForm competitionSetupForm,
+                                                  BindingResult bindingResult,
+                                                  ValidationHandler validationHandler,
+                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                  Model model) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, model);
+    }
+
+    @PostMapping("/{competitionId}/section/lead-international-organisation")
+    public String submitLeadInternationalOrganisationSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) LeadInternationalOrganisationForm competitionSetupForm,
                                                                BindingResult bindingResult,
                                                                ValidationHandler validationHandler,
                                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                                Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.LEAD_INTERNATIONAL_ORGANISATION, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")
     public String submitCompletionStageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
-                                                      BindingResult bindingResult,
-                                                      ValidationHandler validationHandler,
-                                                      @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                      Model model) {
+                                                 BindingResult bindingResult,
+                                                 ValidationHandler validationHandler,
+                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                 Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -447,7 +459,7 @@ public class CompetitionSetupController {
         );
     }
 
-    @PostMapping(path = "/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
+    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
     public String uploadTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
@@ -455,7 +467,7 @@ public class CompetitionSetupController {
                                            Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", +competition.getId());
+        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
         Supplier<String> failure = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
@@ -469,14 +481,14 @@ public class CompetitionSetupController {
                 .failNowOrSucceedWith(failure, success);
     }
 
-    @PostMapping(path = "/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
+    @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "deleteTermsAndConditionsDoc")
     public String deleteTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                            Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", +competition.getId());
+        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
 
         RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
         return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())
@@ -515,13 +527,20 @@ public class CompetitionSetupController {
             return "competition/setup";
         };
 
+        if (section == CompetitionSetupSection.LEAD_INTERNATIONAL_ORGANISATION) {
+            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
+            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () ->
+                        format("redirect:/competition/setup/%d/section/organisational-eligibility", competition.getId()));
+                    }
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, section);
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> {
                         if (section == CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY) {
                             if (((OrganisationalEligibilityForm) competitionSetupForm).getInternationalOrganisationsApplicable()) {
-                                return format("redirect:/competition/setup/%d/organisational-eligibility/lead-international-organisation", competition.getId());
+                                return format("redirect:/competition/setup/%d/section/lead-international-organisation", competition.getId());
                             }
                         }
                         return format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
