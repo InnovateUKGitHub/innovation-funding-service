@@ -16,6 +16,6 @@ public class LeadInternationalOrganisationViewModelPopulator {
     public LeadInternationalOrganisationViewModel populateModel(long competitionId, CompetitionOrganisationConfigResource competitionOrganisationConfigResource) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return new LeadInternationalOrganisationViewModel(competition.getId(), competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
+        return new LeadInternationalOrganisationViewModel(competition, competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
     }
 }

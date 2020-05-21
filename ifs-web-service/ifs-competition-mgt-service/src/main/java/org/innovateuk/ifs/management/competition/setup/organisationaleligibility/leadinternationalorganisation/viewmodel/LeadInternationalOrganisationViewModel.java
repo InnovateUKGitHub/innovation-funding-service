@@ -1,17 +1,19 @@
 package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+
 public class LeadInternationalOrganisationViewModel {
 
-    private final long competitionId;
+    private final CompetitionResource competition;
     private final Boolean leadInternationalOrganisationsApplicable;
 
-    public LeadInternationalOrganisationViewModel(long competitionId, Boolean leadInternationalOrganisationsApplicable) {
-        this.competitionId = competitionId;
+    public LeadInternationalOrganisationViewModel(CompetitionResource competition, Boolean leadInternationalOrganisationsApplicable) {
+        this.competition = competition;
         this.leadInternationalOrganisationsApplicable = leadInternationalOrganisationsApplicable;
     }
 
-    public long getCompetitionId() {
-        return competitionId;
+    public CompetitionResource getCompetition() {
+        return competition;
     }
 
     public Boolean isLeadInternationalOrganisationsApplicable() {
