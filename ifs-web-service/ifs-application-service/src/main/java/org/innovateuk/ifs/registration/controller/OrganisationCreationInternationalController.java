@@ -135,7 +135,7 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
     }
 
     private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm) {
-        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationInternationalDetailsForm), new AddressTypeResource(INTERNATIONAL.getOrdinal(), INTERNATIONAL.name()));
+        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationInternationalDetailsForm), new AddressTypeResource(INTERNATIONAL.getId(), INTERNATIONAL.name()));
     }
 
     private AddressResource createAddressResource(Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm) {
