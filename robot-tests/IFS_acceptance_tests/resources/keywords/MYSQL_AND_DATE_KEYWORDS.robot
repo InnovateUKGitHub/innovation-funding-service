@@ -243,3 +243,14 @@ Set global date variables
 Delete user from terms and conditions database
     [Arguments]    ${user_id}
     execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';
+
+User sets organisation to international
+    [Arguments]     ${organisation_name}
+    ${organisationID} =     get organisation id by name     ${organisation_name}
+    execute sql string  UPDATE `organisation` SET `international`=1 WHERE `id`='${organisationID}';
+
+User sets organisation to uk based
+    [Arguments]     ${organisation_name}
+    ${organisationID} =     get organisation id by name     ${organisation_name}
+    execute sql string  UPDATE `organisation` SET `international`=0 WHERE `id`='${organisationID}';
+
