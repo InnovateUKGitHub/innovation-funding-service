@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.form;
+package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form;
 
 import javax.validation.constraints.NotNull;
 

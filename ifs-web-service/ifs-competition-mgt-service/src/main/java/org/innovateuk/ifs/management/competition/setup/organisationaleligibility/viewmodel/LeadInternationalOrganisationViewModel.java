@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.viewmodel;
+package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
