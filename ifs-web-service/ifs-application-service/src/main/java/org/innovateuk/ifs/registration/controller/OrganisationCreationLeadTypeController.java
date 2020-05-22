@@ -123,7 +123,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
             CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
-            if(!competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed() && registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+            if(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed() != null && registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
                 return Boolean.FALSE;
             }
 
