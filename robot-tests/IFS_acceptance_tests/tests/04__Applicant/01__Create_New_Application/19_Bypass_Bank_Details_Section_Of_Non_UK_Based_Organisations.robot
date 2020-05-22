@@ -30,22 +30,6 @@ External dashboard - hide the bank details if partner is non-uk based
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
 
-External dashboard - Show the bank details if partner is uk based
-    [Documentation]    IFS - 7163
-    [Tags]
-    Given User sets organisation to uk based                               ${partner_organisation_name_UK_based}
-    And Log in as a different user                                         &{partner_applicant_credentials_UK_based}
-    When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
-    Then the user should see the element                                   jQuery = h2:contains("Bank details")
-
-
-External dashboard - hide the bank details if partner organisation is requesting zero fund
-    [Documentation]    IFS - 7163
-    [Tags]
-    Given lead applicant invites new partner and accepts invitation
-    When partner organisation sets funding level to zero
-    Then the user should not see the element                               jQuery = h2:contains("Bank details")
-
 External dashboard - hide the bank details if lead organisation is non-uk based
     [Documentation]    IFS - 7163
     [Tags]
@@ -54,20 +38,15 @@ External dashboard - hide the bank details if lead organisation is non-uk based
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
 
-External dashboard - show the bank details if lead organisation is uk based
-    [Documentation]    IFS - 7163
-    [Tags]
-    Given User sets organisation to uk based                               ${lead_applicant_organisation_name}
-    When reload page
-    Then the user should see the element                                   jQuery = h2:contains("Bank details")
-
 External dashboard - lead applicant - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
     [Documentation]    IFS - 7163
     [Tags]
+    Given lead applicant invites new partner and accepts invitation
+    And partner organisation sets funding level to zero
     When the user clicks the button/link                                   link = View the status of partners
     Then the user should see the element                                   jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should see the element                                    jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should not see the element                                jQuery = th:contains("Ward Ltd (Lead)") ~ td:nth-child(6) span:contains("Not required for this partner")
+    And the user should see the element                                    jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should not see the element                                jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
 
 External dashboard - partner organisation - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
@@ -78,7 +57,7 @@ External dashboard - partner organisation - view status of partners - will show 
     When the user clicks the button/link                                   link = View the status of partners
     Then the user should see the element                                   jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should see the element                                    jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should not see the element                                jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
+    And the user should see the element                                    jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should not see the element                                jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
 
 Project setup dashboard - Bank details - No action required should display for non uk based and zero funding organisations
@@ -91,7 +70,7 @@ Project setup dashboard - Bank details - No action required should display for n
     When Log in as a different user                                        &{ifs_admin_user_credentials}
     And the user navigates to the page                                     ${server}/project-setup-management/competition/${competitionID}/status/all
     And the user clicks the button/link                                    jQuery = td:nth-child(6) a:contains("Review")
-    Then the user should see the element                                   css = li:nth-child(1) strong
+    Then the user should see the element                                   css = li.read-only:nth-child(1) div.task-status > span:nth-child(1)
     And the user should see the element                                    css = li:nth-child(4) strong
     And the user should see the element                                    css = li.read-only:nth-child(2) div.task-status > span:nth-child(1)
     And the user should see the element                                    css = li.read-only:nth-child(3) div.task-status > span:nth-child(1)
@@ -99,16 +78,8 @@ Project setup dashboard - Bank details - No action required should display for n
 Project setup dashboard - will not prevent the consortium's bank details from approval
     [Documentation]    IFS - 7163
     [Tags]
-    Given the user clicks the button/link                                  link = ${lead_applicant_organisation_name}
-    When the user clicks the button/link                                   jQuery = .govuk-button:contains("Approve bank account details")
-    And the user clicks the button/link                                    jQuery = .govuk-button:contains("Approve account")
-    And the user clicks the button/link                                    link = Bank details
-    And the user clicks the button/link                                    link = ${partner_organisation_name_UK_based}
-    And the user clicks the button/link                                    jQuery = .govuk-button:contains("Approve bank account details")
-    And the user clicks the button/link                                    jQuery = .govuk-button:contains("Approve account")
-    And the user clicks the button/link                                    link = Bank details
-    Then the user should see the element                                   jQuery = li:nth-child(1) span:nth-child(1)
-    And the user should see the element                                    jQuery = li:nth-child(4) span:nth-child(1)
+    When Comp admin approves bank details of partner organisation
+    Then the user should see the element                                   jQuery = li:nth-child(4) span:nth-child(1)
 
 *** Keywords ***
 Custom Suite Setup
@@ -133,7 +104,6 @@ Lead applicant submits bank details
     the user navigates to the page                                         ${server}/project-setup/project/${project_id}/team
     The user selects their finance contact                                 financeContact1
     the user clicks the button/link                                        link = Set up your project
-    the user enters bank details
 
 zero funding parter submits the project and team details
     Log in as a different user                                             &{partner_applicant_credentials_zero_funding}
@@ -178,3 +148,9 @@ partner organisation sets funding level to zero
     the user clicks the button/link                                        jQuery = button:contains("Mark as complete")
     the user accept the competition terms and conditions                   Return to join project
     the user clicks the button/link                                        id = submit-join-project-button
+
+Comp admin approves bank details of partner organisation
+    the user clicks the button/link                                        link = ${partner_organisation_name_UK_based}
+    the user clicks the button/link                                        jQuery = .govuk-button:contains("Approve bank account details")
+    the user clicks the button/link                                        jQuery = .govuk-button:contains("Approve account")
+    the user clicks the button/link                                        link = Bank details
