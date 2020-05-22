@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.leadinternationalorganisation.form;
 
-import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-
 import javax.validation.constraints.NotNull;
 
 /**
  * Form for the organisational eligibility competition setup section where international organisation can lead the competition.
  */
-public class LeadInternationalOrganisationForm extends CompetitionSetupForm {
+public class LeadInternationalOrganisationForm {
 
-    @NotNull(message = "{validation.organisationaleligibilityform.leadInternationalOrganisationsApplicable.required}")
+    @NotNull(message = "{validation.leadinternationalorganisationform.leadInternationalOrganisationsApplicable.required}")
     private Boolean leadInternationalOrganisationsApplicable;
 
     public Boolean getLeadInternationalOrganisationsApplicable() {
