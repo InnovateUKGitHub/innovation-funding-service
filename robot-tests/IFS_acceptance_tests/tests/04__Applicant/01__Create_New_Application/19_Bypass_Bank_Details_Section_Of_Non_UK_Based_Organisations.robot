@@ -29,16 +29,15 @@ External dashboard - hide the bank details if partner is non-uk based
     And the user logs-in in new browser                                    &{partner_applicant_credentials_non_UK_based}
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
-    [Teardown]  the user logs out if they are logged in
 
 External dashboard - Show the bank details if partner is uk based
     [Documentation]    IFS - 7163
     [Tags]
     Given User sets organisation to uk based                               ${partner_organisation_name_UK_based}
-    And the user logs-in in new browser                                    &{partner_applicant_credentials_UK_based}
+    And Log in as a different user                                         &{partner_applicant_credentials_UK_based}
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should see the element                                   jQuery = h2:contains("Bank details")
-    [Teardown]  the user logs out if they are logged in
+
 
 External dashboard - hide the bank details if partner organisation is requesting zero fund
     [Documentation]    IFS - 7163
@@ -46,13 +45,12 @@ External dashboard - hide the bank details if partner organisation is requesting
     Given lead applicant invites new partner and accepts invitation
     When partner organisation sets funding level to zero
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
-    [Teardown]  the user logs out if they are logged in
 
 External dashboard - hide the bank details if lead organisation is non-uk based
     [Documentation]    IFS - 7163
     [Tags]
     Given User sets organisation to international                          ${lead_applicant_organisation_name}
-    And the user logs-in in new browser                                    &{lead_applicant_credentials}
+    And Log in as a different user                                         &{lead_applicant_credentials}
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
 
@@ -71,19 +69,17 @@ External dashboard - lead applicant - view status of partners - will show the ba
     And the user should see the element                                    jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should not see the element                                jQuery = th:contains("Ward Ltd (Lead)") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should not see the element                                jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
-    [Teardown]  the user logs out if they are logged in
 
 External dashboard - partner organisation - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
     [Documentation]    IFS - 7163
     [Tags]
-    Given the user logs-in in new browser                                  &{partner_applicant_credentials_non_UK_based}
+    Given Log in as a different user                                       &{partner_applicant_credentials_non_UK_based}
     And The user navigates to the page                                     ${server}/project-setup/project/${project_id}
     When the user clicks the button/link                                   link = View the status of partners
     Then the user should see the element                                   jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should see the element                                    jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should not see the element                                jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
     And the user should not see the element                                jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
-    [Teardown]  the user logs out if they are logged in
 
 Project setup dashboard - Bank details - No action required should display for non uk based and zero funding organisations
     [Documentation]    IFS - 7163
@@ -92,7 +88,7 @@ Project setup dashboard - Bank details - No action required should display for n
     And zero funding parter submits the project and team details
     And Non UK based partner submits the project and team details
     And UK based partner submits the project and team details
-    When the user logs-in in new browser                                   &{ifs_admin_user_credentials}
+    When Log in as a different user                                        &{ifs_admin_user_credentials}
     And the user navigates to the page                                     ${server}/project-setup-management/competition/${competitionID}/status/all
     And the user clicks the button/link                                    jQuery = td:nth-child(6) a:contains("Review")
     Then the user should see the element                                   css = li:nth-child(1) strong
@@ -129,7 +125,7 @@ Custom suite teardown
     Disconnect from database
 
 Lead applicant submits bank details
-    the user logs-in in new browser                                        &{lead_applicant_credentials}
+    Log in as a different user                                             &{lead_applicant_credentials}
     project lead submits project address                                   ${project_id}
     the user navigates to the page                                         ${server}/project-setup/project/${project_id}/team/project-manager
     the user selects the radio button                                      projectManager  projectManager1
@@ -138,10 +134,9 @@ Lead applicant submits bank details
     The user selects their finance contact                                 financeContact1
     the user clicks the button/link                                        link = Set up your project
     the user enters bank details
-    the user logs out if they are logged in
 
 zero funding parter submits the project and team details
-    the user logs-in in new browser                                        &{partner_applicant_credentials_zero_funding}
+    Log in as a different user                                             &{partner_applicant_credentials_zero_funding}
     the user navigates to the page                                         ${server}/project-setup/project/${project_id}/details
     the user clicks the button/link                                        link = Edit
     the user enters text to a text field                                   id = postcode      P05T C0D3
@@ -151,29 +146,26 @@ zero funding parter submits the project and team details
     the user clicks the button/link                                        link = Your finance contact
     the user selects the radio button                                      financeContact  financeContact1
     the user clicks the button/link                                        id = save-finance-contact-button
-    the user logs out if they are logged in
 
 Non UK based partner submits the project and team details
-    the user logs-in in new browser                                        &{partner_applicant_credentials_non_UK_based}
+    Log in as a different user                                             &{partner_applicant_credentials_non_UK_based}
     the user navigates to the page                                         ${server}/project-setup/project/${project_id}
     the user clicks the button/link                                        link = Project team
     the user clicks the button/link                                        link = Your finance contact
     the user selects the radio button                                      financeContact  financeContact1
     the user clicks the button/link                                        id = save-finance-contact-button
-    the user logs out if they are logged in
 
 UK based partner submits the project and team details
-    the user logs-in in new browser                                        &{partner_applicant_credentials_UK_based}
+    Log in as a different user                                             &{partner_applicant_credentials_UK_based}
     the user navigates to the page                                         ${server}/project-setup/project/${project_id}/team
     the user clicks the button/link                                        link = Your finance contact
     the user selects the radio button                                      financeContact  financeContact1
     the user clicks the button/link                                        id = save-finance-contact-button
     the user clicks the button/link                                        link = Return to setup your project
     the user enters bank details
-    the user logs out if they are logged in
 
 lead applicant invites new partner and accepts invitation
-    the user logs-in in new browser                                        &{ifs_admin_user_credentials}
+    Log in as a different user                                             &{ifs_admin_user_credentials}
     the user navigates to the page                                         ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/team/partner
     the user adds a new partner organisation                               innovate    jsonsmith    json.smith@gmail.com
     a new organisation is able to accept project invite                    json  smith   json.smith@gmail.com   innovate  INNOVATE LTD    ${applicationId}    ${application_name}
