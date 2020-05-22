@@ -2,9 +2,13 @@ package org.innovateuk.ifs.project.invite.controller;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -33,15 +37,16 @@ public class AcceptProjectPartnerInviteController {
 
     @Autowired
     private RegistrationCookieService registrationCookieService;
-
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
-
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
-
     @Autowired
     private NavigationUtils navigationUtils;
+    @Autowired
+    private ProjectRestService projectRestService;
+    @Autowired
+    private CompetitionOrganisationConfigRestService organisationConfigRestService;
 
     @GetMapping("/{hash}/accept")
     public String inviteEntryPage(
@@ -75,7 +80,13 @@ public class AcceptProjectPartnerInviteController {
                                     Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+
+                    ProjectResource projectResource = projectRestService.getProjectById(projectId).getSuccess();
+                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(projectResource.getCompetition()).getSuccess();
+                    boolean international = organisationConfigResource.getInternationalOrganisationsAllowed();
+
                     model.addAttribute("projectName", invite.getProjectName());
+                    model.addAttribute("internationalCompetition", international);
                     return "project/partner-invite/new-user";
             }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
@@ -88,9 +99,15 @@ public class AcceptProjectPartnerInviteController {
                                     Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+                    ProjectResource projectResource = projectRestService.getProjectById(projectId).getSuccess();
+                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(projectResource.getCompetition()).getSuccess();
+                    boolean international = organisationConfigResource.getInternationalOrganisationsAllowed();
+
                     model.addAttribute("projectName", invite.getProjectName());
                     model.addAttribute("loggedIn", user != null);
                     model.addAttribute("projectId", projectId);
+                    model.addAttribute("internationalCompetition", international);
+
                     return "project/partner-invite/existing-user";
                 }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
@@ -106,11 +123,12 @@ public class AcceptProjectPartnerInviteController {
                                    Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
+                    //Force user to be logged in.
                     if (loggedInAsNonInviteUser(invite, user)) {
                         return "registration/logged-in-with-another-user-failure";
                     }
-                    //Force user to be logged in.
-                    return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/create/international-organisation");
+
+                    return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/select");
                 }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
     }
