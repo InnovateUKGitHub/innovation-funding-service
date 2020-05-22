@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
+import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,9 +39,16 @@ public class OrganisationCreationLeadInitializationController extends AbstractOr
         organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
 
+        OrganisationInternationalForm organisationInternationalForm = new OrganisationInternationalForm();
+        organisationInternationalForm.setInternational(false);
+
+
         if (organisationConfig.getInternationalLeadOrganisationAllowed() != null && organisationConfig.getInternationalLeadOrganisationAllowed()) {
+            organisationInternationalForm.setInternational(true);
+            registrationCookieService.saveToOrganisationInternationalCookie(organisationInternationalForm, response);
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
         }
+        registrationCookieService.saveToOrganisationInternationalCookie(organisationInternationalForm, response);
 
         return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
     }

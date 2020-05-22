@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -37,17 +38,20 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
     private UserRestService userRestService;
     private EncryptedCookieService cookieUtil;
+    private CompetitionOrganisationConfigRestService organisationConfigRestService;
 
     public AcceptInviteAuthenticatedController(final InviteRestService inviteRestService,
                                                final OrganisationRestService organisationRestService,
                                                final ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator,
                                                final UserRestService userRestService,
-                                               final EncryptedCookieService cookieUtil) {
+                                               final EncryptedCookieService cookieUtil,
+                                               final CompetitionOrganisationConfigRestService organisationConfigRestService) {
         this.inviteRestService = inviteRestService;
         this.organisationRestService = organisationRestService;
         this.confirmOrganisationInviteModelPopulator = confirmOrganisationInviteModelPopulator;
         this.userRestService = userRestService;
         this.cookieUtil = cookieUtil;
+        this.organisationConfigRestService = organisationConfigRestService;
     }
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
@@ -112,7 +116,12 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
 
-                    return "redirect:/organisation/create/international-organisation";
+                    boolean internationalAllowed = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess().getInternationalOrganisationsAllowed();
+                    if(internationalAllowed) {
+                        return "redirect:/organisation/create/international-organisation";
+                    }
+
+                    return "redirect:/organisation/create/contributor-organisation-type";
                 }
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
         return view.getSuccess();

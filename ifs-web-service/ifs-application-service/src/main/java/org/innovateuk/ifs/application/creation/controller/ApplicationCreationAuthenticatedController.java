@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -46,6 +47,7 @@ public class ApplicationCreationAuthenticatedController {
                        UserResource user,
                        HttpServletResponse response) {
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
+
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
             model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
@@ -78,9 +80,17 @@ public class ApplicationCreationAuthenticatedController {
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
         CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
+        OrganisationInternationalForm organisationInternationalForm = new OrganisationInternationalForm();
+        organisationInternationalForm.setInternational(false);
+
         if (organisationConfig.getInternationalOrganisationsAllowed() != null && organisationConfig.getInternationalOrganisationsAllowed()) {
+            organisationInternationalForm.setInternational(organisationConfig.getInternationalOrganisationsAllowed());
+            registrationCookieService.saveToOrganisationInternationalCookie(organisationInternationalForm, response);
+
             return "redirect:/organisation/create/international-organisation";
         }
+        registrationCookieService.saveToOrganisationInternationalCookie(organisationInternationalForm, response);
+
         return "redirect:/organisation/select";
     }
 }
