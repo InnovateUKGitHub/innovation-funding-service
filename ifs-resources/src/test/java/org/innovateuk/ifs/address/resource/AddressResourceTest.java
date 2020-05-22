@@ -26,12 +26,10 @@ public class AddressResourceTest {
         postcode = "NR14 7PZ";
 
         address = new AddressResource(addressLine1, addressLine2, addressLine3, town, county, postcode);
-        address.setId(id);
     }
 
     @Test
-    public void addresshouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(address.getId(), id);
+    public void addressShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(address.getAddressLine1(), addressLine1);
         Assert.assertEquals(address.getAddressLine2(), addressLine2);
         Assert.assertEquals(address.getAddressLine3(), addressLine3);

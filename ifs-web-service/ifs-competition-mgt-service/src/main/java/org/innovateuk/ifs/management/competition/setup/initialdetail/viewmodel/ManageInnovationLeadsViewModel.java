@@ -21,8 +21,8 @@ public class ManageInnovationLeadsViewModel extends CompetitionSetupViewModel {
     public ManageInnovationLeadsViewModel(Long competitionId, String competitionName,
                                           String leadTechnologistName, String executiveName,
                                           String innovationSectorName, Set<String> innovationAreaNames,
-                                          List<UserResource> innovationLeadsAssignedToCompetition,
-                                          List<UserResource> availableInnovationLeads) {
+                                          List<UserResource> availableInnovationLeads,
+                                          List<UserResource> innovationLeadsAssignedToCompetition) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.leadTechnologistName = leadTechnologistName;

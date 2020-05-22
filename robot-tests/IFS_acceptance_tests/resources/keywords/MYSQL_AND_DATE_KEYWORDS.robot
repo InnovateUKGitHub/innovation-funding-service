@@ -164,6 +164,12 @@ get next year
     ${year} =    get time    year    NOW + 370d
     [Return]    ${year}
 
+get next year in two digits
+    ${year} =    get time
+    ${yearintwodigits} =    Add time To Date   ${year}  370d     result_format=%y
+    # This format is like 21 instead of 2021
+    [Return]    ${yearintwodigits}
+
 get user id from user email
     [Arguments]  ${name}
     ${id}  get table id by email  user  ${name}
@@ -239,6 +245,8 @@ Set global date variables
     Set global variable  ${tomorrowday}
     ${monthWord} =      get month as word
     set global variable  ${monthWord}
+    ${nextyearintwodigits}=     get next year in two digits
+    set global variable     ${nextyearintwodigits}
 
 Delete user from terms and conditions database
     [Arguments]    ${user_id}
