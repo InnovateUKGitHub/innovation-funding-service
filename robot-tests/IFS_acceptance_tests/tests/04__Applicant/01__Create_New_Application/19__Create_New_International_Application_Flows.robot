@@ -32,7 +32,9 @@ Non registered UK based users confirm their organisation details and create an a
     When the user enters text to a text field                                                   name = organisationSearchName  Nomensa
     And the user clicks the button/link                                                         name = search-organisation
     And the user clicks the button/link                                                         link = NOMENSA LTD
-    And the user confirms organisation details and create an account for non-registered user    Tony  Blair  ${uk_based_applicant_1}  ${short_password}
+    And the user verifies their organisation details
+    And the user clicks the button/link                               name = save-organisation
+    And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_1}  ${short_password}
     Then the user should not see an error in the page
 
 Non registered international users apply for an international competition
@@ -47,8 +49,10 @@ Non registered international users apply for an international competition
 Non registered international users can create an account and provide international organisation details
     [Documentation]    IFS-7198  IFS-7199
     [Tags]  HappyPath
-    Given the user provides international organisation details                                    564789  London  cana  Canada  International_Ltd.  international-organisation-details-cta
-    When the user confirms organisation details and create an account for non-registered user     Roselin  Messy  ${lead_international_email_1}  ${short_password}
+    Given the user provides international organisation details        564789  London  cana  Canada  International_Ltd.  international-organisation-details-cta
+    When the user verifies their organisation details
+    And the user clicks the button/link                               id = international-confirm-organisation-cta
+    And the user enters the details and clicks the create account     Roselin  Messy  ${lead_international_email_1}  ${short_password}
     Then the user should not see an error in the page
 
 Registered users applying for an international competition see no international organisation if there is none
@@ -64,7 +68,7 @@ Registered users applying for an international competition see no international 
 Registered users applying for an international competition see only UK based organisations if they are UK based
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-     Given the user clicks the button/link              link = Back
+     Given the user clicks the button/link              link = Back to tell us where your organisation is based
      When user selects where is organisation based      isNotInternational
      Then the user should see the element               jQuery = dt:contains("Empire Ltd")
      And the user should see the element                link = Apply with a different organisation
@@ -77,14 +81,13 @@ Registered UK based user applies for International Competition
     And the user clicks the button/link         name = select-company-type
     And the user clicks the Not on companies house link
     Then the user verifies their organisation details
+    And the user clicks the button/link         name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Application team
-    And the user clicks the button/link           link = Add a partner organisation
-    When the user adds a partner organisation     Empire (french)  Stephan Marriek  ${lead_international_email}
-    And the user clicks the button/link           jQuery = button:contains("Invite partner organisation")
+    When invite partner organisation              Empire (french)  Stephan Marriek  ${lead_international_email}
     Then the user should see the element          jQuery = td:contains("Steve") ~ td:contains("Lead")
     And the user should see the element           jQuery = td:contains("Stephan Marriek (pending for")
 
@@ -99,7 +102,7 @@ Registered user(Partner organisation) logs in and select where their organisatio
     [Documentation]    IFS-7197 IFS-7252
     [Tags]  HappyPath
     When logging in and error checking                                                      ${lead_international_email}  ${short_password}
-    Then the user should see organisations list according to organisation type selected     Join with a different organisation.
+    Then the user should see organisations list according to organisation type selected     Join with a different organisation.  jQuery = dt:contains("Empire (french)")
 
 Partner user provides non-UK based organisation details and verifies them
     [Documentation]    IFS-7198 IFS-7199
@@ -107,29 +110,85 @@ Partner user provides non-UK based organisation details and verifies them
     Given the user clicks the button/link                         link = Join with a different organisation.
     When the user provides international organisation details     3242442  Test  Abu  Abu Dhabi  International Organisation Ltd.  international-organisation-details-cta
     And the user verifies their organisation details
+    And the user clicks the button/link                           id = international-confirm-organisation-cta
     Then the user should see the element                          jQuery = h2:contains("Application progress")
+
+Registered UK based lead user invites partner organisation(with non-registered email/user)
+    [Documentation]    IFS-7197
+    [Tags]  HappyPath
+    [Setup]  logout as user
+    Given Registered UK based lead user goes to the application team
+    When invite partner organisation              New Empire  Tim Simpson  ${partner_international_email}
+    Then the user should see the element          jQuery = td:contains("Steve") ~ td:contains("Lead")
+    And the user should see the element           jQuery = td:contains("Tim Simpson (pending for")
+
+Partner organisation(with non-registered email/user) accepts the invite
+    [Documentation]    IFS-7197
+    [Tags]  HappyPath
+    [Setup]  Logout as user
+    When the user reads his email and clicks the link    ${partner_international_email}  Invitation to collaborate in ${createApplicationOpenInternationalCompetition}  You will be joining as part of the organisation  2
+    Then the user clicks the button/link                 jQuery = a:contains("Yes, accept invitation")
+
+Non-Registered user(Partner organisation) provide organisation details and verifies them
+    [Documentation]    IFS-7199
+    [Tags]  HappyPath
+    Given user selects where is organisation based                isInternational
+    When the user provides international organisation details     435353543  Helsinki  Finland  Finland  New Empire  international-organisation-details-cta
+    And the user verifies their organisation details
+    And the user clicks the button/link                           id = international-confirm-organisation-cta
+    Then The user should not see an error in the page
+
+Non-Registered user(Partner organisation) create an account
+    [Documentation]    IFS-7198 IFS-7199
+    [Tags]  HappyPath
+    When Partner user enters the details and clicks the create account     Tim  Simpson  ${short_password}
+    Then The user should not see an error in the page
 
 Registered lead users applying for an international competition see only International organisations if they are non-UK based
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-    Given log in as a different user                                                        ${lead_international_email}  ${short_password}
-    And the user select the competition and starts application                              ${createApplicationOpenInternationalCompetition}
+    Given the user select the competition and starts application        ${createApplicationOpenInternationalCompetition}
+    And the user clicks the button/link                                 jQuery = .govuk-grid-column-one-half a:contains("Sign in")
+    And logging in and error checking                                   ${lead_international_email}  ${short_password}
     When check if there is an existing application in progress for this competition
-    Then the user should see organisations list according to organisation type selected     Apply with a different organisation
+    Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = span:contains("Empire (french)")
 
 *** Keywords ***
+Partner user enters the details and clicks the create account
+    [Arguments]   ${first_name}  ${last_name}  ${password}
+    Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
+    Input Text                       id = firstName  ${first_name}
+    Input Text                       id = lastName  ${last_name}
+    Input Text                       id = phoneNumber  234324234
+    Input Password                   id = password  ${password}
+    the user selects the checkbox    termsAndConditions
+    the user selects the checkbox    allowMarketingEmails
+    the user clicks the button/link  name = create-account
+
+invite partner organisation
+    [Arguments]  ${org_name}  ${user_name}  ${email}
+    the user clicks the button/link          link = Add a partner organisation
+    the user adds a partner organisation     ${org_name}  ${user_name}  ${email}
+    the user clicks the button/link          jQuery = button:contains("Invite partner organisation")
+
+Registered UK based lead user goes to the application team
+    the user select the competition and starts application      ${createApplicationOpenInternationalCompetition}
+    the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
+    Logging in and Error Checking                               ${lead_applicant}  ${short_password}
+    the user navigates to the page                              ${APPLICANT_DASHBOARD_URL}
+    the user clicks the button/link                             link = Untitled application (start here)
+    the user clicks the button/link                             link = Application team
+
 the user should see organisations list according to organisation type selected
-    [Arguments]  ${arg}
+    [Arguments]  ${arg}  ${locator}
     user selects where is organisation based     isNotInternational
     the user should not see the element          link = ${arg}
-    the user clicks the button/link              link = Back
+    the user clicks the button/link              link = Back to tell us where your organisation is based
     user selects where is organisation based     isInternational
-    the user should see the element              jQuery = dt:contains("Empire (french)")
+    the user should see the element              ${locator}
 
 the user confirms organisation details and create an account for non-registered user
     [Arguments]  ${firstname}  ${lastname}  ${email}  ${password}
-    the user verifies their organisation details
-    the user enters the details and clicks the create account   ${firstname}  ${lastname}  ${email}  ${password}
 
 user selects where is organisation based
     [Arguments]  ${org_type}
@@ -162,11 +221,18 @@ the user provides international organisation details
     the user clicks the button/link          jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link          id = ${button_id}
 
+the user provides uk based organisation details
+    [Arguments]  ${org_search_name}  ${org}
+    the user selects the radio button        organisationTypeId  radio-1
+    the user clicks the button/link          name = select-company-type
+    the user enters text to a text field     name = organisationSearchName  ${org_search_name}
+    the user clicks the button/link          name = search-organisation
+    the user clicks the button/link          link = ${org}
+
 the user verifies their organisation details
     the user should see the element         jQuery = p:contains("This organisation will lead the application.")
     the user should not see the element     jQuery = p:contains("Your organisation must be UK based to receive funding from Innovate UK.")
     the user should see the element         jQuery = h2:contains("Is your organisation based in the UK?")
-    the user clicks the button/link         id = international-confirm-organisation-cta
 
 the user gets an error message on not filling mandatory fields
     [Arguments]  ${button_id}
