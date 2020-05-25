@@ -72,7 +72,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
     }
 
     @PostMapping
-    public String submitOrganisationalEligibilitySectionDetails(@Valid @ModelAttribute("competitionSetupForm") OrganisationalEligibilityForm competitionSetupForm,
+    public String submitOrganisationalEligibilitySectionDetails(@Valid @ModelAttribute("competitionSetupForm") OrganisationalEligibilityForm organisationalEligibilityForm,
                                                                 BindingResult bindingResult,
                                                                 ValidationHandler validationHandler,
                                                                 @PathVariable("competitionId") long competitionId,
@@ -81,19 +81,19 @@ public class CompetitionSetupOrganisationalEligibilityController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Supplier<String> successView = () ->
-                competitionSetupForm.getInternationalOrganisationsApplicable() ?
+                organisationalEligibilityForm.getInternationalOrganisationsApplicable() ?
                         format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()) :
                         format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath());
 
 
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, ORGANISATIONAL_ELIGIBILITY));
-            model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
+            model.addAttribute(COMPETITION_SETUP_FORM_KEY, organisationalEligibilityForm);
             return "competition/setup";
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(competitionSetupForm, competition, ORGANISATIONAL_ELIGIBILITY);
+            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(organisationalEligibilityForm, competition, ORGANISATIONAL_ELIGIBILITY);
             return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, successView);
         });
