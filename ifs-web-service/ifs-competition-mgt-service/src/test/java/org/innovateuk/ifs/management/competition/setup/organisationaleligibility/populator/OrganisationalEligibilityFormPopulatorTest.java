@@ -34,7 +34,10 @@ public class OrganisationalEligibilityFormPopulatorTest extends BaseUnitTest {
     public void populateForm() {
         long competitionId=100L;
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).build();
-        CompetitionOrganisationConfigResource configResource = newCompetitionOrganisationConfigResource().withInternationalOrganisationsAllowed(true).build();
+        CompetitionOrganisationConfigResource configResource = newCompetitionOrganisationConfigResource()
+                .withInternationalOrganisationsAllowed(true)
+                .withInternationalLeadOrganisationAllowed(true)
+                .build();
 
         when(competitionOrganisationConfigRestService.findByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(configResource));
 
@@ -42,6 +45,4 @@ public class OrganisationalEligibilityFormPopulatorTest extends BaseUnitTest {
 
         assertTrue(result.getInternationalOrganisationsApplicable());
     }
-
-
 }
