@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestS
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationViewModelPopulator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +42,9 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
 
     @Mock
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+
+    @Mock
+    private LeadInternationalOrganisationViewModelPopulator leadInternationalOrganisationViewModelPopulator;
 
     @Override
     protected CompetitionSetupOrganisationalEligibilityController supplyControllerUnderTest() {
