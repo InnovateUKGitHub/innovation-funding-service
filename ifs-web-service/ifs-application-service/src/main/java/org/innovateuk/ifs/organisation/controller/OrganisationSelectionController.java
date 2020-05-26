@@ -28,14 +28,12 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
-import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE;
-import static org.innovateuk.ifs.organisation.controller.OrganisationCreationLeadTypeController.NOT_ELIGIBLE;
+import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.ORGANISATION_TYPE;
+import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
 
 @RequestMapping("/organisation/select")
-@SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
-        " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
-        securedType = OrganisationSelectionController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationSelectionController.class)
+@PreAuthorize("permitAll")
 @Controller
 public class OrganisationSelectionController {
 
@@ -63,15 +61,19 @@ public class OrganisationSelectionController {
                                             UserResource user,
                                             Model model) {
         if (cannotSelectOrganisation(user, request)) {
-            return "redirect:" + nextPageInFlow(request);
+            return "redirect:" + nextPageInFlow();
         }
         model.addAttribute("model", organisationSelectionViewModelPopulator.populate(user,
                 request,
-                nextPageInFlow(request)));
+                nextPageInFlow()));
         return "registration/organisation/select-organisation";
     }
 
     @PostMapping
+    @SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
+            " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
+            securedType = OrganisationSelectionController.class)
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
     public String selectOrganisation(HttpServletRequest request,
                                      HttpServletResponse response,
                                      @ModelAttribute(FORM_ATTR_NAME) @Valid OrganisationSelectionForm form,
@@ -95,12 +97,8 @@ public class OrganisationSelectionController {
         return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
     }
 
-    private String nextPageInFlow(HttpServletRequest request) {
-        if (registrationCookieService.isCollaboratorJourney(request)) {
-            return "/organisation/create/contributor-organisation-type";
-        }
-
-        return "/organisation/create/lead-organisation-type";
+    private String nextPageInFlow() {
+        return "/organisation/create/organisation-type";
     }
 
     private Supplier<String> validateEligibility(HttpServletRequest request, HttpServletResponse response, UserResource user, OrganisationSelectionForm form) {
@@ -109,7 +107,7 @@ public class OrganisationSelectionController {
                 CompetitionResource competition = competitionRestService.getCompetitionById(registrationCookieService.getCompetitionIdCookieValue(request).get()).getSuccess();
                 OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
                 if (!competition.getLeadApplicantTypes().contains(organisation.getOrganisationType())) {
-                    return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+                    return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
                 }
             }
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());

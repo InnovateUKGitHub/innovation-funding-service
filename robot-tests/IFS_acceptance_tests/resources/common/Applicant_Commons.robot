@@ -385,7 +385,7 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
-    the user selects the radio button           organisationType    radio-${organisationType}
+    the user selects the radio button           organisationTypeId    radio-${organisationType}
     the user clicks the button/link             jQuery = .govuk-button:contains("Save and continue")
     the user should see the element             jQuery = h1:contains("Enter organisation details")
     the user selects his organisation in Companies House  innovate  INNOVATE LTD

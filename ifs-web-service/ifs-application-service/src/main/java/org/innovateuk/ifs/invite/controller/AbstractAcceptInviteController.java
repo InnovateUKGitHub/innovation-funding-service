@@ -28,9 +28,7 @@ public abstract class AbstractAcceptInviteController {
     }
 
     protected final void clearDownInviteFlowCookies(HttpServletResponse response) {
-        registrationCookieService.deleteOrganisationCreationCookie(response);
-        registrationCookieService.deleteOrganisationIdCookie(response);
-        registrationCookieService.deleteInviteHashCookie(response);
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
     }
 
     protected final String alreadyAcceptedView(HttpServletResponse response) {

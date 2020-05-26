@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.organisation.controller.OrganisationCreationLeadTypeController;
+import org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationLeadTypeController> {
+public class OrganisationCreationTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationTypeController> {
 
     @Mock
     private RegistrationCookieService registrationCookieService;
@@ -41,8 +41,8 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Mock
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
-    protected OrganisationCreationLeadTypeController supplyControllerUnderTest() {
-        return new OrganisationCreationLeadTypeController();
+    protected OrganisationCreationTypeController supplyControllerUnderTest() {
+        return new OrganisationCreationTypeController();
     }
 
     @Before

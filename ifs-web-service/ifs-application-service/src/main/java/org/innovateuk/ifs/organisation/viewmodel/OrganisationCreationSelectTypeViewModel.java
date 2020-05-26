@@ -8,18 +8,19 @@ import java.util.List;
  * View model for Organisation creation lead applicant - choosing organisation type
  */
 public class OrganisationCreationSelectTypeViewModel {
-    private List<OrganisationTypeResource> types;
+    private final List<OrganisationTypeResource> types;
+    private final boolean leadJourney;
 
-    public OrganisationCreationSelectTypeViewModel(List<OrganisationTypeResource> types) {
+    public OrganisationCreationSelectTypeViewModel(List<OrganisationTypeResource> types, boolean leadJourney) {
         this.types = types;
+        this.leadJourney = leadJourney;
     }
 
     public List<OrganisationTypeResource> getTypes() {
         return types;
     }
 
-    public void setTypes(List<OrganisationTypeResource> types) {
-        this.types = types;
+    public boolean isLeadJourney() {
+        return leadJourney;
     }
-
 }

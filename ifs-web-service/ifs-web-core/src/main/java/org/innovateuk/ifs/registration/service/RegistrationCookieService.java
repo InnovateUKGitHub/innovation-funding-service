@@ -131,6 +131,8 @@ public class RegistrationCookieService {
         deleteInviteHashCookie(response);
         deleteCompetitionIdCookie(response);
         deleteProjectInviteHashCookie(response);
+        deleteOrganisationInternationalCookie(response);
+        deleteOrganisationInternationalDetailsCookie(response);
     }
 
     public boolean isCollaboratorJourney(HttpServletRequest request) {

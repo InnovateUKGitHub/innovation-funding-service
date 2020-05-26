@@ -4,15 +4,18 @@ Documentation     IFS-7197 As a non-UK based business I can apply for Internatio
 ...               IFS-7198 As a non-UK based business I can create a new account to apply to an International Competition..
 ...
 ...               IFS-7199 Read only page for organisation details should not have a banner mentioning only UK based organisations can apply for the International Competition..
-Suite Setup       The guest user opens the browser
-Suite Teardown    The user closes the browser
+Suite Setup       Custom Suite Setup
+Suite Teardown    Custom Suite teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/PS_Common.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
+Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
+${InternationalApplicationTitle}                       International application
+${InternationalCompetitionTitle}                       International Competition
 
 *** Test Cases ***
 Non registered UK based users apply for an international competition
@@ -153,6 +156,35 @@ Registered lead users applying for an international competition see only Interna
     When check if there is an existing application in progress for this competition
     Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = span:contains("Empire (french)")
 
+#Creating the flow testing partner org invite in project set up for IFS-7197
+Applicant is able to submit international application
+    [Documentation]  IFS-7197
+    [Setup]  the user navigates to the page    ${APPLICANT_DASHBOARD_URL}
+    When the user clicks the button/link       link = International application
+    Then the applicant submits the application
+
+Moving International Competition to Project Setup
+    [Documentation]  IFS-7197
+    [Setup]  Get competitions id and set it as suite variable     ${InternationalCompetitionTitle}
+    Given Log in as a different user                   &{internal_finance_credentials}
+    Then moving competition to Closed                  ${competitionId}
+    And making the application a successful project    ${competitionId}  ${InternationalApplicationTitle}
+    And moving competition to Project Setup            ${competitionId}
+    [Teardown]  Requesting IDs of this Project
+
+The user is able to complete Project details section
+    [Documentation]  IFS-7197
+    [Setup]  the user logs-in in new browser     ${lead_international_email}  ${short_password}
+    Given the user navigates to the page         ${server}/project-setup/project/${ProjectID}
+    When the user is able to complete project details section
+    Then the user should see the element         css = ul li.complete:nth-child(1)
+
+The user is able to complete Project team section
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  the user clicks the button/link       link = Project team
+    Given the user completes the project team section
+    Then the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+
 *** Keywords ***
 Partner user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${password}
@@ -241,3 +273,32 @@ the user gets an error message on not filling mandatory fields
     the user should see the element     link = The first line of the address cannot be blank.
     the user should see the element     link = The town cannot be blank.
     the user should see the element     link = The country cannot be blank.
+
+The user completes the application
+    the user clicks the button/link                          link = Application details
+    the user fills in the Application details                ${InternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes Application Team
+    the lead applicant fills all the questions and marks as complete(programme)
+    the user navigates to Your-finances page                 ${InternationalApplicationTitle}
+    the user marks the finances as complete                  ${InternationalApplicationTitle}   Calculate  52,214  yes
+    the user accept the competition terms and conditions     Return to application overview
+
+Requesting IDs of this Project
+    ${ProjectID} =  get project id by name    ${InternationalApplicationTitle}
+    Set suite variable    ${ProjectID}
+    ${ApplicationID} =  get application id by name    ${InternationalApplicationTitle}
+    Set suite variable    ${ApplicationID}
+
+Get competitions id and set it as suite variable
+    [Arguments]  ${competitionTitle}
+    ${InternationalCompetitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${competitionId}
+
+Custom Suite Setup
+    The guest user opens the browser
+    Set predefined date variables
+    Connect to database  @{database}
+
+Custom Suite teardown
+    Close browser and delete emails
+    Disconnect from database
