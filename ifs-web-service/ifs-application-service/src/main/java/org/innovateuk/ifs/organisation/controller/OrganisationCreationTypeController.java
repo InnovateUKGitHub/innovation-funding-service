@@ -32,10 +32,10 @@ import java.util.Optional;
  */
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationLeadTypeController.class)
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.ORGANISATION_TYPE)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationTypeController.class)
 @PreAuthorize("permitAll")
-public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
+public class OrganisationCreationTypeController extends AbstractOrganisationCreationController {
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
     public static final String COMPETITION_ID = "competitionId";
@@ -66,7 +66,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
         }
 
-        return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+        return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
     }
 
     @PostMapping
@@ -87,7 +87,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrganisationTypeToCreationForm(response, organisationTypeForm);
 
-            if (!isAllowedToLeadApplication(organisationTypeId, request)) {
+            if (registrationCookieService.isLeadJourney(request) && !isAllowedToLeadApplication(organisationTypeId, request)) {
                 return redirectToNotEligibleUrl();
             }
 
@@ -100,12 +100,12 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             organisationForm.setTriedToSave(true);
             OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate(request);
             model.addAttribute("model", selectOrgTypeViewModel);
-            return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+            return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
         }
     }
 
     private String redirectToNotEligibleUrl() {
-        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
     }
 
     @GetMapping(NOT_ELIGIBLE)

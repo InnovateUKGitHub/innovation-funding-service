@@ -38,6 +38,7 @@ public class OrganisationCreationSelectTypePopulator {
 
         return new OrganisationCreationSelectTypeViewModel(
                         simpleFilter(organisationTypeResourceList,
-                                o -> OrganisationTypeEnum.getFromId(o.getId()) != null));
+                                o -> OrganisationTypeEnum.getFromId(o.getId()) != null),
+                registrationCookieService.isLeadJourney(request));
     }
 }

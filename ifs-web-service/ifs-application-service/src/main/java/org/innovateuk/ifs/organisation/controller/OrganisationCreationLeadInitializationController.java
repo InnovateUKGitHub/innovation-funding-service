@@ -42,6 +42,6 @@ public class OrganisationCreationLeadInitializationController extends AbstractOr
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
         }
 
-        return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+        return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE;
     }
 }

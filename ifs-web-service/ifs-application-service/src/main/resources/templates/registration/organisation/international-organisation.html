@@ -24,8 +24,7 @@
 
         <p class="govuk-body govuk-!-margin-top-6">Is your organisation based in the UK?</p>
 
-        <form id="lead-organisation-type-form"
-              th:object="${organisationForm}"
+        <form th:object="${organisationForm}"
               th:action="@{/organisation/create/international-organisation}" method="POST" novalidate="novalidate">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{international}')} ? 'govuk-form-group--error'">
                 <fieldset id="international" class="govuk-fieldset">

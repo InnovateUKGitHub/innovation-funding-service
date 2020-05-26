@@ -107,7 +107,7 @@ Invite and accept the invitation
     logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
-    When the user selects the radio button              organisationType    2
+    When the user selects the radio button              organisationTypeId    2
     And the user clicks the button/link                 css = .govuk-button[type="submit"]
     the research user finds org in companies house      Live  University of Liverpool
     And the invited user fills the create account form  Arsene    Wenger
