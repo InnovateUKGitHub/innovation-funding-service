@@ -20,6 +20,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
@@ -103,6 +104,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private ProjectUserMapper projectUserMapper;
@@ -321,33 +325,17 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, PostcodeAndTownResource postcodeAndTown) {
-
         Function<PostcodeAndTownResource, ServiceResult<Void>> validation;
         ExceptionThrowingFunction<PartnerOrganisation, PartnerOrganisation> settingLocation;
 
-        if (StringUtils.isNotBlank(postcodeAndTown.getPostcode())) {
-            validation = ProjectDetailsServiceImpl::validatePostcode;
-            settingLocation = partnerOrganisation -> {
-                partnerOrganisation.setPostcode(postcodeAndTown.getPostcode().toUpperCase());
-                return partnerOrganisation;
-            };
-        } else {
+        Optional<Organisation> organisation = organisationRepository.findById(composite.getOrganisationId());
+
+        if (organisation.isPresent() && organisation.get().isInternational()) {
             validation = ProjectDetailsServiceImpl::validateTown;
-            settingLocation = partnerOrganisation -> {
-                        String town = postcodeAndTown.getTown();
-                        String townFixedCase = Stream.of(town.split(" "))
-                                .filter(w -> w.length() > 0)
-                                .map(word -> {
-                                    String wordCased = word.substring(0, 1).toUpperCase();
-                                    if (word.length() > 1) {
-                                        wordCased = wordCased + word.substring(1).toLowerCase();
-                                    }
-                                    return wordCased;
-                                })
-                                .collect(Collectors.joining(" "));
-                partnerOrganisation.setInternationalLocation(townFixedCase);
-                return partnerOrganisation;
-            };
+            settingLocation = settingTown(postcodeAndTown);
+        } else {
+            validation = ProjectDetailsServiceImpl::validatePostcode;
+            settingLocation = settingPostcode(postcodeAndTown);
         }
 
         return validation.apply(postcodeAndTown).
@@ -361,8 +349,37 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                 projectDetailsWorkflowHandler.projectLocationAdded(partnerOrganisation.getProject(), projectUser)));
     }
 
+    private static ExceptionThrowingFunction<PartnerOrganisation, PartnerOrganisation> settingPostcode(PostcodeAndTownResource postcodeAndTown) {
+        return partnerOrganisation -> {
+            partnerOrganisation.setPostcode(postcodeAndTown.getPostcode().toUpperCase());
+            return partnerOrganisation;
+        };
+    }
+
+    private static ExceptionThrowingFunction<PartnerOrganisation, PartnerOrganisation> settingTown(PostcodeAndTownResource postcodeAndTown) {
+        return partnerOrganisation -> {
+            String town = postcodeAndTown.getTown();
+            String townFixedCase = Stream.of(town.split(" "))
+                    .filter(w -> w.length() > 0)
+                    .map(word -> {
+                        String wordCased = word.substring(0, 1).toUpperCase();
+                        if (word.length() > 1) {
+                            wordCased = wordCased + word.substring(1).toLowerCase();
+                        }
+                        return wordCased;
+                    })
+                    .collect(Collectors.joining(" "));
+            partnerOrganisation.setInternationalLocation(townFixedCase);
+            return partnerOrganisation;
+        };
+    }
+
     private static ServiceResult<Void> validatePostcode(PostcodeAndTownResource postcodeAndTown) {
         String postcode = postcodeAndTown.getPostcode();
+
+        if (StringUtils.isBlank(postcode)) {
+            return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
+        }
         if (StringUtils.length(postcode) > MAX_POSTCODE_LENGTH) {
             return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST));
         }

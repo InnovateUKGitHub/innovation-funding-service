@@ -601,7 +601,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
-
     }
 
     @Test
@@ -685,6 +684,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().withId(projectId).build();
         when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
@@ -705,6 +705,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().withId(projectId).build();
         when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
@@ -725,12 +726,38 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         Project existingProject = newProject().withId(projectId).build();
         when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isSuccess());
 
         assertEquals("The Hague", partnerOrganisationInDb.getInternationalLocation());
+    }
+
+    @Test
+    public void updatePartnerProjectLocationWhenInternationalLocationIsNullOrEmpty() {
+        long projectId = 1L;
+        long organisationId = 2L;
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
+
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+        postcodeAndTown.setTown("");
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+        postcodeAndTown.setTown("    ");
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
     }
 
     @Test
@@ -766,6 +793,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
