@@ -151,38 +151,38 @@ Non-Registered user(Partner organisation) create an account
     When Partner user enters the details and clicks the create account     Tim  Simpson  ${short_password}
     Then The user should not see an error in the page
 
-#Registered International lead user applying for an international competition see only International organisations
-#    [Documentation]    IFS-7252
-#    [Tags]  HappyPath
-#    Given the user select the competition and starts application                            ${createApplicationOpenInternationalCompetition}
-#    And the user clicks the button/link                                                     jQuery = .govuk-grid-column-one-half a:contains("Sign in")
-#    And logging in and error checking                                                       ${lead_international_email}  ${short_password}
-#    When check if there is an existing application in progress for this competition
-#    Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = dt:contains("Empire (french)")
-#
-#Registered International lead user applies for an international competition
-#    [Documentation]    IFS-7197
-#    [Tags]  HappyPath
-#    Given the user clicks the button/link                         link = Apply with a different organisation
-#    When the user provides international organisation details     343434435  Sydney  Australia  Australia  New Empire 1  international-organisation-details-cta
-#    Then the user verifies their organisation details
-#    And the user clicks the button/link                           id = international-confirm-organisation-cta
-#
-#Applicant is able to complete and submit international application
-#    [Documentation]  IFS-7197
-#    [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
-#    Given the user clicks the button/link       link = Untitled application (start here)
-#    When the user completes the application
-#    Then the applicant submits the application
-#
-#Moving International Competition to Project Setup
-#    [Documentation]  IFS-7197
-#    [Setup]  Get competitions id and set it as suite variable     ${InternationalCompetitionTitle}
-#    Given Log in as a different user                              &{internal_finance_credentials}
-#    Then moving competition to Closed                             ${InternationalCompetitionId}
-#    And making the application a successful project               ${InternationalCompetitionId}  ${InternationalApplicationTitle}
-#    And moving competition to Project Setup                       ${InternationalCompetitionId}
-#    [Teardown]  Requesting IDs of this Project
+Registered International lead user applying for an international competition see only International organisations
+    [Documentation]    IFS-7252
+    [Tags]  HappyPath
+    Given the user select the competition and starts application                            ${createApplicationOpenInternationalCompetition}
+    And the user clicks the button/link                                                     jQuery = .govuk-grid-column-one-half a:contains("Sign in")
+    And logging in and error checking                                                       ${lead_international_email}  ${short_password}
+    When check if there is an existing application in progress for this competition
+    Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = dt:contains("Empire (french)")
+
+Registered International lead user applies for an international competition
+    [Documentation]    IFS-7197
+    [Tags]  HappyPath
+    Given the user clicks the button/link                         link = Apply with a different organisation
+    When the user provides international organisation details     343434435  Sydney  Australia  Australia  New Empire 1  international-organisation-details-cta
+    Then the user verifies their organisation details
+    And the user clicks the button/link                           id = international-confirm-organisation-cta
+
+Applicant is able to complete and submit international application
+    [Documentation]  IFS-7197
+    [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
+    Given the user clicks the button/link       link = Untitled application (start here)
+    When the user completes the application
+    Then the applicant submits the application
+
+Moving International Competition to Project Setup
+    [Documentation]  IFS-7197
+    [Setup]  Get competitions id and set it as suite variable     ${InternationalCompetitionTitle}
+    Given Log in as a different user                              &{internal_finance_credentials}
+    Then moving competition to Closed                             ${InternationalCompetitionId}
+    And making the application a successful project               ${InternationalCompetitionId}  ${InternationalApplicationTitle}
+    And moving competition to Project Setup                       ${InternationalCompetitionId}
+    [Teardown]  Requesting IDs of this Project
 
 *** Keywords ***
 Partner user enters the details and clicks the create account
