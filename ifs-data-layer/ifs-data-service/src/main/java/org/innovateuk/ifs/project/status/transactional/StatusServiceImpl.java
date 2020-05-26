@@ -176,7 +176,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
         ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, organisation);
-        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), organisation.getId(), bankDetails, financeContactStatus);
+        ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), organisation, bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, organisation, isQueryActionRequired);
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : partnerProjectLocationStatus;
         ProjectActivityStates projectTeamStatus = isLead? createProjectTeamStatus(project) : financeContactStatus;
@@ -308,10 +308,10 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private ProjectActivityStates createBankDetailStatus(long projectId, long organisationId, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
+    private ProjectActivityStates createBankDetailStatus(long projectId, Organisation organisation, final Optional<BankDetails> bankDetails, ProjectActivityStates financeContactStatus) {
         if (bankDetails.isPresent()) {
             return bankDetails.get().isApproved() ? COMPLETE : PENDING;
-        } else if (!isOrganisationSeekingFunding(projectId, organisationId)) {
+        } else if (organisation.isInternational() || !isOrganisationSeekingFunding(projectId, organisation.getId())) {
             return NOT_REQUIRED;
         } else if (COMPLETE.equals(financeContactStatus)) {
             return ACTION_REQUIRED;
