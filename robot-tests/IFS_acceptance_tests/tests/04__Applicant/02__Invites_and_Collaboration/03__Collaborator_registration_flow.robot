@@ -7,7 +7,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
-${SELECT_ORGANISATION}    ${SERVER}/organisation/create/organisation-type
+${SELECT_ORGANISATION}    ${SERVER}/organisation/create/contributor-organisation-type
 ${terms_and_conditions_user_id}  ${user_ids['${terms_and_conditions_login_credentials["email"]}']}
 # This file uses the Application: Climate science the history of Greenland's ice    (Lead applcant: Steve.Smith)
 
@@ -24,26 +24,25 @@ User cannot continue if an organisation type is not selected
     Given browser validations have been disabled
     When the user clicks the button/link           jQuery = .govuk-button:contains("Save and continue")
     Then the user should see a field error         Please select an organisation type.
-    Given the user selects the radio button        organisationTypeId    3
+    Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
 
 User is able to select only one type
     [Documentation]    INFUND-1005
     Given the user navigates to the page                 ${SELECT_ORGANISATION}
-    When the user selects the radio button               organisationTypeId    2
-    And the user selects the radio button                organisationTypeId    1
+    When the user selects the radio button               organisationType    2
+    And the user selects the radio button                organisationType    1
     Then the radio button should have the new selection  1
 
 The type of organisation navigates to the correct page
     [Documentation]    INFUND-1780, INFUND-1231, INFUND 8531
     [Tags]
-    When the user should see the element           jQuery = .govuk-hint:contains("UK based business.")
-    And the user selects the radio button          organisationTypeId    1
+    When the user selects the radio button          organisationType    1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     Then the user should see the element           jQuery = div label:contains("Enter your organisation name or registration number.")
     When the user goes back to the previous page
     And the user should see the element            jQuery = .govuk-hint:contains("Higher education and organisations registered with Je-S.")
-    Given the user selects the radio button        organisationTypeId    2
+    Given the user selects the radio button        organisationType    2
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     Then the user should see the element           jQuery = span:contains("This is the organisation that you work for, this will search all organisations available on Je-S.")
     And the user enters text to a text field       id = organisationSearchName    zoo
@@ -54,12 +53,12 @@ The type of organisation navigates to the correct page
     Then the user should see the element           jQuery = span:contains("This is the organisation that you work for, this will search all organisations available on Je-S.")
     Given the user clicks the button/link          jQuery = a:contains("Back to choose your organisation type")
     Then the user should see the element           jQuery = .govuk-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
-    Given the user selects the radio button        organisationTypeId    3
+    Given the user selects the radio button        organisationType    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     And the user should see the element            jQuery = div label:contains("Enter your organisation name or registration number.")
     When the user goes back to the previous page
     And the user should see the element            jQuery = .govuk-hint:contains("A not-for-profit public sector body or charity working on innovation.")
-    Given the user selects the radio button        organisationTypeId    4
+    Given the user selects the radio button        organisationType    4
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     And the user should see the element            jQuery = div label:contains("Enter your organisation name or registration number.")
     And the user goes back to the previous page
@@ -69,7 +68,7 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     [Tags]  HappyPath
     Given the user navigates to the page           ${INVITE_LINK}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user selects the radio button          organisationTypeId    3
+    And the user selects the radio button          organisationType    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     When the user clicks the button/link           jQuery = .govuk-button:contains("Search")
     Then the user should see a field error         Please enter an organisation name to search.
@@ -117,7 +116,7 @@ Custom Suite Setup
 
 the radio button should have the new selection
     [Arguments]    ${ORG_TYPE}
-    Radio Button Should Be Set To    organisationTypeId    ${ORG_TYPE}
+    Radio Button Should Be Set To    organisationType    ${ORG_TYPE}
 
 the user enters organisation details
     [Arguments]    ${orgName}

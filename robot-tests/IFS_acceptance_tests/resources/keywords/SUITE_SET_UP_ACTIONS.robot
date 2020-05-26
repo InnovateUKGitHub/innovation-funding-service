@@ -1,5 +1,8 @@
 *** Settings ***
 Resource          ../defaultResources.robot
+Resource          ../../../resources/common/Applicant_Commons.robot
+
+
 
 *** Keywords ***
 log in and create new application if there is not one already
