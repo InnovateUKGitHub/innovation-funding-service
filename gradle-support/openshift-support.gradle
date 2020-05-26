@@ -62,10 +62,12 @@ task getBuildProperties(type: Exec, dependsOn: osApplyBuildEnvProperties) {
 
 task readBuildEnvProperties() {
     File file = rootProject.file("gradle-support/build-env-properties.gradle")
-    println file.text
-    println ""
-    file.readLines().each {
-        println it
+    if (file.exists()) {
+        println file.text
+        println ""
+        file.readLines().each {
+            println it
+        }
     }
 }
 
