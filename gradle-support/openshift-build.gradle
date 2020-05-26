@@ -154,10 +154,10 @@ def getRemoteOCCredentials() {
 def getNexusCredentials() {
     def dockerRegistryCredentials = new DockerRegistryCredentials()
     dockerRegistryCredentials.url = project.nexusRegistry
-    //dockerRegistryCredentials.username = project.findProperty("nexus_username")
-    dockerRegistryCredentials.username = project.nexusUsername
-    //dockerRegistryCredentials.password = project.findProperty("nexus_password")
-    dockerRegistryCredentials.password = project.nexusPassword
+    dockerRegistryCredentials.username = project.findProperty("nexus_username")
+    //dockerRegistryCredentials.username = project.nexusUsername
+    dockerRegistryCredentials.password = project.findProperty("nexus_password")
+    //dockerRegistryCredentials.password = project.nexusPassword
     return dockerRegistryCredentials
 }
 
