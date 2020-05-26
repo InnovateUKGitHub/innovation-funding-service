@@ -240,11 +240,11 @@ the user provides international organisation details
     [Arguments]  ${company_reg_no}  ${international_org_town}  ${international_org_country}  ${international_org_country_complete}  ${international_org_name}  ${button_id}
     the user selects the radio button        organisationTypeId  radio-1
     the user clicks the button/link          name = select-company-type
-    The user enters text to a text field     id = name  ${international_org_name}
+    input text                               id = name  ${international_org_name}
     the user gets an error message on not filling mandatory fields     ${button_id}
-    The user enters text to a text field     id = companyRegistrationNumber  ${company_reg_no}
-    The user enters text to a text field     id = addressLine1  ${internationalOrganisationFirstLineAddress}
-    The user enters text to a text field     id = town  ${international_org_town}
+    input text                               id = companyRegistrationNumber  ${company_reg_no}
+    input text                               id = addressLine1  ${internationalOrganisationFirstLineAddress}
+    input text                               id = town  ${international_org_town}
     input text                               id = country  ${international_org_country}
     the user clicks the button/link          jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link          id = ${button_id}
