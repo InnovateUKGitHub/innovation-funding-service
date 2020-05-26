@@ -30,11 +30,11 @@ Non registered UK based users apply for an international competition
 Non registered UK based users confirm their organisation details and create an account
     [Documentation]    IFS-7199
     [Tags]  HappyPath
-    Given the user selects the radio button                                                     organisationTypeId  radio-1
-    And the user clicks the button/link                                                         name = select-company-type
-    When the user enters text to a text field                                                   name = organisationSearchName  Nomensa
-    And the user clicks the button/link                                                         name = search-organisation
-    And the user clicks the button/link                                                         link = NOMENSA LTD
+    Given the user selects the radio button                           organisationTypeId  radio-1
+    And the user clicks the button/link                               name = select-company-type
+    When the user enters text to a text field                         name = organisationSearchName  Nomensa
+    And the user clicks the button/link                               name = search-organisation
+    And the user clicks the button/link                               link = NOMENSA LTD
     And the user verifies their organisation details
     And the user clicks the button/link                               name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_1}  ${short_password}
@@ -90,30 +90,34 @@ Registered UK based lead user invites partner organisation(with registered email
     [Documentation]    IFS-7197
     [Tags]  HappyPath
     Given the user clicks the button/link         link = Application team
-    When invite partner organisation              Empire (french)  Stephan Marriek  ${lead_international_email}
+    When invite partner organisation              Test Empire  Daniel Tan  ${lead_international_email1}
     Then the user should see the element          jQuery = td:contains("Steve") ~ td:contains("Lead")
-    And the user should see the element           jQuery = td:contains("Stephan Marriek (pending for")
+    And the user should see the element           jQuery = td:contains("Daniel Tan (pending for")
 
 Partner organisation(with registered email/user) accepts the invite
     [Documentation]    IFS-7197
     [Tags]  HappyPath
     [Setup]  Logout as user
-    When the user reads his email and clicks the link    ${lead_international_email}  Invitation to collaborate in ${createApplicationOpenInternationalCompetition}  You will be joining as part of the organisation  2
+    When the user reads his email and clicks the link    ${lead_international_email1}  Invitation to collaborate in ${createApplicationOpenInternationalCompetition}  You will be joining as part of the organisation  2
     Then the user clicks the button/link                 link = Continue
 
 Registered user(Partner organisation) logs in and select where their organisation is based
     [Documentation]    IFS-7197 IFS-7252
     [Tags]  HappyPath
-    When logging in and error checking                                                      ${lead_international_email}  ${short_password}
-    Then the user should see organisations list according to organisation type selected     Join with a different organisation.  jQuery = dt:contains("Empire (french)")
+    Given logging in and error checking               ${lead_international_email1}  ${short_password}
+    When user selects where is organisation based     isInternational
+    Then the user should not see the element          link = Join with a different organisation.
+    When the user clicks the button/link              link = Back to tell us where your organisation is based
+    And user selects where is organisation based      isNotInternational
+    Then the user should see the element              jQuery = dt:contains("Golden Valley Research Ltd")
 
 Partner user provides non-UK based organisation details and verifies them
     [Documentation]    IFS-7198 IFS-7199
     [Tags]  HappyPath
     Given the user clicks the button/link                         link = Join with a different organisation.
-    When the user provides international organisation details     3242442  Test  Abu  Abu Dhabi  International Organisation Ltd.  international-organisation-details-cta
-    And the user verifies their organisation details
-    And the user clicks the button/link                           id = international-confirm-organisation-cta
+    When the user provides uk based organisation details          Nomensa  NOMENSA LTD
+    And the user should see the element                           jQuery = p:contains("This is the organisation that you will join the application with.")
+    And the user clicks the button/link                           name = save-organisation
     Then the user should see the element                          jQuery = h2:contains("Application progress")
 
 Registered UK based lead user invites partner organisation(with non-registered email/user)
@@ -147,46 +151,46 @@ Non-Registered user(Partner organisation) create an account
     When Partner user enters the details and clicks the create account     Tim  Simpson  ${short_password}
     Then The user should not see an error in the page
 
-Registered International lead user applying for an international competition see only International organisations
-    [Documentation]    IFS-7252
-    [Tags]  HappyPath
-    Given the user select the competition and starts application                            ${createApplicationOpenInternationalCompetition}
-    And the user clicks the button/link                                                     jQuery = .govuk-grid-column-one-half a:contains("Sign in")
-    And logging in and error checking                                                       ${lead_international_email}  ${short_password}
-    When check if there is an existing application in progress for this competition
-    Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = span:contains("Empire (french)")
-
-Registered International lead user applies for an international competition
-    [Documentation]    IFS-7197
-    [Tags]  HappyPath
-    Given the user clicks the button/link                         link = Apply with a different organisation
-    When the user provides international organisation details     343434435  Sydney  Australia  Australia  New Empire 1  international-organisation-details-cta
-    Then the user verifies their organisation details
-    And the user clicks the button/link                           id = international-confirm-organisation-cta
-
-Applicant is able to complete and submit international application
-    [Documentation]  IFS-7197
-    [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link       link = Untitled application (start here)
-    When the user completes the application
-    Then the applicant submits the application
-
-Moving International Competition to Project Setup
-    [Documentation]  IFS-7197
-    [Setup]  Get competitions id and set it as suite variable     ${InternationalCompetitionTitle}
-    Given Log in as a different user                              &{internal_finance_credentials}
-    Then moving competition to Closed                             ${competitionId}
-    And making the application a successful project               ${competitionId}  ${InternationalApplicationTitle}
-    And moving competition to Project Setup                       ${competitionId}
-    [Teardown]  Requesting IDs of this Project
+#Registered International lead user applying for an international competition see only International organisations
+#    [Documentation]    IFS-7252
+#    [Tags]  HappyPath
+#    Given the user select the competition and starts application                            ${createApplicationOpenInternationalCompetition}
+#    And the user clicks the button/link                                                     jQuery = .govuk-grid-column-one-half a:contains("Sign in")
+#    And logging in and error checking                                                       ${lead_international_email}  ${short_password}
+#    When check if there is an existing application in progress for this competition
+#    Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = dt:contains("Empire (french)")
+#
+#Registered International lead user applies for an international competition
+#    [Documentation]    IFS-7197
+#    [Tags]  HappyPath
+#    Given the user clicks the button/link                         link = Apply with a different organisation
+#    When the user provides international organisation details     343434435  Sydney  Australia  Australia  New Empire 1  international-organisation-details-cta
+#    Then the user verifies their organisation details
+#    And the user clicks the button/link                           id = international-confirm-organisation-cta
+#
+#Applicant is able to complete and submit international application
+#    [Documentation]  IFS-7197
+#    [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
+#    Given the user clicks the button/link       link = Untitled application (start here)
+#    When the user completes the application
+#    Then the applicant submits the application
+#
+#Moving International Competition to Project Setup
+#    [Documentation]  IFS-7197
+#    [Setup]  Get competitions id and set it as suite variable     ${InternationalCompetitionTitle}
+#    Given Log in as a different user                              &{internal_finance_credentials}
+#    Then moving competition to Closed                             ${InternationalCompetitionId}
+#    And making the application a successful project               ${InternationalCompetitionId}  ${InternationalApplicationTitle}
+#    And moving competition to Project Setup                       ${InternationalCompetitionId}
+#    [Teardown]  Requesting IDs of this Project
 
 *** Keywords ***
 Partner user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${password}
     Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
-    Input Text                       id = firstName  ${first_name}
-    Input Text                       id = lastName  ${last_name}
-    Input Text                       id = phoneNumber  234324234
+    the user enters text to a text field                    id = firstName  ${first_name}
+    the user enters text to a text field                    id = lastName  ${last_name}
+    the user enters text to a text field                    id = phoneNumber  234324234
     Input Password                   id = password  ${password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
@@ -199,10 +203,7 @@ invite partner organisation
     the user clicks the button/link          jQuery = button:contains("Invite partner organisation")
 
 Registered UK based lead user goes to the application team
-    the user select the competition and starts application      ${createApplicationOpenInternationalCompetition}
-    the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
     Logging in and Error Checking                               ${lead_applicant}  ${short_password}
-    the user navigates to the page                              ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link                             link = Untitled application (start here)
     the user clicks the button/link                             link = Application team
 
@@ -275,8 +276,18 @@ The user completes the application
     the applicant completes Application Team
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${InternationalApplicationTitle}
-    the user marks the finances as complete                  ${InternationalApplicationTitle}   Calculate  52,214  yes
+    the user marks the finance as complete                  ${InternationalApplicationTitle}   Calculate  52,214  yes
     the user accept the competition terms and conditions     Return to application overview
+
+the user marks the finance as complete
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
+    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
+    the user enters the project location
+    the user fills in the organisation information     ${Application}  ${SMALL_ORGANISATION_SIZE}
+    the user checks Your Funding section        ${Application}
+    the user should see all finance subsections complete
+    the user clicks the button/link  link = Back to application overview
+    the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
 
 Requesting IDs of this Project
     ${ProjectID} =  get project id by name    ${InternationalApplicationTitle}
@@ -287,7 +298,7 @@ Requesting IDs of this Project
 Get competitions id and set it as suite variable
     [Arguments]  ${competitionTitle}
     ${InternationalCompetitionId} =  get comp id from comp title  ${competitionTitle}
-    Set suite variable  ${competitionId}
+    Set suite variable  ${InternationalCompetitionId}
 
 Custom Suite Setup
     The guest user opens the browser
