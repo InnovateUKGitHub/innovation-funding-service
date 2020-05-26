@@ -72,8 +72,8 @@ task readBuildEnvProperties() {
 }
 
 task applyBuildEnvProperties(dependsOn: getBuildProperties) {
+    dependsOn readBuildEnvProperties
     doLast {
-        dependsOn readBuildEnvProperties
         apply from: rootProject.file("gradle-support/build-env-properties.gradle")
     }
 }
