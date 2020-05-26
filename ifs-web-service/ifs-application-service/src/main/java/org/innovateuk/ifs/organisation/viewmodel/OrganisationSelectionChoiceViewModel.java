@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.viewmodel;
+package org.innovateuk.ifs.organisation.viewmodel;
 
 public class OrganisationSelectionChoiceViewModel {
 

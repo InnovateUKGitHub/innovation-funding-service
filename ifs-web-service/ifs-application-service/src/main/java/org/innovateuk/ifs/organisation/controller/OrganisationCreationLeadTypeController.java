@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
@@ -7,10 +7,9 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -88,13 +87,11 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrganisationTypeToCreationForm(response, organisationTypeForm);
 
-            Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-
-            if (!isAllowedToLeadApplication(organisationTypeId, request, organisationInternationalForm)) {
+            if (!isAllowedToLeadApplication(organisationTypeId, request)) {
                 return redirectToNotEligibleUrl();
             }
 
-            if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+            if (registrationCookieService.isInternationalJourney(request)) {
                 return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
             }
 
@@ -116,15 +113,16 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
     }
 
-    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request, Optional<OrganisationInternationalForm> organisationInternationalForm) {
+    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
 
         if (competitionIdOpt.isPresent()) {
 
             CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
-            if(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed() != null && registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
-                return Boolean.FALSE;
+            if(!Boolean.TRUE.equals(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed())
+                    && registrationCookieService.isInternationalJourney(request)) {
+                return false;
             }
 
             List<OrganisationTypeResource> organisationTypesAllowed = competitionRestService.getCompetitionOrganisationType(competitionIdOpt.get()).getSuccess();
@@ -133,7 +131,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                     .anyMatch(aLong -> aLong.equals(organisationTypeId));
         }
 
-        return Boolean.FALSE;
+        return false;
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {

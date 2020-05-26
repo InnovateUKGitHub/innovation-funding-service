@@ -1,14 +1,15 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
-import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
-import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
-import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.registration.controller.RegistrationController;
+import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
+import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.security.access.prepost.PreAuthorize;

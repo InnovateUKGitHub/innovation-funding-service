@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -80,17 +79,10 @@ public class ApplicationCreationAuthenticatedController {
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
         CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
-        OrganisationInternationalForm organisationInternationalForm = new OrganisationInternationalForm();
-        organisationInternationalForm.setInternational(false);
 
-        if (organisationConfig.getInternationalOrganisationsAllowed() != null && organisationConfig.getInternationalOrganisationsAllowed()) {
-            organisationInternationalForm.setInternational(organisationConfig.getInternationalOrganisationsAllowed());
-            registrationCookieService.saveToOrganisationInternationalCookie(organisationInternationalForm, response);
-
+        if (Boolean.TRUE.equals(organisationConfig.getInternationalOrganisationsAllowed())) {
             return "redirect:/organisation/create/international-organisation";
         }
-        registrationCookieService.saveToOrganisationInternationalCookie(organisationInternationalForm, response);
-
         return "redirect:/organisation/select";
     }
 }

@@ -147,7 +147,8 @@ public class RegistrationCookieService {
         return !getProjectInviteHashCookieValue(request).isPresent();
     }
 
-    public boolean isInternationalJourney(Optional<OrganisationInternationalForm> organisationInternationalForm) {
+    public boolean isInternationalJourney(HttpServletRequest request) {
+        Optional<OrganisationInternationalForm> organisationInternationalForm = getOrganisationInternationalCookieValue(request);
         return organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
     }
 }

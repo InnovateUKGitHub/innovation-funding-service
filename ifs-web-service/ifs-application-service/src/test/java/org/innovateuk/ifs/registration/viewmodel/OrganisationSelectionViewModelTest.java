@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.junit.Test;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;

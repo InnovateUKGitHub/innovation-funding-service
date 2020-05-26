@@ -1,13 +1,12 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
-import org.innovateuk.ifs.registration.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,12 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.registration.controller.AbstractOrganisationCreationController.BASE_URL;
-import static org.innovateuk.ifs.registration.controller.AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE;
-import static org.innovateuk.ifs.registration.controller.OrganisationCreationLeadTypeController.NOT_ELIGIBLE;
+import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
+import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE;
+import static org.innovateuk.ifs.organisation.controller.OrganisationCreationLeadTypeController.NOT_ELIGIBLE;
 
 @RequestMapping("/organisation/select")
 @SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
@@ -93,9 +91,7 @@ public class OrganisationSelectionController {
     }
 
     private boolean isLinkedToPreviousOrganisations(long userId, HttpServletRequest request) {
-        Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-        final boolean international = registrationCookieService.isInternationalJourney(organisationInternationalForm);
-
+        final boolean international = registrationCookieService.isInternationalJourney(request);
         return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
     }
 

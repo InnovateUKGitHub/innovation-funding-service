@@ -1,14 +1,12 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
+import org.innovateuk.ifs.organisation.viewmodel.ContributorOrganisationTypeViewModel;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.registration.viewmodel.ContributorOrganisationTypeViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/contributor-organisation-type")
@@ -31,9 +28,6 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
     private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);
 
     private static final String ORGANISATION_TYPE = "organisationType";
-
-    @Autowired
-    private InviteRestService inviteRestService;
 
     @Autowired
     private OrganisationCreationSelectTypePopulator organisationCreationSelectTypePopulator;
@@ -71,10 +65,8 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
             return "redirect:/organisation/create/contributor-organisation-type?invalid";
         } else {
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
-            Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-            LOG.debug("redirect for organisation creation");
 
-            if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+            if (registrationCookieService.isInternationalJourney(request)) {
                 return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
             }
 

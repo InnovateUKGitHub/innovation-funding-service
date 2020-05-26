@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.registration.populator;
+package org.innovateuk.ifs.invite.populator;
 
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.springframework.stereotype.Component;
 
 

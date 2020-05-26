@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
@@ -42,9 +42,6 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
     public String selectInternationalOrganisation(Model model,
                                                   HttpServletRequest request,
                                                   @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalForm organisationInternationalForm) {
-        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        model.addAttribute("competitionId", competitionIdOpt.orElse(null));
-
         return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION;
     }
 
@@ -60,16 +57,7 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         Supplier<String> failureView = () -> selectInternationalOrganisation(model, request, organisationForm);
         Supplier<String> successView = () -> {
             registrationCookieService.saveToOrganisationInternationalCookie(organisationForm, response);
-            if (userResource != null) {
-                if (!organisationRestService.getAllByUserId(userResource.getId()).getSuccess().isEmpty()) {
-                    return "redirect:/organisation/select";
-                }
-            }
-            if (registrationCookieService.isCollaboratorJourney(request)) {
-                    return "redirect:" + BASE_URL + "/" + "contributor-organisation-type";
-            }
-
-            return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+            return "redirect:/organisation/select";
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
@@ -80,7 +68,6 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                                                    HttpServletRequest request,
                                                    @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalDetailsForm organisationForm) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        model.addAttribute("competitionId", competitionIdOpt.orElse(null));
         model.addAttribute("countries", COUNTRIES);
 
         return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION_DETAILS;
