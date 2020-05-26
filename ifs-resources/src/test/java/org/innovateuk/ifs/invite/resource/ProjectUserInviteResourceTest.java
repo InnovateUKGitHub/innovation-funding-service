@@ -52,7 +52,7 @@ public class ProjectUserInviteResourceTest {
         setInviteResource.setCompetitionName(competitionName);
         setInviteResource.setLeadApplicant(leadApplicant);
 
-        constructedInviteResource = new ProjectUserInviteResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
+//        constructedInviteResource = new ProjectUserInviteResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
 
     }
 
