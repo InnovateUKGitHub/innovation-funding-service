@@ -152,6 +152,14 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "/organisation/select">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
   <Location ~ "/organisation/(create|save|addAddress)/.*">
     AuthType shibboleth
     ShibRequireSession Off
