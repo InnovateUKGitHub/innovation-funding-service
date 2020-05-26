@@ -6,10 +6,12 @@ import org.innovateuk.ifs.application.forms.questions.team.viewmodel.Application
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,8 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/team/organisation/{organisationId}/address")
+@SecuredBySpring(value = "Controller", description = "Only applicants can edit their application team", securedType = ApplicationTeamAddressController.class)
+@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamAddressController {
 
     @Autowired

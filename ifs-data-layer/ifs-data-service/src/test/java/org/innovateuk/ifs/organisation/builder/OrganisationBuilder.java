@@ -58,10 +58,6 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
         return withArraySetFieldByReflection("companiesHouseNumber", numbers);
     }
 
-    public OrganisationBuilder withInternational(boolean... internationals) {
-        return withArraySetFieldByReflection("international", internationals);
-    }
-
     public OrganisationBuilder withOrganisationType(OrganisationType... organisationTypes) {
         return withArraySetFieldByReflection("organisationType", organisationTypes);
     }
