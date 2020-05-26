@@ -80,11 +80,11 @@ task wait(type: DockerWaitHealthyContainer) {
 wait.mustRunAfter deploy
 
 task stageNexus(type: DockerPushImage, dependsOn: tagDockerNexus) {
-    if (isNamedEnv()) {
+    //if (isNamedEnv()) {
         registryCredentials = getNexusCredentials()
         imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
         tag = project.version
-    }
+    //}
 }
 
 task osStageRemote(type: DockerPushImage) {
@@ -153,13 +153,12 @@ def getRemoteOCCredentials() {
 
 def getNexusCredentials() {
     def dockerRegistryCredentials = new DockerRegistryCredentials()
-    dockerRegistryCredentials.url = project.nexusRegistry
-    println(project.findProperty("nexusUsername"))
+    //println(project.findProperty("nexusRegistry"))
+    dockerRegistryCredentials.url = project.findProperty("nexusRegistry") ? project.getProperty("nexusRegistry") : ""
+    //println(project.findProperty("nexusUsername"))
     dockerRegistryCredentials.username = project.findProperty("nexusUsername") ? project.getProperty("nexusUsername") : ""
-    //dockerRegistryCredentials.username = project.nexusUsername
-    println(project.findProperty("nexusPassword"))
+    //println(project.findProperty("nexusPassword"))
     dockerRegistryCredentials.password = project.findProperty("nexusPassword") ? project.getProperty("nexusPassword") : ""
-    //dockerRegistryCredentials.password = project.nexusPassword
     return dockerRegistryCredentials
 }
 
