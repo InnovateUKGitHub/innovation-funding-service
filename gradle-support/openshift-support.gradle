@@ -60,8 +60,18 @@ task getBuildProperties(type: Exec, dependsOn: osApplyBuildEnvProperties) {
     args = [openshiftEnv, "build"]
 }
 
+task readBuildEnvProperties() {
+    File file = rootProject.file("gradle-support/build-env-properties.gradle")
+    println file.text
+    println ""
+    file.readLines().each {
+        println it
+    }
+}
+
 task applyBuildEnvProperties(dependsOn: getBuildProperties) {
     doLast {
+        dependsOn readBuildEnvProperties
         apply from: rootProject.file("gradle-support/build-env-properties.gradle")
     }
 }

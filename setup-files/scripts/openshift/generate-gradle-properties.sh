@@ -13,7 +13,6 @@ SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause ${TARGET} ${PROJECT} ${SVC_ACCOUNT_TOKEN})
 
 if $(isBuildEnvironment $TARGET); then
-      echo "building env properties for nexus"
       oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > 'gradle-support/build-env-properties.gradle'
 else
   if $(isNamedEnvironment $PROJECT); then
