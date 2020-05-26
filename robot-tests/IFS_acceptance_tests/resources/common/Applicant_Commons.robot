@@ -72,7 +72,7 @@ the user moves Application details in Edit mode
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = name  ${appTitle}
     the user enters text to a text field  id = startDate  ${tomorrowday}
     the user enters text to a text field  css = #application_details-startdate_month  ${month}
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
