@@ -57,7 +57,10 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         Supplier<String> failureView = () -> selectInternationalOrganisation(model, request, organisationForm);
         Supplier<String> successView = () -> {
             registrationCookieService.saveToOrganisationInternationalCookie(organisationForm, response);
-            return "redirect:/organisation/select";
+            if (userResource != null) {
+                return "redirect:/organisation/select";
+            }
+            return "redirect:/organisation/create/organisation-type";
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);

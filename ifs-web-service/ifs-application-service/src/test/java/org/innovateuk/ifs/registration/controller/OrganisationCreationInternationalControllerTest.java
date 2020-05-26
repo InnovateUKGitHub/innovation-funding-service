@@ -42,14 +42,11 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
 
     @Test
     public void selectInternationalOrganisation() throws Exception {
-        when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
-
         mockMvc.perform(
                     get("/organisation/create/international-organisation")
                 )
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/international-organisation"))
-                .andExpect(model().attribute("competitionId", 1L));
+                .andExpect(view().name("registration/organisation/international-organisation"));
     }
 
     @Test
@@ -66,7 +63,7 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
 
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/lead-organisation-type"));
+                .andExpect(view().name("redirect:/organisation/select"));
     }
 
     @Test
@@ -78,7 +75,6 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/international-organisation-details"))
-                .andExpect(model().attribute("competitionId", 1L))
                 .andExpect(model().attributeExists("countries"));
     }
 

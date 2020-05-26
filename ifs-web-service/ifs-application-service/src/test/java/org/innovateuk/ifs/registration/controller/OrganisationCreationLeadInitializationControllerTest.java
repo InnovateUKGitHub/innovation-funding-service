@@ -47,7 +47,7 @@ public class OrganisationCreationLeadInitializationControllerTest extends BaseCo
 
         mockMvc.perform(get("/organisation/create/initialize"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/lead-organisation-type"));
+                .andExpect(view().name("redirect:/organisation/create/organisation-type"));
 
         OrganisationTypeForm expectedOrganisationTypeForm = new OrganisationTypeForm();
         expectedOrganisationTypeForm.setLeadApplicant(true);

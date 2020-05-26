@@ -24,6 +24,7 @@ public class ProjectUserInviteResourceTest {
     InviteStatus status;
     String leadApplicant;
     String competitionName;
+    Long competitionId;
 
     @Before
     public void setUp() throws Exception {
@@ -39,6 +40,7 @@ public class ProjectUserInviteResourceTest {
         status = InviteStatus.OPENED;
         leadApplicant = "leadApplicant";
         competitionName = "competitionName";
+        competitionId = 5L;
 
         setInviteResource = new ProjectUserInviteResource();
         setInviteResource.setId(inviteId);
@@ -51,9 +53,9 @@ public class ProjectUserInviteResourceTest {
         setInviteResource.setStatus(status);
         setInviteResource.setCompetitionName(competitionName);
         setInviteResource.setLeadApplicant(leadApplicant);
+        setInviteResource.setCompetitionId(competitionId);
 
-//        constructedInviteResource = new ProjectUserInviteResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName);
-
+        constructedInviteResource = new ProjectUserInviteResource(inviteId, userId, name, email, project, organisation, applicationId, hash, status, leadApplicant, competitionName, competitionId);
     }
 
     @Test
@@ -67,6 +69,7 @@ public class ProjectUserInviteResourceTest {
         assertEquals(status, constructedInviteResource.getStatus());
         assertEquals(leadApplicant, constructedInviteResource.getLeadApplicant());
         assertEquals(competitionName, constructedInviteResource.getCompetitionName());
+        assertEquals(competitionId, constructedInviteResource.getCompetitionId());
     }
 
 
@@ -82,5 +85,6 @@ public class ProjectUserInviteResourceTest {
         assertEquals(status, setInviteResource.getStatus());
         assertEquals(leadApplicant, setInviteResource.getLeadApplicant());
         assertEquals(competitionName, setInviteResource.getCompetitionName());
+        assertEquals(competitionId, setInviteResource.getCompetitionId());
     }
 }
