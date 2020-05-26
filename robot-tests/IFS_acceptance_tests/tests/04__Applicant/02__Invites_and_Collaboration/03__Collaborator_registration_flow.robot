@@ -37,8 +37,7 @@ User is able to select only one type
 The type of organisation navigates to the correct page
     [Documentation]    INFUND-1780, INFUND-1231, INFUND 8531
     [Tags]
-    When the user should see the element           jQuery = .govuk-hint:contains("UK based business.")
-    And the user selects the radio button          organisationType    1
+    When the user selects the radio button          organisationType    1
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
     Then the user should see the element           jQuery = div label:contains("Enter your organisation name or registration number.")
     When the user goes back to the previous page
