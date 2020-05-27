@@ -306,5 +306,5 @@ Custom Suite Setup
     Connect to database  @{database}
 
 Custom Suite teardown
-    Close browser and delete emails
+    Close any open browsers
     Disconnect from database
