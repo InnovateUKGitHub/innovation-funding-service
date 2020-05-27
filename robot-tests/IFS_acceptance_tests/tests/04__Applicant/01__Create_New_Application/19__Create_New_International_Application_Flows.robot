@@ -13,10 +13,10 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${projectSetupPage}                                    ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
 ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
 ${InternationalApplicationTitle}                       New Test Application for International Users
 ${InternationalCompetitionTitle}                       International Competition
+${InternationalCompetitionId}                          ${competition_ids["${InternationalCompetitionTitle}"]}
 
 *** Test Cases ***
 
@@ -179,7 +179,6 @@ Applicant is able to complete and submit international application
 
 Moving International Competition to Project Setup
     [Documentation]  IFS-7197
-    [Setup]  Get competitions id and set it as suite variable     ${InternationalCompetitionTitle}
     Given Log in as a different user                              &{internal_finance_credentials}
     Then moving competition to Closed                             ${InternationalCompetitionId}
     And making the application a successful project               ${InternationalCompetitionId}  ${InternationalApplicationTitle}
@@ -320,11 +319,6 @@ Requesting IDs of this Project
     Set suite variable    ${ProjectID}
     ${ApplicationID} =  get application id by name    ${InternationalApplicationTitle}
     Set suite variable    ${ApplicationID}
-
-Get competitions id and set it as suite variable
-    [Arguments]  ${competitionTitle}
-    ${InternationalCompetitionId} =  get comp id from comp title  ${competitionTitle}
-    Set suite variable  ${InternationalCompetitionId}
 
 Custom Suite Setup
     The guest user opens the browser
