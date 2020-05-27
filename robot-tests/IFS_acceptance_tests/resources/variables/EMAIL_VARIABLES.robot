@@ -16,6 +16,7 @@ ${submit_rto_email}             ${test_mailbox_one}+submitrto@gmail.com
 ${local_imap}                   mail
 ${local_imap_port}              8143
 ${invite_email}                 ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+${international_invite_email}   international@example.com
 ${lead_applicant}               steve.smith@empire.com
 ${uk_based_applicant}           russell.jenkins@load.example.com
 ${uk_based_applicant_new}       tony.blair@test.com
