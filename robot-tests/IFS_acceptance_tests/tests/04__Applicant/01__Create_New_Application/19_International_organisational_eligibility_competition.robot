@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     IFS-7195  Organisational eligibility category in Competition setup
+...
+...               IFS-7246  Comp setup allowing international organisations to lead the competition
+...
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -13,7 +16,9 @@ Resource          ../../../resources/common/PS_Common.robot
 ${OrganisationalEligibilitySubTitle}                                                        Can international organisations apply?
 ${OrganisationalEligibilityInfo}                                                            Is this competition open to organisations based outside the UK?
 ${OrganisationalEligibilityValidationErrorMessage}                                          You must choose if organisations based outside the UK can apply for this competition.
-
+${LeadOrganisationsTitle}                                                                   Lead organisations
+${LeadOrganisationsSubTitle}                                                                Can international organisations lead the competition?
+${LeadOrganisationsValidationErrorMessage}                                                  You must choose if international organisations can lead the competition.
 
 *** Test Cases ***
 Comp admin can only access organisational eligibility category after intial details entered
@@ -51,25 +56,50 @@ Comp admin can access the Organisational eligibility category and check for all 
 
 Organisational eligibility validations
      [Documentation]    IFS-7195
-     When the user clicks the button/link                                                   jQuery = button:contains("Done")
+     When the user clicks the button/link                                                   jQuery = button:contains("Save and continue")
      Then The user should see a field and summary error                                     ${OrganisationalEligibilityValidationErrorMessage}
 
 Comp admin sets organisational eligibility to No
-     [Documentation]    IFS-7195
+     [Documentation]    IFS-7195 IFS-7246
      When the user selects the radio button                                                 internationalOrganisationsApplicable     false
      And The user should not see a field and summary error                                  ${OrganisationalEligibilityValidationErrorMessage}
-     And the user clicks the button/link                                                    jQuery = button:contains("Done")
+     And the user clicks the button/link                                                    jQuery = button:contains("Save and continue")
      Then the user should see the element                                                   jQuery = dd:contains("No")
      And the user should see the element                                                    jQuery = button:contains("Edit")
+     And the user should not see the element                                                jQuery = h1:contains("${LeadOrganisationsTitle}")
 
-Comp admin sets organisational eligibility to Yes
-     [Documentation]    IFS-7195
+Comp admin sets organisational eligibility to Yes and check for lead organisations fields
+     [Documentation]    IFS-7195 IFS-7246
      Given the user clicks the button/link                                                  jQuery = button:contains("Edit")
      When the user selects the radio button                                                 internationalOrganisationsApplicable     true
      And The user should not see a field and summary error                                  ${OrganisationalEligibilityValidationErrorMessage}
-     And the user clicks the button/link                                                    jQuery = button:contains("Done")
-     Then the user should see the element                                                   jQuery = dd:contains("Yes")
+     And the user clicks the button/link                                                    jQuery = button:contains("Save and continue")
+     Then the user checks for lead organisations fields
+
+Lead organisations validations
+     [Documentation]    IFS-7246
+     When the user clicks the button/link                                                   jQuery = button:contains("Save and continue")
+     Then The user should see a field and summary error                                     ${LeadOrganisationsValidationErrorMessage}
+
+Comp admin sets international organisations can not lead the competition
+     [Documentation]   IFS-7246
+     When the user selects the radio button                                                 leadInternationalOrganisationsApplicable  false
+     And The user should not see a field and summary error                                  ${LeadOrganisationsValidationErrorMessage}
+     And the user clicks the button/link                                                    jQuery = button:contains("Save and continue")
+     Then the user should see the element                                                   jQuery = dt:contains("${OrganisationalEligibilitySubTitle}") ~ dd:contains("Yes")
+     And the user should see the element                                                    jQuery = dt:contains("${LeadOrganisationsSubTitle}") ~ dd:contains("No")
      And the user should see the element                                                    jQuery = button:contains("Edit")
+
+Comp admin sets international organisations can lead the competition
+     [Documentation]   IFS-7246
+     Given the user clicks the button/link                                                  jQuery = button:contains("Edit")
+     And the user clicks the button/link                                                    jQuery = button:contains("Save and continue")
+     When the user selects the radio button                                                 leadInternationalOrganisationsApplicable  true
+     And the user clicks the button/link                                                    jQuery = button:contains("Save and continue")
+     Then the user should see the element                                                   jQuery = dt:contains("${OrganisationalEligibilitySubTitle}") ~ dd:contains("Yes")
+     And the user should see the element                                                    jQuery = dt:contains("${LeadOrganisationsSubTitle}") ~ dd:contains("Yes")
+     And the user should see the element                                                    jQuery = button:contains("Edit")
+
 
 Comp admin creates international organisation eligibility competition
      [Documentation]  IFS-7195
@@ -101,10 +131,21 @@ the user checks for organisational eligibility fields
     the user should see the element                                                         jQuery = span:contains("Is this competition open to organisations based outside the UK?")
     the user should see the element                                                         css = [for="comp-internationalOrganisationsApplicable-yes"]
     the user should see the element                                                         css = [for="comp-internationalOrganisationsApplicable-no"]
-    the user should see the element                                                         jQuery = button:contains("Done")
+    the user should see the element                                                         jQuery = button:contains("Save and continue")
     the user should see the element                                                         jQuery = span:contains("${ProjectEligibilityLink}")
     the user should see the element                                                         link = Competition setup
     the user should see the element                                                         link = Return to setup overview
+
+the user checks for lead organisations fields
+    the user should see the element                                                         jQuery = h1:contains("${LeadOrganisationsTitle}")
+    the user should see the element                                                         id = leadInternationalOrganisationsApplicable
+    the user should see the element                                                         css = [for="comp-leadInternationalOrganisationsApplicable-yes"]
+    the user should see the element                                                         css = [for="comp-leadInternationalOrganisationsApplicable-no"]
+    the user should see the element                                                         jQuery = button:contains("Save and continue")
+    the user should see the element                                                         jQuery = span:contains("${OrganisationalEligibilityTitle}")
+    the user should see the element                                                         link = Competition setup
+    the user should see the element                                                         link = Return to setup overview
+
 
 the user completes all categories except organisational eligibility category
     [Arguments]    ${orgType}  ${extraKeyword}  ${compType}  ${completionStage}  ${projectGrowth}  ${researchParticipation}  ${researchCategory}  ${collaborative}
@@ -117,6 +158,7 @@ the user completes all categories except organisational eligibility category
     the user clicks the button/link                                                         link = Public content
     the user fills in the Public content and publishes                                      ${extraKeyword}
     the user clicks the button/link                                                         link = Return to setup overview
+
 
 
 

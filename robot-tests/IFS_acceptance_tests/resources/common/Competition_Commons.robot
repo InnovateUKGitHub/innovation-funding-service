@@ -17,7 +17,7 @@ The competition admin creates competition
     ...  ELSE  the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility        ${orgType}  ${researchParticipation}  ${researchCategory}  ${collaborative}  # 1 means 30%
-    the user selects the organisational eligibility     true
+    the user selects the organisational eligibility     true    true
     the user fills in the CS Milestones                 ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
     ...  ELSE  the user marks the application as done   ${projectGrowth}  ${compType}
@@ -473,9 +473,11 @@ the user set assessor score notification to yes
     the user clicks the button/link         jQuery = button:contains("Done")
 
 the user selects the organisational eligibility
-    [Arguments]     ${organisationEligibilityOption}
-    the user clicks the button/link        link = ${OrganisationalEligibilityTitle}
-    the user selects the radio button      internationalOrganisationsApplicable       ${organisationEligibilityOption}
-    the user clicks the button/link        jQuery = button:contains("Done")
-    the user clicks the button/link        link = Competition setup
-    the user should see the element        jQuery = li:contains("Organisational eligibility") .task-status-complete
+    [Arguments]     ${organisationEligibilityOption}            ${CanInternationalOrganisationsLead}
+    the user clicks the button/link         link = ${OrganisationalEligibilityTitle}
+    the user selects the radio button       internationalOrganisationsApplicable       ${organisationEligibilityOption}
+    the user clicks the button/link         jQuery = button:contains("Save and continue")
+    the user selects the radio button       leadInternationalOrganisationsApplicable  ${CanInternationalOrganisationsLead}
+    the user clicks the button/link         jQuery = button:contains("Save and continue")
+    the user clicks the button/link         link = Competition setup
+    the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete

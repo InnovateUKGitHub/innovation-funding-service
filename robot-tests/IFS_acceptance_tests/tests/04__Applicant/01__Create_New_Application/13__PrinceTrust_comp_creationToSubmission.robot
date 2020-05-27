@@ -53,7 +53,7 @@ The competition admin creates The Prince's Trust Comp
     the user selects the Terms and Conditions
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility        ${orgType}  1  false  single-or-collaborative  # 1 means 30%
-    the user selects the organisational eligibility     true
+    the user selects the organisational eligibility     true        true
     the user fills in the CS Milestones                 release-feedback-completion-stage   ${month}   ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
     the user fills in the CS Assessors
