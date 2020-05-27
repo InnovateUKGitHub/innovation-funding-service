@@ -27,7 +27,7 @@ task osApplyNamedEnvProperties(type: Exec) {
 
 task osApplyBuildEnvProperties(type: Exec) {
     println("loading nexus properties from ssm")
-    executable = 'setup-files/scripts/openshift/os-apply-properties-from-secrets.sh'
+    executable = rootProject.file('setup-files/scripts/openshift/os-apply-properties-from-secrets.sh')
     args = [openshiftEnv, "BUILD", project.version, project.findProperty("use_iam") ?: "true"]
 }
 
