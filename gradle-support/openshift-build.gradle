@@ -44,6 +44,7 @@ task loadNexusCredentials() {
     if (!project.hasProperty("nexusRegistry")
             || !project.hasProperty("nexusUsername")
             || !project.hasProperty("nexusPassword")) {
+        println("no nexus properties found")
         applyBuildEnvProperties
     }
 }
