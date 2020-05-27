@@ -1,3 +1,5 @@
+apply from: rootProject.file("gradle-support/openshift-support.gradle")
+
 import com.bmuschko.gradle.docker.tasks.image.*
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.container.*
@@ -35,7 +37,18 @@ task buildDocker(type: DockerBuildImage) {
     }
 }
 
-task tagDockerNexus(type: DockerTagImage, dependsOn: [buildDocker]) {
+task loadNexusCredentials() {
+    println("here->" + project.hasProperty("nexusRegistry"))
+    println("here->" + rootProject.hasProperty("nexusUsername"))
+    println("here->" + rootProject.hasProperty("nexusPassword"))
+    if (!project.hasProperty("nexusRegistry")
+            || !project.hasProperty("nexusUsername")
+            || !project.hasProperty("nexusPassword")) {
+        applyBuildEnvProperties
+    }
+}
+
+task tagDockerNexus(type: DockerTagImage, dependsOn: [buildDocker, loadNexusCredentials]) {
     imageId = buildDocker.getTag()
     repository = project.findProperty("nexusRegistry") + "/release/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
@@ -78,7 +91,7 @@ task wait(type: DockerWaitHealthyContainer) {
 }
 wait.mustRunAfter deploy
 
-task stageNexus(type: DockerPushImage, dependsOn: [tagDockerNexus]) {
+task stageNexus(type: DockerPushImage, dependsOn: [tagDockerNexus, loadNexusCredentials]) {
     if (isNamedEnv()) {
         registryCredentials = getNexusCredentials()
         imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")

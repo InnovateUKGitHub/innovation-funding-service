@@ -73,17 +73,20 @@ task readBuildEnvProperties() {
 
 task applyBuildEnvProperties(dependsOn: getBuildProperties) {
     //dependsOn readBuildEnvProperties
-    doLast {
+    //doLast {
         apply from: rootProject.file("gradle-support/build-env-properties.gradle")
-    }
-}
+        println("here->" + project.hasProperty("nexusRegistry"))
+        println("here->" + project.findProperty("nexusRegistry"))
+        println(project.getProperty("nexusRegistry"))
 
-task loadNexusCredentials() {
-    if (project.findProperty("nexusRegistry") == null
-            || project.findProperty("nexusUsername") == null
-            || project.findProperty("nexusPassword") == null) {
-        dependsOn applyBuildEnvProperties
-    }
+        println("here->" + project.hasProperty("nexusUsername"))
+        println("here->" + project.findProperty("nexusUsername"))
+        println(project.getProperty("nexusUsername"))
+
+        println(project.hasProperty("nexusPassword"))
+        println("here->" + project.findProperty("nexusPassword"))
+        println(project.getProperty("nexusPassword"))
+    //}
 }
 
 task createSecretsFromAws() {
