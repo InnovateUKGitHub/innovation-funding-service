@@ -143,7 +143,7 @@ the user checks for lead organisations fields
     the user should see the element                                                         css = [for="comp-leadInternationalOrganisationsApplicable-no"]
     the user should see the element                                                         jQuery = button:contains("Save and continue")
     the user should see the element                                                         jQuery = span:contains("${OrganisationalEligibilityTitle}")
-    the user should see the element                                                         link = Competition setup
+    the user should see the element                                                         link = Back to organisational eligibility
     the user should see the element                                                         link = Return to setup overview
 
 
