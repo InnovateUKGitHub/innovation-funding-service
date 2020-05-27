@@ -1,3 +1,5 @@
+apply from: rootProject.file("gradle-support/openshift-support.gradle")
+
 import com.bmuschko.gradle.docker.tasks.image.*
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.container.*
@@ -35,10 +37,18 @@ task buildDocker(type: DockerBuildImage) {
     }
 }
 
-task tagDockerNexus(type: DockerTagImage) {
+task loadNexusCredentials() {
+    if (project.findProperty("nexusRegistry") == null
+            || project.findProperty("nexusUsername") == null
+            || project.findProperty("nexusPassword") == null) {
+        dependsOn applyBuildEnvProperties
+    }
+}
+
+task tagDockerNexus(type: DockerTagImage, dependsOn: loadNexusCredentials) {
     dependsOn buildDocker
     imageId = buildDocker.getTag()
-    repository = project.nexusRegistry + "/release/" + project.name.replaceAll(/ifs-/, "")
+    repository = project.findProperty("nexusRegistry") + "/release/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
@@ -79,12 +89,12 @@ task wait(type: DockerWaitHealthyContainer) {
 }
 wait.mustRunAfter deploy
 
-task stageNexus(type: DockerPushImage, dependsOn: tagDockerNexus) {
-    //if (isNamedEnv()) {
+task stageNexus(type: DockerPushImage, dependsOn: [loadNexusCredentials, tagDockerNexus]) {
+    if (isNamedEnv()) {
         registryCredentials = getNexusCredentials()
         imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
         tag = project.version
-    //}
+    }
 }
 
 task osStageRemote(type: DockerPushImage) {
@@ -153,12 +163,9 @@ def getRemoteOCCredentials() {
 
 def getNexusCredentials() {
     def dockerRegistryCredentials = new DockerRegistryCredentials()
-    //println(project.findProperty("nexusRegistry"))
-    dockerRegistryCredentials.url = project.findProperty("nexusRegistry") ? project.getProperty("nexusRegistry") : ""
-    //println(project.findProperty("nexusUsername"))
-    dockerRegistryCredentials.username = project.findProperty("nexusUsername") ? project.getProperty("nexusUsername") : ""
-    //println(project.findProperty("nexusPassword"))
-    dockerRegistryCredentials.password = project.findProperty("nexusPassword") ? project.getProperty("nexusPassword") : ""
+    dockerRegistryCredentials.url = project.findProperty("nexusRegistry")
+    dockerRegistryCredentials.username = project.findProperty("nexusUsername")
+    dockerRegistryCredentials.password =project.findProperty("nexusPassword")
     return dockerRegistryCredentials
 }
 
