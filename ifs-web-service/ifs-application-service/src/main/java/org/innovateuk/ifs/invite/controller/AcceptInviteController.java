@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -77,7 +78,8 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             registrationCookieService.saveToInviteHashCookie(hash, response);// Add the hash to a cookie for later flow lookup.
                             AcceptRejectApplicationInviteViewModel acceptRejectApplicationInviteViewModel = acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation);
                             model.addAttribute("model", acceptRejectApplicationInviteViewModel);
-                            boolean international = organisationConfigRestService.findByCompetitionId(acceptRejectApplicationInviteViewModel.getCompetitionId()).getSuccess().getInternationalOrganisationsAllowed();
+                            CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(acceptRejectApplicationInviteViewModel.getCompetitionId()).getSuccess();
+                            boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
                             model.addAttribute("internationalCompetition", international);
                             return invite.getUser() == null ? ACCEPT_INVITE_NEW_USER_VIEW : ACCEPT_INVITE_EXISTING_USER_VIEW;
                         }
