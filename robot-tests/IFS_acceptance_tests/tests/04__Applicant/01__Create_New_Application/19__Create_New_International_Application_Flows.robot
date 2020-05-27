@@ -186,8 +186,8 @@ Ifs Admin is able to add a new partner organisation
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
     When the user clicks the button/link                   jQuery = tr:contains("${internationalApplicationTitle}") .waiting:nth-child(3)
     And the user clicks the button/link                    link = Add a partner organisation
-    When the user adds a new partner organisation          Testing International Partner Organisation  FName Surname  ${invite_email}
-    Then organisation is able to accept project invite     FName  Surname  ${invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
+    When the user adds a new partner organisation          Testing International Partner Organisation  FName Surname  ${international_invite_email}
+    Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
     [Documentation]  IFS-7197
