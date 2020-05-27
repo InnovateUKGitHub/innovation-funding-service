@@ -78,8 +78,15 @@ task applyBuildEnvProperties(dependsOn: getBuildProperties) {
     }
 }
 
+task loadNexusCredentials() {
+    if (project.findProperty("nexusRegistry") == null
+            || project.findProperty("nexusUsername") == null
+            || project.findProperty("nexusPassword") == null) {
+        dependsOn applyBuildEnvProperties
+    }
+}
+
 task createSecretsFromAws() {
-    dependsOn applyBuildEnvProperties
     if (!isNamedEnv()) {
         dependsOn applyNonNamedEnvProperties
     } else {
