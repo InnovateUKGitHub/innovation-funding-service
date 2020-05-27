@@ -13,11 +13,13 @@ Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
+${projectSetupPage}                                    ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
 ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
 ${InternationalApplicationTitle}                       New Test Application for International Users
 ${InternationalCompetitionTitle}                       International Competition
 
 *** Test Cases ***
+
 Non registered UK based users apply for an international competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
@@ -150,7 +152,7 @@ Non-Registered user(Partner organisation) create an account
     [Tags]  HappyPath
     When Partner user enters the details and clicks the create account     Tim  Simpson  ${short_password}
     Then The user should not see an error in the page
-
+#
 Registered International lead user applying for an international competition see only International organisations
     [Documentation]    IFS-7252
     [Tags]  HappyPath
@@ -184,17 +186,41 @@ Moving International Competition to Project Setup
     And moving competition to Project Setup                       ${InternationalCompetitionId}
     [Teardown]  Requesting IDs of this Project
 
+Ifs Admin is able to add a new partner organisation
+    [Documentation]  IFS-7197
+    Given the user navigates to the page                       ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
+    When the user clicks the button/link                       jQuery = tr:contains("${InternationalApplicationTitle}") .waiting:nth-child(3)
+    And the user clicks the button/link                        link = Add a partner organisation
+    When the user adds a new partner organisation              Testing International Partner Organisation  FName Surname  ${invite_email}
+    Then organisation is able to accept project invite         FName  Surname  ${invite_email}  Nomensa  NOMENSA LTD  ${ApplicationID}  ${InternationalApplicationTitle}
+
 *** Keywords ***
+organisation is able to accept project invite
+    [Arguments]  ${fname}  ${sname}  ${email}  ${orgId}  ${orgName}  ${applicationID}  ${appTitle}
+    logout as user
+    the user reads his email and clicks the link                  ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
+    the user accepts invitation                                   ${orgId}  ${orgName}
+
+The user accepts invitation
+    [Arguments]   ${orgId}  ${orgName}
+    the user clicks the button/link                          jQuery = .govuk-button:contains("Yes, create an account")
+    user selects where is organisation based                 isInternational
+    the user provides international organisation details     435445543  Sydney  Australia  Australia  Test Empire  international-organisation-details-cta
+    the user verifies their organisation details
+    the user clicks the button/link                          id = international-confirm-organisation-cta
+    partner user enters the details and clicks the create account     Tester  Simpson  ${short_password}
+    the user should not see an error in the page
+
 Partner user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${password}
     Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
     the user enters text to a text field                    id = firstName  ${first_name}
     the user enters text to a text field                    id = lastName  ${last_name}
     the user enters text to a text field                    id = phoneNumber  234324234
-    Input Password                   id = password  ${password}
-    the user selects the checkbox    termsAndConditions
-    the user selects the checkbox    allowMarketingEmails
-    the user clicks the button/link  name = create-account
+    Input Password                                          id = password  ${password}
+    the user selects the checkbox                           termsAndConditions
+    the user selects the checkbox                           allowMarketingEmails
+    the user clicks the button/link                         name = create-account
 
 invite partner organisation
     [Arguments]  ${org_name}  ${user_name}  ${email}
@@ -276,7 +302,7 @@ The user completes the application
     the applicant completes Application Team
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${InternationalApplicationTitle}
-    the user marks the finance as complete                  ${InternationalApplicationTitle}   Calculate  52,214  yes
+    the user marks the finance as complete                   ${InternationalApplicationTitle}   Calculate  52,214  yes
     the user accept the competition terms and conditions     Return to application overview
 
 the user marks the finance as complete
