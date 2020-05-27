@@ -208,8 +208,8 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link           jQuery = button:contains("Continue")
     the user clicks the button/link           jQuery = span:contains("Start")
     the user clicks the button/link           css = div.initials-tab-content
-    The user enters text to a docusign field  jQuery = .text-tab:first input  ${date}
-    The user enters text to a docusign field  jQuery = .text-tab ~ .text-tab input   ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first + .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
     the user should see the element           jQuery = h1:contains("Grant offer letter")
