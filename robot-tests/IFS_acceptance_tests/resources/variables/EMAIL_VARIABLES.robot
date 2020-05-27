@@ -20,5 +20,6 @@ ${lead_applicant}               steve.smith@empire.com
 ${uk_based_applicant}           russell.jenkins@load.example.com
 ${uk_based_applicant_1}         tony.blair@test.com
 ${lead_international_email}     stephan.marriek@empire.fr
+${lead_international_email1}    daniel.tan@example.com
 ${partner_international_email}  tim.simpson@test.com
 ${lead_international_email_1}   roselin.messy1@empire.fr
