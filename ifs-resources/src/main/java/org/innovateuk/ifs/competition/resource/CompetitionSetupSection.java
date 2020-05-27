@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -30,7 +29,7 @@ public enum CompetitionSetupSection {
     ASSESSORS(7L, "assessors", "Assessors", emptyList(), true),
     CONTENT(8L, "content", "Public content", emptyList(), true),
     PROJECT_DOCUMENT(10L, "project-document", "Documents in project setup", emptyList(), false),
-    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", singletonList(LEAD_INTERNATIONAL_ORGANISATION), false);
+    ORGANISATIONAL_ELIGIBILITY(12L, "organisational-eligibility", "Organisational eligibility", emptyList(), false);
 
     private Long id;
     private String path;

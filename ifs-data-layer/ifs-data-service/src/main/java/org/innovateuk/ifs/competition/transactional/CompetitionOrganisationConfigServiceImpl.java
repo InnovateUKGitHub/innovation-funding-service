@@ -42,7 +42,7 @@ public class CompetitionOrganisationConfigServiceImpl implements CompetitionOrga
         return find(competitionOrganisationConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionOrganisationConfig.class, competitionId))
                 .andOnSuccessReturnVoid((config) -> {
                     config.setInternationalOrganisationsAllowed(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed());
-                    if (config.getInternationalOrganisationsAllowed().equals(true)) {
+                    if (Boolean.TRUE.equals(config.getInternationalOrganisationsAllowed())) {
                         config.setInternationalLeadOrganisationAllowed(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
                     } else {
                         config.setInternationalLeadOrganisationAllowed(null);
