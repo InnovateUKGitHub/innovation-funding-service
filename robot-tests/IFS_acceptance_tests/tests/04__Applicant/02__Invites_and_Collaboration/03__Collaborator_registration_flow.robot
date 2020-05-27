@@ -24,7 +24,7 @@ User cannot continue if an organisation type is not selected
     Given browser validations have been disabled
     When the user clicks the button/link           jQuery = .govuk-button:contains("Save and continue")
     Then the user should see a field error         Please select an organisation type.
-    Given the user selects the radio button        organisationType    3
+    Given the user selects the radio button        organisationTypeId    3
     And the user clicks the button/link            jQuery = .govuk-button:contains("Save and continue")
 
 User is able to select only one type

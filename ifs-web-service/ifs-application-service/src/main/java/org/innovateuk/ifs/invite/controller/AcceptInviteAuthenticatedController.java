@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -116,6 +117,11 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
 
+                    CompetitionOrganisationConfigResource organisationConfig = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
+
+                    if (Boolean.TRUE.equals(organisationConfig.getInternationalOrganisationsAllowed())) {
+                        return "redirect:/organisation/create/international-organisation";
+                    }
                     return "redirect:/organisation/select";
                 }
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));

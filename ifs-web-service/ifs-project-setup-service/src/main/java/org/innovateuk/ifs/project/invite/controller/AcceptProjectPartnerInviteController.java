@@ -5,8 +5,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
-import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResource;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
@@ -44,8 +42,6 @@ public class AcceptProjectPartnerInviteController {
     @Autowired
     private NavigationUtils navigationUtils;
     @Autowired
-    private ProjectInviteRestService projectInviteRestService;
-    @Autowired
     private CompetitionOrganisationConfigRestService organisationConfigRestService;
 
     @GetMapping("/{hash}/accept")
@@ -80,12 +76,11 @@ public class AcceptProjectPartnerInviteController {
                                     Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
-                    ProjectUserInviteResource projectResource = projectInviteRestService.getInviteByHash(cookie.getHash()).getSuccess();
-                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(projectResource.getCompetitionId()).getSuccess();
+                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
                     boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
 
                     model.addAttribute("projectName", invite.getProjectName());
-                    model.addAttribute("internationalCompetition", international);
+                    model.addAttribute("international", international);
                     return "project/partner-invite/new-user";
             }).getSuccess()
         ).orElseThrow(ObjectNotFoundException::new);
@@ -98,14 +93,10 @@ public class AcceptProjectPartnerInviteController {
                                     Model model) {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
-                    ProjectUserInviteResource projectResource = projectInviteRestService.getInviteByHash(cookie.getHash()).getSuccess();
-                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(projectResource.getCompetitionId()).getSuccess();
-                    boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
 
                     model.addAttribute("projectName", invite.getProjectName());
                     model.addAttribute("loggedIn", user != null);
                     model.addAttribute("projectId", projectId);
-                    model.addAttribute("internationalCompetition", international);
 
                     return "project/partner-invite/existing-user";
                 }).getSuccess()
@@ -127,11 +118,10 @@ public class AcceptProjectPartnerInviteController {
                         return "registration/logged-in-with-another-user-failure";
                     }
 
-                    ProjectUserInviteResource projectResource = projectInviteRestService.getInviteByHash(cookie.getHash()).getSuccess();
-                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(projectResource.getCompetitionId()).getSuccess();
+                    CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
                     boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
 
-                    if(international) {
+                    if (international) {
                         return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/create/international-organisation");
                     }
 
