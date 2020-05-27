@@ -74,18 +74,21 @@ task readBuildEnvProperties() {
 task applyBuildEnvProperties(dependsOn: getBuildProperties) {
     //dependsOn readBuildEnvProperties
     //doLast {
-        apply from: rootProject.file("gradle-support/build-env-properties.gradle")
-        println("here->" + project.hasProperty("nexusRegistry"))
-        println("here->" + project.findProperty("nexusRegistry"))
-        println(project.getProperty("nexusRegistry"))
+        File file = rootProject.file("gradle-support/build-env-properties.gradle")
+        if (file.exists()) {
+            apply from: rootProject.file("gradle-support/build-env-properties.gradle")
+            println("here->" + project.hasProperty("nexusRegistry"))
+            println("here->" + project.findProperty("nexusRegistry"))
+            println(project.getProperty("nexusRegistry"))
 
-        println("here->" + project.hasProperty("nexusUsername"))
-        println("here->" + project.findProperty("nexusUsername"))
-        println(project.getProperty("nexusUsername"))
+            println("here->" + project.hasProperty("nexusUsername"))
+            println("here->" + project.findProperty("nexusUsername"))
+            println(project.getProperty("nexusUsername"))
 
-        println(project.hasProperty("nexusPassword"))
-        println("here->" + project.findProperty("nexusPassword"))
-        println(project.getProperty("nexusPassword"))
+            println(project.hasProperty("nexusPassword"))
+            println("here->" + project.findProperty("nexusPassword"))
+            println(project.getProperty("nexusPassword"))
+        }
     //}
 }
 
