@@ -230,7 +230,7 @@ invite partner organisation
 
 Registered UK based lead user goes to the application team
     Logging in and Error Checking                               ${lead_applicant}  ${short_password}
-    the user clicks the button/link                             link = Untitled application (start here)
+    the user clicks the button/link                             jQuery = li:contains("${InternationalCompetitionTitle}") a:contains("Untitled")
     the user clicks the button/link                             link = Application team
 
 the user should see organisations list according to organisation type selected
