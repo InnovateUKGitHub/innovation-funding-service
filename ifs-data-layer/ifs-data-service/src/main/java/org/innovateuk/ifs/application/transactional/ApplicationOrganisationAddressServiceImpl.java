@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,7 +16,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 
 /**
- * Service provides notification emails functions to send emails for {@link Application}s.
+ * Service for getting and saving application organisation addresses.
  */
 @Service
 public class ApplicationOrganisationAddressServiceImpl extends BaseTransactionalService implements ApplicationOrganisationAddressService {
