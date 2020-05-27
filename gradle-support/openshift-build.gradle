@@ -166,3 +166,42 @@ ext {
     getLocalOCCredentials = this.&getLocalOCCredentials
     getRemoteOCCredentials = this.&getRemoteOCCredentials
 }
+
+task pullImage(type: DockerPullImage) {
+    registryCredentials = getNexusCredentials()
+    repository = project.nexusRegistry + "/release/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version.replaceAll("-SNAPSHOT", "")
+}
+
+task pullImageAndCreateContainer(type: DockerCreateContainer) {
+    dependsOn 'pullImage'
+    dependsOn 'removeNexusContainer'
+    containerName = "${project.name.replaceAll(/ifs-/, "")}"
+    containerId = "${project.name.replaceAll(/ifs-/, "")}"
+    network="ifs"
+    imageId = pullImage.getImageId()
+}
+
+task deployNexusLocal(type: DockerStartContainer, dependsOn: pullImageAndCreateContainer) {
+    targetContainerId { pullImageAndCreateContainer.getContainerId() }
+}
+
+task waitNexusDeploy(type: DockerWaitHealthyContainer) {
+    targetContainerId { pullImageAndCreateContainer.getContainerId() }
+}
+
+task stopNexusContainer(type: DockerStopContainer) {
+    targetContainerId { pullImageAndCreateContainer.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeNexusContainer(type: DockerRemoveContainer, dependsOn: stopNexusContainer) {
+    targetContainerId { pullImageAndCreateContainer.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+waitNexusDeploy.mustRunAfter deployNexusLocal

@@ -4,9 +4,9 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 buildscript {
     ext['thymeleaf.version'] = '3.0.8.RELEASE'
@@ -36,15 +36,29 @@ osStageRemote.tag = competitionMgtServiceVersion
 tagDockerLocal.tag = competitionMgtServiceVersion
 osStageLocal.tag = competitionMgtServiceVersion
 
-createContainer.hostName="competition-mgt-svc"
-createContainer.containerName="competition-mgt-svc"
-createContainer.containerId="competition-mgt-svc"
+createContainer.hostName = "competition-mgt-svc"
+createContainer.containerName = "competition-mgt-svc"
+createContainer.containerId = "competition-mgt-svc"
 createContainer.portBindings = ['9003:8000']
 
 def enabled = project.hasProperty('ifs.competition-mgt-service.enabled') ? project.property('ifs.competition-mgt-service.enabled').toBoolean() : true
+def pullNexusImage = project.hasProperty('ifs.competition-mgt-service.pull.nexus.image') ? project.property('ifs.competition-mgt-service.pull.nexus.image').toBoolean() : true
+if (enabled && pullNexusImage) {
 
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
+    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
+        task.enabled = true
+    }
+
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = false
+    }
+
+    assemble.dependsOn deployNexusLocal
+
+} else {
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
 }
 
 prepareDockerBaseInput {
@@ -60,11 +74,11 @@ dependencies {
 
     compile 'org.apache.commons:commons-collections4:4.3'
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-web-service:ifs-application-commons", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv:4.3.2"
 

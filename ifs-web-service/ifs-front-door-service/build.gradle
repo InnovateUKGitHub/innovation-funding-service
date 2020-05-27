@@ -4,9 +4,9 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 buildscript {
     ext['thymeleaf.version'] = '3.0.8.RELEASE'
@@ -34,8 +34,20 @@ tagDockerLocal.tag = frontDoorServiceVersion
 osStageLocal.tag = frontDoorServiceVersion
 
 def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
+def pullNexusImage = project.hasProperty('ifs.front-door-service.pull.nexus.image') ? project.property('ifs.front-door-service.pull.nexus.image').toBoolean() : true
+if (enabled && pullNexusImage) {
+    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
+        task.enabled = true
+    }
+    [stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = false
+    }
+
+    assemble.dependsOn deployNexusLocal
+} else {
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
 }
 
 prepareDockerBaseInput {
@@ -43,19 +55,14 @@ prepareDockerBaseInput {
     dependsOn ":ifs-web-service:ifs-web-core:build"
 }
 
-createContainer.hostName="front-door-svc"
-createContainer.containerName="front-door-svc"
-createContainer.containerId="front-door-svc"
-createContainer.portBindings = ['9008:8000']
-
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile project(':ifs-web-service:ifs-application-commons')
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv:4.3.2"
 }
