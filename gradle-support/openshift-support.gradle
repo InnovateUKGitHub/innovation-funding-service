@@ -26,6 +26,7 @@ task osApplyNamedEnvProperties(type: Exec) {
 }
 
 task osApplyBuildEnvProperties(type: Exec) {
+    println("loading nexus properties from ssm")
     executable = 'setup-files/scripts/openshift/os-apply-properties-from-secrets.sh'
     args = [openshiftEnv, "BUILD", project.version, project.findProperty("use_iam") ?: "true"]
 }
@@ -39,6 +40,7 @@ task osApplyEnvProperties(){
 }
 
 task getProperties(type: Exec, dependsOn: osApplyEnvProperties) {
+    println("adding nexus credentials to project properties")
     executable = 'setup-files/scripts/openshift/generate-gradle-properties.sh'
     args = [openshiftEnv, openshiftEnv]
 }
@@ -74,9 +76,10 @@ task readBuildEnvProperties() {
 task applyBuildEnvProperties(dependsOn: getBuildProperties) {
     //dependsOn readBuildEnvProperties
     //doLast {
+        println("applying nexus properties")
         File file = rootProject.file("gradle-support/build-env-properties.gradle")
         if (file.exists()) {
-            apply from: rootProject.file("gradle-support/build-env-properties.gradle")
+            apply from: file
             println("here->" + project.hasProperty("nexusRegistry"))
             println("here->" + project.findProperty("nexusRegistry"))
             println(project.getProperty("nexusRegistry"))
