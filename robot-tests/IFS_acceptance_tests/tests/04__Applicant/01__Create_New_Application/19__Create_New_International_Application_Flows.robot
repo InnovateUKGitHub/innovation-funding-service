@@ -16,8 +16,14 @@ Resource          ../../../resources/common/Competition_Commons.robot
 
 *** Variables ***
 ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
+<<<<<<< HEAD
 ${internationalApplicationTitle}                       New Test Application for International Users
 ${internationalCompetitionTitle}                       International Competition
+=======
+${InternationalApplicationTitle}                       New Test Application for International Users
+${InternationalCompetitionTitle}                       International Competition
+${InternationalCompetitionId}                          ${competition_ids["${InternationalCompetitionTitle}"]}
+>>>>>>> b2c9776193843158e69b7564b46fe7cd24c909dc
 
 *** Test Cases ***
 
@@ -168,8 +174,11 @@ Applicant is able to complete and submit international application
 
 Moving International Competition to Project Setup
     [Documentation]  IFS-7197
+<<<<<<< HEAD
     [Tags]  HappyPath
     [Setup]  Get competitions id and set it as suite variable     ${internationalCompetitionTitle}
+=======
+>>>>>>> b2c9776193843158e69b7564b46fe7cd24c909dc
     Given Log in as a different user                              &{internal_finance_credentials}
     Then moving competition to Closed                             ${InternationalCompetitionId}
     And making the application a successful project               ${InternationalCompetitionId}  ${internationalApplicationTitle}
@@ -332,11 +341,6 @@ Requesting IDs of this Project
     Set suite variable    ${ProjectID}
     ${ApplicationID} =  get application id by name    ${internationalApplicationTitle}
     Set suite variable    ${ApplicationID}
-
-Get competitions id and set it as suite variable
-    [Arguments]  ${competitionTitle}
-    ${InternationalCompetitionId} =  get comp id from comp title  ${competitionTitle}
-    Set suite variable  ${InternationalCompetitionId}
 
 Custom Suite Setup
     The guest user opens the browser
