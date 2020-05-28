@@ -38,7 +38,7 @@ External dashboard - non-uk based partner applicant can complete the project loc
     [Documentation]    IFS - 7240
     [Tags]
     Given the user navigates to the page                                   ${server}/project-setup/project/${project_id}/organisation/${organisationRedId}/partner-project-location
-    When the user should see project location details
+    When the user should see project location details in project details section
     And the user enters text to a text field                               id = town     delhi
     And the user clicks the button/link                                    jQuery = button:contains("Save project location")
     Then the user should see the element                                   jQuery = td:contains("Delhi")
@@ -46,11 +46,13 @@ External dashboard - non-uk based partner applicant can complete the project loc
 Application form - non-uk based applicant can complete the project location details in project finances
     [Documentation]     IFS-7240
     [Tags]
-    Given the user navigated to project finances in application form
-    When the user should see project location details
+    ${applicationInProgressId} =    get application id by name          ${applicationInProgress}
+    Given the user navigates to the page                                ${server}/application/${applicationInProgressId}/form/your-project-location/organisation/${organisationRedId}/section/384
+    When the user should see project location details in project finances
     And the user enters text to a text field                            id = town     Äteritsiputeritsipuolilautatsijänkä
-    And the user clicks the button/link                                 jQuery = button:contains("Save project location")
-    Then the user should see the element                                jQuery = td:contains("Äteritsiputeritsipuolilautatsijänkä")
+    And the user clicks the button/link                                 id = mark_as_complete
+    And the user clicks the button/link                                 link = Your project location
+    Then the user should see the element                                jQuery = dd:contains("Äteritsiputeritsipuolilautatsijänkä")
 
 External dashboard - hide the bank details if lead organisation is non-uk based
     [Documentation]    IFS - 7163
@@ -62,8 +64,8 @@ External dashboard - hide the bank details if lead organisation is non-uk based
 
 Non-uk based project location validations
     [Documentation]    IFS - 7240
-    Given the user navigates to the page                   ${server}/project-setup/project/${project_id}/organisation/${organisationRedId}/partner-project-location
-    When the user should see project location details
+    Given the user navigates to the page                   ${server}/project-setup/project/${project_id}/organisation/${organisationWardId}/partner-project-location
+    When the user should see project location details in project details section
     And the user clicks the button/link                    jQuery = button:contains("Save project location")
     Then the user should see a field and summary error     ${projectLocationValidationErrorMessage}
 
@@ -119,9 +121,10 @@ Project setup dashboard - will not prevent the consortium's bank details from ap
 
 Non-uk based organisations project loaction details updated in project setup
     [Documentation]     IFS-7240
-    When the user navigates to the page      ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/details
-    Then the user should see the element     td:contains("Ward Ltd") ~ td:contains("Mamungkukumpurangkuntjunya Hill")
-    And the user should see the element      td:contains("Red Planet") ~ td:contains("Delhi")
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionID}/status/all
+    When the user clicks the button/link     jQuery = td:nth-child(2) a:contains("Complete")
+    Then the user should see the element     jQuery = td:contains("Ward Ltd") ~ td:contains("Mamungkukumpurangkuntjunya Hill")
+    And the user should see the element      jQuery = td:contains("Red Planet") ~ td:contains("Delhi")
 
 
 
@@ -199,13 +202,14 @@ Comp admin approves bank details of partner organisation
     the user clicks the button/link                                        jQuery = .govuk-button:contains("Approve account")
     the user clicks the button/link                                        link = Bank details
 
-the user should see project location details
+the user should see project location details in project details section
     the user should see the element     css = [for ="town"]
     the user should see the element     jQuery = span:contains("${projectLocationInfo}")
     the user should see the element     id = town
     the user should see the element     jQuery = button:contains("Save project location")
 
-the user navigated to project finances in application form
-    the user clicks the button/link                     link = ${applicationInProgress}
-    the user clicks the button/link                     link = Your project finances
-    the user clicks the button/link                     link = Your project location
+the user should see project location details in project finances
+    the user should see the element     css = [for ="town"]
+    the user should see the element     jQuery = span:contains("${projectLocationInfo}")
+    the user should see the element     id = town
+    the user should see the element     jQuery = button:contains("Save and return to finances")
