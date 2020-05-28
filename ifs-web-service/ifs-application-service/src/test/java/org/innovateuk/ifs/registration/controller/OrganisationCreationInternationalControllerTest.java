@@ -129,7 +129,6 @@ public class OrganisationCreationInternationalControllerTest extends BaseControl
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/international-confirm-organisation"))
-                .andExpect(model().attribute("competitionId", 1L))
                 .andExpect(model().attributeExists("organisationType", "organisationName", "registrationNumber", "address"));
     }
 
