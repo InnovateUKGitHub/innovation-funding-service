@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,15 +20,6 @@ import java.util.List;
 public interface CompetitionService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<CompetitionResource> getCompetitionById(final long id);
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<List<UserResource>> findInnovationLeads(final long competitionId);
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<Void> addInnovationLead(final long competitionId, final long innovationLeadUserId);
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'MANAGE_INNOVATION_LEADS')")
-    ServiceResult<Void> removeInnovationLead(final long competitionId, final long innovationLeadUserId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionResource>> findAll();

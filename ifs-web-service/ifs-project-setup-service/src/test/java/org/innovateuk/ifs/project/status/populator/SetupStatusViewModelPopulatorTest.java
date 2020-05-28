@@ -66,6 +66,8 @@ import static org.innovateuk.ifs.sections.SectionStatus.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
@@ -332,7 +334,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
-        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -871,7 +873,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(FINANCE_CONTACT).build())));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
-        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1507,7 +1509,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(pmUser));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);
-        when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource, partnerOrganisationResource));
     }
 

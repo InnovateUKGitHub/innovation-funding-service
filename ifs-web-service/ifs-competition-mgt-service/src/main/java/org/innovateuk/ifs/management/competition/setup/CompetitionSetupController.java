@@ -30,7 +30,6 @@ import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionS
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
-import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +83,6 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
-
-    @Autowired
-    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -363,81 +359,6 @@ public class CompetitionSetupController {
                 .failNowOrSucceedWith(failureView, () -> DASHBOARD_REDIRECT);
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @GetMapping("/{competitionId}/manage-innovation-leads/find")
-    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       Model model) {
-
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-find";
-    }
-
-    @PreAuthorize("hasPermission(#competitionId,'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @GetMapping("/{competitionId}/manage-innovation-leads/overview")
-    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                               Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-overview";
-    }
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
-    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                    @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                    Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        return competitionSetupService.addInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
-                failure -> "redirect:/competition/manage-innovation-leads/find",
-                success -> {
-                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "competition/manage-innovation-leads-find";
-                }
-        );
-    }
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
-    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                       Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        return competitionSetupService.removeInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
-                failure -> "redirect:/competition/manage-innovation-leads/overview",
-                success -> {
-                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "competition/manage-innovation-leads-overview";
-                }
-        );
-    }
-
     @PostMapping(path = "/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")
     public String uploadTermsAndConditions(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) TermsAndConditionsForm termsAndConditionsForm,
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
@@ -446,7 +367,7 @@ public class CompetitionSetupController {
                                            Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
+        Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", +competition.getId());
         Supplier<String> failure = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
@@ -467,7 +388,7 @@ public class CompetitionSetupController {
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                            Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
+        Supplier<String> failureAndSuccessView = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", +competition.getId());
 
         RestResult<Void> deleteResult = competitionSetupRestService.deleteCompetitionTerms(competitionId);
         return validationHandler.addAnyErrors(error(deleteResult.getErrors()), fileUploadField("termsAndConditionsDoc"), defaultConverters())

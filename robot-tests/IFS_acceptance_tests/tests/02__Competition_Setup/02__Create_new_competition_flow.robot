@@ -213,6 +213,7 @@ Funding information: calculations
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
+    And the user check for competition code
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
@@ -934,3 +935,6 @@ the user fills new application details
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user check for competition code
+    the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}

@@ -13,6 +13,8 @@ public class PartnerOrganisationResource {
 
     private String postcode;
 
+    private String internationalLocation;
+
     public Long getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class PartnerOrganisationResource {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public String getInternationalLocation() {
+        return internationalLocation;
+    }
+
+    public void setInternationalLocation(String internationalLocation) {
+        this.internationalLocation = internationalLocation;
     }
 }

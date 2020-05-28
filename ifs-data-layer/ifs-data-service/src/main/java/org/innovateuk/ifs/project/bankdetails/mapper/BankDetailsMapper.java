@@ -23,7 +23,6 @@ import org.mapstruct.Mappings;
 public abstract class BankDetailsMapper extends BaseMapper<BankDetails, BankDetailsResource, Long> {
 
         @Mappings({
-                @Mapping(target = "address", source = "organisationAddress.address"),
                 @Mapping(target = "companyName", ignore = true),
                 @Mapping(target = "registrationNumber", ignore = true),
                 @Mapping(target = "organisationTypeName", ignore = true)

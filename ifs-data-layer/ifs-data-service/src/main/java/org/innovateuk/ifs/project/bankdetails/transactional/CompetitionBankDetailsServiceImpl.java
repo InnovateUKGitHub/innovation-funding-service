@@ -41,7 +41,7 @@ public class CompetitionBankDetailsServiceImpl extends BaseTransactionalService 
         List<String[]> allRows = new ArrayList<>();
         allRows.add(getBankDetailCSVHeadingRecord());
         bankDetails.forEach(bankDetail -> {
-            Address address = bankDetail.getOrganisationAddress().getAddress();
+            Address address = bankDetail.getAddress();
             List<String> row = new ArrayList<>();
             row.add(bankDetail.getOrganisation().getName());
             row.add(bankDetail.getProject().getApplication().getId().toString());
