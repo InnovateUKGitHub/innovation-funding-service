@@ -38,12 +38,9 @@ task buildDocker(type: DockerBuildImage) {
 }
 
 task loadNexusCredentials() {
-    println("here->" + project.hasProperty("nexusRegistry"))
-    println("here->" + rootProject.hasProperty("nexusUsername"))
-    println("here->" + rootProject.hasProperty("nexusPassword"))
-    if (!project.hasProperty("nexusRegistry")
-            || !project.hasProperty("nexusUsername")
-            || !project.hasProperty("nexusPassword")) {
+    println("here->" + project.findProperty("nexus_username"))
+    println("here->" + project.findProperty("nexus_password"))
+    if (project.findProperty("nexus_username") == null ||  project.findProperty("nexus_password") == null) {
         println("no nexus properties found")
         dependsOn applyBuildEnvProperties
     }
@@ -51,7 +48,7 @@ task loadNexusCredentials() {
 
 task tagDockerNexus(type: DockerTagImage, dependsOn: [buildDocker, loadNexusCredentials]) {
     imageId = buildDocker.getTag()
-    repository = project.findProperty("nexusRegistry") + "/release/" + project.name.replaceAll(/ifs-/, "")
+    repository = project.nexusRegistry + "/release/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
@@ -166,9 +163,9 @@ def getRemoteOCCredentials() {
 
 def getNexusCredentials() {
     def dockerRegistryCredentials = new DockerRegistryCredentials()
-    dockerRegistryCredentials.url = project.findProperty("nexusRegistry")
-    dockerRegistryCredentials.username = project.findProperty("nexusUsername")
-    dockerRegistryCredentials.password =project.findProperty("nexusPassword")
+    dockerRegistryCredentials.url = project.nexusRegistry
+    dockerRegistryCredentials.username = project.findProperty("nexus_username")
+    dockerRegistryCredentials.password =project.findProperty("nexus_password")
     return dockerRegistryCredentials
 }
 

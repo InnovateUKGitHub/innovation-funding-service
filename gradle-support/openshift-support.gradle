@@ -62,37 +62,12 @@ task getBuildProperties(type: Exec, dependsOn: osApplyBuildEnvProperties) {
     args = [openshiftEnv, "build"]
 }
 
-task readBuildEnvProperties() {
+task applyBuildEnvProperties(dependsOn: getBuildProperties) {
+    println("applying nexus properties")
     File file = rootProject.file("gradle-support/build-env-properties.gradle")
     if (file.exists()) {
-        println file.text
-        println ""
-        file.readLines().each {
-            println it
-        }
+        apply from: file
     }
-}
-
-task applyBuildEnvProperties(dependsOn: getBuildProperties) {
-    //dependsOn readBuildEnvProperties
-    //doLast {
-        println("applying nexus properties")
-        File file = rootProject.file("gradle-support/build-env-properties.gradle")
-        if (file.exists()) {
-            apply from: file
-            println("here->" + project.hasProperty("nexusRegistry"))
-            println("here->" + project.findProperty("nexusRegistry"))
-            println(project.getProperty("nexusRegistry"))
-
-            println("here->" + project.hasProperty("nexusUsername"))
-            println("here->" + project.findProperty("nexusUsername"))
-            println(project.getProperty("nexusUsername"))
-
-            println(project.hasProperty("nexusPassword"))
-            println("here->" + project.findProperty("nexusPassword"))
-            println(project.getProperty("nexusPassword"))
-        }
-    //}
 }
 
 task createSecretsFromAws() {
