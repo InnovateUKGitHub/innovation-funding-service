@@ -17,7 +17,29 @@
 
         <p class="govuk-body govuk-!-margin-top-6">This organisation will lead the application.</p>
 
-        <th:block th:insert="fragments/addresses :: international-organisation-details"/>
+        <dl class="govuk-list readonly-data">
+            <dt>Organisation type</dt>
+            <dd th:text="${organisationType.name}">Business</dd>
+
+            <dt>Is your organisation based in the UK?</dt>
+            <dd>No</dd>
+
+            <dt>Organisation name</dt>
+            <dd th:text="${organisationName}">name</dd>
+
+            <th:block th:if="${registrationNumber != null}">
+                <dt>Registration number</dt>
+                <dd th:text="${registrationNumber}">1234</dd>
+            </th:block>
+            <dt>Address</dt>
+            <dd>
+                <th:block th:text="${address.addressLine1}"></th:block><br/>
+                <th:block th:text="${address.addressLine2}"></th:block><br/>
+                <th:block th:text="${address.town}"></th:block><br/>
+                <th:block th:text="${address?.country}"></th:block><br/>
+                <th:block th:text="${address.postcode}"></th:block>
+            </dd>
+        </dl>
 
         <form method="post" th:action="@{/organisation/create/international-organisation/save-organisation}">
             <button id="international-confirm-organisation-cta" class="govuk-button govuk-!-margin-top-6">Save and continue</button>

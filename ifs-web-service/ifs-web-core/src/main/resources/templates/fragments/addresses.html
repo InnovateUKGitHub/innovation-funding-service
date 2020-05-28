@@ -249,35 +249,6 @@
     </fieldset>
 </th:block>
 
-<th:block th:fragment="international-organisation-details">
-    <fieldset class="govuk-fieldset">
-        <legend class="govuk-visually-hidden" th:text="${organisationType.name} + ''">? Organisation</legend>
-        <div class="govuk-form-group">
-
-            <h2 class="govuk-heading-s">Organisation type</h2>
-            <p class="govuk-body" th:text="${organisationType.name}">Business</p>
-
-            <h2 class="govuk-heading-s">Is your organisation based in the UK?</h2>
-            <p class="govuk-body">No</p>
-
-            <h2 class="govuk-heading-s">Organisation name</h2>
-            <p class="govuk-body" th:text="${organisationName}"></p>
-
-            <th:block th:if="${registrationNumber != null}">
-                <h2 class="govuk-heading-s">Registration number</h2>
-                <p class="govuk-body" th:text="${registrationNumber}"></p>
-            </th:block>
-
-                <h2 class="govuk-heading-s">Address</h2>
-                <div class="govuk-body govuk-!-margin-0" th:text="${address.addressLine1}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${address.addressLine2}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${address.town}"></div>
-                <div class="govuk-body govuk-!-margin-0" th:text="${address?.country}"></div>
-                <div class="govuk-body" th:text="${address.postcode}"></div>
-        </div>
-    </fieldset>
-</th:block>
-
 <th:block th:fragment="business-details">
     <fieldset class="govuk-fieldset">
         <div class="govuk-form-group">

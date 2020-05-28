@@ -7,13 +7,15 @@ public class OrganisationSelectionViewModel {
     private final Set<OrganisationSelectionChoiceViewModel> choices;
     private final boolean collaboratorJourney;
     private final boolean applicantJourney;
+    private final boolean internationalJourney;
     private final String newOrganisationUrl;
 
-    public OrganisationSelectionViewModel(Set<OrganisationSelectionChoiceViewModel> choices, boolean collaboratorJourney, boolean applicantJourney, String newOrganisationUrl) {
+    public OrganisationSelectionViewModel(Set<OrganisationSelectionChoiceViewModel> choices, boolean collaboratorJourney, boolean applicantJourney, boolean internationalJourney, String newOrganisationUrl) {
         this.choices = choices;
         this.collaboratorJourney = collaboratorJourney;
         this.newOrganisationUrl = newOrganisationUrl;
         this.applicantJourney = applicantJourney;
+        this.internationalJourney = internationalJourney;
     }
 
     public Set<OrganisationSelectionChoiceViewModel> getChoices() {
@@ -26,6 +28,10 @@ public class OrganisationSelectionViewModel {
 
     public boolean isApplicantJourney() {
         return applicantJourney;
+    }
+
+    public boolean isInternationalJourney() {
+        return internationalJourney;
     }
 
     public String getNewOrganisationUrl() {
