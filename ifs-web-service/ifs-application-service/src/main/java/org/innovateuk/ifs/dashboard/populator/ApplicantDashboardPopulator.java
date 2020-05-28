@@ -1,26 +1,14 @@
 package org.innovateuk.ifs.dashboard.populator;
 
-import org.innovateuk.ifs.applicant.resource.dashboard.ApplicantDashboardResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardEuGrantTransferRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInProgressRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardInSetupRowResource;
-import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResource;
+import org.innovateuk.ifs.applicant.resource.dashboard.*;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
-import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
-import org.innovateuk.ifs.dashboard.viewmodel.EuGrantTransferDashboardRowViewModel;
-import org.innovateuk.ifs.dashboard.viewmodel.InProgressDashboardRowViewModel;
-import org.innovateuk.ifs.dashboard.viewmodel.InSetupDashboardRowViewModel;
-import org.innovateuk.ifs.dashboard.viewmodel.PreviousDashboardRowViewModel;
+import org.innovateuk.ifs.dashboard.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
-import static java.util.Comparator.nullsLast;
-import static java.util.Comparator.reverseOrder;
+import static java.util.Comparator.*;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -31,9 +19,6 @@ public class ApplicantDashboardPopulator {
 
     @Autowired
     private ApplicantRestService applicantRestService;
-
-    @Value("${ifs.show.covid.questionnaire.links}")
-    private boolean showCovidQuestionnaireLink;
 
     public ApplicantDashboardViewModel populate(Long userId) {
         ApplicantDashboardResource applicantDashboardResource = applicantRestService.getApplicantDashboard(userId);
@@ -46,7 +31,7 @@ public class ApplicantDashboardPopulator {
         List<InProgressDashboardRowViewModel> applicationsInProgress = getViewModelForInProgress(applicantDashboardResource.getInProgress());
         List<PreviousDashboardRowViewModel> applicationsPreviouslySubmitted = getViewModelForPrevious(applicantDashboardResource.getPrevious());
 
-        return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted, showCovidQuestionnaireLink);
+        return new ApplicantDashboardViewModel(applicationsInSetUp, applicationsForEuGrantTransfers, applicationsInProgress, applicationsPreviouslySubmitted);
     }
 
     private List<InSetupDashboardRowViewModel> getViewModelForInSetup(List<DashboardInSetupRowResource> inSetupResources){
