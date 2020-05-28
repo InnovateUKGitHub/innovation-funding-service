@@ -16,7 +16,7 @@ if (project.hasProperty('openshiftEnv')) {
 
 task osApplyNonNamedEnvProperties(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-apply-properties-from-secrets.sh'
-    args = [openshiftEnv, "NON-NAMED", project.version, project.findProperty("use_iam") ?: "true"]
+    args = [openshiftEnv, project.findProperty("ssm_location") ?: "NON-NAMED", project.version, project.findProperty("use_iam") ?: "true"]
 }
 
 task osApplyNamedEnvProperties(type: Exec) {

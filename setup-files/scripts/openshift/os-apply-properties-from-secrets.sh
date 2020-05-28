@@ -33,6 +33,8 @@ function applyProperties() {
     echo "$(valueFromAws)" >> "unformatted-properties.gradle"
     sed 's/ext/\'$'\n''&/g' unformatted-properties.gradle > formatted-properties.gradle
 
+    echo formatted-properties.gradle
+
     oc create secret generic properties \
         --from-file=properties=formatted-properties.gradle \
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
