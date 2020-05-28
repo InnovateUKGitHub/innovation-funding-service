@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     IFS-7163  Non-UK based partner organisation will bypass bank details section in Project Setup
 ...
+...               IFS-7240  Project location details for non-UK based organisations
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -30,6 +31,16 @@ External dashboard - hide the bank details if partner is non-uk based
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
 
+External dashboard - non-uk based partner applicant can complete the project location details
+    [Documentation]    IFS - 7240
+    [Tags]
+    Given the user navigates to the page                                   ${server}/project-setup/project/${project_id}/organisation/${organisationRedId}/partner-project-location
+    When the user should see project location details
+    And the user enters text to a text field                               id = town     delhi
+    And the user clicks the button/link                                    jQuery = button:contains("Save project location")
+    Then the user should see the element                                   jQuery = td:contains("Delhi")
+
+
 External dashboard - hide the bank details if lead organisation is non-uk based
     [Documentation]    IFS - 7163
     [Tags]
@@ -37,6 +48,16 @@ External dashboard - hide the bank details if lead organisation is non-uk based
     And Log in as a different user                                         &{lead_applicant_credentials}
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
+
+External dashboard - non-uk based lead applicant can complete the project location details
+    [Documentation]    IFS - 7240
+    [Tags]
+    Given the user navigates to the page                                   ${server}/project-setup/project/${project_id}/organisation/${organisationRedId}/partner-project-location
+    When the user should see project location details
+    And the user enters text to a text field                               id = town     mamungkukumpurangkuntjunya Hill
+    And the user clicks the button/link                                    jQuery = button:contains("Save project location")
+    Then the user should see the element                                   jQuery = td:contains("Mamungkukumpurangkuntjunya Hill")
+
 
 External dashboard - lead applicant - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
     [Documentation]    IFS - 7163
@@ -80,6 +101,8 @@ Project setup dashboard - will not prevent the consortium's bank details from ap
     [Tags]
     When Comp admin approves bank details of partner organisation
     Then the user should see the element                                   jQuery = li:nth-child(4) span:nth-child(1)
+
+
 
 *** Keywords ***
 Custom Suite Setup
@@ -154,3 +177,11 @@ Comp admin approves bank details of partner organisation
     the user clicks the button/link                                        jQuery = .govuk-button:contains("Approve bank account details")
     the user clicks the button/link                                        jQuery = .govuk-button:contains("Approve account")
     the user clicks the button/link                                        link = Bank details
+
+the user should see project location details
+    the user should see the element     css = [for ="town"]
+    the user should see the element     jQuery = span:contains("Please enter the town or city where most of the project work will take place")
+    the user should see the element     id = town
+    the user should see the element     jQuery = button:contains("Save project location")
+
+
