@@ -34,7 +34,6 @@ task osApplyEnvProperties(){
 }
 
 task getProperties(type: Exec, dependsOn: osApplyEnvProperties) {
-    println("adding nexus credentials to project properties")
     executable = 'setup-files/scripts/openshift/generate-gradle-properties.sh'
     args = [openshiftEnv, openshiftEnv]
 }
