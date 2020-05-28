@@ -94,6 +94,14 @@
                 </a>
             </li>
         </ul>
+
+        <div class="govuk-!-margin-top-6">
+            <a class="govuk-button govuk-button--secondary"
+               th:href="@{/competition/setup/{competitionId}/(competitionId=${model.competition.getId()})}">Return to setup overview</a>
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+
     </main>
 </div>
 
