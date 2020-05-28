@@ -98,7 +98,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
                                 .failNowOrSucceedWith(failureView, () ->
                                         format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPath())) :
 
-                        validationHandler.addAnyErrors(saveOrganisationEligibility(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
+                        validationHandler.addAnyErrors(saveResult(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
                                 .failNowOrSucceedWith(failureView, () ->
                                         format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
 
@@ -150,10 +150,22 @@ public class CompetitionSetupOrganisationalEligibilityController {
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
         competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable());
 
-        return competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource).toServiceResult().andOnSuccessReturnVoid();
+        competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource);
+
+        OrganisationalEligibilityForm form = new OrganisationalEligibilityForm();
+        form.setInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed());
+
+        return competitionSetupService.saveCompetitionSetupSection(form, competition, ORGANISATIONAL_ELIGIBILITY);
     }
 
     private ServiceResult<Void> saveOrganisationEligibility(OrganisationalEligibilityForm organisationalEligibilityForm, CompetitionResource competition) {
+
+        CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
+        competitionOrganisationConfigResource.setInternationalOrganisationsAllowed(organisationalEligibilityForm.getInternationalOrganisationsApplicable());
+        return competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource).toServiceResult().andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> saveResult(OrganisationalEligibilityForm organisationalEligibilityForm, CompetitionResource competition) {
         return competitionSetupService.saveCompetitionSetupSection(organisationalEligibilityForm, competition, ORGANISATIONAL_ELIGIBILITY);
     }
 }
