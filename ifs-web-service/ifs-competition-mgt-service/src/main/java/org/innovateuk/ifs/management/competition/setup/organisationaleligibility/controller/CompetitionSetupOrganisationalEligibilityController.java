@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.util.Objects.isNull;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -96,7 +97,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
 
                         validationHandler.addAnyErrors(saveOrganisationEligibility(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
                                 .failNowOrSucceedWith(failureView, () ->
-                                        format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPath())) :
+                                        format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath())) :
 
                         validationHandler.addAnyErrors(saveResult(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
                                 .failNowOrSucceedWith(failureView, () ->
@@ -133,7 +134,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         };
 
         Supplier<String> successView = () -> {
-            if (leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable() != null) {
+            if (!isNull(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable())) {
                 validationHandler.addAnyErrors(saveOrganisationConfig(competition, leadInternationalOrganisationForm), fieldErrorsToFieldErrors(), asGlobalErrors())
                         .failNowOrSucceedWith(failureView, () ->
                                 format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
@@ -150,10 +151,9 @@ public class CompetitionSetupOrganisationalEligibilityController {
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
         competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable());
 
-        competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource);
-
         OrganisationalEligibilityForm form = new OrganisationalEligibilityForm();
         form.setInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalOrganisationsAllowed());
+        form.setLeadInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
 
         return competitionSetupService.saveCompetitionSetupSection(form, competition, ORGANISATIONAL_ELIGIBILITY);
     }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestS
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationViewModelPopulator;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +17,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionOrganisationConfigResourceBuilder.newCompetitionOrganisationConfigResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,6 +43,9 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
 
     @Mock
     private LeadInternationalOrganisationViewModelPopulator leadInternationalOrganisationViewModelPopulator;
+
+    @Mock
+    private LeadInternationalOrganisationFormPopulator leadInternationalOrganisationFormPopulator;
 
     @Override
     protected CompetitionSetupOrganisationalEligibilityController supplyControllerUnderTest() {
@@ -74,7 +75,12 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
         OrganisationalEligibilityForm organisationalEligibilityForm = new OrganisationalEligibilityForm();
         organisationalEligibilityForm.setInternationalOrganisationsApplicable(true);
 
-        when(competitionSetupService.saveCompetitionSetupSection(isA(OrganisationalEligibilityForm.class), eq(competition), eq(ORGANISATIONAL_ELIGIBILITY))).thenReturn(serviceSuccess());
+        CompetitionOrganisationConfigResource configResource = newCompetitionOrganisationConfigResource()
+                .withInternationalOrganisationsAllowed(true)
+                .build();
+
+        when(competitionOrganisationConfigRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(configResource));
+        when(competitionOrganisationConfigRestService.update(competitionId, configResource)).thenReturn(restSuccess(configResource));
 
         mockMvc.perform(post(URL, competitionId)
                 .param("internationalOrganisationsApplicable", "true"))
@@ -94,24 +100,5 @@ public class CompetitionSetupOrganisationalEligibilityControllerTest extends Bas
         mockMvc.perform(get(URL + "/lead-international-organisation", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/lead-international-organisation"));
-    }
-
-    @Test
-    public void submitLeadInternationalOrganisationDetails() throws Exception {
-
-        OrganisationalEligibilityForm organisationalEligibilityForm = new OrganisationalEligibilityForm();
-        organisationalEligibilityForm.setLeadInternationalOrganisationsApplicable(true);
-
-        CompetitionOrganisationConfigResource configResource = newCompetitionOrganisationConfigResource()
-                .withInternationalLeadOrganisationAllowed(organisationalEligibilityForm.getLeadInternationalOrganisationsApplicable())
-                .build();
-
-        when(competitionOrganisationConfigRestService.findByCompetitionId(competitionId)).thenReturn(restSuccess(configResource));
-        when(competitionOrganisationConfigRestService.update(competitionId, configResource)).thenReturn(restSuccess(configResource));
-
-        mockMvc.perform(post(URL + "/lead-international-organisation", competitionId)
-                .param("leadInternationalOrganisationsApplicable", "true"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/setup/%d/section/organisational-eligibility", competitionId)));
     }
 }

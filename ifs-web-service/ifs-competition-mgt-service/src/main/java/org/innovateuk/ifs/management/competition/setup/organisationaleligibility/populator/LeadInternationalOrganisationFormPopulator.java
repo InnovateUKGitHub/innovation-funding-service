@@ -16,7 +16,6 @@ public class LeadInternationalOrganisationFormPopulator {
 
         LeadInternationalOrganisationForm leadInternationalOrganisationForm = new LeadInternationalOrganisationForm();
         leadInternationalOrganisationForm.setLeadInternationalOrganisationsApplicable(configResource.getInternationalLeadOrganisationAllowed());
-        leadInternationalOrganisationForm.setInternationalOrganisationsApplicable(configResource.getInternationalOrganisationsAllowed());
 
         return leadInternationalOrganisationForm;
     }
