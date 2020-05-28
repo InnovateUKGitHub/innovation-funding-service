@@ -30,10 +30,8 @@
         <p class="govuk-body">We will assign a Monitoring Officer who will visit your project location.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
-            <h2 class="govuk-heading-m">Project location</h2>
-
             <div th:if="${model.international}" class="govuk-form-group" th:classappend="${#fields.hasErrors('town')} ? 'govuk-form-group--error'" >
-                <label class="govuk-label" for="town">
+                <label class="govuk-label govuk-label--s" for="town">
                     Town or city
                 </label>
                 <span class="govuk-hint">Please enter the town or city where most of the project work will take place.</span>
@@ -51,7 +49,7 @@
                        th:field="*{town}" />
             </div>
             <div th:if="${!model.international}" class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'" >
-                <label class="govuk-label" for="postcode">
+                <label class="govuk-label govuk-label--s" for="postcode">
                     Postcode
                 </label>
                 <span class="govuk-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>

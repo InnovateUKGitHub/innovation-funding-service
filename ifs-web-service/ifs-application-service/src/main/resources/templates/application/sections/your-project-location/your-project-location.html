@@ -41,12 +41,11 @@
 
             <div th:if="${model.international}" class="govuk-!-margin-top-6">
 
-                <p class="govuk-body" th:if="${!model.readOnly}">Please enter the town or city where most of the project work will take place.</p>
-
                 <th:block th:insert="fragments/form-elements/textfield ::
                     textfield(
                         label='Town or city',
                         id='town',
+                        hint=${model.readOnly ? null : 'Please enter the town or city where most of the project work will take place.'},
                         value=${form.town},
                         readOnly=${model.readOnly},
                         required=true,
