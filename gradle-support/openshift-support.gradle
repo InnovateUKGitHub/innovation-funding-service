@@ -25,12 +25,6 @@ task osApplyNamedEnvProperties(type: Exec) {
     args = [openshiftEnv, envName, project.version, project.findProperty("use_iam") ?: "true"]
 }
 
-task osApplyBuildEnvProperties(type: Exec) {
-    println("loading nexus properties from ssm")
-    executable = rootProject.file('setup-files/scripts/openshift/os-apply-properties-from-secrets.sh')
-    args = [openshiftEnv, "BUILD", project.version, project.findProperty("use_iam") ?: "true"]
-}
-
 task osApplyEnvProperties(){
     if (isNamedEnv()) {
         dependsOn osApplyNamedEnvProperties
@@ -54,19 +48,6 @@ task applyNonNamedEnvProperties(dependsOn: getProperties) {
 task applyNamedEnvProperties(dependsOn: getProperties) {
     doLast {
         apply from: rootProject.file("gradle-support/" + openshiftEnv + "-named-env-properties.gradle")
-    }
-}
-
-task getBuildProperties(type: Exec, dependsOn: osApplyBuildEnvProperties) {
-    executable = 'setup-files/scripts/openshift/generate-gradle-properties.sh'
-    args = [openshiftEnv, "build"]
-}
-
-task applyBuildEnvProperties(dependsOn: getBuildProperties) {
-    println("applying nexus properties")
-    File file = rootProject.file("gradle-support/build-env-properties.gradle")
-    if (file.exists()) {
-        apply from: file
     }
 }
 

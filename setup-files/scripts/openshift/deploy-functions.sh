@@ -5,17 +5,6 @@ function getBuildLocation() {
     echo "build/resources/main"
 }
 
-function isForBuildProperties() {
-
-    TARGET=$1
-
-    if [[ ${TARGET} != "build" ]]; then
-        exit 1
-    else
-        exit 0
-    fi
-}
-
 function isNamedEnvironment() {
 
     TARGET=$1
