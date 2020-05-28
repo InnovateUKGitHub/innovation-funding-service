@@ -11,7 +11,8 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to organisational eligibility',linkUrl=@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.getId()},sectionPath='organisational-eligibility')}" />
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back to organisational eligibility',linkUrl=@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.getId()},sectionPath='organisational-eligibility')}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${leadInternationalOrganisationForm.*}')}" class="govuk-error-summary"

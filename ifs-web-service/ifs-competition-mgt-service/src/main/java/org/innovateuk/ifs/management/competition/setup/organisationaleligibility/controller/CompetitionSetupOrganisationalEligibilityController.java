@@ -7,10 +7,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigReso
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.LeadInternationalOrganisationForm;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationViewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,8 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
 /**
- * Controller to manage the Application Questions and it's sub-sections in the
- * competition setup process
+ * Controller to manage the Organisational eligibility and Lead organisations in competition setup process
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/organisational-eligibility")
@@ -48,18 +49,22 @@ public class CompetitionSetupOrganisationalEligibilityController {
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
+
+    @Autowired
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
     @Autowired
     private LeadInternationalOrganisationViewModelPopulator leadInternationalOrganisationViewModelPopulator;
 
-    @GetMapping
-    public String organisationalEligibilityPageDetails(Model model, @PathVariable long competitionId) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+    @Autowired
+    private LeadInternationalOrganisationFormPopulator leadInternationalOrganisationFormPopulator;
 
-        if (competition.isNonIfs()) {
-            return "redirect:/non-ifs-competition/setup/" + competitionId;
-        }
+    @GetMapping
+    public String organisationalEligibilityPageDetails(Model model,
+                                                       @PathVariable long competitionId) {
+
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
@@ -80,23 +85,24 @@ public class CompetitionSetupOrganisationalEligibilityController {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        Supplier<String> successView = () ->
-                organisationalEligibilityForm.getInternationalOrganisationsApplicable() ?
-                        format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()) :
-                        format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath());
-
-
         Supplier<String> failureView = () -> {
             model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, ORGANISATIONAL_ELIGIBILITY));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, organisationalEligibilityForm);
             return "competition/setup";
         };
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult = competitionSetupService.saveCompetitionSetupSection(organisationalEligibilityForm, competition, ORGANISATIONAL_ELIGIBILITY);
-            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, successView);
-        });
+        Supplier<String> successView = () ->
+                organisationalEligibilityForm.getInternationalOrganisationsApplicable() ?
+
+                        validationHandler.addAnyErrors(saveOrganisationEligibility(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
+                                .failNowOrSucceedWith(failureView, () ->
+                                        format("redirect:/competition/setup/%d/section/%s/lead-international-organisation", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPath())) :
+
+                        validationHandler.addAnyErrors(saveOrganisationEligibility(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
+                                .failNowOrSucceedWith(failureView, () ->
+                                        format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
+
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
     @GetMapping("/lead-international-organisation")
@@ -106,6 +112,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
 
         RestResult<CompetitionOrganisationConfigResource> configResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionId);
         model.addAttribute("model", leadInternationalOrganisationViewModelPopulator.populateModel(competitionId, configResource.getSuccess()));
+        model.addAttribute("leadInternationalOrganisationForm", leadInternationalOrganisationFormPopulator.populateForm(configResource.getSuccess()));
 
         return "competition/setup/lead-international-organisation";
     }
@@ -117,28 +124,36 @@ public class CompetitionSetupOrganisationalEligibilityController {
                                                              ValidationHandler validationHandler,
                                                              Model model) {
 
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionOrganisationConfigResource configResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
 
-        Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/organisational-eligibility", competitionResource.getId());
-
         Supplier<String> failureView = () -> {
-            model.addAttribute("model", leadInternationalOrganisationViewModelPopulator.populateModel(competitionResource.getId(), configResource));
+            model.addAttribute("model", leadInternationalOrganisationViewModelPopulator.populateModel(competition.getId(), configResource));
             return "competition/setup/lead-international-organisation";
         };
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> saveResult = doSaveSection(competitionResource, leadInternationalOrganisationForm);
-            return validationHandler.addAnyErrors(saveResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, successView);
-        });
+        Supplier<String> successView = () -> {
+            if (leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable() != null) {
+                validationHandler.addAnyErrors(saveOrganisationConfig(competition, leadInternationalOrganisationForm), fieldErrorsToFieldErrors(), asGlobalErrors())
+                        .failNowOrSucceedWith(failureView, () ->
+                                format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
+            }
+
+            return format(ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT, competitionId);
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
-    private ServiceResult<Void> doSaveSection(CompetitionResource competition, LeadInternationalOrganisationForm leadInternationalOrganisationForm) {
+    private ServiceResult<Void> saveOrganisationConfig(CompetitionResource competition, LeadInternationalOrganisationForm leadInternationalOrganisationForm) {
 
         CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competition.getId()).getSuccess();
         competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable());
 
         return competitionOrganisationConfigRestService.update(competition.getId(), competitionOrganisationConfigResource).toServiceResult().andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> saveOrganisationEligibility(OrganisationalEligibilityForm organisationalEligibilityForm, CompetitionResource competition) {
+        return competitionSetupService.saveCompetitionSetupSection(organisationalEligibilityForm, competition, ORGANISATIONAL_ELIGIBILITY);
     }
 }

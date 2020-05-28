@@ -4,6 +4,8 @@ import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetu
 
 import javax.validation.constraints.NotNull;
 
+import static java.util.Objects.isNull;
+
 /**
  * Form for the organisational eligibility competition setup section.
  */
@@ -28,5 +30,9 @@ public class OrganisationalEligibilityForm extends CompetitionSetupForm {
 
     public void setLeadInternationalOrganisationsApplicable(Boolean leadInternationalOrganisationsApplicable) {
         this.leadInternationalOrganisationsApplicable = leadInternationalOrganisationsApplicable;
+    }
+
+    public boolean hasNullLeadInternationalOrganisation() {
+        return Boolean.TRUE.equals(getInternationalOrganisationsApplicable()) && isNull(leadInternationalOrganisationsApplicable);
     }
 }

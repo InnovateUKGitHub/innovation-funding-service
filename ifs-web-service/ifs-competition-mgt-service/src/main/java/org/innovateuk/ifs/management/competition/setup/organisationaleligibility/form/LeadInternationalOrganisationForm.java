@@ -10,11 +10,21 @@ public class LeadInternationalOrganisationForm {
     @NotNull(message = "{validation.leadinternationalorganisationform.leadInternationalOrganisationsApplicable.required}")
     private Boolean leadInternationalOrganisationsApplicable;
 
+    private Boolean internationalOrganisationsApplicable;
+
     public Boolean getLeadInternationalOrganisationsApplicable() {
         return leadInternationalOrganisationsApplicable;
     }
 
     public void setLeadInternationalOrganisationsApplicable(Boolean leadInternationalOrganisationsApplicable) {
         this.leadInternationalOrganisationsApplicable = leadInternationalOrganisationsApplicable;
+    }
+
+    public Boolean getInternationalOrganisationsApplicable() {
+        return internationalOrganisationsApplicable;
+    }
+
+    public void setInternationalOrganisationsApplicable(Boolean internationalOrganisationsApplicable) {
+        this.internationalOrganisationsApplicable = internationalOrganisationsApplicable;
     }
 }

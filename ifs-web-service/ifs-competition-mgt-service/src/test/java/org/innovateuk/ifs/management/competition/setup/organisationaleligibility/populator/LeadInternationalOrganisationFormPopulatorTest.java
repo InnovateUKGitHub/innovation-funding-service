@@ -33,7 +33,7 @@ public class LeadInternationalOrganisationFormPopulatorTest extends BaseUnitTest
 
         when(competitionOrganisationConfigRestService.findByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(configResource));
 
-        LeadInternationalOrganisationForm result = service.populateForm(competitionResource);
+        LeadInternationalOrganisationForm result = service.populateForm(configResource);
 
         assertTrue(result.getLeadInternationalOrganisationsApplicable());
     }

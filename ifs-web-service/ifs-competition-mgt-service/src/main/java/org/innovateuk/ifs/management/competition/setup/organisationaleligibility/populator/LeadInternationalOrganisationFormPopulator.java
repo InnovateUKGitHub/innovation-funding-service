@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.LeadInternationalOrganisationForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +12,12 @@ public class LeadInternationalOrganisationFormPopulator {
     @Autowired
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
-    public LeadInternationalOrganisationForm populateForm(CompetitionResource competitionResource) {
-
-        CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionResource.getId()).getSuccess();
+    public LeadInternationalOrganisationForm populateForm(CompetitionOrganisationConfigResource configResource) {
 
         LeadInternationalOrganisationForm leadInternationalOrganisationForm = new LeadInternationalOrganisationForm();
-        leadInternationalOrganisationForm.setLeadInternationalOrganisationsApplicable(competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed());
+        leadInternationalOrganisationForm.setLeadInternationalOrganisationsApplicable(configResource.getInternationalLeadOrganisationAllowed());
+        leadInternationalOrganisationForm.setInternationalOrganisationsApplicable(configResource.getInternationalOrganisationsAllowed());
 
         return leadInternationalOrganisationForm;
     }
-
 }
