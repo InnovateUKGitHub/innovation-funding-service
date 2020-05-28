@@ -17,14 +17,11 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)"/>
         </div>
 
-        <h1 class="govuk-heading-xl">
-            <span class="govuk-caption-xl">Create an account</span>
-            Enter your organisation's details
-        </h1>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter your organisation\'s details',subTitle=${subtitle},size='govuk-heading-xl'" />
 
         <form th:object="${organisationForm}"
               th:action="@{/organisation/create/international-organisation/details}" method="POST"
@@ -80,20 +77,13 @@
                            th:field="*{addressLine1}"
                            required="required"
                            th:errorclass="govuk-input--error"
-                           th:attr="data-required-errormessage=#{validation.international.addressline1.required}"/>
-                </div>
-                <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('addressLine2')} ? 'govuk-form-group--error'">
+                           th:attr="data-required-errormessage=#{validation.international.addressline1.required}"/><br />
                     <label class="govuk-label govuk-visually-hidden" for="addressLine2">
                         Street line two
                     </label>
-                    <th:block th:if="${#fields.hasErrors('addressLine2')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('addressLine2')}"
-                              th:text="${err}"></span>
-                    </th:block>
                     <input id="addressLine2"
                            type="text"
-                           class="govuk-input govuk-input--width-25"
+                           class="govuk-input govuk-input--width-25 govuk-!-margin-top-5"
                            th:field="*{addressLine2}"
                            th:errorclass="govuk-input--error"/>
                 </div>

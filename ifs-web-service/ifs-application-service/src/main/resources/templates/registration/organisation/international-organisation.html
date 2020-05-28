@@ -18,9 +18,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)" />
         </div>
 
-        <h1 class="govuk-heading-xl">
-            Tell us where your organisation is based
-        </h1>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Tell us where your organisation is based',subTitle=${subtitle},size='govuk-heading-xl'" />
 
         <p class="govuk-body govuk-!-margin-top-6">Is your organisation based in the UK?</p>
 

@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.BASE_URL;
-import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.ORGANISATION_TYPE;
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
 
 @RequestMapping("/organisation/select")
@@ -37,7 +35,7 @@ import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTyp
         securedType = OrganisationSelectionController.class)
 @PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
 @Controller
-public class OrganisationSelectionController {
+public class OrganisationSelectionController extends AbstractOrganisationCreationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -68,6 +66,7 @@ public class OrganisationSelectionController {
         model.addAttribute("model", organisationSelectionViewModelPopulator.populate(user,
                 request,
                 nextPageInFlow()));
+        addPageSubtitleToModel(request, user, model);
         return "registration/organisation/select-organisation";
     }
 

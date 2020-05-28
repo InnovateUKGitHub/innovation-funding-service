@@ -10,6 +10,7 @@ import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -53,12 +54,14 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
 
     @GetMapping
     public String selectOrganisationType(Model model,
+                                         UserResource user,
                                          HttpServletRequest request) {
 
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request));
         model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+        addPageSubtitleToModel(request, user, model);
 
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
