@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.contro
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
@@ -15,9 +16,11 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,6 +57,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private UserRestService userRestService;
+    private OrganisationRestService organisationRestService;
 
     public YourProjectLocationController() {
     }
@@ -64,13 +68,15 @@ public class YourProjectLocationController extends AsyncAdaptor {
             YourProjectLocationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
-            UserRestService userRestService) {
+            UserRestService userRestService,
+            OrganisationRestService organisationRestService) {
 
         this.commonViewModelPopulator = commonViewModelPopulator;
         this.formPopulator = formPopulator;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
+        this.organisationRestService = organisationRestService;
     }
 
     @GetMapping
@@ -154,7 +160,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         };
 
         return validationHandler.
-                addAnyErrors(validateProjectLocation(form.getPostcode())).
+                addAnyErrors(validateProjectLocation(organisationId, form)).
                 failNowOrSucceedWith(failureHandler, successHandler);
     }
 
@@ -206,13 +212,25 @@ public class YourProjectLocationController extends AsyncAdaptor {
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
-    private List<Error> validateProjectLocation(String postcode) {
+    private List<Error> validateProjectLocation(Long organisationId, YourProjectLocationForm form) {
 
-        if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
-            return emptyList();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        if (organisation.isInternational()) {
+            String town = form.getTown();
+            if (StringUtils.isBlank(town)) {
+                return singletonList(fieldError("town", town, "APPLICATION_PROJECT_LOCATION_TOWN_REQUIRED"));
+            } else {
+                return emptyList();
+            }
+        } else {
+            String postcode = form.getPostcode();
+            if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
+                return emptyList();
+            }
+
+            return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
         }
-
-        return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
     }
 
     private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {

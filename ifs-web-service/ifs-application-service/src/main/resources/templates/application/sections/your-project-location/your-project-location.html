@@ -45,12 +45,12 @@
 
                 <th:block th:insert="fragments/form-elements/textfield ::
                     textfield(
-                        label='Town',
+                        label='Town or city',
                         id='town',
                         value=${form.town},
                         readOnly=${model.readOnly},
                         required=true,
-                        requiredMessage=#{APPLICATION_PROJECT_LOCATION_REQUIRED}
+                        requiredMessage=#{APPLICATION_PROJECT_LOCATION_TOWN_REQUIRED}
                         )" />
             </div>
             <div th:if="${!model.international}" class="govuk-!-margin-top-6">
