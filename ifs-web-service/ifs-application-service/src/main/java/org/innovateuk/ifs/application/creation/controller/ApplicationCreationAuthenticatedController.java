@@ -80,7 +80,7 @@ public class ApplicationCreationAuthenticatedController {
 
         CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
 
-        if (Boolean.TRUE.equals(organisationConfig.getInternationalOrganisationsAllowed())) {
+        if (organisationConfig.areInternationalApplicantsAllowed()) {
             return "redirect:/organisation/create/international-organisation";
         }
         return "redirect:/organisation/select";

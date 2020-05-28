@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class CompetitionOrganisationConfigResource {
 
     private Long id;
@@ -37,4 +39,17 @@ public class CompetitionOrganisationConfigResource {
     public void setInternationalLeadOrganisationAllowed(Boolean internationalLeadOrganisationAllowed) {
         this.internationalLeadOrganisationAllowed = internationalLeadOrganisationAllowed;
     }
+
+    /* two methods to handle null cases in applicant journey. */
+    @JsonIgnore
+    public boolean areInternationalApplicantsAllowed() {
+        return Boolean.TRUE.equals(getInternationalOrganisationsAllowed();
+    }
+
+    @JsonIgnore
+    public boolean cantInternationalApplicantsLead() {
+        return Boolean.TRUE.equals(getInternationalLeadOrganisationAllowed();
+    }
+
+
 }

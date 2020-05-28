@@ -38,7 +38,7 @@ public class OrganisationCreationLeadInitializationController extends AbstractOr
         organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
 
-        if (Boolean.TRUE.equals(organisationConfig.getInternationalOrganisationsAllowed())) {
+        if (organisationConfig.areInternationalApplicantsAllowed()) {
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
         }
 

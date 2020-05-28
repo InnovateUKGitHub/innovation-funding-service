@@ -17,7 +17,7 @@
         <p class="govuk-body" th:text="|You have been invited to join the project '${projectName}'.|">You have been invited to join the project 'Blah'.</p>
         <h3 class="govuk-heading-s">Are you happy to accept the invitation to participate?</h3>
         <p class="govuk-body">As you are new to the service, you will be taken through the account creation process.</p>
-        <a class="govuk-button" th:if="${!international}" th:href="@{~/organisation/create/organisation-type}">Yes, create an account</a>
+        <a class="govuk-button" th:unless="${international}" th:href="@{~/organisation/create/organisation-type}">Yes, create an account</a>
         <a class="govuk-button" th:if="${international}" th:href="@{~/organisation/create/international-organisation}">Yes, create an account</a>
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>

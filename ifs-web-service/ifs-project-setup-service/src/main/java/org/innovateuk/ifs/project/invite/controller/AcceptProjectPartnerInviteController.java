@@ -77,7 +77,7 @@ public class AcceptProjectPartnerInviteController {
         return registrationCookieService.getProjectInviteHashCookieValue(request).map(cookie ->
                 projectPartnerInviteRestService.getInviteByHash(projectId, cookie.getHash()).andOnSuccessReturn(invite -> {
                     CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
-                    boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
+                    boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
 
                     model.addAttribute("projectName", invite.getProjectName());
                     model.addAttribute("international", international);
@@ -119,7 +119,7 @@ public class AcceptProjectPartnerInviteController {
                     }
 
                     CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
-                    boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
+                    boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
 
                     if (international) {
                         return navigationUtils.getRedirectToSameDomainUrl(request, "organisation/create/international-organisation");

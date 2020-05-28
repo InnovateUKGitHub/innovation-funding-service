@@ -79,7 +79,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             AcceptRejectApplicationInviteViewModel acceptRejectApplicationInviteViewModel = acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation);
                             model.addAttribute("model", acceptRejectApplicationInviteViewModel);
                             CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(acceptRejectApplicationInviteViewModel.getCompetitionId()).getSuccess();
-                            boolean international = Boolean.TRUE.equals(organisationConfigResource.getInternationalOrganisationsAllowed());
+                            boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
                             model.addAttribute("internationalCompetition", international);
                             return invite.getUser() == null ? ACCEPT_INVITE_NEW_USER_VIEW : ACCEPT_INVITE_EXISTING_USER_VIEW;
                         }

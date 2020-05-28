@@ -119,7 +119,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
 
                     CompetitionOrganisationConfigResource organisationConfig = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
 
-                    if (Boolean.TRUE.equals(organisationConfig.getInternationalOrganisationsAllowed())) {
+                    if (organisationConfig.areInternationalApplicantsAllowed()) {
                         return "redirect:/organisation/create/international-organisation";
                     }
                     return "redirect:/organisation/select";
