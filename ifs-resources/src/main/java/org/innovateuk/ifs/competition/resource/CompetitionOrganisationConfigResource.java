@@ -43,12 +43,12 @@ public class CompetitionOrganisationConfigResource {
     /* two methods to handle null cases in applicant journey. */
     @JsonIgnore
     public boolean areInternationalApplicantsAllowed() {
-        return Boolean.TRUE.equals(getInternationalOrganisationsAllowed();
+        return Boolean.TRUE.equals(getInternationalOrganisationsAllowed());
     }
 
     @JsonIgnore
     public boolean cantInternationalApplicantsLead() {
-        return Boolean.TRUE.equals(getInternationalLeadOrganisationAllowed();
+        return Boolean.TRUE.equals(getInternationalLeadOrganisationAllowed());
     }
 
 
