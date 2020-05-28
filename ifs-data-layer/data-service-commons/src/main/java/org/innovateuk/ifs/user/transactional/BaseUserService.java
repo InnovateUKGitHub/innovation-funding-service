@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 
@@ -25,4 +26,7 @@ public interface BaseUserService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<UserResource>> findByProcessRole(Role roleType);
+
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<UserResource>> findByProcessRoleAndUserStatus(Role roleType, UserStatus userStatus);
 }

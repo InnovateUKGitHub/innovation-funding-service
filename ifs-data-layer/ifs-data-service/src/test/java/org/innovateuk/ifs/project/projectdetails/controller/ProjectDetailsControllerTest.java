@@ -126,7 +126,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         long leadOrganisationId = 123L;
         long projectId = 456L;
 
-        AddressResource addressResource = newAddressResource().withId(1L).build();
+        AddressResource addressResource = newAddressResource().build();
 
         when(projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, addressResource)).thenReturn(serviceSuccess());
 
