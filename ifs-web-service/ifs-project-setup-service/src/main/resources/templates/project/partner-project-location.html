@@ -20,7 +20,8 @@
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li th:each="err : ${#fields.errors('${form.*}')}">
-                        <a href="#postcode" th:text="${err}" class="govuk-link">The error message</a>
+                        <a th:if="${model.international}" href="#town" th:text="${err}" class="govuk-link">The error message</a>
+                        <a th:if="${!model.international}" href="#postcode" th:text="${err}" class="govuk-link">The error message</a>
                     </li>
                 </ul>
             </div>
