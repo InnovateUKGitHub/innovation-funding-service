@@ -21,6 +21,9 @@ ${partner_organisation_name_UK_based}                                      Smith
 ${lead_applicant_organisation_name}                                        Ward Ltd
 ${application_name}                                                        PSC application 3
 ${competition_name}                                                        Project Setup Comp 3
+${applicationInProgress}                                                   Performance Application 4
+${projectLocationInfo}                                                     Please enter the town or city where most of the project work will take place
+${projectLocationValidationErrorMessage}                                   This field cannot be left blank.
 
 *** Test Cases ***
 External dashboard - hide the bank details if partner is non-uk based
@@ -40,6 +43,14 @@ External dashboard - non-uk based partner applicant can complete the project loc
     And the user clicks the button/link                                    jQuery = button:contains("Save project location")
     Then the user should see the element                                   jQuery = td:contains("Delhi")
 
+Application form - non-uk based applicant can complete the project location details in project finances
+    [Documentation]     IFS-7240
+    [Tags]
+    Given the user navigated to project finances in application form
+    When the user should see project location details
+    And the user enters text to a text field                            id = town     Äteritsiputeritsipuolilautatsijänkä
+    And the user clicks the button/link                                 jQuery = button:contains("Save project location")
+    Then the user should see the element                                jQuery = td:contains("Äteritsiputeritsipuolilautatsijänkä")
 
 External dashboard - hide the bank details if lead organisation is non-uk based
     [Documentation]    IFS - 7163
@@ -49,15 +60,19 @@ External dashboard - hide the bank details if lead organisation is non-uk based
     When the user navigates to the page                                    ${server}/project-setup/project/${project_id}
     Then the user should not see the element                               jQuery = h2:contains("Bank details")
 
+Non-uk based project location validations
+    [Documentation]    IFS - 7240
+    Given the user navigates to the page                   ${server}/project-setup/project/${project_id}/organisation/${organisationRedId}/partner-project-location
+    When the user should see project location details
+    And the user clicks the button/link                    jQuery = button:contains("Save project location")
+    Then the user should see a field and summary error     ${projectLocationValidationErrorMessage}
+
 External dashboard - non-uk based lead applicant can complete the project location details
     [Documentation]    IFS - 7240
     [Tags]
-    Given the user navigates to the page                                   ${server}/project-setup/project/${project_id}/organisation/${organisationRedId}/partner-project-location
-    When the user should see project location details
-    And the user enters text to a text field                               id = town     mamungkukumpurangkuntjunya Hill
+    When the user enters text to a text field                              id = town     mamungkukumpurangkuntjunya Hill
     And the user clicks the button/link                                    jQuery = button:contains("Save project location")
     Then the user should see the element                                   jQuery = td:contains("Mamungkukumpurangkuntjunya Hill")
-
 
 External dashboard - lead applicant - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
     [Documentation]    IFS - 7163
@@ -101,6 +116,12 @@ Project setup dashboard - will not prevent the consortium's bank details from ap
     [Tags]
     When Comp admin approves bank details of partner organisation
     Then the user should see the element                                   jQuery = li:nth-child(4) span:nth-child(1)
+
+Non-uk based organisations project loaction details updated in project setup
+    [Documentation]     IFS-7240
+    When the user navigates to the page      ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/details
+    Then the user should see the element     td:contains("Ward Ltd") ~ td:contains("Mamungkukumpurangkuntjunya Hill")
+    And the user should see the element      td:contains("Red Planet") ~ td:contains("Delhi")
 
 
 
@@ -180,8 +201,11 @@ Comp admin approves bank details of partner organisation
 
 the user should see project location details
     the user should see the element     css = [for ="town"]
-    the user should see the element     jQuery = span:contains("Please enter the town or city where most of the project work will take place")
+    the user should see the element     jQuery = span:contains("${projectLocationInfo}")
     the user should see the element     id = town
     the user should see the element     jQuery = button:contains("Save project location")
 
-
+the user navigated to project finances in application form
+    the user clicks the button/link                     link = ${applicationInProgress}
+    the user clicks the button/link                     link = Your project finances
+    the user clicks the button/link                     link = Your project location
