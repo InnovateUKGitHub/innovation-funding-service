@@ -25,7 +25,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
-import static java.util.Objects.isNull;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -93,7 +92,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
         };
 
         Supplier<String> successView = () ->
-                organisationalEligibilityForm.getInternationalOrganisationsApplicable() ?
+                Boolean.TRUE.equals(organisationalEligibilityForm.getInternationalOrganisationsApplicable()) ?
 
                         validationHandler.addAnyErrors(saveOrganisationEligibility(organisationalEligibilityForm, competition), fieldErrorsToFieldErrors(), asGlobalErrors())
                                 .failNowOrSucceedWith(failureView, () ->
@@ -134,13 +133,9 @@ public class CompetitionSetupOrganisationalEligibilityController {
         };
 
         Supplier<String> successView = () -> {
-            if (!isNull(leadInternationalOrganisationForm.getLeadInternationalOrganisationsApplicable())) {
-                validationHandler.addAnyErrors(saveOrganisationConfig(competition, leadInternationalOrganisationForm), fieldErrorsToFieldErrors(), asGlobalErrors())
-                        .failNowOrSucceedWith(failureView, () ->
-                                format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
-            }
-
-            return format(ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT, competitionId);
+            return validationHandler.addAnyErrors(saveOrganisationConfig(competition, leadInternationalOrganisationForm), fieldErrorsToFieldErrors(), asGlobalErrors())
+                    .failNowOrSucceedWith(failureView, () ->
+                            format("redirect:/competition/setup/%d/section/%s", competition.getId(), ORGANISATIONAL_ELIGIBILITY.getPostMarkCompletePath()));
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
