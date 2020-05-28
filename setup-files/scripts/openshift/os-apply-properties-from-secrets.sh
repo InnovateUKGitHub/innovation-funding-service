@@ -12,7 +12,6 @@ LOCAL_AWS_PROFILE="iukorg" # If USE_IAM = "true" then this the profile we use fo
 # Common functions
 . $(dirname $0)/deploy-functions.sh
 
-
 PROJECT=$(getProjectName ${PROJECT} ${TARGET})
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause ${TARGET} ${PROJECT} ${SVC_ACCOUNT_TOKEN})
@@ -22,7 +21,6 @@ echo "PROJECT="${PROJECT}
 echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
 echo "USE_IAM"=${USE_IAM}
-echo $(dirname $0)/../../..
 
 if [[ ${USE_IAM} != "true" && ${USE_IAM} != "false" ]]; then
     echo "IF USE_IAM is specified it must be either 'true' or 'false'"

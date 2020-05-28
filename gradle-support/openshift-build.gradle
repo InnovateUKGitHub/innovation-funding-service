@@ -38,8 +38,6 @@ task buildDocker(type: DockerBuildImage) {
 }
 
 task loadNexusCredentials() {
-    println("here->" + project.findProperty("nexus_username"))
-    println("here->" + project.findProperty("nexus_password"))
     if (project.findProperty("nexus_username") == null ||  project.findProperty("nexus_password") == null) {
         println("no nexus properties found")
         dependsOn applyBuildEnvProperties
