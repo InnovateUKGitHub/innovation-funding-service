@@ -22,7 +22,7 @@ echo "PROJECT="${PROJECT}
 echo "TARGET="${TARGET}
 echo "VERSION="${VERSION}
 echo "USE_IAM"=${USE_IAM}
-echo $(dirname $0)
+echo $(dirname $0)/../../..
 
 if [[ ${USE_IAM} != "true" && ${USE_IAM} != "false" ]]; then
     echo "IF USE_IAM is specified it must be either 'true' or 'false'"
@@ -48,7 +48,7 @@ function valueFromAws() {
 # Create a file with aws credentials which mounted to the aws-cli docker image.
 docker stop ssm-access-container || true
 docker image rm ssm-access-image || true
-docker build --tag="ssm-access-image" $(dirname $0)/../../../docker/aws-cli
+docker build --tag="ssm-access-image" docker/aws-cli
 
 if [[ "$USE_IAM" = "false" ]]; then
     # Use the local developer AWS credentials as the mount point for this container
