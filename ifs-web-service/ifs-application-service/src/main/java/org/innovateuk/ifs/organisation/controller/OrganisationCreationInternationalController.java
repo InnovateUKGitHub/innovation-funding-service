@@ -106,6 +106,8 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         model.addAttribute("organisationName", organisationInternationalDetailsForm.isPresent() ? organisationInternationalDetailsForm.get().getName() : null);
         model.addAttribute("registrationNumber", organisationInternationalDetailsForm.isPresent() ? organisationInternationalDetailsForm.get().getCompanyRegistrationNumber() : null);
         model.addAttribute("address", createAddressResource(organisationInternationalDetailsForm));
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
+        model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
 
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + INTERNATIONAL_CONFIRM_ORGANISATION;
