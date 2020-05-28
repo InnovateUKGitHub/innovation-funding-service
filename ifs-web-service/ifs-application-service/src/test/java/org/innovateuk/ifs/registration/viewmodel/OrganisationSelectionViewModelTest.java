@@ -18,11 +18,13 @@ public class OrganisationSelectionViewModelTest {
         OrganisationSelectionViewModel viewModel = new OrganisationSelectionViewModel(asSet(choice),
                 false,
                 false,
+                false,
                 "url"
                 );
 
         assertFalse(viewModel.canSelectOrganisation());
         assertFalse(viewModel.isApplicantJourney());
+        assertFalse(viewModel.isInternationalJourney());
         assertEquals(viewModel.onlyOrganisation(), choice);
     }
 }
