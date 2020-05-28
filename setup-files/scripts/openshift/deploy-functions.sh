@@ -5,7 +5,7 @@ function getBuildLocation() {
     echo "build/resources/main"
 }
 
-function isBuildEnvironment() {
+function isForBuildProperties() {
 
     TARGET=$1
 

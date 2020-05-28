@@ -12,7 +12,8 @@ PROJECT=$(getProjectName ${PROJECT} ${TARGET})
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause ${TARGET} ${PROJECT} ${SVC_ACCOUNT_TOKEN})
 
-if $(isBuildEnvironment $TARGET); then
+# Check creating environment properties for application or build
+if $(isForBuildProperties $TARGET); then
       oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > 'gradle-support/build-env-properties.gradle'
 else
   if $(isNamedEnvironment $PROJECT); then
