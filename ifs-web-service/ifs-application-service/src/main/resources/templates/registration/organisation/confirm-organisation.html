@@ -22,8 +22,10 @@
             <dt>Organisation type</dt>
             <dd th:text="${organisationType.name}">Business</dd>
 
-            <dt>Is your organisation based in the UK?</dt>
-            <dd>Yes</dd>
+            <th:block th:if="${includeInternationalQuestion}">
+                <dt>Is your organisation based in the UK?</dt>
+                <dd>Yes</dd>
+            </th:block>
 
             <dt>Registered name</dt>
             <dd th:text="${organisationForm.organisationName}">name</dd>

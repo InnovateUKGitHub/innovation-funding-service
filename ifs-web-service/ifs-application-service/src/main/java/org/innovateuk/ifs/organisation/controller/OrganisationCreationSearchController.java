@@ -102,6 +102,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         addPageSubtitleToModel(request, user, model);
 

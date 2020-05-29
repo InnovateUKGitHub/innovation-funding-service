@@ -41,6 +41,7 @@ public class OrganisationCreationSaveController extends AbstractOrganisationCrea
         model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + CONFIRM_ORGANISATION;
     }
