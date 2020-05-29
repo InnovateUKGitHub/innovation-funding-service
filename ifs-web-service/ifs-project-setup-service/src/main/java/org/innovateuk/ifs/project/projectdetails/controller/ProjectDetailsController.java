@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -29,7 +29,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -144,9 +143,10 @@ public class ProjectDetailsController {
                                              UserResource loggedInUser) {
 
         PartnerOrganisationResource partnerOrganisation = partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostcode(), partnerOrganisation.getInternationalLocation());
 
-        return doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
+        return doViewPartnerProjectLocation(projectId, organisation, loggedInUser, model, form);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")
@@ -158,36 +158,37 @@ public class ProjectDetailsController {
                                                Model model,
                                                UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        Supplier<String> failureView = () -> doViewPartnerProjectLocation(projectId, organisation, loggedInUser, model, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             PostcodeAndTownResource postcodeAndTownResource = new PostcodeAndTownResource(form.getPostcode(), form.getTown());
             ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTownResource);
 
-            return validationHandler.addAnyErrors(updateResult, this::errorConverter).
+            return validationHandler.addAnyErrors(updateResult, errorConverter(organisation)).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
     }
 
-    private Optional<ObjectError> errorConverter(Error error) {
-        if("postcode".equals(error.getFieldName()) ) {
-            return toField("postcode").apply(error);
+    private ErrorToObjectErrorConverter errorConverter(OrganisationResource organisationResource) {
+        if (organisationResource.isInternational()) {
+            return error -> toField("town").apply(error);
         } else {
-            return toField("town").apply(error);
+            return error -> toField("postcode").apply(error);
         }
     }
 
-    private String doViewPartnerProjectLocation(long projectId, long organisationId, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
+    private String doViewPartnerProjectLocation(long projectId, OrganisationResource organisation, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
 
-        if (!projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())) {
+        if (!projectService.userIsPartnerInOrganisationForProject(projectId, organisation.getId(), loggedInUser.getId())) {
             return redirectToProjectDetails(projectId);
         }
 
         ProjectResource projectResource = projectService.getById(projectId);
-        OrganisationResource organisationResource = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        boolean international = organisationResource.isInternational();
+        boolean international = organisation.isInternational();
 
-        model.addAttribute("model", new PartnerProjectLocationViewModel(projectId, projectResource.getName(), organisationId, international));
+        model.addAttribute("model", new PartnerProjectLocationViewModel(projectId, projectResource.getName(), organisation.getId(), international));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/partner-project-location";

@@ -291,7 +291,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withPostcode("TW14 9QG")
                 .build();
 
-        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource().build();
+        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource().withId(organisationId).build();
 
         when(partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId)).thenReturn(restSuccess(partnerOrganisation));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
