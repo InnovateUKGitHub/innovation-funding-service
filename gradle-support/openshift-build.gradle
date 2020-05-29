@@ -79,7 +79,7 @@ task wait(type: DockerWaitHealthyContainer) {
 wait.mustRunAfter deploy
 
 task stageNexus(type: DockerPushImage, dependsOn: tagDockerNexus) {
-    if (isNamedEnv()) {
+    if (openshiftEnv == "ifs-prod" || openshiftEnv == "ifs-uat") {
         registryCredentials = getNexusCredentials()
         imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
         tag = project.version
