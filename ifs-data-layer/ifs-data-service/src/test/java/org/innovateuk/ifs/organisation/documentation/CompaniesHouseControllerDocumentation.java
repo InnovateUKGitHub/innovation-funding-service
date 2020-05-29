@@ -9,7 +9,6 @@ import org.innovateuk.ifs.organisation.transactional.CompaniesHouseApiService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,7 +46,6 @@ public class CompaniesHouseControllerDocumentation extends BaseControllerMockMVC
     @Before
     public void setUp() throws Exception {
         AddressResource addressResource = newAddressResource()
-                .withId(1L)
                 .withAddressLine1("one")
                 .withAddressLine2("two")
                 .withAddressLine3("three")

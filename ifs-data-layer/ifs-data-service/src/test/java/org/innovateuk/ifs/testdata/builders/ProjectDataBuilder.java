@@ -292,7 +292,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     private AddressResource getAddress(OrganisationResource organisationResource, List<CsvUtils.OrganisationLine> organisationLines) {
         CsvUtils.OrganisationLine organisationLine = organisationLines.stream().filter(line -> line.name.equals(organisationResource.getName())).findFirst().get();
         return newAddressResource().
-                withId().
                 withAddressLine1(organisationLine.addressLine1).
                 withAddressLine2(organisationLine.addressLine2).
                 withAddressLine3(organisationLine.addressLine3).

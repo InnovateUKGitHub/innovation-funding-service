@@ -20,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -126,7 +125,6 @@ public class AssessorProfileDetailsEditControllerTest extends BaseControllerMock
                 .withPhoneNumber(phoneNumber)
                 .withEmail(user.getEmail())
                 .withAddress(newAddressResource()
-                        .with(id(null))
                         .withAddressLine1(addressLine1)
                         .withAddressLine2()
                         .withAddressLine3()
@@ -282,7 +280,6 @@ public class AssessorProfileDetailsEditControllerTest extends BaseControllerMock
 
     private UserProfileResource buildTestUserProfile() {
         AddressResource address = newAddressResource()
-                .with(id(null))
                 .withAddressLine1("address1")
                 .withAddressLine2()
                 .withAddressLine3()

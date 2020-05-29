@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.bankdetails.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.core.domain.Project;
 
 import javax.persistence.*;
@@ -29,11 +29,9 @@ public class BankDetails {
     @JoinColumn(name = "projectId" , referencedColumnName = "id")
     private Project project;
 
-    @OneToOne (cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    // Using cascade because entries with type "BANK_DETAILS" should be
-    // added/removed via bank details
-    @JoinColumn(name = "organisationAddressId", referencedColumnName = "id")
-    private OrganisationAddress organisationAddress;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "addressId" , referencedColumnName = "id")
+    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
@@ -84,12 +82,12 @@ public class BankDetails {
         this.project = project;
     }
 
-    public OrganisationAddress getOrganisationAddress() {
-        return organisationAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setOrganisationAddress(OrganisationAddress organisationAddress) {
-        this.organisationAddress = organisationAddress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public Organisation getOrganisation() {
@@ -158,7 +156,7 @@ public class BankDetails {
                 .append(sortCode, that.sortCode)
                 .append(accountNumber, that.accountNumber)
                 .append(project, that.project)
-                .append(organisationAddress, that.organisationAddress)
+                .append(address, that.address)
                 .append(organisation, that.organisation)
                 .isEquals();
     }
@@ -170,7 +168,7 @@ public class BankDetails {
                 .append(sortCode)
                 .append(accountNumber)
                 .append(project)
-                .append(organisationAddress)
+                .append(address)
                 .append(organisation)
                 .append(companyNameScore)
                 .append(registrationNumberMatched)
