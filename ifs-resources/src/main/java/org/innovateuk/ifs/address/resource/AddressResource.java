@@ -13,7 +13,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 
 public class AddressResource {
-    private Long id;
 
     @NotBlank(message = "{validation.standard.addressline1.required}")
     private String addressLine1;
@@ -123,14 +122,6 @@ public class AddressResource {
         return String.join(", ", location);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @JsonIgnore
     public List<String> getNonEmptyLines() {
         List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode, country);
@@ -146,7 +137,6 @@ public class AddressResource {
         AddressResource that = (AddressResource) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
                 .append(addressLine1, that.addressLine1)
                 .append(addressLine2, that.addressLine2)
                 .append(addressLine3, that.addressLine3)
@@ -160,7 +150,6 @@ public class AddressResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
                 .append(addressLine1)
                 .append(addressLine2)
                 .append(addressLine3)

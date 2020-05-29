@@ -280,16 +280,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                 });
     }
 
-    @Override
-    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
-        return competitionRestService.addInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
-        return competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
-    }
-
     private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
         List<CompetitionSetupSection> requiredSections = new ArrayList<>();
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);

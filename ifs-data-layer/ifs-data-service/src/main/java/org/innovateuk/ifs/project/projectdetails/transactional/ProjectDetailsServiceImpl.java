@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -19,11 +18,9 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
@@ -60,13 +57,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POSTCODE_LENGTH;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
-import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
@@ -83,9 +76,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private AddressMapper addressMapper;
-
-    @Autowired
-    private OrganisationAddressRepository organisationAddressRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -355,11 +345,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private boolean isMonitoringOfficerAssigned(long projectId) {
-        LegacyMonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
-        return monitoringOfficer != null;
-    }
-
     private LegacyMonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
         return legacyMonitoringOfficerRepository.findOneByProjectId(projectId);
     }
@@ -372,16 +357,10 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 andOnSuccess(() ->
                         find(getProject(projectId), getOrganisation(organisationId)).
                                 andOnSuccess((project, organisation) -> {
-                                    Address oldAddress = project.getAddress();
-                                    if (address.getId() != null && addressRepository.existsById(address.getId())) {
-                                        Address existingAddress = addressRepository.findById(address.getId()).orElse(null);
-                                        project.setAddress(existingAddress);
+                                    if (project.getAddress() != null) {
+                                        project.getAddress().copyFrom(address);
                                     } else {
-                                        Address newAddress = addressMapper.mapToDomain(address);
-                                        project.setAddress(newAddress);
-                                    }
-                                    if (oldAddress != null) {
-                                        deleteAddressIfNotLinkedToOrganisation(oldAddress, organisationId);
+                                        project.setAddress(addressRepository.save(addressMapper.mapToDomain(address)));
                                     }
 
                                     return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {
@@ -390,13 +369,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                                     });
                                 })
                 );
-    }
-
-    private void deleteAddressIfNotLinkedToOrganisation(Address oldAddress, Long organisationId) {
-        OrganisationAddress maybeAddress = organisationAddressRepository.findByOrganisationIdAndAddressId(organisationId, oldAddress.getId());
-        if (maybeAddress == null) {
-            addressRepository.delete(oldAddress);
-        }
     }
 
     @Override
