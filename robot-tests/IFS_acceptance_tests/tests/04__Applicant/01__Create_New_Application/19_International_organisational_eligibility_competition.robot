@@ -13,6 +13,7 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
+${leadOrganisationInternationalCompetition}            Lead International Organisation Competition
 ${organisationalEligibilitySubTitle}                   Can international organisations apply?
 ${organisationalEligibilityInfo}                       Is this competition open to organisations based outside the UK?
 ${organisationalEligibilityValidationErrorMessage}     You must choose if organisations based outside the UK can apply for this competition.
@@ -94,7 +95,6 @@ Comp admin sets international organisations can lead the competition
      And the user clicks the button/link                                                                        jQuery = button:contains("Save and continue")
      Then comp admin can view organisation eligibility and lead organisation response question and answers      Yes
 
-
 Comp admin creates international organisation eligibility competition
      [Documentation]  IFS-7195
      Given the user clicks the button/link         link = Return to setup overview
@@ -103,11 +103,19 @@ Comp admin creates international organisation eligibility competition
      And the user navigates to the page            ${CA_UpcomingComp}
      Then the user should see the element          jQuery = h2:contains("Ready to open") ~ ul a:contains("${organisationEligibilityCompetitionName}")
 
-Comp admin sets the international organisation eligibility competition to live
+Comp admin sets lead organisations can lead international competitions and sets competition to live
      [Documentation]  IFS-7195
      Given Get competition id and set open date to yesterday        ${organisationEligibilityCompetitionName}
      When the user navigates to the page                            ${CA_Live}
      Then the user should see the element                           jQuery = h2:contains('Open') ~ ul a:contains('${organisationEligibilityCompetitionName}')
+
+Comp admin sets lead organisations can not lead international competitions and sets competition to live
+     [Documentation]  IFS-7246
+     Given the user navigates to the page                                               ${CA_UpcomingComp}
+     When comp admin sets lead organisation can not lead the international competition
+     And Get competition id and set open date to yesterday                              ${organisationEligibilityCompetitionName}
+     Then the user navigates to the page                                                ${CA_Live}
+     And the user should see the element                                                jQuery = h2:contains('Open') ~ ul a:contains('${organisationEligibilityCompetitionName}')
 
 *** Keywords ***
 Custom Suite Setup
@@ -164,5 +172,11 @@ comp admin can view organisation eligibility response question and answer
     the user should see the element         jQuery = button:contains("Edit")
     the user should not see the element     jQuery = h1:contains("${leadOrganisationsTitle}")
 
-
+comp admin sets lead organisation can not lead the international competition
+     the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
+     the user fills in the CS Initial details                                          ${leadOrganisationInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     the user selects the organisational eligibility                                   true    false
+     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  project-setup-completion-stage  yes  1  true  single
+     the user clicks the button/link                                                   jQuery = a:contains("Complete")
+     the user clicks the button/link                                                   jQuery = button:contains('Done')
 
