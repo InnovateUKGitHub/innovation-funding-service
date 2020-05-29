@@ -211,4 +211,4 @@ the user should see project location details in project finances
     the user should see the element     css = [for ="town"]
     the user should see the element     jQuery = span:contains("${projectLocationInfo}")
     the user should see the element     id = town
-    the user should see the element     jQuery = button:contains("Save and return to finances")
+    the user should see the element     jQuery = button:contains("Save and return to project finances")

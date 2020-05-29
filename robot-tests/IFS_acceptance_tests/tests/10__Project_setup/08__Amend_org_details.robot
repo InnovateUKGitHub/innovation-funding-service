@@ -30,7 +30,7 @@ Project finance cannot add an invalid percentage
     [Documentation]  IFS-6695
     Given the user enters text to a text field            id = partners[${orgId}].fundingLevel  300
     And the user should see a field error                 Funding level must be 45% or lower.
-    When the user clicks the button/link                  jQuery = button:contains("Save and return to finances")
+    When the user clicks the button/link                  jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error    Funding level must be 45% or lower.
 
 Values are updated dynamically as new percentages are added
@@ -52,7 +52,7 @@ New funding percentage is applied on finance overview
     [Documentation]  IFS-6695  IFS-7128
     Given the user enters text to a text field      id = partners[${orgId}].fundingLevel  20
     And the user should not see the element         jQuery = .message-alert:contains("The revised amount is higher")
-    When the user clicks the button/link            jQuery = button:contains("Save and return to finances")
+    When the user clicks the button/link            jQuery = button:contains("Save and return to project finances")
     Then the user should see the element            jQuery = th:contains("Ward Ltd") ~ td:contains("£200,903") ~ td:contains("20.00%") ~ td:contains("37,713") ~ td:contains("2,468") ~ td:contains("160,723")
     And the user should see the element             jQuery = h3:contains("Overview") + div table td:contains("23.96%")
 
