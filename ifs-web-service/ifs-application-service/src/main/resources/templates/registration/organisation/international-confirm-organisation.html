@@ -34,11 +34,11 @@
             </th:block>
             <dt>Address</dt>
             <dd>
-                <th:block th:text="${address.addressLine1}"></th:block><br/>
-                <th:block th:text="${address.addressLine2}"></th:block><br/>
-                <th:block th:text="${address.town}"></th:block><br/>
-                <th:block th:text="${address?.country}"></th:block><br/>
-                <th:block th:text="${address.postcode}"></th:block>
+                <div th:text="${address.addressLine1}"></div>
+                <div th:text="${address.addressLine2}"></div>
+                <div th:text="${address.town}"></div>
+                <div th:text="${address?.country}"></div>
+                <div th:text="${address.postcode}"></div>
             </dd>
         </dl>
 
