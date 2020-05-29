@@ -67,7 +67,6 @@ task createContainer(type: DockerCreateContainer, dependsOn: [buildDocker, remov
     imageId = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     containerName = "${project.name.replaceAll(/ifs-/, "")}"
     containerId = "${project.name.replaceAll(/ifs-/, "")}"
-    //network="ifs"
 }
 
 task deploy(type: DockerStartContainer, dependsOn: createContainer) {
