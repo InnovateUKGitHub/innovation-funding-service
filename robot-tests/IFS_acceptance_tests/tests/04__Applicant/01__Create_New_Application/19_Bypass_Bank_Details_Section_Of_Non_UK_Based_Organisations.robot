@@ -48,9 +48,7 @@ Application form - non-uk based applicant can complete the project location deta
     ${applicationInProgressId} =    get application id by name          ${applicationInProgress}
     Given the user navigates to the page               ${server}/application/${applicationInProgressId}/form/your-project-location/organisation/${organisationRedId}/section/384
     When the user should see project location details in project finances
-    And the user enters text to a text field           id = town     Äteritsiputeritsipuolilautatsijänkä
-    And the user clicks the button/link                id = mark_as_complete
-    And the user clicks the button/link                link = Your project location
+    And applicant enters project location details
     Then the user should see the element               jQuery = dd:contains("Äteritsiputeritsipuolilautatsijänkä")
 
 External dashboard - hide the bank details if lead organisation is non-uk based
@@ -75,16 +73,13 @@ External dashboard - non-uk based lead applicant can complete the project locati
     And the user clicks the button/link                 jQuery = button:contains("Save project location")
     Then the user should see the element                jQuery = td:contains("Mamungkukumpurangkuntjunya Hill")
 
-External dashboard - lead applicant - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
+External dashboard - lead applicant - view status of partners - will show the bank details as not required for lead applicant organisations
     [Documentation]    IFS - 7163
     [Tags]
     Given lead applicant invites new partner and accepts invitation
     And partner organisation sets funding level to zero
     When the user clicks the button/link               link = View the status of partners
-    Then the user should see the element               jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should see the element                jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should see the element                jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should not see the element            jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
+    Then will show the bank details as not required for lead applicant organisations
 
 External dashboard - partner organisation - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
     [Documentation]    IFS - 7163
@@ -92,25 +87,16 @@ External dashboard - partner organisation - view status of partners - will show 
     Given Log in as a different user                   &{partnerApplicantCredentialsNonUKBased}
     And The user navigates to the page                 ${server}/project-setup/project/${project_id}
     When the user clicks the button/link               link = View the status of partners
-    Then the user should see the element               jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should see the element                jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should see the element                jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
-    And the user should not see the element            jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
+    Then will show the bank details as not required for non uk based and zero funding partner organisations
 
 Project setup dashboard - Bank details - No action required should display for non uk based and zero funding organisations
     [Documentation]    IFS - 7163
     [Tags]
-    Given Lead applicant submits bank details
-    And zero funding parter submits the project and team details
-    And Non UK based partner submits the project and team details
-    And UK based partner submits the project and team details
+    Given lead and partner applicants completes the project and bank details
     When Log in as a different user                    &{ifs_admin_user_credentials}
     And the user navigates to the page                 ${server}/project-setup-management/competition/${competitionID}/status/all
     And the user clicks the button/link                jQuery = td:nth-child(6) a:contains("Review")
-    Then the user should see the element               css = li.read-only:nth-child(1) div.task-status > span:nth-child(1)
-    And the user should see the element                css = li:nth-child(4) strong
-    And the user should see the element                css = li.read-only:nth-child(2) div.task-status > span:nth-child(1)
-    And the user should see the element                css = li.read-only:nth-child(3) div.task-status > span:nth-child(1)
+    Then No action required should display for non uk based and zero funding organisations
 
 Project setup dashboard - will not prevent the consortium's bank details from approval
     [Documentation]    IFS - 7163
@@ -212,3 +198,32 @@ the user should see project location details in project finances
     the user should see the element     jQuery = span:contains("${projectLocationInfo}")
     the user should see the element     id = town
     the user should see the element     jQuery = button:contains("Save and return to project finances")
+
+No action required should display for non uk based and zero funding organisations
+    the user should see the element     css = li.read-only:nth-child(1) div.task-status > span:nth-child(1)
+    the user should see the element     css = li:nth-child(4) strong
+    the user should see the element     css = li.read-only:nth-child(2) div.task-status > span:nth-child(1)
+    the user should see the element     css = li.read-only:nth-child(3) div.task-status > span:nth-child(1)
+
+lead and partner applicants completes the project and bank details
+    Lead applicant submits bank details
+    zero funding parter submits the project and team details
+    Non UK based partner submits the project and team details
+    UK based partner submits the project and team details
+
+will show the bank details as not required for non uk based and zero funding partner organisations
+    the user should see the element       jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
+    the user should see the element       jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
+    the user should see the element       jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
+    the user should not see the element   jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
+
+will show the bank details as not required for lead applicant organisations
+    the user should see the element       jQuery = th:contains("INNOVATE LTD") ~ td:nth-child(6) span:contains("Not required for this partner")
+    the user should see the element       jQuery = th:contains("Red Planet") ~ td:nth-child(6) span:contains("Not required for this partner")
+    the user should see the element       jQuery = th:contains("Ward Ltd") ~ td:nth-child(6) span:contains("Not required for this partner")
+    the user should not see the element   jQuery = th:contains("SmithZone") ~ td:nth-child(6) span:contains("Not required for this partner")
+
+applicant enters project location details
+    the user enters text to a text field     id = town     Äteritsiputeritsipuolilautatsijänkä
+    the user clicks the button/link          id = mark_as_complete
+    the user clicks the button/link          link = Your project location
