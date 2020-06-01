@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.11
 
 ENV CLI_VERSION=1.16.302
 ENV AWS_REGION=eu-west-2
