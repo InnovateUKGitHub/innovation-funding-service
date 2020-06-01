@@ -11,6 +11,8 @@ Documentation     IFS-7365 DocuSign Integration
 ...
 ...               IFS-7440 Allow applicants to edit a submitted application
 ...
+...               IFS-7552 Provide External Finance user with access to download appendix
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -80,10 +82,11 @@ Lead can reopen application
    And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
-    [Documentation]  IFS-7440
-    Given the user clicks the button/link      id = application-overview-submit-cta
-    And the user should not see the element    jQuery = .message-alert:contains("You will not be able to make changes")
-    Then the user clicks the button/link       id = submit-application-button
+    [Documentation]  IFS-7440  IFS-7552
+    Given the user uploads an appendix
+    When the user clicks the button/link      id = application-overview-submit-cta
+    And the user should not see the element   jQuery = .message-alert:contains("You will not be able to make changes")
+    Then the user clicks the button/link      id = submit-application-button
 
 Internal user cannot invite to assesment
     [Documentation]  IFS-7441
@@ -135,6 +138,12 @@ External project finance can see the application finances
     When the user clicks the button/link     jQuery = tr:contains("Empire") a:contains("View finances")
     And the user clicks the button/link      link = Your project costs
     Then the user should see the element     jQuery = h1:contains("Your project costs")
+
+External finance can access appendix
+    [Documentation]  IFS-7552
+    Given the user navigates to the page   ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
+    When the user clicks the button/link   link = ${application_id}
+    Then open pdf link                     link = ${5mb_pdf}, 4 MB
 
 External project finance cannot access documents or MO
     [Documentation]  IFS-7357
@@ -390,3 +399,10 @@ the internal user can complete PS
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}
     Set suite variable    ${ProjectID}
+
+the user uploads an appendix
+    the user clicks the button/link     link = 5. Technical approach
+    the user clicks the button/link     id = edit
+    the user uploads the file           css = .inputfile    ${5mb_pdf}
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
