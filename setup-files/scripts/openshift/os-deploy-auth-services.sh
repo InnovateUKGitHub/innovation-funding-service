@@ -49,7 +49,7 @@ then
     replacePersistentFileClaim
 fi
 
-useContainerRegistry
+useNexusRegistry
 deploy
 #blockUntilServiceIsUp
 
