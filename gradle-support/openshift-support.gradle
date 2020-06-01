@@ -661,3 +661,7 @@ task osTestResults(type: Exec) {
     args = [openshiftEnv, "remote", project.version]
 }
 
+task osDeployAuthServices(type: Exec, dependsOn: prepareDeployAndUpgrade) {
+    executable = 'setup-files/scripts/openshift/os-deploy-auth-services.sh'
+    args = [openshiftEnv, "remote", project.version]
+}

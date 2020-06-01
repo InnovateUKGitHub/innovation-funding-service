@@ -252,6 +252,12 @@ function useContainerRegistry() {
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 
+function useNexusRegistry() {
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/release/#g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/**/*.yml
+}
+
 function pushDBResetImages() {
     docker tag innovateuk/dbreset:latest \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
@@ -369,4 +375,12 @@ function getClusterAddress() {
 
 function getRemoteRegistryUrl() {
   echo "docker-registry.default.svc:5000"
+}
+
+function getNexusRegistryUrl() {
+  echo "docker-ifs.devops.innovateuk.org"
+}
+
+function getNexusCredentials() {
+    echo "${bamboo_openshift_svc_account_token}"
 }
