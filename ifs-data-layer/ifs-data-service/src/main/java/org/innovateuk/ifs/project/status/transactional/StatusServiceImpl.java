@@ -296,7 +296,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
         return project.getPartnerOrganisations()
                 .stream()
-                .noneMatch(org -> org.getPostcode() == null);
+                .noneMatch(org -> {
+                    if (org.getOrganisation().isInternational()) {
+                        return org.getInternationalLocation() == null;
+                    }
+                    return org.getPostcode() == null;
+                });
     }
 
     private ProjectActivityStates createProjectTeamStatus(Project project) {
