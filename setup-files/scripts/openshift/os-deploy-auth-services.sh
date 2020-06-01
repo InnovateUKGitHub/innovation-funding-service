@@ -5,6 +5,8 @@ set -e
 PROJECT=$1
 TARGET=$2
 VERSION=$3
+NEXUS_USER=$3
+NEXUS_PASS=$3
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
@@ -20,7 +22,7 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Deploying the $PROJECT Openshift project"
 
-docker login --username "${bamboo.nexus_repo_user}" --password "${bamboo.nexus_repo_pass}" docker-ifs.devops.innovateuk.org
+docker login --username ${NEXUS_USER} --password ${NEXUS_PASS} ${NEXUS_REGISTRY}
 
 docker pull docker-ifs.devops.innovateuk.org/release/sp-service:1.1.111
 
