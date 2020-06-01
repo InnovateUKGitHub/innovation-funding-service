@@ -106,7 +106,7 @@ Registered user(Partner organisation) logs in and select where their organisatio
 Partner user provides non-UK based organisation details and verifies them
     [Documentation]    IFS-7198 IFS-7199
     [Tags]  HappyPath
-    Given the user clicks the button/link                    link = Join with a different organisation.
+    Given the user clicks the button/link                    link = Join with a different organisation
     When the user provides uk based organisation details     Nomensa  NOMENSA LTD
     Then the user should see the element                     jQuery = p:contains("This is the organisation that you will join the application with.")
     And the user clicks the button/link                      name = save-organisation

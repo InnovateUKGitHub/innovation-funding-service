@@ -28,7 +28,7 @@ Companies House: User can choose the organisation address
     [Tags]  HappyPath
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user should see the element     jQuery = dt:contains("Registered name")
-    And the user should see the element     jQuery = dt:contains("Registered address")
+    And the user should see the element     jQuery = dt:contains("Address")
     And the user should see the element     jQuery = dt:contains("Registration number")
     [Teardown]    the user goes back to the previous page
 
