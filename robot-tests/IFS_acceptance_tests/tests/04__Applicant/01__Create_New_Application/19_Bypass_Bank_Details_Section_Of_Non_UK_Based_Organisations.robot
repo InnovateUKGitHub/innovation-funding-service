@@ -42,10 +42,9 @@ External dashboard - non-uk based partner applicant can complete the project loc
     And the user clicks the button/link                jQuery = button:contains("Save project location")
     Then the user should see the element               jQuery = td:contains("Delhi")
 
-Application form - non-uk based applicant can complete the project location details in project finances
+Application form - non-uk based partner applicant can complete the project location details in project finances
     [Documentation]     IFS-7240
     [Tags]
-    ${applicationInProgressId} =    get application id by name          ${applicationInProgress}
     Given the user navigates to the page               ${server}/application/${applicationInProgressId}/form/your-project-location/organisation/${organisationRedId}/section/384
     When the user should see project location details in project finances
     And applicant enters project location details
@@ -104,7 +103,7 @@ Project setup dashboard - will not prevent the consortium's bank details from ap
     When Comp admin approves bank details of partner organisation
     Then the user should see the element              jQuery = li:nth-child(4) span:nth-child(1)
 
-Non-uk based organisations project loaction details updated in project setup
+Non-uk based organisations project location details updated in ifs admin project setup view
     [Documentation]     IFS-7240
     Given the user navigates to the page     ${server}/project-setup-management/competition/${competitionID}/status/all
     When the user clicks the button/link     jQuery = td:nth-child(2) a:contains("Complete")
@@ -122,6 +121,8 @@ Custom Suite Setup
     Set suite variable    ${competitionID}
     ${applicationId} =    get application id by name                       ${applicationName}
     Set suite variable    ${applicationId}
+    ${applicationInProgressId} =    get application id by name          ${applicationInProgress}
+    Set suite variable     ${applicationInProgressId}
 
 Custom suite teardown
     the user closes the browser
