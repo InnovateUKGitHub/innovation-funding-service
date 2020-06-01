@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -33,21 +32,6 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     @Override
     public RestResult<CompetitionResource> getCompetitionById(long competitionId) {
         return getWithRestResult(format("%s/%d", COMPETITION_REST_SERVICE, competitionId), CompetitionResource.class);
-    }
-
-    @Override
-    public RestResult<List<UserResource>> findInnovationLeads(long competitionId) {
-        return getWithRestResult(format("%s/%d/%s", COMPETITION_REST_SERVICE, competitionId, "innovation-leads"), userListType());
-    }
-
-    @Override
-    public RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId) {
-        return postWithRestResult(format("%s/%d/%s/%d", COMPETITION_REST_SERVICE, competitionId, "add-innovation-lead", innovationLeadUserId), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId) {
-        return postWithRestResult(format("%s/%d/%s/%d", COMPETITION_REST_SERVICE, competitionId, "remove-innovation-lead", innovationLeadUserId), Void.class);
     }
 
     @Override
