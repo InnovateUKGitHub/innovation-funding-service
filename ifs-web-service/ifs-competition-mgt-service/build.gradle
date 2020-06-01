@@ -41,8 +41,13 @@ createContainer.containerName = "competition-mgt-svc"
 createContainer.containerId = "competition-mgt-svc"
 createContainer.portBindings = ['9003:8000']
 
+pullImageAndCreateContainer.hostName = "competition-mgt-svc"
+pullImageAndCreateContainer.containerName = "competition-mgt-svc"
+pullImageAndCreateContainer.containerId = "competition-mgt-svc"
+pullImageAndCreateContainer.portBindings = ['9003:8000']
+
 def enabled = project.hasProperty('ifs.competition-mgt-service.enabled') ? project.property('ifs.competition-mgt-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.competition-mgt-service.pull.nexus.image') ? project.property('ifs.competition-mgt-service.pull.nexus.image').toBoolean() : true
+def pullNexusImage = project.hasProperty('ifs.competition-mgt-service.pull.nexus.image') ? project.property('ifs.competition-mgt-service.pull.nexus.image').toBoolean() : false
 if (enabled && pullNexusImage) {
 
     [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->

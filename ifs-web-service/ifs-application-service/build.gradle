@@ -38,8 +38,13 @@ createContainer.containerName = "application-svc"
 createContainer.containerId = "application-svc"
 createContainer.portBindings = ['9001:8000']
 
+pullImageAndCreateContainer.hostName = "application-svc"
+pullImageAndCreateContainer.containerName = "application-svc"
+pullImageAndCreateContainer.containerId = "application-svc"
+pullImageAndCreateContainer.portBindings = ['9001:8000']
+
 def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.application-service.pull.nexus.image') ? project.property('ifs.application-service.pull.nexus.image').toBoolean() : true
+def pullNexusImage = project.hasProperty('ifs.application-service.pull.nexus.image') ? project.property('ifs.application-service.pull.nexus.image').toBoolean() : false
 if (enabled && pullNexusImage) {
 
     [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->

@@ -32,7 +32,7 @@ version project.version
 apply plugin: 'idea'
 
 def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : false
-def pullNexusImage = project.hasProperty('ifs.survey-service.pull.nexus.image') ? project.property('ifs.survey-service.pull.nexus.image').toBoolean() : true
+def pullNexusImage = project.hasProperty('ifs.survey-service.pull.nexus.image') ? project.property('ifs.survey-service.pull.nexus.image').toBoolean() : false
 if (enabled && pullNexusImage) {
 
     [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
@@ -63,6 +63,11 @@ createContainer.hostName = "survey-svc"
 createContainer.containerName = "survey-svc"
 createContainer.containerId = "survey-svc"
 createContainer.portBindings = ['9007:8000']
+
+pullImageAndCreateContainer.hostName = "survey-svc"
+pullImageAndCreateContainer.containerName = "survey-svc"
+pullImageAndCreateContainer.containerId = "survey-svc"
+pullImageAndCreateContainer.portBindings = ['9007:8000']
 
 prepareDockerBaseInput {
     inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")

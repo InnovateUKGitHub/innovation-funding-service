@@ -41,8 +41,13 @@ createContainer.containerName = "project-setup-mgt-svc"
 createContainer.containerId = "project-setup-mgt-svc"
 createContainer.portBindings = ['9004:8000']
 
+pullImageAndCreateContainer.hostName = "project-setup-mgt-svc"
+pullImageAndCreateContainer.containerName = "project-setup-mgt-svc"
+pullImageAndCreateContainer.containerId = "project-setup-mgt-svc"
+pullImageAndCreateContainer.portBindings = ['9004:8000']
+
 def enabled = project.hasProperty('ifs.project-setup-mgt-service.enabled') ? project.property('ifs.project-setup-mgt-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.project-setup-mgt-service.pull.nexus.image') ? project.property('ifs.project-setup-mgt-service.pull.nexus.image').toBoolean() : true
+def pullNexusImage = project.hasProperty('ifs.project-setup-mgt-service.pull.nexus.image') ? project.property('ifs.project-setup-mgt-service.pull.nexus.image').toBoolean() : false
 if (enabled && pullNexusImage) {
 
     [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->

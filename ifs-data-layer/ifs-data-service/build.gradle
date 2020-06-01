@@ -48,7 +48,7 @@ tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":late
 
 
 def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property('ifs.data-service.enabled').toBoolean() : true
-def pullNexusImage = project.hasProperty('ifs.data-service.pull.nexus.image') ? project.property('ifs.data-service.pull.nexus.image').toBoolean() : true
+def pullNexusImage = project.hasProperty('ifs.data-service.pull.nexus.image') ? project.property('ifs.data-service.pull.nexus.image').toBoolean() : false
 if (enabled && pullNexusImage) {
 
     [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy, flywayClean, flywayMigrate].each { task ->
@@ -69,9 +69,14 @@ if (enabled && pullNexusImage) {
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:wait"
 deploy.mustRunAfter ":docker:ifs-mysql:ifs-database:deploy"
 
-createContainer.portBindings = ['8086:8080', '9006:8000']
+deployNexusLocal.dependsOn ":docker:ifs-mysql:ifs-database:waitNexusDeploy"
+deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-database:deployNexusLocal"
 
+createContainer.portBindings = ['8086:8080', '9006:8000']
 createContainer.networkAliases = ["ifs-data-service"]
+
+pullImageAndCreateContainer.portBindings = ['8086:8080', '9006:8000']
+pullImageAndCreateContainer.networkAliases = ["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 
