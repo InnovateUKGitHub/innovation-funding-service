@@ -34,7 +34,7 @@ public interface ProjectDetailsService {
     ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, AddressResource addressResource);
+    ServiceResult<Void> updateProjectAddress(Long projectId, AddressResource addressResource);
 
     @PreAuthorize("hasPermission(#composite, 'UPDATE_FINANCE_CONTACT')")
     @Activity(projectOrganisationCompositeId = "composite", type = FINANCE_CONTACT_NOMINATED)

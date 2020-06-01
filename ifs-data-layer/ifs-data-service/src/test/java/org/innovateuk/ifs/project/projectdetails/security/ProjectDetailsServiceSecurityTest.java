@@ -40,7 +40,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
 
         when(projectLookupStrategy.getProjectResource(456L)).thenReturn(project);
 
-        assertAccessDenied(() -> classUnderTest.updateProjectAddress(123L, 456L, newAddressResource().build()), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProjectAddress(456L, newAddressResource().build()), () -> {
             verify(projectDetailsPermissionRules).leadPartnersCanUpdateTheBasicProjectDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectDetailsPermissionRules);
         });

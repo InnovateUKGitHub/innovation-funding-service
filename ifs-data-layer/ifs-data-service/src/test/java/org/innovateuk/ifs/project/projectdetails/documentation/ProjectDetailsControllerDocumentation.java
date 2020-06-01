@@ -240,9 +240,9 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         AddressResource address = newAddressResource().build();
 
-        when(projectDetailsServiceMock.updateProjectAddress(leadOrganisationId, projectId, address)).thenReturn(serviceSuccess());
+        when(projectDetailsServiceMock.updateProjectAddress(projectId, address)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/address?leadOrganisationId={leadOrganisationId}", projectId, leadOrganisationId)
+        mockMvc.perform(post("/project/{projectId}/address", projectId)
                 .header("IFS_AUTH_TOKEN", "123abc")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(address)))
@@ -250,9 +250,6 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of project that the project address is being set on")
-                        ),
-                        requestParameters(
-                                parameterWithName("leadOrganisationId").description("Id of the Lead Organisation for this Project")
                         )
                 ));
     }

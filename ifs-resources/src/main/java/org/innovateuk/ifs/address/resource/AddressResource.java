@@ -44,6 +44,15 @@ public class AddressResource {
         this.country = country;
     }
 
+    // For international addresses
+    public AddressResource(String addressLine1, String addressLine2, String town, String country, String zipCode) {
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.town = town;
+        this.country = country;
+        this.postcode = zipCode;
+    }
+
     public String getAddressLine1() {
         return addressLine1;
     }
@@ -119,6 +128,19 @@ public class AddressResource {
         location[0] = getAddressLine1() == null ? "" : getAddressLine1();
         location[1] = getTown() == null ? "" : getTown();
         location[2] = getPostcode() == null ? "" : getPostcode();
+        return String.join(", ", location);
+    }
+
+    @JsonIgnore
+    public String getAsSingleLineWithCountry() {
+        if (getAddressLine1() == null && getTown() == null && getCountry() == null && getPostcode() == null) {
+            return "";
+        }
+        String[] location = new String[4];
+        location[0] = getAddressLine1() == null ? "" : getAddressLine1();
+        location[1] = getTown() == null ? "" : getTown();
+        location[2] = getCountry() == null ? "" : getCountry();
+        location[3] = getPostcode() == null ? "" : getPostcode();
         return String.join(", ", location);
     }
 

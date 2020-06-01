@@ -21,5 +21,5 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths);
 
-    ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address);
+    ServiceResult<Void> updateAddress(Long projectId, AddressResource address);
 }

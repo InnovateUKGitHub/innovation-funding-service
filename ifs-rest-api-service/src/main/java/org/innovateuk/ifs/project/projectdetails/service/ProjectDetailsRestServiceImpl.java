@@ -32,8 +32,8 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> updateProjectAddress(long leadOrganisationId, long projectId, AddressResource address) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/address?leadOrganisationId=" + leadOrganisationId, address, Void.class);
+    public RestResult<Void> updateProjectAddress(long projectId, AddressResource address) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/address?leadOrganisationId=", address, Void.class);
     }
 
     @Override
