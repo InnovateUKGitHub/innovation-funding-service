@@ -26,6 +26,8 @@ docker login --username ${NEXUS_USER} --password ${NEXUS_PASS} ${NEXUS_REGISTRY}
 
 docker pull docker-ifs.devops.innovateuk.org/release/sp-service:1.1.111
 
+docker images
+
 
 function deploy() {
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
