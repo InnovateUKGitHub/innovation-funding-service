@@ -2,10 +2,11 @@ package org.innovateuk.ifs.management.competition.setup.core.service;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
+import org.innovateuk.ifs.finance.resource.FundingLevel;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.management.competition.setup.application.form.DetailsForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupFormPopulator;
@@ -20,8 +21,7 @@ import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.A
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.viewmodel.AdditionalModelViewModel;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.InitialDetailsViewModel;
-import org.innovateuk.ifs.finance.resource.FundingLevel;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
+import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -427,26 +427,6 @@ public class CompetitionSetupServiceImplTest {
 
         verify(competitionInviteRestService, only()).getInviteStatistics(COMPETITION_ID);
         verify(competitionSetupRestService, never()).delete(isA(Long.class));
-    }
-
-    @Test
-    public void addInnovationLead() throws Exception {
-        Long competitionId = 1L;
-        Long innovationLeadUserId = 2L;
-        when(competitionRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
-
-        service.addInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
-    }
-
-    @Test
-    public void removeInnovationLead() throws Exception {
-        Long competitionId = 1L;
-        Long innovationLeadUserId = 2L;
-        when(competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
-
-        service.removeInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {

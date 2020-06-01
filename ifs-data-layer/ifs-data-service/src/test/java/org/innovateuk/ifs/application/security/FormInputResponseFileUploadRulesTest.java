@@ -136,6 +136,25 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     }
 
     @Test
+    public void externalFinanceCanDownloadFilesInResponse() {
+        Application application = newApplication().withApplicationState(ApplicationState.OPENED).build();
+
+        Competition competition = newCompetition().build();
+        application.setCompetition(competition);
+        UserResource externalFinanceUserResource = newUserResource()
+                .withRoleGlobal(EXTERNAL_FINANCE)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), externalFinanceUserResource.getId())).thenReturn(true);
+
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
+        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L));
+
+        assertTrue(fileUploadRules.externalFinanceCanDownloadFilesInResponse(fileEntry, externalFinanceUserResource));
+    }
+
+    @Test
     public void monitoringOfficersCanSeeTheResearchParticipantPercentageInApplications() {
         Project project = newProject().build();
         when(projectRepository.findOneByApplicationId(anyLong())).thenReturn(project);

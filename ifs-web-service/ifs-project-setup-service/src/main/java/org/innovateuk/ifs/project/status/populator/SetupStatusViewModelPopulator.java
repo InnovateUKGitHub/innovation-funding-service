@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
@@ -61,8 +63,18 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         boolean monitoringOfficer = monitoringOfficerService.isMonitoringOfficerOnProject(projectId, loggedInUser.getId()).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
+
+        RestResult<OrganisationResource> organisationResult = projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId());
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(project.getId(), Optional.of(loggedInUser.getId()));
+
+        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(project.getId(), Optional.empty()));
+        CompletableFuture<OrganisationResource> organisationRequest = async(() -> monitoringOfficer ?
+                projectService.getLeadOrganisation(project.getId()) :
+                projectRestService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId()).getSuccess());
+
         List<SetupStatusStageViewModel> stages = competition.getProjectSetupStages().stream()
-                .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer))
+                .filter(stage -> (ProjectSetupStage.BANK_DETAILS != stage) || showBankDetails(organisationResult, teamStatus))
+                .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer, teamStatusRequest, organisationRequest))
                 .collect(toList());
 
         return new SetupStatusViewModel(
@@ -71,6 +83,26 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 stages,
                 competition.isLoan(),
                 showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
+    }
+
+    private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {
+
+        if (organisationResult.isFailure()) {
+            return true;
+        }
+
+        OrganisationResource organisation = organisationResult.getSuccess();
+
+        if (organisation.isInternational()) {
+            return false;
+        }
+
+        Optional<ProjectPartnerStatusResource> statusForOrg = teamStatus.getPartnerStatusForOrganisation(organisation.getId());
+
+        if (statusForOrg.isPresent() && ProjectActivityStates.NOT_REQUIRED == statusForOrg.get().getBankDetailsStatus()) {
+            return false;
+        }
+        return true;
     }
 
     private boolean showApplicationFeedbackLink(ProjectResource project,
@@ -85,11 +117,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
         }
     }
 
-    private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer) {
-        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest = async(() -> statusService.getProjectTeamStatus(project.getId(), Optional.empty()));
-        CompletableFuture<OrganisationResource> organisationRequest = async(() -> monitoringOfficer ?
-                                projectService.getLeadOrganisation(project.getId()) :
-                                projectRestService.getOrganisationByProjectAndUser(project.getId(), user.getId()).getSuccess());
+    private SetupStatusStageViewModel toStageViewModel(ProjectSetupStage stage, ProjectResource project, CompetitionResource competition, UserResource user, boolean monitoringOfficer,
+                                                       CompletableFuture<ProjectTeamStatusResource> teamStatusRequest, CompletableFuture<OrganisationResource> organisationRequest) {
 
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(resolve(teamStatusRequest));
         boolean projectComplete = project.getProjectState().isLive();
