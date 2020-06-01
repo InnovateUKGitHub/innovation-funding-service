@@ -145,9 +145,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.3'
     compile "com.opencsv:opencsv:4.3.2"
 
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-
     testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
     testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
