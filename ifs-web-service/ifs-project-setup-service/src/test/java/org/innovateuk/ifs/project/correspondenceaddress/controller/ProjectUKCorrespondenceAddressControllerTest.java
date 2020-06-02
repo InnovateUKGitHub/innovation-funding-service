@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails.controller;
+package org.innovateuk.ifs.project.correspondenceaddress.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.form.AddressForm;
@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.correspondenceaddress.controller.ProjectDetailsAddressController;
 import org.innovateuk.ifs.project.correspondenceaddress.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.correspondenceaddress.viewmodel.ProjectDetailsAddressViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -38,7 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class ProjectDetailsAddressControllerTest extends BaseControllerMockMVCTest<ProjectDetailsAddressController> {
+public class ProjectUKCorrespondenceAddressControllerTest extends BaseControllerMockMVCTest<ProjectUKCorrespondenceAddressController> {
 
      @Mock
     private ProjectService projectService;
@@ -51,8 +50,8 @@ public class ProjectDetailsAddressControllerTest extends BaseControllerMockMVCTe
 
 
     @Override
-    protected ProjectDetailsAddressController supplyControllerUnderTest() {
-        return new ProjectDetailsAddressController();
+    protected ProjectUKCorrespondenceAddressController supplyControllerUnderTest() {
+        return new ProjectUKCorrespondenceAddressController();
     }
 
     @Test
@@ -103,7 +102,7 @@ public class ProjectDetailsAddressControllerTest extends BaseControllerMockMVCTe
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(projectDetailsService.updateAddress(leadOrganisation.getId(), project.getId(), addressResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.updateAddress(project.getId(), addressResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)

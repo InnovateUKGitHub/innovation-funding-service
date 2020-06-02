@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
  */
 @Controller
 @RequestMapping("/project")
-public class ProjectDetailsAddressController extends AddressLookupBaseController {
+public class ProjectUKCorrespondenceAddressController extends AddressLookupBaseController {
 
     @Autowired
     private ProjectService projectService;
