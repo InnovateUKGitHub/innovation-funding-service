@@ -73,11 +73,22 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                                                    HttpServletRequest request,
                                                    UserResource user,
                                                    @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalDetailsForm organisationForm) {
+        Optional<OrganisationInternationalDetailsForm> cookieForm = registrationCookieService.getOrganisationInternationalDetailsValue(request);
+        if (cookieForm.isPresent()) {
+            model.addAttribute(ORGANISATION_FORM, cookieForm);
+        }
+        return viewInternationalDetails(model, request, user);
+
+    }
+
+    private String viewInternationalDetails(Model model,
+                                            HttpServletRequest request,
+                                            UserResource user) {
         model.addAttribute("countries", COUNTRIES);
         addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION_DETAILS;
-    }
 
+    }
     @PostMapping("/details")
     public String saveInternationalOrganisationDetails(Model model,
                                                        HttpServletRequest request,
