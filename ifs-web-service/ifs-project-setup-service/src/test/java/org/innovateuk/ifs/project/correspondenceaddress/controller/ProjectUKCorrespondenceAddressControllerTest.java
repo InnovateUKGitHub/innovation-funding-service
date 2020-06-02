@@ -55,7 +55,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
     }
 
     @Test
-    public void testViewAddress() throws Exception {
+    public void viewAddress() throws Exception {
         OrganisationResource organisationResource = newOrganisationResource().build();
         AddressResource addressResource = newAddressResource().build();
         ApplicationResource applicationResource = newApplicationResource().build();
@@ -65,7 +65,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(organisationResource);
         when(organisationRestService.getOrganisationById(organisationResource.getId())).thenReturn(restSuccess(organisationResource));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address", project.getId())).
+        MvcResult result = mockMvc.perform(get("/project/{id}/details/project-address/UK", project.getId())).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/details-address")).
                 andExpect(model().hasNoErrors()).
@@ -84,7 +84,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
     }
 
     @Test
-    public void testUpdateProjectAddressAddNewManually() throws Exception {
+    public void updateProjectAddressAddNewManually() throws Exception {
         OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         AddressResource addressResource = newAddressResource().
@@ -104,7 +104,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(projectDetailsService.updateAddress(project.getId(), addressResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+        mockMvc.perform(post("/project/{id}/details/project-address/UK", project.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name())
                 .param("addressForm.manualAddress.addressLine1", addressResource.getAddressLine1())
@@ -116,7 +116,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
     }
 
     @Test
-    public void testSearchAddressFailsWithFieldErrorOnEmpty() throws Exception {
+    public void searchAddressFailsWithFieldErrorOnEmpty() throws Exception {
         OrganisationResource leadOrganisation = newOrganisationResource().build();
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
@@ -125,7 +125,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
 
-        mockMvc.perform(post("/project/{id}/details/project-address", project.getId()).
+        mockMvc.perform(post("/project/{id}/details/project-address/UK", project.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("addressForm.action", AddressForm.Action.SEARCH_POSTCODE.name())
                 .param("addressForm.postcodeInput", "")).
