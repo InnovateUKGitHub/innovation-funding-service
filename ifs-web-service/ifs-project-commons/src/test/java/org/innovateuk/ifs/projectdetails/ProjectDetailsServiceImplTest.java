@@ -99,13 +99,13 @@ public class ProjectDetailsServiceImplTest {
         long projectId = 2L;
         AddressResource addressResource = newAddressResource().build();
 
-        when(projectDetailsRestService.updateProjectAddress(leadOrgId, projectId, addressResource)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updateProjectAddress(projectId, addressResource)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.updateAddress(leadOrgId, projectId, addressResource);
+        ServiceResult<Void> result = service.updateAddress(projectId, addressResource);
 
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updateProjectAddress(leadOrgId, projectId, addressResource);
+        verify(projectDetailsRestService).updateProjectAddress(projectId, addressResource);
         verifyNoMoreInteractions(projectDetailsRestService);
     }
 }
