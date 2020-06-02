@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
@@ -37,13 +38,12 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectInternationalCorrespondenceAddressForm form) {
 
         ProjectResource project = projectService.getById(projectId);
-        ProjectInternationalCorrespondenceAddressViewModel viewModel = loadDataIntoModel(project);
 
         if(project.getAddress() != null) {
             form.populate(project.getAddress());
         }
 
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", new ProjectInternationalCorrespondenceAddressViewModel(project));
         return "project/international-address";
     }
 
@@ -57,39 +57,37 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
 
         ProjectResource projectResource = projectService.getById(projectId);
 
-        if (validationHandler.hasErrors()) {
-            return viewCurrentAddressForm(model, form, projectResource);
-        }
-        return update(projectId, form).handleSuccessOrFailure(
-                failure -> {
+        Supplier<String> failureView = () -> viewCurrentAddressForm(model, projectResource);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () ->{
+            projectResource.setAddress(createAddressResource(form));
+            ServiceResult<Void> updateResult = projectDetailsService.updateAddress(projectId, projectResource.getAddress());
+            return updateResult.handleSuccessOrFailure(
+                    failure -> {
                     validationHandler.addAnyErrors(failure, asGlobalErrors());
                     return viewAddress(projectId, model, form);
                 },
                 success -> redirectToProjectDetails(projectId));
+
+        });
     }
 
-    private String viewCurrentAddressForm(Model model, ProjectInternationalCorrespondenceAddressForm form,
-                                          ProjectResource project) {
-        model.addAttribute("model", form.populate(project.getAddress()));
+    private String viewCurrentAddressForm(Model model, ProjectResource project) {
+
+        model.addAttribute("model", new ProjectInternationalCorrespondenceAddressViewModel(project));
         return "project/international-address";
-    }
-
-    private ProjectInternationalCorrespondenceAddressViewModel loadDataIntoModel(final ProjectResource project) {
-        return new ProjectInternationalCorrespondenceAddressViewModel(project);
     }
 
     private String redirectToProjectDetails(long projectId) {
         return "redirect:/project/" + projectId + "/details";
     }
 
-    private ServiceResult<Void> update(long projectId, ProjectInternationalCorrespondenceAddressForm form) {
-        AddressResource addressResource = new AddressResource(
+    private AddressResource createAddressResource(ProjectInternationalCorrespondenceAddressForm form) {
+        return new AddressResource(
                 form.getAddressLine1(),
                 form.getAddressLine2(),
                 form.getTown(),
                 form.getCountry(),
-                form.getZipCode()
-        );
-        return projectDetailsService.updateAddress(projectId, addressResource);
+                form.getZipCode());
     }
 }
