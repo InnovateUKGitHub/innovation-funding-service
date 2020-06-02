@@ -33,6 +33,11 @@ public class CompetitionSetupPermissionRules {
         return competitionInitialDetailsSet(competitionCompositeId);
     }
 
+    @PermissionRule(value = "CHOOSE_POST_AWARD_SERVICE", description = "Allowed to choose post award service")
+    public boolean choosePostAwardService(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+        return competitionInitialDetailsSet(competitionCompositeId);
+    }
+
     private boolean competitionInitialDetailsSet(CompetitionCompositeId competitionCompositeId) {
         return competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionCompositeId.id());
     }
