@@ -1,12 +1,16 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
-import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
-import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.registration.controller.RegistrationController;
+import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
+import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +40,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
     private InviteRestService inviteRestService;
     private AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator;
     private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
+    private CompetitionOrganisationConfigRestService organisationConfigRestService;
 
     private static final String ACCEPT_INVITE_NEW_USER_VIEW = "registration/accept-invite-new-user";
     private static final String ACCEPT_INVITE_EXISTING_USER_VIEW = "registration/accept-invite-existing-user";
@@ -43,11 +48,13 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
     public AcceptInviteController(final OrganisationRestService organisationRestService,
                                   final InviteRestService inviteRestService,
                                   final AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator,
-                                  final ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator) {
+                                  final ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator,
+                                  final CompetitionOrganisationConfigRestService organisationConfigRestService) {
         this.organisationRestService = organisationRestService;
         this.inviteRestService = inviteRestService;
         this.acceptRejectApplicationInviteModelPopulator = acceptRejectApplicationInviteModelPopulator;
         this.confirmOrganisationInviteModelPopulator = confirmOrganisationInviteModelPopulator;
+        this.organisationConfigRestService = organisationConfigRestService;
     }
 
     @GetMapping("/accept-invite/{hash}")
@@ -69,7 +76,11 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             }
                             // Success
                             registrationCookieService.saveToInviteHashCookie(hash, response);// Add the hash to a cookie for later flow lookup.
-                            model.addAttribute("model", acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation));
+                            AcceptRejectApplicationInviteViewModel acceptRejectApplicationInviteViewModel = acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation);
+                            model.addAttribute("model", acceptRejectApplicationInviteViewModel);
+                            CompetitionOrganisationConfigResource organisationConfigResource = organisationConfigRestService.findByCompetitionId(acceptRejectApplicationInviteViewModel.getCompetitionId()).getSuccess();
+                            boolean international = organisationConfigResource.areInternationalApplicantsAllowed();
+                            model.addAttribute("internationalCompetition", international);
                             return invite.getUser() == null ? ACCEPT_INVITE_NEW_USER_VIEW : ACCEPT_INVITE_EXISTING_USER_VIEW;
                         }
                 )

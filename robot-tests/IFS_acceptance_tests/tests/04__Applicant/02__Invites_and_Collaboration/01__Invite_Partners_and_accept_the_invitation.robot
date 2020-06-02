@@ -331,7 +331,7 @@ Custom suite teardown
 
 the user accepts invitation
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 

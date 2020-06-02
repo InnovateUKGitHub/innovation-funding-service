@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
@@ -7,10 +7,10 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
-import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,10 +33,10 @@ import java.util.Optional;
  */
 
 @Controller
-@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationLeadTypeController.class)
+@RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.ORGANISATION_TYPE)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationTypeController.class)
 @PreAuthorize("permitAll")
-public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
+public class OrganisationCreationTypeController extends AbstractOrganisationCreationController {
 
     private static final String ORGANISATION_TYPE_ID = "organisationTypeId";
     public static final String COMPETITION_ID = "competitionId";
@@ -54,12 +54,14 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
 
     @GetMapping
     public String selectOrganisationType(Model model,
+                                         UserResource user,
                                          HttpServletRequest request) {
 
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
         model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request));
         model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
+        addPageSubtitleToModel(request, user, model);
 
         if (organisationCreationFormCookie.isPresent()) {
             model.addAttribute(ORGANISATION_FORM, organisationCreationFormCookie.get());
@@ -67,7 +69,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             model.addAttribute(ORGANISATION_FORM, new OrganisationCreationForm());
         }
 
-        return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+        return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
     }
 
     @PostMapping
@@ -88,13 +90,11 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             saveOrganisationTypeToCreationForm(response, organisationTypeForm);
 
-            Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-
-            if (!isAllowedToLeadApplication(organisationTypeId, request, organisationInternationalForm)) {
+            if (registrationCookieService.isLeadJourney(request) && !isAllowedToLeadApplication(organisationTypeId, request)) {
                 return redirectToNotEligibleUrl();
             }
 
-            if (registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
+            if (registrationCookieService.isInternationalJourney(request)) {
                 return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/details";
             }
 
@@ -103,12 +103,12 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
             organisationForm.setTriedToSave(true);
             OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate(request);
             model.addAttribute("model", selectOrgTypeViewModel);
-            return TEMPLATE_PATH + "/" + LEAD_ORGANISATION_TYPE;
+            return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
         }
     }
 
     private String redirectToNotEligibleUrl() {
-        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+        return "redirect:" + BASE_URL + "/" + AbstractOrganisationCreationController.ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
     }
 
     @GetMapping(NOT_ELIGIBLE)
@@ -116,15 +116,16 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
         return TEMPLATE_PATH + "/" + NOT_ELIGIBLE;
     }
 
-    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request, Optional<OrganisationInternationalForm> organisationInternationalForm) {
+    private boolean isAllowedToLeadApplication(Long organisationTypeId, HttpServletRequest request) {
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
 
         if (competitionIdOpt.isPresent()) {
 
             CompetitionOrganisationConfigResource competitionOrganisationConfigResource = competitionOrganisationConfigRestService.findByCompetitionId(competitionIdOpt.get()).getSuccess();
 
-            if(!competitionOrganisationConfigResource.getInternationalLeadOrganisationAllowed() && registrationCookieService.isInternationalJourney(organisationInternationalForm)) {
-                return Boolean.FALSE;
+            if(!competitionOrganisationConfigResource.cantInternationalApplicantsLead()
+                    && registrationCookieService.isInternationalJourney(request)) {
+                return false;
             }
 
             List<OrganisationTypeResource> organisationTypesAllowed = competitionRestService.getCompetitionOrganisationType(competitionIdOpt.get()).getSuccess();
@@ -133,7 +134,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                     .anyMatch(aLong -> aLong.equals(organisationTypeId));
         }
 
-        return Boolean.FALSE;
+        return false;
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {

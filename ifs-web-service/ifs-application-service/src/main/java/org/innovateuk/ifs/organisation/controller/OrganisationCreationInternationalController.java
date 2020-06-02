@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
@@ -42,10 +42,9 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
     @GetMapping
     public String selectInternationalOrganisation(Model model,
                                                   HttpServletRequest request,
+                                                  UserResource user,
                                                   @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalForm organisationInternationalForm) {
-        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        model.addAttribute("competitionId", competitionIdOpt.orElse(null));
-
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION;
     }
 
@@ -56,17 +55,15 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response,
-                                                   UserResource userResource) {
+                                                   UserResource user) {
 
-        Supplier<String> failureView = () -> selectInternationalOrganisation(model, request, organisationForm);
+        Supplier<String> failureView = () -> selectInternationalOrganisation(model, request, user, organisationForm);
         Supplier<String> successView = () -> {
             registrationCookieService.saveToOrganisationInternationalCookie(organisationForm, response);
-            if (userResource != null) {
-                if (!organisationRestService.getAllByUserId(userResource.getId()).getSuccess().isEmpty()) {
-                    return "redirect:/organisation/select";
-                }
+            if (user != null) {
+                return "redirect:/organisation/select";
             }
-            return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+            return "redirect:/organisation/create/organisation-type";
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
@@ -75,11 +72,10 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
     @GetMapping("/details")
     public String internationalOrganisationDetails(Model model,
                                                    HttpServletRequest request,
+                                                   UserResource user,
                                                    @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalDetailsForm organisationForm) {
-        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        model.addAttribute("competitionId", competitionIdOpt.orElse(null));
         model.addAttribute("countries", COUNTRIES);
-
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION_DETAILS;
     }
 
@@ -89,9 +85,10 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                                                        HttpServletResponse response,
                                                        @Valid @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalDetailsForm organisationForm,
                                                        BindingResult bindingResult,
-                                                       ValidationHandler validationHandler) {
+                                                       ValidationHandler validationHandler,
+                                                       UserResource user) {
 
-        Supplier<String> failureView = () -> internationalOrganisationDetails(model, request, organisationForm);
+        Supplier<String> failureView = () -> internationalOrganisationDetails(model, request, user, organisationForm);
         Supplier<String> successView = () -> {
             registrationCookieService.saveToOrganisationInternationalDetailsCookie(organisationForm, response);
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION + "/confirm";
@@ -102,17 +99,18 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
 
     @GetMapping("/confirm")
     public String confirmInternationalOrganisationDetails(Model model,
+                                                          UserResource user,
                                                           HttpServletRequest request) {
-        Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        model.addAttribute("competitionId", competitionIdOpt.orElse(null));
-
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
         Optional<OrganisationInternationalDetailsForm> organisationInternationalDetailsForm = registrationCookieService.getOrganisationInternationalDetailsValue(request);
         model.addAttribute("organisationType", organisationTypeForm.isPresent() ? organisationTypeRestService.findOne(organisationTypeForm.get().getOrganisationType()).getSuccess() : null);
         model.addAttribute("organisationName", organisationInternationalDetailsForm.isPresent() ? organisationInternationalDetailsForm.get().getName() : null);
         model.addAttribute("registrationNumber", organisationInternationalDetailsForm.isPresent() ? organisationInternationalDetailsForm.get().getCompanyRegistrationNumber() : null);
         model.addAttribute("address", createAddressResource(organisationInternationalDetailsForm));
+        model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
+        model.addAttribute("isLeadApplicant", registrationCookieService.isLeadJourney(request));
 
+        addPageSubtitleToModel(request, user, model);
         return TEMPLATE_PATH + "/" + INTERNATIONAL_CONFIRM_ORGANISATION;
     }
 

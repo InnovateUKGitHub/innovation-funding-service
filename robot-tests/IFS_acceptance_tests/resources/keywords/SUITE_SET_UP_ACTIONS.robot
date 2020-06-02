@@ -107,7 +107,7 @@ Invite and accept the invitation
     logout as user
     When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
     And the user clicks the button/link                 jQuery=.govuk-button:contains("Yes, accept invitation")
-    When the user selects the radio button              organisationType    2
+    When the user selects the radio button              organisationTypeId    2
     And the user clicks the button/link                 css = .govuk-button[type="submit"]
     the research user finds org in companies house      Live  University of Liverpool
     And the invited user fills the create account form  Arsene    Wenger
@@ -219,6 +219,18 @@ the invited user fills the create account form
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketing
     the user clicks the button/link  css=button[type="submit"][name="create-account"]
+
+the user enters the details and clicks the create account
+    [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
+    Wait Until Page Contains Element Without Screenshots    jQuery = a:contains("Terms and conditions")
+    Input Text                     name = firstName  ${first_name}
+    Input Text                     id = lastName  ${last_name}
+    Input Text                     id = phoneNumber  23232323
+    Input Text                     id = email  ${email}
+    Input Password                 id = password  ${password}
+    the user selects the checkbox    termsAndConditions
+    the user selects the checkbox    allowMarketingEmails
+    Submit Form
 
 the user clicks the forgot psw link
     The user clicks the button/link  jQuery=summary:contains("Need help signing in or creating an account?")

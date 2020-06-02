@@ -28,6 +28,7 @@ public class ProjectUserInviteResource extends InviteResource {
     private String organisationName;
     private String leadApplicant;
     private String competitionName;
+    private Long competitionId;
     private ZonedDateTime sentOn;
 
 
@@ -35,7 +36,7 @@ public class ProjectUserInviteResource extends InviteResource {
         // no-arg constructor
     }
 
-    public ProjectUserInviteResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName) {
+    public ProjectUserInviteResource(Long id, Long user, String name, String email, Long project, Long organisation, Long applicationId, String hash, InviteStatus status, String leadApplicant, String competitionName, Long competitionId) {
         this.id = id;
         this.user = user;
         this.name = name;
@@ -47,6 +48,7 @@ public class ProjectUserInviteResource extends InviteResource {
         this.status = status;
         this.competitionName = competitionName;
         this.leadApplicant = leadApplicant;
+        this.competitionId = competitionId;
     }
 
     public ProjectUserInviteResource(String name, String email, Long project) {
@@ -189,6 +191,14 @@ public class ProjectUserInviteResource extends InviteResource {
         this.sentOn = sentOn;
     }
 
+    public Long getCompetitionId() {
+        return competitionId;
+    }
+
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -260,4 +270,5 @@ public class ProjectUserInviteResource extends InviteResource {
                 .append("competitionName", competitionName)
                 .toString();
     }
+
 }

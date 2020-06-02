@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -102,6 +102,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("isApplicantJourney", registrationCookieService.isApplicantJourney(request));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
         model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute("includeInternationalQuestion", registrationCookieService.getOrganisationInternationalCookieValue(request).isPresent());
         model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
         addPageSubtitleToModel(request, user, model);
 

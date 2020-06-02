@@ -46,6 +46,7 @@ public class ApplicationCreationAuthenticatedController {
                        UserResource user,
                        HttpServletResponse response) {
         Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
+
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
             model.addAttribute(FORM_NAME, new ApplicationCreationAuthenticatedForm());
@@ -78,7 +79,8 @@ public class ApplicationCreationAuthenticatedController {
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
         CompetitionOrganisationConfigResource organisationConfig = competitionOrganisationConfigRestService.findByCompetitionId(competitionId).getSuccess();
-        if (organisationConfig.getInternationalOrganisationsAllowed()) {
+
+        if (organisationConfig.areInternationalApplicantsAllowed()) {
             return "redirect:/organisation/create/international-organisation";
         }
         return "redirect:/organisation/select";

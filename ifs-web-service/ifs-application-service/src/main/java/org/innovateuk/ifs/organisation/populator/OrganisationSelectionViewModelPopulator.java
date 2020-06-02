@@ -1,10 +1,9 @@
-package org.innovateuk.ifs.registration.populator;
+package org.innovateuk.ifs.organisation.populator;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.form.OrganisationInternationalForm;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionChoiceViewModel;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -37,14 +35,15 @@ public class OrganisationSelectionViewModelPopulator {
                 .map(this::choice)
                 .collect(toSet());
 
-        return new OrganisationSelectionViewModel(choices, registrationCookieService.isCollaboratorJourney(request),
-                registrationCookieService.isApplicantJourney(request), newOrganisationUrl);
+        return new OrganisationSelectionViewModel(choices,
+                registrationCookieService.isCollaboratorJourney(request),
+                registrationCookieService.isApplicantJourney(request),
+                registrationCookieService.isInternationalJourney(request),
+                newOrganisationUrl);
     }
 
     private List<OrganisationResource> getOrganisationResources(long userId, HttpServletRequest request) {
-       Optional<OrganisationInternationalForm> organisationInternationalForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
-       final boolean international = registrationCookieService.isInternationalJourney(organisationInternationalForm);
-
+       final boolean international = registrationCookieService.isInternationalJourney(request);
        return organisationRestService.getOrganisations(userId, international).getSuccess();
     }
 

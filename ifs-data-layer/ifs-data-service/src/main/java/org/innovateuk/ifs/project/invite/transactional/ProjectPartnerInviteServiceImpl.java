@@ -167,7 +167,8 @@ public class ProjectPartnerInviteServiceImpl extends BaseTransactionalService im
                 projectPartnerInvite.getInviteOrganisation().getOrganisationName(),
                 projectPartnerInvite.getName(),
                 projectPartnerInvite.getEmail(),
-                projectPartnerInvite.getProject().getApplication().getId());
+                projectPartnerInvite.getProject().getApplication().getId(),
+                projectPartnerInvite.getProject().getApplication().getCompetition().getId());
     }
 
     @Override

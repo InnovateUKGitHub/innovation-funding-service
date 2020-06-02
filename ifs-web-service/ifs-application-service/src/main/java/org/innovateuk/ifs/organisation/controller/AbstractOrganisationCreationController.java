@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;
@@ -31,7 +31,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public abstract class AbstractOrganisationCreationController {
 
     protected static final String BASE_URL = "/organisation/create";
-    protected static final String LEAD_ORGANISATION_TYPE = "lead-organisation-type";
+    protected static final String ORGANISATION_TYPE = "organisation-type";
     protected static final String FIND_ORGANISATION = "find-organisation";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
     protected static final String INTERNATIONAL_CONFIRM_ORGANISATION = "international-confirm-organisation";

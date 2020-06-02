@@ -12,28 +12,24 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back', linkUrl='/organisation/create/lead-organisation-type', currentApplication=${currentApplication}"/>
+              th:with="linkTitle='Back', linkUrl='/organisation/create/organisation-type',dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to save your changes.</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)"/>
         </div>
 
-        <h1 class="govuk-heading-xl">
-            <span class="govuk-caption-xl">Create an account</span>
-            Enter your organisation's details
-        </h1>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter your organisation\'s details',subTitle=${subtitle},size='govuk-heading-xl'" />
 
-        <form id="lead-organisation-type-form"
-              th:object="${organisationForm}"
+        <form th:object="${organisationForm}"
               th:action="@{/organisation/create/international-organisation/details}" method="POST"
               novalidate="novalidate">
 
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('name')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" for="name">
+                <label class="govuk-label govuk-label--s" for="name">
                     Organisation name
                 </label>
                 <th:block th:if="${#fields.hasErrors('name')}">
@@ -42,91 +38,110 @@
                 </th:block>
                 <input id="name"
                        type="text"
-                       class="govuk-input"
+                       class="govuk-input govuk-input--width-25"
                        th:field="*{name}"
                        required="required"
                        th:errorclass="govuk-input--error"
-                       th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"/>
+                       th:attr="data-required-errormessage=#{validation.international.organisationname.required}"/>
             </div>
 
             <div class="govuk-form-group">
-                <label class="govuk-label--s" for="companyRegistrationNumber">
+                <label class="govuk-label govuk-label--s" for="companyRegistrationNumber">
                     Company registration number
                 </label>
                 <span class="govuk-hint">Enter your organisation's unique identification number, if it has one.</span>
                 <input id="companyRegistrationNumber"
                        type="text"
-                       class="govuk-input"
+                       class="govuk-input govuk-input--width-25"
                        th:field="*{companyRegistrationNumber}"/>
             </div>
 
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('addressLine1')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" for="addressLine1">
-                    Street
-                </label>
-                <th:block th:if="${#fields.hasErrors('addressLine1')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('addressLine1')}"
-                          th:text="${err}"></span>
-                </th:block>
-                <input id="addressLine1"
-                       type="text"
-                       class="govuk-input"
-                       th:field="*{addressLine1}"
-                       required="required"
-                       th:errorclass="govuk-input--error"
-                       th:attr="data-required-errormessage=#{validation.standard.addressline1.required}"/>
-                <input id="addressLine2"
-                       type="text"
-                       class="govuk-input govuk-!-margin-top-6"
-                       th:field="*{addressLine2}"/>
-            </div>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h1 class="govuk-fieldset__heading">
+                        Enter your organisation address
+                    </h1>
+                </legend>
+                <div class="govuk-form-group govuk-!-margin-bottom-0"
+                     th:classappend="${#fields.hasErrors('addressLine1')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="addressLine1">
+                        Street
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('addressLine1')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('addressLine1')}"
+                              th:text="${err}"></span>
+                    </th:block>
+                    <input id="addressLine1"
+                           type="text"
+                           class="govuk-input govuk-input--width-25"
+                           th:field="*{addressLine1}"
+                           required="required"
+                           th:errorclass="govuk-input--error"
+                           th:attr="data-required-errormessage=#{validation.international.addressline1.required}"/>
+                </div>
 
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('town')} ? 'govuk-form-group--error'">
-                <label class="govuk-label--s" for="town">
-                    Town or city
-                </label>
-                <th:block th:if="${#fields.hasErrors('town')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('town')}"
-                          th:text="${err}"></span>
-                </th:block>
-                <input id="town"
-                       type="text"
-                       class="govuk-input"
-                       th:field="*{town}"
-                       required="required"
-                       th:errorclass="govuk-input--error"
-                       th:attr="data-required-errormessage=#{validation.standard.town.required}"/>
-            </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label govuk-visually-hidden" for="addressLine2">
+                        Street line two
+                    </label>
+                    <input id="addressLine2"
+                           type="text"
+                           class="govuk-input govuk-input--width-25 govuk-!-margin-top-5"
+                           th:field="*{addressLine2}"
+                           th:errorclass="govuk-input--error"/>
+                </div>
 
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('*{country}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s">Country</label>
-                <th:block th:if="${#fields.hasErrors('country')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('town')}"
-                          th:text="${err}"></span>
-                </th:block>
-                <select class="govuk-select"
-                        th:id="country"
-                        th:field="*{country}"
-                        data-required-errormessage="The country cannot be blank."
-                        data-auto-complete="">
-                    <option value=""></option>
-                    <option th:each="country : ${countries}" th:value="${country}"
-                            th:text="${country}"></option>
-                </select>
-            </div>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('town')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="town">
+                        Town or city
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('town')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('town')}"
+                              th:text="${err}"></span>
+                    </th:block>
+                    <input id="town"
+                           type="text"
+                           class="govuk-input govuk-input--width-20"
+                           th:field="*{town}"
+                           required="required"
+                           th:errorclass="govuk-input--error"
+                           th:attr="data-required-errormessage=#{validation.international.town.required}"/>
+                </div>
 
-            <div class="govuk-form-group">
-                <label class="govuk-label--s" for="zipCode">
-                    Zip or postal code
-                </label>
-                <input id="zipCode"
-                       type="text"
-                       class="govuk-input"
-                       th:field="*{zipCode}"/>
-            </div>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('*{country}')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s">Country</label>
+                    <th:block th:if="${#fields.hasErrors('country')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('country')}"
+                              th:text="${err}"></span>
+                    </th:block>
+                    <span class="govuk-hint">Start typing your country's name and select from the list</span>
+                    <div class="govuk-input--width-25">
+                        <select class="govuk-select"
+                                th:id="country"
+                                required="required"
+                                th:field="*{country}"
+                                th:errorclass="govuk-input--error"
+                                th:attr="data-required-errormessage=#{validation.international.country.required}"
+                                data-auto-complete="">
+                            <option value=""></option>
+                            <option th:each="country : ${countries}" th:value="${country}"
+                                    th:text="${country}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label govuk-label--s" for="zipCode">
+                        Zip or postal code
+                    </label>
+                    <input id="zipCode"
+                           type="text"
+                           class="govuk-input govuk-input--width-10"
+                           th:field="*{zipCode}"/>
+                </div>
+            </fieldset>
 
             <button id="international-organisation-details-cta" class="govuk-button govuk-!-margin-top-6"
                     type="submit">Continue

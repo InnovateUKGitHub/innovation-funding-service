@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.viewmodel;
+package org.innovateuk.ifs.invite.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 

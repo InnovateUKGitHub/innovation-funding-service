@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.viewmodel;
+package org.innovateuk.ifs.organisation.viewmodel;
 
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;

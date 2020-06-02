@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
@@ -38,10 +38,10 @@ public class OrganisationCreationLeadInitializationController extends AbstractOr
         organisationTypeForm.setLeadApplicant(true);
         registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
 
-        if (organisationConfig != null && organisationConfig.getInternationalLeadOrganisationAllowed()) {
+        if (organisationConfig.areInternationalApplicantsAllowed()) {
             return "redirect:" + BASE_URL + "/" + INTERNATIONAL_ORGANISATION;
         }
 
-        return "redirect:" + BASE_URL + "/" + LEAD_ORGANISATION_TYPE;
+        return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE;
     }
 }

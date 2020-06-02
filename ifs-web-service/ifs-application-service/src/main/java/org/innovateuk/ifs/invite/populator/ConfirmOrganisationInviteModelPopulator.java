@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.registration.populator;
+package org.innovateuk.ifs.invite.populator;
 
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.springframework.stereotype.Component;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;

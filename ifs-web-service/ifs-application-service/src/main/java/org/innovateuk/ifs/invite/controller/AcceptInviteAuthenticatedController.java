@@ -1,12 +1,14 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
+import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.registration.populator.ConfirmOrganisationInviteModelPopulator;
-import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -37,17 +39,20 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
     private UserRestService userRestService;
     private EncryptedCookieService cookieUtil;
+    private CompetitionOrganisationConfigRestService organisationConfigRestService;
 
     public AcceptInviteAuthenticatedController(final InviteRestService inviteRestService,
                                                final OrganisationRestService organisationRestService,
                                                final ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator,
                                                final UserRestService userRestService,
-                                               final EncryptedCookieService cookieUtil) {
+                                               final EncryptedCookieService cookieUtil,
+                                               final CompetitionOrganisationConfigRestService organisationConfigRestService) {
         this.inviteRestService = inviteRestService;
         this.organisationRestService = organisationRestService;
         this.confirmOrganisationInviteModelPopulator = confirmOrganisationInviteModelPopulator;
         this.userRestService = userRestService;
         this.cookieUtil = cookieUtil;
+        this.organisationConfigRestService = organisationConfigRestService;
     }
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
@@ -112,6 +117,11 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
 
+                    CompetitionOrganisationConfigResource organisationConfig = organisationConfigRestService.findByCompetitionId(invite.getCompetitionId()).getSuccess();
+
+                    if (organisationConfig.areInternationalApplicantsAllowed()) {
+                        return "redirect:/organisation/create/international-organisation";
+                    }
                     return "redirect:/organisation/select";
                 }
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));

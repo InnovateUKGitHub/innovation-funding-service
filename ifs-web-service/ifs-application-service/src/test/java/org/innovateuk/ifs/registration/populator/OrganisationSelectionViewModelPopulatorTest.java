@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.registration.populator;
 
+import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionChoiceViewModel;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -28,9 +28,7 @@ public abstract class AbstractAcceptInviteController {
     }
 
     protected final void clearDownInviteFlowCookies(HttpServletResponse response) {
-        registrationCookieService.deleteOrganisationCreationCookie(response);
-        registrationCookieService.deleteOrganisationIdCookie(response);
-        registrationCookieService.deleteInviteHashCookie(response);
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
     }
 
     protected final String alreadyAcceptedView(HttpServletResponse response) {

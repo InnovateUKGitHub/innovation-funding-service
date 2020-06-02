@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back', linkUrl='/organisation/create/international-organisation',currentApplication=${currentApplication}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back', linkUrl='/organisation/create/international-organisation',dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}"
@@ -30,16 +30,12 @@
             </div>
         </div>
 
-        <h1 class="govuk-heading-xl">
-            <span class="govuk-caption-xl">Start new application</span>
-            Choose your organisation type
-        </h1>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose organisation type',subTitle=${subtitle},size='govuk-heading-xl'" />
 
-        <p class="govuk-body govuk-!-margin-top-6">This is the organisation that will lead the application.</p>
+        <p th:if="${model.leadJourney}" class="govuk-body govuk-!-margin-top-6">This is the organisation that will lead the application.</p>
 
-         <form id="lead-organisation-type-form"
-               th:object="${organisationForm}"
-               th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
+         <form th:object="${organisationForm}"
+               th:action="@{/organisation/create/organisation-type}" method="POST" novalidate="novalidate">
              <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'govuk-form-group--error'">
                  <fieldset class="govuk-fieldset">
                      <legend class="govuk-fieldset__legend govuk-visually-hidden" id="organisationTypeId">
@@ -61,7 +57,7 @@
                                 <span th:text="${type.name}"></span>
                                 <span class="govuk-hint" th:text="${type.description}"></span>
                             </label>
-                            <div th:if="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">
+                            <div th:if="${model.leadJourney && T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">
                                 <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>
                                 <ul class="govuk-list govuk-list--bullet">
                                     <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>

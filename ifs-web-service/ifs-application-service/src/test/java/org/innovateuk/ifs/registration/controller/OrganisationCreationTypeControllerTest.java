@@ -5,10 +5,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
+import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationLeadTypeController> {
+public class OrganisationCreationTypeControllerTest extends BaseControllerMockMVCTest<OrganisationCreationTypeController> {
 
     @Mock
     private RegistrationCookieService registrationCookieService;
@@ -40,8 +41,8 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Mock
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
 
-    protected OrganisationCreationLeadTypeController supplyControllerUnderTest() {
-        return new OrganisationCreationLeadTypeController();
+    protected OrganisationCreationTypeController supplyControllerUnderTest() {
+        return new OrganisationCreationTypeController();
     }
 
     @Before
@@ -56,8 +57,9 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
 
         when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
         when(registrationCookieService.getOrganisationTypeCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
+        when(registrationCookieService.isLeadJourney(any(HttpServletRequest.class))).thenReturn(false);
         when(competitionRestService.getCompetitionOrganisationType(1L)).thenReturn(restSuccess(newOrganisationTypeResource().withId(1L, 3L).build(2)));
-        when(organisationCreationSelectTypePopulator.populate(request)).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4)));
+        when(organisationCreationSelectTypePopulator.populate(request)).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4), false));
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(competitionOrganisationConfigResource));
     }
 
@@ -65,7 +67,7 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     public void testSelectedLeadOrganisationTypeEligible() throws Exception {
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
 
-        mockMvc.perform(post("/organisation/create/lead-organisation-type")
+        mockMvc.perform(post("/organisation/create/organisation-type")
                 .param("organisationTypeId", valueOf(OrganisationTypeEnum.RTO.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/organisation/create/find-organisation"));
@@ -74,26 +76,27 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
     @Test
     public void testSelectedLeadOrganisationTypeNotEligible() throws Exception {
         when(registrationCookieService.getCompetitionIdCookieValue(any())).thenReturn(Optional.of(1L));
+        when(registrationCookieService.isLeadJourney(any())).thenReturn(true);
 
-        mockMvc.perform(post("/organisation/create/lead-organisation-type")
+        mockMvc.perform(post("/organisation/create/organisation-type")
                 .param("organisationTypeId", valueOf(OrganisationTypeEnum.RESEARCH.getId())))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/lead-organisation-type/not-eligible"));
+                .andExpect(view().name("redirect:/organisation/create/organisation-type/not-eligible"));
     }
 
     @Test
     public void testLeadOrganisationTypeNotSelected() throws Exception {
-        mockMvc.perform(post("/organisation/create/lead-organisation-type"))
-                .andExpect(view().name("registration/organisation/lead-organisation-type"))
+        mockMvc.perform(post("/organisation/create/organisation-type"))
+                .andExpect(view().name("registration/organisation/organisation-type"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
     }
 
     @Test
     public void testLeadOrganisationTypeIncorrectSelected() throws Exception {
-        mockMvc.perform(post("/organisation/create/lead-organisation-type")
+        mockMvc.perform(post("/organisation/create/organisation-type")
                 .param("organisationTypeId", "300"))
-                .andExpect(view().name("registration/organisation/lead-organisation-type"))
+                .andExpect(view().name("registration/organisation/organisation-type"))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
     }
