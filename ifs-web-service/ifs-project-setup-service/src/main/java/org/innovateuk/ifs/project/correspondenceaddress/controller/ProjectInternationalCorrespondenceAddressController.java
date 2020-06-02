@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.correspondenceaddress.controller;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.correspondenceaddress.form.ProjectInternationalCorrespondenceAddressForm;
@@ -50,20 +50,17 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping("/{projectId}/details/project-address/international")
     public String updateAddress(@PathVariable("projectId") final Long projectId,
-                                Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectInternationalCorrespondenceAddressForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult,
-                                ValidationHandler validationHandler) {
+                                ValidationHandler validationHandler,
+                                Model model) {
+
         ProjectResource projectResource = projectService.getById(projectId);
-
-
 
         if (validationHandler.hasErrors()) {
             return viewCurrentAddressForm(model, form, projectResource);
         }
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
-        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(projectId, projectResource.getAddress());
-        return updateResult.handleSuccessOrFailure(
+        return update(projectId, form).handleSuccessOrFailure(
                 failure -> {
                     validationHandler.addAnyErrors(failure, asGlobalErrors());
                     return viewAddress(projectId, model, form);
@@ -73,8 +70,7 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
 
     private String viewCurrentAddressForm(Model model, ProjectInternationalCorrespondenceAddressForm form,
                                           ProjectResource project) {
-        ProjectInternationalCorrespondenceAddressViewModel viewModel = loadDataIntoModel(project);
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", form.populate(project.getAddress()));
         return "project/international-address";
     }
 
@@ -86,4 +82,14 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
         return "redirect:/project/" + projectId + "/details";
     }
 
+    private ServiceResult<Void> update(long projectId, ProjectInternationalCorrespondenceAddressForm form) {
+        AddressResource addressResource = new AddressResource(
+                form.getAddressLine1(),
+                form.getAddressLine2(),
+                form.getTown(),
+                form.getCountry(),
+                form.getZipCode()
+        );
+        return projectDetailsService.updateAddress(projectId, addressResource);
+    }
 }

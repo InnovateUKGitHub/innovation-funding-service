@@ -60,7 +60,7 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         setupPostWithRestResultExpectations(projectRestURL + "/123/address?leadOrganisationId=456", addressResource, OK);
 
-        RestResult<Void> result = service.updateProjectAddress(456L, 123L, addressResource);
+        RestResult<Void> result = service.updateProjectAddress(456L, addressResource);
 
         assertTrue(result.isSuccess());
 
