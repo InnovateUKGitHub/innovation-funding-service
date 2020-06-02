@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ProjectUKCorrespondenceAddressControllerTest extends BaseControllerMockMVCTest<ProjectUKCorrespondenceAddressController> {
 
-     @Mock
+    @Mock
     private ProjectService projectService;
 
     @Mock
@@ -108,7 +108,7 @@ public class ProjectUKCorrespondenceAddressControllerTest extends BaseController
                 contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name())
                 .param("addressForm.manualAddress.addressLine1", addressResource.getAddressLine1())
-                .param("addressForm.manualAddress.town", addressResource.getTown())
+                .param("addressForm.manualAddress.town", addressResource.getTown ())
                 .param("addressForm.manualAddress.postcode", addressResource.getPostcode()))
                 .andExpect(redirectedUrl("/project/" + project.getId() + "/details"))
                 .andExpect(model().attributeDoesNotExist("readOnlyView"))

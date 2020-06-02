@@ -14,19 +14,16 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title"  id="error-summary-title">We were unable to save your changes.</h2>
+            <h2 class="govuk-error-summary__title"  id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Correspondence address',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
-        <p class="govuk-body" th:if="${model.isCollaborativeProject()}">This is the correspondence address for the lead organisation.</p>
-        <p class="govuk-body" th:unless="${model.isCollaborativeProject()}">This is the correspondence address for your organisation.</p>
+        <p class="govuk-body">This is the postal address for your organisation.</p>
 
         <form id="address-details-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
             <div id="custom-postcode" class="govuk-body">
-
-
              <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group govuk-!-margin-bottom-0"
                      th:classappend="${#fields.hasErrors('addressLine1')} ? 'govuk-form-group--error'">
@@ -82,7 +79,7 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('country')}"
                               th:text="${err}"></span>
                     </th:block>
-                    <span class="govuk-hint">Start typing your country's name and select from the list</span>
+                    <span class="govuk-hint">Start typing your country's name and select it from the list</span>
                     <div class="govuk-input--width-20">
                         <select class="govuk-select"
                                 th:id="country"
@@ -108,8 +105,6 @@
                            th:field="*{zipCode}"/>
                 </div>
             </fieldset>
-
-
             </div>
             <button class="govuk-button govuk-!-margin-top-6" id="save-project-address-button">Save address</button>
         </form>
