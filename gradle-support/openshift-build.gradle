@@ -192,15 +192,23 @@ task waitNexusDeploy(type: DockerWaitHealthyContainer) {
 
 task stopNexusContainer(type: DockerStopContainer) {
     targetContainerId { pullImageAndCreateContainer.getContainerId() }
-    onError {
-        //Deliberately ignore
+    onError { exception ->
+        if (exception.class.simpleName.matches('^(NotModified|NotFound)Exception$')) {
+            println 'Container not running'
+        } else {
+            throw exception
+        }
     }
 }
 
 task removeNexusContainer(type: DockerRemoveContainer, dependsOn: stopNexusContainer) {
     targetContainerId { pullImageAndCreateContainer.getContainerId() }
-    onError {
-        //Deliberately ignore
+    onError { exception ->
+        if (exception.class.simpleName.matches('^(NotModified|NotFound)Exception$')) {
+            println 'Container not running'
+        } else {
+            throw exception
+        }
     }
 }
 
