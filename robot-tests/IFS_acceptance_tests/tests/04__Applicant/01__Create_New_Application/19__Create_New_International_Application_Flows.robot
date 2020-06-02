@@ -180,7 +180,6 @@ Ifs Admin is able to add a new partner organisation
     [Documentation]  IFS-7197
     [Tags]  HappyPath
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
-    exit tests
     When the user clicks the button/link                   jQuery = tr:contains("${internationalApplicationTitle}") .waiting:nth-child(3)
     And the user clicks the button/link                    link = Add a partner organisation
     And the user adds a new partner organisation           Testing International Partner Organisation  FName Surname  ${international_invite_email}

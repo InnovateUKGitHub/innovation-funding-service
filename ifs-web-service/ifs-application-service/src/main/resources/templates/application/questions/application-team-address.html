@@ -109,8 +109,9 @@
                                 th:attr="data-required-errormessage=#{validation.international.country.required}"
                                 data-auto-complete="">
                             <option value=""></option>
-                            <option th:each="country : ${countries}" th:value="${country}"
-                                    th:text="${country}"></option>
+                            <option th:each="country : ${model.countries}" th:value="${country}"
+                                                                           th:text="${country}"
+                                                                           th:selected="${country.equals(form.country)}"></option>
                         </select>
                     </div>
                 </div>
