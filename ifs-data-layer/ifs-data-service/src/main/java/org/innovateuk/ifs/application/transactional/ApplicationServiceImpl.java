@@ -352,6 +352,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> linkAddressesToOrganisation(long organisationId, long applicationId) {
         return find(application(applicationId), organisation(organisationId)).andOnSuccessReturnVoid((application, organisation) -> {
             if (organisation.isInternational()) {
+                Optional<ApplicationOrganisationAddress> existingApplicationAddress = applicationOrganisationAddressRepository.findByApplicationIdAndOrganisationAddressOrganisationIdAndOrganisationAddressAddressTypeId(applicationId, organisationId, INTERNATIONAL.getId());
+                if (existingApplicationAddress.isPresent()) {
+                    // organisation already has an address on this application.
+                    return;
+                }
                 Optional<OrganisationAddress> organisationAddress = organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId());
                 if (organisationAddress.isPresent()) {
                     OrganisationAddress organisationAddressToLinkToApplication;

@@ -5,18 +5,19 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import javax.validation.constraints.NotBlank;
 
 public class ApplicationTeamAddressForm {
-    @NotBlank(message = "{validation.standard.addressline1.required}")
+    @NotBlank(message = "{validation.international.addressline1.required}")
     private String addressLine1;
 
     private String addressLine2;
 
-    @NotBlank(message = "{validation.standard.town.required}")
+    @NotBlank(message = "{validation.international.town.required}")
     private String town;
 
-    @NotBlank(message = "{validation.standard.country.required}")
+    @NotBlank(message = "{validation.international.country.required}")
     private String country;
 
     private String zipCode;
+
 
     public ApplicationTeamAddressForm() {}
 

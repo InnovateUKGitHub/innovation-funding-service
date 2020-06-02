@@ -9,6 +9,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 
@@ -136,11 +138,13 @@ public class AddressResource {
         if (getAddressLine1() == null && getTown() == null && getPostcode() == null && getCountry() == null) {
             return "";
         }
-        String[] location = new String[4];
-        location[0] = getAddressLine1() == null ? "" : getAddressLine1();
-        location[1] = getTown() == null ? "" : getTown();
-        location[2] = getCountry() == null ? "" : getCountry();
-        location[3] = getPostcode() == null ? "" : getPostcode();
+        List<String> location = newArrayList();
+        location.add(getAddressLine1());
+        location.add(getTown());
+        location.add(getCountry());
+        if (!isNullOrEmpty(getPostcode())) {
+            location.add(getPostcode());
+        }
         return String.join(", ", location);
     }
 
