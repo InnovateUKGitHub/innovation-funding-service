@@ -2,7 +2,9 @@ package org.innovateuk.ifs.management.competition.setup.postawardservice.control
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.postawardservice.form.PostAwardServiceForm;
 import org.innovateuk.ifs.management.competition.setup.postawardservice.populator.ChoosePostAwardServiceModelPopulator;
@@ -10,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/competition/setup")
@@ -28,6 +28,9 @@ public class CompetitionSetupPostAwardServiceController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
+    private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
+
+    @Autowired
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
@@ -35,14 +38,8 @@ public class CompetitionSetupPostAwardServiceController {
 
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'CHOOSE_POST_AWARD_SERVICE')")
-    @GetMapping("/{competitionId}/manage-stakeholders")
+    @GetMapping("/{competitionId}/post-award-service")
     public String setupPostAwardService(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model) {
-
-        PostAwardServiceForm form = new PostAwardServiceForm();
-        return doSetupPostAwardService(competitionId, model, form);
-    }
-
-    private String doSetupPostAwardService(long competitionId, Model model, PostAwardServiceForm form) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -50,9 +47,22 @@ public class CompetitionSetupPostAwardServiceController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
+        PostAwardServiceForm form = new PostAwardServiceForm();
+        form.setPostAwardService(competition.getPostAwardService());
+
         model.addAttribute(MODEL, choosePostAwardServiceModelPopulator.populateModel(competition));
         model.addAttribute(FORM_ATTR_NAME, form);
 
-        return "competition/setup/manage-stakeholders";
+        return "competition/setup/post-award-service";
     }
+
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'CHOOSE_POST_AWARD_SERVICE')")
+    @PostMapping(value = "/{competitionId}/post-award-service")
+    public String configurePostAwardService(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                    @RequestParam("service") PostAwardService postAwardService) {
+
+        competitionSetupPostAwardServiceRestService.setPostAwardService(competitionId, postAwardService);
+        return "redirect:/competition/setup/" + competitionId;
+    }
+
 }

@@ -199,6 +199,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Enumerated(EnumType.STRING)
     private CovidType covidType;
 
+    @Enumerated(EnumType.STRING)
+    private PostAwardService postAwardService;
+
     public Competition() {
         setupComplete = false;
     }
@@ -980,6 +983,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionAssessmentConfig(CompetitionAssessmentConfig competitionAssessmentConfig) {
         this.competitionAssessmentConfig = competitionAssessmentConfig;
+    }
+
+    public PostAwardService getPostAwardService() {
+        return postAwardService;
+    }
+
+    public void setPostAwardService(PostAwardService postAwardService) {
+        this.postAwardService = postAwardService;
     }
 
     @Override

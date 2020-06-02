@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChoosePostAwardServiceModelPopulator {
     public ChoosePostAwardServiceViewModel populateModel(CompetitionResource competition) {
-        return null;
+        return new ChoosePostAwardServiceViewModel(competition.getId(), competition.getName());
     }
 }
