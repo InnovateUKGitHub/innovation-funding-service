@@ -85,6 +85,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("modifiedOn").description("when the competition was modified").optional(),
             fieldWithPath("hasAssessmentStage").description("Does the competition has assessors.").optional(),
             fieldWithPath("covidType").description("The type of covid comp if any").optional(),
+            fieldWithPath("postAwardService").description("The service used post-award, if any").optional(),
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
