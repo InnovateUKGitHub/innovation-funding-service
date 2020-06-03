@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.correspondenceaddress.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
@@ -24,6 +25,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 @Controller
 @RequestMapping("/project/{projectId}/details/project-address/international")
 @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
+@SecuredBySpring(value = "Controller", description = "A international lead can access the project address in project setup stage",  securedType = ProjectInternationalCorrespondenceAddressController.class)
 public class ProjectInternationalCorrespondenceAddressController extends AddressLookupBaseController {
 
     @Autowired
