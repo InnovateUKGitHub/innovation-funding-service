@@ -144,4 +144,5 @@ def getNexusCredentials() {
     return dockerRegistryCredentials
 }
 
-IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build.
+IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build. 
+e.g. if version is 1.1.112-SNAPSHOT, you need to pull the last release 1.1.111 as 1.1.112 is upcoming release, so update version=1.1.111
