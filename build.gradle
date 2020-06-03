@@ -32,9 +32,7 @@ def isSysIntEnv() {
 }
 
 def isAcceptanceBranch() {
-    println(getCurrentBranchName())
-    //getCurrentBranchName().equals("acceptance")
-    getCurrentBranchName().equals("feature/IFS-7518-publish-images-to-nexus")
+    getCurrentBranchName().equals("acceptance")
 }
 
 if (!project.hasProperty('osTestArgs')) {
