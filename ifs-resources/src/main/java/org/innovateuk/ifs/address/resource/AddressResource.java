@@ -154,7 +154,8 @@ public class AddressResource {
         return simpleFilterNot(lines, StringUtils::isEmpty);
     }
 
-    // for the project-setup-mgt MO page for international lead project
+    // for the project-setup-mgt MO page for international lead address,
+    // standard pattern will be decided in a separate cleanup ticket
     @JsonIgnore
     public List<String> getNonEmptyLinesInternational() {
         List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, country, postcode);
