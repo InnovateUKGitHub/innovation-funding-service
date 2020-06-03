@@ -126,23 +126,26 @@ There are two steps to pull service docker images from nexus.
 - ifs.application-service.pull.nexus.image=true
 - ifs.assessment-service.pull.nexus.image=true
 - ifs.competition-mgt-service.pull.nexus.image=true
-- ifs.data-service.pull.nexus.image=true
-- ifs.finance-data-service.pull.nexus.image=true
 - ifs.front-door-service.pull.nexus.image=true
 - ifs.project-setup-mgt-service.pull.nexus.image=true
 - ifs.project-setup-service.pull.nexus.image=true
-- ifs.survey-data-service.pull.nexus.image=true
 - ifs.survey-service.pull.nexus.image=true
+
+**Data services are dependant on base images so need to be built locally. Set below data service properties to false**
+- ifs.data-service.pull.nexus.image=false
+- ifs.finance-data-service.pull.nexus.image=false
+- ifs.survey-data-service.pull.nexus.image=false
 
 You need to add above properties in your local gradle.properties
 Also you need to use your own credentials to pull images from nexus, in openshift-build.gradle update existing getNexusCredentials() method
-def getNexusCredentials() {
-    def dockerRegistryCredentials = new DockerRegistryCredentials()
-    dockerRegistryCredentials.url = project.nexusRegistry
-    dockerRegistryCredentials.username = '<your_username>'
-    dockerRegistryCredentials.password = '<your_password>'
-    return dockerRegistryCredentials
-}
 
-IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build. 
-e.g. if version is 1.1.112-SNAPSHOT, you need to pull the last release 1.1.111 as 1.1.112 is upcoming release, so update version=1.1.111
+    def getNexusCredentials() {
+        def dockerRegistryCredentials = new DockerRegistryCredentials()
+        dockerRegistryCredentials.url = project.nexusRegistry
+        dockerRegistryCredentials.username = '<your_username>'
+        dockerRegistryCredentials.password = '<your_password>'
+        return dockerRegistryCredentials
+    }
+
+**IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build. 
+e.g. if version is 1.1.112-SNAPSHOT, you need to pull the last release 1.1.111 as 1.1.112 is upcoming release, so update version=1.1.111**
