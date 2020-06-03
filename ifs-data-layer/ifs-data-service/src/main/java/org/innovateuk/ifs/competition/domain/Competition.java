@@ -200,7 +200,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private CovidType covidType;
 
     @Enumerated(EnumType.STRING)
-    private PostAwardService postAwardService;
+    private PostAwardService postAwardService = PostAwardService.CONNECT;
 
     public Competition() {
         setupComplete = false;

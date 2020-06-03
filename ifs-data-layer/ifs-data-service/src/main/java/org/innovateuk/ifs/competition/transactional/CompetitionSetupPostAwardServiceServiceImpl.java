@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -17,6 +19,7 @@ public class CompetitionSetupPostAwardServiceServiceImpl extends BaseTransaction
     }
 
     @Override
+    @Transactional
     public ServiceResult<Void> configurePostAwardService(long competitionId, PostAwardService postAwardService) {
         return findCompetitionById(competitionId)
                 .andOnSuccessReturnVoid(competition -> {

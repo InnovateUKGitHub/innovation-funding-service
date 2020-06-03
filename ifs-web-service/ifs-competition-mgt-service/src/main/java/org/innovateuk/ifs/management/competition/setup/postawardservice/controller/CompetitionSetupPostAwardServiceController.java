@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/competition/setup")
@@ -48,21 +51,35 @@ public class CompetitionSetupPostAwardServiceController {
         }
 
         PostAwardServiceForm form = new PostAwardServiceForm();
-        form.setPostAwardService(competition.getPostAwardService());
+        if (competition.getPostAwardService() == null) {
+            form.setPostAwardService(PostAwardService.CONNECT);
+        } else {
+            form.setPostAwardService(competition.getPostAwardService());
+        }
 
-        model.addAttribute(MODEL, choosePostAwardServiceModelPopulator.populateModel(competition));
-        model.addAttribute(FORM_ATTR_NAME, form);
-
-        return "competition/setup/post-award-service";
+        return populateModel(model, competition, form);
     }
 
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'CHOOSE_POST_AWARD_SERVICE')")
     @PostMapping(value = "/{competitionId}/post-award-service")
     public String configurePostAwardService(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                    @RequestParam("service") PostAwardService postAwardService) {
+                                            @Valid @ModelAttribute(FORM_ATTR_NAME) PostAwardServiceForm form,
+                                            BindingResult bindingResult,
+                                            Model model) {
 
-        competitionSetupPostAwardServiceRestService.setPostAwardService(competitionId, postAwardService);
+        if (bindingResult.hasErrors()) {
+            CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+            return populateModel(model, competition, form);
+        }
+        competitionSetupPostAwardServiceRestService.setPostAwardService(competitionId, form.getPostAwardService());
         return "redirect:/competition/setup/" + competitionId;
+    }
+
+    private String populateModel(Model model, CompetitionResource competition, PostAwardServiceForm form) {
+        model.addAttribute(MODEL, choosePostAwardServiceModelPopulator.populateModel(competition));
+        model.addAttribute(FORM_ATTR_NAME, form);
+
+        return "competition/setup/post-award-service";
     }
 
 }

@@ -30,7 +30,7 @@
 
                 <fieldset class="govuk-fieldset">
 
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Choose the post award service:</legend>
+                    <legend class="govuk-fieldset__legend">Choose the post award service:</legend>
 
                     <th:block th:if="${#fields.hasErrors('postAwardService')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('postAwardService')}" th:text="${err}"></span>
@@ -38,37 +38,25 @@
 
                     <div class="govuk-radios">
 
-                        <div class="govuk-radios__item">
+                        <div class="govuk-radios__item" th:each="postAwardServ : ${T(org.innovateuk.ifs.competition.resource.PostAwardService).values()}">
 
                             <input type="radio"
                                    class="govuk-radios__input"
-                                   th:id="postAwardService-ifs_post_award"
+                                   th:id="${'postAwardService-' + postAwardServ.name()}"
                                    th:name="postAwardService"
-                                   th:value="IFS_POST_AWARD"
-                                   th:checked="${form.postAwardService == 'IFS_POST_AWARD'}"
+                                   th:value="${postAwardServ.name()}"
+                                   th:checked="${form.postAwardService == postAwardServ}"
                                />
 
-                            <label th:for="postAwardService-ifs_post_award"
-                                   class="govuk-label govuk-radios__label">IFS Post Award</label>
-                        </div>
-                        <div class="govuk-radios__item">
-
-                            <input type="radio"
-                                   class="govuk-radios__input"
-                                   th:id="postAwardService-connect"
-                                   th:name="postAwardService"
-                                   th:value="CONNECT"
-                                   th:checked="${form.postAwardService == null || form.postAwardService == 'CONNECT'}"
-                            />
-
-                            <label th:for="postAwardService-connect"
-                                   class="govuk-label govuk-radios__label">_connect</label>
+                            <label th:for="${'postAwardService-' + postAwardServ.name()}"
+                                   class="govuk-label govuk-radios__label" th:text="${postAwardServ.displayName}">Post Award Service Name</label>
                         </div>
                     </div>
 
+                    <div class="govuk-body govuk-!-margin-top-6">
+                        <input type="submit" class="govuk-button" value="Save and return to competition" />
+                    </div>
                 </fieldset>
-                <input type="submit" class="govuk-button" value="Save and return to competition" />
-
             </form>
 
         </div>
