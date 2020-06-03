@@ -1,3 +1,5 @@
+import org.ajoberstar.grgit.*
+
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/release.gradle"
@@ -13,14 +15,8 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance.totals.enabled'] ?: true
 
 ext.getCurrentBranchName = {
-    new ByteArrayOutputStream().withStream { os ->
-        exec {
-            executable = "git"
-            args = ["rev-parse", "--abbrev-ref", "HEAD"]
-            standardOutput = os
-        }
-        return os.toString().trim()
-    }
+    def repo = Grgit.open(dir: '.')
+    return repo.branch.getCurrent().name
 }
 
 def isNamedEnv() {
@@ -36,7 +32,9 @@ def isSysIntEnv() {
 }
 
 def isAcceptanceBranch() {
-    getCurrentBranchName().equals("acceptance")
+    println(getCurrentBranchName())
+    //getCurrentBranchName().equals("acceptance")
+    getCurrentBranchName().equals("feature/IFS-7518-publish-images-to-nexus")
 }
 
 if (!project.hasProperty('osTestArgs')) {
@@ -65,6 +63,8 @@ buildscript {
 
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
+
+        classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
     }
 
 }
