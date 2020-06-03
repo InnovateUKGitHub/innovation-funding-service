@@ -135,3 +135,11 @@ There are two steps to pull service docker images from nexus.
 - ifs.survey-service.pull.nexus.image=true
 
 You need to add above properties in your local gradle.properties
+Also you need to use your own credentials to pull images from nexus, in openshift-build.gradle update existing getNexusCredentials() method
+def getNexusCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    dockerRegistryCredentials.url = project.nexusRegistry
+    dockerRegistryCredentials.username = '<your_username>'
+    dockerRegistryCredentials.password = '<your_password>'
+    return dockerRegistryCredentials
+}
