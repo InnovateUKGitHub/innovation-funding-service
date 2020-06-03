@@ -89,6 +89,7 @@
                                 th:attr="data-required-errormessage=#{validation.international.country.required}"
                                 data-auto-complete="">
                             <option value=""></option>
+                            <option value="United Kingdom">United Kingdom</option>
                             <option th:each="country : ${model.countries}" th:value="${country}"
                                     th:text="${country}"></option>
                         </select>
