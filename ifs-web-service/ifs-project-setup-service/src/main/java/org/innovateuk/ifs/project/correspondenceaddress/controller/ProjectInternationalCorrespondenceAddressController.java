@@ -61,8 +61,7 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
         Supplier<String> failureView = () -> viewCurrentAddressForm(model, projectResource);
 
         return validationHandler.failNowOrSucceedWith(failureView, () ->{
-            projectResource.setAddress(createAddressResource(form));
-            ServiceResult<Void> updateResult = projectDetailsService.updateAddress(projectId, projectResource.getAddress());
+            ServiceResult<Void> updateResult = projectDetailsService.updateAddress(projectId, createAddressResource(form));
             return updateResult.handleSuccessOrFailure(
                     failure -> {
                     validationHandler.addAnyErrors(failure, asGlobalErrors());
