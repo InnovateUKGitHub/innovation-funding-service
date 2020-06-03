@@ -7,6 +7,9 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,6 +55,9 @@ public class CommonYourFinancesViewModelPopulatorTest {
 
     @Mock
     private CompetitionRestService competitionRestServiceMock;
+
+    @Mock
+    private OrganisationRestService organisationRestServiceMock;
 
     @Mock
     private SectionService sectionServiceMock;
@@ -170,9 +176,12 @@ public class CommonYourFinancesViewModelPopulatorTest {
                 withApplicationState(applicationState).
                 build();
 
+        OrganisationResource organisation = OrganisationResourceBuilder.newOrganisationResource().build();
+
         when(applicationRestServiceMock.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         when(competitionRestServiceMock.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(sectionServiceMock.getCompleted(application.getId(), organisationId)).thenReturn(sectionsMarkedAsComplete);
+        when(organisationRestServiceMock.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
         CommonYourProjectFinancesViewModel viewModel = populator.populate(organisationId, application.getId(), sectionId, internalUser);
 

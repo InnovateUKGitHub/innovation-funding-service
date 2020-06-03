@@ -16,6 +16,7 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
     private final boolean complete;
     private final boolean h2020;
     private final boolean procurementCompetition;
+    private final boolean international;
 
 
     public CommonYourProjectFinancesViewModel(String financesUrl,
@@ -26,7 +27,8 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
                                               boolean open,
                                               boolean h2020,
                                               boolean complete,
-                                              boolean procurementCompetition) {
+                                              boolean procurementCompetition,
+                                              boolean international) {
         this.financesUrl = financesUrl;
         this.applicationName = applicationName;
         this.applicationId = applicationId;
@@ -36,6 +38,7 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
         this.h2020 = h2020;
         this.complete = complete;
         this.procurementCompetition = procurementCompetition;
+        this.international = international;
     }
 
     @Override
@@ -77,5 +80,9 @@ public class CommonYourProjectFinancesViewModel implements BaseAnalyticsViewMode
 
     public boolean isProcurementCompetition() {
         return procurementCompetition;
+    }
+
+    public boolean isInternational() {
+        return international;
     }
 }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.innovateuk.ifs.activitylog.advice.Activity;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
@@ -41,7 +42,7 @@ public interface ProjectDetailsService {
     ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
     @PreAuthorize("hasPermission(#composite, 'UPDATE_PARTNER_PROJECT_LOCATION')")
-    ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postcode);
+    ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, PostcodeAndTownResource postcodeAndTown);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteFinanceContact(Long projectId, ProjectUserInviteResource inviteResource);
