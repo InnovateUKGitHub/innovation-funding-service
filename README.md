@@ -143,3 +143,5 @@ def getNexusCredentials() {
     dockerRegistryCredentials.password = '<your_password>'
     return dockerRegistryCredentials
 }
+
+IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build.
