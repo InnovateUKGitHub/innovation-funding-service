@@ -165,7 +165,12 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
 
     private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
         return simpleAnyMatch(project.getPartnerOrganisations(),
-                              partnerOrganisation -> isBlank(partnerOrganisation.getPostcode())) ?
+                              partnerOrganisation -> {
+                                    if (partnerOrganisation.getOrganisation().isInternational()) {
+                                        return isBlank(partnerOrganisation.getInternationalLocation());
+                                    }
+                                  return isBlank(partnerOrganisation.getPostcode());
+                              }) ?
                 PENDING : COMPLETE;
     }
 
