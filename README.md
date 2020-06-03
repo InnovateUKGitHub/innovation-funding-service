@@ -139,7 +139,7 @@ There are two steps to pull service docker images from nexus.
 You need to add above properties in your local gradle.properties
 Also you need to use your own credentials to pull images from nexus, pass your nexus credentials to gradle command
 
-    ./gradlew clean build deploy wait syncShib -Pinitialise=true --PnexusUsername=<your_nexus_userName> -PnexusPassword=<your_nexus_password> -x test
+    ./gradlew clean build deploy wait syncShib -Pinitialise=true -PnexusUsername=<your_nexus_userName> -PnexusPassword=<your_nexus_password> -x test
 
 **IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build. 
 e.g. if version is 1.1.112-SNAPSHOT, you need to pull the last release 1.1.111 as 1.1.112 is upcoming release, so update version=1.1.111**
