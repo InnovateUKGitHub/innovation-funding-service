@@ -149,7 +149,7 @@ The user should see further organisation details
     [Arguments]  ${OrgType}  ${RegName}  ${RegNumber}
     the user should see the element   jQuery = h2:contains("Organisation details")
     the user should see the element   jQuery = h3:contains("Organisation type") + p:contains("${OrgType}")
-    the user should see the element   jQuery = h3:contains("Registered name") + p:contains("${RegName}")
+    the user should see the element   jQuery = h3:contains("Organisation name") + p:contains("${RegName}")
     the user should see the element   jQuery = h3:contains("Registration number") + p:contains("${RegNumber}")
 
 The user should see Organisation size details
