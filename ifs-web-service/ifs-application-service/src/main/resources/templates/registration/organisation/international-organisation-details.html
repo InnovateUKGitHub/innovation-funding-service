@@ -59,7 +59,7 @@
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h1 class="govuk-fieldset__heading">
-                        Enter your organisation address
+                        Enter your organisation's address
                     </h1>
                 </legend>
                 <div class="govuk-form-group govuk-!-margin-bottom-0"
@@ -116,7 +116,7 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('country')}"
                               th:text="${err}"></span>
                     </th:block>
-                    <span class="govuk-hint">Start typing your country's name and select from the list</span>
+                    <span class="govuk-hint">Start typing your country's name and select from the list.</span>
                     <div class="govuk-input--width-25">
                         <select class="govuk-select"
                                 th:id="country"
