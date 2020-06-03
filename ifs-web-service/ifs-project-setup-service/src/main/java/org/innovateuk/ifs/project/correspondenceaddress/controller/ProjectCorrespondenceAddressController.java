@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/project/{projectId}/details/project-address")
 @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-@SecuredBySpring(value = "Controller", description = "TODO",  securedType = ProjectCorrespondenceAddressController.class)
+@SecuredBySpring(value = "Controller", description = "A lead can access the project address in project setup stage",  securedType = ProjectCorrespondenceAddressController.class)
 public class ProjectCorrespondenceAddressController {
 
     @Autowired

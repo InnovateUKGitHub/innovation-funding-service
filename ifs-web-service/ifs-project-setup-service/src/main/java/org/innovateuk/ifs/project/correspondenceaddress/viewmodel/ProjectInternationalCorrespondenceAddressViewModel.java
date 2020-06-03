@@ -10,15 +10,12 @@ public class ProjectInternationalCorrespondenceAddressViewModel implements Basic
 
     private final Long projectId;
     private String projectName;
-    private boolean collaborativeProject;
     private List<String> countries = Countries.COUNTRIES;
 
 
     public ProjectInternationalCorrespondenceAddressViewModel(ProjectResource projectResource) {
         this.projectId = projectResource.getId();
         this.projectName = projectResource.getName();
-        this.collaborativeProject = projectResource.isCollaborativeProject();
-
     }
 
     @Override
@@ -29,10 +26,6 @@ public class ProjectInternationalCorrespondenceAddressViewModel implements Basic
     @Override
     public String getProjectName() {
         return projectName;
-    }
-
-    public boolean isCollaborativeProject() {
-        return collaborativeProject;
     }
 
     public List<String> getCountries() {

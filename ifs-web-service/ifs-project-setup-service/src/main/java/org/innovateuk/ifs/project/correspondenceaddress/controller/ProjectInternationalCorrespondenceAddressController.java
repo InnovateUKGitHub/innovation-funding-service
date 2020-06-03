@@ -22,7 +22,8 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 
 @Controller
-@RequestMapping("/project")
+@RequestMapping("/project/{projectId}/details/project-address/international")
+@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
 public class ProjectInternationalCorrespondenceAddressController extends AddressLookupBaseController {
 
     @Autowired
@@ -31,8 +32,7 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
     @Autowired
     private ProjectDetailsService projectDetailsService;
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @GetMapping("/{projectId}/details/project-address/international")
+    @GetMapping
     public String viewAddress(@PathVariable("projectId") final Long projectId,
                               Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectInternationalCorrespondenceAddressForm form) {
@@ -47,8 +47,7 @@ public class ProjectInternationalCorrespondenceAddressController extends Address
         return "project/international-address";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping("/{projectId}/details/project-address/international")
+    @PostMapping
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectInternationalCorrespondenceAddressForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult,

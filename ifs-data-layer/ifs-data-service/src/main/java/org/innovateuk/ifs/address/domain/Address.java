@@ -114,7 +114,7 @@ public class Address {
         this.id = id;
     }
 
-    public void updateForm(AddressResource other) {
+    public void updateFrom(AddressResource other) {
         this.addressLine1 = other.getAddressLine1();
         this.addressLine2 = other.getAddressLine2();
         this.addressLine3 = other.getAddressLine3();
