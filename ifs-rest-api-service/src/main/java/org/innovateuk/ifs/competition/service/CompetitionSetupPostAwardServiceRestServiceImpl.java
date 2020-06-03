@@ -10,7 +10,7 @@ import static java.lang.String.format;
 @Service
 public class CompetitionSetupPostAwardServiceRestServiceImpl extends BaseRestService implements CompetitionSetupPostAwardServiceRestService {
 
-    private String COMPETITIONS_POST_AWARD_REST_URL = "/competition/setup";
+    private static final String COMPETITIONS_POST_AWARD_REST_URL = "/competition/setup";
 
     @Override
     public RestResult<Void> setPostAwardService(long competitionId, PostAwardService postAwardService) {
