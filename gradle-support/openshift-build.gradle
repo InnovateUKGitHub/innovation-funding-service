@@ -85,6 +85,7 @@ task stageNexus(type: DockerPushImage, dependsOn: tagDockerNexus) {
         tag = project.version
     }
 }
+stageNexus.onlyIf { isAcceptanceBranch() }
 
 task osStageRemote(type: DockerPushImage) {
     dependsOn tagDocker

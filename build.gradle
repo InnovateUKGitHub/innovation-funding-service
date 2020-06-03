@@ -12,6 +12,17 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
 
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance.totals.enabled'] ?: true
 
+ext.getCurrentBranchName = {
+    new ByteArrayOutputStream().withStream { os ->
+        exec {
+            executable = "git"
+            args = ["rev-parse", "--abbrev-ref", "HEAD"]
+            standardOutput = os
+        }
+        return os.toString().trim()
+    }
+}
+
 def isNamedEnv() {
     return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "ifs-prod"].contains(openshiftEnv)
 }
@@ -22,6 +33,10 @@ def isNotProductionEnv() {
 
 def isSysIntEnv() {
     "ifs-sysint".equals(openshiftEnv)
+}
+
+def isAcceptanceBranch() {
+    getCurrentBranchName().equals("feature/IFS-7518-publish-images-to-nexus")
 }
 
 if (!project.hasProperty('osTestArgs')) {
