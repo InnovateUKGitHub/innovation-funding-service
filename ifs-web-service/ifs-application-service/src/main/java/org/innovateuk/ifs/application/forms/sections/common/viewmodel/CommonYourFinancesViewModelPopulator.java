@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,16 +23,19 @@ public class CommonYourFinancesViewModelPopulator {
     private ApplicationRestService applicationRestService;
     private CompetitionRestService competitionRestService;
     private SectionService sectionService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
     public CommonYourFinancesViewModelPopulator(
             ApplicationRestService applicationRestService,
             CompetitionRestService competitionRestService,
-            SectionService sectionService) {
+            SectionService sectionService,
+            OrganisationRestService organisationRestService) {
 
         this.applicationRestService = applicationRestService;
         this.competitionRestService = competitionRestService;
         this.sectionService = sectionService;
+        this.organisationRestService = organisationRestService;
     }
 
     public CommonYourProjectFinancesViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
@@ -38,6 +43,8 @@ public class CommonYourFinancesViewModelPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
 
@@ -54,7 +61,8 @@ public class CommonYourFinancesViewModelPopulator {
                 open,
                 competition.isH2020(),
                 sectionMarkedAsComplete,
-                competition.isProcurement());
+                competition.isProcurement(),
+                organisation.isInternational());
     }
 
     private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {

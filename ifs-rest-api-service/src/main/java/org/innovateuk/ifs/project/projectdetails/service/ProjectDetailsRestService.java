@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -22,6 +23,6 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updateFinanceContact(ProjectOrganisationCompositeId compositeId, Long financeContactUserId);
 
-    RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postcode);
+    RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, PostcodeAndTownResource postcodeAndTown);
 
 }
