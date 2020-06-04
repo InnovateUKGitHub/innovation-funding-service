@@ -56,6 +56,9 @@ IFS.core.autoComplete = (function () {
         if (required) {
           element.parent().find('.autocomplete__input').attr('data-required-errormessage', required)
         }
+        if (element.hasClass('govuk-input--error')) {
+          element.parent().find('.autocomplete__input').addClass('govuk-input--error')
+        }
       }
     }
   }

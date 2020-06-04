@@ -25,11 +25,6 @@ task osApplyNamedEnvProperties(type: Exec) {
     args = [openshiftEnv, envName, project.version, project.findProperty("use_iam") ?: "true"]
 }
 
-task osApplyBuildEnvProperties(type: Exec) {
-    executable = 'setup-files/scripts/openshift/os-apply-properties-from-secrets.sh'
-    args = [openshiftEnv, "BUILD", project.version, project.findProperty("use_iam") ?: "true"]
-}
-
 task osApplyEnvProperties(){
     if (isNamedEnv()) {
         dependsOn osApplyNamedEnvProperties
@@ -55,31 +50,7 @@ task applyNamedEnvProperties(dependsOn: getProperties) {
     }
 }
 
-task getBuildProperties(type: Exec, dependsOn: osApplyBuildEnvProperties) {
-    executable = 'setup-files/scripts/openshift/generate-gradle-properties.sh'
-    args = [openshiftEnv, "build"]
-}
-
-task readBuildEnvProperties() {
-    File file = rootProject.file("gradle-support/build-env-properties.gradle")
-    if (file.exists()) {
-        println file.text
-        println ""
-        file.readLines().each {
-            println it
-        }
-    }
-}
-
-task applyBuildEnvProperties(dependsOn: getBuildProperties) {
-    //dependsOn readBuildEnvProperties
-    doLast {
-        apply from: rootProject.file("gradle-support/build-env-properties.gradle")
-    }
-}
-
 task createSecretsFromAws() {
-    dependsOn applyBuildEnvProperties
     if (!isNamedEnv()) {
         dependsOn applyNonNamedEnvProperties
     } else {

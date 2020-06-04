@@ -5,4 +5,3 @@ ext.dockerRegistry = "docker-registry-default.apps." + ext.openshiftDomain
 ext.internalRegistry = "docker-registry.default.svc:5000"
 ext.nexusRegistry = "docker-ifs.devops.innovateuk.org"
 
-

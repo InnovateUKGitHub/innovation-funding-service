@@ -256,7 +256,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         boolean locationPresent = project.getPartnerOrganisations().stream()
                 .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().getId().equals(organisation.getId()))
                 .findFirst()
-                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostcode()))
+                .map(partnerOrganisation -> {
+                    if (organisation.isInternational()) {
+                        return StringUtils.isNotBlank(partnerOrganisation.getInternationalLocation());
+                    }
+                    return StringUtils.isNotBlank(partnerOrganisation.getPostcode());
+                })
                 .orElse(false);
 
         return locationPresent ? COMPLETE : ACTION_REQUIRED;
@@ -291,7 +296,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
         return project.getPartnerOrganisations()
                 .stream()
-                .noneMatch(org -> org.getPostcode() == null);
+                .noneMatch(org -> {
+                    if (org.getOrganisation().isInternational()) {
+                        return org.getInternationalLocation() == null;
+                    }
+                    return org.getPostcode() == null;
+                });
     }
 
     private ProjectActivityStates createProjectTeamStatus(Project project) {

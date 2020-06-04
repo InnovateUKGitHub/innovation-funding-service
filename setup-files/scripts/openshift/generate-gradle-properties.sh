@@ -12,13 +12,8 @@ PROJECT=$(getProjectName ${PROJECT} ${TARGET})
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause ${TARGET} ${PROJECT} ${SVC_ACCOUNT_TOKEN})
 
-if $(isBuildEnvironment $TARGET); then
-      oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > 'gradle-support/build-env-properties.gradle'
+if $(isNamedEnvironment $PROJECT); then
+    oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > gradle-support/$PROJECT-named-env-properties.gradle
 else
-  if $(isNamedEnvironment $PROJECT); then
-      oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > gradle-support/$PROJECT-named-env-properties.gradle
-  else
-      oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > 'gradle-support/non-named-env-properties.gradle'
-  fi
+    oc ${SVC_ACCOUNT_CLAUSE} get secret properties -o jsonpath='{.data.properties}' | base64 --decode > 'gradle-support/non-named-env-properties.gradle'
 fi
-

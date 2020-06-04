@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionChoiceViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.junit.Test;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -16,11 +18,13 @@ public class OrganisationSelectionViewModelTest {
         OrganisationSelectionViewModel viewModel = new OrganisationSelectionViewModel(asSet(choice),
                 false,
                 false,
+                false,
                 "url"
                 );
 
         assertFalse(viewModel.canSelectOrganisation());
         assertFalse(viewModel.isApplicantJourney());
+        assertFalse(viewModel.isInternationalJourney());
         assertEquals(viewModel.onlyOrganisation(), choice);
     }
 }

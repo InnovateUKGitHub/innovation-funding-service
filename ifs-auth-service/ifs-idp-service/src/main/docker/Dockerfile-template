@@ -23,7 +23,7 @@ RUN  apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java lib
 RUN  WGETRC=wgetrc wget --continue https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar && \
   mv jstl-1.2.jar /usr/share/tomcat8/lib/
 # Shibboleth IDP \
-RUN  WGETRC=wgetrc wget --continue -O- http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
+RUN  WGETRC=wgetrc wget --continue -O- http://shibboleth.net/downloads/identity-provider/archive/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
   sed "s/3\.3\.1/$IDPVER/" /idp/build.xml > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
   (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER
 # apache. not strictly needed \

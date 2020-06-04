@@ -5,28 +5,6 @@ function getBuildLocation() {
     echo "build/resources/main"
 }
 
-function isBuildEnvironment() {
-
-    TARGET=$1
-
-    if [[ ${TARGET} != "build" ]]; then
-        exit 1
-    else
-        exit 0
-    fi
-}
-
-function isNamedEnvironment() {
-
-    TARGET=$1
-
-    if [[ ${TARGET} != "ifs-prod" && ${TARGET} != "ifs-demo" && ${TARGET} != "ifs-uat" && ${TARGET} != "ifs-sysint" && ${TARGET} != "ifs-perf" ]]; then
-        exit 1
-    else
-        exit 0
-    fi
-}
-
 function isNamedEnvironment() {
 
     TARGET=$1
