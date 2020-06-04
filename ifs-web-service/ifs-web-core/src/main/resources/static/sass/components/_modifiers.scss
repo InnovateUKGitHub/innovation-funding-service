@@ -304,3 +304,12 @@ hr,
     vertical-align: baseline;
   }
 }
+
+.govuk-input--width-25 {
+  max-width:50ex
+}
+
+/* make selector more specific than autocomplete library. */
+.autocomplete__input.govuk-input--error {
+  @extend .govuk-input--error;
+}

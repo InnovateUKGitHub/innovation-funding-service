@@ -24,6 +24,7 @@ public abstract class ProjectUserInviteMapper extends BaseMapper<ProjectUserInvi
 
     @Mappings({
             @Mapping(source = "target.application.competition.name", target = "competitionName"),
+            @Mapping(source = "target.application.competition.id", target = "competitionId"),
             @Mapping(source = "target.application.leadApplicant.name", target = "leadApplicant"),
             @Mapping(source = "target.application.leadApplicantProcessRole.organisationId", target = "leadOrganisationId"),
             @Mapping(source = "organisation.id", target = "organisation"),
@@ -44,5 +45,4 @@ public abstract class ProjectUserInviteMapper extends BaseMapper<ProjectUserInvi
         }
         return object.getId();
     }
-
 }
