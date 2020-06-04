@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.competition.setup.postawardservice.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -39,23 +40,19 @@ public class CompetitionSetupPostAwardServiceController {
     @Autowired
     private ChoosePostAwardServiceModelPopulator choosePostAwardServiceModelPopulator;
 
-
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'CHOOSE_POST_AWARD_SERVICE')")
     @GetMapping("/{competitionId}/post-award-service")
     public String setupPostAwardService(@PathVariable(COMPETITION_ID_KEY) long competitionId, Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionId;
         }
 
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        CompetitionPostAwardServiceResource competitionPostAwardService = competitionSetupPostAwardServiceRestService.getPostAwardService(competitionId).getSuccess();
+
         PostAwardServiceForm form = new PostAwardServiceForm();
-        if (competition.getPostAwardService() == null) {
-            form.setPostAwardService(PostAwardService.CONNECT);
-        } else {
-            form.setPostAwardService(competition.getPostAwardService());
-        }
+        form.setPostAwardService(competitionPostAwardService.getPostAwardService());
 
         return populateModel(model, competition, form);
     }

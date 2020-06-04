@@ -205,10 +205,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("includeYourOrganisationSection", includeYourOrganisationSection);
     }
 
-    public CompetitionBuilder withPostAwardService(PostAwardService... postAwardService) {
-        return withArraySetFieldByReflection("postAwardService", postAwardService);
-    }
-
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         ZonedDateTime now = ZonedDateTime.now();
         if(READY_TO_OPEN.equals(status)) {

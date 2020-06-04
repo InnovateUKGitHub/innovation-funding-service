@@ -45,7 +45,7 @@
                                    th:id="${'postAwardService-' + postAwardServ.name()}"
                                    th:name="postAwardService"
                                    th:value="${postAwardServ.name()}"
-                                   th:checked="${form.postAwardService == postAwardServ}"
+                                   th:field="*{postAwardService}"
                                />
 
                             <label th:for="${'postAwardService-' + postAwardServ.name()}"

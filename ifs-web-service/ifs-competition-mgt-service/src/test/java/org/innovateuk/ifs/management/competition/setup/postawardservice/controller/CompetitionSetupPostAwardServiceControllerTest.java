@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.competition.setup.postawardservice.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.builder.CompetitionPostAwardServiceResourceBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -58,7 +60,13 @@ public class CompetitionSetupPostAwardServiceControllerTest extends BaseControll
                 .withName(COMPETITION_NAME)
                 .build();
 
+        CompetitionPostAwardServiceResource competitionPostAwardServiceResource = CompetitionPostAwardServiceResourceBuilder.newCompetitionPostAwardServiceResource()
+                .withCompetitionId(COMPETITION_ID)
+                .withPostAwardService(PostAwardService.CONNECT)
+                .build();
+
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
+        when(competitionSetupPostAwardServiceRestService.getPostAwardService(COMPETITION_ID)).thenReturn(restSuccess(competitionPostAwardServiceResource));
 
         ChoosePostAwardServiceViewModel viewModel = new ChoosePostAwardServiceViewModel(COMPETITION_ID, COMPETITION_NAME);
         when(choosePostAwardServiceModelPopulator.populateModel(competitionResource)).thenReturn(viewModel);

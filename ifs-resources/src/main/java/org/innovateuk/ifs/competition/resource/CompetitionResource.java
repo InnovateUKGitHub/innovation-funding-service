@@ -117,7 +117,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
     private CovidType covidType;
-    private PostAwardService postAwardService;
 
     public CompetitionResource() {
     }
@@ -815,14 +814,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.covidType = covidType;
     }
 
-    public PostAwardService getPostAwardService() {
-        return postAwardService;
-    }
-
-    public void setPostAwardService(PostAwardService postAwardService) {
-        this.postAwardService = postAwardService;
-    }
-
     @JsonIgnore
     public boolean isCompetitionTermsUploaded() {
         return competitionTerms != null;
@@ -899,7 +890,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn, that.createdOn)
                 .append(modifiedBy, that.modifiedBy)
                 .append(modifiedOn, that.modifiedOn)
-                .append(postAwardService, that.postAwardService)
                 .isEquals();
     }
 
@@ -964,7 +954,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 .append(createdOn)
                 .append(modifiedBy)
                 .append(modifiedOn)
-                .append(postAwardService)
                 .toHashCode();
     }
 
