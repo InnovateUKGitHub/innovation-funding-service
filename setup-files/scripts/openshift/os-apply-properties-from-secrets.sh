@@ -30,7 +30,7 @@ fi
 function applyProperties() {
 
 #   Copy values to a file, this is needed  as multiline values for properties mess up if using --from-literal
-    echo "$(valueFromAws)" >> "unformatted-properties.gradle"
+    getValuesFromAws
     sed 's/ext/\'$'\n''&/g' unformatted-properties.gradle > formatted-properties.gradle
 
     oc create secret generic properties \
@@ -38,9 +38,19 @@ function applyProperties() {
     ${SVC_ACCOUNT_CLAUSE} --dry-run -o yaml | \
     oc apply -f - ${SVC_ACCOUNT_CLAUSE}
 }
+function getValuesFromAws() {
+    RESULT=$(docker exec ssm-access-container aws ssm get-parameters-by-path --path /CI/IFS/$TARGET/PROPERTIES/ --max-results 1 --with-decryption)
+    extractResults
+    until [$NEXTTOKEN == "null"]; do
+        RESULT=$(docker exec ssm-access-container aws ssm get-parameters-by-path --path /CI/IFS/$TARGET/PROPERTIES/ --max-results 1 --next-token $NEXTTOKEN --with-decryption)
+        extractResults
+    done
+}
 
-function valueFromAws() {
-   echo "$(docker exec ssm-access-container aws ssm get-parameters-by-path --path /CI/IFS/$TARGET/PROPERTIES/ --no-paginate --query "Parameters[].Value" --with-decryption --output text)"
+function extractResults() {
+    NEXTTOKEN=$(echo $RESULT | /usr/bin/jq --raw-output '.NextToken')
+    VALUES=$(echo $RESULT | /usr/bin/jq --raw-output '.Parameters[].Value')
+    echo $VALUES >> "unformatted-properties.gradle"
 }
 
 # Create a file with aws credentials which mounted to the aws-cli docker image.
