@@ -256,8 +256,9 @@ ${organisationRedName}                Red Planet
 ${organisationRedId}                  ${organisation_ids["${organisationRedName}"]}
 ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
+${organisationWardName}               Ward Ltd
+${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
 ${internationalOrganisationName}      International Competition Ltd.
-
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1

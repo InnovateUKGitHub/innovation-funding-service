@@ -2,10 +2,11 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.registration.populator.OrganisationSelectionViewModelPopulator;
+import org.innovateuk.ifs.organisation.controller.OrganisationSelectionController;
+import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.OrganisationSelectionViewModel;
+import org.innovateuk.ifs.organisation.viewmodel.OrganisationSelectionViewModel;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
     public void viewPreviousOrganisations() throws Exception {
         OrganisationSelectionViewModel model = mock(OrganisationSelectionViewModel.class);
 
-        when(populator.populate(eq(loggedInUser), any(), eq("/organisation/create/lead-organisation-type"))).thenReturn(model);
+        when(populator.populate(eq(loggedInUser), any(), eq("/organisation/create/organisation-type"))).thenReturn(model);
         when(organisationRestService.getOrganisations(loggedInUser.getId(), false)).thenReturn(restSuccess(newOrganisationResource().build(1)));
         when(registrationCookieService.isCollaboratorJourney(any())).thenReturn(false);
 
@@ -55,7 +56,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
                 .andExpect(view().name("registration/organisation/select-organisation"))
                 .andExpect(model().attribute("model", model));
 
-        verify(populator).populate(eq(loggedInUser), any(), eq("/organisation/create/lead-organisation-type"));
+        verify(populator).populate(eq(loggedInUser), any(), eq("/organisation/create/organisation-type"));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/organisation/create/lead-organisation-type"));
+                .andExpect(redirectedUrl("/organisation/create/organisation-type"));
     }
 
     @Test
@@ -73,7 +74,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/organisation/select"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/organisation/create/lead-organisation-type"));
+                .andExpect(redirectedUrl("/organisation/create/organisation-type"));
     }
 
     @Test
@@ -91,7 +92,7 @@ public class OrganisationSelectionControllerTest extends BaseControllerMockMVCTe
         mockMvc.perform(post("/organisation/select")
                 .param("selectedOrganisationId", String.valueOf(organisationId)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/organisation/create/lead-organisation-type/not-eligible"));
+                .andExpect(redirectedUrl("/organisation/create/organisation-type/not-eligible"));
     }
 
     @Test

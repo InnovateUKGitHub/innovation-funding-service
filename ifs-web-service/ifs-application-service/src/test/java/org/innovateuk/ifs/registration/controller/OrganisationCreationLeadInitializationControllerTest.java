@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
+import org.innovateuk.ifs.organisation.controller.OrganisationCreationLeadInitializationController;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -46,7 +47,7 @@ public class OrganisationCreationLeadInitializationControllerTest extends BaseCo
 
         mockMvc.perform(get("/organisation/create/initialize"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/lead-organisation-type"));
+                .andExpect(view().name("redirect:/organisation/create/organisation-type"));
 
         OrganisationTypeForm expectedOrganisationTypeForm = new OrganisationTypeForm();
         expectedOrganisationTypeForm.setLeadApplicant(true);

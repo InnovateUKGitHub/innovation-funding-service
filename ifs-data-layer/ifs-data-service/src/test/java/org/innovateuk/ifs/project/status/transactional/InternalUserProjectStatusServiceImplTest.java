@@ -18,7 +18,6 @@ import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.core.domain.*;
-import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.project.document.resource.DocumentStatus;
 import org.innovateuk.ifs.project.documents.domain.ProjectDocument;
@@ -29,10 +28,6 @@ import org.innovateuk.ifs.project.monitoring.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusPageResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
@@ -49,7 +44,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,23 +58,18 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionDocumentBuilder.newCompetitionDocument;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder.newBankDetails;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
-import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.core.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newProjectProcess;
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.documents.builder.ProjectDocumentBuilder.newProjectDocument;
 import static org.innovateuk.ifs.project.resource.ProjectState.*;
-import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -95,16 +84,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
     private Application application;
     private Competition competition;
-    private Role partnerRole;
-    private User u;
-    private List<PartnerOrganisation> po;
-    private List<ProjectUserResource> puResource;
-    private List<ProjectUser> pu;
-    private Organisation o;
     private Project project;
-    private Project p;
-    private BankDetails bankDetails;
-    private SpendProfile spendProfile;
     private ProjectProcess projectProcess;
 
     @Mock
@@ -139,9 +119,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
     @Mock
     protected OrganisationRepository organisationRepository;
-
-    @Mock
-    protected PartnerOrganisationRepository partnerOrganisationRepository;
 
     @Mock
     protected UserRepository userRepository;
@@ -201,53 +178,11 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        o = organisation;
-        o.setOrganisationType(businessOrganisationType);
-
-        partnerRole = Role.FINANCE_CONTACT;
-
-        po = newPartnerOrganisation().
-                withOrganisation(o).
-                withLeadOrganisation(true).
-                build(1);
-
-        u = newUser().
-                withEmailAddress("a@b.com").
-                withFirstName("A").
-                withLastName("B").
-                build();
-
-        pu = newProjectUser().
-                withRole(PROJECT_FINANCE_CONTACT).
-                withUser(u).
-                withOrganisation(o).
-                withInvite(newProjectUserInvite().
-                        build()).
-                build(1);
+        organisation.setOrganisationType(businessOrganisationType);
 
         projectProcess = newProjectProcess()
                 .withActivityState(LIVE)
                 .build();
-
-        p = newProject().
-                withProjectUsers(pu).
-                withApplication(application).
-                withPartnerOrganisations(po).
-                withDateSubmitted(ZonedDateTime.now()).
-                withSpendProfileSubmittedDate(ZonedDateTime.now()).
-                withProjectProcess(projectProcess).
-                build();
-
-        puResource = newProjectUserResource().
-                withProject(p.getId()).
-                withOrganisation(o.getId()).
-                withRole(partnerRole.getId()).
-                withRoleName(PROJECT_PARTNER.getName()).
-                build(1);
-
-
-        bankDetails = newBankDetails().withOrganisation(o).withApproval(true).build();
-        spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(true).build();
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
@@ -283,9 +218,9 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         List<ProjectStatusResource> projectStatusResources = result.getSuccess().getContent();
         assertTrue(projectsGetSortedByApplicationId(projectStatusResources));
         assertEquals(3, projectStatusResources.size());
-        assertEquals(new Integer(3), projectStatusResources.get(0).getNumberOfPartners());
-        assertEquals(new Integer(3), projectStatusResources.get(1).getNumberOfPartners());
-        assertEquals(new Integer(3), projectStatusResources.get(2).getNumberOfPartners());
+        assertEquals(Integer.valueOf(3), projectStatusResources.get(0).getNumberOfPartners());
+        assertEquals(Integer.valueOf(3), projectStatusResources.get(1).getNumberOfPartners());
+        assertEquals(Integer.valueOf(3), projectStatusResources.get(2).getNumberOfPartners());
     }
 
     @Test
@@ -303,9 +238,9 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         List<ProjectStatusResource> projectStatusResources = result.getSuccess();
         assertTrue(projectsGetSortedByApplicationId(projectStatusResources));
         assertEquals(3, projectStatusResources.size());
-        assertEquals(new Integer(3), projectStatusResources.get(0).getNumberOfPartners());
-        assertEquals(new Integer(3), projectStatusResources.get(1).getNumberOfPartners());
-        assertEquals(new Integer(3), projectStatusResources.get(2).getNumberOfPartners());
+        assertEquals(Integer.valueOf(3), projectStatusResources.get(0).getNumberOfPartners());
+        assertEquals(Integer.valueOf(3), projectStatusResources.get(1).getNumberOfPartners());
+        assertEquals(Integer.valueOf(3), projectStatusResources.get(2).getNumberOfPartners());
     }
 
     private List<Project> setupCompetitionStatusMocks(long competitionId) {
@@ -352,15 +287,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 .withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2))
                 .build(3);
 
-        SpendProfile spendProfile = newSpendProfile().build();
-
-        List<PartnerOrganisationResource> partnerOrganisationResources =
-                newPartnerOrganisationResource()
-                        .withId(partnerOrganisations.get(0).getId(),
-                                partnerOrganisations.get(1).getId(),
-                                partnerOrganisations.get(2).getId())
-                        .build(3);
-
         when(competitionRepository.findById(competitionId)).thenReturn(Optional.of(competition));
 
         when(projectRepository.findById(projects.get(0).getId())).thenReturn(Optional.of(projects.get(0)));
@@ -379,8 +305,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         when(organisationRepository.findById(organisations.get(0).getId())).thenReturn(Optional.of(organisations.get(0)));
         when(organisationRepository.findById(organisations.get(1).getId())).thenReturn(Optional.of(organisations.get(1)));
         when(organisationRepository.findById(organisations.get(2).getId())).thenReturn(Optional.of(organisations.get(2)));
-
-        List<ProjectUserResource> puResource = newProjectUserResource().withProject(projects.get(0).getId()).withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(3);
 
         when(projectFinanceService.financeChecksDetails(projects.get(0).getId(), organisations.get(0).getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
         when(projectFinanceService.financeChecksDetails(projects.get(0).getId(), organisations.get(1).getId())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsNotRequestingFunding().build()));
@@ -418,8 +342,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      true,
-                                                      SETUP);
+                                                      true
+        );
 
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
 
@@ -456,14 +380,13 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -501,12 +424,11 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      true,
-                                                      SETUP);
+                                                      true
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -544,8 +466,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      true,
-                                                      SETUP);
+                                                      true
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
                 .withOrganisation(o)
@@ -554,7 +476,52 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+
+        when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
+        when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
+    }
+
+    @Test
+    public void getProjectStatusFinanceContactCompleteAndPartnerLocationsRequiredInternationalAndComplete() {
+        long projectId = 2345L;
+        long organisationId = 123L;
+
+        Project project = createProjectStatusResource(projectId,
+                ApprovalType.EMPTY,
+                false,
+                false,
+                false,
+                false,
+                true
+        );
+        Organisation o = newOrganisation().withId(organisationId).withInternational(true).build();
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
+                .withOrganisation(o)
+                .withInternationalLocation("LOCATION")
+                .build());
+        project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
 
         when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -591,8 +558,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
@@ -635,8 +602,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
 
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -670,9 +637,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       true,
-                                                      false,
-                                                      SETUP);
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+                                                      false
+        );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -701,8 +667,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     @Test
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
         long projectId = 2345L;
-        long orgId = 564321L;
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withOrganisation(orgId).build();
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
@@ -710,10 +674,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       true,
                                                       false,
-                                                      false,
-                                                      SETUP);
-
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+                                                      false
+        );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(false);
@@ -749,9 +711,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+                                                      false
+        );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -786,9 +747,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+                                                      false
+        );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -824,9 +784,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+                                                      false
+        );
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(any(long.class), any(long.class))).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -866,8 +825,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -894,8 +853,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -922,8 +881,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -950,8 +909,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         project.setProjectDocuments(docs);
         project.setApplication(application);
         when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
@@ -976,8 +935,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         project.setPartnerOrganisations(newPartnerOrganisation().withOrganisation(newOrganisation().build()).build(2));
         project.setProjectDocuments(docs);
         project.setApplication(application);
@@ -999,7 +958,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 .withStatus(DocumentStatus.APPROVED)
                 .withCompetitionDocument(competition.getCompetitionDocuments().get(1))
                 .build(1);
-        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().build();
 
         Project project = createProjectStatusResource(projectId,
                                                       ApprovalType.APPROVED,
@@ -1007,8 +965,8 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       true,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         project.setProjectDocuments(docs);
         project.setApplication(application);
 
@@ -1032,14 +990,13 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(new BankDetails()));
         when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
@@ -1074,15 +1031,14 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         Organisation o2 = newOrganisation().withId(organisationId2).build();
         List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId2)).thenReturn(Optional.empty());
@@ -1112,19 +1068,18 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         long organisationId = 123L;
 
         Project project = createProjectStatusResource(projectId,
-                                                      ApprovalType.EMPTY,
-                                                      false,
-                                                      false,
-                                                      false,
-                                                      false,
-                                                      false,
-                                                      SETUP);
+                ApprovalType.EMPTY,
+                false,
+                false,
+                false,
+                false,
+                false
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
         when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
@@ -1147,14 +1102,57 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
     }
 
+    @Test
+    public void getProjectStatusNotRequiringBankDetailsForInternational() {
+        long projectId = 2345L;
+        long organisationId = 123L;
+        long organisationId2 = 234L;
+
+        Project project = createProjectStatusResource(projectId,
+                ApprovalType.EMPTY,
+                false,
+                false,
+                false,
+                false,
+                false
+        );
+        Organisation o = newOrganisation().withId(organisationId).build();
+        Organisation o2 = newOrganisation().withId(organisationId2).build();
+        o2.setInternational(true);
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
+        project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
+
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));
+        when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId2)).thenReturn(Optional.empty());
+        when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
+        when(projectFinanceService.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(2), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+    }
+
     private Project createProjectStatusResource(long projectId,
                                                 ApprovalType spendProfileStatus,
                                                 Boolean golReadyToApprove,
                                                 Boolean golIsSent,
                                                 Boolean golIsApproved,
                                                 Boolean golRejected,
-                                                boolean locationPerPartnerRequired,
-                                                ProjectState projectState) {
+                                                boolean locationPerPartnerRequired) {
 
         long competitionId = 112L;
 
@@ -1179,14 +1177,13 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 withOrganisationId(organisation.getId()).
                 build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
-        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().withId(partnerOrganisation.getId()).build();
 
         List<ProjectDocument> projectDocuments = newProjectDocument()
                 .withProject(project)
                 .withStatus(DocumentStatus.APPROVED)
                 .withCompetitionDocument(competitionDocuments.get(0))
                 .build(1);
-        ProjectProcess projectProcess = newProjectProcess().withProject(project).withActivityState(projectState).build();
+        ProjectProcess projectProcess = newProjectProcess().withProject(project).withActivityState(SETUP).build();
 
         Project project = newProject()
                 .withId(projectId)
@@ -1197,7 +1194,6 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                 .build();
 
         BankDetails bankDetail = newBankDetails().withProject(project).build();
-        SpendProfile spendprofile = newSpendProfile().withOrganisation(organisation).build();
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
@@ -1229,14 +1225,13 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
                                                       false,
                                                       false,
                                                       false,
-                                                      false,
-                                                      SETUP);
+                                                      false
+        );
         Organisation o = newOrganisation().withId(organisationId).build();
         List<PartnerOrganisation> po = singletonList(newPartnerOrganisation().withOrganisation(o).build());
         project.setPartnerOrganisations(po);
         project.setAddress(newAddress().build());
         project.setTargetStartDate(LocalDate.now());
-        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
         MonitoringOfficerResource monitoringOfficer = newMonitoringOfficerResource().build();
 
         when(bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(newBankDetails().withApproval(true).build()));

@@ -208,8 +208,8 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link           jQuery = button:contains("Continue")
     the user clicks the button/link           jQuery = span:contains("Start")
     the user clicks the button/link           css = div.initials-tab-content
-    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:first  ${date}
-    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:last   ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
     the user should see the element           jQuery = h1:contains("Grant offer letter")
@@ -676,7 +676,7 @@ the user adds a new partner organisation
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 

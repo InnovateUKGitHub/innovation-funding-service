@@ -131,6 +131,8 @@ public class RegistrationCookieService {
         deleteInviteHashCookie(response);
         deleteCompetitionIdCookie(response);
         deleteProjectInviteHashCookie(response);
+        deleteOrganisationInternationalCookie(response);
+        deleteOrganisationInternationalDetailsCookie(response);
     }
 
     public boolean isCollaboratorJourney(HttpServletRequest request) {
@@ -147,7 +149,8 @@ public class RegistrationCookieService {
         return !getProjectInviteHashCookieValue(request).isPresent();
     }
 
-    public boolean isInternationalJourney(Optional<OrganisationInternationalForm> organisationInternationalForm) {
+    public boolean isInternationalJourney(HttpServletRequest request) {
+        Optional<OrganisationInternationalForm> organisationInternationalForm = getOrganisationInternationalCookieValue(request);
         return organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
     }
 }

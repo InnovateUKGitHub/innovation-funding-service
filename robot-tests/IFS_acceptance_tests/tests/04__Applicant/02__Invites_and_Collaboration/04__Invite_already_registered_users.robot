@@ -25,8 +25,7 @@ The user clicks the login link
     When the user clicks the button/link                link = Continue
     And The guest user inserts user email and password  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
-    Then the user should see the element                jQuery = h1:contains("Your organisation")
-    And the user should see the element                 jQuery = dt:contains("INNOVATE LTD")
+    Then the user should see the element                jQuery = dt:contains("INNOVATE LTD")
     When the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
     Then the user should see the element                jQuery = h1:contains("Application overview")
 
@@ -49,7 +48,7 @@ Invite a user with the same organisation under the same organisation
 the user enters profile details
     The user enters text to a text field  id = firstName    Dennis
     The user enters text to a text field  id = lastName    Bergkamp
-    Set Focus To Element                                   css = [name="create-account"]
+    Set Focus To Element                  css = [name="create-account"]
     The user clicks the button/link       css = [name="create-account"]
 
 the user should see the change in the view team members page
