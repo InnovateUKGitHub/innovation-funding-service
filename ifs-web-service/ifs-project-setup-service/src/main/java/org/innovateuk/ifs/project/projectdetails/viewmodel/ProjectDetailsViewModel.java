@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProjectDetailsViewModel {
     private ProjectResource project;
@@ -57,11 +58,18 @@ public class ProjectDetailsViewModel {
         return organisations;
     }
 
-    public String getPostcodeForPartnerOrganisation(Long organisationId) {
+    public String getLocationForPartnerOrganisation(Long organisationId) {
         return partnerOrganisations.stream()
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()
-                .map(PartnerOrganisationResource::getPostcode)
+                .map(partnerOrg -> {
+                    Optional<OrganisationResource> organisationResource = organisations.stream().filter(org -> organisationId.equals(org.getId())).findFirst();
+                    if (organisationResource.isPresent() && organisationResource.get().isInternational()) {
+                        return partnerOrg.getInternationalLocation();
+                    } else {
+                        return partnerOrg.getPostcode();
+                    }
+                })
                 .orElse(null);
     }
 

@@ -110,7 +110,7 @@ Validation on duration of Project
     And Set Focus To Element                            id = durationInMonths
     When Set Focus To Element                           link = Contact us
     Then the user should see a field error              ${empty_field_warning_message}
-    When the user clicks the button/link                jQuery = button:contains("Save and return to finances")
+    When the user clicks the button/link                jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error  ${empty_field_warning_message}
     [Teardown]  the user clicks the button/link         link = Projects in setup
 
@@ -119,7 +119,7 @@ Project Finance can edit the duration of the Project
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link       link = Edit
     Given the user enters text to a text field     id = durationInMonths  4
-    And the user clicks the button/link            jQuery = button:contains("Save and return to finances")
+    And the user clicks the button/link            jQuery = button:contains("Save and return to project finances")
     Then the user should see the element           jQuery = dd:contains("4 months")
 
 Project finance user cannot view viability section if this is not applicable for the org in question

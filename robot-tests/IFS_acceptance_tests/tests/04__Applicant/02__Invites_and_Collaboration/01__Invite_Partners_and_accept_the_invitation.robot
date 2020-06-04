@@ -310,7 +310,7 @@ the lead applicant invites the collaborator
 the collaborator accepts the invite and is able to see the application without any errors
     The user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
     The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
-    The user should see the element               jQuery = h1:contains("Choose organisation type")
+    The user should see the element               jQuery = h1:contains("Choose your organisation type")
     The user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
     The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page

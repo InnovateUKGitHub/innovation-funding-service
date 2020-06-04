@@ -278,7 +278,7 @@ apply for comp with a different organisation
 non-registered user selects business options
     [Arguments]  ${isBusinessInternational}
     the user clicks the button/link              link = Continue and create an account
-    the user should see the element              jQuery = p:contains("Is your organisation based in the UK?")
+    the user should see the element              jQuery = span:contains("Is your organisation based in the UK?")
     the user should not see the element          jQuery = span:contains("Create an account")
     user selects where is organisation based     ${isBusinessInternational}
 
@@ -327,6 +327,11 @@ the user marks the finance as complete
     the user should see all finance subsections complete
     the user clicks the button/link                          link = Back to application overview
     the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
+
+the user enters the project location
+    the user clicks the button/link         link = Your project location
+    the user enters text to a text field    town   BS1 4NT
+    the user clicks the button/link         jQuery = button:contains("Mark as complete")
 
 Requesting IDs of this Project
     ${ProjectID} =  get project id by name    ${internationalApplicationTitle}

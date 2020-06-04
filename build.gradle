@@ -1,3 +1,5 @@
+import org.ajoberstar.grgit.*
+
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/release.gradle"
@@ -12,6 +14,11 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
 
 ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance.totals.enabled'] ?: true
 
+ext.getCurrentBranchName = {
+    def repo = Grgit.open(dir: '.')
+    return repo.branch.getCurrent().name
+}
+
 def isNamedEnv() {
     return ["ifs-sysint", "ifs-uat", "ifs-demo", "ifs-perf", "ifs-prod"].contains(openshiftEnv)
 }
@@ -22,6 +29,10 @@ def isNotProductionEnv() {
 
 def isSysIntEnv() {
     "ifs-sysint".equals(openshiftEnv)
+}
+
+def isAcceptanceBranch() {
+    getCurrentBranchName().equals("acceptance")
 }
 
 if (!project.hasProperty('osTestArgs')) {
@@ -50,6 +61,8 @@ buildscript {
 
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
+
+        classpath 'org.ajoberstar.grgit:grgit-core:4.0.2'
     }
 
 }

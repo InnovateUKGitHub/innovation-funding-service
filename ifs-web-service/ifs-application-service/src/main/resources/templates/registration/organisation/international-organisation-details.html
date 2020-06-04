@@ -17,7 +17,7 @@
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${organisationForm.*}')}" class="govuk-error-summary" role="alert"
              aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(organisationForm)"/>
         </div>
 
@@ -59,7 +59,7 @@
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                     <h1 class="govuk-fieldset__heading">
-                        Enter your organisation address
+                        Enter your organisation's address
                     </h1>
                 </legend>
                 <div class="govuk-form-group govuk-!-margin-bottom-0"
@@ -116,7 +116,7 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('country')}"
                               th:text="${err}"></span>
                     </th:block>
-                    <span class="govuk-hint">Start typing your country's name and select from the list</span>
+                    <span class="govuk-hint">Start typing your country's name and select it from the list.</span>
                     <div class="govuk-input--width-25">
                         <select class="govuk-select"
                                 th:id="country"
