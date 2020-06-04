@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Correspondence address - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Correspondence address - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body class="govuk-template__body project-details project-address">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Project details',linkUrl=@{/project/{id}/details(id=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title"  id="error-summary-title">There is a problem</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(projectInternationalCorrespondenceAddressForm)" />
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert"
+             aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Correspondence address',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Correspondence address',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
         <p class="govuk-body">This is the postal address for your organisation.</p>
 
-        <form id="address-details-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
-            <div id="custom-postcode" class="govuk-body">
-             <fieldset class="govuk-fieldset">
+        <form id="address-details-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="post" novalidate="novalidate">
+            <fieldset class="govuk-fieldset">
                 <div class="govuk-form-group govuk-!-margin-bottom-0"
                      th:classappend="${#fields.hasErrors('addressLine1')} ? 'govuk-form-group--error'">
                     <label class="govuk-label govuk-label--s" for="addressLine1">
@@ -106,15 +110,15 @@
                            th:field="*{zipCode}"/>
                 </div>
             </fieldset>
-            </div>
+
             <button class="govuk-button govuk-!-margin-top-6" id="save-project-address-button">Save address</button>
         </form>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 </div>
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 </body>
 </html>
