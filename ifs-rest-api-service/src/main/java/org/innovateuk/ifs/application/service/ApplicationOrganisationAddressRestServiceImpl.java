@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 /**
- * REST service for retrieving {@link ApplicationAssessmentSummaryResource}'s.
+ * REST service for getting and saving application organisation addresses.
  */
 @Service
 public class ApplicationOrganisationAddressRestServiceImpl extends BaseRestService implements ApplicationOrganisationAddressRestService {

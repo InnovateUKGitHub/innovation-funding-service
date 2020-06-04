@@ -44,8 +44,11 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
                                                   HttpServletRequest request,
                                                   UserResource user,
                                                   @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalForm organisationInternationalForm) {
-        addPageSubtitleToModel(request, user, model);
-        return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION;
+        Optional<OrganisationInternationalForm> cookieForm = registrationCookieService.getOrganisationInternationalCookieValue(request);
+        if (cookieForm.isPresent()) {
+            model.addAttribute(ORGANISATION_FORM, cookieForm);
+        }
+        return viewInternationalSelect(model, request, user);
     }
 
     @PostMapping
@@ -69,14 +72,24 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
+    private String viewInternationalSelect(Model model,
+                                           HttpServletRequest request,
+                                           UserResource user) {
+        addPageSubtitleToModel(request, user, model);
+        return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION;
+    }
+
     @GetMapping("/details")
     public String internationalOrganisationDetails(Model model,
                                                    HttpServletRequest request,
                                                    UserResource user,
                                                    @ModelAttribute(ORGANISATION_FORM) OrganisationInternationalDetailsForm organisationForm) {
-        model.addAttribute("countries", COUNTRIES);
-        addPageSubtitleToModel(request, user, model);
-        return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION_DETAILS;
+        Optional<OrganisationInternationalDetailsForm> cookieForm = registrationCookieService.getOrganisationInternationalDetailsValue(request);
+        if (cookieForm.isPresent()) {
+            model.addAttribute(ORGANISATION_FORM, cookieForm);
+        }
+        return viewInternationalDetails(model, request, user);
+
     }
 
     @PostMapping("/details")
@@ -95,6 +108,15 @@ public class OrganisationCreationInternationalController extends AbstractOrganis
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
+
+    private String viewInternationalDetails(Model model,
+                                            HttpServletRequest request,
+                                            UserResource user) {
+        model.addAttribute("countries", COUNTRIES);
+        addPageSubtitleToModel(request, user, model);
+        return TEMPLATE_PATH + "/" + INTERNATIONAL_ORGANISATION_DETAILS;
+
     }
 
     @GetMapping("/confirm")
