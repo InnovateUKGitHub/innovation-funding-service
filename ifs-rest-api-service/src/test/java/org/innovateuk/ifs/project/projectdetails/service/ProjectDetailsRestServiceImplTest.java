@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
@@ -44,13 +45,13 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "TW14 9QG";
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postcode=" + postcode, null, OK);
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location", postcodeAndTown, OK);
 
-        RestResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcode);
+        RestResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown);
         assertTrue(result.isSuccess());
 
-        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postcode=" + postcode, Void.class, null);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location", Void.class, postcodeAndTown);
     }
 
     @Test

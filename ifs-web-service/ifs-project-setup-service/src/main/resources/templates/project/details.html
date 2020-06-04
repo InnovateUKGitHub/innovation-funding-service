@@ -79,10 +79,10 @@
                     <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                 </td>
                 <td class="govuk-table__cell">
-                    <th:block th:unless="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
-                        <span th:text="${model.getPostcodeForPartnerOrganisation(organisation.id)}" />
+                    <th:block th:unless="${model.getLocationForPartnerOrganisation(organisation.id) == null}">
+                        <span th:text="${model.getLocationForPartnerOrganisation(organisation.id)}" />
                     </th:block>
-                    <th:block th:if="${model.getPostcodeForPartnerOrganisation(organisation.id) == null}">
+                    <th:block th:if="${model.getLocationForPartnerOrganisation(organisation.id) == null}">
                         <span>-</span>
                     </th:block>
                 </td>
