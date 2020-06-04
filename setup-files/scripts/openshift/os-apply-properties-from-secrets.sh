@@ -27,6 +27,7 @@ if [[ ${USE_IAM} != "true" && ${USE_IAM} != "false" ]]; then
     exit 1
 fi
 
+
 function applyProperties() {
 
 #   Copy values to a file, this is needed  as multiline values for properties mess up if using --from-literal
@@ -41,7 +42,7 @@ function applyProperties() {
 function getValuesFromAws() {
     RESULT=$(docker exec ssm-access-container aws ssm get-parameters-by-path --path /CI/IFS/$TARGET/PROPERTIES/ --max-results 1 --with-decryption)
     extractResults
-    until [$NEXTTOKEN == "null"]; do
+    while [ "$NEXTTOKEN" != null ]; do
         RESULT=$(docker exec ssm-access-container aws ssm get-parameters-by-path --path /CI/IFS/$TARGET/PROPERTIES/ --max-results 1 --next-token $NEXTTOKEN --with-decryption)
         extractResults
     done
