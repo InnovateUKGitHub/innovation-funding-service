@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionOrganisationConfigResourceBuilder.newCompetitionOrganisationConfigResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CompetitionOrganisationConfigRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionOrganisationConfigRestServiceImpl> {
 
-    private String url = "/competition-organisation-config";
-
+    private static final String COMPETITION_ORGANISATION_CONFIG_BASE_URL = "/competition-organisation-config";
 
     @Override
     protected CompetitionOrganisationConfigRestServiceImpl registerRestServiceUnderTest() {
@@ -18,15 +18,18 @@ public class CompetitionOrganisationConfigRestServiceImplTest extends BaseRestSe
     }
 
     @Test
-    public void findByCompetitionId() {
-        long competitionId = 100L;
-        CompetitionOrganisationConfigResource resource = newCompetitionOrganisationConfigResource()
+    public void findOrganisationConfigByCompetitionId() {
+        long competitionId = 123L;
+
+        CompetitionOrganisationConfigResource returnedResponse = newCompetitionOrganisationConfigResource()
+                .withInternationalOrganisationsAllowed(true)
+                .withInternationalLeadOrganisationAllowed(true)
                 .build();
 
-        setupGetWithRestResultExpectations(url + "/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class, resource);
-
-        CompetitionOrganisationConfigResource actual = service.findByCompetitionId(competitionId).getSuccess();
-        assertEquals(resource, actual);
+        setupGetWithRestResultExpectations(COMPETITION_ORGANISATION_CONFIG_BASE_URL + "/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class, returnedResponse);
+        CompetitionOrganisationConfigResource responses = service.findByCompetitionId(competitionId).getSuccess();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
     }
 
     @Test
@@ -36,9 +39,10 @@ public class CompetitionOrganisationConfigRestServiceImplTest extends BaseRestSe
                 .build();
         CompetitionOrganisationConfigResource expected = newCompetitionOrganisationConfigResource()
                 .withInternationalOrganisationsAllowed(true)
+                .withInternationalLeadOrganisationAllowed(true)
                 .build();
 
-        setupPutWithRestResultExpectations(url + "/update/" + competitionId, CompetitionOrganisationConfigResource.class, resource, expected);
+        setupPutWithRestResultExpectations(COMPETITION_ORGANISATION_CONFIG_BASE_URL + "/update/" + competitionId, CompetitionOrganisationConfigResource.class, resource, expected);
 
         CompetitionOrganisationConfigResource actual = service.update(competitionId, resource).getSuccess();
         assertEquals(expected, actual);

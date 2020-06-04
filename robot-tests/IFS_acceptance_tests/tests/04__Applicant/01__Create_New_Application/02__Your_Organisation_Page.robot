@@ -27,9 +27,9 @@ Companies House: User can choose the organisation address
     [Documentation]    INFUND-887
     [Tags]  HappyPath
     When the user clicks the button/link    Link = ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
-    And the user should see the element     jQuery = h2:contains("Registered name")
-    And the user should see the element     jQuery = h2:contains("Registered address")
-    And the user should see the element     jQuery = h2:contains("Registration number")
+    And the user should see the element     jQuery = dt:contains("Organisation name")
+    And the user should see the element     jQuery = dt:contains("Address")
+    And the user should see the element     jQuery = dt:contains("Registration number")
     [Teardown]    the user goes back to the previous page
 
 Companies House: Invalid company name
@@ -60,8 +60,8 @@ Manually add the details and pass to the confirmation page
     [Setup]  the user expands enter details manually
     Given the user enters text to a text field    name = organisationName    Top of the Popps
     When the user clicks the button/link          jQuery = button:contains("Continue")
-    Then the user should see the element          jQuery = h2:contains("Organisation type")~ p:contains("Business")
-    And the user should see the element           jQuery = h2:contains("Registered name")~ p:contains("Top of the Popps")
+    Then the user should see the element          jQuery = dt:contains("Organisation type")~ dd:contains("Business")
+    And the user should see the element           jQuery = dt:contains("Organisation name")~ dd:contains("Top of the Popps")
 
 *** Keywords ***
 Applicant goes to the organisation search page

@@ -514,13 +514,13 @@ Validate errors on Your project Finances section
     the user clicks the button/link                      jQuery = a:contains("Your project location")
     the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter a valid postcode.
-    the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link                      jQuery = button:contains("Save and return to project finances")
     the user clicks the button/link                      jQuery = a:contains("Your organisation")
     the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter your organisation size.
     the user should see a field and summary error        ${empty_field_warning_message}
     the user should see a field and summary error        ${empty_field_warning_message}
-    the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link                      jQuery = button:contains("Save and return to project finances")
     the user clicks the button/link                      jQuery = a:contains("Return to application overview")
 
 Validate the user is unable to submit an incomplete application
