@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -109,14 +110,16 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "TW14 9QG";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
-        when(projectDetailsService.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode)).thenReturn(serviceSuccess());
+        when(projectDetailsService.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcodeAndTown)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postcode={postcode}", projectId, organisationId, postcode))
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(postcodeAndTown)))
                 .andExpect(status().isOk());
 
-        verify(projectDetailsService).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcode);
+        verify(projectDetailsService).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postcodeAndTown);
         verifyNoMoreInteractions(projectDetailsService);
     }
 

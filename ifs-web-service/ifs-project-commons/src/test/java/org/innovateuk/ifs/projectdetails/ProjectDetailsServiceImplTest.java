@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.projectdetails;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.projectdetails.service.ProjectDetailsRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -44,14 +45,14 @@ public class ProjectDetailsServiceImplTest {
     public void updatePartnerProjectLocation() {
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "TW14 9QG";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
-        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcode)).thenReturn(restSuccess());
+        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcode);
+        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown);
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postcode);
+        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postcodeAndTown);
         verifyNoMoreInteractions(projectDetailsRestService);
     }
 

@@ -150,7 +150,7 @@ As next step the Applicant cannot see the turnover field
 
 User can save null values and reenter the organisation page
     [Documentation]    IFS-5612
-    Given The user clicks the button/link  jQuery = button:contains("Save and return to finances")
+    Given The user clicks the button/link  jQuery = button:contains("Save and return to project finances")
     When the user clicks the button/link   link = Your organisation
     Then the user should see the element   jQuery = h1:contains("Your organisation")
 
@@ -255,7 +255,7 @@ Mark Organisation as complete when yes
     And the user enters text to a text field     css = #financialYearEndYearValue    2016
     And the user populates the project growth table
     When the user enters text to a text field    css = #headCountAtLastFinancialYear  4
-    And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
+    And the user clicks the button/link          jQuery = button:contains("Save and return to project finances")
     And the user clicks the button/link          link = Your organisation
     Then the user should see the element         jQuery = #researchAndDevelopmentSpendAtLastFinancialYear[value = "15000"]
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")

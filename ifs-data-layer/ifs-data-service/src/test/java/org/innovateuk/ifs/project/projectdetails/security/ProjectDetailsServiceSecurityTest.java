@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.project.core.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.core.security.ProjectPermissionRules;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -67,7 +68,7 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         Long organisationId = 2L;
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.updatePartnerProjectLocation(projectOrganisationCompositeId, "TW14 9QG"), () -> {
+        assertAccessDenied(() -> classUnderTest.updatePartnerProjectLocation(projectOrganisationCompositeId, new PostcodeAndTownResource("TW14 9QG", null)), () -> {
             verify(projectDetailsPermissionRules).partnersCanUpdateProjectLocationForTheirOwnOrganisation(projectOrganisationCompositeId, getLoggedInUser());
             verifyNoMoreInteractions(projectDetailsPermissionRules);
         });
