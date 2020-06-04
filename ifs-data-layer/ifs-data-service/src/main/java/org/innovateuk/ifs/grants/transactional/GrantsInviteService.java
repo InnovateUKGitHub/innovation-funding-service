@@ -6,7 +6,14 @@ import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 public interface GrantsInviteService {
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_INVITES",
+            description = "The Project finance user get all invites for a project")
+    ServiceResult<List<SentGrantsInviteResource>> getByProjectId(long projectId);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "SEND_INVITE",
@@ -28,5 +35,6 @@ public interface GrantsInviteService {
     @SecuredBySpring(value = "ACCEPT_INVITE",
             description = "The System Registration user can accept an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> acceptInvite(long inviteId, long organisationId);
+    ServiceResult<Void> acceptInvite(long inviteId);
+
 }
