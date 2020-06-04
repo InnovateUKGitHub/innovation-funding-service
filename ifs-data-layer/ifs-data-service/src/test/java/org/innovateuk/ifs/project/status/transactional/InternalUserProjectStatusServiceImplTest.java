@@ -502,6 +502,52 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
     }
 
     @Test
+    public void getProjectStatusFinanceContactCompleteAndPartnerLocationsRequiredInternationalAndComplete() {
+        long projectId = 2345L;
+        long organisationId = 123L;
+
+        Project project = createProjectStatusResource(projectId,
+                ApprovalType.EMPTY,
+                false,
+                false,
+                false,
+                false,
+                true
+        );
+        Organisation o = newOrganisation().withId(organisationId).withInternational(true).build();
+        List<PartnerOrganisation> po = singletonList(newPartnerOrganisation()
+                .withOrganisation(o)
+                .withInternationalLocation("LOCATION")
+                .build());
+        project.setPartnerOrganisations(po);
+        project.setAddress(newAddress().build());
+        project.setTargetStartDate(LocalDate.now());
+
+        when(projectDetailsWorkflowHandler.isSubmitted(project)).thenReturn(true);
+        when(projectFinanceService.financeChecksDetails(anyLong(), anyLong())).thenReturn(serviceSuccess(newProjectFinanceResource().thatIsRequestingFunding().build()));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+        ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
+        assertTrue(resultFailure.isFailure());
+    }
+
+    @Test
     public void getProjectStatusFinanceContactIncomplete() {
         long projectId = 2345L;
         long organisationId = 123L;
