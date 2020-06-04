@@ -3,7 +3,6 @@ package org.innovateuk.ifs.address.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.validator.InternationalPostcode;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +13,6 @@ import javax.persistence.Id;
  * Resource object to store the address details, from the company, from the companies house api.
  */
 @Entity
-@InternationalPostcode(argument="postcode")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
