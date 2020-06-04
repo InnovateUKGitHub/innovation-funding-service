@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
-import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
-import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.form.*;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,8 @@ import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 public class RegistrationCookieService {
 
     public static final String ORGANISATION_TYPE = "organisationType";
+    public static final String ORGANISATION_INTERNATIONAL = "organisationInternational";
+    public static final String ORGANISATION_INTERNATIONAL_DETAILS = "organisationInternationalDetails";
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String ORGANISATION_ID = "organisationId";
     public static final String INVITE_HASH = "invite_hash";
@@ -31,8 +31,16 @@ public class RegistrationCookieService {
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, JsonUtil.getSerializedObject(organisationTypeForm));
     }
 
+    public void saveToOrganisationInternationalCookie(OrganisationInternationalForm organisationInternationalForm, HttpServletResponse response) {
+        cookieUtil.saveToCookie(response, ORGANISATION_INTERNATIONAL, JsonUtil.getSerializedObject(organisationInternationalForm));
+    }
+
     public void saveToOrganisationCreationCookie(OrganisationCreationForm organisationFormForCookie, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationFormForCookie));
+    }
+
+    public void saveToOrganisationInternationalDetailsCookie(OrganisationInternationalDetailsForm organisationFormForCookie, HttpServletResponse response) {
+        cookieUtil.saveToCookie(response, ORGANISATION_INTERNATIONAL_DETAILS, JsonUtil.getSerializedObject(organisationFormForCookie));
     }
 
     public void saveToOrganisationIdCookie(Long id, HttpServletResponse response) {
@@ -55,8 +63,16 @@ public class RegistrationCookieService {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_TYPE), OrganisationTypeForm.class));
     }
 
+    public Optional<OrganisationInternationalForm> getOrganisationInternationalCookieValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_INTERNATIONAL), OrganisationInternationalForm.class));
+    }
+
     public Optional<OrganisationCreationForm> getOrganisationCreationCookieValue(HttpServletRequest request) {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_FORM), OrganisationCreationForm.class));
+    }
+
+    public Optional<OrganisationInternationalDetailsForm> getOrganisationInternationalDetailsValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_INTERNATIONAL_DETAILS), OrganisationInternationalDetailsForm.class));
     }
 
     public Optional<Long> getOrganisationIdCookieValue(HttpServletRequest request) {
@@ -81,8 +97,16 @@ public class RegistrationCookieService {
         cookieUtil.removeCookie(response, ORGANISATION_TYPE);
     }
 
+    public void deleteOrganisationInternationalCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, ORGANISATION_INTERNATIONAL);
+    }
+
     public void deleteOrganisationCreationCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, ORGANISATION_FORM);
+    }
+
+    public void deleteOrganisationInternationalDetailsCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, ORGANISATION_INTERNATIONAL_DETAILS);
     }
 
     public void deleteOrganisationIdCookie(HttpServletResponse response) {
@@ -107,6 +131,8 @@ public class RegistrationCookieService {
         deleteInviteHashCookie(response);
         deleteCompetitionIdCookie(response);
         deleteProjectInviteHashCookie(response);
+        deleteOrganisationInternationalCookie(response);
+        deleteOrganisationInternationalDetailsCookie(response);
     }
 
     public boolean isCollaboratorJourney(HttpServletRequest request) {
@@ -121,5 +147,10 @@ public class RegistrationCookieService {
 
     public boolean isApplicantJourney(HttpServletRequest request) {
         return !getProjectInviteHashCookieValue(request).isPresent();
+    }
+
+    public boolean isInternationalJourney(HttpServletRequest request) {
+        Optional<OrganisationInternationalForm> organisationInternationalForm = getOrganisationInternationalCookieValue(request);
+        return organisationInternationalForm.isPresent() && organisationInternationalForm.get().getInternational();
     }
 }

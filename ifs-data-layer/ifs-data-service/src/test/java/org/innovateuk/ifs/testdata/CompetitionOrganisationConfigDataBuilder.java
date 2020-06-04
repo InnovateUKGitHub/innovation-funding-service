@@ -21,13 +21,21 @@ public class CompetitionOrganisationConfigDataBuilder extends BaseDataBuilder<Vo
     public CompetitionOrganisationConfigDataBuilder withCompetitionOrganisationConfigData(String competitionName, boolean internationalOrganisation, boolean internationalLeadOrganisationAllowed) {
         return with(data -> {
 
-            Competition competition = retrieveCompetitionByName(competitionName);
+            testService.doWithinTransaction(() -> {
+                Competition competition = retrieveCompetitionByName(competitionName);
 
-            CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
-            competitionOrganisationConfig.setCompetition(competition);
-            competitionOrganisationConfig.setInternationalOrganisationsAllowed(internationalOrganisation);
-            competitionOrganisationConfig.setInternationalLeadOrganisationAllowed(internationalLeadOrganisationAllowed);
-            competitionOrganisationConfigRepository.save(competitionOrganisationConfig);
+                CompetitionOrganisationConfig competitionOrganisationConfig;
+                if (competition.getCompetitionOrganisationConfig() != null) {
+                    competitionOrganisationConfig = competition.getCompetitionOrganisationConfig();
+                } else {
+                    competitionOrganisationConfig = new CompetitionOrganisationConfig();
+                    competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
+                    competitionOrganisationConfig.setCompetition(competition);
+                }
+                competitionOrganisationConfig.setInternationalOrganisationsAllowed(internationalOrganisation);
+                competitionOrganisationConfig.setInternationalLeadOrganisationAllowed(internationalLeadOrganisationAllowed);
+                competitionOrganisationConfigRepository.save(competitionOrganisationConfig);
+            });
         });
     }
 
