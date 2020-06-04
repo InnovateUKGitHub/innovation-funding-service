@@ -36,10 +36,12 @@ public class YourFundingFormValidator extends AbstractYourFundingFormValidator {
     }
 
     private void validateLessThanCosts(YourFundingAmountForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier) {
-        BaseFinanceResource finance = financeSupplier.get();
-        BigDecimal roundedCosts =  finance.getTotal().setScale(0, BigDecimal.ROUND_HALF_EVEN); //Same as thymeleaf
-        if (form.getAmount().compareTo(roundedCosts) > 0) {
-            errors.rejectValue("amount", "validation.finance.funding.sought.more.than.costs");
+        if (form.getAmount() != null ) {
+            BaseFinanceResource finance = financeSupplier.get();
+            BigDecimal roundedCosts = finance.getTotal().setScale(0, BigDecimal.ROUND_HALF_EVEN); //Same as thymeleaf
+            if (form.getAmount().compareTo(roundedCosts) > 0) {
+                errors.rejectValue("amount", "validation.finance.funding.sought.more.than.costs");
+            }
         }
     }
 }
