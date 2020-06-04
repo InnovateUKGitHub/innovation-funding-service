@@ -86,12 +86,7 @@
                         <th:block th:if="${showLead}" th:text="${partnerOrganisation.organisationName + ' (Lead)'}"></th:block>
                         <th:block th:unless="${showLead}" th:text="${partnerOrganisation.organisationName}"></th:block>
                     </td>
-                    <td class="govuk-table__cell">
-                        <th:block th:unless="${partnerOrganisation.postcode == null}"
-                                  th:text="${partnerOrganisation.postcode}" />
-                        <th:block th:if="${partnerOrganisation.postcode == null}">
-                            Not yet completed
-                        </th:block>
+                    <td class="govuk-table__cell" th:text="${model.getLocationForPartnerOrganisation(partnerOrganisation.organisation)}">
                     </td>
                 </tr>
 
