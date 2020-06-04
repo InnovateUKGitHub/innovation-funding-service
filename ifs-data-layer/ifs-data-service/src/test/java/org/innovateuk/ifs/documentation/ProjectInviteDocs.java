@@ -20,6 +20,7 @@ public class ProjectInviteDocs {
             fieldWithPath("projectName").description("Name of the Project for which the Invite is intended"),
             fieldWithPath("applicationId").description("Id of the Application that the Project belongs to"),
             fieldWithPath("competitionName").description("Name of the Competition that the Project belongs to"),
+            fieldWithPath("competitionId").description("ID of the Competition that the Project belongs to"),
             fieldWithPath("email").description("The email address of the Invite recipient"),
             fieldWithPath("hash").description("The hash used to access the Invite"),
             fieldWithPath("leadApplicant").description("Name of the Lead Applicant of the Application"),
