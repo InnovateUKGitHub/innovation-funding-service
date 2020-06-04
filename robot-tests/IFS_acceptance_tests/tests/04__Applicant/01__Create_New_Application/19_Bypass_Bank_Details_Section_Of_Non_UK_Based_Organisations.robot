@@ -2,6 +2,8 @@
 Documentation     IFS-7163  Non-UK based partner organisation will bypass bank details section in Project Setup
 ...
 ...               IFS-7240  Project location details for non-UK based organisations
+...               IFS-7241  Correspondence address for non-UK based organisations
+
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -23,6 +25,11 @@ ${competitionName}                               Project Setup Comp 3
 ${applicationInProgress}                         Performance Application 4
 ${projectLocationInfo}                           Please enter the town or city where most of the project work will take place
 ${projectLocationValidationErrorMessage}         This field cannot be left blank.
+${correspondenceAddressTitle}           Correspondence address
+${subTitleForCorrespondenceAddress}     This is the postal address for your organisation.
+${countryValidationMessage}             You must select the country where your organisation is based.
+${townOrCityValidationMessage}          You must enter your organisation's town or city.
+${streetValidationMessage}              You must enter your organisation's street address.
 
 *** Test Cases ***
 External dashboard - hide the bank details if partner is non-uk based
