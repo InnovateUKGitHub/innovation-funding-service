@@ -30,8 +30,8 @@ public class OrganisationFinanceOverviewTest {
 
     @Before
     public void setUp() throws Exception {
-        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, SMALL, "");
-        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, SMALL, "");
+        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, SMALL, "", null);
+        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, SMALL, "", null);
 
         MockitoAnnotations.initMocks(this);
 

@@ -83,39 +83,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<UserResource>> findInnovationLeads(long competitionId) {
-
-        List<InnovationLead> innovationLeads = innovationLeadRepository.findInnovationsLeads(competitionId);
-        List<UserResource> innovationLeadUsers = simpleMap(innovationLeads, competitionParticipant -> userMapper
-                .mapToResource(competitionParticipant.getUser()));
-
-        return serviceSuccess(innovationLeadUsers);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId) {
-
-        return findCompetitionById(competitionId)
-                .andOnSuccessReturnVoid(competition ->
-                        find(userRepository.findById(innovationLeadUserId),
-                                notFoundError(User.class, innovationLeadUserId))
-                                .andOnSuccess(innovationLead -> {
-                                    innovationLeadRepository.save(new InnovationLead(competition, innovationLead));
-                                    return serviceSuccess();
-                                })
-                );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId) {
-        return find(innovationLeadRepository.findInnovationLead(competitionId, innovationLeadUserId),
-                notFoundError(InnovationLead.class, competitionId, innovationLeadUserId))
-                .andOnSuccessReturnVoid(innovationLead -> innovationLeadRepository.delete(innovationLead));
-    }
-
-    @Override
     public ServiceResult<List<OrganisationTypeResource>> getCompetitionOrganisationTypes(long id) {
         return find(competitionRepository.findById(id), notFoundError(OrganisationType.class, id)).andOnSuccess(comp -> serviceSuccess((List) organisationTypeMapper.mapToResource(comp.getLeadApplicantTypes())));
     }
