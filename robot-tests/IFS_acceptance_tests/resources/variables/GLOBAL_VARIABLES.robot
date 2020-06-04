@@ -255,6 +255,10 @@ ${organisationRedName}      Red Planet
 ${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
 ${organisationSmithName}    SmithZone
 ${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
+${organisationWardName}     Ward Ltd
+${organisationWardId}       ${organisation_ids["${organisationSmithName}"]}
+${organisationInnovateName} INNOVATE LTD
+${organisationInnovateId}   ${organisation_ids["${organisationSmithName}"]}
 
 
 # Organisation type ids
