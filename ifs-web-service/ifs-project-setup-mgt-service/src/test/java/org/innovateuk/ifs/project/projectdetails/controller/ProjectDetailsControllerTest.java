@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -63,6 +64,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private PartnerOrganisationRestService partnerOrganisationRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private ProjectDetailsService projectDetailsService;
@@ -139,7 +143,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(RestResult.restSuccess(partnerOrganisations));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisations));
+        when(organisationRestService.getOrganisationById(1L)).thenReturn(restSuccess(leadOrganisation));
+        when(organisationRestService.getOrganisationById(2L)).thenReturn(restSuccess(partnerOrganisation));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/details"))
                 .andExpect(view().name("project/detail"))
@@ -349,7 +355,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         verify(projectDetailsService).updateProjectDuration(projectId, 18L);
     }
 
-    private  List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {
+    private List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {
 
         ProjectUserResource leadPartnerProjectUser = newProjectUserResource().
                 withUser(loggedInUser.getId()).

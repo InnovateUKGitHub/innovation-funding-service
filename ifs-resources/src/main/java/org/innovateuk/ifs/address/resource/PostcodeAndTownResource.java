@@ -1,22 +1,17 @@
-package org.innovateuk.ifs.project.projectdetails.form;
+package org.innovateuk.ifs.address.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
-/**
- * Form for capturing the partner project location
- */
-public class PartnerProjectLocationForm extends BaseBindingResultTarget {
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class PostcodeAndTownResource {
     private String postcode;
     private String town;
 
-    // for spring form binding
-    public PartnerProjectLocationForm() {
-    }
+    public PostcodeAndTownResource(){}
 
-    public PartnerProjectLocationForm(String postcode, String town) {
+    public PostcodeAndTownResource(String postcode, String town) {
         this.postcode = postcode;
         this.town = town;
     }
@@ -43,7 +38,7 @@ public class PartnerProjectLocationForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PartnerProjectLocationForm that = (PartnerProjectLocationForm) o;
+        PostcodeAndTownResource that = (PostcodeAndTownResource) o;
 
         return new EqualsBuilder()
                 .append(postcode, that.postcode)
@@ -59,4 +54,3 @@ public class PartnerProjectLocationForm extends BaseBindingResultTarget {
                 .toHashCode();
     }
 }
-

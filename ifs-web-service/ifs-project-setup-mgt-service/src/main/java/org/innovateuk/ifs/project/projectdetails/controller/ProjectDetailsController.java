@@ -16,11 +16,13 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateFor
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsStartDateViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,8 +34,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -51,7 +55,8 @@ public class ProjectDetailsController {
     private ProjectService projectService;
     private CompetitionRestService competitionRestService;
     private ProjectDetailsService projectDetailsService;
-    private PartnerOrganisationRestService partnerOrganisationService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+    private OrganisationRestService organisationRestService;
     private FinanceReviewerRestService financeReviewerRestService;
 
     public ProjectDetailsController() {
@@ -60,12 +65,14 @@ public class ProjectDetailsController {
     @Autowired
     public ProjectDetailsController(ProjectService projectService, CompetitionRestService competitionRestService,
                                     ProjectDetailsService projectDetailsService,
-                                    PartnerOrganisationRestService partnerOrganisationService,
+                                    PartnerOrganisationRestService partnerOrganisationRestService,
+                                    OrganisationRestService organisationRestService,
                                     FinanceReviewerRestService financeReviewerRestService) {
         this.projectService = projectService;
         this.competitionRestService = competitionRestService;
         this.projectDetailsService = projectDetailsService;
-        this.partnerOrganisationService = partnerOrganisationService;
+        this.partnerOrganisationRestService = partnerOrganisationRestService;
+        this.organisationRestService = organisationRestService;
         this.financeReviewerRestService = financeReviewerRestService;
     }
 
@@ -89,15 +96,21 @@ public class ProjectDetailsController {
         Optional<SimpleUserResource> financeReviewer = Optional.ofNullable(projectResource.getFinanceReviewer())
                 .map(id -> financeReviewerRestService.findFinanceReviewerForProject(projectId).getSuccess());
 
+        List<PartnerOrganisationResource> partnerOrganisations = locationPerPartnerRequired?
+                partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess()
+                : Collections.emptyList();
+        List<OrganisationResource> organisations = partnerOrganisations.stream()
+                .map(p -> organisationRestService.getOrganisationById(p.getOrganisation()).getSuccess())
+                .collect(Collectors.toList());
+
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 competitionResource.getName(),
                 loggedInUser,
                 leadOrganisationResource.getName(),
                 locationPerPartnerRequired,
-                locationPerPartnerRequired?
-                        partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
-                        : Collections.emptyList(),
+                partnerOrganisations,
+                organisations,
                 financeReviewer.map(SimpleUserResource::getName).orElse(null),
                 financeReviewer.map(SimpleUserResource::getEmail).orElse(null),
                 isSpendProfileGenerated));
