@@ -258,8 +258,6 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
-${organisationInnovateName}           INNOVATE LTD
-${organisationInnovateId}             ${organisation_ids["${organisationSmithName}"]}
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
