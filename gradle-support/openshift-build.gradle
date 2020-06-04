@@ -35,6 +35,12 @@ task buildDocker(type: DockerBuildImage) {
     }
 }
 
+task tagDockerNexus(type: DockerTagImage, dependsOn: buildDocker) {
+    imageId = buildDocker.getTag()
+    repository = project.nexusRegistry + "/release/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
 task tagDocker(type: DockerTagImage) {
     dependsOn buildDocker
     imageId = buildDocker.getTag()
@@ -71,6 +77,15 @@ task wait(type: DockerWaitHealthyContainer) {
     targetContainerId { createContainer.getContainerId() }
 }
 wait.mustRunAfter deploy
+
+task stageNexus(type: DockerPushImage, dependsOn: tagDockerNexus) {
+    if (openshiftEnv == "ifs-uat") {
+        registryCredentials = getNexusCredentials()
+        imageName = registryCredentials.url + "/release/" + project.name.replaceAll(/ifs-/, "")
+        tag = project.version
+    }
+}
+stageNexus.onlyIf { isAcceptanceBranch() }
 
 task osStageRemote(type: DockerPushImage) {
     dependsOn tagDocker
@@ -133,6 +148,14 @@ def getRemoteOCCredentials() {
                 "in which case it will need to be installed")
         println(ignored)
     }
+    return dockerRegistryCredentials
+}
+
+def getNexusCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    dockerRegistryCredentials.url = project.nexusRegistry
+    dockerRegistryCredentials.username = project.findProperty("nexus_username")
+    dockerRegistryCredentials.password =project.findProperty("nexus_password")
     return dockerRegistryCredentials
 }
 
