@@ -50,9 +50,9 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
-${OrganisationEligibilityCompetitionName}                Organisation Eligibility Competition
-${ProjectEligibilityLink}                                Project eligibility
-${OrganisationalEligibilityTitle}                        Organisational eligibility
+${organisationEligibilityCompetitionName}                Organisation Eligibility Competition
+${projectEligibilityLink}                                Project eligibility
+${organisationalEligibilityTitle}                        Organisational eligibility
 
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}

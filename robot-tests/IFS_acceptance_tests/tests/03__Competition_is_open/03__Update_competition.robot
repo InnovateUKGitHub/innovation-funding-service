@@ -106,7 +106,7 @@ Organisational eligibility is editable (Ready to Open)
     [Documentation]     IFS-7195 IFS-7246
     [Tags]
     Given the user clicks the button/link                    link = Return to setup overview
-    And the user clicks the button/link                      link = ${OrganisationalEligibilityTitle}
+    And the user clicks the button/link                      link = ${organisationalEligibilityTitle}
     And the user clicks the button/link                      jQuery = button:contains("Edit")
     When the user selects the radio button                   internationalOrganisationsApplicable       true
     And the user clicks the button/link                      jQuery = button:contains("Save and continue")
@@ -281,7 +281,7 @@ Organisational eligibility is not editable (Open)
      [Documentation]  IFS-7195
      [Tags]
      Given the user clicks the button/link            link = Return to setup overview
-     When the user clicks the button/link             link = ${OrganisationalEligibilityTitle}
+     When the user clicks the button/link             link = ${organisationalEligibilityTitle}
      Then the user should not see the element         jQuery = button:contains("Edit")
 
 *** Keywords ***

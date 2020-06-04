@@ -474,7 +474,7 @@ the user set assessor score notification to yes
 
 the user selects the organisational eligibility
     [Arguments]     ${organisationEligibilityOption}            ${CanInternationalOrganisationsLead}
-    the user clicks the button/link         link = ${OrganisationalEligibilityTitle}
+    the user clicks the button/link         link = ${organisationalEligibilityTitle}
     the user selects the radio button       internationalOrganisationsApplicable       ${organisationEligibilityOption}
     the user clicks the button/link         jQuery = button:contains("Save and continue")
     the user selects the radio button       leadInternationalOrganisationsApplicable  ${CanInternationalOrganisationsLead}
