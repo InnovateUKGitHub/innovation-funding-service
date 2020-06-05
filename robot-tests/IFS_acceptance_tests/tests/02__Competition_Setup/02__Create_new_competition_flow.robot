@@ -570,9 +570,7 @@ Organisational eligibility is required for a Competition to be setup
     [Documentation]     IFS-7195
     [Tags]  HappyPath
     Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
-    When the user selects the radio button                    internationalOrganisationsApplicable       true
-    And the user clicks the button/link                       jQuery = button:contains("Save and continue")
-    And the user selects the radio button                     leadInternationalOrganisationsApplicable  true
+    When the user selects the radio button                    internationalOrganisationsApplicable       false
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
     And the user clicks the button/link                       link = Competition setup
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
