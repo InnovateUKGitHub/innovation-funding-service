@@ -157,7 +157,7 @@
                 </tr>
                 <tr class="govuk-table__row" th:if="${organisation.address != null}" >
                     <td class="govuk-table__cell">Address</td>
-                    <td class="govuk-table__cell"th:text="${organisation.address.getAsInternationalSingleLine()}">1 my lane, france, 1234</td>
+                    <td class="govuk-table__cell" ifs:utext="${organisation.address.getAsInternationalTwoLine()}">1 my lane, france, 1234</td>
                 </tr>
                 </tbody>
             </table>

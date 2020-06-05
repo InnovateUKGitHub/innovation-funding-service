@@ -134,14 +134,14 @@ public class AddressResource {
     }
 
     @JsonIgnore
-    public String getAsInternationalSingleLine() {
+    public String getAsInternationalTwoLine() {
         if (getAddressLine1() == null && getTown() == null && getPostcode() == null && getCountry() == null) {
             return "";
         }
         List<String> location = newArrayList();
         location.add(getAddressLine1());
         location.add(getTown());
-        location.add(getCountry());
+        location.add("<br/>" + getCountry());
         if (!isNullOrEmpty(getPostcode())) {
             location.add(getPostcode());
         }
