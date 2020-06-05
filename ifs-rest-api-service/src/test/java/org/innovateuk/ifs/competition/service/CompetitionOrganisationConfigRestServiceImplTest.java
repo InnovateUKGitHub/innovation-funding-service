@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
 import org.junit.Test;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.competition.builder.CompetitionOrganisationConfigResourceBuilder.newCompetitionOrganisationConfigResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,15 +20,10 @@ public class CompetitionOrganisationConfigRestServiceImplTest extends BaseRestSe
 
     @Test
     public void findOrganisationConfigByCompetitionId() {
-        long competitionId = 123L;
+        CompetitionOrganisationConfigResource returnedResponse = new CompetitionOrganisationConfigResource(true, true);
 
-        CompetitionOrganisationConfigResource returnedResponse = newCompetitionOrganisationConfigResource()
-                .withInternationalOrganisationsAllowed(true)
-                .withInternationalLeadOrganisationAllowed(true)
-                .build();
-
-        setupGetWithRestResultExpectations(COMPETITION_ORGANISATION_CONFIG_BASE_URL + "/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class, returnedResponse);
-        CompetitionOrganisationConfigResource responses = service.findByCompetitionId(competitionId).getSuccess();
+        setupGetWithRestResultAnonymousExpectations(format("%s/find-by-competition-id/%d", COMPETITION_ORGANISATION_CONFIG_BASE_URL, 123), CompetitionOrganisationConfigResource.class, returnedResponse);
+        CompetitionOrganisationConfigResource responses = service.findByCompetitionId(123).getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
