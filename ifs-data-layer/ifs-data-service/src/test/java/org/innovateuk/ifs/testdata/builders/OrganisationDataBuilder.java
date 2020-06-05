@@ -49,8 +49,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
 
                 }
                 organisation.setAddresses(addresses);
-                OrganisationResource created = organisationService.create(organisation).getSuccess();
-
+                OrganisationResource created = organisationInitialCreationService.createOrMatch(organisation).getSuccess();
                 data.setOrganisation(created);
             });
         });
