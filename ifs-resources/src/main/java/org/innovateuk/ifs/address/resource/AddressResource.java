@@ -44,6 +44,15 @@ public class AddressResource {
         this.country = country;
     }
 
+    // For international addresses
+    public AddressResource(String addressLine1, String addressLine2, String town, String country, String zipCode) {
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.town = town;
+        this.country = country;
+        this.postcode = zipCode;
+    }
+
     public String getAddressLine1() {
         return addressLine1;
     }

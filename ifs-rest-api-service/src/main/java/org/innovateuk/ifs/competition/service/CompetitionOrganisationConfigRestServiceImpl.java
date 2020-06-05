@@ -12,7 +12,7 @@ public class CompetitionOrganisationConfigRestServiceImpl extends BaseRestServic
 
     @Override
     public RestResult<CompetitionOrganisationConfigResource> findByCompetitionId(long competitionId) {
-        return getWithRestResult(competitionOrganisationConfigUrl + "/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class);
+        return getWithRestResultAnonymous(competitionOrganisationConfigUrl + "/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class);
     }
 
     @Override
