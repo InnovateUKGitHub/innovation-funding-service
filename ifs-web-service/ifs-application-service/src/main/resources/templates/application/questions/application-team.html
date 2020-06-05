@@ -96,9 +96,9 @@
                                           th:text="${err}"></span>
                     </th:block>
 
-
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                           method="post">
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
                         <table class="govuk-table"
                                th:classappend="${organisation.editable and !model.readOnly ? 'govuk-!-margin-bottom-2' : ''}">
                             <thead class="govuk-table__head">
