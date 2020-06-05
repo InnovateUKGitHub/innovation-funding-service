@@ -356,8 +356,3 @@ the user complete all sections of the project setup and generates GOL
     external partner organisations submit the spend profile             ${project_id}   ${organisationRedId}  ${organisationSmithId}  ${organisationInnovateId}
     lead organisations submit the spend profile                         ${project_id}   ${organisationWardId}
     proj finance approves the spend profiles                            ${project_id}
-
-enter the country in the autocomplete field
-    [Arguments]         ${country}  ${completeCountryName}
-    input text                          id = country        ${country}
-    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
