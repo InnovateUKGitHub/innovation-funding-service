@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Manage invitations to external users|"/>
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Project details',linkUrl=@{/competition/{competitionId}/status/all(competitionId=${model.competitionId})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage invitations to external users',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+
+        <p class="govuk-body">You can invite people to create a new external user account, so they can be added to this live project.</p>
+
+        <a class="govuk-link" th:href="@{/project/{projectId}/grants/invite/send(projectId=${model.projectId})}">Invite a new external user</a>
+
+        <p class="govuk-body"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.totalGrants}">9</span> Pending invitations</p>
+
+        <table class="govuk-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th colspan="2">Email address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="grant : ${model.grants}">
+                    <td th:text="${grant.userName}"></td>
+                    <td th:text="${grant.grantsInviteRole.displayName}"></td>
+                    <td th:text="${grant.email}"></td>
+                    <td>
+                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                            <input type="hidden" name="projectId" th:value="${model.projectId}" />
+                            <input type="hidden" name="inviteId" th:value="${grant.id}" />
+                            <input type="submit" class="govuk-button" value="Resend this invitation" />
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

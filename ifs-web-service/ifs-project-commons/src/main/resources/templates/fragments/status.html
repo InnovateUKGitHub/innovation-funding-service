@@ -52,6 +52,12 @@
                             <a th:unless="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
                             class="govuk-link">View activity log</a>
                         </small>
+                        <div th:if="${model.isIfsAdmin() || model.isProjectFinanceUser()}" class="govuk-grid-row govuk-!-padding-right-0">
+                            <div class="govuk-grid-column-full">
+                                <a th:href="@{~/project-setup-management/project/{projectId}/manage-invitations(projectId=${row.projectId})}"
+                                    class="govuk-link">Manage invitations to external users</a>
+                            </div>
+                        </div>
                     </th>
 
                     <th:block th:each="state : ${row.states}">
