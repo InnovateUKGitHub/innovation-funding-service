@@ -83,7 +83,7 @@
                                 </tr>
                                 <tr class="govuk-table__row" th:if="${organisation.address != null}" >
                                     <td class="govuk-table__cell">Address</td>
-                                    <td class="govuk-table__cell"th:text="${organisation.address.getAsInternationalSingleLine()}">1 my lane, france, 1234</td>
+                                    <td class="govuk-table__cell"ifs:utext="${organisation.address.getAsInternationalTwoLine()}">1 my lane, france, 1234</td>
                                     <td class="govuk-table__cell alignright"><a class="govuk-link" th:if="${organisation.userBelongsToOrganisation and !model.readOnly}" th:href="@{{base}/organisation/{organisationId}/address(base=${#ifsUtil.formPostUri(#httpServletRequest)},organisationId=${organisation.id})}">Edit</a></td>
                                 </tr>
                             </tbody>
@@ -96,9 +96,9 @@
                                           th:text="${err}"></span>
                     </th:block>
 
-
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                           method="post">
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
                         <table class="govuk-table"
                                th:classappend="${organisation.editable and !model.readOnly ? 'govuk-!-margin-bottom-2' : ''}">
                             <thead class="govuk-table__head">
