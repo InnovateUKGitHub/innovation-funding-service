@@ -283,7 +283,7 @@ the user check for correspondence address titles and info text
     the user should see the element     jQuery = h1:contains("${correspondenceAddressTitle}")
     the user should see the element     jQuery = p:contains("${subTitleForCorrespondenceAddress}")
     the user should see the element     link = Project details
-    the user should see the element     jQuery = span:contains("Start typing your country's name and select it from the list")
+    the user should see the element     jQuery = span:contains("Start typing your country's name and select it from the list.")
 
 the user fills correspondence address data
     [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
