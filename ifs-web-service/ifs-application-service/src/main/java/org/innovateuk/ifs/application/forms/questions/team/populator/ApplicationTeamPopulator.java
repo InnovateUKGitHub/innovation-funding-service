@@ -135,11 +135,16 @@ public class ApplicationTeamPopulator {
                 userRows,
                 applicantCanEditRow(userRows, user, leadApplicant),
                 true,
+                applicantBelongsToOrg(userRows, user),
                 address);
     }
 
     private boolean applicantCanEditRow(List<ApplicationTeamRowViewModel> userRows, UserResource user, boolean leadApplicant) {
-        return leadApplicant || userRows.stream().anyMatch(row -> !row.isInvite() && row.getId().equals(user.getId()));
+        return leadApplicant || applicantBelongsToOrg(userRows, user);
+    }
+
+    private boolean applicantBelongsToOrg(List<ApplicationTeamRowViewModel> userRows, UserResource user) {
+        return userRows.stream().anyMatch(row -> !row.isInvite() && row.getId().equals(user.getId()));
     }
 
     private Long findInviteIdFromProcessRole(ProcessRoleResource pr, InviteOrganisationResource organisationInvite) {

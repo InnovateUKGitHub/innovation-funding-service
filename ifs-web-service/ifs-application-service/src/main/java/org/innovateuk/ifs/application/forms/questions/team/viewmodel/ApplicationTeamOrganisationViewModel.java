@@ -12,21 +12,23 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
     private final String type;
     private final List<ApplicationTeamRowViewModel> rows;
     private final boolean editable;
+    private final boolean userBelongsToOrganisation;
     private final boolean existing;
     private final AddressResource address;
 
     private boolean openAddTeamMemberForm;
     public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing) {
-        this(id, inviteId, name, type, rows, editable, existing, null);
+        this(id, inviteId, name, type, rows, editable, false, existing, null);
     }
 
-    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing, AddressResource address) {
+    public ApplicationTeamOrganisationViewModel(long id, Long inviteId, String name, String type, List<ApplicationTeamRowViewModel> rows, boolean editable, boolean existing, boolean userBelongsToOrganisation, AddressResource address) {
         this.id = id;
         this.inviteId = inviteId;
         this.name = name;
         this.type = type;
         this.rows = rows;
         this.editable = editable;
+        this.userBelongsToOrganisation = userBelongsToOrganisation;
         this.existing = existing;
         this.address = address;
         this.openAddTeamMemberForm = false;
@@ -54,6 +56,10 @@ public class ApplicationTeamOrganisationViewModel implements Comparable<Applicat
 
     public boolean isEditable() {
         return editable;
+    }
+
+    public boolean isUserBelongsToOrganisation() {
+        return userBelongsToOrganisation;
     }
 
     public boolean isExisting() {
