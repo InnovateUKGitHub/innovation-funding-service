@@ -47,6 +47,10 @@ public class ApplicationTeamAddressController {
                              @PathVariable long organisationId) {
         AddressResource address = applicationOrganisationAddressRestService.getAddress(applicationId, organisationId, INTERNATIONAL).getSuccess();
         form.populate(address);
+        return getAddressView(model, applicationId, organisationId, questionId);
+    }
+
+    private String getAddressView(Model model, long applicationId, long organisationId, long questionId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         model.addAttribute("model", new ApplicationTeamAddressViewModel(application, organisation, questionId));
@@ -55,13 +59,13 @@ public class ApplicationTeamAddressController {
 
     @PostMapping
     public String updateAddress(@Valid @ModelAttribute(value = "form") ApplicationTeamAddressForm form,
-                           BindingResult bindingResult,
-                           ValidationHandler validationHandler,
-                           Model model,
-                            @PathVariable long applicationId,
-                            @PathVariable long questionId,
-                            @PathVariable long organisationId) {
-        Supplier<String> failureView = () -> getAddress(form, bindingResult, model, applicationId, questionId, organisationId);
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                Model model,
+                                @PathVariable long applicationId,
+                                @PathVariable long questionId,
+                                @PathVariable long organisationId) {
+        Supplier<String> failureView = () -> getAddressView(model, applicationId, organisationId, questionId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(applicationOrganisationAddressRestService.updateAddress(applicationId, organisationId, INTERNATIONAL, form.toAddress()));
             return validationHandler.failNowOrSucceedWith(failureView,

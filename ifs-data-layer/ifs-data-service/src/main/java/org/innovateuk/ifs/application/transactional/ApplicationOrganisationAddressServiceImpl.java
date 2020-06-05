@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -41,6 +43,7 @@ public class ApplicationOrganisationAddressServiceImpl extends BaseTransactional
                 notFoundError(ApplicationOrganisationAddress.class, applicationId, organisationId, type))
                 .andOnSuccessReturn(applicationOrganisationAddress -> {
                     applicationOrganisationAddress.getOrganisationAddress().getAddress().copyFrom(address);
+                    applicationOrganisationAddress.getOrganisationAddress().setModifiedOn(ZonedDateTime.now());
                     return addressMapper.mapToResource(applicationOrganisationAddress.getOrganisationAddress().getAddress());
                 });
     }

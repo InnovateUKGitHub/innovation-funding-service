@@ -34,7 +34,7 @@ public class OrganisationAddress {
     private AddressType addressType;
 
     @LastModifiedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private ZonedDateTime modifiedOn;
 
     @OneToMany(mappedBy = "organisationAddress")
@@ -95,5 +95,9 @@ public class OrganisationAddress {
 
     public ZonedDateTime getModifiedOn() {
         return modifiedOn;
+    }
+
+    public void setModifiedOn(ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 }

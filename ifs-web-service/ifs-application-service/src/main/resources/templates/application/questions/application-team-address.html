@@ -29,7 +29,7 @@
                   th:with="pageTitle='Organisation details',size='govuk-heading-xl'"/>
 
 
-        <dl class="govuk-list govuk-!-margin-bottom-6">
+        <dl class="govuk-list">
             <dt>Name</dt>
             <dd th:text="${model.organisationName}"></dd>
             <dt>Type</dt>
@@ -127,7 +127,7 @@
             </fieldset>
 
             <p class="govuk-body">These changes will only update the address for this application and any future applications.</p>
-            <p class="govuk-body">
+            <p class="govuk-body govuk-!-margin-top-6">
                 <button id="update-organisation-address" class="govuk-button" type="submit">Save changes</button>
             </p>
 
