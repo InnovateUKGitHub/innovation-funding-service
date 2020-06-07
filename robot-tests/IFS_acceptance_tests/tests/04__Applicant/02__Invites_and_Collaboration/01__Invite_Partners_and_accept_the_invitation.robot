@@ -266,7 +266,8 @@ New Lead Applicant invites new user as collaborator on his application
 
 *** Keywords ***
 The lead applicant should have the correct org status
-    the user should see the element  jQuery = h2:contains("org2"):contains("(Lead)")+td:contains("Type")+td:contains("Business")
+    the user should see the element  jQuery = h2:contains("org2")
+    the user should see the element  jQuery = td:contains("Type")+td:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
 the status of the people should be correct in the Manage contributors page
@@ -283,7 +284,8 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     When the user clicks the button/link  link = Application team
-    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")+td:contains("Type")+td:contains("Business")
+    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")
+    And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
     the user should see the text in the element  css = tr:nth-of-type(1) td:nth-of-type(3)    Lead
