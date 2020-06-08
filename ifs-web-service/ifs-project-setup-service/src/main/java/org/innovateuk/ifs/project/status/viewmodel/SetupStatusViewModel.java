@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -22,12 +23,18 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean collaborativeProject;
     private final boolean showApplicationFeedbackLink;
     private final List<SetupStatusStageViewModel> stages;
+    private final boolean projectManager;
+    private final boolean financeContact;
+    private final PostAwardService postAwardService;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
                                 List<SetupStatusStageViewModel> stages,
                                 boolean loanCompetition,
-                                boolean showApplicationFeedbackLink) {
+                                boolean showApplicationFeedbackLink,
+                                boolean projectManager,
+                                boolean financeContact,
+                                PostAwardService postAwardService) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -39,6 +46,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.loanCompetition = loanCompetition;
         this.collaborativeProject = project.isCollaborativeProject();
         this.showApplicationFeedbackLink = showApplicationFeedbackLink;
+        this.projectManager = projectManager;
+        this.financeContact = financeContact;
+        this.postAwardService = postAwardService;
     }
 
     public Long getProjectId() {
@@ -87,5 +97,21 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean shouldShowStatus(SetupStatusStageViewModel stage) {
         return isMonitoringOfficer() || !stage.getAccess().isNotAccessible();
+    }
+
+    public boolean isProjectManager() {
+        return projectManager;
+    }
+
+    public boolean isFinanceContact() {
+        return financeContact;
+    }
+
+    public PostAwardService getPostAwardService() {
+        return postAwardService;
+    }
+
+    public boolean isIfsPostAward() {
+        return this.postAwardService == PostAwardService.IFS_POST_AWARD;
     }
 }

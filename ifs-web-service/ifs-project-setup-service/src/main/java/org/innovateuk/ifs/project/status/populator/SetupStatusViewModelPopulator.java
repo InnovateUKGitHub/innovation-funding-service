@@ -2,8 +2,11 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
@@ -20,6 +23,7 @@ import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 import org.innovateuk.ifs.status.StatusService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +61,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SetupSectionStatus sectionStatus;
 
+    @Autowired
+    private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
+
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
@@ -77,12 +84,17 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer, teamStatusRequest, organisationRequest))
                 .collect(toList());
 
+        RestResult<CompetitionPostAwardServiceResource> competitionPostAwardServiceResource = competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition());
+
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
-                showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
+                showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer),
+                loggedInUser.hasRole(Role.PROJECT_MANAGER),
+                loggedInUser.hasRole(Role.FINANCE_CONTACT),
+                competitionPostAwardServiceResource.getSuccess().getPostAwardService());
     }
 
     private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {
