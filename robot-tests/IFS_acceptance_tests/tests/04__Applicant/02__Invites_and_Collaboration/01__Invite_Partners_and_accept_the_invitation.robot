@@ -288,8 +288,8 @@ the user can see the updated company name throughout the application
     And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
-    the user should see the text in the element  css = tr:nth-of-type(1) td:nth-of-type(3)    Lead
-    the user should not see the element          jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
+    the user should see the element         jQuery = td:contains("Lead applicant")
+    the user should not see the element     jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
 
 the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
