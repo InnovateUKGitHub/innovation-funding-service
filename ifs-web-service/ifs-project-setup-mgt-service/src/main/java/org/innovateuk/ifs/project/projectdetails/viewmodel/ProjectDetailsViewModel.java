@@ -25,7 +25,7 @@ public class ProjectDetailsViewModel {
     private Long competitionId;
     private String competitionName;
     private UserResource userResource;
-    private String leadOrganisation;
+    private OrganisationResource leadOrganisation;
     private boolean locationPerPartnerRequired;
     private List<PartnerOrganisationResource> partnerOrganisations;
     private List<OrganisationResource> organisations;
@@ -38,7 +38,7 @@ public class ProjectDetailsViewModel {
                                    Long competitionId,
                                    String competitionName,
                                    UserResource userResource,
-                                   String leadOrganisation,
+                                   OrganisationResource leadOrganisation,
                                    boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations,
                                    List<OrganisationResource> organisations,
@@ -92,7 +92,7 @@ public class ProjectDetailsViewModel {
         return competitionName;
     }
 
-    public String getLeadOrganisation() {
+    public OrganisationResource getLeadOrganisation() {
         return leadOrganisation;
     }
 
@@ -103,8 +103,6 @@ public class ProjectDetailsViewModel {
     public String getFinanceReviewerEmail() {
         return financeReviewerEmail;
     }
-
-
 
     public boolean isLocationPerPartnerRequired() {
         return locationPerPartnerRequired;
@@ -151,6 +149,10 @@ public class ProjectDetailsViewModel {
                     }
                 })
                 .orElse("Not yet completed");
+    }
+
+    public boolean isLeadOrganisationInternational() {
+        return leadOrganisation.isInternational();
     }
 
     /*

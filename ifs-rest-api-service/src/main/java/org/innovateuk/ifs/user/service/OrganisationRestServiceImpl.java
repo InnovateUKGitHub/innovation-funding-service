@@ -19,43 +19,48 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.org
  */
 @Service
 public class OrganisationRestServiceImpl extends BaseRestService implements OrganisationRestService {
-    private static final Log log = LogFactory.getLog(OrganisationRestServiceImpl.class);
 
-    private String organisationRestURL = "/organisation";
+    private static final Log log = LogFactory.getLog(OrganisationRestServiceImpl.class);
+    private static final String ORGANISATION_BASE_URL = "/organisation";
 
     @Override
     public RestResult<List<OrganisationResource>> getOrganisationsByApplicationId(Long applicationId) {
-        return getWithRestResult(organisationRestURL + "/find-by-application-id/" + applicationId, organisationResourceListType());
+        return getWithRestResult(ORGANISATION_BASE_URL + "/find-by-application-id/" + applicationId, organisationResourceListType());
     }
 
     @Override
     public RestResult<OrganisationResource> getOrganisationById(long organisationId) {
-        return getWithRestResult(organisationRestURL + "/find-by-id/" + organisationId, OrganisationResource.class);
+        return getWithRestResult(ORGANISATION_BASE_URL + "/find-by-id/" + organisationId, OrganisationResource.class);
     }
 
     @Override
     public RestResult<OrganisationResource> getOrganisationByIdForAnonymousUserFlow(Long organisationId) {
-        return getWithRestResultAnonymous(organisationRestURL + "/find-by-id/" + organisationId, OrganisationResource.class);
+        return getWithRestResultAnonymous(ORGANISATION_BASE_URL + "/find-by-id/" + organisationId, OrganisationResource.class);
     }
 
     @Override
     public RestResult<OrganisationResource> getByUserAndApplicationId(long userId, long applicationId) {
-        return getWithRestResult(organisationRestURL + "/by-user-and-application-id/" + userId + "/" + applicationId, OrganisationResource.class);
+        return getWithRestResult(ORGANISATION_BASE_URL + "/by-user-and-application-id/" + userId + "/" + applicationId, OrganisationResource.class);
     }
 
     @Override
     public RestResult<OrganisationResource> getByUserAndProjectId(long userId, long projectId) {
-        return getWithRestResult(organisationRestURL + "/by-user-and-project-id/" + userId + "/" + projectId, OrganisationResource.class);
+        return getWithRestResult(ORGANISATION_BASE_URL + "/by-user-and-project-id/" + userId + "/" + projectId, OrganisationResource.class);
     }
 
     @Override
     public RestResult<List<OrganisationResource>> getAllByUserId(long userId) {
-        return getWithRestResult(organisationRestURL + "/all-by-user-id/" + userId,  organisationResourceListType());
+        return getWithRestResult(ORGANISATION_BASE_URL + "/all-by-user-id/" + userId,  organisationResourceListType());
+    }
+
+    @Override
+    public RestResult<List<OrganisationResource>> getOrganisations(long userId, boolean international) {
+        return getWithRestResult(ORGANISATION_BASE_URL + "?userId=" + userId + "&international=" + international,  organisationResourceListType());
     }
 
     @Override
     public RestResult<OrganisationResource> createOrMatch(OrganisationResource organisation) {
-        return postWithRestResultAnonymous(organisationRestURL + "/create-or-match", organisation, OrganisationResource.class);
+        return postWithRestResultAnonymous(ORGANISATION_BASE_URL + "/create-or-match", organisation, OrganisationResource.class);
     }
 
     @Override
@@ -67,6 +72,6 @@ public class OrganisationRestServiceImpl extends BaseRestService implements Orga
             log.error(e);
             organisationName = organisation.getName();
         }
-        return postWithRestResult(organisationRestURL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class);
+        return postWithRestResult(ORGANISATION_BASE_URL + "/update-name-and-registration/" +  organisation.getId() + "?name=" + organisationName + "&registration=" + organisation.getCompaniesHouseNumber(), OrganisationResource.class);
     }
 }
