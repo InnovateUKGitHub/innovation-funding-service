@@ -2,7 +2,6 @@ package org.innovateuk.ifs.address.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.persistence.Entity;
@@ -27,7 +26,6 @@ public class Address {
     private String county;
     private String country;
 
-    @Length(max = 9)
     private String postcode;
 
     public Address() {
