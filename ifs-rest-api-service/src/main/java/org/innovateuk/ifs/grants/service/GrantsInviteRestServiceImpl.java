@@ -21,7 +21,7 @@ public class GrantsInviteRestServiceImpl extends BaseRestService implements Gran
     }
 
     @Override
-    public RestResult<Void> invitePartnerOrganisation(long projectId, GrantsInviteResource grantsInviteResource) {
+    public RestResult<Void> invite(long projectId, GrantsInviteResource grantsInviteResource) {
         return postWithRestResult(format(BASE_URL, projectId), grantsInviteResource, Void.class);
     }
 

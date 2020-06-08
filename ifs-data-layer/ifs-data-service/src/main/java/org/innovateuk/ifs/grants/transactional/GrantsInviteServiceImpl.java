@@ -88,9 +88,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     private String webBaseUrl;
 
     enum Notifications {
-        INVITE_GRANTS_PROJECT_MANAGER,
-        INVITE_GRANTS_MONITORING_OFFICER,
-        INVITE_GRANTS_PROJECT_FINANCE_CONTACT,
+        INVITE_GRANTS_USER,
     }
 
     @Override
@@ -162,22 +160,16 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     private Notification getNotification(GrantsInvite grantsInvite) {
 
         Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", grantsInvite.getProject().getApplication().getId());
+        notificationArguments.put("projectName", grantsInvite.getProject().getName());
+        notificationArguments.put("role", getGrantsInviteRole(grantsInvite.getClass()).getDisplayName());
+        notificationArguments.put("inviteUrl", webBaseUrl + "/project-setup/grants/invite/" + grantsInvite.getHash());
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-        return new Notification(from, singletonList(to), getEmailTemplate(grantsInvite.getClass()), notificationArguments);
+        return new Notification(from, singletonList(to), Notifications.INVITE_GRANTS_USER, notificationArguments);
     }
 
-    private Notifications getEmailTemplate(Class<? extends GrantsInvite> clazz) {
-        if (GrantsProjectManagerInvite.class.equals(clazz)) {
-            return Notifications.INVITE_GRANTS_PROJECT_MANAGER;
-        } else if (GrantsMonitoringOfficerInvite.class.equals(clazz)) {
-            return Notifications.INVITE_GRANTS_MONITORING_OFFICER;
-        } else if (GrantsFinanceContactInvite.class.equals(clazz)) {
-            return Notifications.INVITE_GRANTS_PROJECT_FINANCE_CONTACT;
-        }
-        throw new IFSRuntimeException("No matching email template");
-    }
 
     @Override
     @Transactional
@@ -228,6 +220,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                     return serviceSuccess();
                 });
     }
+
 
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {
         if (GrantsProjectManagerInvite.class.equals(clazz)) {

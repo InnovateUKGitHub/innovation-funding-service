@@ -22,7 +22,7 @@ public class GrantsInviteController {
     }
 
     @PostMapping
-    public RestResult<Void> invitePartnerOrganisation(@PathVariable long projectId, @RequestBody GrantsInviteResource grantsInviteResource) {
+    public RestResult<Void> invite(@PathVariable long projectId, @RequestBody GrantsInviteResource grantsInviteResource) {
         return grantsInviteService.sendInvite(projectId, grantsInviteResource).toPostResponse();
     }
 

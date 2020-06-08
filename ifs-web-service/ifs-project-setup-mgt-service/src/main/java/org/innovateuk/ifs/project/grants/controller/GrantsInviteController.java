@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.function.Supplier;
 
 @Controller
@@ -31,12 +32,12 @@ public class GrantsInviteController {
     }
 
     @PostMapping("/send")
-    public String sendInvite(Model model, @PathVariable long projectId, @ModelAttribute("form") GrantsSendInviteForm form,
+    public String sendInvite(Model model, @PathVariable long projectId, @Valid @ModelAttribute("form") GrantsSendInviteForm form,
                              BindingResult bindingResult, ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> inviteForm(model, projectId, form);
-        Supplier<String> successView = () -> "redirect:/";
+        Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
         GrantsInviteResource resource = new GrantsInviteResource(form.getFirstName() + form.getLastName(), form.getEmail(), form.getRole());
-        validationHandler.addAnyErrors(grantsInviteRestService.invitePartnerOrganisation(projectId, resource));
+        validationHandler.addAnyErrors(grantsInviteRestService.invite(projectId, resource));
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 }
