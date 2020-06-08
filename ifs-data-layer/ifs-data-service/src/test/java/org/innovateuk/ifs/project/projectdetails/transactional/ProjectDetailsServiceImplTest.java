@@ -1040,10 +1040,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void updateProjectAddressToNewProjectAddress() {
 
-        Organisation leadOrganisation = newOrganisation()
-                .withId(organisation.getId())
-                .build();
-
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress()
                 .build();
@@ -1059,7 +1055,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
         assertEquals(newAddress, project.getAddress());
     }
@@ -1067,7 +1063,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void updateProjectAddressToExistingAddress() {
 
-        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
         AddressResource newAddressResource = newAddressResource().withAddressLine1("new").build();
         Address existingAddress = newAddress().withAddressLine1("old").build();
         project.setAddress(existingAddress);
@@ -1080,7 +1075,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
         assertEquals(existingAddress, project.getAddress());
         assertEquals(existingAddress.getAddressLine1(), "new");
