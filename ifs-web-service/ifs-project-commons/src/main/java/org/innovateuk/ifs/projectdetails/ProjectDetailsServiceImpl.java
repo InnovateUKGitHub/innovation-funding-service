@@ -49,7 +49,7 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
-    public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, AddressResource address) {
-        return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, address).toServiceResult();
+    public ServiceResult<Void> updateAddress(Long projectId, AddressResource address) {
+        return projectDetailsRestService.updateProjectAddress(projectId, address).toServiceResult();
     }
 }

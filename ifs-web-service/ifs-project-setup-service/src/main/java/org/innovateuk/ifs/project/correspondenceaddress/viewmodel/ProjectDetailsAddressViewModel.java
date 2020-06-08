@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.project.projectdetails.viewmodel;
+package org.innovateuk.ifs.project.correspondenceaddress.viewmodel;
 
+import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 /**
