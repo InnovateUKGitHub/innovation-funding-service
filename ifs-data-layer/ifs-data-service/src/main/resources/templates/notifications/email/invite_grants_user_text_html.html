@@ -1,0 +1,15 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+    <@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name}</p>
+
+    <p style="margin: 0 0 1em 0;">You have been invited to participate in this Innovation Funding Service project: ${applicationId}: ${projectName}</p>
+
+    <p style="margin: 0 0 1em 0;">You will be joining as a ${role}.</p>
+
+    <@layout.button href="${inviteUrl}" text="Accept invitation" />
+
+    <p style="margin: 0 0 1em 0;">Yours sincerely</p>
+
+    <p style="margin: 0 0 1em 0;">IFS Team</p>
+</@layout.default>
