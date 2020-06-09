@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTyp
 @SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
         " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
         securedType = OrganisationSelectionController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder')")
 @Controller
 public class OrganisationSelectionController extends AbstractOrganisationCreationController {
 
