@@ -9,6 +9,8 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 
@@ -132,8 +134,31 @@ public class AddressResource {
     }
 
     @JsonIgnore
+    public String getAsInternationalTwoLine() {
+        if (getAddressLine1() == null && getTown() == null && getPostcode() == null && getCountry() == null) {
+            return "";
+        }
+        List<String> location = newArrayList();
+        location.add(getAddressLine1());
+        location.add(getTown());
+        location.add("<br/>" + getCountry());
+        if (!isNullOrEmpty(getPostcode())) {
+            location.add(getPostcode());
+        }
+        return String.join(", ", location);
+    }
+
+    @JsonIgnore
     public List<String> getNonEmptyLines() {
         List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, postcode, country);
+        return simpleFilterNot(lines, StringUtils::isEmpty);
+    }
+
+    // for the project-setup-mgt MO page for international lead address,
+    // standard pattern will be decided in a separate cleanup ticket
+    @JsonIgnore
+    public List<String> getNonEmptyLinesInternational() {
+        List<String> lines = asList(addressLine1, addressLine2, addressLine3, town, county, country, postcode);
         return simpleFilterNot(lines, StringUtils::isEmpty);
     }
 

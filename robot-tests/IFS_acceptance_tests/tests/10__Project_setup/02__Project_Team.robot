@@ -490,7 +490,8 @@ lead submits project documents
     [Arguments]  ${projectID}
     log in as a different user          ${leadApplicantEmail}   ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${projectID}/details/project-address
-    the user enter the Correspondence address
+    #the user enter the Correspondence address
+    the user fills correspondence address for non-uk based organisations    Calle 11   No 1111    San Sebastian   Argentina      X5187XAB
     the user clicks the button/link     link = Return to set up your project
     the user completes the project team details
     PM uploads the project documents    ${projectID}

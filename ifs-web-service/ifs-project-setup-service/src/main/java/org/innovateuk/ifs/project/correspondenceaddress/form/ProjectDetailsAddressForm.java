@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails.form;
+package org.innovateuk.ifs.project.correspondenceaddress.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.address.form.AddressForm;
