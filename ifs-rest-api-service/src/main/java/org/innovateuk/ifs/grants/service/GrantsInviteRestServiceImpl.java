@@ -27,7 +27,7 @@ public class GrantsInviteRestServiceImpl extends BaseRestService implements Gran
 
     @Override
     public RestResult<Void> resendInvite(long projectId, long inviteId) {
-        return postWithRestResult(format(BASE_URL + "/resend", projectId), Void.class);
+        return postWithRestResult(format(BASE_URL + "/%d/resend", projectId, inviteId), Void.class);
     }
 
     @Override
