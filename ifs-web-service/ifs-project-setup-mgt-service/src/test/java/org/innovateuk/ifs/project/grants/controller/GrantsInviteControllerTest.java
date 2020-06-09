@@ -79,7 +79,7 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
                 .param("lastName", lastName)
                 .param("email", email)
                 .param("role", role.name()))
-                .andExpect(redirectedUrl(String.format("/project/%d/grants/invite", projectId)));
+                .andExpect(redirectedUrl(String.format("/project/%d/manage-invitations", projectId)));
 
         verify(grantsInviteRestService).invite(projectId, new GrantsInviteResource(firstName + " " + lastName, email, role));
     }
