@@ -143,10 +143,26 @@
         </h2>
 
         <th:block th:if="${organisation.type != null}">
-            <h3 class="govuk-heading-s govuk-!-margin-top-2">Organisation type</h3>
-            <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations
-                (RTOs)</p>
+            <table class="govuk-table govuk-!-margin-bottom-2">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
+                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'govuk-!-width-two-thirds' : 'govuk-!-width-one-third'"></th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Type</td>
+                    <td class="govuk-table__cell"th:text="${organisation.type}">Research and technology organisations</td>
+                </tr>
+                <tr class="govuk-table__row" th:if="${organisation.address != null}" >
+                    <td class="govuk-table__cell">Address</td>
+                    <td class="govuk-table__cell" ifs:utext="${organisation.address.getAsInternationalTwoLine()}">1 my lane, france, 1234</td>
+                </tr>
+                </tbody>
+            </table>
         </th:block>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">

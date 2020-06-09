@@ -5,6 +5,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -14,4 +15,5 @@ import java.util.List;
 public interface OrganisationAddressRepository extends PagingAndSortingRepository<OrganisationAddress, Long> {
     List<OrganisationAddress> findByOrganisationIdAndAddressType(Long organisationId, AddressType addressType);
     OrganisationAddress findByOrganisationIdAndAddressId(long organisationId, long addressId);
+    Optional<OrganisationAddress> findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(long organisationId, long addressTypeId);
 }
