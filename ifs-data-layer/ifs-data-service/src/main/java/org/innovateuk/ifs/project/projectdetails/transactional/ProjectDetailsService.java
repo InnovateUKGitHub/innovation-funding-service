@@ -23,6 +23,9 @@ public interface ProjectDetailsService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
+    ServiceResult<ProjectUserResource> getProjectFinanceContact(Long projectId);
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     @Activity(projectId = "projectId", type = PROJECT_MANAGER_NOMINATED)
     ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerId);

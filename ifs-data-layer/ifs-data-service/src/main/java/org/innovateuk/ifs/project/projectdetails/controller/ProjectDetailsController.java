@@ -29,6 +29,11 @@ public class ProjectDetailsController {
         return projectDetailsService.getProjectManager(projectId).toGetResponse();
     }
 
+    @GetMapping("/{projectId}/project-finance-contact")
+    public RestResult<ProjectUserResource> getProjectFinanceContact(@PathVariable(value = "projectId") Long projectId) {
+        return projectDetailsService.getProjectFinanceContact(projectId).toGetResponse();
+    }
+
     @PostMapping(value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
         return projectDetailsService.setProjectManager(id, projectManagerId).toPostResponse();

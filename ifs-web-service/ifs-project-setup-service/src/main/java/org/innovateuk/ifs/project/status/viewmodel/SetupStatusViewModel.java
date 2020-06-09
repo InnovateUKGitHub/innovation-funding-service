@@ -24,7 +24,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean showApplicationFeedbackLink;
     private final List<SetupStatusStageViewModel> stages;
     private final boolean projectManager;
-    private final boolean financeContact;
+    private final boolean projectFinanceContact;
     private final PostAwardService postAwardService;
 
     public SetupStatusViewModel(ProjectResource project,
@@ -33,7 +33,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 boolean loanCompetition,
                                 boolean showApplicationFeedbackLink,
                                 boolean projectManager,
-                                boolean financeContact,
+                                boolean projectFinanceContact,
                                 PostAwardService postAwardService) {
         this.projectId = project.getId();
         this.projectName = project.getName();
@@ -47,7 +47,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.collaborativeProject = project.isCollaborativeProject();
         this.showApplicationFeedbackLink = showApplicationFeedbackLink;
         this.projectManager = projectManager;
-        this.financeContact = financeContact;
+        this.projectFinanceContact = projectFinanceContact;
         this.postAwardService = postAwardService;
     }
 
@@ -103,8 +103,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return projectManager;
     }
 
-    public boolean isFinanceContact() {
-        return financeContact;
+    public boolean isProjectFinanceContact() {
+        return projectFinanceContact;
     }
 
     public PostAwardService getPostAwardService() {

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -23,7 +22,6 @@ import org.innovateuk.ifs.project.status.viewmodel.SetupStatusViewModel;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 import org.innovateuk.ifs.status.StatusService;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,14 +84,17 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         RestResult<CompetitionPostAwardServiceResource> competitionPostAwardServiceResource = competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition());
 
+        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
+        boolean isProjectFinanceContact = projectService.isProjectFinanceContact(loggedInUser.getId(), projectId);
+
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
                 showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer),
-                loggedInUser.hasRole(Role.PROJECT_MANAGER),
-                loggedInUser.hasRole(Role.FINANCE_CONTACT),
+                isProjectManager,
+                isProjectFinanceContact,
                 competitionPostAwardServiceResource.getSuccess().getPostAwardService());
     }
 

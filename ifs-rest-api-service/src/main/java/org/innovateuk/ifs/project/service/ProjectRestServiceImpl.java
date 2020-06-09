@@ -52,6 +52,10 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(format(PROJECT_REST_URL + "%d/project-manager", projectId), ProjectUserResource.class);
     }
 
+    @Override
+    public RestResult<ProjectUserResource> getProjectFinanceContact(long projectId) {
+        return getWithRestResult(format(PROJECT_REST_URL + "%d/project-finance-contact", projectId), ProjectUserResource.class);
+    }
 
     @Override
     public RestResult<ProjectResource> createProjectFromApplicationId(long applicationId) {

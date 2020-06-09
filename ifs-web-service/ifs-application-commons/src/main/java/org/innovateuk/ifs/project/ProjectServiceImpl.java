@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -120,6 +121,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public final Boolean isProjectManager(long userId, long projectId) {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
+    }
+
+    @Override
+    public Boolean isProjectFinanceContact(long userId, long projectId) {
+        return projectRestService.getProjectFinanceContact(projectId).getOptionalSuccessObject()
+                .map(pu -> pu.isUser(userId)).orElse(false);
     }
 
     @Override
