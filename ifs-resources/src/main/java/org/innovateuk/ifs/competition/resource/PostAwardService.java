@@ -14,12 +14,4 @@ public enum PostAwardService {
     public String getDisplayName() {
         return displayName;
     }
-
-    public boolean isIfsPostAward() {
-        return this == IFS_POST_AWARD;
-    }
-
-    public boolean isConnect() {
-        return this == CONNECT;
-    }
 }
