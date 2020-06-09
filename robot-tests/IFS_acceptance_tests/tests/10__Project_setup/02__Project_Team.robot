@@ -353,7 +353,7 @@ A new organisation logs in and sees the project
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
@@ -490,7 +490,8 @@ lead submits project documents
     [Arguments]  ${projectID}
     log in as a different user          ${leadApplicantEmail}   ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${projectID}/details/project-address
-    the user enter the Correspondence address
+    #the user enter the Correspondence address
+    the user fills correspondence address for non-uk based organisations    Calle 11   No 1111    San Sebastian   Argentina      X5187XAB
     the user clicks the button/link     link = Return to set up your project
     the user completes the project team details
     PM uploads the project documents    ${projectID}

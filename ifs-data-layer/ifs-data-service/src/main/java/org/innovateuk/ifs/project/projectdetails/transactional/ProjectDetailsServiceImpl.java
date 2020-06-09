@@ -402,12 +402,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, AddressResource address) {
+    public ServiceResult<Void> updateProjectAddress(Long projectId, AddressResource address) {
         return getProject(projectId).
                 andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(() ->
-                        find(getProject(projectId), getOrganisation(organisationId)).
-                                andOnSuccess((project, organisation) -> {
+                        find(getProject(projectId)).
+                                andOnSuccess(project -> {
                                     if (project.getAddress() != null) {
                                         project.getAddress().copyFrom(address);
                                     } else {
