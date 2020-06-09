@@ -47,7 +47,7 @@ Eligibility is changed to project eligibility in pagination
 Comp admin can not complete the competition setup without organisational eligibility category completetion
      [Documentation]  IFS-7195
      Given the user clicks the button/link                                                  link = Return to setup overview
-     When the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  project-setup-completion-stage  yes  1  true  single
+     When the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  project-setup-completion-stage  yes  1  true  Collaborative
      Then The user should see the element                                                   css = #compCTA[disabled]
 
 Comp admin can access the Organisational eligibility category and check for all required fields
@@ -113,9 +113,9 @@ Comp admin sets lead organisations can not lead international competitions and s
      [Documentation]  IFS-7246
      Given the user navigates to the page                                               ${CA_UpcomingComp}
      When comp admin sets lead organisation can not lead the international competition
-     And Get competition id and set open date to yesterday                              ${organisationEligibilityCompetitionName}
+     And Get competition id and set open date to yesterday                              ${leadOrganisationInternationalCompetition}
      Then the user navigates to the page                                                ${CA_Live}
-     And the user should see the element                                                jQuery = h2:contains('Open') ~ ul a:contains('${organisationEligibilityCompetitionName}')
+     And the user should see the element                                                jQuery = h2:contains('Open') ~ ul a:contains('${leadOrganisationInternationalCompetition}')
 
 *** Keywords ***
 Custom Suite Setup
@@ -176,7 +176,7 @@ comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = .govuk-button:contains("Create competition")
      the user fills in the CS Initial details                                          ${leadOrganisationInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
      the user selects the organisational eligibility                                   true    false
-     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  project-setup-completion-stage  yes  1  true  single
+     the user completes all categories except organisational eligibility category      ${business_type_id}  KTP  ${compType_Programme}  project-setup-completion-stage  yes  1  true  Collaborative
      the user clicks the button/link                                                   jQuery = a:contains("Complete")
      the user clicks the button/link                                                   jQuery = button:contains('Done')
 
