@@ -50,7 +50,7 @@
                 <td class="govuk-table__cell" id="project-address">
                     <th:block th:if="${model.project.address == null}">-</th:block>
                     <th:block th:unless="${model.project.address == null}">
-                        <th:block th:if="${model.leadOrganisation.isInternational()}" th:text="${model.project.address.asInternationalTwoLine}">Correspondence address</th:block>
+                        <th:block th:if="${model.leadOrganisation.isInternational()}" th:text="${model.project.address.asInternationalSingleLine}">Correspondence address</th:block>
                         <th:block th:unless="${model.leadOrganisation.isInternational()}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
                     </th:block>
                 </td>

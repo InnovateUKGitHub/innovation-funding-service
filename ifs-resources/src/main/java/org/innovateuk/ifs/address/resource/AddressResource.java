@@ -134,6 +134,21 @@ public class AddressResource {
     }
 
     @JsonIgnore
+    public String getAsInternationalSingleLine() {
+        if (getAddressLine1() == null && getTown() == null && getPostcode() == null && getCountry() == null) {
+            return "";
+        }
+        List<String> location = newArrayList();
+        location.add(getAddressLine1());
+        location.add(getTown());
+        location.add(getCountry());
+        if (!isNullOrEmpty(getPostcode())) {
+            location.add(getPostcode());
+        }
+        return String.join(", ", location);
+    }
+
+    @JsonIgnore
     public String getAsInternationalTwoLine() {
         if (getAddressLine1() == null && getTown() == null && getPostcode() == null && getCountry() == null) {
             return "";
