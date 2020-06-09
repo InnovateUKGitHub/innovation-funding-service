@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 
 import javax.persistence.*;
@@ -18,6 +20,14 @@ public class ApplicationOrganisationAddress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Application application;
+
+    //for orm
+    ApplicationOrganisationAddress() {}
+
+    public ApplicationOrganisationAddress(OrganisationAddress organisationAddress, Application application) {
+        this.organisationAddress = organisationAddress;
+        this.application = application;
+    }
 
     public Long getId() {
         return id;
@@ -41,5 +51,29 @@ public class ApplicationOrganisationAddress {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationOrganisationAddress that = (ApplicationOrganisationAddress) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(organisationAddress, that.organisationAddress)
+                .append(application, that.application)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(organisationAddress)
+                .append(application)
+                .toHashCode();
     }
 }
