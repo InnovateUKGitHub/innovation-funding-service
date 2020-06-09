@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grants.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
@@ -7,6 +8,7 @@ import org.innovateuk.ifs.project.grants.form.GrantsSendInviteForm;
 import org.innovateuk.ifs.project.grants.viewmodel.GrantsInviteSendViewModel;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,8 @@ import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/project/{projectId}/grants/invite")
+@SecuredBySpring(value = "TODO", description = "TODO")
+@PreAuthorize("hasAnyAuthority('project_finance')")
 public class GrantsInviteController {
 
     @Autowired
@@ -36,8 +40,12 @@ public class GrantsInviteController {
                              BindingResult bindingResult, ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> inviteForm(model, projectId, form);
         Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
-        GrantsInviteResource resource = new GrantsInviteResource(form.getFirstName() + form.getLastName(), form.getEmail(), form.getRole());
-        validationHandler.addAnyErrors(grantsInviteRestService.invite(projectId, resource));
-        return validationHandler.failNowOrSucceedWith(failureView, successView);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            GrantsInviteResource resource = new GrantsInviteResource(form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
+            validationHandler.addAnyErrors(grantsInviteRestService.invite(projectId, resource));
+            return validationHandler.failNowOrSucceedWith(failureView, successView);
+        });
+
     }
 }
