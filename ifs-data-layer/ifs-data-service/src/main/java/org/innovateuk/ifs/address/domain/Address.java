@@ -159,7 +159,7 @@ public class Address {
     public void copyFrom(AddressResource address) {
         this.addressLine1 = address.getAddressLine1();
         this.addressLine2 = address.getAddressLine2();
-        this.addressLine3 = address.getAddressLine1();
+        this.addressLine3 = address.getAddressLine3();
         this.town = address.getTown();
         this.county = address.getCounty();
         this.postcode = address.getPostcode();

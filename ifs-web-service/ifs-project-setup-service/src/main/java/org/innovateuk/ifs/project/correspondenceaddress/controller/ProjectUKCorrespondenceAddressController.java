@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails.controller;
+package org.innovateuk.ifs.project.correspondenceaddress.controller;
 
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -6,8 +6,8 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsAddressViewModel;
+import org.innovateuk.ifs.project.correspondenceaddress.form.ProjectDetailsAddressForm;
+import org.innovateuk.ifs.project.correspondenceaddress.viewmodel.ProjectDetailsAddressViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
  */
 @Controller
 @RequestMapping("/project")
-public class ProjectDetailsAddressController extends AddressLookupBaseController {
+public class ProjectUKCorrespondenceAddressController extends AddressLookupBaseController {
 
     @Autowired
     private ProjectService projectService;
@@ -36,7 +36,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     private ProjectDetailsService projectDetailsService;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @GetMapping("/{projectId}/details/project-address")
+    @GetMapping("/{projectId}/details/project-address/UK")
     public String viewAddress(@PathVariable("projectId") final Long projectId,
                               Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsAddressForm form) {
@@ -52,7 +52,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping("/{projectId}/details/project-address")
+    @PostMapping("/{projectId}/details/project-address/UK")
     public String updateAddress(@PathVariable("projectId") final Long projectId,
                                 Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
@@ -65,7 +65,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
         }
         projectResource.setAddress(form.getAddressForm().getSelectedAddress(this::searchPostcode));
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectResource.getId());
-        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(leadOrganisation.getId(), projectId, projectResource.getAddress());
+        ServiceResult<Void> updateResult = projectDetailsService.updateAddress(projectId, projectResource.getAddress());
         return updateResult.handleSuccessOrFailure(
                 failure -> {
                     validationHandler.addAnyErrors(failure, asGlobalErrors());
@@ -75,7 +75,7 @@ public class ProjectDetailsAddressController extends AddressLookupBaseController
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
-    @PostMapping(value = "/{projectId}/details/project-address", params = FORM_ACTION_PARAMETER)
+    @PostMapping(value = "/{projectId}/details/project-address/UK", params = FORM_ACTION_PARAMETER)
     public String addressFormAction(@PathVariable("projectId") Long projectId,
                                 Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,

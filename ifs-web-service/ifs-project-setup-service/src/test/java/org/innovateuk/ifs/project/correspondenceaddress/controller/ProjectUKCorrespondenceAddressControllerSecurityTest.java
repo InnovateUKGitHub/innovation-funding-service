@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.projectdetails.controller;
+package org.innovateuk.ifs.project.correspondenceaddress.controller;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
@@ -11,7 +11,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 
-public class ProjectDetailsAddressControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectDetailsAddressController> {
+public class ProjectUKCorrespondenceAddressControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectUKCorrespondenceAddressController> {
 
     private ProjectLookupStrategy projectLookupStrategy;
     private ProjectCompositeId projectCompositeId;
@@ -27,8 +27,8 @@ public class ProjectDetailsAddressControllerSecurityTest extends BaseProjectSetu
     }
 
     @Override
-    protected Class<? extends ProjectDetailsAddressController> getClassUnderTest() {
-        return ProjectDetailsAddressController.class;
+    protected Class<? extends ProjectUKCorrespondenceAddressController> getClassUnderTest() {
+        return ProjectUKCorrespondenceAddressController.class;
     }
 
     @Test

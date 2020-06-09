@@ -48,9 +48,8 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/address")
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
-                                                 @RequestParam("leadOrganisationId") final Long leadOrganisationId,
                                                  @RequestBody AddressResource addressResource) {
-        return projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, addressResource).toPostResponse();
+        return projectDetailsService.updateProjectAddress(projectId, addressResource).toPostResponse();
     }
 
     @PostMapping("/{projectId}/organisation/{organisation}/finance-contact")
