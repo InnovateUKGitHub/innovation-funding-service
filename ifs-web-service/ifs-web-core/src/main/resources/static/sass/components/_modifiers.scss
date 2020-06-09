@@ -310,6 +310,8 @@ hr,
 }
 
 /* make selector more specific than autocomplete library. */
-.autocomplete__input.govuk-input--error {
-  @extend .govuk-input--error;
+.autocomplete__input {
+  &.govuk-input--error {
+    @extend .govuk-input--error;
+  }
 }
