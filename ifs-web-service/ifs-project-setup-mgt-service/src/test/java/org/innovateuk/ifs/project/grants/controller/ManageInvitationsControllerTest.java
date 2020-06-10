@@ -66,6 +66,8 @@ public class ManageInvitationsControllerTest  extends BaseControllerMockMVCTest<
         long projectId = 123L;
         long inviteId = 567L;
 
+        when(grantsInviteRestService.resendInvite(projectId, inviteId)).thenReturn(restSuccess());
+
         mockMvc.perform(post("/project/{projectId}/grants/invite/resend", projectId)
                 .param("projectId", Long.toString(projectId))
                 .param("inviteId", Long.toString(inviteId)))

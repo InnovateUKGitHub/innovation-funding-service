@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grants.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.project.grants.form.ResendInvitationForm;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/project/{projectId}")
@@ -32,7 +34,7 @@ public class ManageInvitationsController {
     @GetMapping("/grants/invite")
     public String viewInvitations(
             Model model,
-            @PathVariable("projectId") long projectId) {
+            @PathVariable("projectId") long projectId, @ModelAttribute("form") ResendInvitationForm form) {
 
         ManageInvitationsViewModel viewModel = manageInvitationsModelPopulator.populateManageInvitationsViewModel(projectId);
 
@@ -43,12 +45,17 @@ public class ManageInvitationsController {
     @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance users can manage invitations")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @PostMapping("/grants/invite/resend")
-    public String resendInvitation(@PathVariable long projectId, @ModelAttribute("form") ResendInvitationForm form,
-                                   HttpServletResponse response) {
+    public String resendInvitation(Model model, @PathVariable long projectId, @ModelAttribute("form") ResendInvitationForm form,
+                                   ValidationHandler validationHandler, HttpServletResponse response) {
 
-        grantsInviteRestService.resendInvite(form.getProjectId(), form.getInviteId());
-        cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
-        return String.format("redirect:/project/%s/grants/invite", projectId);
+        Supplier<String> failureView = () -> viewInvitations(model, projectId, form);
+        Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
+
+        validationHandler.addAnyErrors(grantsInviteRestService.resendInvite(form.getProjectId(), form.getInviteId()));
+        if (!validationHandler.hasErrors()) {
+            cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
+        }
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
 }
