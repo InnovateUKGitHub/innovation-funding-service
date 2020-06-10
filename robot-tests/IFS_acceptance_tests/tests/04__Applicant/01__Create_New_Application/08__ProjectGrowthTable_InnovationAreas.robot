@@ -41,7 +41,7 @@ Comp Admin starts a new Competition
     Given the user navigates to the page           ${CA_UpcomingComp}
     When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
-    And the user selects the Terms and Conditions
+    And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
@@ -121,7 +121,7 @@ Once the project growth table is selected
     When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
-    And the user selects the Terms and Conditions
+    And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user fills in the CS Milestones              project-setup-completion-stage   ${month}   ${nextyear}
@@ -354,7 +354,7 @@ Non-lead can mark terms and conditions as complete
     [Documentation]  IFS-5920
     [Setup]  the user clicks the button/link      link = Your project finances
     Given the user clicks the button/link         link = Back to application overview
-    When the user accept the competition terms and conditions     Return to application overview
+    When the user accept the temporary framework terms and conditions
     Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
@@ -375,7 +375,7 @@ The lead applicant checks for terms and conditions partners status
     [Documentation]  IFS-5920
     [Tags]
     [Setup]  the user navigate to competition
-    Given the user accept the competition terms and conditions    Return to application overview
+    Given the user accept the temporary framework terms and conditions
     And the user clicks the button/link             link = Award terms and conditions
     When the user clicks the button/link            link = View partners' acceptance
     Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")
@@ -530,3 +530,19 @@ the user navigate to competition
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the user selects temporary framework terms and conditions
+    the user clicks the button/link         link = Terms and conditions
+    the user selects the radio button       termsAndConditionsId  30
+    the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         link = New projects temporary framework
+    the user clicks the button/link         link = Competition setup
+    the user should see the element         jQuery = li:contains("Terms and conditions") .task-status-complete
+
+the user accept the temporary framework terms and conditions
+    the user clicks the button/link         link = Award terms and conditions
+    the user should see the element         jQuery = h1:contains("New projects temporary framework terms and conditions")
+    the user selects the checkbox           agreed
+    the user clicks the button/link         jQuery = button:contains("Agree and continue")
+    the user should see the element         jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link         link = Return to application overview
