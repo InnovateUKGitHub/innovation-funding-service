@@ -7,6 +7,7 @@ TARGET=$2
 VERSION=$3
 NEXUS_USER=$4
 NEXUS_PASS=$5
+NEXUS_EMAIL=$6
 
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
@@ -22,17 +23,19 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Deploying the $PROJECT Openshift project"
 
-docker login --username ${NEXUS_USER} --password ${NEXUS_PASS} ${NEXUS_REGISTRY}
-
-docker pull docker-ifs.devops.innovateuk.org/release/sp-service:1.1.111
-
-docker images
-
-
 function deploy() {
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
+function addAbilityToPullFromNexus() {
+    oc secrets new-dockercfg ifs-external-registry \
+        --docker-username=${NEXUS_USER} \
+        --docker-password=${NEXUS_PASS} \
+        --docker-email=${NEXUS_EMAIL} \
+        --docker-server=${NEXUS_REGISTRY}
+
+    oc secrets add serviceaccount/builder secrets/ifs-external-registry ${SVC_ACCOUNT_CLAUSE}
+}
 # move to deploy-functions
 #function shibInit() {
 #    echo "Shib init.."
@@ -51,6 +54,7 @@ then
     replacePersistentFileClaim
 fi
 
+addAbilityToPullFromNexus
 useNexusRegistry
 deploy
 #blockUntilServiceIsUp
