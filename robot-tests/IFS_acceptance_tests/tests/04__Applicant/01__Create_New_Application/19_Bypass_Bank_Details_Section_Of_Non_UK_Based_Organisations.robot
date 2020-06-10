@@ -149,7 +149,8 @@ Non-uk based organisations project location details updated in ifs admin project
 comp admin can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
     When the user navigates to the page      ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/details
-    Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian, Argentina, X5187XAB")
+    Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
@@ -296,7 +297,8 @@ the user fills correspondence address data
     the user enters text to a text field            id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
-    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian, Argentina, X5187XAB")
+    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
     the user should see the element     id = project-address-status
 
 the user should see field and summary validation messages
