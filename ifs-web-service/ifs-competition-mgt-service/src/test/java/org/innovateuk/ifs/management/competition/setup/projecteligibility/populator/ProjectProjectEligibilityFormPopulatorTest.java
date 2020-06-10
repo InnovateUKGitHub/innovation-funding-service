@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.innovateuk.ifs.finance.resource.GrantClaimMaximumResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -35,10 +35,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EligibilityFormPopulatorTest {
+public class ProjectProjectEligibilityFormPopulatorTest {
 
     @InjectMocks
-    private EligibilityFormPopulator service;
+    private ProjectEligibilityFormPopulator service;
 
     @Mock
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
@@ -49,7 +49,7 @@ public class EligibilityFormPopulatorTest {
     @Test
     public void testSectionToFill() {
         CompetitionSetupSection result = service.sectionToFill();
-        assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
+        assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, result);
     }
 
     @Test
@@ -79,8 +79,8 @@ public class EligibilityFormPopulatorTest {
 
         CompetitionSetupForm result = service.populateForm(competition);
 
-        assertTrue(result instanceof EligibilityForm);
-        EligibilityForm form = (EligibilityForm) result;
+        assertTrue(result instanceof ProjectEligibilityForm);
+        ProjectEligibilityForm form = (ProjectEligibilityForm) result;
         assertEquals(CollectionFunctions.asLinkedSet(2L, 3L), form.getResearchCategoryId());
         assertEquals("no", form.getMultipleStream());
         assertEquals(null, form.getStreamName());
@@ -116,8 +116,8 @@ public class EligibilityFormPopulatorTest {
 
         CompetitionSetupForm result = service.populateForm(competition);
 
-        assertTrue(result instanceof EligibilityForm);
-        EligibilityForm form = (EligibilityForm) result;
+        assertTrue(result instanceof ProjectEligibilityForm);
+        ProjectEligibilityForm form = (ProjectEligibilityForm) result;
         assertEquals(1, form.getResearchParticipationAmountId());
     }
 
@@ -147,14 +147,14 @@ public class EligibilityFormPopulatorTest {
 
         CompetitionSetupForm result = service.populateForm(competition);
 
-        assertTrue(result instanceof EligibilityForm);
-        EligibilityForm form = (EligibilityForm) result;
+        assertTrue(result instanceof ProjectEligibilityForm);
+        ProjectEligibilityForm form = (ProjectEligibilityForm) result;
         assertFalse(form.getResearchCategoriesApplicable());
     }
 
     @Test
     public void checkConfiguredFundingLevelLogic() {
-        EligibilityForm competitionSetupForm = new EligibilityForm();
+        ProjectEligibilityForm competitionSetupForm = new ProjectEligibilityForm();
 
         Integer OverrideFieldValue = 40;
         Integer ResearchCategoryFieldValue = 70;
