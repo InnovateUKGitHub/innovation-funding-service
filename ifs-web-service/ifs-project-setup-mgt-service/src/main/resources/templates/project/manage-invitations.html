@@ -41,7 +41,7 @@
                             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                                 <input type="hidden" name="projectId" th:value="${model.projectId}" />
                                 <input type="hidden" name="inviteId" th:value="${grant.id}" />
-                                <input type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0" value="Resend this invitation" />
+                                <input type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0 alignright" value="Resend this invitation" />
                             </form>
                         </td>
                     </tr>
