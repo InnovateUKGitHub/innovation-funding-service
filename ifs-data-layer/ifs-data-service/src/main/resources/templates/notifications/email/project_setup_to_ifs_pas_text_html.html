@@ -1,0 +1,17 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+    <@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+    <p style="margin: 0 0 1em 0;">We have accepted your signed grant offer letter for your project:</p>
+    <p style="margin: 0 0 1em 0;">${projectName}</p>
+
+    <p style="margin: 0 0 1em 0;">You can start your project on ${projectStartDate}.</p>
+
+    <p style="margin: 0 0 1em 0;">You can also review the status of your project when you sign into the</p>
+    <p style="margin: 0 0 1em 0;"><a href="${dashboardUrl}">Innovation Funding Service</a>.</p>
+
+    <p style="margin: 0 0 1em 0;">Please contact us if you have questions.</p>
+
+    <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+    <@layout.grantsSenderHTML />
+</@layout.default>

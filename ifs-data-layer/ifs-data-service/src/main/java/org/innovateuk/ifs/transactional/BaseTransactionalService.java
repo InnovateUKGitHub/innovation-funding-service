@@ -6,10 +6,14 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.PostAwardService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupPostAwardServiceServiceImpl;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.grant.domain.GrantProcessConfiguration;
+import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
@@ -18,6 +22,7 @@ import org.innovateuk.ifs.project.core.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -58,6 +63,8 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
 
     protected Supplier<ServiceResult<Section>> section(long id) {
         return () -> getSection(id);
@@ -135,5 +142,21 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
 
     protected ServiceResult<Question> getQuestion(long questionId) {
         return find(questionRepository.findById(questionId), notFoundError(Question.class));
+    }
+
+    protected ServiceResult<PostAwardService> getCompetitionPostAwardService(long competitionId) {
+        return getCompetition(competitionId)
+                .andOnSuccessReturn(competition -> {
+
+                    Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(competitionId);
+
+                    PostAwardService postAwardService;
+                    if (config.isPresent() && config.get().isSendByDefault()) {
+                        postAwardService = PostAwardService.IFS_POST_AWARD;
+                    } else {
+                        postAwardService = PostAwardService.CONNECT;
+                    }
+                    return postAwardService;
+                });
     }
 }
