@@ -23,15 +23,37 @@ tagDockerLocal.tag = financeDataServiceVersion
 osStageLocal.tag = financeDataServiceVersion
 
 def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate].each { task ->
-    task.enabled = enabled
+def pullNexusImage = project.hasProperty('ifs.finance-data-service.pull.nexus.image') ? project.property('ifs.finance-data-service.pull.nexus.image').toBoolean() : false
+if (enabled && pullNexusImage) {
+
+    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy, flywayClean, flywayMigrate].each { task ->
+        task.enabled = true
+    }
+
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = false
+    }
+
+    assemble.dependsOn deployNexusLocal
+
+} else {
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait, flywayClean, flywayMigrate].each { task ->
+        task.enabled = enabled
+    }
 }
+
 createContainer.portBindings = ['9012:8000']
+createContainer.networkAliases = ["ifs-finance-data-service"]
+
+pullImageAndCreateContainer.portBindings = ['9012:8000']
+pullImageAndCreateContainer.networkAliases = ["ifs-finance-data-service"]
 
 deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:wait"
 deploy.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deploy"
 
-createContainer.networkAliases = ["ifs-finance-data-service"]
+deployNexusLocal.dependsOn ":docker:ifs-mysql:ifs-finance-database:waitNexusDeploy"
+deployNexusLocal.mustRunAfter ":docker:ifs-mysql:ifs-finance-database:deployNexusLocal"
+
 
 afterEvaluate {
     ext {
