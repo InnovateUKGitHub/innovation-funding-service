@@ -37,7 +37,7 @@ public class ManageInvitationsController {
 
     @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance users can manage invitations")
     @PreAuthorize("hasAnyAuthority('project_finance')")
-    @GetMapping("/manage-invitations")
+    @GetMapping("/grants/invite")
     public String viewInvitations(
             Model model,
             @PathVariable("projectId") long projectId,
@@ -54,13 +54,13 @@ public class ManageInvitationsController {
 
     @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance users can manage invitations")
     @PreAuthorize("hasAnyAuthority('project_finance')")
-    @PostMapping("/manage-invitations")
+    @PostMapping("/grants/invite/resend")
     public String resendInvitation(@PathVariable long projectId, @ModelAttribute("form") ResendInvitationForm form,
                                    HttpServletResponse response) {
 
         grantsInviteRestService.resendInvite(form.getProjectId(), form.getInviteId());
         cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
-        return String.format("redirect:/project/%s/manage-invitations", projectId);
+        return String.format("redirect:/project/%s/grants/invite", projectId);
     }
 
 }

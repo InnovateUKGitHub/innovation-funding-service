@@ -66,7 +66,7 @@ public class ManageInvitationsControllerTest  extends BaseControllerMockMVCTest<
         ManageInvitationsViewModel viewModel = new ManageInvitationsViewModel(competitionId, null, projectId, null, applicationId, grants);
         when(manageInvitationsModelPopulator.populateManageInvitationsViewModel(project, grants)).thenReturn(viewModel);
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/manage-invitations", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/grants/invite", projectId))
                 .andExpect(view().name("project/manage-invitations"))
                 .andReturn();
 
@@ -80,10 +80,10 @@ public class ManageInvitationsControllerTest  extends BaseControllerMockMVCTest<
         long projectId = 123L;
         long inviteId = 567L;
 
-        mockMvc.perform(post("/project/{projectId}/manage-invitations", projectId)
+        mockMvc.perform(post("/project/{projectId}/grants/invite/resend", projectId)
                 .param("projectId", Long.toString(projectId))
                 .param("inviteId", Long.toString(inviteId)))
-                .andExpect(redirectedUrl("/project/123/manage-invitations"));
+                .andExpect(redirectedUrl("/project/123/grants/invite"));
 
         verify(grantsInviteRestService).resendInvite(projectId, inviteId);
         verify(cookieFlashMessageFilter).setFlashMessage(any(), eq("emailSent"));

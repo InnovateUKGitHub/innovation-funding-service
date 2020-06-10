@@ -39,7 +39,7 @@ public class GrantsInviteController {
     public String sendInvite(Model model, @PathVariable long projectId, @Valid @ModelAttribute("form") GrantsSendInviteForm form,
                              BindingResult bindingResult, ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> inviteForm(model, projectId, form);
-        Supplier<String> successView = () -> String.format("redirect:/project/%d/manage-invitations", projectId);
+        Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             GrantsInviteResource resource = new GrantsInviteResource(form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
