@@ -178,6 +178,7 @@ Custom Suite Setup
 Custom suite teardown
     the user closes the browser
     User sets organisation to uk based      ${leadApplicantOrganisationName}
+    User sets organisation to uk based      ${partnerOrganisationNameNonUKBased}
     Disconnect from database
 
 Lead applicant submits bank details
@@ -222,7 +223,7 @@ lead applicant invites new partner and accepts invitation
     Log in as a different user                             &{ifs_admin_user_credentials}
     the user navigates to the page                         ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/team/partner
     the user adds a new partner organisation               innovate    jsonsmith    json.smith@gmail.com
-    a new organisation is able to accept project invite    json  smith   json.smith@gmail.com   HIVE   ${zeroFundingPartnerOrgnaisationName}    ${applicationId}    ${application_name}
+    a new organisation is able to accept project invite    json  smith   json.smith@gmail.com   INNOV   ${zeroFundingPartnerOrgnaisationName}    ${applicationId}    ${application_name}
 
 partner organisation sets funding level to zero
     The new partner can complete Your organisation
