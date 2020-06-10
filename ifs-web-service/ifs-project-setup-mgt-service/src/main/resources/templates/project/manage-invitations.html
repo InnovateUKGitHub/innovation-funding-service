@@ -18,11 +18,7 @@
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-            <div class="govuk-error-summary__body">
-                <ul class="govuk-list govuk-error-summary__list">
-                    <li>Unable to send email</li>
-                </ul>
-            </div>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage invitations to external users',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
@@ -49,9 +45,7 @@
                         <td class="govuk-table__cell" th:text="${grant.email}"></td>
                         <td class="govuk-table__cell">
                             <form th:action="@{/project/{projectId}/grants/invite/resend(projectId=${model.projectId})}" method="post">
-                                <input type="hidden" name="projectId" th:value="${model.projectId}" />
-                                <input type="hidden" name="inviteId" th:value="${grant.id}" />
-                                <input type="submit" class="govuk-button govuk-button--secondary govuk-!-margin-0 alignright" value="Resend this invitation" />
+                                <button name="inviteId" th:value="${grant.id}" class="govuk-button govuk-button--secondary govuk-!-margin-0 alignright">Resend this invitation</button>
                             </form>
                         </td>
                     </tr>

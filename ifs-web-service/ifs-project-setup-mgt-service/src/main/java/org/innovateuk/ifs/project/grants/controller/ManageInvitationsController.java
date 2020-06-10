@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +47,7 @@ public class ManageInvitationsController {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @PostMapping("/grants/invite/resend")
     public String resendInvitation(Model model, @PathVariable long projectId, @ModelAttribute("form") ResendInvitationForm form,
-                                   ValidationHandler validationHandler, HttpServletResponse response) {
+                                   BindingResult bindingResult, ValidationHandler validationHandler, HttpServletResponse response) {
 
         Supplier<String> failureView = () -> viewInvitations(model, projectId, form);
         Supplier<String> successView = () -> {
@@ -54,7 +55,7 @@ public class ManageInvitationsController {
             return String.format("redirect:/project/%d/grants/invite", projectId);
         };
 
-        validationHandler.addAnyErrors(grantsInviteRestService.resendInvite(form.getProjectId(), form.getInviteId()));
+        validationHandler.addAnyErrors(grantsInviteRestService.resendInvite(projectId, form.getInviteId()));
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
