@@ -177,6 +177,7 @@ Custom Suite Setup
 
 Custom suite teardown
     the user closes the browser
+    User sets organisation to uk based      ${leadApplicantOrganisationName}
     Disconnect from database
 
 Lead applicant submits bank details
