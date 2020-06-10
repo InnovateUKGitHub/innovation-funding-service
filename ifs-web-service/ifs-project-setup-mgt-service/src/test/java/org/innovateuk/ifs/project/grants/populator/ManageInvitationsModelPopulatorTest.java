@@ -1,44 +1,59 @@
 package org.innovateuk.ifs.project.grants.populator;
 
+import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.grants.viewmodel.ManageInvitationsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ManageInvitationsModelPopulatorTest {
 
+    @InjectMocks
     private ManageInvitationsModelPopulator populator;
 
-    @Before
-    public void setUp() {
-        populator = new ManageInvitationsModelPopulator();
-    }
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private GrantsInviteRestService grantsInviteRestService;
 
     @Test
     public void shouldPopulate() {
         // given
+        Long projectId = 5L;
         ProjectResource project = ProjectResourceBuilder.newProjectResource()
                 .withCompetition(4L)
                 .withCompetitionName("compName")
-                .withId(5L)
+                .withId(projectId)
                 .withName("projName")
                 .withApplication(6L).build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+
         List<SentGrantsInviteResource> grants = new ArrayList<>();
+        when(grantsInviteRestService.getAllForProject(projectId)).thenReturn(restSuccess(grants));
 
         // when
-        ManageInvitationsViewModel result = populator.populateManageInvitationsViewModel(project, grants);
+        ManageInvitationsViewModel result = populator.populateManageInvitationsViewModel(projectId);
 
         // then
         assertEquals(4L, result.getCompetitionId());
         assertEquals("compName", result.getCompetitionName());
-        assertEquals(Long.valueOf(5L), result.getProjectId());
+        assertEquals(projectId, result.getProjectId());
         assertEquals("projName", result.getProjectName());
         assertEquals(6L, result.getApplicationId());
         assertEquals(grants, result.getGrants());
