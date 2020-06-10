@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.invitations.form;
+package org.innovateuk.ifs.project.grants.form;
 
 public class ResendInvitationForm {
     private long projectId;

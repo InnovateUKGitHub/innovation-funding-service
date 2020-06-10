@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.invitations.populator;
+package org.innovateuk.ifs.project.grants.populator;
 
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
-import org.innovateuk.ifs.project.invitations.viewmodel.ManageInvitationsViewModel;
+import org.innovateuk.ifs.project.grants.viewmodel.ManageInvitationsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.project.invitations.controller;
+package org.innovateuk.ifs.project.grants.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.invitations.populator.ManageInvitationsModelPopulator;
-import org.innovateuk.ifs.project.invitations.viewmodel.ManageInvitationsViewModel;
+import org.innovateuk.ifs.project.grants.populator.ManageInvitationsModelPopulator;
+import org.innovateuk.ifs.project.grants.viewmodel.ManageInvitationsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.invitations.viewmodel;
+package org.innovateuk.ifs.project.grants.viewmodel;
 
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 

@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.project.invitations.controller;
+package org.innovateuk.ifs.project.grants.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.invitations.form.ResendInvitationForm;
-import org.innovateuk.ifs.project.invitations.populator.ManageInvitationsModelPopulator;
-import org.innovateuk.ifs.project.invitations.viewmodel.ManageInvitationsViewModel;
+import org.innovateuk.ifs.project.grants.form.ResendInvitationForm;
+import org.innovateuk.ifs.project.grants.populator.ManageInvitationsModelPopulator;
+import org.innovateuk.ifs.project.grants.viewmodel.ManageInvitationsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
