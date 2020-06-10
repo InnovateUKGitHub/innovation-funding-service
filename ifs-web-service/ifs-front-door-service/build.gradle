@@ -4,9 +4,9 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 buildscript {
     ext['thymeleaf.version'] = '3.0.8.RELEASE'
@@ -34,13 +34,20 @@ tagDockerLocal.tag = frontDoorServiceVersion
 osStageLocal.tag = frontDoorServiceVersion
 
 def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
-[stop, removeContainer, createContainer, deploy, wait].each { task ->
-    task.enabled = enabled
-}
+def pullNexusImage = project.hasProperty('ifs.front-door-service.pull.nexus.image') ? project.property('ifs.front-door-service.pull.nexus.image').toBoolean() : false
+if (enabled && pullNexusImage) {
+    [stopNexusContainer, removeNexusContainer, pullImageAndCreateContainer, deployNexusLocal, waitNexusDeploy].each { task ->
+        task.enabled = true
+    }
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = false
+    }
 
-prepareDockerBaseInput {
-    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
-    dependsOn ":ifs-web-service:ifs-web-core:build"
+    assemble.dependsOn deployNexusLocal
+} else {
+    [buildDocker, stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
 }
 
 createContainer.hostName="front-door-svc"
@@ -48,14 +55,25 @@ createContainer.containerName="front-door-svc"
 createContainer.containerId="front-door-svc"
 createContainer.portBindings = ['9008:8000']
 
+pullImageAndCreateContainer.hostName="front-door-svc"
+pullImageAndCreateContainer.containerName="front-door-svc"
+pullImageAndCreateContainer.containerId="front-door-svc"
+pullImageAndCreateContainer.portBindings = ['9008:8000']
+
+
+prepareDockerBaseInput {
+    inputs.dir file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
     compile project(':ifs-web-service:ifs-application-commons')
 
-    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-commons", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-security", configuration: 'testArtifacts')
-    testCompile project (path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-resources", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-commons", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-security", configuration: 'testArtifacts')
+    testCompile project(path: ":ifs-web-service:ifs-web-core", configuration: 'testArtifacts')
 
     testCompile "com.opencsv:opencsv:4.3.2"
 }
