@@ -6,4 +6,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigReso
 public interface CompetitionOrganisationConfigRestService {
 
     RestResult<CompetitionOrganisationConfigResource> findByCompetitionId(long competitionId);
+
+    RestResult<CompetitionOrganisationConfigResource> update(long competitionId, CompetitionOrganisationConfigResource competitionOrganisationConfigResource);
 }
