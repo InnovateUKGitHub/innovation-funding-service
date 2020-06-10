@@ -35,8 +35,8 @@ public class ManageInvitationsController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
-    @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance and ifs admin users can manage invitations")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
+    @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance users can manage invitations")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
     @GetMapping("/manage-invitations")
     public String viewInvitations(
             Model model,
@@ -52,8 +52,8 @@ public class ManageInvitationsController {
         return "project/manage-invitations";
     }
 
-    @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance and ifs admin users can manage invitations")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
+    @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance users can manage invitations")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
     @PostMapping("/manage-invitations")
     public String resendInvitation(@PathVariable long projectId, @ModelAttribute("form") ResendInvitationForm form,
                                    HttpServletResponse response) {
