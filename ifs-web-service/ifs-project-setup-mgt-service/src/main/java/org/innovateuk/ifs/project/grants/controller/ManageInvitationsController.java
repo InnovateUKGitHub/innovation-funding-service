@@ -49,12 +49,12 @@ public class ManageInvitationsController {
                                    ValidationHandler validationHandler, HttpServletResponse response) {
 
         Supplier<String> failureView = () -> viewInvitations(model, projectId, form);
-        Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
+        Supplier<String> successView = () -> {
+            cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
+            return String.format("redirect:/project/%d/grants/invite", projectId);
+        };
 
         validationHandler.addAnyErrors(grantsInviteRestService.resendInvite(form.getProjectId(), form.getInviteId()));
-        if (!validationHandler.hasErrors()) {
-            cookieFlashMessageFilter.setFlashMessage(response, "emailSent");
-        }
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
