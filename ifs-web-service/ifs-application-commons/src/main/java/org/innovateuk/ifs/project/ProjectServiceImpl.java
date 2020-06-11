@@ -37,13 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
     private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ProjectService projectService;
 
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(long projectId) {
@@ -125,8 +119,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Boolean isProjectFinanceContact(long userId, long projectId) {
-        return projectRestService.getProjectFinanceContact(projectId).getOptionalSuccessObject()
-                .map(pu -> pu.isUser(userId)).orElse(false);
+        List<ProjectUserResource> projectFinanceContacts = projectRestService.getProjectFinanceContacts(projectId).getSuccess();
+        return projectFinanceContacts.stream().anyMatch(pu -> pu.isUser(userId));
     }
 
     @Override

@@ -132,12 +132,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     @Override
-    public ServiceResult<ProjectUserResource> getProjectFinanceContact(Long projectId) {
-        return find(projectUserRepository.findByProjectIdAndRole(projectId, PROJECT_FINANCE_CONTACT),
-                notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
-    }
-
-    @Override
     @Transactional
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).

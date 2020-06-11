@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -90,7 +91,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     public enum NotificationsGol {
         GRANT_OFFER_LETTER_PROJECT_MANAGER,
         PROJECT_LIVE,
-        PROJECT_SETUP_TO_IFS_PAS
+        PROJECT_LIVE_PAS
     }
 
     @Override
@@ -498,14 +499,14 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
         notificationArguments.put("projectName", project.getName());
-        notificationArguments.put("projectStartDate", project.getTargetStartDate().toString());
+        notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
 
         return getCompetitionPostAwardService(project.getApplication().getCompetition().getId()).andOnSuccess(postAwardService -> {
             Notification notification;
-            if (postAwardService == PostAwardService.IFS_POST_AWARD) {
-                notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
+            if (postAwardService == PostAwardService.IFS_POST_AWARD || postAwardService == PostAwardService.CONNECT) {
+                notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
                 notification = new Notification(systemNotificationSource, notificationTargets,
-                        NotificationsGol.PROJECT_SETUP_TO_IFS_PAS, notificationArguments);
+                        NotificationsGol.PROJECT_LIVE_PAS, notificationArguments);
             } else {
                 notification = new Notification(systemNotificationSource, notificationTargets,
                         NotificationsGol.PROJECT_LIVE, notificationArguments);

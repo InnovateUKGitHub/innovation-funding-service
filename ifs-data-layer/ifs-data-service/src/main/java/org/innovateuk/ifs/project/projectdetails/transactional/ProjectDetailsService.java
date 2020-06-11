@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.FINANCE_CONTACT_NOMINATED;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.PROJECT_MANAGER_NOMINATED;
@@ -22,9 +23,6 @@ public interface ProjectDetailsService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
-    ServiceResult<ProjectUserResource> getProjectFinanceContact(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     @Activity(projectId = "projectId", type = PROJECT_MANAGER_NOMINATED)

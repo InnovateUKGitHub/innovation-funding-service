@@ -22,7 +22,7 @@ public interface ProjectRestService {
 
     RestResult<ProjectUserResource> getProjectManager(long projectId);
 
-    RestResult<ProjectUserResource> getProjectFinanceContact(long projectId);
+    RestResult<List<ProjectUserResource>> getProjectFinanceContacts(long projectId);
 
     RestResult<ProjectResource> createProjectFromApplicationId(long applicationId);
 
