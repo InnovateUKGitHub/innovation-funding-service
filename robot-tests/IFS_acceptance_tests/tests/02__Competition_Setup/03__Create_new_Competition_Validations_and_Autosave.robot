@@ -117,25 +117,25 @@ Funding information client-side validations
     And the user enters text to a text field           id = activityCode    4242
     Then The user should not see the error text in the page   Please enter a budget.
 
-Eligibility server-side validations
+Project eligibility server-side validations
     [Documentation]    INFUND-2986
     [Tags]
     [Setup]    The user navigates to the Validation competition
-    Given The user clicks the button/link  link = Eligibility
+    Given The user clicks the button/link  link = Project eligibility
     When the user clicks the button/link   jQuery = button:contains("Done")
     Then The user should see a field and summary error   Please select a research categories applicable option.
     And The user should see a field and summary error    Please select a collaboration level
     And The user should see a field and summary error    Please select a lead applicant type
     And The user should see a field and summary error    Please select a resubmission option
 
-Eligibility funding level validation
+Project eligibility funding level validation
     [Documentation]  IFS-3622  IFS-7148
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
     Then the user is able to see all validations
     [Teardown]  the user clicks the button/link         jQuery = button:contains("Done")
 
-Eligibility client-side validations
+Project eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
     [Tags]
     [Setup]  the user selects the radio button           researchCategoriesApplicable   true
@@ -366,7 +366,7 @@ the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id = activityCode
     Should Be Equal As Strings    ${input_value}    4242
 
-the user should see the correct details in the eligibility form
+the user should see the correct details in the project eligibility form
     the user sees that the radio button is selected     singleOrCollaborative    single
     Checkbox Should Be Selected   research-categories-33
     Checkbox Should Be Selected   research-categories-34

@@ -20,6 +20,9 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               INFUND-6694 As a Competitions team member I want to be able to update Milestones throughout the life of the competition
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
+...
+...               IFS-7195  Organisational eligibility category in Competition setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -90,14 +93,25 @@ Finances are editable (Ready to Open)
     And the user clicks the button/link          jQuery = button:contains("Done")
     [Teardown]  the user clicks the button/link  link = Competition setup
 
-Eligibility is editable (Ready to Open)
+Project eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
     [Tags]
-    When the user clicks the button/link    link = Eligibility
-    Then the user should see the element    jquery = h1:contains("Eligibility")
+    When the user clicks the button/link    link = Project eligibility
+    Then the user should see the element    jquery = h1:contains("Project eligibility")
     And The user clicks the button/link     jQuery = button:contains(Edit)
     And the user selects the radio button   singleOrCollaborative  single
     And The user clicks the button/link     jQuery = button:contains(Done)
+
+Organisational eligibility is editable (Ready to Open)
+    [Documentation]     IFS-7195 IFS-7246
+    [Tags]
+    Given the user clicks the button/link                    link = Return to setup overview
+    And the user clicks the button/link                      link = ${organisationalEligibilityTitle}
+    And the user clicks the button/link                      jQuery = button:contains("Edit")
+    When the user selects the radio button                   internationalOrganisationsApplicable       false
+    And the user clicks the button/link                      jQuery = button:contains("Save and continue")
+    And the user clicks the button/link                      link = Competition setup
+    Then the user should see the element                     jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
@@ -149,12 +163,12 @@ Assessed Questions are not editable (Open)
     Then the user should not see the element         jquery = .govuk-button:contains("Edit")
     [Teardown]    The user clicks the button/link    link = Application
 
-Eligibility is not editable (Open)
+Project eligibility is not editable (Open)
     [Documentation]    INFUND-6792
     [Tags]
     [Setup]    The user clicks the button/link       link = Competition setup
-    When The user clicks the button/link             link = Eligibility
-    And the user should see the element              jquery = h1:contains("Eligibility")
+    When The user clicks the button/link             link = Project eligibility
+    And the user should see the element              jquery = h1:contains("Project eligibility")
     Then The user should not see the element         css = input
     And The user should not see the element          jquery = .govuk-button:contains("Edit")
     And The user should not see the element          jquery = button:contains("Done")
@@ -260,6 +274,13 @@ Assessors not editable after Notifications Date (Open)
     When the user clicks the button/link        link = Assessors
     Then the user should not see the element    jQuery = .govuk-button:contains("Edit")
     And the user should not see the element     jQuery = button:contains("Done")
+
+Organisational eligibility is not editable (Open)
+     [Documentation]  IFS-7195
+     [Tags]
+     Given the user clicks the button/link            link = Return to setup overview
+     When the user clicks the button/link             link = ${organisationalEligibilityTitle}
+     Then the user should not see the element         jQuery = button:contains("Edit")
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
