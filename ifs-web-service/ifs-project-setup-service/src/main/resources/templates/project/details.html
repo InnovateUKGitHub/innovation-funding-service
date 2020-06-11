@@ -49,7 +49,10 @@
                 </td>
                 <td class="govuk-table__cell" id="project-address">
                     <th:block th:if="${model.project.address == null}">-</th:block>
-                    <th:block th:unless="${model.project.address == null}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
+                    <th:block th:unless="${model.project.address == null}">
+                        <th:block th:if="${model.leadOrganisation.isInternational()}" ifs:utext="${model.project.address.getAsInternationalTwoLine()}">Correspondence address</th:block>
+                        <th:block th:unless="${model.leadOrganisation.isInternational()}" th:text="${model.project.address.asSingleLine}">Correspondence address</th:block>
+                    </th:block>
                 </td>
                 <td class="govuk-table__cell alignright">
                     <strong th:if="${model.project.address == null}" id="project-address-status" class="incomplete-status">Incomplete</strong>

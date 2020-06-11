@@ -34,6 +34,10 @@ public class CompetitionOrganisationConfig {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Competition getCompetition() {
         return competition;
     }

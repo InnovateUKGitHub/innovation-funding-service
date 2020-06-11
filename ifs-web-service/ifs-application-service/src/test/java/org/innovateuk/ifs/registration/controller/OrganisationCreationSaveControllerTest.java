@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.organisation.controller.OrganisationCreationSaveController;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;

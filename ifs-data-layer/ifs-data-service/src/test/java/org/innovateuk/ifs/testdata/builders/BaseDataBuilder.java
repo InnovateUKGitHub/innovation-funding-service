@@ -56,6 +56,7 @@ import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationTypeService;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -140,6 +141,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ContentGroupService contentGroupService;
     protected ContentEventRepository contentEventRepository;
     protected OrganisationService organisationService;
+    protected OrganisationInitialCreationService organisationInitialCreationService;
     protected OrganisationTypeService organisationTypeService;
     protected UserRepository userRepository;
     protected ProfileRepository profileRepository;
@@ -243,6 +245,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         categoryRepository = serviceLocator.getBean(CategoryRepository.class);
         competitionSetupService = serviceLocator.getBean(CompetitionSetupService.class);
         organisationService = serviceLocator.getBean(OrganisationService.class);
+        organisationInitialCreationService = serviceLocator.getBean(OrganisationInitialCreationService.class);
         organisationTypeService = serviceLocator.getBean(OrganisationTypeService.class);
         userRepository = serviceLocator.getBean(UserRepository.class);
         registrationService = serviceLocator.getBean(RegistrationService.class);
