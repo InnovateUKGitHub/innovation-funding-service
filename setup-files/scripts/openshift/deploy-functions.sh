@@ -247,7 +247,7 @@ function tailorAppInstance() {
 }
 
 function useContainerRegistry() {
-    sed '/imagePullSecrets/{N;d;}' $(getBuildLocation)/**/*.yml
+    sed -i.bak '/imagePullSecrets/{N;d;}' $(getBuildLocation)/**/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/**/*.yml
