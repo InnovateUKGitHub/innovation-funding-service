@@ -143,11 +143,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withRolesGlobal(singletonList(Role.APPLICANT))
             .withUID("2aerg234-aegaeb-23aer").build();
 
-    private CompetitionPostAwardServiceResource competitionPostAwardServiceResource = CompetitionPostAwardServiceResourceBuilder.newCompetitionPostAwardServiceResource()
-            .withCompetitionId(competition.getId())
-            .withPostAwardService(PostAwardService.CONNECT)
-            .build();
-
     @Before
     public void setupExpectations() {
         setupAsyncExpectations(futuresGeneratorMock);
@@ -348,7 +343,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -889,7 +884,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1269,7 +1264,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1360,7 +1355,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1452,7 +1447,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1500,7 +1495,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource));
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1536,11 +1531,16 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource, partnerOrganisationResource));
 
-        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
     }
 
-    private void setupCompetitionPostAwardServiceExpectations(CompetitionResource competition, ProjectResource project, UserResource loggedInUser) {
-        when(competitionSetupPostAwardServiceRestService.getPostAwardService(competition.getId())).thenReturn(restSuccess(competitionPostAwardServiceResource));
+    private void setupCompetitionPostAwardServiceExpectations(ProjectResource project, UserResource loggedInUser) {
+        CompetitionPostAwardServiceResource competitionPostAwardServiceResource = CompetitionPostAwardServiceResourceBuilder.newCompetitionPostAwardServiceResource()
+                .withCompetitionId(project.getCompetition())
+                .withPostAwardService(PostAwardService.CONNECT)
+                .build();
+
+        when(competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition())).thenReturn(restSuccess(competitionPostAwardServiceResource));
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
     }
