@@ -316,6 +316,13 @@ public class UserPermissionRules {
                 user.hasRole(STAKEHOLDER);
     }
 
+    @PermissionRule(value = "GRANT_ROLE", description = "An monitoring officer can request applicant role")
+    public boolean monitoringOfficerCanRequestApplicantRole(GrantRoleCommand roleCommand, UserResource user) {
+        return roleCommand.getTargetRole().equals(APPLICANT) &&
+                user.getId().equals(roleCommand.getUserId()) &&
+                user.hasRole(MONITORING_OFFICER);
+    }
+
     @PermissionRule(value = "CAN_VIEW_OWN_DASHBOARD", description = "User is requesting own dashboard")
     public boolean isViewingOwnDashboard(UserResource userToView, UserResource user) {
         return userToView.getId().equals(user.getId());
