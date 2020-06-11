@@ -348,6 +348,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
@@ -887,6 +889,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
@@ -1265,6 +1269,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStageStatus(viewModel, PROJECT_DETAILS, TICK);
@@ -1353,6 +1359,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
+
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1444,6 +1452,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         return viewModel;
@@ -1490,6 +1500,8 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource));
 
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertFalse(viewModel.isMonitoringOfficer());
@@ -1524,6 +1536,10 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource, partnerOrganisationResource));
 
+        setupCompetitionPostAwardServiceExpectations(competition, project, loggedInUser);
+    }
+
+    private void setupCompetitionPostAwardServiceExpectations(CompetitionResource competition, ProjectResource project, UserResource loggedInUser) {
         when(competitionSetupPostAwardServiceRestService.getPostAwardService(competition.getId())).thenReturn(restSuccess(competitionPostAwardServiceResource));
         when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
         when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
