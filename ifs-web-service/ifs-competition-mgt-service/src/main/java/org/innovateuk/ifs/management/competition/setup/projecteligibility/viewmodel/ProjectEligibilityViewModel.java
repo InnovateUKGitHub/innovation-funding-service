@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.viewmodel;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.management.funding.form.enumerable.ResearchParticipationAmount;
@@ -10,7 +10,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 
 import java.util.List;
 
-public class EligibilityViewModel extends CompetitionSetupViewModel {
+public class ProjectEligibilityViewModel extends CompetitionSetupViewModel {
 
     private ResearchParticipationAmount[] researchParticipationAmounts;
     private CollaborationLevel[] collaborationLevels;
@@ -20,7 +20,7 @@ public class EligibilityViewModel extends CompetitionSetupViewModel {
     private List<ResearchCategoryResource> researchCategories;
     private String researchCategoriesFormatted;
 
-    public EligibilityViewModel(
+    public ProjectEligibilityViewModel(
             GeneralSetupViewModel generalSetupViewModel,
             ResearchParticipationAmount[] researchParticipationAmounts,
             CollaborationLevel[] collaborationLevels,

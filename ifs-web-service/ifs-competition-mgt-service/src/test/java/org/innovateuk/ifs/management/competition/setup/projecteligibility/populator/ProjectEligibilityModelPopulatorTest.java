@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.eligibility.viewmodel.EligibilityViewModel;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -30,10 +30,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EligibilityModelPopulatorTest {
+public class ProjectEligibilityModelPopulatorTest {
 
     @InjectMocks
-    private EligibilityModelPopulator populator;
+    private ProjectEligibilityModelPopulator populator;
 
     @Mock
     private CategoryRestService categoryRestService;
@@ -48,7 +48,7 @@ public class EligibilityModelPopulatorTest {
     public void testSectionToPopulateModel() {
         CompetitionSetupSection result = populator.sectionToPopulateModel();
 
-        assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
+        assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, result);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class EligibilityModelPopulatorTest {
                 .withVisibleInSetup(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
                 .build(3)));
 
-        EligibilityViewModel viewModel = (EligibilityViewModel) populator.populateModel(
+        ProjectEligibilityViewModel viewModel = (ProjectEligibilityViewModel) populator.populateModel(
                 getBasicGeneralSetupView(competition),
                 competition
         );
@@ -82,7 +82,7 @@ public class EligibilityModelPopulatorTest {
         assertEquals(researchCategories, viewModel.getResearchCategories());
         assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
         assertEquals("formattedcategories", viewModel.getResearchCategoriesFormatted());
-        assertEquals(CompetitionSetupSection.ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
+        assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class EligibilityModelPopulatorTest {
                 .withVisibleInSetup(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
                 .build(3)));
 
-        EligibilityViewModel viewModel = (EligibilityViewModel) populator.populateModel(
+        ProjectEligibilityViewModel viewModel = (ProjectEligibilityViewModel) populator.populateModel(
                 getBasicGeneralSetupView(competition),
                 competition
         );
@@ -118,7 +118,7 @@ public class EligibilityModelPopulatorTest {
         return new GeneralSetupViewModel(
                 Boolean.FALSE,
                 competition,
-                CompetitionSetupSection.ELIGIBILITY,
+                CompetitionSetupSection.PROJECT_ELIGIBILITY,
                 CompetitionSetupSection.values(),
                 Boolean.TRUE
         );
