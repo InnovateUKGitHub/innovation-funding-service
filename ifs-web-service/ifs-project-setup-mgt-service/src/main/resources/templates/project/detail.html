@@ -62,7 +62,7 @@
                     <td class="govuk-table__cell" id="project-address">
                         <th:block th:if="${model.project.address == null}">Not yet completed</th:block>
                         <th:block th:unless="${model.project.address == null}">
-                            <th:block th:if="${model.leadOrganisationInternational}" th:text="${model.project.address.asInternationalSingleLine}"></th:block>
+                            <th:block th:if="${model.leadOrganisationInternational}" ifs:utext="${model.project.address.getAsInternationalTwoLine()}"></th:block>
                             <th:block th:unless="${model.leadOrganisationInternational}" th:text="${model.project.address.asSingleLine}"></th:block>
                         </th:block>
                     </td>

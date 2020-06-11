@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.competition.setup.eligibility.populator;
+package org.innovateuk.ifs.management.competition.setup.projecteligibility.populator;
 
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
@@ -10,7 +10,7 @@ import org.innovateuk.ifs.management.competition.setup.service.CategoryFormatter
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
-import org.innovateuk.ifs.management.competition.setup.eligibility.viewmodel.EligibilityViewModel;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
@@ -25,15 +25,15 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  * populates the model for the eligibility competition setup section.
  */
 @Service
-public class EligibilityModelPopulator implements CompetitionSetupSectionModelPopulator {
+public class ProjectEligibilityModelPopulator implements CompetitionSetupSectionModelPopulator {
 
     private CategoryRestService categoryRestService;
     private CategoryFormatter categoryFormatter;
     private OrganisationTypeRestService organisationTypeRestService;
 
-    public EligibilityModelPopulator(CategoryRestService categoryRestService,
-                                     CategoryFormatter categoryFormatter,
-                                     OrganisationTypeRestService organisationTypeRestService) {
+    public ProjectEligibilityModelPopulator(CategoryRestService categoryRestService,
+                                            CategoryFormatter categoryFormatter,
+                                            OrganisationTypeRestService organisationTypeRestService) {
         this.categoryRestService = categoryRestService;
         this.categoryFormatter = categoryFormatter;
         this.organisationTypeRestService = organisationTypeRestService;
@@ -41,7 +41,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
 
     @Override
     public CompetitionSetupSection sectionToPopulateModel() {
-        return CompetitionSetupSection.ELIGIBILITY;
+        return CompetitionSetupSection.PROJECT_ELIGIBILITY;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
                 researchCategories
         );
 
-        return new EligibilityViewModel(
+        return new ProjectEligibilityViewModel(
                 generalViewModel,
                 getResearchParticipationAmounts(competitionResource),
                 CollaborationLevel.values(),
