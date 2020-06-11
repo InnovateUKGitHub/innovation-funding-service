@@ -44,9 +44,3 @@ the user fills in initial details
     the user navigates to the page              ${CA_UpcomingComp}
     the user clicks the button/link             jQuery = .govuk-button:contains("Create competition")
     the user fills in the CS Initial details    Investor comp  ${month}  ${nextyear}  ${compType_Programme}  1  INVESTOR_PARTNERSHIPS
-
-the user selects the Terms and Conditions
-    the user clicks the button/link      link = Terms and conditions
-    the user clicks the button/link      jQuery = button:contains("Done")
-    the user clicks the button/link      link = Competition setup
-    the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
