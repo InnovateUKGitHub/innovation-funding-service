@@ -172,6 +172,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
+        assertEquals(false, viewModel.isProjectManager());
+        assertEquals(false, viewModel.isProjectFinanceContact());
+        assertCompetitionPostAwardService(viewModel, PostAwardService.CONNECT);
     }
 
     @Test
@@ -343,7 +346,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
+        when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
+        when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -353,6 +358,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertStageStatus(viewModel, FINANCE_CHECKS, HOURGLASS);
 
         assertStageAccess(viewModel, FINANCE_CHECKS, ACCESSIBLE);
+        assertEquals(false, viewModel.isProjectManager());
+        assertEquals(true, viewModel.isProjectFinanceContact());
+        assertCompetitionPostAwardService(viewModel, PostAwardService.IFS_POST_AWARD);
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -884,7 +892,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
+        when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(true);
+        when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(true);
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.IFS_POST_AWARD);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -894,6 +904,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertStageStatus(viewModel, FINANCE_CHECKS, FLAG);
 
         assertStageStatusOverride(viewModel, FINANCE_CHECKS, "pending-query");
+        assertEquals(true, viewModel.isProjectManager());
+        assertEquals(true, viewModel.isProjectFinanceContact());
+        assertCompetitionPostAwardService(viewModel, PostAwardService.IFS_POST_AWARD);
     }
 
     @Test
@@ -1264,7 +1277,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1355,7 +1368,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1447,8 +1460,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withOrganisation(organisationResource.getId())
                 .withRole(PROJECT_MANAGER).build())));
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
-
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         return viewModel;
@@ -1495,7 +1506,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource));
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
@@ -1531,18 +1542,18 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource, partnerOrganisationResource));
 
-        setupCompetitionPostAwardServiceExpectations(project, loggedInUser);
+        when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
+        when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
+        setupCompetitionPostAwardServiceExpectations(project, PostAwardService.CONNECT);
     }
 
-    private void setupCompetitionPostAwardServiceExpectations(ProjectResource project, UserResource loggedInUser) {
+    private void setupCompetitionPostAwardServiceExpectations(ProjectResource project, PostAwardService postAwardService) {
         CompetitionPostAwardServiceResource competitionPostAwardServiceResource = CompetitionPostAwardServiceResourceBuilder.newCompetitionPostAwardServiceResource()
                 .withCompetitionId(project.getCompetition())
-                .withPostAwardService(PostAwardService.CONNECT)
+                .withPostAwardService(postAwardService)
                 .build();
 
         when(competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition())).thenReturn(restSuccess(competitionPostAwardServiceResource));
-        when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
-        when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
     }
 
     private void assertStandardViewModelValuesCorrect(SetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {
@@ -1565,5 +1576,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private void assertStageAccess(SetupStatusViewModel viewModel, ProjectSetupStage stage, SectionAccess access) {
         SetupStatusStageViewModel found = viewModel.getStages().stream().filter(stageViewModel -> stageViewModel.getStage() == stage).findFirst().get();
         assertEquals(found.getAccess(), access);
+    }
+
+    private void assertCompetitionPostAwardService(SetupStatusViewModel viewModel, PostAwardService postAwardService) {
+        assertEquals(postAwardService, viewModel.getPostAwardService());
     }
 }
