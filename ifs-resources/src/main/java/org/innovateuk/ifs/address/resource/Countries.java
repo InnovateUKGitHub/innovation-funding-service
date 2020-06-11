@@ -6,7 +6,7 @@ import static java.util.Arrays.asList;
 
 public class Countries {
 
-    private static List<String> countriesList = asList(
+    public static final List<String> COUNTRIES = asList(
             "Abu Dhabi",
             "Afghanistan",
             "Ajman",

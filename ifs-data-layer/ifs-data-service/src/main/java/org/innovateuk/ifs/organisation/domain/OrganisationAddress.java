@@ -3,12 +3,14 @@ package org.innovateuk.ifs.organisation.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * Resource object to store the address details, from the company, from the companies house api.
@@ -32,8 +34,11 @@ public class OrganisationAddress {
     private AddressType addressType;
 
     @LastModifiedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private ZonedDateTime modifiedOn;
+
+    @OneToMany(mappedBy = "organisationAddress")
+    private List<ApplicationOrganisationAddress> applicationAddresses;
 
     public OrganisationAddress(Organisation organisation, Address address, AddressType addressType) {
         this.organisation = organisation;
@@ -80,7 +85,19 @@ public class OrganisationAddress {
         this.id = id;
     }
 
+    public List<ApplicationOrganisationAddress> getApplicationAddresses() {
+        return applicationAddresses;
+    }
+
+    public void setApplicationAddresses(List<ApplicationOrganisationAddress> applicationAddresses) {
+        this.applicationAddresses = applicationAddresses;
+    }
+
     public ZonedDateTime getModifiedOn() {
         return modifiedOn;
+    }
+
+    public void setModifiedOn(ZonedDateTime modifiedOn) {
+        this.modifiedOn = modifiedOn;
     }
 }

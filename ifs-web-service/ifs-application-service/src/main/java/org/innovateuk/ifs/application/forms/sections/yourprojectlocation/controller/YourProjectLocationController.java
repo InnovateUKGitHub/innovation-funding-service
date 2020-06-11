@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.contro
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
@@ -15,9 +16,11 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +33,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -52,6 +57,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
     private ApplicationFinanceRestService applicationFinanceRestService;
     private SectionService sectionService;
     private UserRestService userRestService;
+    private OrganisationRestService organisationRestService;
 
     public YourProjectLocationController() {
     }
@@ -62,13 +68,15 @@ public class YourProjectLocationController extends AsyncAdaptor {
             YourProjectLocationFormPopulator formPopulator,
             ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
-            UserRestService userRestService) {
+            UserRestService userRestService,
+            OrganisationRestService organisationRestService) {
 
         this.commonViewModelPopulator = commonViewModelPopulator;
         this.formPopulator = formPopulator;
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.userRestService = userRestService;
+        this.organisationRestService = organisationRestService;
     }
 
     @GetMapping
@@ -102,7 +110,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             @PathVariable("organisationId") long organisationId,
             @ModelAttribute YourProjectLocationForm form) {
 
-        updatePostcode(applicationId, organisationId, form);
+        updateLocation(applicationId, organisationId, form);
         return redirectToYourFinances(applicationId);
     }
 
@@ -131,7 +139,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             ValidationHandler validationHandler,
             Model model) {
 
-        trimPostcodeInForm(form);
+        formatLocationInForm(form);
 
         Supplier<String> failureHandler = () -> {
             CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
@@ -142,7 +150,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
         Supplier<String> successHandler = () -> {
 
-            updatePostcode(applicationId, organisationId, form);
+            updateLocation(applicationId, organisationId, form);
 
             ProcessRoleResource processRole = userRestService.findProcessRole(loggedInUser.getId(), applicationId).getSuccess();
             ValidationMessages validationMessages = sectionService.markAsComplete(sectionId, applicationId, processRole.getId());
@@ -152,7 +160,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         };
 
         return validationHandler.
-                addAnyErrors(validateProjectLocation(form.getPostcode())).
+                addAnyErrors(validateProjectLocation(organisationId, form)).
                 failNowOrSucceedWith(failureHandler, successHandler);
     }
 
@@ -170,31 +178,59 @@ public class YourProjectLocationController extends AsyncAdaptor {
         return redirectToViewPage(applicationId, organisationId, sectionId);
     }
 
-    private void trimPostcodeInForm(YourProjectLocationForm form) {
-        form.setPostcode(form.getPostcode().trim());
+    private void formatLocationInForm(YourProjectLocationForm form) {
+        if (form.getPostcode() != null) {
+            form.setPostcode(form.getPostcode().trim().toUpperCase());
+        }
+        if(form.getTown() != null) {
+            String townFixedCase = Stream.of(form.getTown().split(" "))
+                    .filter(w -> w.length() > 0)
+                    .map(word -> {
+                        String wordCased = word.substring(0, 1).toUpperCase();
+                        if (word.length() > 1) {
+                            wordCased = wordCased + word.substring(1).toLowerCase();
+                        }
+                        return wordCased;
+                    })
+                    .collect(Collectors.joining(" "));
+            form.setTown(townFixedCase);
+        }
     }
 
-    private void updatePostcode(long applicationId,
+    private void updateLocation(long applicationId,
                                 long organisationId,
                                 YourProjectLocationForm form) {
 
-        trimPostcodeInForm(form);
+        formatLocationInForm(form);
 
         ApplicationFinanceResource finance =
                 applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
         finance.setWorkPostcode(form.getPostcode());
+        finance.setInternationalLocation(form.getTown());
 
         applicationFinanceRestService.update(finance.getId(), finance).getSuccess();
     }
 
-    private List<Error> validateProjectLocation(String postcode) {
+    private List<Error> validateProjectLocation(Long organisationId, YourProjectLocationForm form) {
 
-        if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
-            return emptyList();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
+        if (organisation.isInternational()) {
+            String town = form.getTown();
+            if (StringUtils.isBlank(town)) {
+                return singletonList(fieldError("town", town, "APPLICATION_PROJECT_LOCATION_TOWN_REQUIRED"));
+            } else {
+                return emptyList();
+            }
+        } else {
+            String postcode = form.getPostcode();
+            if (postcode.length() >= MINIMUM_POSTCODE_LENGTH && postcode.length() <= MAXIMUM_POSTCODE_LENGTH) {
+                return emptyList();
+            }
+
+            return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
         }
-
-        return singletonList(fieldError("postcode", postcode, "APPLICATION_PROJECT_LOCATION_REQUIRED"));
     }
 
     private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
