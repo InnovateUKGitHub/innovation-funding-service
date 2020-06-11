@@ -732,3 +732,17 @@ the user is able to remove a pending partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the user fills correspondence address for non-uk based organisations
+    [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
+    the user enters text to a text field            id = addressLine1       ${addresLine1}
+    the user enters text to a text field            id = addressLine2       ${addresLine2}
+    the user enters text to a text field            id = town               ${town}
+    enter the country in the autocomplete field     Argent                  ${country}
+    the user enters text to a text field            id = zipCode            ${zipCode}
+    the user clicks the button/link                 id = save-project-address-button
+
+enter the country in the autocomplete field
+    [Arguments]         ${country}  ${completeCountryName}
+    input text                          id = country        ${country}
+    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
