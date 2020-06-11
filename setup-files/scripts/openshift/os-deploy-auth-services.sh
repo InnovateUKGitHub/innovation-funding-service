@@ -47,6 +47,7 @@ then
 fi
 
 addAbilityToPullFromNexus
-useNexusRegistry
+# use hardcoded version as our version is one above the release so does not exist
+useNexusRegistry 1.1.111
 deploy
 blockUntilServiceIsUp

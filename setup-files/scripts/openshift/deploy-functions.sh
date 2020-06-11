@@ -254,10 +254,13 @@ function useContainerRegistry() {
 }
 
 function useNexusRegistry() {
+
+    NEXUS_VERSION=$1
+
     sed -i.bak "s/imagePullSecretsName/ifs-external-registry/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/release/#g" $(getBuildLocation)/**/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 
 function pushDBResetImages() {
