@@ -35,16 +35,17 @@ ${ineligibleMessage}         Your organisation type does not match our eligibili
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
-    [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
+    [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
-    Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+    Given the user navigates to the page                        ${CA_UpcomingComp}
+    When the user clicks the button/link                        jQuery = .govuk-button:contains("Create competition")
+    Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user selects the organisational eligibility to no   false
+    And the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -116,26 +117,27 @@ Turnover and Staff count fields
 Once the project growth table is selected
     [Documentation]    INFUND-6393 IFS-40
     [Tags]  HappyPath
-    [Setup]    log in as a different user                &{Comp_admin1_credentials}
-    Given the user navigates to the page                 ${CA_UpcomingComp}
-    When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
+    [Setup]    log in as a different user                       &{Comp_admin1_credentials}
+    Given the user navigates to the page                        ${CA_UpcomingComp}
+    When the user clicks the button/link                        jQuery = .govuk-button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
-    Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
+    Then the user fills in the Open-All Initial details         ${compWithGrowth}  ${month}  ${nextyear}
     And the user selects the Terms and Conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones              project-setup-completion-stage   ${month}   ${nextyear}
-    Then the user marks the Application as done          yes  Sector
+    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user selects the organisational eligibility to no   false
+    And the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
+    Then the user marks the Application as done                 yes  Sector
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects
-    When the user clicks the button/link                 link = Public content
-    Then the user fills in the Public content and publishes  GrowthTable
-    And the user clicks the button/link                  link = Return to setup overview
-    And the user should see the element                  jQuery = div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery = a:contains("Complete")
-    Then the user clicks the button/link                 css = button[type="submit"]
-    And the user navigates to the page                   ${CA_UpcomingComp}
-    Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    When the user clicks the button/link                        link = Public content
+    Then the user fills in the Public content and publishes     GrowthTable
+    And the user clicks the button/link                         link = Return to setup overview
+    And the user should see the element                         jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link                        jQuery = a:contains("Complete")
+    Then the user clicks the button/link                        css = button[type="submit"]
+    And the user navigates to the page                          ${CA_UpcomingComp}
+    Then the user should see the element                        jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
@@ -150,7 +152,7 @@ As next step the Applicant cannot see the turnover field
 
 User can save null values and reenter the organisation page
     [Documentation]    IFS-5612
-    Given The user clicks the button/link  jQuery = button:contains("Save and return to finances")
+    Given The user clicks the button/link  jQuery = button:contains("Save and return to project finances")
     When the user clicks the button/link   link = Your organisation
     Then the user should see the element   jQuery = h1:contains("Your organisation")
 
@@ -255,7 +257,7 @@ Mark Organisation as complete when yes
     And the user enters text to a text field     css = #financialYearEndYearValue    2016
     And the user populates the project growth table
     When the user enters text to a text field    css = #headCountAtLastFinancialYear  4
-    And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
+    And the user clicks the button/link          jQuery = button:contains("Save and return to project finances")
     And the user clicks the button/link          link = Your organisation
     Then the user should see the element         jQuery = #researchAndDevelopmentSpendAtLastFinancialYear[value = "15000"]
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
@@ -481,7 +483,7 @@ Newly invited collaborator can create account and sign in
     logout as user
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
-    the user should see the element               jquery = h1:contains("Choose organisation type")
+    the user should see the element               jquery = h1:contains("Choose your organisation type")
     the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details

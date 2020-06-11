@@ -4,8 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
@@ -18,6 +20,8 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
+import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
@@ -25,7 +29,6 @@ import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.monitoringofficer.domain.LegacyMonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.repository.LegacyMonitoringOfficerRepository;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -44,10 +47,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
@@ -70,6 +73,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail
 public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implements ProjectDetailsService {
 
     private static final String WEB_CONTEXT = "/project-setup";
+    private static final int MAX_TOWN_LENGTH = 255;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -100,6 +104,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private ProjectUserMapper projectUserMapper;
@@ -317,27 +324,62 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postcode) {
-        return validatePostcode(postcode).
-                andOnSuccess(() -> getProject(composite.getProjectId())).
-                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
-                andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
-                andOnSuccessReturn(partnerOrganisation -> {
-                    partnerOrganisation.setPostcode(postcode.toUpperCase());
-                    return partnerOrganisation;
-                })
-                .andOnSuccessReturnVoid(partnerOrganisation ->
-                        getCurrentlyLoggedInProjectUser(partnerOrganisation.getProject(), PROJECT_PARTNER)
-                                .andOnSuccessReturnVoid((projectUser) ->
-                                        projectDetailsWorkflowHandler.projectLocationAdded(partnerOrganisation.getProject(), projectUser)));
+    public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, PostcodeAndTownResource postcodeAndTown) {
+        Function<PostcodeAndTownResource, ServiceResult<Void>> validation;
+        ExceptionThrowingFunction<PartnerOrganisation, PartnerOrganisation> settingLocation;
 
+        Optional<Organisation> organisation = organisationRepository.findById(composite.getOrganisationId());
+
+        if (organisation.isPresent() && organisation.get().isInternational()) {
+            validation = ProjectDetailsServiceImpl::validateTown;
+            settingLocation = settingTown(postcodeAndTown);
+        } else {
+            validation = ProjectDetailsServiceImpl::validatePostcode;
+            settingLocation = settingPostcode(postcodeAndTown);
+        }
+
+        return validation.apply(postcodeAndTown).
+            andOnSuccess(() -> getProject(composite.getProjectId())).
+            andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
+            andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
+            andOnSuccessReturn(settingLocation)
+            .andOnSuccessReturnVoid(partnerOrganisation ->
+                getCurrentlyLoggedInProjectUser(partnerOrganisation.getProject(), PROJECT_PARTNER)
+                        .andOnSuccessReturnVoid((projectUser) ->
+                                projectDetailsWorkflowHandler.projectLocationAdded(partnerOrganisation.getProject(), projectUser)));
     }
 
-    private ServiceResult<Void> validatePostcode(String postcode) {
+    private static ExceptionThrowingFunction<PartnerOrganisation, PartnerOrganisation> settingPostcode(PostcodeAndTownResource postcodeAndTown) {
+        return partnerOrganisation -> {
+            partnerOrganisation.setPostcode(postcodeAndTown.getPostcode().toUpperCase());
+            return partnerOrganisation;
+        };
+    }
+
+    private static ExceptionThrowingFunction<PartnerOrganisation, PartnerOrganisation> settingTown(PostcodeAndTownResource postcodeAndTown) {
+        return partnerOrganisation -> {
+            String town = postcodeAndTown.getTown();
+            String townFixedCase = Stream.of(town.split(" "))
+                    .filter(w -> w.length() > 0)
+                    .map(word -> {
+                        String wordCased = word.substring(0, 1).toUpperCase();
+                        if (word.length() > 1) {
+                            wordCased = wordCased + word.substring(1).toLowerCase();
+                        }
+                        return wordCased;
+                    })
+                    .collect(Collectors.joining(" "));
+            partnerOrganisation.setInternationalLocation(townFixedCase);
+            return partnerOrganisation;
+        };
+    }
+
+    private static ServiceResult<Void> validatePostcode(PostcodeAndTownResource postcodeAndTown) {
+        String postcode = postcodeAndTown.getPostcode();
+
         if (StringUtils.isBlank(postcode)) {
             return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
         }
-
         if (StringUtils.length(postcode) > MAX_POSTCODE_LENGTH) {
             return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST));
         }
@@ -345,18 +387,27 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private LegacyMonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
-        return legacyMonitoringOfficerRepository.findOneByProjectId(projectId);
+    private static ServiceResult<Void> validateTown(PostcodeAndTownResource postcodeAndTown) {
+        String town = postcodeAndTown.getTown();
+        if (StringUtils.isBlank(town)) {
+            return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
+        }
+
+        if (StringUtils.length(town) > MAX_TOWN_LENGTH) {
+            return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_TOWN_LENGTH), HttpStatus.BAD_REQUEST));
+        }
+
+        return serviceSuccess();
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, AddressResource address) {
+    public ServiceResult<Void> updateProjectAddress(Long projectId, AddressResource address) {
         return getProject(projectId).
                 andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(() ->
-                        find(getProject(projectId), getOrganisation(organisationId)).
-                                andOnSuccess((project, organisation) -> {
+                        find(getProject(projectId)).
+                                andOnSuccess(project -> {
                                     if (project.getAddress() != null) {
                                         project.getAddress().copyFrom(address);
                                     } else {
@@ -431,7 +482,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 simpleFindFirst(project.getProjectUsers(), pu -> findUserAndRole(role, currentUser, pu)).
-                        map(user -> serviceSuccess(user)).
+                        map(ServiceResult::serviceSuccess).
                         orElse(serviceFailure(forbiddenError())));
     }
 

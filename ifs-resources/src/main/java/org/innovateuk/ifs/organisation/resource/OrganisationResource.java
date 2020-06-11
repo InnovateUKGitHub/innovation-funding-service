@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import static java.util.Comparator.comparingLong;
 
@@ -17,6 +19,7 @@ public class  OrganisationResource {
     private String organisationTypeDescription;
     private boolean isInternational;
     private String internationalRegistrationNumber;
+    private List<OrganisationAddressResource> addresses = new ArrayList<>();
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
 
@@ -82,6 +85,14 @@ public class  OrganisationResource {
 
     public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
         this.internationalRegistrationNumber = internationalRegistrationNumber;
+    }
+
+    public List<OrganisationAddressResource> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<OrganisationAddressResource> addresses) {
+        this.addresses = addresses;
     }
 
     @JsonIgnore

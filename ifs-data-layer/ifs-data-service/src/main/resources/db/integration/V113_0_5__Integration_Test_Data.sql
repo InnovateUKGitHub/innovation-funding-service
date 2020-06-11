@@ -342,7 +342,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (3,3),(9,3),(1,4),(2,4),(8,4),(10,4),(13,4),(18,5),(54,8),(55,11),(49,12),(50,12),(51,13),(52,13),(53,14);
+INSERT INTO `user_role` VALUES (3,3),(9,3),(1,4),(2,4),(8,4),(10,4),(13,4),(18,5),(54,8),(55,11),(49,12),(50,12),(51,13),(52,13),(53,14),(53,8);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
