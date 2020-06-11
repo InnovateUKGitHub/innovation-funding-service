@@ -5,9 +5,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.CompetitionDocumentResourceBuilder;
+import org.innovateuk.ifs.competition.builder.CompetitionPostAwardServiceResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionDocumentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
@@ -99,6 +103,9 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     @Mock
     private AsyncFuturesGenerator futuresGeneratorMock;
 
+    @Mock
+    private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
+
     private static final boolean monitoringOfficerExpected = true;
 
     List<CompetitionDocumentResource> projectDocumentConfig =
@@ -135,6 +142,11 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
             .withEmail("james.watts@email.co.uk")
             .withRolesGlobal(singletonList(Role.APPLICANT))
             .withUID("2aerg234-aegaeb-23aer").build();
+
+    private CompetitionPostAwardServiceResource competitionPostAwardServiceResource = CompetitionPostAwardServiceResourceBuilder.newCompetitionPostAwardServiceResource()
+            .withCompetitionId(competition.getId())
+            .withPostAwardService(PostAwardService.CONNECT)
+            .build();
 
     @Before
     public void setupExpectations() {
@@ -1511,6 +1523,10 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);
         when(statusService.getProjectTeamStatus(eq(project.getId()), any(Optional.class))).thenReturn(teamStatus);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource, partnerOrganisationResource));
+
+        when(competitionSetupPostAwardServiceRestService.getPostAwardService(competition.getId())).thenReturn(restSuccess(competitionPostAwardServiceResource));
+        when(projectService.isProjectManager(loggedInUser.getId(), project.getId())).thenReturn(false);
+        when(projectService.isProjectFinanceContact(loggedInUser.getId(), project.getId())).thenReturn(false);
     }
 
     private void assertStandardViewModelValuesCorrect(SetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {
