@@ -396,7 +396,3 @@ function getRemoteRegistryUrl() {
 function getNexusRegistryUrl() {
   echo "docker-ifs.devops.innovateuk.org"
 }
-
-function getNexusCredentials() {
-    echo "${bamboo_openshift_svc_account_token}"
-}
