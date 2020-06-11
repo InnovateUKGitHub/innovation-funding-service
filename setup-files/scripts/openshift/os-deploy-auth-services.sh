@@ -24,7 +24,10 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 echo "Deploying the $PROJECT Openshift project"
 
 function deploy() {
+    oc create -f $(getBuildLocation)/shib/55-ldap.yml ${SVC_ACCOUNT_CLAUSE}
+    oc create -f $(getBuildLocation)/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+    oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
 function addAbilityToPullFromNexus() {
@@ -36,17 +39,6 @@ function addAbilityToPullFromNexus() {
 
     oc secrets add serviceaccount/builder secrets/ifs-external-registry ${SVC_ACCOUNT_CLAUSE}
 }
-# move to deploy-functions
-#function shibInit() {
-#    echo "Shib init.."
-#    LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
-#    echo "Ldap pod: ${LDAP_POD}"
-#
-#     while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
-#        echo "Shibinit failed. Retrying.."
-#        sleep 10
-#    done
-#}
 
 # Entry point
 if [[ ${TARGET} == "local" ]]
@@ -57,9 +49,4 @@ fi
 addAbilityToPullFromNexus
 useNexusRegistry
 deploy
-#blockUntilServiceIsUp
-
-#if [[ ${TARGET} == "local" || ${TARGET} == "remote" ]]
-#then
-#    shibInit
-#fi
+blockUntilServiceIsUp
