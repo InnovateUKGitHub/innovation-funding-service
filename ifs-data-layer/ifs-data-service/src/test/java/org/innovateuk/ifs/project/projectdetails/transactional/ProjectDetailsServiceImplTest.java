@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -22,9 +22,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
-import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.core.builder.ProjectBuilder;
@@ -54,7 +52,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -65,12 +62,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.address.builder.AddressTypeBuilder.newAddressType;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJECT;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -81,7 +75,6 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteBuilder.newProjectUserInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectUserInviteResourceBuilder.newProjectUserInviteResource;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -153,9 +146,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Mock
     private AddressMapper addressMapperMock;
-
-    @Mock
-    private OrganisationAddressRepository organisationAddressRepositoryMock;
 
     @Mock
     private AddressTypeRepository addressTypeRepositoryMock;
@@ -594,24 +584,23 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = null;
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, null);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postcode = "";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        postcodeAndTown.setPostcode("");
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
-        postcode = "    ";
-        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        postcodeAndTown.setPostcode("    ");
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
-
     }
 
     @Test
@@ -619,11 +608,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "SOME LONG POSTCODE";
+        PostcodeAndTownResource postcodeAndTownResource = new PostcodeAndTownResource("SOME LONG POSTCODE", null);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTownResource);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POSTCODE_LENGTH), HttpStatus.BAD_REQUEST)));
     }
@@ -633,7 +622,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "TW14 9QG";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
         Project existingProject = newProject().withId(projectId).withGrantOfferLetter(newFileEntry().build()).build();
         when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
@@ -642,7 +631,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_LOCATION_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
     }
@@ -652,13 +641,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "TW14 9QG";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("TW14 9QG", null);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         Project existingProject = newProject().withId(projectId).build();
         when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
 
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(notFoundError(PartnerOrganisation.class, projectId, organisationId)));
     }
@@ -668,7 +657,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "tw14 9qg";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("tw14 9qg", null);
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
 
@@ -677,17 +666,105 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postcode.toUpperCase(), partnerOrganisationInDb.getPostcode());
+        assertEquals(postcodeAndTown.getPostcode().toUpperCase(), partnerOrganisationInDb.getPostcode());
+    }
+
+    @Test
+    public void updatePartnerProjectLocationEnsureWrongCaseInternationalLocationIsSavedWithAppropriateCasing() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "aMsTeRdAm");
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals("Amsterdam", partnerOrganisationInDb.getInternationalLocation());
+    }
+
+    @Test
+    public void updatePartnerProjectLocationEnsureWrongCaseInternationalLocationIsSavedWithAppropriateCasingForMultipleWords() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "tHe hAgUe");
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals("The Hague", partnerOrganisationInDb.getInternationalLocation());
+    }
+
+    @Test
+    public void updatePartnerProjectLocationEnsureWrongCaseInternationalLocationIsSavedWithoutExcessiveSpacingForMultipleWords() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "tHe       hAgUe");
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals("The Hague", partnerOrganisationInDb.getInternationalLocation());
+    }
+
+    @Test
+    public void updatePartnerProjectLocationWhenInternationalLocationIsNullOrEmpty() {
+        long projectId = 1L;
+        long organisationId = 2L;
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
+
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+        postcodeAndTown.setTown("");
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
+
+        postcodeAndTown.setTown("    ");
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
     }
 
     @Test
     public void updatePartnerProjectLocationSuccess() {
         long projectId = 1L;
         long organisationId = 2L;
-        String postcode = "UB7 8QF";
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource("UB7 8QF", null);
 
         PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation(project, null, true);
 
@@ -697,10 +774,32 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcode);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
         assertTrue(updateResult.isSuccess());
 
-        assertEquals(postcode, partnerOrganisationInDb.getPostcode());
+        assertEquals(postcodeAndTown.getPostcode(), partnerOrganisationInDb.getPostcode());
+        verify(projectDetailsWorkflowHandlerMock).projectLocationAdded(eq(project), eq(leadPartnerProjectUser));
+    }
+
+    @Test
+    public void updatePartnerProjectLocationSuccessForInternational() {
+        long projectId = 1L;
+        long organisationId = 2L;
+        PostcodeAndTownResource postcodeAndTown = new PostcodeAndTownResource(null, "Amsterdam");
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation(project, null, true);
+
+        Project existingProject = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findById(existingProject.getId())).thenReturn(Optional.of(existingProject));
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
+        when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(newOrganisation().withInternational(true).build()));
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postcodeAndTown);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals(postcodeAndTown.getTown(), partnerOrganisationInDb.getInternationalLocation());
         verify(projectDetailsWorkflowHandlerMock).projectLocationAdded(eq(project), eq(leadPartnerProjectUser));
     }
 
@@ -939,108 +1038,47 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void updateProjectAddressToBeRegisteredAddress() {
-        AddressResource existingRegisteredAddressResource = newAddressResource().build();
-        Address registeredAddress = newAddress().build();
-
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
-        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(addressRepositoryMock.existsById(existingRegisteredAddressResource.getId())).thenReturn(true);
-        when(addressRepositoryMock.findById(existingRegisteredAddressResource.getId())).thenReturn(Optional.of(registeredAddress));
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), existingRegisteredAddressResource);
-        assertTrue(result.isSuccess());
-        assertEquals(registeredAddress, project.getAddress());
-    }
-
-    @Test
-    public void updateProjectAddressToBeOperatingAddress() {
-        AddressResource existingOperatingAddressResource = newAddressResource().build();
-        Address operatingAddress = newAddress().build();
-
-        when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
-        when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
-        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(addressRepositoryMock.existsById(existingOperatingAddressResource.getId())).thenReturn(true);
-        when(addressRepositoryMock.findById(existingOperatingAddressResource.getId())).thenReturn(Optional.of(operatingAddress));
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), existingOperatingAddressResource);
-        assertTrue(result.isSuccess());
-        assertEquals(operatingAddress, project.getAddress());
-    }
-
-    @Test
     public void updateProjectAddressToNewProjectAddress() {
-
-        Organisation leadOrganisation = newOrganisation()
-                .withId(organisation.getId())
-                .build();
 
         AddressResource newAddressResource = newAddressResource().build();
         Address newAddress = newAddress()
                 .build();
-
-        AddressType projectAddressType = newAddressType()
-                .withId((long) PROJECT.getOrdinal())
-                .withName(PROJECT.name())
-                .build();
-
-        OrganisationAddress organisationAddress = newOrganisationAddress()
-                .withOrganisation(leadOrganisation)
-                .withAddress(newAddress).withAddressType(projectAddressType)
-                .build();
+        project.setAddress(null);
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(addressRepositoryMock.existsById(newAddressResource.getId())).thenReturn(false);
         when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
-        when(addressTypeRepositoryMock.findById(PROJECT.getOrdinal())).thenReturn(Optional.of(projectAddressType));
-        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
-        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
+        when(addressRepositoryMock.save(newAddress)).thenReturn(newAddress);
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
-        verify(organisationAddressRepositoryMock, never()).delete(Mockito.any(OrganisationAddress.class));
         assertEquals(newAddress, project.getAddress());
     }
 
     @Test
-    public void updateProjectAddressToNewProjectAddressAndExistingAddressAssociatedWithOrg() {
+    public void updateProjectAddressToExistingAddress() {
 
-        Organisation leadOrganisation = newOrganisation().withId(organisation.getId()).build();
-        AddressResource newAddressResource = newAddressResource().build();
-        Address newAddress = newAddress().build();
-        AddressType projectAddressType = newAddressType().withId((long) PROJECT.getOrdinal()).withName(PROJECT.name()).build();
-        OrganisationAddress organisationAddress = newOrganisationAddress().withOrganisation(leadOrganisation).withAddress(newAddress).withAddressType(projectAddressType).build();
+        AddressResource newAddressResource = newAddressResource().withAddressLine1("new").build();
+        Address existingAddress = newAddress().withAddressLine1("old").build();
+        project.setAddress(existingAddress);
+
 
         when(userRepositoryMock.findById(user.getId())).thenReturn(Optional.of(user));
         when(projectRepositoryMock.findById(project.getId())).thenReturn(Optional.of(project));
         when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
-        when(addressRepositoryMock.existsById(newAddressResource.getId())).thenReturn(false);
-        when(addressMapperMock.mapToDomain(newAddressResource)).thenReturn(newAddress);
-        when(addressTypeRepositoryMock.findById(PROJECT.getOrdinal())).thenReturn(Optional.of(projectAddressType));
-        when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(singletonList(organisationAddress));
-        when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        assertNull(project.getAddress());
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), newAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(project.getId(), newAddressResource);
         assertTrue(result.isSuccess());
-        assertEquals(newAddress, project.getAddress());
+        assertEquals(existingAddress, project.getAddress());
+        assertEquals(existingAddress.getAddressLine1(), "new");
     }
 
     @Test

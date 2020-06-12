@@ -187,13 +187,13 @@ internal user generates the GOL
     #horrible hack but we need to wait for virus scanning
     sleep  5s
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send to project team")
-    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
+    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
 
 Applicant uploads the GOL
     [Arguments]  ${projectID}
     the user navigates to the page        ${server}/project-setup/project/${projectID}
-    the user clicks the button/link       link = Grant offer letter
+    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
@@ -201,15 +201,15 @@ Applicant uploads the GOL
 Applicant uploads the GOL using Docusign
     [Arguments]  ${projectID}  ${date}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
-    the user clicks the button/link           link = Grant offer letter
-    the user clicks the button/link           link = docusign
-    the user should see the element           jQuery = span:contains("Please Review & Act on These Documents")
+    the user clicks the button/link           jquery = a:contains("Grant offer letter")
+    the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           jQuery = span:contains("Please review the documents below.")
     the user selects the checkbox             disclosureAccepted
     the user clicks the button/link           jQuery = button:contains("Continue")
     the user clicks the button/link           jQuery = span:contains("Start")
     the user clicks the button/link           css = div.initials-tab-content
-    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:first  ${date}
-    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:last   ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
     the user should see the element           jQuery = h1:contains("Grant offer letter")
@@ -676,7 +676,7 @@ the user adds a new partner organisation
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
@@ -732,3 +732,17 @@ the user is able to remove a pending partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the user fills correspondence address for non-uk based organisations
+    [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
+    the user enters text to a text field            id = addressLine1       ${addresLine1}
+    the user enters text to a text field            id = addressLine2       ${addresLine2}
+    the user enters text to a text field            id = town               ${town}
+    enter the country in the autocomplete field     Argent                  ${country}
+    the user enters text to a text field            id = zipCode            ${zipCode}
+    the user clicks the button/link                 id = save-project-address-button
+
+enter the country in the autocomplete field
+    [Arguments]         ${country}  ${completeCountryName}
+    input text                          id = country        ${country}
+    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")

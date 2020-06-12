@@ -33,11 +33,6 @@ public class GrantOfferLetterModelPopulator {
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
         GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        String docusignUrl = null;
-        if(state.getState().equals(GrantOfferLetterState.SENT) && project.isUseDocusignForGrantOfferLetter()) {
-            docusignUrl = grantOfferLetterService.getDocusignUrl(projectId).getSuccess().getContent();
-        }
-
         return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
@@ -45,7 +40,6 @@ public class GrantOfferLetterModelPopulator {
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectManager,
                 state,
-                project.isUseDocusignForGrantOfferLetter(),
-                docusignUrl);
+                project.isUseDocusignForGrantOfferLetter());
     }
 }

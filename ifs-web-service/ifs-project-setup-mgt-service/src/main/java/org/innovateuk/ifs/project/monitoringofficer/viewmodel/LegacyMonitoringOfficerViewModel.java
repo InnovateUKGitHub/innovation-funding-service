@@ -37,7 +37,7 @@ public class LegacyMonitoringOfficerViewModel {
         this.applicationId = project.getApplication();
         this.area = area;
         AddressResource primaryAddress = project.getAddress();
-        this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLines() : emptyList();
+        this.primaryAddressLines = primaryAddress != null ? primaryAddress.getNonEmptyLinesInternational() : emptyList();
         this.targetProjectStartDate = project.getTargetStartDate();
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;

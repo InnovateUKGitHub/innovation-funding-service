@@ -30,7 +30,7 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
             // Tags and attributes should be in alphabetical order for ease of lookup
             .addTags(
                     "a", "caption", "h1", "h2", "h3", "div", "em", "li", "ol", "p", "span",
-                    "strong", "table", "tbody", "tfoot", "thead", "td", "th", "tr", "ul"
+                    "strong", "table", "tbody", "tfoot", "thead", "td", "th", "tr", "ul", "br"
             )
             .addAttributes("a", "href", "target", "title")
             .addAttributes("div", "class", "id", "aria-hidden")

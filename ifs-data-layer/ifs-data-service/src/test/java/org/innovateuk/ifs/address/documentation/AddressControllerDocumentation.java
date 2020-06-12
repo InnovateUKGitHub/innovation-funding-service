@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.controller.AddressController;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.transactional.AddressLookupService;
-import org.innovateuk.ifs.address.transactional.AddressService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -17,15 +16,13 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 
 public class AddressControllerDocumentation extends BaseControllerMockMVCTest<AddressController> {
 
     @Mock
     private AddressLookupService addressLookupServiceMock;
-
-    @Mock
-    private AddressService addressServiceMock;
 
     @Override
     protected AddressController supplyControllerUnderTest() {
@@ -63,7 +60,6 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                                 parameterWithName("lookup").description("Postcode to look up")
                         ),
                         responseFields(
-                                fieldWithPath("[]id").description("Address Id"),
                                 fieldWithPath("[]addressLine1").description("Address line1"),
                                 fieldWithPath("[]addressLine2").description("Address line2"),
                                 fieldWithPath("[]addressLine3").description("Address Line3"),
@@ -75,29 +71,4 @@ public class AddressControllerDocumentation extends BaseControllerMockMVCTest<Ad
                         )
                 ));
     }
-    @Test
-    public void findOne() throws Exception {
-        long id = 1;
-        AddressResource addressResource = addressResourceBuilder.build();
-        when(addressServiceMock.getById(id)).thenReturn(serviceSuccess(addressResource));
-
-        mockMvc.perform(get("/address/{id}", id)
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("address/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of Address to find")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").description("Address Id"),
-                                fieldWithPath("addressLine1").description("Address line1"),
-                                fieldWithPath("addressLine2").description("Address line2"),
-                                fieldWithPath("addressLine3").description("Address Line3"),
-                                fieldWithPath("town").description("Town"),
-                                fieldWithPath("county").description("County"),
-                                fieldWithPath("postcode").description("Postcode"),
-                                fieldWithPath("country").description("Country")
-                                )
-                ));
-    }
-
 }

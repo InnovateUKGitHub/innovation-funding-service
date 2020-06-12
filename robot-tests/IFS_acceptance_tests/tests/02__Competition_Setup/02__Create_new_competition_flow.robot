@@ -108,7 +108,7 @@ User can create a new competition
     When the user clicks the button/link       jQuery = .govuk-button:contains("Create competition")
     And The user should see the element        css = #compCTA[disabled]
     And The user should not see the element    link = Funding information
-    And The user should not see the element    link = Eligibility
+    And The user should not see the element    link = Project eligibility
     And The user should not see the element    link = Milestones
     And The user should not see the element    link = Application
     And The user should not see the element    link = Assessors
@@ -171,7 +171,7 @@ User should have access to all the sections
     And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Funding information")
-    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Eligibility")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Project eligibility")
     And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Application")
     And the user should see the element      link = Documents
     And The user should see the element      jQuery = h2:contains("Assessment") ~ ul a:contains("Assessors")
@@ -213,6 +213,7 @@ Funding information: calculations
     [Setup]  the user navigates to the page     ${SERVER}/management/competition/setup/${competitionId}
     Given the user clicks the button/link       link = Funding information
     And the user clicks the button/link         id = generate-code
+    And the user check for competition code
     And the user enters text to a text field    id = funders[0].funderBudget    20000
     And the user enters text to a text field    id = pafNumber    2016
     And the user enters text to a text field    id = budgetCode    2004
@@ -257,10 +258,10 @@ Funding information: should have a green check
     Then the user should see the element    jQuery = li:contains("Funding information") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
-Eligibility: Contain the correct options
+Project eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225  IFS-3287
     [Tags]  HappyPath
-    Given the user clicks the button/link  link = Eligibility
+    Given the user clicks the button/link  link = Project eligibility
     And the user should see the element    jQuery = h2:contains("Please choose the project type.")
     Then the user should see the element   jQuery = label:contains("Single or Collaborative")
     When the user should see the element   jQuery = label:contains("Collaborative")
@@ -282,7 +283,7 @@ Eligibility: Contain the correct options
     And the user should see the element    css = label[for="comp-overrideFundingRules-no"]
     And the resubmission should not have a default selection
 
-Eligibility: Mark as Done then Edit again
+Project eligibility: Mark as Done then Edit again
     [Documentation]    INFUND-3051 INFUND-3872 INFUND-3002 INFUND-9225
     [Tags]  HappyPath
     Given the user selects the checkbox      research-categories-33
@@ -303,15 +304,15 @@ Eligibility: Mark as Done then Edit again
     And the user should see the element      jQuery = dt:contains("Override funding rules") ~ dd:contains("No")
     And The user should not see the element  id = streamName
     When the user clicks the button/link     link = Competition setup
-    When the user clicks the button/link     link = Eligibility
+    When the user clicks the button/link     link = Project eligibility
     And the user clicks the button/link      jQuery = .govuk-button:contains("Edit")
     And the user clicks the button/link      jQuery = button:contains("Done")
 
-Eligibility: Should have a Green Check
+Project eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]  HappyPath
     When The user clicks the button/link    link = Competition setup
-    Then the user should see the element    jQuery = li:contains("Eligibility") .task-status-complete
+    Then the user should see the element    jQuery = li:contains("Project eligibility") .task-status-complete
     And the user should see the element     css = #compCTA[disabled]
 
 Milestones: Page should contain the correct fields
@@ -565,15 +566,24 @@ Public content is required for a Competition to be setup
     And the user clicks the button/link                       link = Return to setup overview
     Then the user should see the element                      jQuery = li:contains("Public content") .task-status-complete
 
+Organisational eligibility is required for a Competition to be setup
+    [Documentation]     IFS-7195
+    [Tags]  HappyPath
+    Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
+    When the user selects the radio button                    internationalOrganisationsApplicable       false
+    And the user clicks the button/link                       jQuery = button:contains("Save and continue")
+    And the user clicks the button/link                       link = Competition setup
+    Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
+
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
     [Tags]
     Given the user should see the element       id = compCTA
-    When the user clicks the button/link        link = Eligibility
+    When the user clicks the button/link        link = Project eligibility
     And the user clicks the button/link         jQuery = button:contains("Edit")
     And the user clicks the button/link         link = Competition setup
     Then the user should see the element        css = #compCTA[disabled]
-    When the user clicks the button/link        link = Eligibility
+    When the user clicks the button/link        link = Project eligibility
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user clicks the button/link         link = Return to setup overview
     Then the user should not see the element    css = #compCTA[disabled]
@@ -923,3 +933,6 @@ the user fills new application details
 Custom suite teardown
     The user closes the browser
     Disconnect from database
+
+the user check for competition code
+    the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}

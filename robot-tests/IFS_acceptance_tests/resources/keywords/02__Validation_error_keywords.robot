@@ -42,3 +42,16 @@ Specific user should not be able to access the page 403 error
     [Arguments]   ${url}   ${email}   ${password}
     log in as a different user   ${email}  ${password}
     The user navigates to the page and gets a custom error message   ${url}   ${403_error_message}
+
+The user should not see a field error
+    [Arguments]    ${ERROR_TEXT}
+    Wait Until Page Does Not Contain Without Screenshots   jQuery = .govuk-error-message:contains("${ERROR_TEXT}")    5s
+
+The user should not see a summary error
+    [Arguments]    ${ERROR_TEXT}
+    Wait Until Page Does Not Contain Without Screenshots    jQuery=.govuk-error-summary:contains("${ERROR_TEXT}")    5s
+
+The user should not see a field and summary error
+     [Arguments]    ${ERROR_TEXT}
+    The user should not see a field error    ${ERROR_TEXT}
+    the user should not see a summary error    ${ERROR_TEXT}

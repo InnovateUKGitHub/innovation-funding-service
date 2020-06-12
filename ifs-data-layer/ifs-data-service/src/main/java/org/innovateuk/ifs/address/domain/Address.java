@@ -2,7 +2,6 @@ package org.innovateuk.ifs.address.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.persistence.Entity;
@@ -27,11 +26,14 @@ public class Address {
     private String county;
     private String country;
 
-    @Length(max = 9)
     private String postcode;
 
     public Address() {
         // no-arg constructor
+    }
+
+    public Address(Address address) {
+        this(address.getAddressLine1(), address.getAddressLine2(), address.getAddressLine3(), address.getTown(), address.getCounty(), address.getPostcode(), address.getCountry());
     }
 
     public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {
@@ -152,5 +154,15 @@ public class Address {
                 .append(postcode)
                 .append(country)
                 .toHashCode();
+    }
+
+    public void copyFrom(AddressResource address) {
+        this.addressLine1 = address.getAddressLine1();
+        this.addressLine2 = address.getAddressLine2();
+        this.addressLine3 = address.getAddressLine3();
+        this.town = address.getTown();
+        this.county = address.getCounty();
+        this.postcode = address.getPostcode();
+        this.country = address.getCountry();
     }
 }

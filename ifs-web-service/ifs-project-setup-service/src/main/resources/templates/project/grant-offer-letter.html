@@ -43,26 +43,45 @@
 
                 <th:block th:unless="${model.submitted}">
                     <h2 class="govuk-heading-m">Next steps</h2>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>review grant offer letter and annex if provided</li>
-                        <li>the Project Manager will need to sign the document</li>
-                        <li>the signed grant offer letter should then be sent to Innovate UK</li>
+                    <ul class="govuk-list govuk-list--number">
+                        <li>All partners can review grant offer letter and annex (if provided).</li>
+                        <li>The Project Manager must review and sign the letter.</li>
+                        <li>The signed letter is sent to Innovate UK.</li>
                     </ul>
-                    <p class="govuk-body">After the signed grant offer letter is received and approved by Innovate UK, project setup will
-                        be complete.</p>
+                    <p class="govuk-body">Project setup will be complete after the signed grant offer letter has been received and approved by Innovate UK.</p>
                 </th:block>
 
 
-                <h2 class="govuk-heading-m">Grant offer letter</h2>
-                <p class="govuk-body" th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
+                <th:block th:if="${!model.useDocusign or model.showGrantOfferLetterReceivedByInnovateMessage}">
+                    <h2 class="govuk-heading-m">Grant offer letter</h2>
+                    <p class="govuk-body" th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
 
-                <th:block th:if="${model.grantOfferLetterSent}">
-                    <p class="govuk-body">
-                        <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
-                           th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
-                           target="_blank"
-                           class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>.
-                    </p>
+                    <th:block th:if="${model.grantOfferLetterSent}">
+                        <p class="govuk-body">
+                            <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
+                               th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
+                               target="_blank"
+                               class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>
+                        </p>
+                    </th:block>
+                </th:block>
+
+                <th:block th:if="${model.useDocusign and !model.submitted}">
+                    <h2 class="govuk-heading-m">Grant offer letter</h2>
+                    <p class="govuk-body">The project manager must <a th:if="${model.projectManager}" class="govuk-link" th:href="@{/project/{projectId}/offer/docusign(projectId=${model.projectId})}">review and sign the grant offer letter</a><th:block th:unless="${model.projectManager}">review and sign the grant offer letter</th:block> on DocuSign, our secure electronic signature partner.</p>
+                    <p class="govuk-body">Please <a href="/info/contact">contact us</a> if you have any accessibility issues with the DocSign process.</p>
+                    <details class="govuk-details">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">How do I sign the letter on DocuSign?</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <ul class="govuk-list govuk-list--number">
+                                <li>Click the DocuSign link on this screen or in the email you received.</li>
+                                <li>Follow the simple instructions on DocuSign's website to guide you through the signing process.</li>
+                                <li>Click 'Finish' and the signed letter will be sent to us.</li>
+                            </ul>
+                        </div>
+                    </details>
                 </th:block>
 
                 <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
@@ -71,9 +90,10 @@
                         <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}"
                            th:text="|${model.signedGrantOfferLetterFile.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank">Signed grant offer letter 2016-07-28a.PDF</a>.
+                           target="_blank">Signed grant offer letter 2016-07-28a.PDF</a>
                     </p>
                 </th:block>
+
 
                 <th:block th:if="${model.additionalContractFile != null}">
                     <h2 class="govuk-heading-m">Annex</h2>
@@ -82,14 +102,10 @@
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>.
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
                     </p>
                 </th:block>
 
-                <th:block th:if="${model.useDocusign and !model.submitted}">
-                    <h2 class="govuk-heading-m">Grant offer letter</h2>
-                    <p class="govuk-body">Please review the grant offer letter on <a th:href="${model.docusignUrl}">docusign</a></p>
-                </th:block>
 
                 <th:block th:unless="${model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
@@ -152,7 +168,7 @@
                     <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
                        th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
                        target="_blank"
-                       class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>.
+                       class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>
                 </p>
 
                 <th:block th:if="${model.additionalContractFile}">
@@ -162,7 +178,7 @@
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>.
+                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
                     </p>
                 </th:block>
             </th:block>

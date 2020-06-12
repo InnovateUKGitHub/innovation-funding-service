@@ -12,10 +12,11 @@ public class SentProjectPartnerInviteResource extends SendProjectPartnerInviteRe
     private Long user;
     private InviteStatus status;
     private long applicationId;
+    private long competitionId;
 
     private SentProjectPartnerInviteResource() {}
 
-    public SentProjectPartnerInviteResource(long id, ZonedDateTime sentOn, String projectName, Long user, InviteStatus status, String organisationName, String userName, String email, long applicationId) {
+    public SentProjectPartnerInviteResource(long id, ZonedDateTime sentOn, String projectName, Long user, InviteStatus status, String organisationName, String userName, String email, long applicationId, long competitionId) {
         super(organisationName, userName, email);
         this.id = id;
         this.sentOn = sentOn;
@@ -23,6 +24,7 @@ public class SentProjectPartnerInviteResource extends SendProjectPartnerInviteRe
         this.user = user;
         this.status = status;
         this.applicationId = applicationId;
+        this.competitionId = competitionId;
     }
 
     public long getId() {
@@ -47,5 +49,9 @@ public class SentProjectPartnerInviteResource extends SendProjectPartnerInviteRe
 
     public long getApplicationId() {
         return applicationId;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 }

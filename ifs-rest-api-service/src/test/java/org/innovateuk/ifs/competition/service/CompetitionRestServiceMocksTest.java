@@ -1,11 +1,9 @@
-
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -14,9 +12,9 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 
 public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionRestServiceImpl> {
@@ -46,38 +44,6 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         CompetitionResource response = service.getCompetitionById(123).getSuccess();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
-    }
-
-    @Test
-    public void findInnovationLeads() {
-        List<UserResource> returnedResponse = newUserResource().build(2);
-
-        setupGetWithRestResultExpectations(format("%s/%d/%s", COMPETITIONS_REST_URL, 123, "innovation-leads"), userListType(), returnedResponse);
-
-        List<UserResource> response = service.findInnovationLeads(123).getSuccess();
-
-        assertNotNull(response);
-        assertEquals(returnedResponse, response);
-    }
-
-    @Test
-    public void addInnovationLead() {
-        setupPostWithRestResultExpectations(format("%s/%d/%s/%d", COMPETITIONS_REST_URL, 123, "add-innovation-lead", 234), HttpStatus.OK);
-
-        RestResult<Void> response = service.addInnovationLead(123, 234);
-
-        assertTrue(response.isSuccess());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    public void removeInnovationLead() {
-        setupPostWithRestResultExpectations(format("%s/%d/%s/%d", COMPETITIONS_REST_URL, 123, "remove-innovation-lead", 234), HttpStatus.OK);
-
-        RestResult<Void> response = service.removeInnovationLead(123, 234);
-
-        assertTrue(response.isSuccess());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test

@@ -18,11 +18,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel additionalContractFile;
     private GrantOfferLetterStateResource golState;
     private boolean useDocusign;
-    private String docusignUrl;
 
     public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign, String docusignUrl) {
+                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign) {
 
         this.projectId = projectId;
         this.projectName = projectName;
@@ -33,7 +32,6 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.projectManager = projectManager;
         this.golState = golState;
         this.useDocusign = useDocusign;
-        this.docusignUrl = docusignUrl;
     }
 
     @Override
@@ -80,10 +78,6 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isUseDocusign() {
         return useDocusign;
-    }
-
-    public String getDocusignUrl() {
-        return docusignUrl;
     }
 
     public boolean isShowSubmitButton() {

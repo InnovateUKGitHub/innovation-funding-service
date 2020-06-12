@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_WITH_ASSESSORS_CANNOT_BE_DELETED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.*;
 
 @Service
 public class CompetitionSetupServiceImpl implements CompetitionSetupService {
@@ -280,22 +280,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                 });
     }
 
-    @Override
-    public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
-        return competitionRestService.addInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
-        return competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId).toServiceResult();
-    }
-
     private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
         List<CompetitionSetupSection> requiredSections = new ArrayList<>();
         requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
         requiredSections.add(CompetitionSetupSection.TERMS_AND_CONDITIONS);
         requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
-        requiredSections.add(ELIGIBILITY);
+        requiredSections.add(PROJECT_ELIGIBILITY);
+        requiredSections.add(ORGANISATIONAL_ELIGIBILITY);
         requiredSections.add(CompetitionSetupSection.MILESTONES);
         requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
         requiredSections.add(CompetitionSetupSection.CONTENT);

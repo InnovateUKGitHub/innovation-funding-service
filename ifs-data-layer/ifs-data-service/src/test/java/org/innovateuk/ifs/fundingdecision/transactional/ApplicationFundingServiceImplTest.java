@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
@@ -480,6 +481,24 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         verify(applicationWorkflowHandler).approve(any(Application.class));
         assertTrue(FundingDecisionStatus.FUNDED.equals(unsuccessfulApplication.getFundingDecision()));
 
+    }
+
+    @Test
+    public void testSaveFundingDecisionDataWithNoDecisions() {
+
+        Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
+        Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(asList(application1, application2));
+
+        Map<Long, FundingDecision> decision = new HashMap<>();
+
+        ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
+
+        assertTrue(result.isFailure());
+        assertEquals(1, result.getFailure().getErrors().size());
+        assertEquals("FUNDING_PANEL_DECISION_NONE_PROVIDED", result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals(HttpStatus.BAD_REQUEST, result.getFailure().getErrors().get(0).getStatusCode());
+        verify(applicationRepository, never()).findAllowedApplicationsForCompetition(anySet(), anyLong());
     }
 
     public static Notification createNotificationExpectationsWithGlobalArgs(Notification expectedNotification) {
