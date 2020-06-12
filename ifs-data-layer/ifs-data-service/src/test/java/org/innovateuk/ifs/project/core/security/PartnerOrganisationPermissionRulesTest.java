@@ -37,60 +37,6 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void internalUsersCanViewPartnerOrgs() {
-
-        UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();
-
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
-
-        assertTrue(rules.internalUsersCanViewPartnerOrganisations(partnerOrg, user));
-    }
-
-    @Test
-    public void externalUsersCannotViewPartnerOrgs() {
-
-        UserResource user = newUserResource().build();
-
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
-
-        assertFalse(rules.internalUsersCanViewPartnerOrganisations(partnerOrg, user));
-    }
-
-    @Test
-    public void partnersCannotViewOtherPartnerOrganisations() {
-
-        long projectId = 1L;
-        long organisationId = 2L;
-        UserResource user = newUserResource().build();
-
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
-                .withProject(projectId)
-                .withOrganisation(organisationId)
-                .build();
-        when(projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(null);
-
-        assertFalse(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
-    }
-
-    @Test
-    public void partnersCanViewTheirOwnPartnerOrganisation() {
-
-        long projectId = 1L;
-        long organisationId = 2L;
-        UserResource user = newUserResource().build();
-
-        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
-                .withProject(projectId)
-                .withOrganisation(organisationId)
-                .build();
-        ProjectUser projectUser = newProjectUser()
-                .build();
-        when(projectUserRepository.findFirstByProjectIdAndUserIdAndOrganisationIdAndRoleIn(projectId, user.getId(), organisationId, PROJECT_USER_ROLES.stream().collect(Collectors.toList()))).thenReturn(projectUser);
-
-        assertTrue(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
-    }
-
-    @Test
     public void partnersCanView() {
 
         UserResource user = newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build();

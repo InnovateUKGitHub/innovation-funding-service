@@ -61,7 +61,10 @@
                     </td>
                     <td class="govuk-table__cell" id="project-address">
                         <th:block th:if="${model.project.address == null}">Not yet completed</th:block>
-                        <th:block th:unless="${model.project.address == null}" th:text="${model.project.address.asSingleLine}"></th:block>
+                        <th:block th:unless="${model.project.address == null}">
+                            <th:block th:if="${model.leadOrganisationInternational}" ifs:utext="${model.project.address.getAsInternationalTwoLine()}"></th:block>
+                            <th:block th:unless="${model.leadOrganisationInternational}" th:text="${model.project.address.asSingleLine}"></th:block>
+                        </th:block>
                     </td>
                 </tr>
             </tbody>
@@ -82,16 +85,11 @@
                 </thead>
                 <tbody class="govuk-table__body">
                 <tr class="govuk-table__row" th:each="partnerOrganisation: ${model.partnerOrganisations}">
-                    <td class="govuk-table__cell" th:with="showLead=${partnerOrganisation.organisationName.equals(model.leadOrganisation) && model.project.collaborativeProject}">
+                    <td class="govuk-table__cell" th:with="showLead=${partnerOrganisation.organisationName.equals(model.leadOrganisation.name) && model.project.collaborativeProject}">
                         <th:block th:if="${showLead}" th:text="${partnerOrganisation.organisationName + ' (Lead)'}"></th:block>
                         <th:block th:unless="${showLead}" th:text="${partnerOrganisation.organisationName}"></th:block>
                     </td>
-                    <td class="govuk-table__cell">
-                        <th:block th:unless="${partnerOrganisation.postcode == null}"
-                                  th:text="${partnerOrganisation.postcode}" />
-                        <th:block th:if="${partnerOrganisation.postcode == null}">
-                            Not yet completed
-                        </th:block>
+                    <td class="govuk-table__cell" th:text="${model.getLocationForPartnerOrganisation(partnerOrganisation.organisation)}">
                     </td>
                 </tr>
 

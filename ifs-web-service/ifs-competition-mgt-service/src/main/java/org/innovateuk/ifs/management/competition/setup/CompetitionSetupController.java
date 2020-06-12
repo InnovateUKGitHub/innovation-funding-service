@@ -27,11 +27,11 @@ import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,6 +56,7 @@ import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
+import static org.innovateuk.ifs.management.competition.setup.organisationaleligibility.controller.CompetitionSetupOrganisationalEligibilityController.ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT;
 import static org.innovateuk.ifs.management.competition.setup.projectdocument.controller.CompetitionSetupDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
 
 /**
@@ -166,6 +167,8 @@ public class CompetitionSetupController {
             return format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {
             return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
+        } else if (section == CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY) {
+            return format(ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT, competitionId);
         }
 
         if (competition.isNonIfs()) {
@@ -238,8 +241,8 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
 
-    @PostMapping("/{competitionId}/section/eligibility")
-    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
+    @PostMapping("/{competitionId}/section/project-eligibility")
+    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectEligibilityForm competitionSetupForm,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -250,15 +253,15 @@ public class CompetitionSetupController {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.PROJECT_ELIGIBILITY, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")
     public String submitCompletionStageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
-                                                 BindingResult bindingResult,
-                                                 ValidationHandler validationHandler,
-                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                 Model model) {
+                                                      BindingResult bindingResult,
+                                                      ValidationHandler validationHandler,
+                                                      @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                      Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 

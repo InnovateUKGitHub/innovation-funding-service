@@ -265,14 +265,9 @@ New Lead Applicant invites new user as collaborator on his application
     And the lead applicant is no longer directed to the team page
 
 *** Keywords ***
-The lead applicant should have the correct status
-    the user should see the element  jQuery = h2:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
-    the user should see the element  jQuery = .table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
-
 The lead applicant should have the correct org status
-    the user should see the element  jQuery = h2:contains("org2"):contains("(Lead)")+h3:contains("Organisation type")+p:contains("Business")
+    the user should see the element  jQuery = h2:contains("org2")
+    the user should see the element  jQuery = td:contains("Type")+td:contains("Business")
     the user should see the element  jQuery = td:contains("Steve Smith") ~ td:contains("${lead_applicant}") ~ td:contains("Lead")
 
 the status of the people should be correct in the Manage contributors page
@@ -289,11 +284,12 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
     And the user clicks the button/link   link = ${application_name}
     When the user clicks the button/link  link = Application team
-    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")+h3:contains("Organisation type")+p:contains("Business")
+    Then the user should see the element  jQuery = h2:contains("NOMENSA LTD")
+    And the user should see the element   jQuery = td:contains("Type")+td:contains("Business")
 
 the lead applicant cannot be removed
-    the user should see the text in the element  css = tr:nth-of-type(1) td:nth-of-type(3)    Lead
-    the user should not see the element          jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
+    the user should see the element         jQuery = td:contains("Lead applicant")
+    the user should not see the element     jQuery = #applicant-table tbody > tr:nth-child(1) button:contains("Remove")
 
 the user creates an account and signs in
     The user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
@@ -310,7 +306,7 @@ the lead applicant invites the collaborator
 the collaborator accepts the invite and is able to see the application without any errors
     The user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
     The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
-    The user should see the element               jQuery = h1:contains("Choose organisation type")
+    The user should see the element               jQuery = h1:contains("Choose your organisation type")
     The user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
     The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page
@@ -331,7 +327,7 @@ Custom suite teardown
 
 the user accepts invitation
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, accept invitation")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 

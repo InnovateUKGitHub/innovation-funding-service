@@ -676,7 +676,7 @@ the user adds a new partner organisation
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
@@ -732,3 +732,17 @@ the user is able to remove a pending partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the user fills correspondence address for non-uk based organisations
+    [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
+    the user enters text to a text field            id = addressLine1       ${addresLine1}
+    the user enters text to a text field            id = addressLine2       ${addresLine2}
+    the user enters text to a text field            id = town               ${town}
+    enter the country in the autocomplete field     Argent                  ${country}
+    the user enters text to a text field            id = zipCode            ${zipCode}
+    the user clicks the button/link                 id = save-project-address-button
+
+enter the country in the autocomplete field
+    [Arguments]         ${country}  ${completeCountryName}
+    input text                          id = country        ${country}
+    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
