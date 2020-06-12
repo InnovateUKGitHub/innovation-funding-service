@@ -498,12 +498,12 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
-        notificationArguments.put("projectName", project.getName());
-        notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
 
         return getCompetitionPostAwardService(project.getApplication().getCompetition().getId()).andOnSuccess(postAwardService -> {
             Notification notification;
             if (postAwardService == PostAwardService.IFS_POST_AWARD || postAwardService == PostAwardService.CONNECT) {
+                notificationArguments.put("projectName", project.getName());
+                notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
                 notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
                 notification = new Notification(systemNotificationSource, notificationTargets,
                         NotificationsGol.PROJECT_LIVE_PAS, notificationArguments);
