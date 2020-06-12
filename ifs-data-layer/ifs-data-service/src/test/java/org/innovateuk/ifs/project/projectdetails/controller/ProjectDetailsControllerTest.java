@@ -102,20 +102,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void getProjectFinanceContactsNotFound() throws Exception {
-        Long project1Id = -1L;
-        List<ProjectParticipantRole> projectParticipantRoles = Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
-
-        when(projectService.getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
-
-        mockMvc.perform(get("/project/{id}/project-finance-contacts", project1Id))
-                .andExpect(status().isNotFound());
-
-        verify(projectService).getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles);
-        verifyNoMoreInteractions(projectService);
-    }
-
-    @Test
     public void setProjectManager() throws Exception {
         when(projectDetailsService.setProjectManager(3L, 5L)).thenReturn(serviceSuccess());
 
