@@ -158,38 +158,134 @@ Registered International lead user applies for an international competition
     Then the user verifies their organisation details
     And the user clicks the button/link                           id = international-confirm-organisation-cta
 
-Applicant is able to complete and submit international application
-    [Documentation]  IFS-7197
+Lead applicant can see organisation address details on the application team page
+    [Documentation]    IFS-7264
     [Tags]  HappyPath
-    [Setup]  the user navigates to the page        ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link          link = Untitled application (start here)
+    [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
+    Given the user clicks the button/link       link = Untitled application (start here)
+    And the user clicks the button/link         link = Application team
+    Then the user should see the element        jQuery = td:contains("7 Pinchington Lane, Sydney, ")
+
+Lead applicant can edit organisation address details on the application team page
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    When the user clicks the button/link     link = Edit
+    Then the user should be able to edit the address and see the changes
+
+Lead applicant completes application details
+    Given the user clicks the button/link     link = Application overview
+    And the user enters application details
+
+Lead applicant applies again to international competition using the same international organisation and verifies organisation address
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    Given the user select the competition and starts application                       ${createApplicationOpenInternationalCompetition}
+    And check if there is an existing application in progress for this competition
+    When user selects where is organisation based                                      isInternational
+    Then the user clicks the button/link                                               jQuery = span:contains("New Empire 1")
+    And the user should be able to see the same address details
+
+Lead applicant adds a team member
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
+    Given the user clicks the button/link     link = ${internationalApplicationTitle}
+    And the user clicks the button/link       link = Application team
+    When the user clicks the button/link      jQuery = button:contains("Add person to New Empire 1")
+    And the user adds a new team member       MemberFName MemberSName  ${team_member}
+    Then the user should see the element      jQuery = td:contains("MemberFName MemberSName (pending for 0 days)")
+    [Teardown]  logout as user
+
+Team member accepts the invite and can change lead organisation address details
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    Given team member accepts the invite to join organisation     ${team_member}  ${createApplicationOpenInternationalCompetition}  MemberFName  MemberSName
+    When the user clicks the button/link                          link = Sign in
+    And Logging in and Error Checking                             ${team_member}  ${short_password}
+    And the user clicks the button/link                           link = ${internationalApplicationTitle}
+    Then the member can edit leads organisation address details
+    [Teardown]    Logout as user
+
+Lead applicant adds a partner organisation
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    [Setup]  Logging in and Error Checking            ${lead_international_email}  ${short_password}
+    Given the user clicks the button/link             link = ${internationalApplicationTitle}
+    And the user clicks the button/link               link = Application team
+    When the user clicks the button/link              link = Add a partner organisation
+    And the user adds a new partner                   Partner Ltd  FName SName  ${partner_org}
+    Then the user should see the element              jQuery = td:contains("FName SName (pending for 0 days)")
+    [Teardown]    Logout as user
+
+Partner organisation accepts the invite to collaborate and cannot edit lead org address details
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    Given partner organisation accepts the invite to collaborate      ${partner_org}  ${createApplicationOpenInternationalCompetition}  ${BUSINESS_TYPE_ID}
+    When the user clicks the button/link                              link = Application team
+    Then the user should not see the element                          link = Edit
+    And the user should see the element                               jQuery = td:contains("7 Fisher House")
+    [Teardown]    Logout as user
+
+Internal user can see International Organisation Address Details in Application Overview
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    [Setup]  requesting Application ID for this Application
+    Given Logging in and Error Checking                   &{internal_finance_credentials}
+    When the user selects the application in progress
+    And the user clicks the button/link                   jQuery = button:contains("Open all")
+    Then the user should see the element                  jQuery = td:contains("Address")
+    And the user should see the element                   jQuery = td:contains("7 Fisher House, Sydney, ")
+    [Teardown]    Logout as user
+
+Applicant is able to complete international application
+    [Documentation]  IFS-7264
+    [Tags]  HappyPath
+    [Setup]  Logging in and Error Checking         ${lead_international_email}  ${short_password}
+    Given the user clicks the button/link          link = ${internationalApplicationTitle}
     When the user completes the application
-    Then the applicant submits the application
+
+Partner also completes funding info
+    [Documentation]    IFS-7264
+    [Tags]  HappyPath
+    [Setup]  Logging in and Error Checking          ${partner_org}  ${correct_password}
+    Given the user clicks the button/link           link = ${internationalApplicationTitle}
+    When the user clicks the button/link            link = Your project finances
+    And partner marks the finance as complete       ${internationalApplicationTitle}
+    Then Logout as user
+
+Lead applicant submits the application
+    [Documentation]  IFS-7264
+    [Tags]  HappyPath
+    [Setup]  Logging in and Error Checking         ${lead_international_email}  ${short_password}
+    Given the user clicks the button/link          link = ${internationalApplicationTitle}
+    When the applicant submits the application
+    Then the user should not see an error in the page
+    [Teardown]    Logout as user
 
 Moving International Competition to Project Setup
     [Documentation]  IFS-7197
     [Tags]  HappyPath
     [Setup]  Get competitions id and set it as suite variable     ${internationalCompetitionTitle}
-    Given Log in as a different user                              &{internal_finance_credentials}
+    Given Logging in and Error Checking                           &{internal_finance_credentials}
     When moving competition to Closed                             ${internationalCompetitionId}
     And making the application a successful project               ${internationalCompetitionId}  ${internationalApplicationTitle}
     Then moving competition to Project Setup                      ${internationalCompetitionId}
-    [Teardown]  Requesting IDs of this Project
+    [Teardown]  requesting project ID for this project
 
 Ifs Admin is able to add a new partner organisation
     [Documentation]  IFS-7197
     [Tags]  HappyPath
+    [Setup]  logging in and error checking                 &{internal_finance_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
     When the user clicks the button/link                   jQuery = tr:contains("${internationalApplicationTitle}") .waiting:nth-child(3)
     And the user clicks the button/link                    link = Add a partner organisation
-    And the user adds a new partner organisation           Testing International Partner Organisation  FName Surname  ${international_invite_email}
+    And the user adds a new partner organisation           INTERNATIONAL PARTNER ORGANISATION  FName Surname  ${international_invite_email}
     Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
     [Documentation]  IFS-7197
     [Tags]  HappyPath
-    When partner user provide organisation detail and create account
-    Then the user should not see an error in the page
+    When partner user provide organisation detail and create account     ${international_invite_email}
 
 *** Keywords ***
 UK-based user sees these page elements
@@ -223,12 +319,18 @@ organisation is able to accept project invite
     the user reads his email and clicks the link     ${email}  Invitation to join project ${applicationID}: ${appTitle}  You have been invited to join the project ${appTitle}
 
 partner user provide organisation detail and create account
+    [Arguments]  ${email}
     the user clicks the button/link                                   jQuery = .govuk-button:contains("Yes, create an account")
     user selects where is organisation based                          isInternational
     the user provides international organisation details              435445543  Sydney  Australia  Australia  Test Empire  international-organisation-details-cta
     the user should see the element                                   jQuery = p:contains("This is the organisation that you will join the project with.")
     the user clicks the button/link                                   id = international-confirm-organisation-cta
     partner user enters the details and clicks the create account     Tester  Simpson  ${short_password}
+    the user should see the element                                   jQuery = h1:contains("Please verify your email address")
+    the user reads his email and clicks the link                      ${email}  Please verify your email address  Once verified you can sign into your account.
+    the user should be redirected to the correct page                 ${REGISTRATION_VERIFIED}
+    the user clicks the button/link                                   link = Sign in
+    Logging in and Error Checking                                     ${email}  ${correct_password}
 
 Partner user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${password}
@@ -309,34 +411,94 @@ the user gets an error message on not filling mandatory fields
     the user should see the element     link = You must select the country where your organisation is based.
 
 The user completes the application
-    the user clicks the button/link                          link = Application details
-    the user fills in the Application details                ${internationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${internationalApplicationTitle}
-    the user marks the finance as complete                   ${internationalApplicationTitle}   Calculate  52,214
+    lead marks the finance as complete                       ${internationalApplicationTitle}   Calculate  52,214
     the user accept the competition terms and conditions     Return to application overview
 
-the user marks the finance as complete
+lead marks the finance as complete
     [Arguments]  ${application}  ${overheadsCost}  ${totalCosts}
     the user fills in the project costs                      ${overheadsCost}  ${totalCosts}
-    the user enters the project location
+    the user enters the project location                     town   London
     the user fills in the organisation information           ${application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section                     ${application}
     the user should see all finance subsections complete
     the user clicks the button/link                          link = Back to application overview
     the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
+partner marks the finance as complete
+    [Arguments]  ${application}
+    the user clicks the button/link                          link = Your project costs
+    the user fills in Labour
+    the user clicks the button/link                          css = label[for="stateAidAgreed"]
+    the user clicks the button/link                          jQuery = button:contains("Mark as complete")
+    the user enters the project location                     postcode  AB12 3CD
+    the user fills in the organisation information           ${application}  ${SMALL_ORGANISATION_SIZE}
+    the user checks Your Funding section                     ${application}
+    the user should see all finance subsections complete
+    the user clicks the button/link                          link = Back to application overview
+    the user accept the competition terms and conditions     Return to application overview
+
 the user enters the project location
+    [Arguments]  ${locator}  ${location}
     the user clicks the button/link         link = Your project location
-    the user enters text to a text field    town   BS1 4NT
+    the user enters text to a text field    ${locator}  ${location}
     the user clicks the button/link         jQuery = button:contains("Mark as complete")
 
-Requesting IDs of this Project
+requesting project ID for this project
     ${ProjectID} =  get project id by name    ${internationalApplicationTitle}
     Set suite variable    ${ProjectID}
+
+requesting Application ID for this Application
     ${ApplicationID} =  get application id by name    ${internationalApplicationTitle}
     Set suite variable    ${ApplicationID}
+
+the user should be able to edit the address and see the changes
+    the user enters text to a text field     id = addressLine1  77 First Line
+    the user enters text to a text field     id = zipCode  RG14 7AU
+    the user clicks the button/link          id = update-organisation-address
+    the user should see the element          jQuery = td:contains("77 First Line")
+
+the user should be able to see the same address details
+    the user clicks the button/link     id = save-organisation-button
+    the user clicks the button/link     link = Application team
+    the user should see the element     jQuery = td:contains("77 First Line")
+
+the user enters application details
+    the user clicks the button/link               link = Application details
+    the user fills in the Application details     ${internationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+
+the user adds a new partner
+    [Arguments]   ${partnerOrgName}  ${persFullName}  ${email}
+    the user enters text to a text field  id = organisationName  ${partnerOrgName}
+    the user enters text to a text field  id = name  ${persFullName}
+    the user enters text to a text field  id = email  ${email}
+    the user clicks the button/link       jQuery = .govuk-button:contains("Invite partner organisation")
+    the user should see the element       jQuery = h2:contains(${partnerOrgName})
+
+the member can edit leads organisation address details
+    the user clicks the button/link          link = Application team
+    the user clicks the button/link          link = Edit
+    the user enters text to a text field     id = addressLine1  7 Fisher House
+    the user clicks the button/link          id = update-organisation-address
+    the user should see the element          jQuery = td:contains("7 Fisher House")
+
+partner organisation accepts the invite to collaborate
+    [Arguments]  ${email}  ${compName}  ${businessTypeId}
+    the user reads his email and clicks the link  ${email}  Invitation to collaborate in ${compName}  You are invited by  2
+    The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
+    user selects where is organisation based      isNotInternational
+    The user should see the element               jQuery = h1:contains("Choose your organisation type")
+    The user completes the new account creation   ${email}  ${businessTypeId}
+    The user clicks the button/link               link = ${internationalApplicationTitle}
+    The user should not see an error in the page
+
+the user selects the application in progress
+    the user clicks the button/link     link = ${createApplicationOpenInternationalCompetition}
+    the user clicks the button/link     link = Applications: All, submitted, ineligible
+    the user clicks the button/link     link = All applications
+    the user clicks the button/link     link = ${ApplicationID}
 
 Custom Suite Setup
     The guest user opens the browser
