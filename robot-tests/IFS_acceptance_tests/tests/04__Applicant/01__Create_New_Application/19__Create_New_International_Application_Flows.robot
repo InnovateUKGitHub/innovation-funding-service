@@ -169,7 +169,7 @@ Applicant is able to complete and submit international application
 Moving International Competition to Project Setup
     [Documentation]  IFS-7197
     [Tags]  HappyPath
-    [Setup]  Get competitions id and set it as suite variable     ${internationalCompetitionTitle}
+    [Setup]  Get competitions id and set it as suite variable     ${internationalCompetitionName}
     Given Log in as a different user                              &{internal_finance_credentials}
     When moving competition to Closed                             ${internationalCompetitionId}
     And making the application a successful project               ${internationalCompetitionId}  ${internationalApplicationTitle}
@@ -249,7 +249,7 @@ invite partner organisation
 
 Registered UK based lead user goes to the application team
     Logging in and Error Checking       ${lead_applicant}  ${short_password}
-    the user clicks the button/link     jQuery = li:contains("${internationalCompetitionTitle}") a:contains("Untitled")
+    the user clicks the button/link     jQuery = li:contains("${internationalCompetitionName}") a:contains("Untitled")
     the user clicks the button/link     link = Application team
 
 the user should see organisations list according to organisation type selected

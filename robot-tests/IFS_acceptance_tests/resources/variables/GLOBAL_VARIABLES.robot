@@ -50,7 +50,7 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
-${organisationEligibilityCompetitionName}                Organisation Eligibility Competition
+${internationalCompetitionName}                          International Organisation Competition
 ${projectEligibilityLink}                                Project eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 
@@ -76,7 +76,7 @@ ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPE
 
 ${createApplicationOpenCompetition}                  Home and industrial efficiency programme
 ${createApplicationOpenCompetitionId}                ${competition_ids['${createApplicationOpenCompetition}']}
-${createApplicationOpenInternationalCompetition}     International Competition
+#${createApplicationOpenInternationalCompetition}     International Competition
 ${createApplicationOpenCompetitionApplication1Name}  Networking home IOT devices
 ${createApplicationOpenCompetitionApplication1Number}  ${application_ids['${createApplicationOpenCompetitionApplication1Name}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
