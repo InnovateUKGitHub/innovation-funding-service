@@ -53,7 +53,7 @@ External dashboard - non-uk based partner applicant can complete the project loc
 Application form - non-uk based partner applicant can complete the project location details in project finances
     [Documentation]     IFS-7240
     [Tags]
-    Given the user navigates to the page               ${server}/application/${applicationInProgressId}/form/your-project-location/organisation/${organisationRedId}/section/384
+    Given the user navigates to the page               ${server}/application/${applicationInProgressId}
     When the user should see project location details in project finances
     And applicant enters project location details
     Then the user should see the element               jQuery = dd:contains("Äteritsiputeritsipuolilautatsijänkä")
@@ -248,6 +248,8 @@ the user should see project location details in project details section
     the user should see the element     jQuery = button:contains("Save project location")
 
 the user should see project location details in project finances
+    the user clicks the button/link     link = Your project finances
+    the user clicks the button/link     link = Your project location
     the user should see the element     css = [for ="town"]
     the user should see the element     jQuery = span:contains("${projectLocationInfo}")
     the user should see the element     id = town
