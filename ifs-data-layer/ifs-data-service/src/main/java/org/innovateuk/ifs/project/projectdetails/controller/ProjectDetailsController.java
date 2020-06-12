@@ -4,8 +4,6 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
-import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * ProjectController exposes Project Details data and operations through a REST API.
@@ -28,17 +24,9 @@ public class ProjectDetailsController {
     @Autowired
     private ProjectDetailsService projectDetailsService;
 
-    @Autowired
-    private ProjectService projectService;
-
     @GetMapping("/{projectId}/project-manager")
     public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
         return projectDetailsService.getProjectManager(projectId).toGetResponse();
-    }
-
-    @GetMapping("/{projectId}/project-finance-contacts")
-    public RestResult<List<ProjectUserResource>> getProjectFinanceContacts(@PathVariable(value = "projectId") Long projectId) {
-        return projectService.getProjectUsersByProjectIdAndRoleIn(projectId, Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT)).toGetResponse();
     }
 
     @PostMapping(value="/{id}/project-manager/{projectManagerId}")
