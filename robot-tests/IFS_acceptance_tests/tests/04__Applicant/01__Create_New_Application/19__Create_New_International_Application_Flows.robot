@@ -201,7 +201,7 @@ Team member accepts the invite and can change lead organisation address details
     [Tags]  HappyPath
     Given team member accepts the invite to join organisation     ${team_member}  ${createApplicationOpenInternationalCompetition}  MemberFName  MemberSName
     When the user clicks the button/link                          link = Sign in
-    And Logging in and Error Checking                             ${team_member}  ${short_password}
+    And Logging in and Error Checking                             ${team_member}  ${correct_password}
     And the user clicks the button/link                           link = ${internationalApplicationTitle}
     Then the member can edit leads organisation address details
     [Teardown]    Logout as user
@@ -247,7 +247,7 @@ Lead applicant is able to complete international application
 UK based partner also completes funding info
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    [Setup]  Logging in and Error Checking          ${partner_org}  ${correct_password}
+    Given log in as a different user                ${partner_org}  ${correct_password}
     Given the user clicks the button/link           link = ${internationalApplicationTitle}
     When the user clicks the button/link            link = Your project finances
     And partner marks the finance as complete       ${internationalApplicationTitle}
@@ -270,12 +270,10 @@ Moving International Competition to Project Setup
     When moving competition to Closed                             ${internationalCompetitionId}
     And making the application a successful project               ${internationalCompetitionId}  ${internationalApplicationTitle}
     Then moving competition to Project Setup                      ${internationalCompetitionId}
-    [Teardown]  requesting project ID for this project
 
-Ifs Admin is able to add a new international partner organisation
+Internal user is able to add a new international partner organisation
     [Documentation]  IFS-7197
     [Tags]  HappyPath
-    [Setup]  logging in and error checking                 &{internal_finance_credentials}
     Given the user navigates to the page                   ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
     When the user clicks the button/link                   jQuery = tr:contains("${internationalApplicationTitle}") .waiting:nth-child(3)
     And the user clicks the button/link                    link = Add a partner organisation
@@ -330,7 +328,7 @@ partner user provide organisation detail and create account
     the user reads his email and clicks the link                      ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page                 ${REGISTRATION_VERIFIED}
     the user clicks the button/link                                   link = Sign in
-    Logging in and Error Checking                                     ${email}  ${correct_password}
+    Logging in and Error Checking                                     ${email}  ${short_password}
 
 Partner user enters the details and clicks the create account
     [Arguments]   ${first_name}  ${last_name}  ${password}
@@ -351,7 +349,7 @@ invite partner organisation
 
 Registered UK based lead user goes to the application team
     Logging in and Error Checking       ${lead_applicant}  ${short_password}
-    the user clicks the button/link     jQuery = li:contains("${internationalCompetitionName}") a:contains("Untitled")
+    the user clicks the button/link     jQuery = li:contains("${createApplicationOpenInternationalCompetition}") a:contains("Untitled")
     the user clicks the button/link     link = Application team
 
 the user should see organisations list according to organisation type selected
@@ -362,8 +360,8 @@ the user should see organisations list according to organisation type selected
     user selects where is organisation based     isInternational
     the user should see the element              ${locator}
 
-the user confirms organisation details and create an account for non-registered user
-    [Arguments]  ${firstname}  ${lastname}  ${email}  ${password}
+#the user confirms organisation details and create an account for non-registered user
+#    [Arguments]  ${firstname}  ${lastname}  ${email}  ${password}
 
 user selects where is organisation based
     [Arguments]  ${org_type}
