@@ -11,7 +11,6 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.FINANCE_CONTACT_NOMINATED;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.PROJECT_MANAGER_NOMINATED;

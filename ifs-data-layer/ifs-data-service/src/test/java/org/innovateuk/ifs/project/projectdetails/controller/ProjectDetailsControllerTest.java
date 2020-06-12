@@ -3,11 +3,16 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -26,6 +31,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Mock
     private ProjectDetailsService projectDetailsService;
+
+    @Mock
+    private ProjectService projectService;
 
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
@@ -59,6 +67,52 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         verify(projectDetailsService).getProjectManager(project1Id);
         verifyNoMoreInteractions(projectDetailsService);
+    }
+
+    @Test
+    public void getProjectFinanceContacts() throws Exception {
+        Long project1Id = 1L;
+        List<ProjectParticipantRole> projectParticipantRoles = Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+        List<ProjectUserResource> projectFinanceContacts = Collections.singletonList(newProjectUserResource().withId(project1Id).build());
+
+        when(projectService.getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles)).thenReturn(serviceSuccess(projectFinanceContacts));
+
+        mockMvc.perform(get("/project/{id}/project-finance-contacts", project1Id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectFinanceContacts)));
+
+        verify(projectService).getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles);
+        verifyNoMoreInteractions(projectService);
+    }
+
+    @Test
+    public void getProjectFinanceContactsEmptyResults() throws Exception {
+        Long project1Id = -1L;
+        List<ProjectParticipantRole> projectParticipantRoles = Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+        List<ProjectUserResource> projectFinanceContacts = Collections.emptyList();
+
+        when(projectService.getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles)).thenReturn(serviceSuccess(projectFinanceContacts));
+
+        mockMvc.perform(get("/project/{id}/project-finance-contacts", project1Id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectFinanceContacts)));
+
+        verify(projectService).getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles);
+        verifyNoMoreInteractions(projectService);
+    }
+
+    @Test
+    public void getProjectFinanceContactsNotFound() throws Exception {
+        Long project1Id = -1L;
+        List<ProjectParticipantRole> projectParticipantRoles = Collections.singletonList(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+
+        when(projectService.getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get("/project/{id}/project-finance-contacts", project1Id))
+                .andExpect(status().isNotFound());
+
+        verify(projectService).getProjectUsersByProjectIdAndRoleIn(project1Id, projectParticipantRoles);
+        verifyNoMoreInteractions(projectService);
     }
 
     @Test
