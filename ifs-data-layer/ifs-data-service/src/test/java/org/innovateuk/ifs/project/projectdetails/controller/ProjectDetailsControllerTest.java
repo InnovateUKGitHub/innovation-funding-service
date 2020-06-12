@@ -180,21 +180,19 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void updateProjectAddress() throws Exception {
 
-        long leadOrganisationId = 123L;
         long projectId = 456L;
 
         AddressResource addressResource = newAddressResource().build();
 
-        when(projectDetailsService.updateProjectAddress(leadOrganisationId, projectId, addressResource)).thenReturn(serviceSuccess());
+        when(projectDetailsService.updateProjectAddress(projectId, addressResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/address", projectId)
-                .param("leadOrganisationId", "123")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(addressResource)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(projectDetailsService).updateProjectAddress(leadOrganisationId, projectId, addressResource);
+        verify(projectDetailsService).updateProjectAddress(projectId, addressResource);
         verifyNoMoreInteractions(projectDetailsService);
     }
 }

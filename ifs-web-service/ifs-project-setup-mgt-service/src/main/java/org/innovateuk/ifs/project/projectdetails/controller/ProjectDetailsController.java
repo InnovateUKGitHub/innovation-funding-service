@@ -107,7 +107,7 @@ public class ProjectDetailsController {
                 competitionId,
                 competitionResource.getName(),
                 loggedInUser,
-                leadOrganisationResource.getName(),
+                leadOrganisationResource,
                 locationPerPartnerRequired,
                 partnerOrganisations,
                 organisations,

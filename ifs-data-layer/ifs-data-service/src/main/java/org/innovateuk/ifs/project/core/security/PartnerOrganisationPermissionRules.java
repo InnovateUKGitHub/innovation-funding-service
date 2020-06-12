@@ -37,16 +37,6 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isMonitoringOfficer(partnerOrganisation.getProject(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Internal users can see partner organisations for any project")
-    public boolean internalUsersCanViewPartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return isInternal(user);
-    }
-
-    @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Partners can view their own partner organisation")
-    public boolean partnersCanViewTheirOwnPartnerOrganisation(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
-    }
-
     @PermissionRule(value = "READ_PENDING_PARTNER_PROGRESS", description = "Partners can read their own progress when setting up their organisation")
     public boolean partnersCanReadTheirOwnPendingPartnerProgress(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
         return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());

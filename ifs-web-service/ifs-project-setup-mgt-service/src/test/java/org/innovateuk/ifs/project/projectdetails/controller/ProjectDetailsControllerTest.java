@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -158,7 +157,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals("Comp 1", model.getCompetitionName());
         assertTrue(model.isAbleToManageProjectState());
-        assertEquals("Lead Org 1", model.getLeadOrganisation());
+        assertEquals("Lead Org 1", model.getLeadOrganisation().getName());
         assertTrue(model.isLocationPerPartnerRequired());
         assertEquals("TW14 9QG", model.getPostcodeForPartnerOrganisation(1L));
         assertEquals("UB7 8QF", model.getPostcodeForPartnerOrganisation(2L));
