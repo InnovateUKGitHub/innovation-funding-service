@@ -103,7 +103,7 @@ Registered user(Partner organisation) logs in and select where their organisatio
     When user selects where is organisation based     isNotInternational
     Then the user should see the element              jQuery = dt:contains("Golden Valley Research Ltd")
 
-Partner user provides non-UK based organisation details and verifies them
+Partner user provides UK based organisation details and verifies them
     [Documentation]    IFS-7198 IFS-7199
     [Tags]  HappyPath
     Given the user clicks the button/link                    link = Join with a different organisation
@@ -128,7 +128,7 @@ Partner organisation(with non-registered email/user) accepts the invite
     When the user reads his email and clicks the link     ${partner_international_email}  Invitation to collaborate in ${createApplicationOpenInternationalCompetition}  You will be joining as part of the organisation  2
     Then the user clicks the button/link                  jQuery = a:contains("Yes, accept invitation")
 
-Non-Registered user(Partner organisation) provide organisation details and verifies them
+Non-Registered user(Partner organisation) provide international organisation details and verifies them
     [Documentation]    IFS-7199
     [Tags]  HappyPath
     Given user selects where is organisation based                isInternational
@@ -137,7 +137,7 @@ Non-Registered user(Partner organisation) provide organisation details and verif
     And the user clicks the button/link                           id = international-confirm-organisation-cta
     And The user should not see an error in the page
 
-Non-Registered user(Partner organisation) create an account
+Non-Registered user(International partner organisation) create an account
     [Documentation]    IFS-7198 IFS-7199
     [Tags]  HappyPath
     When Partner user enters the details and clicks the create account     Tim  Simpson  ${short_password}
@@ -206,7 +206,7 @@ Team member accepts the invite and can change lead organisation address details
     Then the member can edit leads organisation address details
     [Teardown]    Logout as user
 
-Lead applicant adds a partner organisation
+Lead applicant adds a UK based partner organisation
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  Logging in and Error Checking            ${lead_international_email}  ${short_password}
@@ -217,7 +217,7 @@ Lead applicant adds a partner organisation
     Then the user should see the element              jQuery = td:contains("FName SName (pending for 0 days)")
     [Teardown]    Logout as user
 
-Partner organisation accepts the invite to collaborate and cannot edit lead org address details
+UK based partner organisation accepts the invite to collaborate and cannot edit lead org address details
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     Given partner organisation accepts the invite to collaborate      ${partner_org}  ${createApplicationOpenInternationalCompetition}  ${BUSINESS_TYPE_ID}
@@ -237,14 +237,14 @@ Internal user can see International Organisation Address Details in Application 
     And the user should see the element                   jQuery = td:contains("7 Fisher House, Sydney, ")
     [Teardown]    Logout as user
 
-Applicant is able to complete international application
+Lead applicant is able to complete international application
     [Documentation]  IFS-7264
     [Tags]  HappyPath
     [Setup]  Logging in and Error Checking         ${lead_international_email}  ${short_password}
     Given the user clicks the button/link          link = ${internationalApplicationTitle}
     When the user completes the application
 
-Partner also completes funding info
+UK based partner also completes funding info
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  Logging in and Error Checking          ${partner_org}  ${correct_password}
@@ -272,7 +272,7 @@ Moving International Competition to Project Setup
     Then moving competition to Project Setup                      ${internationalCompetitionId}
     [Teardown]  requesting project ID for this project
 
-Ifs Admin is able to add a new partner organisation
+Ifs Admin is able to add a new international partner organisation
     [Documentation]  IFS-7197
     [Tags]  HappyPath
     [Setup]  logging in and error checking                 &{internal_finance_credentials}
