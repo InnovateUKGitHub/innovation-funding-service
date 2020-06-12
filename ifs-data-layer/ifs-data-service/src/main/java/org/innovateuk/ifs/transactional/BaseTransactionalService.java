@@ -58,6 +58,7 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     @Autowired
     private QuestionRepository questionRepository;
 
+
     protected Supplier<ServiceResult<Section>> section(long id) {
         return () -> getSection(id);
     }
