@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.docusign.resource.DocusignRequest;
 import org.innovateuk.ifs.docusign.resource.DocusignType;
 import org.innovateuk.ifs.docusign.transactional.DocusignService;
@@ -90,8 +89,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     public enum NotificationsGol {
         GRANT_OFFER_LETTER_PROJECT_MANAGER,
-        PROJECT_LIVE,
-        PROJECT_LIVE_PAS
+        PROJECT_LIVE
     }
 
     @Override
@@ -498,21 +496,13 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());
         notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
+        notificationArguments.put("projectName", project.getName());
+        notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+        notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
 
-        return getCompetitionPostAwardService(project.getApplication().getCompetition().getId()).andOnSuccess(postAwardService -> {
-            Notification notification;
-            if (postAwardService == PostAwardService.IFS_POST_AWARD || postAwardService == PostAwardService.CONNECT) {
-                notificationArguments.put("projectName", project.getName());
-                notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
-                notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
-                notification = new Notification(systemNotificationSource, notificationTargets,
-                        NotificationsGol.PROJECT_LIVE_PAS, notificationArguments);
-            } else {
-                notification = new Notification(systemNotificationSource, notificationTargets,
-                        NotificationsGol.PROJECT_LIVE, notificationArguments);
-            }
-            return notificationService.sendNotificationWithFlush(notification, EMAIL);
-        });
+        Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
+
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private DocusignRequest docusignRequest(User projectManager, Project project) {
