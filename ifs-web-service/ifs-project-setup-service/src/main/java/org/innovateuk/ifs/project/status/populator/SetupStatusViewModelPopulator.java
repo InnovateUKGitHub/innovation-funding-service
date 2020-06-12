@@ -23,6 +23,7 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
 
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
@@ -95,7 +99,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer),
                 isProjectManager,
                 isProjectFinanceContact,
-                competitionPostAwardServiceResource.getSuccess().getPostAwardService());
+                competitionPostAwardServiceResource.getSuccess().getPostAwardService(),
+                navigationUtils.getLiveProjectsLandingPageUrl());
     }
 
     private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {

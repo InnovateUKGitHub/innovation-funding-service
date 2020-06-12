@@ -26,6 +26,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean projectManager;
     private final boolean projectFinanceContact;
     private final PostAwardService postAwardService;
+    private final String liveProjectsLandingPageUrl;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
@@ -34,7 +35,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 boolean showApplicationFeedbackLink,
                                 boolean projectManager,
                                 boolean projectFinanceContact,
-                                PostAwardService postAwardService) {
+                                PostAwardService postAwardService,
+                                String liveProjectsLandingPageUrl) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -49,6 +51,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.projectManager = projectManager;
         this.projectFinanceContact = projectFinanceContact;
         this.postAwardService = postAwardService;
+        this.liveProjectsLandingPageUrl = liveProjectsLandingPageUrl;
     }
 
     public Long getProjectId() {
@@ -113,5 +116,9 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean isIfsPostAward() {
         return this.postAwardService == PostAwardService.IFS_POST_AWARD;
+    }
+
+    public String getLiveProjectsLandingPageUrl() {
+        return liveProjectsLandingPageUrl;
     }
 }

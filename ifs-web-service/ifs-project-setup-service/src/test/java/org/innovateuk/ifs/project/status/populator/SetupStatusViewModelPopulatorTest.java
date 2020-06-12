@@ -33,6 +33,7 @@ import org.innovateuk.ifs.sections.SectionStatus;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -104,9 +105,14 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
     private AsyncFuturesGenerator futuresGeneratorMock;
 
     @Mock
+    private NavigationUtils navigationUtils;
+
+    @Mock
     private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
 
     private static final boolean monitoringOfficerExpected = true;
+
+    private static final String liveProjectsLandingPageUrl = "https://ifs.local-dev/live-projects-landing-page";
 
     List<CompetitionDocumentResource> projectDocumentConfig =
             newCompetitionDocumentResource()
@@ -361,6 +367,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(false, viewModel.isProjectManager());
         assertEquals(true, viewModel.isProjectFinanceContact());
         assertCompetitionPostAwardService(viewModel, PostAwardService.IFS_POST_AWARD);
+        assertEquals(liveProjectsLandingPageUrl, viewModel.getLiveProjectsLandingPageUrl());
     }
 
     // PD = Project Details, FC = Finance Contact, PL = Project Location
@@ -907,6 +914,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(true, viewModel.isProjectManager());
         assertEquals(true, viewModel.isProjectFinanceContact());
         assertCompetitionPostAwardService(viewModel, PostAwardService.IFS_POST_AWARD);
+        assertEquals(liveProjectsLandingPageUrl, viewModel.getLiveProjectsLandingPageUrl());
     }
 
     @Test
@@ -1552,7 +1560,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 .withCompetitionId(project.getCompetition())
                 .withPostAwardService(postAwardService)
                 .build();
-
+        when(navigationUtils.getLiveProjectsLandingPageUrl()).thenReturn(liveProjectsLandingPageUrl);
         when(competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition())).thenReturn(restSuccess(competitionPostAwardServiceResource));
     }
 

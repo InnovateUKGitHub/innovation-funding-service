@@ -46,7 +46,7 @@
 
         <th:block th:if="${model.projectState.live}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                <p th:if="${model.projectManager || model.projectFinanceContact}" class="govuk-body">The project is now live and you can <a th:href="${model.ifsPostAward} ? @{/dashboard/live} : 'https://grants.innovateuk.org'" class="govuk-link">review its progress.</a></p>
+                <p th:if="${model.projectManager || model.projectFinanceContact}" class="govuk-body">The project is now live and you can <a th:href="${model.ifsPostAward} ? ${model.liveProjectsLandingPageUrl} : 'https://grants.innovateuk.org'" class="govuk-link">review its progress.</a></p>
                 <p th:if="${!model.projectManager && !model.projectFinanceContact}" class="govuk-body">The project is now live.</p>
             </div>
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
