@@ -19,6 +19,8 @@ ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
 ${internationalApplicationTitle}                       New Test Application for International Users
 ${internationalCompetitionTitle}                       International Competition
 ${internationalCompetitionId}                          ${competition_ids["${internationalCompetitionTitle}"]}
+${addressLine1}                                        7 Fisher House, Sydney,
+${newAddress}                                          7 Fisher House
 
 *** Test Cases ***
 Non registered UK based users apply for an international competition
@@ -223,7 +225,7 @@ UK based partner organisation accepts the invite to collaborate and cannot edit 
     Given partner organisation accepts the invite to collaborate      ${partner_org}  ${createApplicationOpenInternationalCompetition}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                              link = Application team
     Then the user should not see the element                          link = Edit
-    And the user should see the element                               jQuery = td:contains("7 Fisher House")
+    And the user should see the element                               jQuery = td:contains("${newAddress}")
     [Teardown]    Logout as user
 
 Internal user can see International Organisation Address Details in Application Overview
@@ -234,7 +236,7 @@ Internal user can see International Organisation Address Details in Application 
     When the user selects the application in progress
     And the user clicks the button/link                   jQuery = button:contains("Open all")
     Then the user should see the element                  jQuery = td:contains("Address")
-    And the user should see the element                   jQuery = td:contains("7 Fisher House, Sydney, ")
+    And the user should see the element                   jQuery = td:contains("${addressLine1}")
     [Teardown]    Logout as user
 
 Lead applicant is able to complete international application
@@ -281,9 +283,53 @@ Internal user is able to add a new international partner organisation
     Then organisation is able to accept project invite     FName  Surname  ${international_invite_email}  ${ApplicationID}  ${internationalApplicationTitle}
 
 Partner organisation provide organisation detail and create an account
-    [Documentation]  IFS-7197
+    [Documentation]  IFS-7264
     [Tags]  HappyPath
-    When partner user provide organisation detail and create account     ${international_invite_email}
+    Given partner user provide organisation detail and create account     ${international_invite_email}
+    When the user clicks the button/link                                  link = ${internationalApplicationTitle}
+    Then partner completes all sections to join the project
+
+Partner organisation submits project details and is able to see organisation address details in project team
+    [Documentation]  IFS-7264
+    [Tags]  HappyPath
+    When the user completes project details
+    And the user completes project team and can see international organisation addresses
+    Then the user clicks the button/link     link = Return to setup your project
+    And the user should see the element     jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
+    [Teardown]  logout as user
+
+Lead organisation can see international organisation address details in project team and cannot edit it
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    [Setup]  logging in and error checking       ${lead_international_email}  ${short_password}
+    Given the user clicks the button/link        link = ${internationalApplicationTitle}
+    When the user completes project team and can see international organisation addresses
+
+Lead organisation completes the project team and project details
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    Given the user chooses the project manager
+    When the user clicks the button/link     link = Return to setup your project
+    Then the user clicks the button/link     link = Project details
+    And the user completes correspondence address in project details
+    [Teardown]  logout as user
+
+Partner organisation can see international organisation address details in project team and cannot edit it
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    [Setup]  logging in and error checking     ${partner_org}  ${correct_password}
+    Given the user clicks the button/link      link = ${internationalApplicationTitle}
+    When the user completes project team and can see international organisation addresses
+    Then the user clicks the button/link       link = Return to setup your project
+    [Teardown]  logout as user
+
+Internal user can view address details
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    [Setup]  logging in and error checking       &{internal_finance_credentials}
+    Given the user navigates to the page         ${server}/project-setup-management/competition/${InternationalCompetitionId}/status/all
+    When the user clicks the button/link         jQuery = tr:contains("${internationalApplicationTitle}") .waiting:nth-child(3)
+    Then the user should not see the element     jQuery = td:contains("${addressLine1}")
 
 *** Keywords ***
 UK-based user sees these page elements
@@ -359,9 +405,6 @@ the user should see organisations list according to organisation type selected
     the user clicks the button/link              link = Back to tell us where your organisation is based
     user selects where is organisation based     isInternational
     the user should see the element              ${locator}
-
-#the user confirms organisation details and create an account for non-registered user
-#    [Arguments]  ${firstname}  ${lastname}  ${email}  ${password}
 
 user selects where is organisation based
     [Arguments]  ${org_type}
@@ -478,9 +521,9 @@ the user adds a new partner
 the member can edit leads organisation address details
     the user clicks the button/link          link = Application team
     the user clicks the button/link          link = Edit
-    the user enters text to a text field     id = addressLine1  7 Fisher House
+    the user enters text to a text field     id = addressLine1  ${newAddress}
     the user clicks the button/link          id = update-organisation-address
-    the user should see the element          jQuery = td:contains("7 Fisher House")
+    the user should see the element          jQuery = td:contains("${newAddress}")
 
 partner organisation accepts the invite to collaborate
     [Arguments]  ${email}  ${compName}  ${businessTypeId}
@@ -497,6 +540,66 @@ the user selects the application in progress
     the user clicks the button/link     link = Applications: All, submitted, ineligible
     the user clicks the button/link     link = All applications
     the user clicks the button/link     link = ${ApplicationID}
+
+partner completes all sections to join the project
+    the user updates organisation size details      SMALL  800000  200
+    the user updates funding                        request-funding-yes  40  other-funding-no
+    the user accepts terms and conditions
+    And the user clicks the button/link             id = submit-join-project-button
+
+the user updates organisation size details
+    [Arguments]  ${Size}  ${Turnover}  ${Employees}
+    the user clicks the button/link          link = Your organisation
+    the user selects the radio button        organisationSize  ${Size}
+    the user enters text to a text field     id = turnover   ${Turnover}
+    the user enters text to a text field     id = headCount   ${Employees}
+    the user clicks the button/link          id = mark_as_complete
+
+the user updates funding
+    [Arguments]  ${require_funding}  ${percentage}  ${other_funding}
+    the user clicks the button/link          link = Your funding
+    the user selects the radio button        requestingFunding  request-funding-yes
+    the user enters text to a text field     id = grantClaimPercentage  ${percentage}
+    the user selects the radio button        otherFunding  ${other_funding}
+    the user clicks the button/link          id = mark-all-as-complete
+
+the user accepts terms and conditions
+    the user clicks the button/link     link = Award terms and conditions
+    the user selects the checkbox       agreed
+    the user clicks the button/link     id = agree-terms-button
+
+the user completes project details
+    the user clicks the button/link          link = Project details
+    the user clicks the button/link          link = Edit
+    the user enters text to a text field     id = town  Sydney
+    the user clicks the button/link          jQuery = button:contains("Save project location")
+
+the user completes project team and can see international organisation addresses
+    the user clicks the button/link         link = Project team
+    the user should not see the element     link = Edit
+    the user should see the element         jQuery = h2:contains("New Empire 1")
+    the user should see the element         jQuery = td:contains("${addressLine1}")
+    the user clicks the button/link         link = Your finance contact
+    the user selects the radio button       financeContact  financeContact1
+    the user clicks the button/link         id = save-finance-contact-button
+
+the user chooses the project manager
+    the user clicks the button/link      link = Project manager
+    the user selects the radio button    projectManager  projectManager1
+    the user clicks the button/link      id = save-project-manager-button
+
+the user completes correspondence address in project details
+    the user clicks the button/link     link = Correspondence address
+    the user enters text to a text field     id = addressLine1  Lane 1
+    the user enters text to a text field     id = addressLine2  Tester Street
+    the user enters text to a text field     id = town  Sydney
+    input text                               id = country  Australia
+    the user clicks the button/link          jQuery = ul li:contains("Australia")
+    the user enters text to a text field     id = zipCode   ZippyCode123
+    the user clicks the button/link          id = save-project-address-button
+    the user clicks the button/link          link = Return to set up your project
+
+the user cannot edit international organisation
 
 Custom Suite Setup
     The guest user opens the browser
