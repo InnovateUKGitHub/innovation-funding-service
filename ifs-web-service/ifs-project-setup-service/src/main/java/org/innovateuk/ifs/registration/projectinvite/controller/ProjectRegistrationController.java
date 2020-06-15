@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.registration.projectinvite.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -22,7 +22,7 @@ import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.registration.controller.AcceptProjectInviteController.*;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
 
 @Controller
 @SecuredBySpring(value = "Controller",
@@ -49,13 +49,13 @@ public class ProjectRegistrationController {
     public String registerForm(Model model,
                                HttpServletRequest request,
                                UserResource loggedInUser) {
-        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, AcceptProjectInviteController.INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
-                    ValidationMessages errors = errorMessages(loggedInUser, invite);
+                    ValidationMessages errors = AcceptProjectInviteController.errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
-                        return populateModelWithErrorsAndReturnErrorView(errors, model);
+                        return AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
-                    model.addAttribute("invitee", true);
+                    model.addAttribute("model", anInvitedUserViewModel());
                     model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
@@ -68,19 +68,19 @@ public class ProjectRegistrationController {
                                      HttpServletRequest request,
                                      Model model,
                                      UserResource loggedInUser) {
-        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, AcceptProjectInviteController.INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
-            model.addAttribute("invitee", true);
+            model.addAttribute("model", anInvitedUserViewModel());
 
             if (bindingResult.hasErrors()) {
                 model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ValidationMessages errors = errorMessages(loggedInUser, invite);
+            ValidationMessages errors = AcceptProjectInviteController.errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
-                return populateModelWithErrorsAndReturnErrorView(errors, model);
+                return AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
             }
 
             if (emailExists(registrationForm.getEmail())) {

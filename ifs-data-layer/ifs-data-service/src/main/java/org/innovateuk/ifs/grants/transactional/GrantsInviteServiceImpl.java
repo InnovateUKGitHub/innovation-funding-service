@@ -163,7 +163,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         notificationArguments.put("applicationId", grantsInvite.getProject().getApplication().getId());
         notificationArguments.put("projectName", grantsInvite.getProject().getName());
         notificationArguments.put("role", getGrantsInviteRole(grantsInvite.getClass()).getDisplayName());
-        notificationArguments.put("inviteUrl", webBaseUrl + "/project-setup/grants/invite/" + grantsInvite.getHash());
+        notificationArguments.put("inviteUrl", String.format("%s/project-setup/project/%d/grants/invite/%s", webBaseUrl, grantsInvite.getProject().getId(), grantsInvite.getHash()));
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
