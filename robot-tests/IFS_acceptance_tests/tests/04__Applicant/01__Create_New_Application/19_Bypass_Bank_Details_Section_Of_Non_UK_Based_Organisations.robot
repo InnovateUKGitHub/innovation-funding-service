@@ -152,6 +152,10 @@ comp admin can see the correspondence address entered by non uk based lead appli
     Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
     And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
 
+Monitoring officer assign link should be display on completing correspondence address and project location
+    When the user navigates to the page     ${server}/project-setup-management/competition/${competitionID}/status/all
+    Then the user should see the element    link = Assign
+
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
     Given ifs admin assigns MO to the competition in project setup
