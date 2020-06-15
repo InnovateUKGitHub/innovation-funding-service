@@ -175,8 +175,8 @@ Lead applicant can edit organisation address details on the application team pag
     Then the user should be able to edit the address and see the changes
 
 Lead applicant completes application details
-    Given the user clicks the button/link     link = Application overview
-    And the user enters application details
+    When the user clicks the button/link     link = Application overview
+    Then the user enters application details
 
 Lead applicant applies again to international competition using the same international organisation and verifies organisation address
     [Documentation]    IFS-7264
