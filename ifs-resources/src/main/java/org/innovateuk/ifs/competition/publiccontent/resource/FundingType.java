@@ -5,6 +5,7 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
  */
 public enum FundingType {
     GRANT("Grant", "Innovate UK"),
+    INVESTOR_PARTNERSHIPS("Investor Partnerships", "Investor Partnerships"),
     KTP("Knowledge Transfer Partnership (KTP)", "Knowledge Transfer Partnership (KTP)"),
     LOAN("Loan", "Loans"),
     PROCUREMENT("Procurement", "Procurement");
@@ -25,12 +26,4 @@ public enum FundingType {
         return defaultTermsName;
     }
 
-    public static FundingType fromDisplayName(String displayName) {
-        for(FundingType type: FundingType.values()) {
-            if(type.getDisplayName().equals(displayName)) {
-                return type;
-            }
-        }
-        return null;
-    }
 }

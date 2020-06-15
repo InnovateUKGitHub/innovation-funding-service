@@ -8,7 +8,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class AddressDocs {
     public static final FieldDescriptor[] addressResourceFields = {
-            fieldWithPath("id").description("id of the address"),
             fieldWithPath("addressLine1").description("first addressLine"),
             fieldWithPath("addressLine2").description("second addressLine"),
             fieldWithPath("addressLine3").description("third addressLine"),
@@ -19,7 +18,6 @@ public class AddressDocs {
     };
 
     public static final AddressResourceBuilder addressResourceBuilder = newAddressResource()
-            .withId(1L, 2L)
             .withAddressLine1("addressLine1")
             .withAddressLine2("addressLine2")
             .withAddressLine3("addressLine3")

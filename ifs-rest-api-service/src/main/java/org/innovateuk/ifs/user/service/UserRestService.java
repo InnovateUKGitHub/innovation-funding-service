@@ -22,6 +22,8 @@ public interface UserRestService {
 
     RestResult<List<UserResource>> findByUserRole(Role role);
 
+    RestResult<List<UserResource>> findByUserRoleAndUserStatus(Role role, UserStatus userStatus);
+
     RestResult<ManageUserPageResource> getActiveUsers(String filter, int pageNumber, int pageSize);
 
     RestResult<ManageUserPageResource> getInactiveUsers(String filter, int pageNumber, int pageSize);

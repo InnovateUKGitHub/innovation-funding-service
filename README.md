@@ -104,5 +104,42 @@ Running a gradle task for only web services (eg. test)
 Create asciidoc
 
     ./gradlewe clean asciidoctorOnly
+    
 
+## Pull docker images from nexus
+Instead of building individual service docker images locally, we can pull docker images from nexus and build/deploy services faster
+There are two steps to pull service docker images from nexus. 
 
+**1. enable individual services (these are existing properties)**
+- ifs.application-service.enabled=true
+- ifs.assessment-service.enabled=true
+- ifs.competition-mgt-service.enabled=true
+- ifs.data-service.enabled=true
+- ifs.finance-data-service.enabled=true
+- ifs.front-door-service.enabled=true
+- ifs.project-setup-mgt-service.enabled=true
+- ifs.project-setup-service.enabled=true
+- ifs.survey-data-service.enabled=true
+- ifs.survey-service.enabled=true
+
+**2. enable nexus flag to pull image (these are new properties)**
+- ifs.application-service.pull.nexus.image=true
+- ifs.assessment-service.pull.nexus.image=true
+- ifs.competition-mgt-service.pull.nexus.image=true
+- ifs.front-door-service.pull.nexus.image=true
+- ifs.project-setup-mgt-service.pull.nexus.image=true
+- ifs.project-setup-service.pull.nexus.image=true
+- ifs.survey-service.pull.nexus.image=true
+
+**Data services are dependant on base images so need to be built locally. Set below data service properties to false**
+- ifs.data-service.pull.nexus.image=false
+- ifs.finance-data-service.pull.nexus.image=false
+- ifs.survey-data-service.pull.nexus.image=false
+
+You need to add above properties in your local gradle.properties
+Also you need to use your own credentials to pull images from nexus, pass your nexus credentials to gradle command
+
+    ./gradlew clean build deploy wait syncShib -Pinitialise=true -Pnexus_username=<your_nexus_userName> -Pnexus_password=<your_nexus_password> -x test
+
+**IMPORTANT - in root gradle.properties, you need to update "version" property as per nexus build version which you wanted to pull for local build. 
+e.g. if version is 1.1.112-SNAPSHOT, you need to pull the last release 1.1.111 as 1.1.112 is upcoming release, so update version=1.1.111**

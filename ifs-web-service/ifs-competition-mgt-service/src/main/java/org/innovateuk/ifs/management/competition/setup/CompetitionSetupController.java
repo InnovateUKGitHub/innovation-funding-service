@@ -27,12 +27,11 @@ import org.innovateuk.ifs.management.competition.setup.core.form.FunderRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.TermsAndConditionsForm;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
-import org.innovateuk.ifs.management.competition.setup.eligibility.form.EligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
-import org.innovateuk.ifs.management.competition.setup.initialdetail.populator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
+import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,6 +56,7 @@ import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.management.competition.setup.application.controller.CompetitionSetupApplicationController.APPLICATION_LANDING_REDIRECT;
+import static org.innovateuk.ifs.management.competition.setup.organisationaleligibility.controller.CompetitionSetupOrganisationalEligibilityController.ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT;
 import static org.innovateuk.ifs.management.competition.setup.projectdocument.controller.CompetitionSetupDocumentController.PROJECT_DOCUMENT_LANDING_REDIRECT;
 
 /**
@@ -83,9 +83,6 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
-
-    @Autowired
-    private ManageInnovationLeadsModelPopulator manageInnovationLeadsModelPopulator;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -170,6 +167,8 @@ public class CompetitionSetupController {
             return format(PROJECT_DOCUMENT_LANDING_REDIRECT, competitionId);
         } else if (section == CompetitionSetupSection.CONTENT) {
             return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
+        } else if (section == CompetitionSetupSection.ORGANISATIONAL_ELIGIBILITY) {
+            return format(ORGANISATIONAL_ELIGIBILITY_LANDING_REDIRECT, competitionId);
         }
 
         if (competition.isNonIfs()) {
@@ -242,8 +241,8 @@ public class CompetitionSetupController {
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ADDITIONAL_INFO, model);
     }
 
-    @PostMapping("/{competitionId}/section/eligibility")
-    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) EligibilityForm competitionSetupForm,
+    @PostMapping("/{competitionId}/section/project-eligibility")
+    public String submitEligibilitySectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ProjectEligibilityForm competitionSetupForm,
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -254,15 +253,15 @@ public class CompetitionSetupController {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.PROJECT_ELIGIBILITY, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")
     public String submitCompletionStageSectionDetails(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompletionStageForm competitionSetupForm,
-                                                 BindingResult bindingResult,
-                                                 ValidationHandler validationHandler,
-                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                                 Model model) {
+                                                      BindingResult bindingResult,
+                                                      ValidationHandler validationHandler,
+                                                      @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                      Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -358,81 +357,6 @@ public class CompetitionSetupController {
 
         return validationHandler.addAnyErrors(deleteResult, asGlobalErrors())
                 .failNowOrSucceedWith(failureView, () -> DASHBOARD_REDIRECT);
-    }
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @GetMapping("/{competitionId}/manage-innovation-leads/find")
-    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       Model model) {
-
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-find";
-    }
-
-    @PreAuthorize("hasPermission(#competitionId,'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @GetMapping("/{competitionId}/manage-innovation-leads/overview")
-    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                               Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-
-        return "competition/manage-innovation-leads-overview";
-    }
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
-    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                    @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                    Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        return competitionSetupService.addInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
-                failure -> "redirect:/competition/manage-innovation-leads/find",
-                success -> {
-                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "competition/manage-innovation-leads-find";
-                }
-        );
-    }
-
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
-    @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
-    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                       @PathVariable("innovationLeadUserId") long innovationLeadUserId,
-                                       Model model) {
-
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-
-        if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
-            return "redirect:/competition/setup/" + competitionId;
-        }
-
-        return competitionSetupService.removeInnovationLead(competitionId, innovationLeadUserId).handleSuccessOrFailure(
-                failure -> "redirect:/competition/manage-innovation-leads/overview",
-                success -> {
-                    model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
-                    return "competition/manage-innovation-leads-overview";
-                }
-        );
     }
 
     @PostMapping(path="/{competitionId}/section/terms-and-conditions", params = "uploadTermsAndConditionsDoc")

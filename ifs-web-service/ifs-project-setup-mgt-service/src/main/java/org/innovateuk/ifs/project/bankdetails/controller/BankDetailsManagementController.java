@@ -1,19 +1,7 @@
 package org.innovateuk.ifs.project.bankdetails.controller;
 
-import static java.lang.String.format;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.BANK_DETAILS;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-
-
-import java.util.function.Supplier;
-import javax.validation.Valid;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
@@ -33,11 +21,15 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.function.Supplier;
+
+import static java.lang.String.format;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 
 /**
  * This controller is for serving internal project finance user, allowing them to view and manage project bank account details.
@@ -156,8 +148,7 @@ public class BankDetailsManagementController {
         Supplier<String> failureView = () -> doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            final OrganisationAddressResource updatedOrganisationAddressResource = buildOrganisationAddressResource(organisationResource, form);
-            final BankDetailsResource updatedBankDetailsResource = buildBankDetailsResource(existingBankDetails, projectId, organisationResource, updatedOrganisationAddressResource, form);
+            final BankDetailsResource updatedBankDetailsResource = buildBankDetailsResource(existingBankDetails, projectId, organisationResource, form);
             final ServiceResult<Void> updateResult = bankDetailsRestService.updateBankDetails(projectId, updatedBankDetailsResource).toServiceResult();
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).failNowOrSucceedWith(
                     failureView, () -> {
@@ -166,11 +157,6 @@ public class BankDetailsManagementController {
                         return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
                     });
         });
-    }
-
-    private OrganisationAddressResource buildOrganisationAddressResource(OrganisationResource organisation, ChangeBankDetailsForm form) {
-        AddressResource address = form.getAddressForm().getManualAddress();
-        return new OrganisationAddressResource(organisation, address, new AddressTypeResource(BANK_DETAILS.getOrdinal(), BANK_DETAILS.name()));
     }
 
     private OrganisationResource buildOrganisationResource(final OrganisationResource organisationResource, ChangeBankDetailsForm form){
@@ -183,7 +169,6 @@ public class BankDetailsManagementController {
             BankDetailsResource existingBankDetailsResource,
             Long projectId,
             OrganisationResource organisation,
-            OrganisationAddressResource organisationAddressResource,
             ChangeBankDetailsForm form) {
         BankDetailsResource bankDetailsResource = new BankDetailsResource();
 
@@ -201,7 +186,7 @@ public class BankDetailsManagementController {
         bankDetailsResource.setOrganisation(organisation.getId());
         bankDetailsResource.setCompanyName(organisation.getName());
         bankDetailsResource.setRegistrationNumber(organisation.getCompaniesHouseNumber());
-        bankDetailsResource.setAddress(organisationAddressResource.getAddress());
+        bankDetailsResource.setAddress(form.getAddressForm().getManualAddress());
 
         return bankDetailsResource;
     }

@@ -2,7 +2,10 @@ package org.innovateuk.ifs.project.core.transactional;
 
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
+import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseFailingOrSucceedingResult;
@@ -42,6 +45,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -92,6 +96,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ActivityLogService activityLogService;
+
+    @Autowired
+    private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(long projectId) {
@@ -272,7 +279,18 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         PartnerOrganisation partnerOrganisation = new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId()));
 
         simpleFindFirst(application.getApplicationFinances(), applicationFinance -> applicationFinance.getOrganisation().getId().equals(org.getId()))
-                .ifPresent(applicationFinance -> partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode()));
+                .ifPresent(applicationFinance -> {
+                    partnerOrganisation.setPostcode(applicationFinance.getWorkPostcode());
+                    partnerOrganisation.setInternationalLocation(applicationFinance.getInternationalLocation());
+                });
+
+        if (org.isInternational()) {
+            Optional<ApplicationOrganisationAddress> applicationAddress = applicationOrganisationAddressRepository.findByApplicationIdAndOrganisationAddressOrganisationIdAndOrganisationAddressAddressTypeId(application.getId(), org.getId(),INTERNATIONAL.getId());
+            if (applicationAddress.isPresent()) {
+                Address internationalAddress = new Address(applicationAddress.get().getOrganisationAddress().getAddress());
+                partnerOrganisation.setInternationalAddress(internationalAddress);
+            }
+        }
 
         return partnerOrganisation;
     }

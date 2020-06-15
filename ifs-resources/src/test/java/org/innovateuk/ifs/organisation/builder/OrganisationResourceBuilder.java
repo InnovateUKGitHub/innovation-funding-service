@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.organisation.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
@@ -60,5 +61,8 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
 
     public OrganisationResourceBuilder withInternationalRegistrationNumber(String... internationalRegistrationNumbers) {
         return  withArraySetFieldByReflection("internationalRegistrationNumber", internationalRegistrationNumbers);
+    }
+    public OrganisationResourceBuilder withAddresses(List<OrganisationAddressResource>... addresses) {
+        return  withArraySetFieldByReflection("addresses", addresses);
     }
 }

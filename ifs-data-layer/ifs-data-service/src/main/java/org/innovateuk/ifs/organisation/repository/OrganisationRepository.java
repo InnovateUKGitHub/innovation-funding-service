@@ -8,13 +8,15 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrganisationRepository extends PagingAndSortingRepository<Organisation, Long> {
 
     Organisation findByProcessRoles(@Param("processRoles") ProcessRole processRole);
     Organisation findOneByName(String name);
-    List<Organisation> findDistinctByProcessRolesUser(User user);
+    List<Organisation> findDistinctByProcessRolesUserIdAndInternational(long userId, boolean international);
     List<Organisation> findDistinctByProcessRolesUserId(long userId);
+    List<Organisation> findDistinctByProcessRolesUser(User user);
     List<Organisation> findByNameOrderById(String name);
     List<Organisation> findByCompaniesHouseNumberOrderById(String companiesHouseNumber);
     Organisation findByProcessRolesUserIdAndProcessRolesApplicationId(long userId, long applicationId);
@@ -26,4 +28,6 @@ public interface OrganisationRepository extends PagingAndSortingRepository<Organ
     Organisation findByUserAndProjectId(long userId, long projectId);
     List<Organisation> findAllById(Iterable<Long> ids);
     long countDistinctByProcessRolesApplicationId(long applicationId);
+
+    Optional<Organisation> findFirstByInternationalTrueAndInternationalRegistrationNumberAndName(String internationalRegistrationNumber, String name);
 }
