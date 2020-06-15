@@ -31,7 +31,7 @@ version project.version
 
 apply plugin: 'idea'
 
-def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : false
+def enabled = project.hasProperty('ifs.survey-service.enabled') ? project.property('ifs.survey-service.enabled').toBoolean() : true
 def pullNexusImage = project.hasProperty('ifs.survey-service.pull.nexus.image') ? project.property('ifs.survey-service.pull.nexus.image').toBoolean() : false
 if (enabled && pullNexusImage) {
 
