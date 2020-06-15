@@ -119,6 +119,7 @@ public class InitialDetailsSectionSaverTest {
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);
+        when(milestoneRestService.updateMilestone(any(MilestoneResource.class))).thenReturn(restSuccess());
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -131,7 +132,6 @@ public class InitialDetailsSectionSaverTest {
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
-        assertEquals(openingDate, competition.getStartDate());
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
         assertEquals(Boolean.TRUE, competition.getStateAid());
@@ -327,6 +327,7 @@ public class InitialDetailsSectionSaverTest {
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);
+        when(milestoneRestService.updateMilestone(any(MilestoneResource.class))).thenReturn(restSuccess());
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -338,7 +339,6 @@ public class InitialDetailsSectionSaverTest {
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
-        assertEquals(openingDate, competition.getStartDate());
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
 
