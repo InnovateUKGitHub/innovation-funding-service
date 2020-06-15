@@ -31,6 +31,8 @@ public class GrantsSendInviteForm {
     @NotNull(message = "{validation.grants.invite.role.required}")
     private GrantsInviteRole role;
 
+    private Long organisationId;
+
     public String getFirstName() {
         return firstName;
     }
@@ -61,5 +63,13 @@ public class GrantsSendInviteForm {
 
     public void setRole(GrantsInviteRole role) {
         this.role = role;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 }

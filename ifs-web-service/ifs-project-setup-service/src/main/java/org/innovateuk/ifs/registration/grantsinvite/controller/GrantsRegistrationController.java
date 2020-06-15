@@ -8,7 +8,7 @@ import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInvit
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class GrantsRegistrationController {
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Autowired
     private GrantsInviteRestService grantsInviteRestService;
@@ -41,7 +41,6 @@ public class GrantsRegistrationController {
     private EncryptedCookieService cookieUtil;
 
     private final static String EMAIL_FIELD_NAME = "email";
-    private static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
     private static final String REGISTRATION_REGISTER_VIEW = "registration/register";
 
@@ -58,7 +57,7 @@ public class GrantsRegistrationController {
             }
             model.addAttribute("model", new RegistrationViewModel(true,
                     invite.getGrantsInviteRole().getDisplayName(),
-                    invite.getProjectName(),
+                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
                     invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
 
             model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
@@ -67,7 +66,7 @@ public class GrantsRegistrationController {
         ).getSuccess();
     }
 
-    @PostMapping(REGISTER_MAPPING)
+    @PostMapping
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      @PathVariable long projectId,
                                      BindingResult bindingResult,
@@ -89,12 +88,12 @@ public class GrantsRegistrationController {
                 return AcceptGrantsInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
             }
 
-            if (emailExists(registrationForm.getEmail())) {
+            if (invite.userExists()) {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = createUser(registrationForm)
+            ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserResource()).toServiceResult()
                     .andOnSuccess(newUser -> {
                         grantsInviteRestService.acceptInvite(projectId, invite.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
@@ -107,21 +106,5 @@ public class GrantsRegistrationController {
             }
 
         }).getSuccess();
-    }
-
-    private boolean emailExists(String email) {
-        return userService.findUserByEmail(email).isPresent();
-    }
-
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm) {
-        return userService.createOrganisationUser(
-                registrationForm.getFirstName(),
-                registrationForm.getLastName(),
-                registrationForm.getPassword(),
-                registrationForm.getEmail(),
-                registrationForm.getTitle(),
-                registrationForm.getPhoneNumber(),
-                null,
-                registrationForm.getAllowMarketingEmails());
     }
 }

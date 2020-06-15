@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.an
         securedType = ProjectRegistrationController.class)
 @PreAuthorize("permitAll")
 public class ProjectRegistrationController {
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private UserService userService;
@@ -88,7 +92,7 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = createUser(registrationForm, invite.getOrganisation())
+            ServiceResult<String> result = createUser(registrationForm)
                     .andOnSuccess(newUser -> {
                         projectInviteRestService.acceptInvite(hash, newUser.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
@@ -107,15 +111,7 @@ public class ProjectRegistrationController {
         return userService.findUserByEmail(email).isPresent();
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        return userService.createOrganisationUser(
-                registrationForm.getFirstName(),
-                registrationForm.getLastName(),
-                registrationForm.getPassword(),
-                registrationForm.getEmail(),
-                registrationForm.getTitle(),
-                registrationForm.getPhoneNumber(),
-                organisationId,
-                registrationForm.getAllowMarketingEmails());
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm) {
+        return userRestService.createUser(registrationForm.constructUserResource()).toServiceResult();
     }
 }

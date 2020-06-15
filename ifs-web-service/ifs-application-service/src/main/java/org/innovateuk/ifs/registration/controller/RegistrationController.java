@@ -20,6 +20,7 @@ import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -271,6 +272,7 @@ public class RegistrationController {
                 throw new InviteAlreadyAcceptedException();
             }
         }
+        model.addAttribute("model", new RegistrationViewModel(false));
         return false;
     }
 

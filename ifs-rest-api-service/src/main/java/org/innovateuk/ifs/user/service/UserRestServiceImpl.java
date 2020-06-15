@@ -82,6 +82,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<UserResource> createUser(UserResource user) {
+        return postWithRestResultAnonymous(USER_REST_URL, user, UserResource.class);
+    }
+
+    @Override
     public RestResult<List<UserResource>> findAll() {
         return getWithRestResult(USER_REST_URL + "/find-all/", userListType());
     }
@@ -201,12 +206,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         }
 
         return postWithRestResultAnonymous(url, user, UserResource.class);
-    }
-
-    @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                       String phoneNumber, long organisationId, Boolean allowMarketingEmails) {
-        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null, allowMarketingEmails);
     }
 
     @Override

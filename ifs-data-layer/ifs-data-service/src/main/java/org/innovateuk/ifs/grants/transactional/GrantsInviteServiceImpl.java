@@ -28,6 +28,8 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
@@ -83,6 +86,9 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ActivityLogService activityLogService;
+
+    @Autowired
+    private RegistrationService registrationService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -219,6 +225,18 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                     }
                     return serviceSuccess();
                 });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> acceptAndRegister(long inviteId, UserResource user) {
+        return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
+                .andOnSuccess(invite -> {
+                    user.setRoles(newArrayList(getRole(invite.getClass())));
+                    return registrationService.createUser(user)
+                            .andOnSuccess(created -> find(user(created.getId())).andOnSuccessReturnVoid(invite::setUser));
+                })
+                .andOnSuccessReturnVoid(createdUser -> this.acceptInvite(inviteId));
     }
 
 

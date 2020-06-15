@@ -16,6 +16,8 @@ public interface UserRestService {
 
     RestResult<UserResource> retrieveUserById(long id);
 
+    RestResult<UserResource> createUser(UserResource user);
+
     RestResult<List<UserResource>> findAll();
 
     RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory);
@@ -62,8 +64,6 @@ public interface UserRestService {
                                                                                  String phoneNumber, long organisationId,
                                                                                  Long competitionId, Boolean allowMarketingEmails);
 
-    RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
-                                                                String phoneNumber, long organisationId, Boolean allowMarketingEmails);
 
     RestResult<UserResource> updateDetails(long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails);
 

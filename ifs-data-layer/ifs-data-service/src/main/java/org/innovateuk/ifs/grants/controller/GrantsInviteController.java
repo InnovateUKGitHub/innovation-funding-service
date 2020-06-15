@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.grants.transactional.GrantsInviteService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,10 @@ public class GrantsInviteController {
     @PostMapping("/{inviteId}/accept")
     public RestResult<Void> acceptInvite(@PathVariable long inviteId) {
         return grantsInviteService.acceptInvite(inviteId).toPostResponse();
+    }
+
+    @PostMapping("/{inviteId}/accept-and-register")
+    public RestResult<Void> acceptAndRegister(@PathVariable long inviteId, @RequestBody UserResource user) {
+        return grantsInviteService.acceptAndRegister(inviteId, user).toPostResponse();
     }
 }

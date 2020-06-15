@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
@@ -61,6 +62,11 @@ public class UserController {
 
     @Autowired
     private CrmService crmService;
+
+    @PostMapping
+    public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
+        return registrationService.createUser(userResource).toPostCreateResponse();
+    }
 
     @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable String uid) {
@@ -201,6 +207,7 @@ public class UserController {
     }
 
     @PostMapping("/create-lead-applicant-for-organisation/{organisationId}")
+    @ZeroDowntime(reference = "7317", description = "remove this endpoint")
     public RestResult<UserResource> createUser(@PathVariable long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createUser(userResource).toPostCreateResponse();
     }

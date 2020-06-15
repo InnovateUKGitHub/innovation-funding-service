@@ -22,7 +22,7 @@
 
         <p class="govuk-body">To continue, you need to create an account with the Innovation Funding Service.</p>
 
-        <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${registrationForm}" novalidate="novalidate">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="firstName">
                     First name
@@ -110,6 +110,16 @@
                            th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
                                     data-required-errormessage=#{validation.standard.email.required}" />
                 </th:block>
+            </div>
+
+            <div class="govuk-form-group" th:unless="${model.role == null}">
+                <p class="govuk-label govuk-label--s">Role</p>
+                <p class="govuk-body" th:text="${model.role}"></p>
+            </div>
+
+            <div class="govuk-form-group" th:unless="${model.project == null}">
+                <p class="govuk-label govuk-label--s">Project</p>
+                <p class="govuk-body" th:text="${model.project}"></p>
             </div>
 
             <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
