@@ -195,7 +195,8 @@
                                                 <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}"
                                                    th:text="|${model.newAttachmentLinks.get(attachmentId)} (opens in a new window)|"
                                                    target="_blank"
-                                                   class="govuk-link">File</a>
+                                                   class="govuk-link"
+                                                   aria-describedby="file-hint">File</a>
                                                 <button name="removeAttachment" th:value="${attachmentId}"
                                                         class="button-clear remove-file"
                                                         aria-label="Remove uploaded document">Remove
