@@ -201,7 +201,7 @@ The stakeholder partner organisation accepts the invite
     [Setup]  Logout as user
     Given the user reads his email and clicks the link    ${previousStakeholderEmail}  Invitation to collaborate in ${openCompetitionPerformance_name}  You will be joining as part of the organisation  2
     When the user clicks the button/link                  link = Continue
-    Then logging in and error checking                     ${previousStakeholderEmail}  ${short_password}
+    Then logging in and error checking                    ${previousStakeholderEmail}  ${short_password}
 
 The stakeholder partner organisation provides organisation details and do not see any error
     [Documentation]    IFS-7639
