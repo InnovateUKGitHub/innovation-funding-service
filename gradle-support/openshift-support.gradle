@@ -663,5 +663,5 @@ task osTestResults(type: Exec) {
 
 task osDeployAuthServices(type: Exec, dependsOn: prepareDeployAndUpgrade) {
     executable = 'setup-files/scripts/openshift/os-deploy-auth-services.sh'
-    args = [openshiftEnv, "remote", project.version, project.findProperty("nexus_username"), project.findProperty("nexus_password"), project.findProperty("nexus_email")]
+    args = [openshiftEnv, "remote", project.version, project.findProperty("nexus_username"), project.findProperty("nexus_password"), project.findProperty("nexus_email"),  project.findProperty("nexus_version")]
 }
