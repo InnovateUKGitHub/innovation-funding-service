@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -23,7 +24,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -48,6 +48,8 @@ public class AcceptApplicationInviteServiceImplTest {
     private ApplicationProgressService applicationProgressService;
     @Mock
     private OrganisationRepository organisationRepositoryMock;
+    @Mock
+    private ApplicationService applicationService;
 
     @InjectMocks
     private AcceptApplicationInviteServiceImpl service = new AcceptApplicationInviteServiceImpl();
@@ -88,12 +90,16 @@ public class AcceptApplicationInviteServiceImplTest {
                 invite.getTarget().getId()
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
+        when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
+
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, applicationInviteRepositoryMock);
         inOrder.verify(inviteOrganisationRepositoryMock).saveAndFlush(inviteOrganisationToBeReplaced);
         inOrder.verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
+
+        verify(applicationService).linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId());
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation())
@@ -119,10 +125,14 @@ public class AcceptApplicationInviteServiceImplTest {
                 invite.getTarget().getId()
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
+        when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
+
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         verify(inviteOrganisationRepositoryMock, never()).delete(inviteOrganisationToBeReplaced);
+
+        verify(applicationService).linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId());
 
         assertThat(result.isSuccess()).isTrue();
     }
@@ -138,9 +148,12 @@ public class AcceptApplicationInviteServiceImplTest {
                 invite.getTarget().getId()
         ))
                 .thenReturn(Optional.empty());
+        when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
+
+        verify(applicationService).linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId());
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation().getOrganisation())
                 .isEqualToComparingFieldByField(usersCurrentOrganisation);
@@ -168,11 +181,14 @@ public class AcceptApplicationInviteServiceImplTest {
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(expectedProcessRole);
         when(applicationProgressService.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
+        when(applicationService.linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId(), Optional.of(usersCurrentOrganisation.getId()));
 
         verify(processRoleRepositoryMock).save(expectedProcessRole);
         verify(applicationProgressService).updateApplicationProgress(invite.getTarget().getId());
+        verify(applicationService).linkAddressesToOrganisation(usersCurrentOrganisation.getId(), invite.getTarget().getId());
+
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getTarget().getProcessRoles())
