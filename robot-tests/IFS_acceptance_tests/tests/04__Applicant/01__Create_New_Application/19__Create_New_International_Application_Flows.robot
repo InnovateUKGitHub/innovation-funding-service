@@ -58,10 +58,10 @@ Non registered international users can create an account and provide internation
 Registered users applying for an international competition see no international organisation if there is none
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-    Given the user sign in and apply for international comp     ${lead_applicant}  ${short_password}
+    Given the user sign in and apply for international comp                            ${lead_applicant}  ${short_password}
     And check if there is an existing application in progress for this competition
-    When user selects where is organisation based               isInternational
-    Then the user should not see the element                    link = Apply with a different organisation
+    When user selects where is organisation based                                      isInternational
+    Then the user should not see the element                                           link = Apply with a different organisation
 
 Registered users applying for an international competition see only UK based organisations if they are UK based
     [Documentation]    IFS-7252
@@ -171,7 +171,7 @@ Lead applicant can see organisation address details on the application team page
 Lead applicant can edit organisation address details on the application team page
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    When the user clicks the button/link     link = Edit
+    When the user clicks the button/link                                     link = Edit
     Then the user should be able to edit the address and see the changes
 
 Lead applicant completes application details
@@ -190,21 +190,21 @@ Lead applicant applies again to international competition using the same interna
 Lead applicant adds a team member
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    [Setup]  the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link     link = ${internationalApplicationTitle}
-    And the user clicks the button/link       link = Application team
-    When the user clicks the button/link      jQuery = button:contains("Add person to New Empire 1")
-    And the user adds a new team member       MemberFName MemberSName  ${team_member}
-    Then the user should see the element      jQuery = td:contains("MemberFName MemberSName (pending for 0 days)")
+    [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
+    Given the user clicks the button/link       link = ${internationalApplicationTitle}
+    And the user clicks the button/link         link = Application team
+    When the user clicks the button/link        jQuery = button:contains("Add person to New Empire 1")
+    And the user adds a new team member         MemberFName MemberSName  ${team_member}
+    Then the user should see the element        jQuery = td:contains("MemberFName MemberSName (pending for 0 days)")
     [Teardown]  logout as user
 
 Team member accepts the invite and can change lead organisation address details
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    Given team member accepts the invite to join organisation     ${team_member}  ${createApplicationOpenInternationalCompetition}  MemberFName  MemberSName
-    When the user clicks the button/link                          link = Sign in
-    And Logging in and Error Checking                             ${team_member}  ${correct_password}
-    And the user clicks the button/link                           link = ${internationalApplicationTitle}
+    Given team member accepts the invite to join organisation       ${team_member}  ${createApplicationOpenInternationalCompetition}  MemberFName  MemberSName
+    When the user clicks the button/link                            link = Sign in
+    And Logging in and Error Checking                               ${team_member}  ${correct_password}
+    And the user clicks the button/link                             link = ${internationalApplicationTitle}
     Then the member can edit leads organisation address details
     [Teardown]    Logout as user
 
@@ -232,11 +232,11 @@ Internal user can see International Organisation Address Details in Application 
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  requesting Application ID for this Application
-    Given Logging in and Error Checking                   &{internal_finance_credentials}
+    Given Logging in and Error Checking                         &{internal_finance_credentials}
     When the user selects the application in progress
-    And the user clicks the button/link                   jQuery = button:contains("Open all")
-    Then the user should see the element                  jQuery = td:contains("Address")
-    And the user should see the element                   jQuery = td:contains("${addressLine1}")
+    And the user clicks the button/link                         jQuery = button:contains("Open all")
+    Then the user should see the element                        jQuery = td:contains("Address")
+    And the user should see the element                         jQuery = td:contains("${addressLine1}")
     [Teardown]    Logout as user
 
 Lead applicant is able to complete international application
@@ -294,35 +294,35 @@ Partner organisation submits project details and is able to see organisation add
     [Documentation]  IFS-7264
     [Tags]  HappyPath
     Given the user completes project details
-    When the user clicks the button/link         link = Return to setup your project
+    When the user clicks the button/link                                                     link = Return to setup your project
     And the user completes project team and can see international organisation addresses
-    Then the user clicks the button/link         link = Return to setup your project
-    And the user should see the element          jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
+    Then the user clicks the button/link                                                     link = Return to setup your project
+    And the user should see the element                                                      jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
     [Teardown]  logout as user
 
 Lead organisation can see international organisation address details in project team and cannot edit it
     [Documentation]  IFS-7200
     [Tags]  HappyPath
-    [Setup]  logging in and error checking       ${lead_international_email}  ${short_password}
-    Given the user clicks the button/link        link = ${internationalApplicationTitle}
+    [Setup]  logging in and error checking                                                    ${lead_international_email}  ${short_password}
+    Given the user clicks the button/link                                                     link = ${internationalApplicationTitle}
     When the user completes project team and can see international organisation addresses
 
 Lead organisation completes the project team and project details
     [Documentation]  IFS-7200
     [Tags]  HappyPath
     Given the user chooses the project manager
-    When the user clicks the button/link           link = Return to setup your project
-    Then the user clicks the button/link           link = Project details
+    When the user clicks the button/link                                 link = Return to setup your project
+    Then the user clicks the button/link                                 link = Project details
     And the user completes correspondence address in project details
     [Teardown]  logout as user
 
 Partner organisation can see international organisation address details in project team and cannot edit it
     [Documentation]  IFS-7200
     [Tags]  HappyPath
-    [Setup]  logging in and error checking     ${partner_org}  ${correct_password}
-    Given the user clicks the button/link      link = ${internationalApplicationTitle}
+    [Setup]  logging in and error checking                                                    ${partner_org}  ${correct_password}
+    Given the user clicks the button/link                                                     link = ${internationalApplicationTitle}
     When the user completes project team and can see international organisation addresses
-    Then the user clicks the button/link       link = Return to setup your project
+    Then the user clicks the button/link                                                      link = Return to setup your project
     [Teardown]  logout as user
 
 Internal user can view address details
@@ -456,9 +456,9 @@ the user gets an error message on not filling mandatory fields
 The user completes the application
     the applicant completes Application Team
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                 ${internationalApplicationTitle}
-    lead marks the finance as complete                       ${internationalApplicationTitle}   Calculate  52,214
-    the user accept the competition terms and conditions     Return to application overview
+    the user navigates to Your-finances page                                       ${internationalApplicationTitle}
+    lead marks the finance as complete                                             ${internationalApplicationTitle}   Calculate  52,214
+    the user accept the competition terms and conditions                           Return to application overview
 
 lead marks the finance as complete
     [Arguments]  ${application}  ${overheadsCost}  ${totalCosts}
