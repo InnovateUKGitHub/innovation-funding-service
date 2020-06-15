@@ -879,8 +879,8 @@ Requesting new empire one organisation ID of this Project
     Set suite variable             ${organisationTestEmpireOneID}
 
 Lead applicant submits project team details
-    [Arguments]     ${email}    ${password}
-    Log in as a different user                  ${email}    ${password}
+    [Arguments]     ${email}  ${password}  ${ProjectID}
+    Log in as a different user                  ${email}  ${password}
     the user navigates to the page              ${server}/project-setup/project/${ProjectID}/team/project-manager
     the user selects the radio button           projectManager  projectManager1
     the user clicks the button/link             id = save-project-manager-button
@@ -901,8 +901,8 @@ zero funding parter submits the project and team details
     the user clicks the button/link           id = save-finance-contact-button
 
 Non UK based partner submits the project and team details
-    [Arguments]     ${email}    ${password}
-    Log in as a different user              ${email}    ${password}
+    [Arguments]     ${email}  ${password}  ${ProjectID}
+    Log in as a different user              ${email}  ${password}
     the user navigates to the page          ${server}/project-setup/project/${ProjectID}
     the user clicks the button/link         link = Project team
     the user clicks the button/link         link = Your finance contact
@@ -968,9 +968,9 @@ No action required should display for non uk based and zero funding organisation
     the user should see the element     css = li.read-only:nth-child(4) div.task-status > span:nth-child(1)
 
 lead and partner applicants completes the project and bank details
-    Lead applicant submits project team details     &{leadApplicantCredentials}
+    Lead applicant submits project team details     stephan.marriek@empire.fr   ${short_password}     ${ProjectID}
     zero funding parter submits the project and team details
-    Non UK based partner submits the project and team details   &{partnerApplicantCredentialsNonUKBased}
+    Non UK based partner submits the project and team details   international@example.com  ${short_password}  ${ProjectID}
     UK based partner submits the project and team details
 
 will show the bank details as not required for non uk based and zero funding partner organisations
@@ -1127,7 +1127,6 @@ uk lead applicant completes application form
     log in as a different user                               &{ukLeadOrganisationCredentials}
     the user navigates to the page                           ${APPLICANT_DASHBOARD_URL}
     the user clicks the button/link                          link = Untitled application (start here)
-    #the user clicks the button/link                          link = Application overview
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link                          link = Application team
@@ -1135,10 +1134,8 @@ uk lead applicant completes application form
     the user clicks the button/link                          name = remove-team-member
     the user clicks the button/link                          id = application-question-complete
     the user clicks the button/link                          link = Return to application overview
-    #the user clicks the button/link                          link = Application overview
     the user should see the element                          jQuery = li:contains("Application team") > .task-status-complete
     the lead applicant fills all the questions and marks as complete(programme)
-    #the user clicks the button/link                          link = ${ukLeadInternationalApplicationTitle}
     the user navigates to Your-finances page                 ${ukLeadInternationalApplicationTitle}
     Uk based lead marks the finance as complete              ${ukLeadInternationalApplicationTitle}   Calculate  52,214
     the user accept the competition terms and conditions     Return to application overview
@@ -1152,30 +1149,37 @@ international partner submits finance details
 
 Uk lead submits international competition application to assesment
     Requesting uk lead international competition IDs
-    Log in as a different user                               &{ukLeadOrganisationCredentials}
-    the user clicks the button/link                          link = ${ukLeadInternationalApplicationTitle}
+    Log in as a different user                            &{ukLeadOrganisationCredentials}
+    the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the applicant submits the application
     #Logout as user
-    Log in as a different user                               &{internal_finance_credentials}
-    moving competition to Closed                             ${ukLeadinternationalCompetitionId}
-    making the application a successful project              ${ukLeadinternationalCompetitionId}  ${ukLeadInternationalApplicationTitle}
-    moving competition to Project Setup                      ${ukLeadinternationalCompetitionId}
+    Log in as a different user                            &{internal_finance_credentials}
+    moving competition to Closed                          ${ukLeadinternationalCompetitionId}
+    making the application a successful project           ${ukLeadinternationalCompetitionId}  ${ukLeadInternationalApplicationTitle}
+    moving competition to Project Setup                   ${ukLeadinternationalCompetitionId}
+
+project finance approves Eligibility for uk based lead and international partner
+    [Arguments]  ${lead}  ${partner}  ${project}
+    the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${lead}/eligibility
+    the user approves project costs
+    the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/eligibility
+    the user approves project costs
 
 Uk lead compelets project setup details and generated GOL
     Requesting uk lead international project ID
     Requesting uk lead international organisation IDs
-    lead applicant submits project team details                         &{ukLeadOrganisationCredentials}
+    lead applicant submits project team details                                         steve.smith@empire.com   ${short_password}  ${ukLeadApplicationProjectID}
     the user enters bank details
-    Non UK based partner submits the project and team details           &{internationalPartnerOrganisationCredentials}
-    project manager submits documents                                   &{ukLeadOrganisationCredentials}
-    project finance approves both documents                             ${ukLeadApplicationProjectID}
-    project finance approves Viability for                              ${organistaionOrg2}        ${ukLeadApplicationProjectID}
-    project finance approves Viability for                              ${organistaionNewEmpireID}    ${ukLeadApplicationProjectID}
-    project finance approves Eligibility                                ${organistaionOrg2}        ${organistaionNewEmpireID}
-    the user clicks the button/link                                     link = Return to finance checks
-    the user clicks the button/link                                     css = .generate-spend-profile-main-button
-    the user clicks the button/link                                     css = #generate-spend-profile-modal-button
-    Login and submit partners spend profile                             tim.simpson@test.com         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
-    Uk lead organisations submit the spend profile                      ${ukLeadApplicationProjectID}   ${organistaionOrg2}
-    proj finance approves the spend profiles                            ${ukLeadApplicationProjectID}
+    Non UK based partner submits the project and team details                           tim.simpson@test.com  ${short_password}  ${ukLeadApplicationProjectID}
+    project manager submits documents                                                   &{ukLeadOrganisationCredentials}
+    project finance approves both documents                                             ${ukLeadApplicationProjectID}
+    project finance approves Viability for                                              ${organistaionOrg2}        ${ukLeadApplicationProjectID}
+    project finance approves Viability for                                              ${organistaionNewEmpireID}    ${ukLeadApplicationProjectID}
+    project finance approves Eligibility for uk based lead and international partner    ${organistaionOrg2}   ${organistaionNewEmpireID}   ${ukLeadApplicationProjectID}
+    the user clicks the button/link                                                     link = Return to finance checks
+    the user clicks the button/link                                                     css = .generate-spend-profile-main-button
+    the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
+    Login and submit partners spend profile                                             tim.simpson@test.com         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
+    Uk lead organisations submit the spend profile                                      ${ukLeadApplicationProjectID}   ${organistaionOrg2}
+    proj finance approves the spend profiles                                            ${ukLeadApplicationProjectID}
 
