@@ -430,8 +430,8 @@ Project manager's status should be updated
     [Setup]    log in as a different user      ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user should see live project on dashboard
     When the user clicks the button/link       link = ${Elbow_Grease_Title}
-    Then the user should see the element       jQuery = .success-alert:contains("The project is live, you can review progress at")
-    And the user should see the element        link = _connect
+    Then the user should see the element       jQuery = .success-alert:contains("The project is now live and you can ")
+    And the user should see the element        link = review its progress.
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
@@ -439,7 +439,7 @@ Non lead's status should be updated
     [Setup]    log in as a different user    ${Elbow_Grease_Partner_Email}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${Elbow_Grease_Project_Id}
     And the user should see the element      css = li.complete:nth-child(7)
-    And the user should see the element      link = _connect
+    And the user should see the element      link = review its progress.
 
 Non lead can see the GOL approved
     [Documentation]  INFUND-6377
@@ -465,17 +465,17 @@ Non lead cannot see the signed GOL
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Lead_PM_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Lead_PM_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Partner_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Partner_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Academic_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Academic_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Internal user should see completed project in previous tab
     [Documentation]  IFS-6054
