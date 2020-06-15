@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.sectionupdater;
 
-import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -16,16 +15,13 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.competition.setup.application.sectionupdater.AbstractSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.management.competition.setup.core.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionSpecialSectors;
 import org.innovateuk.ifs.management.competition.setup.core.util.CompetitionUtils;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm;
-import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,23 +111,31 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         competition.setStateAid(initialDetailsForm.getStateAid());
         competition.setFundingType(initialDetailsForm.getFundingType());
 
-        errors.addAll(attemptOpeningMilestoneSave(initialDetailsForm, competition));
+        errors.addAll(attemptOpeningDateSave(initialDetailsForm, competition));
         errors.addAll(attemptAddingInnovationAreasToCompetition(initialDetailsForm, competition));
 
         return errors;
     }
 
-    private List<Error> attemptOpeningMilestoneSave(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
-        List<Error> errors = new ArrayList<>();
+    private List<Error> attemptOpeningDateSave(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
 
         if (shouldTryToSaveStartDate(initialDetailsForm)) {
             ZonedDateTime startDate = initialDetailsForm.getOpeningDate();
-            competition.setStartDate(startDate);
+            List<Error> errors = validateOpeningDate(startDate);
 
-            errors.addAll(saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction()));
+            if (!errors.isEmpty()) {
+                return errors;
+            }
+
+            new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId());
+
+            RestResult<Void> result = milestoneRestService.updateMilestone(new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId()));
+            if (!result.getErrors().isEmpty()) {
+                return result.getErrors();
+            }
         }
 
-        return errors;
+        return emptyList();
     }
 
     private List<Error> attemptAddingInnovationAreasToCompetition(InitialDetailsForm initialDetailsForm, CompetitionResource competition) {
@@ -234,42 +238,6 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
         }
 
         return Collections.emptyList();
-    }
-
-	private List<Error> saveOpeningDateAsMilestone(ZonedDateTime openingDate, Long competitionId, boolean isMarkAsCompleteAction) {
-		if (isMarkAsCompleteAction) {
-			List<Error> errors = validateOpeningDate(openingDate);
-			if (!errors.isEmpty()) {
-				return errors;
-			}
-		}
-
-	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
-
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
-        if(milestones.isEmpty()) {
-            milestones = competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionId).getSuccess();
-        }
-        milestones.sort(Comparator.comparing(MilestoneResource::getType));
-
-		LinkedMap<String, GenericMilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
-		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
-
-        ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
-        if(result.isFailure()) {
-            return result.getErrors();
-        }
-		return emptyList();
-	}
-
-    private ZonedDateTime parseDate(String value) {
-        String[] dateParts = value.split("-");
-        ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
-                Integer.parseInt(dateParts[2]),
-                Integer.parseInt(dateParts[1]),
-                Integer.parseInt(dateParts[0]));
-
-        return startDate;
     }
 
     private Set<Long> parseInnovationAreaIds(String commaSeparatedIds) {

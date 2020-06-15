@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
+public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
 
     List<Milestone> findAllByCompetitionId(Long competitionId);
 

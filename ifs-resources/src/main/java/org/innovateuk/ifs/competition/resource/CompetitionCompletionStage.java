@@ -5,6 +5,17 @@ package org.innovateuk.ifs.competition.resource;
  */
 public enum CompetitionCompletionStage {
 
-    RELEASE_FEEDBACK,
-    PROJECT_SETUP
+    COMPETITION_CLOSE("Competition Close"),
+    RELEASE_FEEDBACK("Release feedback"),
+    PROJECT_SETUP("Project setup");
+
+    private String displayName;
+
+    CompetitionCompletionStage(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

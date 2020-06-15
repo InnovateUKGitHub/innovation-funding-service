@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.competition.resource;
 
+import java.util.List;
 import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
 
 /**
  * This enum defines the milestones type for the competition
@@ -23,6 +26,9 @@ public enum MilestoneType {
     NOTIFICATIONS("12. Notifications", false),
     RELEASE_FEEDBACK("13. Release feedback", false),
     FEEDBACK_RELEASED("Feedback released", false, false);
+
+    public static final List<MilestoneType> COMPETITION_CLOSE_MILESTONES =
+            asList(BRIEFING_EVENT, REGISTRATION_DATE, SUBMISSION_DATE);
 
     private String milestoneDescription;
     private boolean presetDate;
