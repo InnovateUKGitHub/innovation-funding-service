@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -338,18 +339,33 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void updateCompletionStage() {
+    public void updateCompletionStage_noChange() {
 
-        Competition competition = newCompetition().build();
-
-        assertNull(competition.getCompletionStage());
+        Competition competition = newCompetition()
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .build();
 
         when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
 
         assertTrue(result.isSuccess());
-        assertEquals(CompetitionCompletionStage.PROJECT_SETUP, competition.getCompletionStage());
+        verifyNoMoreInteractions(milestoneRepository);
+    }
+
+    @Test
+    @Rollback
+    public void updateCompletionStage() {
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .build();
+
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
+
+        ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
+
+        assertTrue(result.isSuccess());
     }
 
     @Override
