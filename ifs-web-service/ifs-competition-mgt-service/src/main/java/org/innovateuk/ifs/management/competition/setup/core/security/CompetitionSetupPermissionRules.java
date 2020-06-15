@@ -39,7 +39,7 @@ public class CompetitionSetupPermissionRules {
     }
 
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed to read post award service during competition setup")
-    public boolean readPostAwardService(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
+    public boolean readPostAwardServiceForCompetitionSetup(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         return competitionInitialDetailsSet(competitionCompositeId);
     }
 
