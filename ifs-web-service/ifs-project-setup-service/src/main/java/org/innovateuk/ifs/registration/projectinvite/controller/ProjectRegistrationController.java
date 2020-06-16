@@ -23,6 +23,7 @@ import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.registration.projectinvite.controller.AcceptProjectInviteController.*;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
 
 @Controller
@@ -53,11 +54,11 @@ public class ProjectRegistrationController {
     public String registerForm(Model model,
                                HttpServletRequest request,
                                UserResource loggedInUser) {
-        String hash = cookieUtil.getCookieValue(request, AcceptProjectInviteController.INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
-                    ValidationMessages errors = AcceptProjectInviteController.errorMessages(loggedInUser, invite);
+                    ValidationMessages errors = errorMessages(loggedInUser, invite);
                     if (errors.hasErrors()) {
-                        return AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
+                        return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
                     model.addAttribute("model", anInvitedUserViewModel());
                     model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
@@ -72,7 +73,7 @@ public class ProjectRegistrationController {
                                      HttpServletRequest request,
                                      Model model,
                                      UserResource loggedInUser) {
-        String hash = cookieUtil.getCookieValue(request, AcceptProjectInviteController.INVITE_HASH);
+        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
             model.addAttribute("model", anInvitedUserViewModel());
@@ -82,9 +83,9 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ValidationMessages errors = AcceptProjectInviteController.errorMessages(loggedInUser, invite);
+            ValidationMessages errors = errorMessages(loggedInUser, invite);
             if (errors.hasErrors()) {
-                return AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
+                return populateModelWithErrorsAndReturnErrorView(errors, model);
             }
 
             if (emailExists(registrationForm.getEmail())) {

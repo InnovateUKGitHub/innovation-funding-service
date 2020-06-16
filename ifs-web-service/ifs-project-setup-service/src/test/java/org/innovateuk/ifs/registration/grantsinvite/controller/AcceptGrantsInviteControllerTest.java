@@ -22,8 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AcceptGrantsInviteControllerTest extends BaseControllerMockMVCTest<AcceptGrantsInviteController> {
 
-//    @RequestMapping("/project/{projectId}/grants/invite")
-
     @Mock
     private GrantsInviteRestService grantsInviteRestService;
 

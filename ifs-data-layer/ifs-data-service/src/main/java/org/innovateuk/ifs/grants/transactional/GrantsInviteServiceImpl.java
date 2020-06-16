@@ -227,19 +227,6 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                 });
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> acceptAndRegister(long inviteId, UserResource user) {
-        return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
-                .andOnSuccess(invite -> {
-                    user.setRoles(newArrayList(getRole(invite.getClass())));
-                    return registrationService.createUser(user)
-                            .andOnSuccess(created -> find(user(created.getId())).andOnSuccessReturnVoid(invite::setUser));
-                })
-                .andOnSuccessReturnVoid(createdUser -> this.acceptInvite(inviteId));
-    }
-
-
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {
         if (GrantsProjectManagerInvite.class.equals(clazz)) {
             return GRANTS_PROJECT_MANAGER_INVITED;

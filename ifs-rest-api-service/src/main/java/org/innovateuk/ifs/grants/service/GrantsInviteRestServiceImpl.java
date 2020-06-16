@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +38,5 @@ public class GrantsInviteRestServiceImpl extends BaseRestService implements Gran
     @Override
     public RestResult<Void> acceptInvite(long projectId, long inviteId) {
         return postWithRestResultAnonymous(format(BASE_URL + "/%d/accept", projectId, inviteId), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> createUserAndAccept(long projectId, long inviteId, UserResource user) {
-        return postWithRestResultAnonymous(format(BASE_URL + "/%d/accept-and-register", projectId, inviteId), user, Void.class);
     }
 }

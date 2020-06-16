@@ -3,7 +3,6 @@ package org.innovateuk.ifs.grants.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 
@@ -16,5 +15,4 @@ public interface GrantsInviteRestService {
     RestResult<Void> resendInvite(long projectId, long inviteId);
     RestResult<SentGrantsInviteResource> getInviteByHash(long projectId, String hash);
     RestResult<Void> acceptInvite(long projectId, long inviteId);
-    RestResult<Void> createUserAndAccept(long projectId, long inviteId, UserResource user);
 }
