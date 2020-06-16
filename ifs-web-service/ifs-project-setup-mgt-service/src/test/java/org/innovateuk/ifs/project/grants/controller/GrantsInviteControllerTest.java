@@ -5,13 +5,19 @@ import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.project.grants.viewmodel.GrantsInviteSendViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -28,14 +34,22 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
     @Mock
     private GrantsInviteRestService grantsInviteRestService;
 
+    @Mock
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
     @Test
     public void inviteForm() throws Exception {
         ProjectResource project = newProjectResource()
                 .withApplication(2L)
                 .withName("name")
                 .build();
+        List<PartnerOrganisationResource> partners = newPartnerOrganisationResource()
+                .withOrganisation(5L, 6L)
+                .withOrganisationName("5", "6")
+                .build(2);
 
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId())).thenReturn(restSuccess(partners));
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId()+ "/grants/invite/send"))
                 .andExpect(view().name("project/grants-invite/invite"))
@@ -45,6 +59,10 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
 
         assertEquals(viewModel.getApplicationId(), 2L);
         assertEquals(viewModel.getProjectName(), "name");
+        assertEquals(viewModel.getOrganisationNameIdPairs().get(0).getLeft(), partners.get(0).getOrganisation());
+        assertEquals(viewModel.getOrganisationNameIdPairs().get(0).getRight(), partners.get(0).getOrganisationName());
+        assertEquals(viewModel.getOrganisationNameIdPairs().get(1).getLeft(), partners.get(1).getOrganisation());
+        assertEquals(viewModel.getOrganisationNameIdPairs().get(1).getRight(), partners.get(1).getOrganisationName());
     }
 
     @Test
@@ -53,15 +71,18 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
                 .withApplication(2L)
                 .withName("name")
                 .build();
+        List<PartnerOrganisationResource> partners = newPartnerOrganisationResource().build(2);
 
         when(projectRestService.getProjectById(project.getId())).thenReturn(restSuccess(project));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId())).thenReturn(restSuccess(partners));
 
-        mockMvc.perform(post("/project/" + project.getId()+ "/grants/invite/send"))
+        mockMvc.perform(post("/project/" + project.getId()+ "/grants/invite/send")
+                .param("role", GRANTS_PROJECT_FINANCE_CONTACT.name()))
                 .andExpect(view().name("project/grants-invite/invite"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "firstName", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "lastName", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "email", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "role", "NotNull"));
+                .andExpect(model().attributeHasFieldErrorCode("form", "organisationId", "validation.grants.invite.organisation.required"));
     }
 
     @Test

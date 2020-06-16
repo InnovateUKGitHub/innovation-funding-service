@@ -82,7 +82,7 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email') and model.invitee == null} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email') and !model.invitee} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="email">
                     Email
                 </label>

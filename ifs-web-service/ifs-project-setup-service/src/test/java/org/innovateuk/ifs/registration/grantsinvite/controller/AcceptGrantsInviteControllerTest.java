@@ -42,9 +42,10 @@ public class AcceptGrantsInviteControllerTest extends BaseControllerMockMVCTest<
 
         when(grantsInviteRestService.getInviteByHash(projectId, hash)).thenReturn(restSuccess(invite));
 
+        logoutCurrentUser();
         MvcResult result = mockMvc.perform(get("/project/{id}/grants/invite/{hash}", projectId, hash))
                 .andExpect(status().isOk())
-                .andExpect(view().name("project/registration/accept-invite-failure"))
+                .andExpect(view().name("project/grants-invite/accept-invite"))
                 .andReturn();
 
         GrantsInviteViewModel viewmodel = (GrantsInviteViewModel) result.getModelAndView().getModel().get("model");
