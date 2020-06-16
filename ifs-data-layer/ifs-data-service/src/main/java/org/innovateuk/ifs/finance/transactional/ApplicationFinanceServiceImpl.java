@@ -229,17 +229,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
         return () -> getApplicationFinance(applicationFinanceId);
     }
 
-
-    private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId() == type.getId();
-    }
-
-    private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource, Competition competition) {
-        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(competition.getId(), organisationType.getId());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
-        applicationFinanceResource.setFinanceOrganisationDetails(costs);
-    }
-
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
         return find(applicationFinanceRepository.findById(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
