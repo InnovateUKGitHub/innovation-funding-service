@@ -285,7 +285,7 @@ Registered International lead user applies for an international competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
     Given the user clicks the button/link                         link = Apply with a different organisation
-    When the user provides international organisation details     343434435  Sydney  Australia  Australia  New Empire 1  international-organisation-details-cta
+    When the user provides international organisation details     343434435  Sydney  Australia  Australia  ${leadApplicantOrganisationName}  international-organisation-details-cta
     Then the user verifies their organisation details
     And the user clicks the button/link                           id = international-confirm-organisation-cta
 
@@ -313,7 +313,7 @@ Lead applicant applies again to international competition using the same interna
     Given the user select the competition and starts application                       ${internationalLeadInternationalCompetition}
     And check if there is an existing application in progress for this competition
     When user selects where is organisation based                                      isInternational
-    Then the user clicks the button/link                                               jQuery = span:contains("New Empire 1")
+    Then the user clicks the button/link                                               jQuery = span:contains("${leadApplicantOrganisationName}")
     And the user should be able to see the same address details
 
 Lead applicant adds a team member
@@ -530,21 +530,21 @@ non-uk based partner applicant can see the read only view of the corresponding a
     When the user navigates to the page                                                    ${server}/project-setup/project/${ProjectID}/details
     Then the user should see read only view of completed correspondence address details
 
-External dashboard - lead applicant - view status of partners - will show the bank details as not required for lead applicant organisations
+External dashboard - lead applicant - view status of partners - bank details not required message should display for international lead applicant organisation
     [Documentation]    IFS - 7163
     [Tags]
     Given lead applicant invites new partner and accepts invitation
     And partner organisation sets funding level to zero
     When the user clicks the button/link                                                 link = View the status of partners
-    Then will show the bank details as not required for lead applicant organisations
+    Then bank details not required message should display for international lead applicant organisation
 
-External dashboard - partner organisation - view status of partners - will show the bank details as not required for non uk based and zero funding partner organisations
+External dashboard - partner organisation - view status of partners - bank details not required message should display for non uk based and zero funding partner organisations
     [Documentation]    IFS - 7163
     [Tags]
     Given Log in as a different user                                                                            &{partnerApplicantCredentialsNonUKBased}
     And The user navigates to the page                                                                          ${server}/project-setup/project/${ProjectID}
     When the user clicks the button/link                                                                        link = View the status of partners
-    Then will show the bank details as not required for non uk based and zero funding partner organisations
+    Then bank details not required message should display for non uk based and zero funding partner organisations
 
 Project setup dashboard - Bank details - No action required should display for non uk based and zero funding organisations
     [Documentation]    IFS - 7163
@@ -586,7 +586,7 @@ Uk based lead applicant moves application to project setup and generates GOL
     When uk lead applicant completes application form
     And international partner submits finance details
     Then Uk lead submits international competition application to assesment
-    And Uk lead compelets project setup details and generated GOL
+    And Uk lead completes project setup details and generated GOL
 
 GOL template to be updated with country for correspondents address
     [Documentation]     IFS - 7241
@@ -977,13 +977,13 @@ lead and partner applicants completes the project and bank details
     the user clicks the button/link                             link = Return to setup your project
     the user enters bank details
 
-will show the bank details as not required for non uk based and zero funding partner organisations
+bank details not required message should display for non uk based and zero funding partner organisations
     the user should see the element         jQuery = th:contains("${zeroFundingPartnerOrgnaisationName}") ~ td:nth-child(6) span:contains("Not required for this partner")
     the user should see the element         jQuery = th:contains("${partnerOrganisationNameNonUKBased}") ~ td:nth-child(6) span:contains("Not required for this partner")
     the user should see the element         jQuery = th:contains("${leadApplicantOrganisationName}") ~ td:nth-child(6) span:contains("Not required for this partner")
     the user should not see the element     jQuery = th:contains("${partnerOrganisationNameUKBased}") ~ td:nth-child(6) span:contains("Not required for this partner")
 
-will show the bank details as not required for lead applicant organisations
+bank details not required message should display for international lead applicant organisation
     the user should see the element         jQuery = th:contains("${zeroFundingPartnerOrgnaisationName}") ~ td:nth-child(6) span:contains("Not required for this partner")
     the user should see the element         jQuery = th:contains("${partnerOrganisationNameNonUKBased}") ~ td:nth-child(6) span:contains("Not required for this partner")
     the user should see the element         jQuery = th:contains("${leadApplicantOrganisationName}") ~ td:nth-child(6) span:contains("Not required for this partner")
@@ -1032,7 +1032,7 @@ partner submits the spend profile
     the user clicks the button/link     link = Submit to lead partner
     the user clicks the button/link     jQuery = button.govuk-button:contains("Submit")
 
-external partner organisations submit the spend profile
+external partner organisation submit the spend profile
     [Arguments]     ${ProjectID}   ${organistaionTestEmpireID}   ${organisationUiveristyOfLiverPoolId}
     Login and submit partners spend profile     ${international_invite_email}      ${organistaionTestEmpireID}            ${ProjectID}
     Login and submit partners spend profile     ${zero_funding_partner_email}      ${organisationUiveristyOfLiverPoolId}  ${ProjectID}
@@ -1076,7 +1076,7 @@ the user complete all sections of the project setup and generates GOL
     the user clicks the button/link                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                     css = #generate-spend-profile-modal-button
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
-    external partner organisations submit the spend profile             ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
+    external partner organisation submit the spend profile             ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
     proj finance approves the spend profiles                            ${ProjectID}
 
@@ -1169,7 +1169,7 @@ UK lead applicant enters correspondence address
     the user clicks the button/link               link = Correspondence address
     the user enter the Correspondence address
 
-Uk lead compelets project setup details and generated GOL
+Uk lead completes project setup details and generated GOL
     Requesting uk lead international project ID
     Requesting uk lead international application ID
     Requesting uk lead international organisation IDs
@@ -1193,5 +1193,5 @@ Uk lead compelets project setup details and generated GOL
 
 the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
-    the user should see the element         jQuery = h2:contains("New Empire 1")
+    the user should see the element         jQuery = h2:contains("${leadApplicantOrganisationName}")
     the user should see the element         jQuery = td:contains("${addressLine1}")
