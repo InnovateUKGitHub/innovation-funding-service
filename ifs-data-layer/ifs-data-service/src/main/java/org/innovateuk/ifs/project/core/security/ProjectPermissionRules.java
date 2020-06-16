@@ -2,18 +2,11 @@ package org.innovateuk.ifs.project.core.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.core.domain.ProjectUser;
-import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 @PermissionRules
@@ -74,11 +67,5 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "VIEW_FINANCE_REVIEWER", description = "Support users can view finance reviewer.")
     public boolean supportCanViewFinanceReviewer(final ProjectResource project, final UserResource user) {
         return isSupport(user);
-    }
-
-    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed to read post award service during project setup")
-    public boolean projectUsersCanReadPostAwardServiceForCompetition(final ProjectResource project, final UserResource user) {
-        List<ProjectUser> projectUsers = projectUserRepository.findByProjectIdAndRoleIsIn(project.getId(),  PROJECT_USER_ROLES.stream().collect(Collectors.toList()));
-        return projectUsers.stream().anyMatch(pu -> pu.isUser(user.getId()));
     }
 }

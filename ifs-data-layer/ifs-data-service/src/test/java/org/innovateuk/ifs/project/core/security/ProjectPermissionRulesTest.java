@@ -225,44 +225,4 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
 
         assertFalse(rules.supportCanViewFinanceReviewer(project, user));
     }
-
-    @Test
-    public void projectUsersCanReadPostAwardServiceForCompetition() {
-
-        UserResource user = newUserResource().withId(5L).build();
-        ProjectResource project = newProjectResource().withProjectUsers(Collections.singletonList(5L)).build();
-
-        List<ProjectUser> projectUsers = project.getProjectUsers().stream().map(pu -> {
-            ProjectUser projectUser = new ProjectUser();
-            projectUser.setUser(newUser().withId(pu).build());
-            return projectUser;
-        }).collect(Collectors.toList());
-
-        List<ProjectParticipantRole> projectRoles = PROJECT_USER_ROLES.stream().collect(Collectors.toList());
-        //ProjectUser projectUser = new ProjectUser();
-        //projectUser.setUser(newUser().withId(user.getId()).build());
-        when(projectUserRepository.findByProjectIdAndRoleIsIn(project.getId(), projectRoles)).thenReturn(projectUsers);
-
-        assertTrue(rules.projectUsersCanReadPostAwardServiceForCompetition(project, user));
-        verify(projectUserRepository).findByProjectIdAndRoleIsIn(project.getId(), projectRoles);
-    }
-
-    @Test
-    public void nonProjectUsersCannotReadPostAwardServiceForCompetition() {
-
-        UserResource user = newUserResource().withId(5L).build();
-        ProjectResource project = newProjectResource().withProjectUsers(Collections.singletonList(15L)).build();
-
-        List<ProjectUser> projectUsers = project.getProjectUsers().stream().map(pu -> {
-            ProjectUser projectUser = new ProjectUser();
-            projectUser.setUser(newUser().withId(pu).build());
-            return projectUser;
-        }).collect(Collectors.toList());
-
-        List<ProjectParticipantRole> projectRoles = PROJECT_USER_ROLES.stream().collect(Collectors.toList());
-        when(projectUserRepository.findByProjectIdAndRoleIsIn(project.getId(), projectRoles)).thenReturn(projectUsers);
-
-        assertFalse(rules.projectUsersCanReadPostAwardServiceForCompetition(project, user));
-        verify(projectUserRepository).findByProjectIdAndRoleIsIn(project.getId(), projectRoles);
-    }
 }
