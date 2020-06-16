@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -141,28 +142,41 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             if (competition.getCompletionStage() != completionStage) {
                 competition.setCompletionStage(completionStage);
 
+                List<Milestone> currentMilestones = milestoneRepository.findAllByCompetitionId(competitionId);
                 List<Milestone> newMilestones = new ArrayList<>();
 
-                Milestone openingDate = new Milestone(MilestoneType.OPEN_DATE, competition.getStartDate(), competition);
+                if (currentMilestones.size() > 1) {
+                    if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
+                        List<Milestone> deleteMilestones = currentMilestones.stream()
+                                .filter(milestone -> !MilestoneType.COMPETITION_CLOSE_MILESTONES.contains(milestone.getType()))
+                                .collect(Collectors.toList());
 
-                competition.getMilestones().clear();
-                milestoneRepository.deleteByCompetitionId(competitionId);
-                milestoneRepository.flush();
+                        milestoneRepository.deleteAll(deleteMilestones);
+                    } else {
+                        List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
+                                .map(milestone -> milestone.getType())
+                                .collect(toList());
 
-                newMilestones.add(openingDate);
-
-                if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
-                    MilestoneType.COMPETITION_CLOSE_MILESTONES.stream().forEach(type ->
-                            newMilestones.add(new Milestone(type, competition))
-                    );
+                        Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                                .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType)).forEach(type ->
+                                newMilestones.add(new Milestone(type, competition))
+                        );
+                        milestoneRepository.saveAll(newMilestones);
+                    }
                 } else {
-                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
-                            newMilestones.add(new Milestone(type, competition))
-                    );
+                    if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
+                        MilestoneType.COMPETITION_CLOSE_MILESTONES.stream()
+                                .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
+                                .forEach(type -> newMilestones.add(new Milestone(type, competition))
+                        );
+                    } else {
+                        Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                                .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
+                                newMilestones.add(new Milestone(type, competition))
+                        );
+                    }
+                    milestoneRepository.saveAll(newMilestones);
                 }
-
-                milestoneRepository.saveAll(newMilestones);
             }
         });
     }

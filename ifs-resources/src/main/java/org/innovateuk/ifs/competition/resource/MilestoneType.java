@@ -28,7 +28,7 @@ public enum MilestoneType {
     FEEDBACK_RELEASED("Feedback released", false, false);
 
     public static final List<MilestoneType> COMPETITION_CLOSE_MILESTONES =
-            asList(BRIEFING_EVENT, REGISTRATION_DATE, SUBMISSION_DATE);
+            asList(OPEN_DATE, BRIEFING_EVENT, REGISTRATION_DATE, SUBMISSION_DATE);
 
     private String milestoneDescription;
     private boolean presetDate;
