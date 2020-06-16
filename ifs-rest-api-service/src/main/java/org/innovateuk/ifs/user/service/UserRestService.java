@@ -64,6 +64,8 @@ public interface UserRestService {
                                                                                  String phoneNumber, long organisationId,
                                                                                  Long competitionId, Boolean allowMarketingEmails);
 
+    RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
+                                                                String phoneNumber, long organisationId, Boolean allowMarketingEmails);
 
     RestResult<UserResource> updateDetails(long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails);
 

@@ -38,7 +38,10 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
 
         return getWithRestResultAnonymous(USER_REST_URL + "/uid/" + uid, UserResource.class);
     }
-
+    @Override
+    public RestResult<UserResource> createUser(UserResource user) {
+        return postWithRestResultAnonymous(USER_REST_URL, user, UserResource.class);
+    }
     @Override
     public Future<RestResult<Void>> sendPasswordResetNotification(String email) {
         return getWithRestResultAsyncAnonymous(USER_REST_URL + "/"+URL_SEND_PASSWORD_RESET_NOTIFICATION+"/"+ email+"/", Void.class);
@@ -79,11 +82,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         }
 
         return getWithRestResult(USER_REST_URL + "/id/" + id, UserResource.class);
-    }
-
-    @Override
-    public RestResult<UserResource> createUser(UserResource user) {
-        return postWithRestResultAnonymous(USER_REST_URL, user, UserResource.class);
     }
 
     @Override
@@ -206,6 +204,12 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         }
 
         return postWithRestResultAnonymous(url, user, UserResource.class);
+    }
+
+    @Override
+    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title,
+                                                                       String phoneNumber, long organisationId, Boolean allowMarketingEmails) {
+        return this.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, null, allowMarketingEmails);
     }
 
     @Override

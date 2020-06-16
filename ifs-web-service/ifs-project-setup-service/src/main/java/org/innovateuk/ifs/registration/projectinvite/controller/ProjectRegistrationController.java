@@ -34,9 +34,6 @@ import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.an
 public class ProjectRegistrationController {
 
     @Autowired
-    private UserRestService userRestService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
@@ -93,7 +90,7 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = createUser(registrationForm)
+            ServiceResult<String> result = createUser(registrationForm, invite.getOrganisation())
                     .andOnSuccess(newUser -> {
                         projectInviteRestService.acceptInvite(hash, newUser.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
@@ -112,7 +109,15 @@ public class ProjectRegistrationController {
         return userService.findUserByEmail(email).isPresent();
     }
 
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm) {
-        return userRestService.createUser(registrationForm.constructUserResource()).toServiceResult();
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
+        return userService.createOrganisationUser(
+                registrationForm.getFirstName(),
+                registrationForm.getLastName(),
+                registrationForm.getPassword(),
+                registrationForm.getEmail(),
+                registrationForm.getTitle(),
+                registrationForm.getPhoneNumber(),
+                organisationId,
+                registrationForm.getAllowMarketingEmails());
     }
 }
