@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.Set;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -37,9 +39,21 @@ public class FormInputResponse {
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
+    @ZeroDowntime(reference = "IFS-7309", description = "TODO")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
     private FileEntry fileEntry;
+
+//    @ElementCollection
+//    @CollectionTable(name = "form_input_file_entry", joinColumns = {@JoinColumn(name="file_entry_id")})
+//    @Column(name = "form_input_response_id")
+//    private Set<Long> fileEntryIds = new LinkedHashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @JoinTable(name = "form_input_file_entry",
+            joinColumns = {@JoinColumn(name = "form_input_response_id")},
+            inverseJoinColumns = {@JoinColumn(name = "fileEntryId", referencedColumnName = "id")})
+    private Set<FileEntry> formInputFileEntry;
 
     public FormInputResponse() {
         // no-arg constructor
@@ -138,5 +152,13 @@ public class FormInputResponse {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public Set<FileEntry> getFormInputFileEntry() {
+        return formInputFileEntry;
+    }
+
+    public void setFormInputFileEntry(Set<FileEntry> formInputFileEntry) {
+        this.formInputFileEntry = formInputFileEntry;
     }
 }
