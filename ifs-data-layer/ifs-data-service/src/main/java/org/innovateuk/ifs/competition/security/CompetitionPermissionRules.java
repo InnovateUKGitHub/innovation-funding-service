@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
@@ -107,5 +106,10 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Competition Admin can read post award service on a competition")
     public boolean internalAdminCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
         return isInternalAdmin(user);
+    }
+
+    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
+    public boolean projectUsersCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
     }
 }
