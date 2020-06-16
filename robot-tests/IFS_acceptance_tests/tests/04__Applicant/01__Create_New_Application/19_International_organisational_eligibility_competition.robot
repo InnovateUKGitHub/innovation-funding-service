@@ -20,7 +20,6 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ukLeadInternationalCompetition}                      UK based Lead International Organisation Competition
 ${organisationalEligibilitySubTitle}                   Can international organisations apply?
 ${organisationalEligibilityInfo}                       Is this competition open to organisations based outside the UK?
 ${organisationalEligibilityValidationErrorMessage}     You must choose if organisations based outside the UK can apply for this competition.
@@ -30,18 +29,14 @@ ${leadOrganisationsValidationErrorMessage}             You must choose if intern
 ${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
 ${internationalApplicationTitle}                       New Test Application for International Users
 ${ukLeadInternationalApplicationTitle}                 New Test Application for UK Lead International Users
-#${internationalCompetitionTitle}                      International Competition
-#${internationalCompetitionId}                         ${competition_ids["${internationalCompetitionName}"]}
-&{partnerApplicantCredentialsNonUKBased}               email=international@example.com        password=Passw0rd
+&{partnerApplicantCredentialsNonUKBased}               email=${international_invite_email}        password=${short_password}
 ${partnerOrganisationNameNonUKBased}                   Test Empire
-&{partnerApplicantCredentialsZeroFunding}              email=json.smith@gmail.com             password=Passw0rd
+&{partnerApplicantCredentialsZeroFunding}              email=${zero_funding_partner_email}            password=${short_password}
 ${zeroFundingPartnerOrgnaisationName}                  UNIVERSITY OF LIVERPOOL
-&{partnerApplicantCredentialsUKBased}                  email=partner2@test.com                password=Passw0rd123
+&{partnerApplicantCredentialsUKBased}                  email=${partner_org}                 password=${correct_password}
 ${partnerOrganisationNameUKBased}                      INNOVATE LTD
-&{leadApplicantCredentials}                            email=stephan.marriek@empire.fr        password=Passw0rd
+&{leadApplicantCredentials}                            email=${lead_international_email}       password=${short_password}
 ${leadApplicantOrganisationName}                       New Empire 1
-#${applicationName}                                     PSC application 3
-#${competitionName}                                     Project Setup Comp 3
 ${applicationInProgress}                               Performance Application 4
 ${projectLocationInfo}                                 Please enter the town or city where most of the project work will take place
 ${projectLocationValidationErrorMessage}               This field cannot be left blank.
@@ -50,18 +45,19 @@ ${subTitleForCorrespondenceAddress}                    This is the postal addres
 ${countryValidationMessage}                            You must select the country where your organisation is based.
 ${townOrCityValidationMessage}                         You must enter your organisation's town or city.
 ${streetValidationMessage}                             You must enter your organisation's street address.
-
-&{ukLeadOrganisationCredentials}                       email=steve.smith@empire.com        password=Passw0rd
+&{ukLeadOrganisationCredentials}                       email=${lead_applicant}       password=${short_password}
 ${ukLeadOrganisationName}                              org2
-&{internationalPartnerOrganisationCredentials}         email=tim.simpson@test.com          password=Passw0rd
+&{internationalPartnerOrganisationCredentials}         email=${partner_international_email}         password=${short_password}
 ${internationalPartnerOrganisation}                    New Empire
+${addressLine1}                                        7 Fisher House, Sydney,
+${newAddress}                                          7 Fisher House
 
 *** Test Cases ***
 Comp admin can only access organisational eligibility category after intial details entered
      [Documentation]  IFS-7195
      Given the user navigates to the page              ${CA_UpcomingComp}
      And the user clicks the button/link               jQuery = .govuk-button:contains("Create competition")
-     When the user fills in the CS Initial details     ${internationalCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     When the user fills in the CS Initial details     ${internationalLeadInternationalCompetition}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
      Then the user should see the enabled element      link = ${organisationalEligibilityTitle}
      And the user should not see the element           jQuery = li:contains("${organisationalEligibilityTitle}") .task-status-complete
 
@@ -136,13 +132,13 @@ Comp admin creates international organisation eligibility competition
      When the user clicks the button/link          jQuery = a:contains("Complete")
      And the user clicks the button/link           jQuery = button:contains('Done')
      And the user navigates to the page            ${CA_UpcomingComp}
-     Then the user should see the element          jQuery = h2:contains("Ready to open") ~ ul a:contains("${internationalCompetitionName}")
+     Then the user should see the element          jQuery = h2:contains("Ready to open") ~ ul a:contains("${internationalLeadInternationalCompetition}")
 
 Comp admin sets lead organisations can lead international competitions and sets competition to live
      [Documentation]  IFS-7195
-     Given Get competition id and set open date to yesterday        ${internationalCompetitionName}
+     Given Get competition id and set open date to yesterday        ${internationalLeadInternationalCompetition}
      When the user navigates to the page                            ${CA_Live}
-     Then the user should see the element                           jQuery = h2:contains('Open') ~ ul a:contains('${internationalCompetitionName}')
+     Then the user should see the element                           jQuery = h2:contains('Open') ~ ul a:contains('${internationalLeadInternationalCompetition}')
 
 Comp admin sets lead organisations can not lead international competitions and sets competition to live
      [Documentation]  IFS-7246
@@ -172,7 +168,7 @@ Non registered UK based users confirm their organisation details and create an a
 Non registered international users apply for an international competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
-    Given the user select the competition and starts application      ${internationalCompetitionName}
+    Given the user select the competition and starts application      ${internationalLeadInternationalCompetition}
     When non-registered user selects business options                 isInternational
     Then international user sees these page elements
 
@@ -274,14 +270,14 @@ Non-Registered user(International partner organisation) create an account
     [Documentation]    IFS-7198 IFS-7199
     [Tags]  HappyPath
     When Partner user enters the details and clicks the create account     Tim  Simpson  ${short_password}
-    And Verify international partner email address                         tim.simpson@test.com
+    And Verify international partner email address                         ${partner_international_email}
     Then The user should not see an error in the page
     [Teardown]  Logout as user
 
 Registered International lead user applying for an international competition see only International organisations
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-    Given the user sign in and apply for international comp                                 ${lead_international_email}  ${short_password}  ${internationalCompetitionName}
+    Given the user sign in and apply for international comp                                 ${lead_international_email}  ${short_password}  ${internationalLeadInternationalCompetition}
     When check if there is an existing application in progress for this competition
     Then the user should see organisations list according to organisation type selected     Apply with a different organisation  jQuery = dt:contains("Empire (french)")
 
@@ -314,7 +310,7 @@ Lead applicant completes application details
 Lead applicant applies again to international competition using the same international organisation and verifies organisation address
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    Given the user select the competition and starts application                       ${internationalCompetitionName}
+    Given the user select the competition and starts application                       ${internationalLeadInternationalCompetition}
     And check if there is an existing application in progress for this competition
     When user selects where is organisation based                                      isInternational
     Then the user clicks the button/link                                               jQuery = span:contains("New Empire 1")
@@ -334,7 +330,7 @@ Lead applicant adds a team member
 Team member accepts the invite and can change lead organisation address details
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    Given team member accepts the invite to join organisation     ${team_member}  ${internationalCompetitionName}  MemberFName  MemberSName
+    Given team member accepts the invite to join organisation     ${team_member}  ${internationalLeadInternationalCompetition}  MemberFName  MemberSName
     When the user clicks the button/link                          link = Sign in
     And Logging in and Error Checking                             ${team_member}  ${correct_password}
     And the user clicks the button/link                           link = ${internationalApplicationTitle}
@@ -355,10 +351,10 @@ Lead applicant adds a UK based partner organisation
 UK based partner organisation accepts the invite to collaborate and cannot edit lead org address details
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    Given partner organisation accepts the invite to collaborate      ${partner_org}  ${internationalCompetitionName}  ${BUSINESS_TYPE_ID}
+    Given partner organisation accepts the invite to collaborate      ${partner_org}  ${internationalLeadInternationalCompetition}  ${BUSINESS_TYPE_ID}
     When the user clicks the button/link                              link = Application team
     Then the user should not see the element                          link = Edit
-    And the user should see the element                               jQuery = td:contains("7 Fisher House")
+    And the user should see the element                               jQuery = td:contains("${newAddress}")
     [Teardown]    Logout as user
 
 Internal user can see International Organisation Address Details in Application Overview
@@ -394,7 +390,7 @@ UK based partner also completes funding info
     Given log in as a different user                ${partner_org}  ${correct_password}
     And the user clicks the button/link             link = ${internationalApplicationTitle}
     When the user clicks the button/link            link = Your project finances
-    Then partner marks the finance as complete       ${internationalApplicationTitle}
+    Then partner marks the finance as complete       ${internationalApplicationTitle}   id = postcode   BS1 4NT
     Then Logout as user
 
 Lead applicant submits the application
@@ -429,20 +425,47 @@ Partner organisation provide organisation detail and create an account
     [Tags]  HappyPath
     When partner user provide organisation detail and create account     ${international_invite_email}
     And the user clicks the button/link                                  link = ${internationalApplicationTitle}
-    Then partner organisation sets funding level to 35 percentage
+    Then partner completes all sections to join the project
 
-Uk based lead applicant moves application to project setup
-    [Documentation]  IFS-7197
+Partner organisation is able to see organisation address details in project team
+    [Documentation]  IFS-7264
     [Tags]  HappyPath
-    When uk lead applicant completes application form
-    And international partner submits finance details
-    Then Uk lead submits international competition application to assesment
-    And Uk lead compelets project setup details and generated GOL
+    Given the user clicks the button/link                                                   link = Project team
+    And the user completes project team and can see international organisation addresses
+    Then the user clicks the button/link                                                     link = Return to setup your project
+    And the user should see the element                                                      jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
+    [Teardown]  logout as user
+
+Lead organisation can see international organisation address details in project team and cannot edit it
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    [Setup]  logging in and error checking                                                    ${lead_international_email}  ${short_password}
+    Given the user clicks the button/link                                                     link = ${internationalApplicationTitle}
+    When the user clicks the button/link                                                      link = Project team
+    Then the user completes project team and can see international organisation addresses
+    [Teardown]  logout as user
+
+Partner organisation can see international organisation address details in project team and cannot edit it
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    [Setup]  logging in and error checking                                                    ${partner_org}  ${correct_password}
+    Given the user clicks the button/link                                                     link = ${internationalApplicationTitle}
+    And the user clicks the button/link                                                       link = Project team
+    When the user completes project team and can see international organisation addresses
+    Then the user clicks the button/link                                                      link = Return to setup your project
+    [Teardown]  logout as user
+
+Internal user can view address details
+    [Documentation]  IFS-7200
+    [Tags]  HappyPath
+    [Setup]  Requesting project ID of this Project
+    Given logging in and error checking      &{internal_finance_credentials}
+    When the user navigates to the page       ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/team
+    Then the user should see the element      jQuery = td:contains("${addressLine1}")
 
 External dashboard - hide the bank details if partner is non-uk based
     [Documentation]    IFS - 7163
     [Tags]
-    [Setup]  Requesting project ID of this Project
     Given the user logs-in in new browser               &{partnerApplicantCredentialsNonUKBased}
     When the user navigates to the page                 ${server}/project-setup/project/${ProjectID}
     Then the user should not see the element            jQuery = h2:contains("Bank details")
@@ -535,7 +558,7 @@ Project setup dashboard - Bank details - No action required should display for n
 Project setup dashboard - will not prevent the consortium's bank details from approval
     [Documentation]    IFS - 7163
     [Tags]
-    When Comp admin approves bank details of partner organisation
+    When Comp admin approves bank details of partner organisation   ${partnerOrganisationNameUKBased}
     Then the user should see the element     jQuery = li:nth-child(4) span:nth-child(1)
 
 Non-uk based organisations project location details updated in ifs admin project setup view
@@ -553,9 +576,17 @@ comp admin can see the correspondence address entered by non uk based lead appli
 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
-    Given ifs admin assigns MO to the competition in project setup
-    When the user navigates to the page      ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
-    Then the user should see the element     jQuery = p:contains("Argentina")
+    Given ifs admin assigns MO to the competition in project setup      ${ApplicationID}   ${internationalApplicationTitle}
+    When the user navigates to the page                                 ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    Then the user should see the element                                jQuery = p:contains("Argentina")
+
+Uk based lead applicant moves application to project setup and generates GOL
+    [Documentation]  IFS-7197
+    [Tags]  HappyPath
+    When uk lead applicant completes application form
+    And international partner submits finance details
+    Then Uk lead submits international competition application to assesment
+    And Uk lead compelets project setup details and generated GOL
 
 GOL template to be updated with country for correspondents address
     [Documentation]     IFS - 7241
@@ -756,23 +787,13 @@ The user completes the application
     the applicant completes Application Team
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${internationalApplicationTitle}
-    lead marks the finance as complete                       ${internationalApplicationTitle}   Calculate  52,214
+    lead marks the finance as complete                       ${internationalApplicationTitle}   Calculate  52,214    id = town       Sydney
     the user accept the competition terms and conditions     Return to application overview
 
 lead marks the finance as complete
-    [Arguments]  ${application}  ${overheadsCost}  ${totalCosts}
+    [Arguments]  ${application}  ${overheadsCost}  ${totalCosts}   ${townOrPostcodeLocator}    ${townOrPostcodeValue}
     the user fills in the project costs                      ${overheadsCost}  ${totalCosts}
-    the user enters the project location                     id = town       Sydney
-    the user fills the organisation details with Project growth table     ${application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section                     ${application}
-    the user should see all finance subsections complete
-    the user clicks the button/link                          link = Back to application overview
-    the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
-
-Uk based lead marks the finance as complete
-    [Arguments]  ${application}  ${overheadsCost}  ${totalCosts}
-    the user fills in the project costs                      ${overheadsCost}  ${totalCosts}
-    the user enters the project location                     id = postcode   BS1 4NT
+    the user enters the project location                     ${townOrPostcodeLocator}    ${townOrPostcodeValue}
     the user fills the organisation details with Project growth table     ${application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section                     ${application}
     the user should see all finance subsections complete
@@ -780,25 +801,12 @@ Uk based lead marks the finance as complete
     the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
 partner marks the finance as complete
-    [Arguments]  ${application}
+    [Arguments]  ${application}      ${townOrPostcodeLocator}    ${townOrPostcodeValue}
     the user clicks the button/link                          link = Your project costs
     the user fills in Labour
     the user clicks the button/link                          css = label[for="stateAidAgreed"]
     the user clicks the button/link                          jQuery = button:contains("Mark as complete")
-    the user enters the project location                     id = postcode   BS1 4NT
-    the user fills the organisation details with Project growth table     ${application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section                     ${application}
-    the user should see all finance subsections complete
-    the user clicks the button/link                          link = Back to application overview
-    the user accept the competition terms and conditions     Return to application overview
-
-International partner marks the finance as complete
-    [Arguments]  ${application}
-    the user clicks the button/link                          link = Your project costs
-    the user fills in Labour
-    the user clicks the button/link                          css = label[for="stateAidAgreed"]
-    the user clicks the button/link                          jQuery = button:contains("Mark as complete")
-    the user enters the project location                     id = town   Chennai
+    the user enters the project location                     ${townOrPostcodeLocator}    ${townOrPostcodeValue}
     the user fills the organisation details with Project growth table     ${application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section                     ${application}
     the user should see all finance subsections complete
@@ -837,9 +845,9 @@ the user adds a new partner
 the member can edit leads organisation address details
     the user clicks the button/link          link = Application team
     the user clicks the button/link          link = Edit
-    the user enters text to a text field     id = addressLine1  7 Fisher House
+    the user enters text to a text field     id = addressLine1  ${newAddress}
     the user clicks the button/link          id = update-organisation-address
-    the user should see the element          jQuery = td:contains("7 Fisher House")
+    the user should see the element          jQuery = td:contains("${newAddress}")
 
 partner organisation accepts the invite to collaborate
     [Arguments]  ${email}  ${compName}  ${businessTypeId}
@@ -852,7 +860,7 @@ partner organisation accepts the invite to collaborate
     The user should not see an error in the page
 
 the user selects the application in progress
-    the user clicks the button/link     link = ${internationalCompetitionName}
+    the user clicks the button/link     link = ${internationalLeadInternationalCompetition}
     the user clicks the button/link     link = Applications: All, submitted, ineligible
     the user clicks the button/link     link = All applications
     the user clicks the button/link     link = ${ApplicationID}
@@ -862,7 +870,7 @@ requesting Application ID for this Application
     Set suite variable      ${ApplicationID}
 
 Requesting competition ID of this Project
-    ${internationalCompetitionId} =  get comp id from comp title    ${internationalCompetitionName}
+    ${internationalCompetitionId} =  get comp id from comp title    ${internationalLeadInternationalCompetition}
     Set suite variable      ${internationalCompetitionId}
 
 Requesting project ID of this Project
@@ -871,9 +879,11 @@ Requesting project ID of this Project
 Requesting innovate uk organisation ID of this Project
     ${organistaionInnovateID} =    get organisation id by name           ${partnerOrganisationNameUKBased}
     Set suite variable             ${organistaionInnovateID}
+
 Requesting test empire organisation ID of this Project
     ${organistaionTestEmpireID} =  get organisation id by name           ${partnerOrganisationNameNonUKBased}
     Set suite variable             ${organistaionTestEmpireID}
+
 Requesting new empire one organisation ID of this Project
     ${organisationTestEmpireOneID} =  get organisation id by name        ${leadApplicantOrganisationName}
     Set suite variable             ${organisationTestEmpireOneID}
@@ -900,7 +910,7 @@ zero funding parter submits the project and team details
     the user selects the radio button         financeContact  financeContact1
     the user clicks the button/link           id = save-finance-contact-button
 
-Non UK based partner submits the project and team details
+partner submits the project and team details
     [Arguments]     ${email}  ${password}  ${ProjectID}
     Log in as a different user              ${email}  ${password}
     the user navigates to the page          ${server}/project-setup/project/${ProjectID}
@@ -909,20 +919,11 @@ Non UK based partner submits the project and team details
     the user selects the radio button       financeContact  financeContact1
     the user clicks the button/link         id = save-finance-contact-button
 
-UK based partner submits the project and team details
-    Log in as a different user              &{partnerApplicantCredentialsUKBased}
-    the user navigates to the page          ${server}/project-setup/project/${ProjectID}/team
-    the user clicks the button/link         link = Your finance contact
-    the user selects the radio button       financeContact  financeContact1
-    the user clicks the button/link         id = save-finance-contact-button
-    the user clicks the button/link         link = Return to setup your project
-    the user enters bank details
-
 lead applicant invites new partner and accepts invitation
     Log in as a different user                                              &{ifs_admin_user_credentials}
     the user navigates to the page                                          ${server}/project-setup-management/competition/${internationalCompetitionId}/project/${ProjectID}/team/partner
-    the user adds a new partner organisation                                university    jsonsmith    json.smith@gmail.com
-    a new organisation is able to accept project invite in project setup    json  smith   json.smith@gmail.com   UNIVERSITY   ${zeroFundingPartnerOrgnaisationName}    ${ApplicationID}    ${internationalApplicationTitle}   isNotInternational
+    the user adds a new partner organisation                                university    jsonsmith    ${zero_funding_partner_email}
+    a new organisation is able to accept project invite in project setup    json  smith   ${zero_funding_partner_email}  UNIVERSITY   ${zeroFundingPartnerOrgnaisationName}    ${ApplicationID}    ${internationalApplicationTitle}   isNotInternational
 
 partner organisation sets funding level to zero
     The new partner can complete Your organisation
@@ -933,7 +934,7 @@ partner organisation sets funding level to zero
     the user accept the competition terms and conditions    Return to join project
     the user clicks the button/link                         id = submit-join-project-button
 
-partner organisation sets funding level to 35 percentage
+partner completes all sections to join the project
     The new partner can complete Your organisation
     the user clicks the button/link                         link = Your funding
     the user selects the radio button                       requestingFunding   true
@@ -944,7 +945,8 @@ partner organisation sets funding level to 35 percentage
     the user clicks the button/link                         id = submit-join-project-button
 
 Comp admin approves bank details of partner organisation
-    the user clicks the button/link     link = ${partnerOrganisationNameUKBased}
+    [Arguments]     ${organisationName}
+    the user clicks the button/link     link = ${organisationName}
     the user clicks the button/link     jQuery = .govuk-button:contains("Approve bank account details")
     the user clicks the button/link     jQuery = .govuk-button:contains("Approve account")
     the user clicks the button/link     link = Bank details
@@ -968,10 +970,12 @@ No action required should display for non uk based and zero funding organisation
     the user should see the element     css = li.read-only:nth-child(4) div.task-status > span:nth-child(1)
 
 lead and partner applicants completes the project and bank details
-    Lead applicant submits project team details     stephan.marriek@empire.fr   ${short_password}     ${ProjectID}
+    Lead applicant submits project team details                 ${lead_international_email}   ${short_password}     ${ProjectID}
     zero funding parter submits the project and team details
-    Non UK based partner submits the project and team details   international@example.com  ${short_password}  ${ProjectID}
-    UK based partner submits the project and team details
+    partner submits the project and team details                ${international_invite_email}  ${short_password}  ${ProjectID}
+    partner submits the project and team details                ${partner_org}   ${correct_password}   ${ProjectID}
+    the user clicks the button/link                             link = Return to setup your project
+    the user enters bank details
 
 will show the bank details as not required for non uk based and zero funding partner organisations
     the user should see the element       jQuery = th:contains("${zeroFundingPartnerOrgnaisationName}") ~ td:nth-child(6) span:contains("Not required for this partner")
@@ -1010,10 +1014,11 @@ the user should see field and summary validation messages
     the user should see a field and summary error   ${streetValidationMessage}
 
 ifs admin assigns MO to the competition in project setup
+    [Arguments]     ${ApplicationID}   ${applicationTitle}
     the user navigates to the page           ${server}/management/dashboard/project-setup
     the user clicks the button/link          link = Assign monitoring officers
     Search for MO                            Orvill  Orville Gibbs
-    The internal user assign project to MO   ${ApplicationID}   ${internationalApplicationTitle}
+    The internal user assign project to MO   ${ApplicationID}   ${applicationTitle}
 
 project finance approves Eligibility for Innovate uk organisation
     [Arguments]         ${organisationID}
@@ -1022,28 +1027,19 @@ project finance approves Eligibility for Innovate uk organisation
 
 partner submits the spend profile
     [Arguments]     ${ProjectID}   ${organistaionInnovateID}
-    log in as a different user       partner2@test.com  ${correct_password}
-    the user navigates to the page   ${server}/project-setup/project/${ProjectID}/partner-organisation/${organistaionInnovateID}/spend-profile
-    the user clicks the button/link  link = Submit to lead partner
-    the user clicks the button/link  jQuery = button.govuk-button:contains("Submit")
+    log in as a different user          ${partner_org}   ${correct_password}
+    the user navigates to the page      ${server}/project-setup/project/${ProjectID}/partner-organisation/${organistaionInnovateID}/spend-profile
+    the user clicks the button/link     link = Submit to lead partner
+    the user clicks the button/link     jQuery = button.govuk-button:contains("Submit")
 
 external partner organisations submit the spend profile
     [Arguments]     ${ProjectID}   ${organistaionTestEmpireID}   ${organisationUiveristyOfLiverPoolId}
-    Login and submit partners spend profile     international@example.com       ${organistaionTestEmpireID}            ${ProjectID}
-    Login and submit partners spend profile     json.smith@gmail.com            ${organisationUiveristyOfLiverPoolId}  ${ProjectID}
+    Login and submit partners spend profile     ${international_invite_email}      ${organistaionTestEmpireID}            ${ProjectID}
+    Login and submit partners spend profile     ${zero_funding_partner_email}      ${organisationUiveristyOfLiverPoolId}  ${ProjectID}
 
 lead organisations submit the spend profile
-    [Arguments]     ${ProjectID}  ${organisationID}
-    log in as a different user          &{leadApplicantCredentials}
-    the user navigates to the page      ${server}/project-setup/project/${ProjectID}/partner-organisation/${organisationID}/spend-profile/review
-    the user clicks the button/link     name = mark-as-complete
-    the user clicks the button/link     link = Review and submit project spend profile
-    the user clicks the button/link     link = Submit project spend profile
-    the user clicks the button/link     id = submit-send-all-spend-profiles
-
-Uk lead organisations submit the spend profile
-    [Arguments]     ${ProjectID}  ${organisationID}
-    log in as a different user          &{ukLeadOrganisationCredentials}
+    [Arguments]     ${ProjectID}  ${organisationID}  ${email}  ${password}
+    log in as a different user          ${email}   ${password}
     the user navigates to the page      ${server}/project-setup/project/${ProjectID}/partner-organisation/${organisationID}/spend-profile/review
     the user clicks the button/link     name = mark-as-complete
     the user clicks the button/link     link = Review and submit project spend profile
@@ -1051,7 +1047,7 @@ Uk lead organisations submit the spend profile
     the user clicks the button/link     id = submit-send-all-spend-profiles
 
 project manager submits documents
-    [Arguments]     ${email}  ${password}
+    [Arguments]     ${email}  ${password}   ${ProjectID}
     log in as a different user          ${email}  ${password}
     the user navigates to the page      ${server}/project-setup/project/${ProjectID}/document/all
     the user clicks the button/link     link = Collaboration agreement
@@ -1068,7 +1064,7 @@ the user complete all sections of the project setup and generates GOL
     ${organisationUiveristyOfLiverPoolId} =         get organisation id by name     ${zeroFundingPartnerOrgnaisationName}
     Requesting test empire organisation ID of this Project
     Requesting innovate uk organisation ID of this Project
-    project manager submits documents                                   &{leadApplicantCredentials}
+    project manager submits documents                                   ${lead_international_email}   ${short_password}   ${ProjectID}
     project finance approves both documents                             ${ProjectID}
     project finance approves Viability for                              ${organisationTestEmpireOneID}        ${ProjectID}
     project finance approves Viability for                              ${organisationUiveristyOfLiverPoolId}    ${ProjectID}
@@ -1081,7 +1077,7 @@ the user complete all sections of the project setup and generates GOL
     the user clicks the button/link                                     css = #generate-spend-profile-modal-button
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
     external partner organisations submit the spend profile             ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
-    lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}
+    lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
     proj finance approves the spend profiles                            ${ProjectID}
 
 a new organisation is able to accept project invite in project setup
@@ -1113,7 +1109,7 @@ Requesting uk lead international application ID
     ${ukLeadApplicationID} =  get application id by name                  ${ukLeadInternationalApplicationTitle}
     Set suite variable      ${ukLeadApplicationID}
 
-Requesting uk lead international competition IDs
+Requesting uk lead international competition ID
     ${ukLeadinternationalCompetitionId} =  get comp id from comp title    ${ukLeadInternationalCompetition}
     Set suite variable      ${ukLeadinternationalCompetitionId}
 
@@ -1137,22 +1133,20 @@ uk lead applicant completes application form
     the user should see the element                          jQuery = li:contains("Application team") > .task-status-complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${ukLeadInternationalApplicationTitle}
-    Uk based lead marks the finance as complete              ${ukLeadInternationalApplicationTitle}   Calculate  52,214
+    lead marks the finance as complete                       ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
     the user accept the competition terms and conditions     Return to application overview
 
 international partner submits finance details
     log in as a different user                               &{internationalPartnerOrganisationCredentials}
     the user clicks the button/link                          link = ${ukLeadInternationalApplicationTitle}
     the user clicks the button/link                          link = Your project finances
-    international partner marks the finance as complete      ${ukLeadInternationalApplicationTitle}
-    #Logout as user
+    partner marks the finance as complete                    ${ukLeadInternationalApplicationTitle}  id = town   Chennai
 
 Uk lead submits international competition application to assesment
-    Requesting uk lead international competition IDs
+    Requesting uk lead international competition ID
     Log in as a different user                            &{ukLeadOrganisationCredentials}
     the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the applicant submits the application
-    #Logout as user
     Log in as a different user                            &{internal_finance_credentials}
     moving competition to Closed                          ${ukLeadinternationalCompetitionId}
     making the application a successful project           ${ukLeadinternationalCompetitionId}  ${ukLeadInternationalApplicationTitle}
@@ -1165,21 +1159,39 @@ project finance approves Eligibility for uk based lead and international partner
     the user navigates to the page  ${server}/project-setup-management/project/${project}/finance-check/organisation/${partner}/eligibility
     the user approves project costs
 
+ifs finance user approves bank details of uk based partner
+    the user navigates to the page                              ${server}/project-setup-management/competition/${ukLeadinternationalCompetitionId}/status/all
+    the user clicks the button/link                             jQuery = td:nth-child(6) a:contains("Review")
+    Comp admin approves bank details of partner organisation    ${ukLeadOrganisationName}
+
+UK lead applicant enters correspondence address
+    the user navigates to the page              ${server}/project-setup/project/${ukLeadApplicationProjectID}/details
+    the user clicks the button/link             link = Correspondence address
+    the user enter the Correspondence address
+
 Uk lead compelets project setup details and generated GOL
     Requesting uk lead international project ID
+    Requesting uk lead international application ID
     Requesting uk lead international organisation IDs
-    lead applicant submits project team details                                         steve.smith@empire.com   ${short_password}  ${ukLeadApplicationProjectID}
+    lead applicant submits project team details                                         ${lead_applicant}    ${short_password}  ${ukLeadApplicationProjectID}
     the user enters bank details
-    Non UK based partner submits the project and team details                           tim.simpson@test.com  ${short_password}  ${ukLeadApplicationProjectID}
-    project manager submits documents                                                   &{ukLeadOrganisationCredentials}
+    UK lead applicant enters correspondence address
+    partner submits the project and team details                                        ${partner_international_email}   ${short_password}  ${ukLeadApplicationProjectID}
+    project manager submits documents                                                   ${lead_applicant}    ${short_password}  ${ukLeadApplicationProjectID}
     project finance approves both documents                                             ${ukLeadApplicationProjectID}
+    ifs finance user approves bank details of uk based partner
+    ifs admin assigns MO to the competition in project setup                            ${ukLeadApplicationID}   ${ukLeadInternationalApplicationTitle}
     project finance approves Viability for                                              ${organistaionOrg2}        ${ukLeadApplicationProjectID}
     project finance approves Viability for                                              ${organistaionNewEmpireID}    ${ukLeadApplicationProjectID}
     project finance approves Eligibility for uk based lead and international partner    ${organistaionOrg2}   ${organistaionNewEmpireID}   ${ukLeadApplicationProjectID}
     the user clicks the button/link                                                     link = Return to finance checks
     the user clicks the button/link                                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                                     css = #generate-spend-profile-modal-button
-    Login and submit partners spend profile                                             tim.simpson@test.com         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
-    Uk lead organisations submit the spend profile                                      ${ukLeadApplicationProjectID}   ${organistaionOrg2}
+    Login and submit partners spend profile                                             ${partner_international_email}         ${organistaionNewEmpireID}     ${ukLeadApplicationProjectID}
+    lead organisations submit the spend profile                                         ${ukLeadApplicationProjectID}   ${organistaionOrg2}   ${lead_applicant}      ${short_password}
     proj finance approves the spend profiles                                            ${ukLeadApplicationProjectID}
 
+the user completes project team and can see international organisation addresses
+    the user should not see the element     link = Edit
+    the user should see the element         jQuery = h2:contains("New Empire 1")
+    the user should see the element         jQuery = td:contains("${addressLine1}")
