@@ -264,6 +264,18 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
+    public void internalUsersCanReadPostAwardServiceForCompetition() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
     public void projectUsersCanReadPostAwardServiceForCompetition() {
 
         UserResource user = newUserResource().withId(5L).build();
