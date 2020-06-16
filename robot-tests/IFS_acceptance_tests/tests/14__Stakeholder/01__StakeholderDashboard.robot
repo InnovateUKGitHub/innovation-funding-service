@@ -22,6 +22,7 @@ ${openProgrammeCompetitionId}    ${competition_ids['${openProgrammeCompetitionNa
 ${stakeholderEmail}              stakeHolder@test.com
 ${applicantEmail}                louis.morgan@example.com
 ${previousStakeholderEmail}      blake.wood@gmail.com
+${uk_based_applicant_new}        aastha.walia@test.com
 
 *** Test Cases ***
 The internal user cannot invite a Stakeholder when they have triggered the name validation
@@ -189,11 +190,13 @@ The stakeholder can apply to a competition as an applicant
 
 The stakeholder can be added as a collaborator to an application
     [Documentation]  IFS-7639
-    Given the existing user apply for comp                                              ${openCompetitionPerformance_name}  ${lead_applicant}  ${short_password}
-    When check if there is an existing application in progress for this competition
-    And the user clicks the button/link                                                 id = save-organisation-button
-    Then the user clicks the button/link                                                link = Application team
-    And the user adds a stakeholder as partner organisation                             Blake Consultants  Blake Wood  ${previousStakeholderEmail}
+    [Tags]  HappyPath
+    Given new user apply for competition and create account
+    When the user verifies their account                        ${uk_based_applicant_new}
+    And A new organisation logs in and sees the project         ${uk_based_applicant_new}
+    And the user clicks the button/link                         link = Untitled application (start here)
+    Then the user clicks the button/link                        link = Application team
+    And the user adds a stakeholder as partner organisation     Blake Consultants  Blake Wood  ${previousStakeholderEmail}
 
 The stakeholder partner organisation accepts the invite
     [Documentation]    IFS-7639
@@ -212,13 +215,19 @@ The stakeholder partner organisation provides organisation details and do not se
     Then the user should not see an error in the page
 
 *** Keywords ***
+new user apply for competition and create account
+    the user select the competition and starts application        ${openCompetitionPerformance_name}
+    the user clicks the button/link                               link = Continue and create an account
+    the user provides organisation details
+    the user enters the details and clicks the create account     Aastha  Walia  ${uk_based_applicant_new}  ${short_password}
+
 the user adds a stakeholder as partner organisation
     [Arguments]  ${orgName}  ${name}  ${email}
-    the user clicks the button/link               link = Add a partner organisation
-    the user enters text to a text field          id = organisationName    ${orgName}
-    the user enters text to a text field          id = name   ${name}
-    the user enters text to a text field          id = email  ${email}
-    the user clicks the button/link               jQuery = button:contains("Invite partner organisation")
+    the user clicks the button/link          link = Add a partner organisation
+    the user enters text to a text field     id = organisationName    ${orgName}
+    the user enters text to a text field     id = name   ${name}
+    the user enters text to a text field     id = email  ${email}
+    the user clicks the button/link          jQuery = button:contains("Invite partner organisation")
 
 the user provides organisation details
     the user selects the radio button        organisationTypeId  radio-1
@@ -227,11 +236,6 @@ the user provides organisation details
     the user clicks the button/link          id = org-search
     the user clicks the button/link          link = NOMENSA LTD
     the user clicks the button/link          name = save-organisation
-
-the existing user apply for comp
-    [Arguments]  ${comp}  ${user}  ${password}
-    the user logs-in in new browser                             ${user}  ${password}
-    the user select the competition and starts application      ${comp}
 
 All of the calculations on the dashboard should be correct
     the total calculation in dashboard should be correct    Open           //section[1]/ul/li
