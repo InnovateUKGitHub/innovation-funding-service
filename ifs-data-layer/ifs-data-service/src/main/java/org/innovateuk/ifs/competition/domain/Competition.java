@@ -233,6 +233,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
+            } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage()) &&
+                    !isMilestoneReached(ASSESSORS_NOTIFIED)) {
+                return PREVIOUS;
             } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
             } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {

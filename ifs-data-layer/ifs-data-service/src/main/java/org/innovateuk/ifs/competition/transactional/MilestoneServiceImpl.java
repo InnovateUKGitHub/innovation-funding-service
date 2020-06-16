@@ -29,6 +29,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.COMPETITION_CLOSE_MILESTONES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -64,15 +65,27 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<Boolean> allPublicDatesComplete(Long competitionId) {
-        boolean isNonIfs = competitionRepository.findById(competitionId).get().isNonIfs();
-        List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
-                .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                .collect(toList());
 
-        List<Milestone> milestones = milestoneRepository
-                .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
 
-        return serviceSuccess(hasRequiredMilestones(milestones, milestonesRequired));
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId)).andOnSuccessReturn(competition -> {
+
+            boolean isNonIfs = competition.isNonIfs();
+
+            List<MilestoneType> milestonesRequired;
+
+            if (competition.getCompletionStage() == CompetitionCompletionStage.COMPETITION_CLOSE) {
+                milestonesRequired = COMPETITION_CLOSE_MILESTONES;
+            } else {
+                milestonesRequired = PUBLIC_MILESTONES.stream()
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .collect(toList());
+            }
+
+            List<Milestone> milestones = milestoneRepository
+                    .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
+
+            return hasRequiredMilestones(milestones, milestonesRequired);
+        });
     }
 
     private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {
@@ -148,7 +161,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 if (currentMilestones.size() > 1) {
                     if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
                         List<Milestone> deleteMilestones = currentMilestones.stream()
-                                .filter(milestone -> !MilestoneType.COMPETITION_CLOSE_MILESTONES.contains(milestone.getType()))
+                                .filter(milestone -> !COMPETITION_CLOSE_MILESTONES.contains(milestone.getType()))
                                 .collect(Collectors.toList());
 
                         milestoneRepository.deleteAll(deleteMilestones);
@@ -165,7 +178,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                     }
                 } else {
                     if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
-                        MilestoneType.COMPETITION_CLOSE_MILESTONES.stream()
+                        COMPETITION_CLOSE_MILESTONES.stream()
                                 .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
                                 .forEach(type -> newMilestones.add(new Milestone(type, competition))
                         );
