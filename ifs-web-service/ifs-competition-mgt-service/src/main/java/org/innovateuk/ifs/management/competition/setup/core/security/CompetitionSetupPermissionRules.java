@@ -38,11 +38,6 @@ public class CompetitionSetupPermissionRules {
         return competitionInitialDetailsSet(competitionCompositeId);
     }
 
-    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed to read post award service during competition setup")
-    public boolean readPostAwardServiceForCompetitionSetup(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
-        return competitionInitialDetailsSet(competitionCompositeId);
-    }
-
     private boolean competitionInitialDetailsSet(CompetitionCompositeId competitionCompositeId) {
         return competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionCompositeId.id());
     }

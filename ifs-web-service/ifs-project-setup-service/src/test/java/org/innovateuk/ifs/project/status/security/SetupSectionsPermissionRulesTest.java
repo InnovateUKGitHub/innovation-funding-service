@@ -10,21 +10,17 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.status.StatusService;
-import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.UserCompositeId;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -94,31 +90,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     @Before
     public void setupAccessorLookup() {
         when(accessorSupplier.apply(isA(ProjectTeamStatusResource.class))).thenReturn(accessor);
-    }
-
-    @Test
-    public void readPostAwardServiceForProjectSetupProvideAccess() {
-        ProjectCompositeId projectCompositeId = ProjectCompositeId.id(14L);
-        UserCompositeId userCompositeId = UserCompositeId.id(5L);
-
-        UserResource loggedInUser = UserResourceBuilder.newUserResource().withId(userCompositeId.id()).build();
-        ProjectUserResource projectUserResource = ProjectUserResourceBuilder.newProjectUserResource().withUser(userCompositeId.id()).build();
-        when(projectService.getProjectUsersForProject(projectCompositeId.id())).thenReturn(Collections.singletonList(projectUserResource));
-
-        assertTrue(rules.readPostAwardServiceForProjectSetup(projectCompositeId, loggedInUser));
-        verify(projectService).getProjectUsersForProject(projectCompositeId.id());
-    }
-
-    @Test
-    public void readPostAwardServiceForProjectSetupRestrictAccess() {
-        ProjectCompositeId projectCompositeId = ProjectCompositeId.id(14L);
-        UserCompositeId userCompositeId = UserCompositeId.id(5L);
-
-        UserResource loggedInUser = UserResourceBuilder.newUserResource().withId(userCompositeId.id()).build();
-        when(projectService.getProjectUsersForProject(projectCompositeId.id())).thenReturn(Collections.emptyList());
-
-        assertFalse(rules.readPostAwardServiceForProjectSetup(projectCompositeId, loggedInUser));
-        verify(projectService).getProjectUsersForProject(projectCompositeId.id());
     }
 
     @Test

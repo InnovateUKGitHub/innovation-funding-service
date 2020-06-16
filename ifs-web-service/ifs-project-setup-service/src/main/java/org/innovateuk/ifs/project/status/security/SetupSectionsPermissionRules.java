@@ -55,12 +55,6 @@ public class SetupSectionsPermissionRules {
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
-    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed to read post award service during project setup")
-    public boolean readPostAwardServiceForProjectSetup(ProjectCompositeId projectCompositeId, UserResource user) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectCompositeId.id());
-        return projectUsers.stream().anyMatch(pu -> pu.isUser(user.getId()));
-    }
-
     @PermissionRule(value = "ACCESS_PROJECT_TEAM_STATUS", description = "A partner can access the Project Team Status page when the project is in a correct state to do so")
     public boolean partnerCanAccessProjectTeamStatus(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectInViewableState(projectCompositeId.id());

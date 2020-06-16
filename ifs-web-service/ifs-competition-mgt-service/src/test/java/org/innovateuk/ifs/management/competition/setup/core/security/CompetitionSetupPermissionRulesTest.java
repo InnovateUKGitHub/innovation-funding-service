@@ -12,7 +12,6 @@ import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest<CompetitionSetupPermissionRules> {
@@ -65,18 +64,6 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
 
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId.id())).thenReturn(Boolean.TRUE);
         assertTrue(rules.choosePostAwardService(competitionId, loggedInUser));
-    }
-
-    @Test
-    public void readPostAwardService() {
-
-        CompetitionCompositeId competitionId = CompetitionCompositeId.id(14L);
-        UserResource loggedInUser = new UserResource();
-
-        when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId.id())).thenReturn(Boolean.TRUE);
-
-        assertTrue(rules.readPostAwardServiceForCompetitionSetup(competitionId, loggedInUser));
-        verify(competitionSetupService).hasInitialDetailsBeenPreviouslySubmitted(competitionId.id());
     }
 
     @Override
