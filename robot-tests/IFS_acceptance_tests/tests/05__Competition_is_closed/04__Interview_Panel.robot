@@ -230,7 +230,7 @@ Applicant can still see their feedback once the comp feedback has been released
     Given log in as a different user          ${aaron_robertson_email}   ${short_password}
     When the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     And the user clicks the button/link       link = view application feedback
-    Then the user should see the element      link = testing_5MB.pdf
+    Then the user should see the element      link = testing_5MB.pdf (opens in a new window)
 
 *** Keywords ***
 Custom Suite Setup
@@ -297,7 +297,7 @@ the compAdmin uploads additional feedback for an application
     the user should see a field error           ${too_large_10MB_validation_error}
     the user uploads the file                   id = feedback[0]   ${text_file}    #checking validation for worng fomrate file upload
     the user should see a field error           ${wrong_filetype_validation_error}
-    the compAdmin/applicant upload feedback     id = feedback[0]  ${5mb_pdf}  link = ${5mb_pdf}
+    the compAdmin/applicant upload feedback     id = feedback[0]  ${5mb_pdf}  link = ${5mb_pdf} (opens in a new window)
 
 the compAdmin/applicant upload feedback
     [Arguments]   ${uploadId}  ${FileToUpload}  ${uploadedFile}
