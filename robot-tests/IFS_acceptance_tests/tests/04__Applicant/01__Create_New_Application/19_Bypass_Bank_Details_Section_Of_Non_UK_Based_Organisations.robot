@@ -53,7 +53,7 @@ External dashboard - non-uk based partner applicant can complete the project loc
 Application form - non-uk based partner applicant can complete the project location details in project finances
     [Documentation]     IFS-7240
     [Tags]
-    Given the user navigates to the page               ${server}/application/${applicationInProgressId}/form/your-project-location/organisation/${organisationRedId}/section/384
+    Given the user navigates to the page               ${server}/application/${applicationInProgressId}
     When the user should see project location details in project finances
     And applicant enters project location details
     Then the user should see the element               jQuery = dd:contains("Äteritsiputeritsipuolilautatsijänkä")
@@ -149,7 +149,8 @@ Non-uk based organisations project location details updated in ifs admin project
 comp admin can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
     When the user navigates to the page      ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/details
-    Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian, Argentina, X5187XAB")
+    Then the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
     [Documentation]     IFS - 7241
@@ -177,6 +178,8 @@ Custom Suite Setup
 
 Custom suite teardown
     the user closes the browser
+    User sets organisation to uk based      ${leadApplicantOrganisationName}
+    User sets organisation to uk based      ${partnerOrganisationNameNonUKBased}
     Disconnect from database
 
 Lead applicant submits bank details
@@ -221,7 +224,7 @@ lead applicant invites new partner and accepts invitation
     Log in as a different user                             &{ifs_admin_user_credentials}
     the user navigates to the page                         ${server}/project-setup-management/competition/${competitionID}/project/${project_id}/team/partner
     the user adds a new partner organisation               innovate    jsonsmith    json.smith@gmail.com
-    a new organisation is able to accept project invite    json  smith   json.smith@gmail.com   HIVE   ${zeroFundingPartnerOrgnaisationName}    ${applicationId}    ${application_name}
+    a new organisation is able to accept project invite    json  smith   json.smith@gmail.com   INNOV   ${zeroFundingPartnerOrgnaisationName}    ${applicationId}    ${application_name}
 
 partner organisation sets funding level to zero
     The new partner can complete Your organisation
@@ -245,6 +248,8 @@ the user should see project location details in project details section
     the user should see the element     jQuery = button:contains("Save project location")
 
 the user should see project location details in project finances
+    the user clicks the button/link     link = Your project finances
+    the user clicks the button/link     link = Your project location
     the user should see the element     css = [for ="town"]
     the user should see the element     jQuery = span:contains("${projectLocationInfo}")
     the user should see the element     id = town
@@ -294,7 +299,8 @@ the user fills correspondence address data
     the user enters text to a text field            id = zipCode            ${zipCode}
 
 the user should see read only view of completed correspondence address details
-    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian, Argentina, X5187XAB")
+    the user should see the element     jQuery = td:contains("Calle 11, San Sebastian,")
+    the user should see the element     jQuery = td:contains("Argentina, X5187XAB")
     the user should see the element     id = project-address-status
 
 the user should see field and summary validation messages
