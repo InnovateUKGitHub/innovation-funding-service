@@ -15,10 +15,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
 
-    protected static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
-    protected static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
+public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
 
     private final ApplicationResource application;
     private final CompetitionResource competition;

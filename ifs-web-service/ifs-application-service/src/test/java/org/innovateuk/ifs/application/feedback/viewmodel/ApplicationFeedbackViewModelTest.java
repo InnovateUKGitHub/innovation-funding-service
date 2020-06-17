@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.feedback.viewmodel;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.util.TermsAndConditionsUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +21,7 @@ public class ApplicationFeedbackViewModelTest {
         String result = viewModel.getTermsAndConditionsTerminology();
 
         // then
-        assertThat(result).isEqualTo(ApplicationFeedbackViewModel.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
+        assertThat(result).isEqualTo(TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
     }
 
     @Test
@@ -35,7 +36,7 @@ public class ApplicationFeedbackViewModelTest {
         String result = viewModel.getTermsAndConditionsTerminology();
 
         // then
-        assertThat(result).isEqualTo(ApplicationFeedbackViewModel.TERMS_AND_CONDITIONS_OTHER);
+        assertThat(result).isEqualTo(TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER);
     }
 
 }
