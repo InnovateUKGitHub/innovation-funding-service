@@ -56,12 +56,12 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link     link = Competition setup
+    Then the user clicks the button/link     link = Competition details
 
 Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
-    Given the user should see the element        jQuery = h1:contains("Competition setup")
+    Given the user should see the element        jQuery = h1:contains("Competition details")
     Then the user marks the Application as done  no  Programme
     And the user fills in the CS Assessors
     When the user clicks the button/link         link = Public content
