@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grants.controller;
 
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
@@ -52,11 +53,24 @@ public class GrantsInviteController {
         validateOrganisationNumber(form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            GrantsInviteResource resource = new GrantsInviteResource(form.getOrganisationId(), form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
+            GrantsInviteResource resource = constructResource(projectId, form);
             validationHandler.addAnyErrors(grantsInviteRestService.invite(projectId, resource));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
 
+    }
+
+    private GrantsInviteResource constructResource(long projectId, GrantsSendInviteForm form) {
+        Long organisationId = form.getOrganisationId();
+        if (form.getRole() == GrantsInviteRole.GRANTS_PROJECT_MANAGER) {
+            List<PartnerOrganisationResource> organisations = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
+            organisationId = organisations.stream()
+                    .filter(PartnerOrganisationResource::isLeadOrganisation)
+                    .findFirst()
+                    .map(PartnerOrganisationResource::getOrganisation)
+                    .orElseThrow(() -> new IFSRuntimeException("Uknown lead organisation"));
+        }
+        return new GrantsInviteResource(organisationId, form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
     }
 
     private void validateOrganisationNumber(GrantsSendInviteForm form, BindingResult bindingResult) {
