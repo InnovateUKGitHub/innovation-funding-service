@@ -89,7 +89,7 @@
                                 </h3>
                             </div>
                         </li>
-                        <li th:if="${model.general.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).GRANT}">
+                        <li th:if="${model.general.ifsAdmin && model.general.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).GRANT}">
                             <div class="task">
                                 <h3 class="govuk-heading-s">
                                     <th:block th:if="${model.general.initialComplete}">
