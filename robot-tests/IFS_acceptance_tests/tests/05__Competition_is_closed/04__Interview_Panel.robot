@@ -167,7 +167,7 @@ Applicant can upload the reponse to interview panel
     [Documentation]  IFS-3253  IFS-3571
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link         link = Feedback overview
-    Given the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf
+    Given the compAdmin/applicant upload feedback    css = .inputfile  ${5mb_pdf}  link = testing_5MB.pdf (opens in a new window)
     Then the compAdmin checks the status for response uploaded applicantion
     And the comp admin see the response uploaded by lead applicant
 
