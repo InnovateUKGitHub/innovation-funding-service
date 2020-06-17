@@ -276,6 +276,23 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
+    public void monitoringOfficerCanReadPostAwardServiceForCompetition() {
+
+        CompetitionResource competition = newCompetitionResource().withId(15L).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(MONITORING_OFFICER).equals(user)) {
+                when(projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+                assertTrue(rules.monitoringOfficerCanReadPostAwardServiceForCompetition(competition, user));
+            } else {
+                when(projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(false);
+                assertFalse(rules.monitoringOfficerCanReadPostAwardServiceForCompetition(competition, user));
+            }
+            verify(projectMonitoringOfficerRepository).existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+        });
+    }
+
+    @Test
     public void projectUsersCanReadPostAwardServiceForCompetition() {
 
         UserResource user = newUserResource().withId(5L).build();

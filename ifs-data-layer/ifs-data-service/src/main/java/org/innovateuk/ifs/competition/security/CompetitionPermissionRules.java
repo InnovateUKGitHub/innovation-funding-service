@@ -114,6 +114,11 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
+    public boolean monitoringOfficerCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return userIsMonitoringOfficerInCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
     public boolean projectUsersCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
         return projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
     }
