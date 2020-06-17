@@ -91,18 +91,20 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
         String firstName = "Bob";
         String lastName = "Bobel";
         String email = "bob.bobel@bobbins.com";
-        GrantsInviteRole role = GrantsInviteRole.GRANTS_PROJECT_MANAGER;
+        GrantsInviteRole role = GRANTS_PROJECT_FINANCE_CONTACT;
+        long organisationId = 5L;
 
-        when(grantsInviteRestService.invite(projectId, new GrantsInviteResource(firstName + " " + lastName, email, role))).thenReturn(restSuccess());
+        when(grantsInviteRestService.invite(projectId, new GrantsInviteResource(organisationId, firstName + " " + lastName, email, role))).thenReturn(restSuccess());
 
         mockMvc.perform(post("/project/" + projectId + "/grants/invite/send")
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("email", email)
-                .param("role", role.name()))
+                .param("role", role.name())
+                .param("organisationId", String.valueOf(organisationId)))
                 .andExpect(redirectedUrl(String.format("/project/%d/grants/invite", projectId)));
 
-        verify(grantsInviteRestService).invite(projectId, new GrantsInviteResource(firstName + " " + lastName, email, role));
+        verify(grantsInviteRestService).invite(projectId, new GrantsInviteResource(organisationId, firstName + " " + lastName, email, role));
     }
 
     @Override

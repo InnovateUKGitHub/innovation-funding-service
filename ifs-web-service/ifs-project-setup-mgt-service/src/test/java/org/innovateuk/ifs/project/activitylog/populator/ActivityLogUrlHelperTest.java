@@ -40,10 +40,10 @@ public class ActivityLogUrlHelperTest {
                 .filter(type -> !asList(NONE,
                         GRANTS_FINANCE_CONTACT_INVITED,
                         GRANTS_MONITORING_OFFICER_INVITED,
-                        GRANTS_MONITORING_OFFICER_INVITED)
+                        GRANTS_PROJECT_MANAGER_INVITED)
                         .contains(type))
                 .forEach((type) ->
-                    assertNotNull(ActivityLogUrlHelper.
+                    assertNotNull("Expected not null " + type, ActivityLogUrlHelper.
                             url(activity.withActivityType(type).build(), project))
                 );
     }
