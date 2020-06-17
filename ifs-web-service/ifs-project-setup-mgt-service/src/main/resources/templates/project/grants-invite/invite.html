@@ -31,12 +31,19 @@
                 <th:block th:if="${#fields.hasErrors('firstName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
-                       id="firstName"
+                <input id="firstName"
+                       class="govuk-input"
                        type="text"
+                       th:errorclass="govuk-input--error"
                        th:field="*{firstName}"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
+                       minlength="2"
+                       maxlength="70"
+                       pattern="\D{2,}"
+                       th:attr="data-minlength-errormessage=#{validation.grants.invite.firstname.min},
+                                data-pattern-errormessage=#{validation.standard.firstname.invalid},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-required-errormessage=#{validation.grants.invite.firstname.required}" />
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
@@ -46,12 +53,19 @@
                 <th:block th:if="${#fields.hasErrors('lastName')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
-                       id="lastName"
+                <input id="lastName"
+                       class="govuk-input"
                        type="text"
+                       th:errorclass="govuk-input--error"
                        th:field="*{lastName}"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
+                       minlength="2"
+                       maxlength="70"
+                       pattern="\D{2,}"
+                       th:attr="data-minlength-errormessage=#{validation.grants.invite.lastname.min},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                data-pattern-errormessage=#{validation.standard.lastname.invalid},
+                                data-required-errormessage=#{validation.grants.invite.lastname.required}" />
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{email}')} ? 'govuk-form-group--error'">
@@ -61,12 +75,15 @@
                 <th:block th:if="${#fields.hasErrors('email')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                 </th:block>
-                <input class="govuk-input"
-                       id="email"
-                       type="text"
+                <input id="email"
+                       class="govuk-input"
+                       type="email"
+                       th:errorclass="govuk-input--error"
                        th:field="*{email}"
+                       maxlength="256"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
+                       th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                        data-required-errormessage=#{validation.invite.email.required}" />
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
