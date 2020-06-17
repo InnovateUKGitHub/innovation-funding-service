@@ -24,6 +24,8 @@ items:
             - name: sp-keys-volume
               secret:
                 secretName: sp-keys-secrets
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/sp-service:${spVersion}
               name: shib
