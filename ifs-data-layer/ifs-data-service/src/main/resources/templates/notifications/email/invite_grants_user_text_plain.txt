@@ -12,5 +12,5 @@ Accept invite here: ${inviteUrl}
 
 Yours sincerely
 
-IFS Team
+<@layout.senderPlainText />
 </@layout.defaultPlainText>
