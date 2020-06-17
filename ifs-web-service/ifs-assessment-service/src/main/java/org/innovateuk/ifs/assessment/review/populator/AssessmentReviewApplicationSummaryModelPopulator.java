@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
+
 /**
  * Build the model for the Application under review view.
  */
 @Component
 public class AssessmentReviewApplicationSummaryModelPopulator {
-
-    private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
-    private static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     @Autowired
     private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;

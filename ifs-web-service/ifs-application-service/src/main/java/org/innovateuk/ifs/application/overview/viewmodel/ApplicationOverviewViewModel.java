@@ -8,13 +8,13 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.util.Set;
 
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
+
 /**
  * View model for the application overview
  */
 public class ApplicationOverviewViewModel implements BaseAnalyticsViewModel {
-
-    protected static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
-    protected static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     private final ProcessRoleResource processRole;
     private final CompetitionResource competition;
