@@ -16,7 +16,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
@@ -97,7 +97,7 @@
                         class="govuk-select"
                         id="role"
                         required="required"
-                        data-required-errormessage="Please select a role">
+                        data-required-errormessage="Please select a role.">
                     <option value="" disabled="disabled" th:selected="${form.role == null}">Please select...</option>
                     <option th:each="inviteRole : ${T( org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).values()}"
                             th:value="${inviteRole}"
