@@ -63,5 +63,5 @@ the user should see travel and subsistence rates
     the user should see the element    jQuery = p:contains("Please make sure your travel claims, receipts and tickets are all submitted.")
 
 the user opens assessor agreement in new window
-    the user clicks the button/link             jQuery = a:contains("your assessor agreement (opens in a new window)")
+    the user clicks the button/link             jQuery = a:contains("your assessor agreement")
     open pdf link                               link = Download assessor agreement (opens in a new window)

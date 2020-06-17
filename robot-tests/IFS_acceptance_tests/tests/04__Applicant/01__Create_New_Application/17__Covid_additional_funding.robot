@@ -143,7 +143,7 @@ External finance can access appendix
     [Documentation]  IFS-7552
     Given the user navigates to the page   ${server}/project-setup-management/competition/${COVIDcompetitionId}/status/all
     When the user clicks the button/link   link = ${application_id}
-    Then open pdf link                     link = ${5mb_pdf}, 4 MB (opens in new window)
+    Then open pdf link                     link = ${5mb_pdf}, 4 MB (opens in a new window)
 
 External project finance cannot access documents or MO
     [Documentation]  IFS-7357
