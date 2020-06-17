@@ -102,7 +102,28 @@
                     <option th:each="inviteRole : ${T( org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).values()}"
                             th:value="${inviteRole}"
                             th:selected="${inviteRole == form.role}"
-                            th:text="${inviteRole.displayName}"></option>
+                            th:text="${inviteRole.displayName}"
+                            th:attr="data-target=${inviteRole == T(org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).GRANTS_PROJECT_FINANCE_CONTACT ? 'organisation-id-form-group' : null}"></option>
+                </select>
+            </div>
+
+            <div id="organisation-id-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationId}')} ? 'govuk-form-group--error' : ''">
+                <label class="govuk-label" for="role">
+                    Organisation
+                </label>
+                <th:block th:if="${#fields.hasErrors('role')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                </th:block>
+                <select name="organisationId"
+                        class="govuk-select"
+                        id="organisationId"
+                        required="required"
+                        data-required-errormessage="Please select an organisation">
+                    <option value="" disabled="disabled" th:selected="${form.organisationId == null}">Please select...</option>
+                    <option th:each="pair : ${model.organisationNameIdPairs}"
+                            th:value="${pair.left}"
+                            th:selected="${pair.left.equals(form.organisationId)}"
+                            th:text="${pair.right}"></option>
                 </select>
             </div>
 

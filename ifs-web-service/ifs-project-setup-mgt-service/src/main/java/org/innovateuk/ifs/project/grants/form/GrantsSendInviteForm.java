@@ -7,18 +7,18 @@ import javax.validation.constraints.*;
 
 public class GrantsSendInviteForm {
 
-    @NotBlank(message = "{validation.grants.invite.firstname.required}")
+    @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.grants.invite.firstname.min}"),
+            @Size(min=2, message="{validation.standard.firstname.length.min}"),
             @Size(max=70, message="{validation.standard.firstname.length.max}"),
     })
     private String firstName;
 
-    @NotBlank(message = "{validation.grants.invite.lastname.required}")
+    @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.grants.invite.lastname.min}"),
+            @Size(min=2, message="{validation.standard.lastname.length.min}"),
             @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
@@ -30,6 +30,8 @@ public class GrantsSendInviteForm {
 
     @NotNull(message = "{validation.grants.invite.role.required}")
     private GrantsInviteRole role;
+
+    private Long organisationId;
 
     public String getFirstName() {
         return firstName;
@@ -61,5 +63,13 @@ public class GrantsSendInviteForm {
 
     public void setRole(GrantsInviteRole role) {
         this.role = role;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 }
