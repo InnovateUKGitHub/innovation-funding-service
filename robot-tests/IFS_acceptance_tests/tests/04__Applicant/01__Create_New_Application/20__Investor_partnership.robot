@@ -41,8 +41,12 @@ Applicant is able to see correct T&C's
     [Documentation]  IFS-7213
     Given Log in as a different user         ${peter_styles_email}  ${short_password}
     when the user clicks the button/link     link = Investor partnership
-    And the user clicks the button/link      link = Award terms and conditions
+    And the user clicks the button/link      link = Investor Partnerships terms and conditions
     Then the user should see the element     jQuery = h2:contains("Terms and conditions of an Innovate UK investor partnerships competition")
+
+Internal user sees correct label for T&C's
+    [Documentation]
+    Given Log in as a different user
 
 *** Keywords ***
 Custom suite setup
