@@ -51,6 +51,11 @@ ${ukLeadOrganisationName}                              org2
 ${internationalPartnerOrganisation}                    New Empire
 ${addressLine1}                                        7 Fisher House, Sydney,
 ${newAddress}                                          7 Fisher House
+${chooseYourOragnisationTypeInfoText}                  This is the organisation that will lead the application.
+${researchOrganisationInfoText}                        Higher education and organisations registered with Je-S.
+${ukBasedOrganisationFundingInfo}                      Your organisation must be UK based to receive funding from Innovate UK.
+${organisationBasedInUkTitle}                          Is your organisation based in the UK?
+
 
 *** Test Cases ***
 Comp admin can only access organisational eligibility category after intial details entered
@@ -151,7 +156,8 @@ Comp admin sets lead organisations can not lead international competitions and s
 Non registered UK based users apply for an international competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
-    Given the user logs out if they are logged in
+    #Given the user logs out if they are logged in
+    Given Logout as user
     And the user select the competition and starts application      ${ukLeadInternationalCompetition}
     When non-registered user selects business options                 isNotInternational
     Then UK-based user sees these page elements
@@ -335,12 +341,13 @@ Team member accepts the invite and can change lead organisation address details
     And Logging in and Error Checking                             ${team_member}  ${correct_password}
     And the user clicks the button/link                           link = ${internationalApplicationTitle}
     Then the member can edit leads organisation address details
-    [Teardown]    Logout as user
+    #[Teardown]    Logout as user
 
 Lead applicant adds a UK based partner organisation
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    [Setup]  Logging in and Error Checking     ${lead_international_email}  ${short_password}
+    #[Setup]  Logging in and Error Checking     ${lead_international_email}  ${short_password}
+    Given log in as a different user           ${lead_international_email}  ${short_password}
     Given the user clicks the button/link      link = ${internationalApplicationTitle}
     And the user clicks the button/link        link = Application team
     When the user clicks the button/link       link = Add a partner organisation
@@ -355,13 +362,14 @@ UK based partner organisation accepts the invite to collaborate and cannot edit 
     When the user clicks the button/link                              link = Application team
     Then the user should not see the element                          link = Edit
     And the user should see the element                               jQuery = td:contains("${newAddress}")
-    [Teardown]    Logout as user
+    #[Teardown]    Logout as user
 
 Internal user can see International Organisation Address Details in Application Overview
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  requesting Application ID for this Application
-    Given Logging in and Error Checking                         &{internal_finance_credentials}
+    #Given Logging in and Error Checking                         &{internal_finance_credentials}
+    Given log in as a different user                            &{internal_finance_credentials}
     When the user selects the application in progress
     And the user clicks the button/link                         jQuery = button:contains("Open all")
     Then the user should see the element                        jQuery = td:contains("Address")
@@ -391,22 +399,24 @@ UK based partner also completes funding info
     And the user clicks the button/link            link = ${internationalApplicationTitle}
     When the user clicks the button/link           link = Your project finances
     Then partner marks the finance as complete     ${internationalApplicationTitle}   id = postcode   BS1 4NT
-    Then Logout as user
+    #Then Logout as user
 
 Lead applicant submits the application
     [Documentation]  IFS-7264
     [Tags]  HappyPath
-    [Setup]  Logging in and Error Checking                ${lead_international_email}  ${short_password}
-    Given the user clicks the button/link                 link = ${internationalApplicationTitle}
+    #[Setup]  Logging in and Error Checking                ${lead_international_email}  ${short_password}
+    Given log in as a different user                      ${lead_international_email}  ${short_password}
+    And the user clicks the button/link                 link = ${internationalApplicationTitle}
     When the applicant submits the application
     Then the user should not see an error in the page
-    [Teardown]    Logout as user
+    #[Teardown]    Logout as user
 
 Moving International Competition to Project Setup
     [Documentation]  IFS-7197
     [Tags]  HappyPath
     [Setup]  Requesting competition ID of this Project
-    Given Logging in and Error Checking                    &{internal_finance_credentials}
+    #Given Logging in and Error Checking                    &{internal_finance_credentials}
+    Given log in as a different user                       &{internal_finance_credentials}
     When moving competition to Closed                      ${internationalCompetitionId}
     And making the application a successful project        ${internationalCompetitionId}  ${internationalApplicationTitle}
     Then moving competition to Project Setup               ${internationalCompetitionId}
@@ -434,22 +444,24 @@ Partner organisation is able to see organisation address details in project team
     And the user completes project team and can see international organisation addresses
     Then the user clicks the button/link                                                     link = Return to setup your project
     And the user should see the element                                                      jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
-    [Teardown]  logout as user
+    #[Teardown]  logout as user
 
 Lead organisation can see international organisation address details in project team and cannot edit it
     [Documentation]  IFS-7200
     [Tags]  HappyPath
-    [Setup]  logging in and error checking                                                    ${lead_international_email}  ${short_password}
-    Given the user clicks the button/link                                                     link = ${internationalApplicationTitle}
+    #[Setup]  logging in and error checking                                                    ${lead_international_email}  ${short_password}
+    Given log in as a different user                                                          ${lead_international_email}  ${short_password}
+    And the user clicks the button/link                                                     link = ${internationalApplicationTitle}
     When the user clicks the button/link                                                      link = Project team
     Then the user completes project team and can see international organisation addresses
-    [Teardown]  logout as user
+    #[Teardown]  logout as user
 
 Partner organisation can see international organisation address details in project team and cannot edit it
     [Documentation]  IFS-7200
     [Tags]  HappyPath
-    [Setup]  logging in and error checking                                                    ${partner_org}  ${correct_password}
-    Given the user clicks the button/link                                                     link = ${internationalApplicationTitle}
+    #[Setup]  logging in and error checking                                                    ${partner_org}  ${correct_password}
+    Given log in as a different user                                                          ${partner_org}  ${correct_password}
+    And the user clicks the button/link                                                     link = ${internationalApplicationTitle}
     And the user clicks the button/link                                                       link = Project team
     When the user completes project team and can see international organisation addresses
     Then the user clicks the button/link                                                      link = Return to setup your project
@@ -657,19 +669,19 @@ comp admin sets lead organisation can not lead the international competition
      the user clicks the button/link                                                   jQuery = button:contains('Done')
 
 UK-based user sees these page elements
-    the user should see the element         jQuery = p:contains("This is the organisation that will lead the application.")
-    the user should see the element         jQuery = span:contains("Higher education and organisations registered with Je-S.")
-    the user should not see the element     jQuery = p:contains("Your organisation must be UK based to receive funding from Innovate UK.")
+    the user should see the element         jQuery = p:contains("${chooseYourOragnisationTypeInfoText}")
+    the user should see the element         jQuery = span:contains("${researchOrganisationInfoText}")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
 
 international user sees these page elements
-    the user should see the element         jQuery = p:contains("This is the organisation that will lead the application.")
-    the user should not see the element     jQuery = span:contains("Higher education and organisations registered with Je-S.")
-    the user should not see the element     jQuery = p:contains("Your organisation must be UK based to receive funding from Innovate UK.")
+    the user should see the element         jQuery = p:contains("${chooseYourOragnisationTypeInfoText}")
+    the user should not see the element     jQuery = span:contains("${researchOrganisationInfoText}")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
 
 the user verifies their organisation details
     the user should see the element         jQuery = p:contains("This organisation will lead the application.")
-    the user should not see the element     jQuery = p:contains("Your organisation must be UK based to receive funding from Innovate UK.")
-    the user should see the element         jQuery = dt:contains("Is your organisation based in the UK?")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
+    the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
 
 the user sign in and apply for international comp
     [Arguments]  ${user}  ${password}   ${competitionName}
@@ -752,7 +764,7 @@ apply for comp with a different organisation
 non-registered user selects business options
     [Arguments]  ${isBusinessInternational}
     the user clicks the button/link              link = Continue and create an account
-    the user should see the element              jQuery = span:contains("Is your organisation based in the UK?")
+    the user should see the element              jQuery = span:contains("${organisationBasedInUkTitle}")
     the user should not see the element          jQuery = span:contains("Create an account")
     user selects where is organisation based     ${isBusinessInternational}
 
@@ -1076,7 +1088,7 @@ the user complete all sections of the project setup and generates GOL
     the user clicks the button/link                                     css = .generate-spend-profile-main-button
     the user clicks the button/link                                     css = #generate-spend-profile-modal-button
     partner submits the spend profile                                   ${ProjectID}   ${organistaionInnovateID}
-    external partner organisation submit the spend profile             ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
+    external partner organisation submit the spend profile              ${ProjectID}   ${organistaionTestEmpireID}  ${organisationUiveristyOfLiverPoolId}
     lead organisations submit the spend profile                         ${ProjectID}   ${organisationTestEmpireOneID}   ${lead_international_email}     ${short_password}
     proj finance approves the spend profiles                            ${ProjectID}
 
