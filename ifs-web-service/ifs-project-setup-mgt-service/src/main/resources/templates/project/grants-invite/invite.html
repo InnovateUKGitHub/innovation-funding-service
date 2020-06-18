@@ -108,11 +108,11 @@
             </div>
 
             <div id="organisation-id-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationId}')} ? 'govuk-form-group--error' : ''">
-                <label class="govuk-label" for="role">
+                <label class="govuk-label" for="organisationId">
                     Organisation
                 </label>
-                <th:block th:if="${#fields.hasErrors('role')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                <th:block th:if="${#fields.hasErrors('organisationId')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationId')}" th:text="${err}"></span>
                 </th:block>
                 <select name="organisationId"
                         class="govuk-select"
