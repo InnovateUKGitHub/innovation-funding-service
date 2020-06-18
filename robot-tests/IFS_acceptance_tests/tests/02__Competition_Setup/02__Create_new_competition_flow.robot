@@ -169,10 +169,10 @@ User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104  IFS-3086  IFS-4186
     Given The user should see the element    jQuery = h2:contains("Publish") ~ ul a:contains("Milestones")
     And The user should see the element      jQuery = h2:contains("Publish") ~ ul a:contains("Public content")
-    And The user should see the element      jQuery = h2:contains("Competition details") ~ ul a:contains("Terms and conditions")
-    And The user should see the element      jQuery = h2:contains("Competition details") ~ ul a:contains("Funding information")
-    And The user should see the element      jQuery = h2:contains("Competition details") ~ ul a:contains("Project eligibility")
-    And The user should see the element      jQuery = h2:contains("Competition details") ~ ul a:contains("Application")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Terms and conditions")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Funding information")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Project eligibility")
+    And The user should see the element      jQuery = h2:contains("Competition setup") ~ ul a:contains("Application")
     And the user should see the element      link = Documents
     And The user should see the element      jQuery = h2:contains("Assessment") ~ ul a:contains("Assessors")
     And The user should see the element      jQuery = h2:contains("Competition access") ~ ul a:contains("Innovation leads")
