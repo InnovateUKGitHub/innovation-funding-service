@@ -50,8 +50,6 @@ public class GrantsInviteController {
         Supplier<String> failureView = () -> inviteForm(model, projectId, form);
         Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
 
-        validateOrganisationId(form, bindingResult);
-
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             GrantsInviteResource resource = constructResource(projectId, form);
             validationHandler.addAnyErrors(grantsInviteRestService.invite(projectId, resource));
@@ -71,13 +69,5 @@ public class GrantsInviteController {
                     .orElseThrow(() -> new IFSRuntimeException("Uknown lead organisation"));
         }
         return new GrantsInviteResource(organisationId, form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
-    }
-
-    private void validateOrganisationId(GrantsSendInviteForm form, BindingResult bindingResult) {
-        if (form.getRole() == GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT) {
-            if (form.getOrganisationId() == null) {
-                bindingResult.rejectValue("organisationId", "validation.grants.invite.organisation.required");
-            }
-        }
     }
 }

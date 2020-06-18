@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.project.grants.form;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 
 import javax.validation.constraints.*;
 
+@FieldRequiredIf(required = "organisationId", argument = "financeContact", predicate = true, message = "{validation.grants.invite.organisation.required}")
 public class GrantsSendInviteForm {
 
     @NotBlank(message = "{validation.grants.invite.firstname.required}")
@@ -71,5 +73,9 @@ public class GrantsSendInviteForm {
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
+    }
+
+    public boolean isFinanceContact() {
+        return role == GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT;
     }
 }
