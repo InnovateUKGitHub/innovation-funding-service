@@ -54,6 +54,7 @@ ${partnerOrganisationNameUKBased}                      INNOVATE LTD
 ${leadApplicantOrganisationName}                       New Empire 1
 ${ukLeadOrganisationName}                              org2
 ${internationalPartnerOrganisation}                    New Empire
+${ukBasedOrganisationName}                             NOMENSA LTD
 
 
 *** Test Cases ***
@@ -1120,22 +1121,27 @@ Requesting uk lead international organisation IDs
     ${organistaionNewEmpireID} =  get organisation id by name           ${internationalPartnerOrganisation}
     Set suite variable      ${organistaionNewEmpireID}
 
+Requesting nomensa organisation IDs
+    ${nomensaLtdOrganisationName} =  get organisation id by name     ${ukBasedOrganisationName}
+    Set suite variable      ${nomensaLtdOrganisationName}
+
 uk lead applicant completes application form
-    log in as a different user                               &{ukLeadOrganisationCredentials}
-    the user navigates to the page                           ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link                          link = Untitled application (start here)
-    the user clicks the button/link                          link = Application details
-    the user fills in the Application details                ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the user clicks the button/link                          link = Application team
-    the user clicks the button/link                          id = remove-organisation-129
-    the user clicks the button/link                          name = remove-team-member
-    the user clicks the button/link                          id = application-question-complete
-    the user clicks the button/link                          link = Return to application overview
-    the user should see the element                          jQuery = li:contains("Application team") > .task-status-complete
+    Requesting nomensa organisation IDs
+    log in as a different user                                      &{ukLeadOrganisationCredentials}
+    the user navigates to the page                                  ${APPLICANT_DASHBOARD_URL}
+    the user clicks the button/link                                 link = Untitled application (start here)
+    the user clicks the button/link                                 link = Application details
+    the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                                 link = Application team
+    the user clicks the button/link                                 id = remove-organisation-${nomensaLtdOrganisationName}
+    the user clicks the button/link                                 name = remove-team-member
+    the user clicks the button/link                                 id = application-question-complete
+    the user clicks the button/link                                 link = Return to application overview
+    the user should see the element                                 jQuery = li:contains("Application team") > .task-status-complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                 ${ukLeadInternationalApplicationTitle}
-    lead marks the finance as complete                       ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
-    the user accept the competition terms and conditions     Return to application overview
+    the user navigates to Your-finances page                        ${ukLeadInternationalApplicationTitle}
+    lead marks the finance as complete                              ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
+    the user accept the competition terms and conditions            Return to application overview
 
 international partner submits finance details
     log in as a different user                               &{internationalPartnerOrganisationCredentials}
