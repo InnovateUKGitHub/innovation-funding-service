@@ -572,7 +572,7 @@ comp admin can see the correspondence address entered by non uk based lead appli
     And the user should see the element      jQuery = td:contains("Argentina, X5187XAB")
 
 Monitoring officer assign link should be displayed on completing correspondence address and project location
-    When the user navigates to the page     ${server}/project-setup-management/competition/${competitionID}/status/all
+    When the user navigates to the page     ${server}/project-setup-management/competition/${internationalCompetitionId}/status/all
     Then the user should see the element    link = Assign
 
 Monitoring office can see the correspondence address entered by non uk based lead applicant in project setup dashboard
