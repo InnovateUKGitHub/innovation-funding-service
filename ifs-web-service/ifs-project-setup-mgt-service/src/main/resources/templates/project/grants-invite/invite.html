@@ -118,7 +118,7 @@
                         class="govuk-select"
                         id="organisationId"
                         required="required"
-                        data-required-errormessage="Please select an organisation">
+                        data-required-errormessage="Please select an organisation.">
                     <option value="" disabled="disabled" th:selected="${form.organisationId == null}">Please select...</option>
                     <option th:each="pair : ${model.organisationNameIdPairs}"
                             th:value="${pair.left}"
