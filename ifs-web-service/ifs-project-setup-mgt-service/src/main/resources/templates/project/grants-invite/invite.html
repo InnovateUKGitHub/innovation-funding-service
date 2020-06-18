@@ -25,7 +25,7 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="firstName">
+                <label class="govuk-label govuk-!-font-weight-bold" for="firstName">
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -47,7 +47,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="lastName">
+                <label class="govuk-label govuk-!-font-weight-bold" for="lastName">
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -69,7 +69,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{email}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="email">
+                <label class="govuk-label govuk-!-font-weight-bold" for="email">
                     Email address
                 </label>
                 <th:block th:if="${#fields.hasErrors('email')}">
@@ -87,7 +87,7 @@
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="role">
+                <label class="govuk-label govuk-!-font-weight-bold" for="role">
                     Role
                 </label>
                 <th:block th:if="${#fields.hasErrors('role')}">
@@ -108,7 +108,7 @@
             </div>
 
             <div id="organisation-id-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationId}')} ? 'govuk-form-group--error' : ''">
-                <label class="govuk-label" for="organisationId">
+                <label class="govuk-label govuk-!-font-weight-bold" for="organisationId">
                     Organisation
                 </label>
                 <th:block th:if="${#fields.hasErrors('organisationId')}">
@@ -127,7 +127,7 @@
                 </select>
             </div>
 
-            <div class="govuk-body govuk-!-margin-top-6">
+            <div class="govuk-body govuk-!-margin-top-8">
                 <button type="submit" class="govuk-button">Send invitation</button>
                 <a th:href="@{/}"
                    class="button-clear">Cancel</a>
