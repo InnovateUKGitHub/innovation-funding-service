@@ -41,6 +41,7 @@ import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.in
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
 
     private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
+    private static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     @Autowired
     private CompetitionTemplatePersistorImpl competitionTemplatePersistor;
@@ -107,15 +108,21 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(Competition competition) {
-        if (FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType()) {
-            Optional<Section> termsSection = competition.getSections().stream().filter(s -> s.isType(SectionType.TERMS_AND_CONDITIONS)).findAny();
-            if (termsSection.isPresent()) {
-                termsSection.get().getQuestions().forEach(q -> {
-                    q.setDescription(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
-                    q.setName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
-                    q.setShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
-                });
+
+        Optional<Section> termsSection = competition.getSections().stream().filter(s -> s.isType(SectionType.TERMS_AND_CONDITIONS)).findAny();
+        if (termsSection.isPresent()) {
+            String termsToUse;
+            if (FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType()) {
+                termsToUse = TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+            } else {
+                termsToUse = TERMS_AND_CONDITIONS_OTHER;
             }
+
+            termsSection.get().getQuestions().forEach(q -> {
+                q.setDescription(termsToUse);
+                q.setName(termsToUse);
+                q.setShortName(termsToUse);
+            });
         }
     }
 
