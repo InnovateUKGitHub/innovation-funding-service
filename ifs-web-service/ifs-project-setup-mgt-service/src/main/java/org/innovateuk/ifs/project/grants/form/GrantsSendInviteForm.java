@@ -7,18 +7,18 @@ import javax.validation.constraints.*;
 
 public class GrantsSendInviteForm {
 
-    @NotBlank(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.grants.invite.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}"),
+            @Size(min=2, message="{validation.grants.invite.firstname.min}"),
             @Size(max=70, message="{validation.standard.firstname.length.max}"),
     })
     private String firstName;
 
-    @NotBlank(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.grants.invite.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}"),
+            @Size(min=2, message="{validation.grants.invite.lastname.min}"),
             @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;

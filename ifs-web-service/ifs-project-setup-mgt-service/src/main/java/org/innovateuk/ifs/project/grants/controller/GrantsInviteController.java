@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grants.controller;
 
+import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
@@ -49,17 +50,30 @@ public class GrantsInviteController {
         Supplier<String> failureView = () -> inviteForm(model, projectId, form);
         Supplier<String> successView = () -> String.format("redirect:/project/%d/grants/invite", projectId);
 
-        validateOrganisationNumber(form, bindingResult);
+        validateOrganisationId(form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            GrantsInviteResource resource = new GrantsInviteResource(form.getOrganisationId(), form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
+            GrantsInviteResource resource = constructResource(projectId, form);
             validationHandler.addAnyErrors(grantsInviteRestService.invite(projectId, resource));
             return validationHandler.failNowOrSucceedWith(failureView, successView);
         });
 
     }
 
-    private void validateOrganisationNumber(GrantsSendInviteForm form, BindingResult bindingResult) {
+    private GrantsInviteResource constructResource(long projectId, GrantsSendInviteForm form) {
+        Long organisationId = form.getOrganisationId();
+        if (form.getRole() == GrantsInviteRole.GRANTS_PROJECT_MANAGER) {
+            List<PartnerOrganisationResource> organisations = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
+            organisationId = organisations.stream()
+                    .filter(PartnerOrganisationResource::isLeadOrganisation)
+                    .findFirst()
+                    .map(PartnerOrganisationResource::getOrganisation)
+                    .orElseThrow(() -> new IFSRuntimeException("Uknown lead organisation"));
+        }
+        return new GrantsInviteResource(organisationId, form.getFirstName() + " " + form.getLastName(), form.getEmail(), form.getRole());
+    }
+
+    private void validateOrganisationId(GrantsSendInviteForm form, BindingResult bindingResult) {
         if (form.getRole() == GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT) {
             if (form.getOrganisationId() == null) {
                 bindingResult.rejectValue("organisationId", "validation.grants.invite.organisation.required");
