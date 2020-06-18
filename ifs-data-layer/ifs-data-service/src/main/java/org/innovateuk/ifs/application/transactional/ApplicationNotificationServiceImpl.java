@@ -71,11 +71,13 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                 .collect(toList());
 
         for (ProcessRole applicant : applicants) {
+            if (applicant.getUser().isActive()) {
 
-            ServiceResult<Void> notificationResult = sendAssessorFeedbackPublishedNotification(applicant);
+                ServiceResult<Void> notificationResult = sendAssessorFeedbackPublishedNotification(applicant);
 
-            if (notificationResult.isFailure()) {
-                return notificationResult;
+                if (notificationResult.isFailure()) {
+                    return notificationResult;
+                }
             }
         }
 
@@ -185,7 +187,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                             .findAny()
                             .orElse("");
 
-                    applicationTeam.forEach(applicant -> {
+                    applicationTeam.stream().filter(pr -> pr.getUser().isActive()).forEach(applicant -> {
 
                         NotificationTarget to = new UserNotificationTarget(applicant.getUser().getName(), applicant.getUser().getEmail());
 
