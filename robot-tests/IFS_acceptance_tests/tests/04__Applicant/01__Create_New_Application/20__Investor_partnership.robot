@@ -1,10 +1,21 @@
 *** Settings ***
 Documentation     IFS-7213  Investor Partnerships Funding type & T&Cs
+...
+...               IFS-7235  Change to terms and conditions labelling for Investor Partnerships
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/Assessor_Commons.robot
+
+*** Variables ***
+${investorCompName}         Investor
+${investorCompId}           ${competition_ids["${investorCompName}"]}
+${investorApplication}      Investor partnership
+${investorApplicationId}    ${application_ids["${investorApplication}"]}
+${tandcLink}                Investor Partnerships terms and conditions
+${investorPSApplication}    Investor ps application
+${investorPSApplicationId}  ${application_ids["${investorPSApplication}"]}
 
 *** Test Cases ***
 Investor partnership initial details
@@ -41,12 +52,27 @@ Applicant is able to see correct T&C's
     [Documentation]  IFS-7213
     Given Log in as a different user         ${peter_styles_email}  ${short_password}
     when the user clicks the button/link     link = Investor partnership
-    And the user clicks the button/link      link = Investor Partnerships terms and conditions
+    And the user clicks the button/link      link = ${tandcLink}
     Then the user should see the element     jQuery = h2:contains("Terms and conditions of an Innovate UK investor partnerships competition")
 
+Applicant can confirm t&c's
+    [Documentation]  IFS-7235
+    Given the user selects the checkbox      agreed
+    When the user clicks the button/link     css = button[type="submit"]
+    And the user clicks the button/link      link = Back to application overview
+    Then the user should see the element     jQuery = li:contains("${tandcLink}") .task-status-complete
+
 Internal user sees correct label for T&C's
-    [Documentation]
-    Given Log in as a different user
+    [Documentation]  IFS-7235
+    Given Log in as a different user      &{Comp_admin1_credentials}
+    When the user navigates to the page   ${server}/management/competition/${investorCompId}/application/${investorApplicationId}
+    Then the user should see the element  jQuery = button:contains("${tandcLink}")
+
+Application feedback page shows the correct link for t&c's
+    [Documentation]  IFS-7235
+    Given Log in as a different user        &{troy_ward_crendentials}
+    When The user navigates to the page     ${server}/application/${investorPSApplicationId}/feedback
+    Then the user should see the element    link = ${tandcLink}
 
 *** Keywords ***
 Custom suite setup
