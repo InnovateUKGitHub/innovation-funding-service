@@ -24,6 +24,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -44,6 +45,8 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
@@ -62,6 +65,9 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private ProjectInviteValidator projectInviteValidator;
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -101,7 +107,8 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> sendInvite(long projectId, GrantsInviteResource invite) {
-        return find(project(projectId), organisationIfOnResource(invite)).andOnSuccess((project, organisation) -> {
+        return find(project(projectId), organisationIfOnResource(invite)).andOnSuccess((project, organisation) ->
+                validateInviteDoesntExist(projectId, invite).andOnSuccess(() -> {
                 GrantsInvite grantsInvite = getInviteType(invite);
                 grantsInvite.setOrganisation(organisation);
                 grantsInvite.setEmail(invite.getEmail());
@@ -111,9 +118,15 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                 getInviteRepository(invite).save(grantsInvite);
                 return sendInviteNotification(grantsInvite)
                         .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
-            });
+            }));
     }
 
+    private ServiceResult<Void> validateInviteDoesntExist(long projectId, GrantsInviteResource invite) {
+        if (grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())) {
+            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
+        }
+        return serviceSuccess();
+    }
     private Supplier<ServiceResult<Organisation>> organisationIfOnResource(GrantsInviteResource invite) {
         if (invite.getOrganisationId() != null) {
             return organisation(invite.getOrganisationId());
