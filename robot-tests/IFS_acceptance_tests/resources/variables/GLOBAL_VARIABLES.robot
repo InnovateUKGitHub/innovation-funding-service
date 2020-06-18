@@ -50,8 +50,11 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
+
 ${ukLeadInternationalCompetition}                        UK based Lead International Competition
-${internationalLeadInternationalCompetition}                          International Lead International Competition
+${internationalLeadInternationalCompetition}             International Lead International Competition
+${openCompetitionPerformance_name}                       Performance testing competition
+${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
 ${projectEligibilityLink}                                Project eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 

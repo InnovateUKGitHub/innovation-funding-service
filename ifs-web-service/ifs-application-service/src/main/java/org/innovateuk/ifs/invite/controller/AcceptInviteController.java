@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.innovateuk.ifs.exception.CommonErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
+import static org.innovateuk.ifs.exception.ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
