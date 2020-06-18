@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.populator;
 
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -77,11 +78,14 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 .map(stage -> toStageViewModel(stage, project, competition, loggedInUser, monitoringOfficer, teamStatusRequest, organisationRequest))
                 .collect(toList());
 
+        boolean isInvestorPartnership = FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType();
+
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
+                isInvestorPartnership,
                 showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
     }
 
