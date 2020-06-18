@@ -25,8 +25,8 @@ ${externalUserRoleValidation}        Please select a role.
 *** Test Cases ***
 IFS Admin gets validation error messages on not completing the fields
     [Documentation]  IFS-7316
-    Given the user navigates to the page                ${externalUserInviteLink}
-    When the user clicks the button/link                jquery = button:contains("Send invitation")
+    Given the user navigates to the page                   ${externalUserInviteLink}
+    When the user clicks the button/link                   jquery = button:contains("Send invitation")
     Then the user should see validation error messages
 
 IFS Admin is able to invite new external user to a live project
