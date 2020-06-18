@@ -26,35 +26,34 @@ Resource          ../../../resources/common/PS_Common.robot
 &{leadApplicantCredentials}                            email=${lead_international_email}     password=${short_password}
 &{ukLeadOrganisationCredentials}                       email=${lead_applicant}               password=${short_password}
 &{internationalPartnerOrganisationCredentials}         email=${partner_international_email}  password=${short_password}
-${organisationalEligibilitySubTitle}                   Can international organisations apply?
 ${organisationalEligibilityInfo}                       Is this competition open to organisations based outside the UK?
-${organisationalEligibilityValidationErrorMessage}     You must choose if organisations based outside the UK can apply for this competition.
+${ukBasedOrganisationFundingInfo}                      Your organisation must be UK based to receive funding from Innovate UK.
+${projectLocationInfo}                                 Please enter the town or city where most of the project work will take place
+${researchOrganisationInfoText}                        Higher education and organisations registered with Je-S.
+${organisationalEligibilitySubTitle}                   Can international organisations apply?
 ${leadOrganisationsTitle}                              Lead organisations
 ${leadOrganisationsSubTitle}                           Can international organisations lead the competition?
-${leadOrganisationsValidationErrorMessage}             You must choose if international organisations can lead the competition.
-${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
+${correspondenceAddressTitle}                          Correspondence address
+${organisationBasedInUkTitle}                          Is your organisation based in the UK?
 ${internationalApplicationTitle}                       New Test Application for International Users
 ${ukLeadInternationalApplicationTitle}                 New Test Application for UK Lead International Users
+${subTitleForCorrespondenceAddress}                    This is the postal address for your organisation.
+${organisationalEligibilityValidationErrorMessage}     You must choose if organisations based outside the UK can apply for this competition.
+${leadOrganisationsValidationErrorMessage}             You must choose if international organisations can lead the competition.
+${countryValidationMessage}                            You must select the country where your organisation is based.
+${townOrCityValidationMessage}                         You must enter your organisation's town or city.
+${streetValidationMessage}                             You must enter your organisation's street address.
+${chooseYourOragnisationTypeInfoText}                  This is the organisation that will lead the application.
+${projectLocationValidationErrorMessage}               This field cannot be left blank.
+${internationalOrganisationFirstLineAddress}           7 Pinchington Lane
+${addressLine1}                                        7 Fisher House, Sydney,
+${newAddress}                                          7 Fisher House
 ${partnerOrganisationNameNonUKBased}                   Test Empire
 ${zeroFundingPartnerOrgnaisationName}                  UNIVERSITY OF LIVERPOOL
 ${partnerOrganisationNameUKBased}                      INNOVATE LTD
 ${leadApplicantOrganisationName}                       New Empire 1
-${applicationInProgress}                               Performance Application 4
-${projectLocationInfo}                                 Please enter the town or city where most of the project work will take place
-${projectLocationValidationErrorMessage}               This field cannot be left blank.
-${correspondenceAddressTitle}                          Correspondence address
-${subTitleForCorrespondenceAddress}                    This is the postal address for your organisation.
-${countryValidationMessage}                            You must select the country where your organisation is based.
-${townOrCityValidationMessage}                         You must enter your organisation's town or city.
-${streetValidationMessage}                             You must enter your organisation's street address.
 ${ukLeadOrganisationName}                              org2
 ${internationalPartnerOrganisation}                    New Empire
-${addressLine1}                                        7 Fisher House, Sydney,
-${newAddress}                                          7 Fisher House
-${chooseYourOragnisationTypeInfoText}                  This is the organisation that will lead the application.
-${researchOrganisationInfoText}                        Higher education and organisations registered with Je-S.
-${ukBasedOrganisationFundingInfo}                      Your organisation must be UK based to receive funding from Innovate UK.
-${organisationBasedInUkTitle}                          Is your organisation based in the UK?
 
 
 *** Test Cases ***
@@ -156,7 +155,6 @@ Comp admin sets lead organisations can not lead international competitions and s
 Non registered UK based users apply for an international competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
-    #Given the user logs out if they are logged in
     Given Logout as user
     And the user select the competition and starts application      ${ukLeadInternationalCompetition}
     When non-registered user selects business options                 isNotInternational
@@ -190,7 +188,6 @@ Non registered international users can create an account and provide internation
 Registered users applying for an international competition see no international organisation if there is none
     [Documentation]    IFS-7252
     [Tags]  HappyPath
-    #1 change
     Given the user sign in and apply for international comp                            ${lead_applicant}  ${short_password}  ${ukleadinternationalcompetition}
     And check if there is an existing application in progress for this competition
     When user selects where is organisation based                                      isInternational
@@ -341,12 +338,10 @@ Team member accepts the invite and can change lead organisation address details
     And Logging in and Error Checking                             ${team_member}  ${correct_password}
     And the user clicks the button/link                           link = ${internationalApplicationTitle}
     Then the member can edit leads organisation address details
-    #[Teardown]    Logout as user
 
 Lead applicant adds a UK based partner organisation
     [Documentation]    IFS-7264
     [Tags]  HappyPath
-    #[Setup]  Logging in and Error Checking     ${lead_international_email}  ${short_password}
     Given log in as a different user           ${lead_international_email}  ${short_password}
     Given the user clicks the button/link      link = ${internationalApplicationTitle}
     And the user clicks the button/link        link = Application team
@@ -362,13 +357,11 @@ UK based partner organisation accepts the invite to collaborate and cannot edit 
     When the user clicks the button/link                              link = Application team
     Then the user should not see the element                          link = Edit
     And the user should see the element                               jQuery = td:contains("${newAddress}")
-    #[Teardown]    Logout as user
 
 Internal user can see International Organisation Address Details in Application Overview
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  requesting Application ID for this Application
-    #Given Logging in and Error Checking                         &{internal_finance_credentials}
     Given log in as a different user                            &{internal_finance_credentials}
     When the user selects the application in progress
     And the user clicks the button/link                         jQuery = button:contains("Open all")
@@ -399,23 +392,19 @@ UK based partner also completes funding info
     And the user clicks the button/link            link = ${internationalApplicationTitle}
     When the user clicks the button/link           link = Your project finances
     Then partner marks the finance as complete     ${internationalApplicationTitle}   id = postcode   BS1 4NT
-    #Then Logout as user
 
 Lead applicant submits the application
     [Documentation]  IFS-7264
     [Tags]  HappyPath
-    #[Setup]  Logging in and Error Checking                ${lead_international_email}  ${short_password}
     Given log in as a different user                      ${lead_international_email}  ${short_password}
     And the user clicks the button/link                 link = ${internationalApplicationTitle}
     When the applicant submits the application
     Then the user should not see an error in the page
-    #[Teardown]    Logout as user
 
 Moving International Competition to Project Setup
     [Documentation]  IFS-7197
     [Tags]  HappyPath
     [Setup]  Requesting competition ID of this Project
-    #Given Logging in and Error Checking                    &{internal_finance_credentials}
     Given log in as a different user                       &{internal_finance_credentials}
     When moving competition to Closed                      ${internationalCompetitionId}
     And making the application a successful project        ${internationalCompetitionId}  ${internationalApplicationTitle}
@@ -444,24 +433,20 @@ Partner organisation is able to see organisation address details in project team
     And the user completes project team and can see international organisation addresses
     Then the user clicks the button/link                                                     link = Return to setup your project
     And the user should see the element                                                      jQuery = p:contains("You must complete your project and bank details within 30 days of our notification to you.")
-    #[Teardown]  logout as user
 
 Lead organisation can see international organisation address details in project team and cannot edit it
     [Documentation]  IFS-7200
     [Tags]  HappyPath
-    #[Setup]  logging in and error checking                                                    ${lead_international_email}  ${short_password}
     Given log in as a different user                                                          ${lead_international_email}  ${short_password}
-    And the user clicks the button/link                                                     link = ${internationalApplicationTitle}
+    And the user clicks the button/link                                                       link = ${internationalApplicationTitle}
     When the user clicks the button/link                                                      link = Project team
     Then the user completes project team and can see international organisation addresses
-    #[Teardown]  logout as user
 
 Partner organisation can see international organisation address details in project team and cannot edit it
     [Documentation]  IFS-7200
     [Tags]  HappyPath
-    #[Setup]  logging in and error checking                                                    ${partner_org}  ${correct_password}
     Given log in as a different user                                                          ${partner_org}  ${correct_password}
-    And the user clicks the button/link                                                     link = ${internationalApplicationTitle}
+    And the user clicks the button/link                                                       link = ${internationalApplicationTitle}
     And the user clicks the button/link                                                       link = Project team
     When the user completes project team and can see international organisation addresses
     Then the user clicks the button/link                                                      link = Return to setup your project
