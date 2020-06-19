@@ -559,4 +559,4 @@ the user should see live project on dashboard
 Custom suite setup
     Connect to database  @{database}
     the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`id`, `competition_id`, `send_by_default`) VALUES ('1', '${PROJECT_SETUP_COMPETITION}', '1');
+    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`competition_id`, `send_by_default`) VALUES ('${PROJECT_SETUP_COMPETITION}', '1');
