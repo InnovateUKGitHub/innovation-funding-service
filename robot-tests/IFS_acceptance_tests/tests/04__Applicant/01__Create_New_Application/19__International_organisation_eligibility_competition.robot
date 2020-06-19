@@ -52,7 +52,7 @@ ${partnerOrganisationNameNonUKBased}                   Test Empire
 ${zeroFundingPartnerOrgnaisationName}                  UNIVERSITY OF LIVERPOOL
 ${partnerOrganisationNameUKBased}                      INNOVATE LTD
 ${leadApplicantOrganisationName}                       New Empire 1
-${ukLeadOrganisationName}                              org2
+${ukLeadOrganisationName}                              Organisation2
 ${internationalPartnerOrganisation}                    New Empire
 ${ukBasedOrganisationName}                             NOMENSA LTD
 
@@ -164,7 +164,7 @@ Non registered UK based users apply for an international competition
 Non registered UK based users confirm their organisation details and create an account
     [Documentation]    IFS-7199
     [Tags]  HappyPath
-    Given the user provides uk based organisation details             Nomensa  NOMENSA LTD
+    Given the user provides uk based organisation details             Nomensa  ${ukBasedOrganisationName}
     And the user verifies their organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
@@ -205,11 +205,11 @@ Registered users applying for an international competition see only UK based org
 Registered UK based user applies for International Competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
-    Given the user clicks the button/link                   link = Apply with a different organisation
+    Given the user clicks the button/link                                  link = Apply with a different organisation
     When the user selects organisation type as business
-    And the user clicks the Not on companies house link
+    And the user clicks enter details manually on companies house link
     Then the user verifies their organisation details
-    And the user clicks the button/link                     name = save-organisation
+    And the user clicks the button/link                                    name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
@@ -240,7 +240,7 @@ Partner user provides UK based organisation details and verifies them
     [Documentation]    IFS-7198 IFS-7199
     [Tags]  HappyPath
     Given the user clicks the button/link                    link = Join with a different organisation
-    When the user provides uk based organisation details     Nomensa  NOMENSA LTD
+    When the user provides uk based organisation details     Nomensa  ${ukBasedOrganisationName}
     Then the user should see the element                     jQuery = p:contains("This is the organisation that you will join the application with.")
     And the user clicks the button/link                      name = save-organisation
     And the user should see the element                      jQuery = h2:contains("Application progress")
@@ -1202,3 +1202,8 @@ the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
     the user should see the element         jQuery = h2:contains("${leadApplicantOrganisationName}")
     the user should see the element         jQuery = td:contains("${addressLine1}")
+
+the user clicks enter details manually on companies house link
+    the user clicks the button/link       jQuery = span:contains("Enter details manually")
+    The user enters text to a text field  name = organisationName    ${ukLeadOrganisationName}
+    the user clicks the button/link       jQuery = button:contains("Continue")
