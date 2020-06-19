@@ -46,7 +46,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             ") " +
             "AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
-    String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
+    String COMP_FUNDING_FILTER = "WHERE " +
             "a.competition.id = :compId " +
             "AND (a.fundingDecision IS NOT NULL) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
@@ -146,15 +146,20 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                                                                  @Param("states") Collection<ApplicationState> applicationStates,
                                                                                  @Param("filter") String filter);
 
-    @Query(COMP_FUNDING_FILTER)
+    @Query("SELECT a FROM Application a " + COMP_FUNDING_FILTER)
     Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding,
                                                                      Pageable pageable);
 
-    @Query(COMP_FUNDING_FILTER)
+    @Query("SELECT a FROM Application a " +COMP_FUNDING_FILTER)
     List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") long competitionId,
+                                                                     @Param("filter") String filter,
+                                                                     @Param("sent") Boolean sent,
+                                                                     @Param("funding") FundingDecisionStatus funding);
+    @Query("SELECT a.id FROM Application a " + COMP_FUNDING_FILTER + " AND NOT (a.manageFundingEmailDate != null AND a.fundingDecision = org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus.FUNDED)")
+    List<Long> getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(@Param("compId") long competitionId,
                                                                      @Param("filter") String filter,
                                                                      @Param("sent") Boolean sent,
                                                                      @Param("funding") FundingDecisionStatus funding);

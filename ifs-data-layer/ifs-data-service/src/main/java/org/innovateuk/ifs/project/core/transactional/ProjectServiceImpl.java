@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.core.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.activitylog.resource.ActivityType;
 import org.innovateuk.ifs.activitylog.transactional.ActivityLogService;
 import org.innovateuk.ifs.address.domain.Address;
@@ -23,7 +25,6 @@ import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.core.mapper.ProjectUserMapper;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -31,7 +32,6 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
-import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +50,15 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
+    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     @Autowired
     private OrganisationMapper organisationMapper;
@@ -75,12 +77,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectWorkflowHandler projectWorkflowHandler;
-
-    @Autowired
-    private CostCategoryTypeStrategy costCategoryTypeStrategy;
-
-    @Autowired
-    private FinanceChecksGenerator financeChecksGenerator;
 
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
@@ -226,7 +222,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(long applicationId) {
+        LOG.error("createProjectFromApplicationId start");
         return getApplication(applicationId).andOnSuccess(application -> {
+            if (application.getCompetition().isNonFinanceType()) {
+                return serviceFailure(CANNOT_CREATE_PROJECT_IF_COMP_HAS_NO_FINANCES);
+            }
 
             Project project = new Project();
             project.setApplication(application);
@@ -262,9 +262,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
-                            andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccess(() -> setCompetitionProjectSetupStartedDate(newProject)).
-                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
+                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject))).andOnSuccessReturn(p -> {
+                LOG.error("createProjectFromApplicationId end");
+                return p;
+            });
         });
     }
 
@@ -304,7 +306,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
-
         ProjectUser originalLeadApplicantProjectUser = newProject.getProjectUsers().get(0);
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
@@ -315,7 +316,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         ServiceResult<Void> spendProfileProcess = createSpendProfileProcess(newProject, originalLeadApplicantProjectUser);
 
         projectRepository.refresh(newProject);
-        
+
         return processAnyFailuresOrSucceed(projectDetailsProcess, viabilityProcesses, eligibilityProcesses, golProcess, projectProcess, spendProfileProcess);
     }
 
@@ -369,17 +370,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         } else {
             return serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES);
         }
-    }
-
-    private ServiceResult<Void> generateFinanceCheckEntitiesForNewProject(Project newProject) {
-        List<Organisation> organisations = newProject.getOrganisations();
-
-        List<ServiceResult<Void>> financeCheckResults = simpleMap(organisations, organisation ->
-                financeChecksGenerator.createFinanceChecksFigures(newProject, organisation).andOnSuccess(() ->
-                        costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(newProject.getId(), organisation.getId()).andOnSuccess(costCategoryType ->
-                                financeChecksGenerator.createMvpFinanceChecksFigures(newProject, organisation, costCategoryType))));
-
-        return processAnyFailuresOrSucceed(financeCheckResults);
     }
 
     private ServiceResult<Project> getProjectByApplication(long applicationId) {
