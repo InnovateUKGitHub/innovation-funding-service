@@ -50,6 +50,9 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
+${openCompetitionPerformance_name}    Performance testing competition
+${openCompetitionPerformance}         ${competition_ids['${openCompetitionPerformance_name}']}
+
 ${organisationEligibilityCompetitionName}                Organisation Eligibility Competition
 ${projectEligibilityLink}                                Project eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
