@@ -8,64 +8,71 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/PS_Common.robot
 
 *** Variables ***
-${postAwardServiceCompetitionName}         Post Award Service Competition
-${nonPostAwardServiceCompetitionName}      Non Post Award Service Competition
-${postAwardServiceLink}                    Post award service
-${postAwardServiceTitle}                   Choose the post award service
-${postAwardServiceGuide}                   You cannot change the post award service for any projects in this competition that are already live.
-${projectSetupCompetitionName}             Project Setup Comp 17
-${projectSetupCompetitionId}               ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}
-${grantFundProjectSetupDashboard}          ${server}/project-setup-management/competition/${projectSetupCompetitionId}/status/all
-${viewAndUpdateCompetitionDetailsLink}     View and update competition details
+${postAwardServiceCompetitionName}             Post Award Service Competition
+${nonPostAwardServiceCompetitionName}          Non Post Award Service Competition
+${postAwardServiceLink}                        Post award service
+${postAwardServiceTitle}                       Choose the post award service
+${postAwardServiceGuide}                       You cannot change the post award service for any projects in this competition that are already live.
+${projectSetupCompetitionName}                 Project Setup Comp 17
+${projectSetupCompetitionId}                   ${competition_ids["${projectSetupCompetitionName}"]}
+${grantFundProjectSetupDashboard}              ${server}/project-setup-management/competition/${projectSetupCompetitionId}/status/all
+${projectSetupNonPostAwardCompetitionName}     Project setup loan comp
+${projectSetupNonPostAwardCompetitionId}       ${competition_ids["${projectSetupNonPostAwardCompetitionName}"]}
+${NonPostAwardProjectSetupDashboard}           ${server}/project-setup-management/competition/${projectSetupNonPostAwardCompetitionId}/status/all
+${viewAndUpdateCompetitionDetailsLink}         View and update competition details
 
 *** Test Cases ***
-Post award service link should not display for any other funding type except grant funding
+Competition Setup - Post award service link should not display for any other funding type except grant funding
      Given the user clicks create a competition button
      When the user fills in the CS Initial details         ${nonPostAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  KTP
      Then the user should not see the element              link = ${postAwardServiceLink}
 
-Ifs admin can access post award service form details for grant funding type competition
+Competition Setup - Ifs admin can access post award service form details for grant funding type competition
      Given the user clicks create a competition button
      When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
      And the user clicks the button/link                     link = ${postAwardServiceLink}
      Then the user check for post award service fields
      And the user sees that the radio button is selected     postAwardService    CONNECT
 
-Ifs admin can save the post award service selection
+Competition Setup - Ifs admin can save the post award service selection
      When the user selects the radio button      postAwardService  IFS_POST_AWARD
      And the user clicks the button/link         css = [value="Save and return to competition"]
      Then the user checks for selected value     IFS_POST_AWARD
 
-comp admin should not see the post award service link
+Competition Setup - comp admin should not see the post award service link for any fundtype
      Given log in as a different user             &{Comp_admin1_credentials}
      And the user navigates to the page           ${CA_UpcomingComp}
      When the user clicks the button/link         link = ${postAwardServiceCompetitionName}
      Then the user should not see the element     link = ${postAwardServiceLink}
 
-Finance manager should not see the post award service link
+Competition Setup - Finance manager should not see the post award service link for any fund type
      Given log in as a different user             &{internal_finance_credentials}
      And the user navigates to the page           ${CA_UpcomingComp}
      When the user clicks the button/link         link = ${postAwardServiceCompetitionName}
      Then the user should not see the element     link = ${postAwardServiceLink}
 
-IFS admin can edit the post award service options in projcet setup
+Project Setup - IFS admin can edit the post award service options
      Given log in as a different user                           &{ifs_admin_user_credentials}
      And the user navigates to the page                         ${grantFundProjectSetupDashboard}
      When the user clicks the button/link                       link = ${viewAndUpdateCompetitionDetailsLink}
      And the user edits form with post award service option
      Then the user checks for selected value                    IFS_POST_AWARD
 
-view and update competition details should not display for comp admin
+Project Setup - view and update competition details should not display for comp admin
      Given log in as a different user             &{Comp_admin1_credentials}
      When the user navigates to the page          ${grantFundProjectSetupDashboard}
      Then the user should not see the element     link = ${viewAndUpdateCompetitionDetailsLink}
 
-view and update competition details should not display for finance manager
+Project Setup - view and update competition details should not display for finance manager
      Given log in as a different user             &{internal_finance_credentials}
      When the user navigates to the page          ${grantFundProjectSetupDashboard}
      Then the user should not see the element     link = ${viewAndUpdateCompetitionDetailsLink}
 
-
+Project Setup - Post award service link should not display for any other fund type except grant in project setup for ifs admin
+     Given log in as a different user             &{ifs_admin_user_credentials}
+     And the user navigates to the page           ${NonPostAwardProjectSetupDashboard}
+     When the user clicks the button/link         link = ${viewAndUpdateCompetitionDetailsLink}
+     Then the user should not see the element     link = ${postAwardServiceLink}
 
 
 *** Keywords ***
