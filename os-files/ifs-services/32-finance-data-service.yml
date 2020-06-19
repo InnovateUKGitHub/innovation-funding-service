@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: finance-data-service
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/finance-data-service:${financeDataServiceVersion}
               name: finance-data-service
