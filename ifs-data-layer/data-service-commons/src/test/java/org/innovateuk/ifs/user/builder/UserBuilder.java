@@ -31,6 +31,7 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return new UserBuilder(emptyList()).
                 with(uniqueIds()).
                 withFirstName("User").
+                withStatus(UserStatus.ACTIVE).
                 with(idBasedLastNames()).
                 with(idBasedEmails());
     }
