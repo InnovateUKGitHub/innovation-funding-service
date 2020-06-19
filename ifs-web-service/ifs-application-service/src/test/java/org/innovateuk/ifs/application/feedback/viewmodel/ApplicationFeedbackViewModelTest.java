@@ -21,7 +21,7 @@ public class ApplicationFeedbackViewModelTest {
         String result = viewModel.getTermsAndConditionsTerminology();
 
         // then
-        assertThat(result).isEqualTo(TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
+        assertThat(result).isEqualTo(TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
     }
 
     @Test

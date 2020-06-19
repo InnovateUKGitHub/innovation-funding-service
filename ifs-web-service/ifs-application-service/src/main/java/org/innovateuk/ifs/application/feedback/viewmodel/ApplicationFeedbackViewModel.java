@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
 import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
 
 public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
@@ -147,7 +147,7 @@ public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
 
     public String getTermsAndConditionsTerminology() {
         if (FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType()) {
-            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+            return VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
         return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
