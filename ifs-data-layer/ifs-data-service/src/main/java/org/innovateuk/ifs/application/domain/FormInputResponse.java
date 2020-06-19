@@ -9,7 +9,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -50,10 +50,10 @@ public class FormInputResponse {
 //    private Set<Long> fileEntryIds = new LinkedHashSet<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST})
-    @JoinTable(name = "form_input_file_entry",
-            joinColumns = {@JoinColumn(name = "form_input_response_id")},
-            inverseJoinColumns = {@JoinColumn(name = "fileEntryId", referencedColumnName = "id")})
-    private Set<FileEntry> formInputFileEntry;
+    @JoinTable(name = "form_input_response_file_entry",
+            joinColumns = @JoinColumn(name = "form_input_response_id"),
+            inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
+    private List<FileEntry> formInputResponseFileEntry;
 
     public FormInputResponse() {
         // no-arg constructor
@@ -154,11 +154,11 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public Set<FileEntry> getFormInputFileEntry() {
-        return formInputFileEntry;
+    public List<FileEntry> getFormInputResponseFileEntry() {
+        return formInputResponseFileEntry;
     }
 
-    public void setFormInputFileEntry(Set<FileEntry> formInputFileEntry) {
-        this.formInputFileEntry = formInputFileEntry;
+    public void setFormInputResponseFileEntry(List<FileEntry> formInputResponseFileEntry) {
+        this.formInputResponseFileEntry = formInputResponseFileEntry;
     }
 }
