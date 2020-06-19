@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
 
 /**
  * Build the model for the Application under review view.
@@ -58,10 +58,10 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     }
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
-        if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+        if (FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
-        return TERMS_AND_CONDITIONS_OTHER;
+        return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
 
 }

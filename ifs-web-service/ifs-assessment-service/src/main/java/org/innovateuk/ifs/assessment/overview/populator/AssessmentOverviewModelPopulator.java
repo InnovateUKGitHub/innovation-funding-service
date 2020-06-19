@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
 
 /**
  * Build the model for Assessment Overview view.
@@ -211,6 +211,6 @@ public class AssessmentOverviewModelPopulator {
         if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
             return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
-        return TERMS_AND_CONDITIONS_OTHER;
+        return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
 }
