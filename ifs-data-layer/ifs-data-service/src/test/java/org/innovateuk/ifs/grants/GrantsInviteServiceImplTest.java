@@ -9,6 +9,7 @@ import org.innovateuk.ifs.grants.domain.GrantsInvite;
 import org.innovateuk.ifs.grants.domain.GrantsMonitoringOfficerInvite;
 import org.innovateuk.ifs.grants.domain.GrantsProjectManagerInvite;
 import org.innovateuk.ifs.grants.repository.GrantsFinanceContactInviteRepository;
+import org.innovateuk.ifs.grants.repository.GrantsInviteRepository;
 import org.innovateuk.ifs.grants.repository.GrantsMonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.grants.repository.GrantsProjectManagerInviteRepository;
 import org.innovateuk.ifs.grants.transactional.GrantsInviteService;
@@ -75,6 +76,9 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
     @Mock
     private OrganisationRepository organisationRepository;
 
+    @Mock
+    private GrantsInviteRepository grantsInviteRepository;
+
     private long projectId = 1L;
 
     private Organisation organisation;
@@ -110,6 +114,7 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
                 grantsInvite.getProject(),
                 grantsInvite.getStatus());
 
+        when(grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())).thenReturn(false);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(grantsProjectManagerInviteRepository.save(grantsProjectManagerInvite)).thenReturn(grantsProjectManagerInvite);
@@ -134,6 +139,7 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
                 grantsInvite.getProject(),
                 grantsInvite.getStatus());
 
+        when(grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())).thenReturn(false);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(grantsFinanceContactInviteRepository.save(grantsFinanceContactInvite)).thenReturn(grantsFinanceContactInvite);
@@ -157,6 +163,7 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
                 grantsInvite.getProject(),
                 grantsInvite.getStatus());
 
+        when(grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())).thenReturn(false);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(grantsMonitoringOfficerInviteRepository.save(grantsMonitoringOfficerInvite)).thenReturn(grantsMonitoringOfficerInvite);
         when(notificationService.sendNotificationWithFlush(any(), any())).thenReturn(serviceSuccess());
