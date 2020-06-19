@@ -228,15 +228,7 @@ Lead is able to resend invitation
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
     [Tags]
-    When the user reads his email and clicks the link      ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to contribute in ${openCompetitionBusinessRTO_name}    You will be joining as part of the organisation    2
-    And the user should see the element                    jQuery = h1:contains("Invitation to contribute")
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user should see the element                    jQuery = h1:contains("Confirm your organisation")
-    And the user should see the element                    link = email the lead applicant
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
-    And the invited user fills the create account form     Roger  Axe
-    And the user reads his email and clicks the link       ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
-    And the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
+    Given team member accepts the invite to join organisation     ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com  ${openCompetitionBusinessRTO_name}  Roger  Axe
 
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
@@ -261,7 +253,7 @@ New Lead Applicant invites new user as collaborator on his application
     [Tags]
     # Business organisation type for the collaborator as well.
     Given the lead applicant invites the collaborator
-    Then the collaborator accepts the invite and is able to see the application without any errors
+    Then partner organisation accepts the invite to collaborate     ${newCollaborator}  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${BUSINESS_TYPE_ID}
     And the lead applicant is no longer directed to the team page
 
 *** Keywords ***
@@ -302,14 +294,6 @@ the lead applicant invites the collaborator
     The user clicks the button/link  link = Untitled application (start here)
     the user fills in the inviting steps no Edit  ${newCollaborator}
     The user logs out if they are logged in
-
-the collaborator accepts the invite and is able to see the application without any errors
-    The user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
-    The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
-    The user should see the element               jQuery = h1:contains("Choose your organisation type")
-    The user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
-    The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
-    The user should not see an error in the page
 
 the lead applicant is no longer directed to the team page
     Log in as a different user       ${newLeadApplicant}  ${correct_password}
