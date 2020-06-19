@@ -26,10 +26,10 @@ Post award service link should not display for any other funding type except gra
 
 Ifs admin can access post award service form details for grant funding type competition
      Given the user clicks create a competition button
-     When the user fills in the CS Initial details         ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
-     And the user clicks the button/link                   link = ${postAwardServiceLink}
+     When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+     And the user clicks the button/link                     link = ${postAwardServiceLink}
      Then the user check for post award service fields
-     And the user should see the element                   css = input[value="CONNECT"]:checked
+     And the user sees that the radio button is selected     postAwardService    CONNECT
 
 Ifs admin can save the post award service selection
      When the user selects the radio button      postAwardService  IFS_POST_AWARD
@@ -94,8 +94,8 @@ the user check for post award service fields
 
 the user checks for selected value
     [Arguments]  ${postAwardLabel}
-    the user clicks the button/link     link = ${postAwardServiceLink}
-    the user should see the element     css = input[value="${postAwardLabel}"]:checked
+    the user clicks the button/link                     link = ${postAwardServiceLink}
+    the user sees that the radio button is selected     postAwardService    ${postAwardLabel}
 
 the user edits form with post award service option
      And the user clicks the button/link      link = ${postAwardServiceLink}
