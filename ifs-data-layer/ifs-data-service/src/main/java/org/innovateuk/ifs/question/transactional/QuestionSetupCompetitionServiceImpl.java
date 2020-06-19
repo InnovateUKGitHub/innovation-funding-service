@@ -94,7 +94,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setAppendix(formInput.getActive());
                 setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
-                setupResource.setMaxWords(formInput.getWordCount());
+                setupResource.setAppendixCount(formInput.getWordCount());
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -230,6 +230,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
+        appendixFormInput.setWordCount(competitionSetupQuestionResource.getAppendixCount());
         if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
