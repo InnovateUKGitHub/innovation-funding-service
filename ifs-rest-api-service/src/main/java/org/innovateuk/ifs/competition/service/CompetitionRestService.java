@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
@@ -17,12 +16,6 @@ public interface CompetitionRestService {
     RestResult<List<CompetitionResource>> getAll();
 
     RestResult<CompetitionResource> getCompetitionById(long competitionId);
-
-    RestResult<List<UserResource>> findInnovationLeads(long competitionId);
-
-    RestResult<Void> addInnovationLead(long competitionId, long innovationLeadUserId);
-
-    RestResult<Void> removeInnovationLead(long competitionId, long innovationLeadUserId);
 
     RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId);
 

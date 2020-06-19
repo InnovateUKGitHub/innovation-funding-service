@@ -22,6 +22,8 @@ items:
           labels:
             deploymentconfig: project-setup-mgt-svc
         spec:
+          imagePullSecrets:
+            - name: imagePullSecretsName
           containers:
             - image: innovateuk/project-setup-mgt-service:${projectSetupMgtServiceVersion}
               name: project-setup-mgt-svc

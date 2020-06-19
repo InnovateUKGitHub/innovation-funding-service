@@ -60,7 +60,7 @@ the user moves Application details in Edit mode
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = name  ${appTitle}
     the user enters text to a text field  id = startDate  ${tomorrowday}
     the user enters text to a text field  css = #application_details-startdate_month  ${month}
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
@@ -368,12 +368,12 @@ Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
     the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery = a:contains("Yes, accept invitation")
-    the user should see the element    jquery = h1:contains("Choose organisation type")
+    the user should see the element    jquery = h1:contains("Choose your organisation type")
     the user completes the new account creation  ${email}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
-    the user selects the radio button           organisationType    radio-${organisationType}
+    the user selects the radio button           organisationTypeId    radio-${organisationType}
     the user clicks the button/link             jQuery = .govuk-button:contains("Save and continue")
     the user should see the element             jQuery = h1:contains("Enter organisation details")
     the user selects his organisation in Companies House  innovate  INNOVATE LTD
@@ -404,7 +404,7 @@ the user select the competition and starts application
     [Arguments]  ${competition}
     the user navigates to the page                            ${frontDoor}
     the user clicks the button/link in the paginated list     link = ${competition}
-    the user clicks the button/link                           jQuery = a:contains("Start new application")
+    the user clicks the button/link                           link = Start new application
 
 the user search for organisation name on Companies house
     [Arguments]  ${org}  ${orgName}
@@ -465,7 +465,7 @@ the applicant completes Application Team
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
 
 the user clicks the Not on companies house link
-    the user clicks the button/link       jQuery = summary:contains("Enter details manually")
+    the user clicks the button/link       jQuery = span:contains("Enter details manually")
     The user enters text to a text field  name = organisationName    org2
     the user clicks the button/link       jQuery = button:contains("Continue")
 

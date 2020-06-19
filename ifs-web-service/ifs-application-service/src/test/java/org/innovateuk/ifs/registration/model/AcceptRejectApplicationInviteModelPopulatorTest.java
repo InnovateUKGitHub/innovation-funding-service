@@ -3,8 +3,8 @@ package org.innovateuk.ifs.registration.model;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.registration.populator.AcceptRejectApplicationInviteModelPopulator;
-import org.innovateuk.ifs.registration.viewmodel.AcceptRejectApplicationInviteViewModel;
+import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationInviteModelPopulator;
+import org.innovateuk.ifs.invite.viewmodel.AcceptRejectApplicationInviteViewModel;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
