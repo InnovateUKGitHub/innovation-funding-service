@@ -81,7 +81,8 @@ public class CompetitionStatusController {
                         competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess(),
                         competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess(),
                         true,
-                        loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
+                        loggedInUser.hasRole(Role.EXTERNAL_FINANCE),
+                        loggedInUser.hasRole(Role.IFS_ADMINISTRATOR)));
         return "project/competition-status-queries";
     }
 

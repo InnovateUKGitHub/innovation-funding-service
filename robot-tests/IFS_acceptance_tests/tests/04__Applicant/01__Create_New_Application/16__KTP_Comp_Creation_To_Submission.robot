@@ -25,10 +25,10 @@ Comp Admin creates an KTP competition
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  the user clicks the button/link      link = ${KTPcompetitionTitle}
-    Given the user clicks the button/link         link = View and update competition setup
+    Given the user clicks the button/link         link = View and update competition details
     When the user clicks the button/link          link = Initial details
     Then the user should see the element          jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
-    [Teardown]  the user clicks the button/link   link = Competition setup
+    [Teardown]  the user clicks the button/link   link = Competition details
 
 Comp Admin is able to see KTP T&C's have been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148

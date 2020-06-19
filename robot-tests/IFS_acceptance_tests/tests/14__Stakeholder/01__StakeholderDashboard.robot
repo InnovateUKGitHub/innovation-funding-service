@@ -191,7 +191,7 @@ All of the calculations on the dashboard should be correct
 Comp admin navigate to stakeholders page
     the user logs-in in new browser    &{Comp_admin1_credentials}
     the user clicks the button/link    link = ${openProgrammeCompetitionName}
-    the user clicks the button/link    link = View and update competition setup
+    the user clicks the button/link    link = View and update competition details
     the user clicks the button/link    link = Stakeholders
 
 the user triggers the name validation

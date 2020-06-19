@@ -267,7 +267,7 @@ external collaborators read their email
     verify the user has received the on hold email    ${collaborator2_alternative_user_credentials["email"]}
 
 Assess the application and move to in notification
-    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Competition details
     the user clicks the button/link    link = Competition
     the user clicks the button/link    id = close-assessment-button
     the user clicks the button/link    link = Input and review funding decision
