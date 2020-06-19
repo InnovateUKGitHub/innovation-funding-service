@@ -74,7 +74,6 @@ Project Setup - Post award service link should not display for any other fund ty
      When the user clicks the button/link         link = ${viewAndUpdateCompetitionDetailsLink}
      Then the user should not see the element     link = ${postAwardServiceLink}
 
-
 *** Keywords ***
 Custom Suite Setup
     Connect to database  @{database}
@@ -108,3 +107,7 @@ the user edits form with post award service option
      And the user clicks the button/link      link = ${postAwardServiceLink}
      And the user selects the radio button    postAwardService  IFS_POST_AWARD
      And the user clicks the button/link      css = [value="Save and return to competition"]
+
+Request a project id of post award service application
+     ${postAwardServiceProjectID} =      get project id by name               ${projectSetupPostAwardCompetitionName}
+     Set suite variable                  ${postAwardServiceProjectID}
