@@ -43,7 +43,7 @@ public class FormInputResponseBuilder extends BaseBuilder<FormInputResponse, For
         return withList(owningFormInputs, (formInput, formInputResponse) -> formInputResponse.setFormInput(formInput));
     }
 
-    public FormInputResponseBuilder withFileEntry(FileEntry fileEntry) {
+    public FormInputResponseBuilder withFileEntry(List<FileEntry> fileEntry) {
         return with(response -> response.setFileEntries(fileEntry));
     }
 

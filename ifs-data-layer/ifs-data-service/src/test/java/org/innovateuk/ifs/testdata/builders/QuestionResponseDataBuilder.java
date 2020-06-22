@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -89,10 +90,10 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                             ProcessRole processRoleEntity = processRoleRepository.findById(processRole.getId()).orElse(null);
                             Application application = applicationRepository.findById(data.getApplication().getId()).orElse(null);
                             FormInput formInputEntity = formInputRepository.findById(input.getId()).orElse(null);
-                            return new FormInputResponse(ZonedDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
+                            return new FormInputResponse(ZonedDateTime.now(), singletonList(fileEntry), processRoleEntity, formInputEntity, application);
                         });
 
-                        formInputResponse.setFileEntries(fileEntry);
+                        formInputResponse.setFileEntries(singletonList(fileEntry));
                         formInputResponse.setUpdateDate(ZonedDateTime.now());
                         formInputResponseRepository.save(formInputResponse);
                     });
