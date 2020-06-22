@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to another page',linkUrl=@{/}"/>
+              th:with="linkTitle='Manage invitations to external users',linkUrl=@{/project/{projectId}/grants/invite(projectId=${model.projectId})}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
