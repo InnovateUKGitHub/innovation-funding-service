@@ -25,7 +25,9 @@
 
         <p class="govuk-body">You can invite people to create a new external user account, so they can be added to this live project.</p>
 
-        <a class="govuk-link" th:href="@{/project/{projectId}/grants/invite/send(projectId=${model.projectId})}">Invite a new external user</a>
+        <p class="govuk-body">
+            <a class="govuk-link" th:href="@{/project/{projectId}/grants/invite/send(projectId=${model.projectId})}">Invite a new external user</a>
+        </p>
 
         <p class="govuk-body"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.totalGrants}">9 </span>Pending invitations</p>
 

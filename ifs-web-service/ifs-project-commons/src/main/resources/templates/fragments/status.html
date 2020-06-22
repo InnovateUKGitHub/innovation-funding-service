@@ -52,7 +52,7 @@
                             <a th:unless="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
                             class="govuk-link">View activity log</a>
                         </small>
-                        <div th:if="${model.isProjectFinanceUser()}" class="govuk-grid-row govuk-!-padding-right-0">
+                        <div th:if="${model.isProjectFinanceUser() && row.grantOfferLetterComplete}" class="govuk-grid-row govuk-!-padding-right-0">
                             <div class="govuk-grid-column-full">
                                 <a th:href="@{~/project-setup-management/project/{projectId}/grants/invite(projectId=${row.projectId})}"
                                     class="govuk-link">Manage invitations to external users</a>
