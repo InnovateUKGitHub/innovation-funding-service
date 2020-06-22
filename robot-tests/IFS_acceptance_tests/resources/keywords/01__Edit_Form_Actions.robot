@@ -154,3 +154,8 @@ Remove previous rows
     \  Exit For Loop If  '${status}'=='FAIL'
     \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
     \  ${i} =  Set Variable  ${i + 1}
+
+The user clears text in the text field
+    [Arguments]    ${TEXT_FIELD}
+    Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
+    Clear Element Text    ${TEXT_FIELD}
