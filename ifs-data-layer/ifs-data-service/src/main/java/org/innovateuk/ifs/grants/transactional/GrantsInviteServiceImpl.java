@@ -25,6 +25,8 @@ import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
@@ -90,6 +92,9 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ActivityLogService activityLogService;
+
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
 
     @Autowired
     private UserService userService;
@@ -224,11 +229,10 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     public ServiceResult<Void> acceptInvite(long inviteId) {
         return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
                 .andOnSuccess(invite -> {
-                    Project project = invite.getProject();
-                    projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), invite.getOrganisation()));
+                    saveUserToProject(invite);
                     invite.open();
                     Role roleToAdd = getRole(invite.getClass());
-                    if (invite.getUser().hasRole(roleToAdd)) {
+                    if (!invite.getUser().hasRole(roleToAdd)) {
                         invite.getUser().addRole(roleToAdd);
                     }
                     if (!invite.getUser().hasRole(LIVE_PROJECTS_USER)) {
@@ -237,6 +241,17 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                     userService.evictUserCache(invite.getUser().getUid());
                     return serviceSuccess();
                 });
+    }
+
+    private void saveUserToProject(GrantsInvite invite) {
+        Project project = invite.getProject();
+        if (GrantsMonitoringOfficerInvite.class.equals(invite.getClass())) {
+            monitoringOfficerRepository.save(new MonitoringOfficer(invite.getUser(), project, ProjectParticipantRole.GRANTS_MONITORING_OFFICER));
+        } else {
+            projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), invite.getOrganisation()));
+        }
+
+
     }
 
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {
