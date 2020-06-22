@@ -156,8 +156,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                 competition.setCollaborationLevel(collaborationLevel), collaborationLevels);
     }
 
-    public CompetitionBuilder withCompetitionAssessmentConfig(CompetitionAssessmentConfig... competitionAssessmentConfigs) {
-        return withArray((competitionAssessmentConfig, competition) -> competition.setCompetitionAssessmentConfig(competitionAssessmentConfig), competitionAssessmentConfigs);
+    public CompetitionBuilder withCompetitionAssessmentConfig(CompetitionAssessmentConfig... competitionAssessmentConfig) {
+        return withArraySetFieldByReflection("competitionAssessmentConfig", competitionAssessmentConfig);
+    }
+
+    public CompetitionBuilder withCompetitionOrganisationConfig(CompetitionOrganisationConfig... competitionOrganisationConfig) {
+        return withArraySetFieldByReflection("competitionOrganisationConfig", competitionOrganisationConfig);
     }
 
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {

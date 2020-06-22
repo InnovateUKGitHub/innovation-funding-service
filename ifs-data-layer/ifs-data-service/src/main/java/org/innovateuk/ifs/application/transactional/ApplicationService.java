@@ -95,4 +95,7 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId);
+
+    @NotSecured(value = "Only called by other secured services")
+    ServiceResult<Void> linkAddressesToOrganisation(long organisationId, long applicationId);
 }

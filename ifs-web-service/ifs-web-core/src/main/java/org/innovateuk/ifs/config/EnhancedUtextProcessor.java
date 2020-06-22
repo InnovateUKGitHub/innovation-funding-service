@@ -29,7 +29,7 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
     public static final Whitelist WHITELIST = Whitelist.none()
             // Tags and attributes should be in alphabetical order for ease of lookup
             .addTags(
-                    "a", "caption", "h1", "h2", "h3", "div", "em", "li", "ol", "p", "span",
+                    "a", "br", "caption", "h1", "h2", "h3", "div", "em", "li", "ol", "p", "span",
                     "strong", "table", "tbody", "tfoot", "thead", "td", "th", "tr", "ul"
             )
             .addAttributes("a", "href", "target", "title")

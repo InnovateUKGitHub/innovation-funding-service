@@ -36,5 +36,4 @@ public interface GrantsInviteService {
             description = "The System Registration user can accept an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Void> acceptInvite(long inviteId);
-
 }

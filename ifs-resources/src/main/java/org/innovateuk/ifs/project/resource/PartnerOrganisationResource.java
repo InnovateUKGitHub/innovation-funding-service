@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.resource;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+
 public class PartnerOrganisationResource {
     private Long id;
 
@@ -14,6 +16,8 @@ public class PartnerOrganisationResource {
     private String postcode;
 
     private String internationalLocation;
+
+    private AddressResource internationalAddress;
 
     public Long getId() {
         return id;
@@ -69,5 +73,13 @@ public class PartnerOrganisationResource {
 
     public void setInternationalLocation(String internationalLocation) {
         this.internationalLocation = internationalLocation;
+    }
+
+    public AddressResource getInternationalAddress() {
+        return internationalAddress;
+    }
+
+    public void setInternationalAddress(AddressResource internationalAddress) {
+        this.internationalAddress = internationalAddress;
     }
 }

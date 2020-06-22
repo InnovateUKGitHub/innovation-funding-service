@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigReso
 import org.junit.Test;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.competition.builder.CompetitionOrganisationConfigResourceBuilder.newCompetitionOrganisationConfigResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -25,5 +26,21 @@ public class CompetitionOrganisationConfigRestServiceImplTest extends BaseRestSe
         CompetitionOrganisationConfigResource responses = service.findByCompetitionId(123).getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void updateOrganisationalEligibility() {
+        long competitionId = 100L;
+        CompetitionOrganisationConfigResource resource = newCompetitionOrganisationConfigResource()
+                .build();
+        CompetitionOrganisationConfigResource expected = newCompetitionOrganisationConfigResource()
+                .withInternationalOrganisationsAllowed(true)
+                .withInternationalLeadOrganisationAllowed(true)
+                .build();
+
+        setupPutWithRestResultExpectations(COMPETITION_ORGANISATION_CONFIG_BASE_URL + "/update/" + competitionId, CompetitionOrganisationConfigResource.class, resource, expected);
+
+        CompetitionOrganisationConfigResource actual = service.update(competitionId, resource).getSuccess();
+        assertEquals(expected, actual);
     }
 }
