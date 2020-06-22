@@ -232,7 +232,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         List<FormInputResponseResource> applicantResponses = newFormInputResponseResource()
                 .withFormInputs(potentialMarketFileEntryFormInput.getId())
-                .withFileEntry(1L)
+                .withFileEntries(singletonList(1L))
                 .withQuestion(questionPotentialMarket.getId())
                 .withFileName("Project-plan.pdf")
                 .withFilesizeBytes(112640L)
