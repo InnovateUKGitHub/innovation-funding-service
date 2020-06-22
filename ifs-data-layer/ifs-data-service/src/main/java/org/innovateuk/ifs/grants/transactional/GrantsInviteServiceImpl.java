@@ -29,6 +29,7 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -89,6 +90,9 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ActivityLogService activityLogService;
+
+    @Autowired
+    private UserService userService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -230,6 +234,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
                     if (!invite.getUser().hasRole(LIVE_PROJECTS_USER)) {
                         invite.getUser().addRole(LIVE_PROJECTS_USER);
                     }
+                    userService.evictUserCache(invite.getUser().getUid());
                     return serviceSuccess();
                 });
     }
