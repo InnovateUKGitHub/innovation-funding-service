@@ -216,7 +216,6 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "applicationId", "1234",
-                "competitionName", "Competition 1",
                 "projectName", "Project 1",
                 "projectStartDate", "12 June 2020",
                 "projectSetupUrl", "https://ifs.local-dev/project-setup/project/1234"

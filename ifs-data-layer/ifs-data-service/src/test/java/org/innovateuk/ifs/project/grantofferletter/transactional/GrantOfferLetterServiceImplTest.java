@@ -839,7 +839,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         );
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", "Competition 1",
                 "applicationId", project.getApplication().getId(),
                 "projectName", project.getName(),
                 "projectStartDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
@@ -912,7 +911,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", "Competition 1",
                 "applicationId", project.getApplication().getId(),
                 "projectName", project.getName(),
                 "projectStartDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
