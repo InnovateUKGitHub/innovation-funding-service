@@ -20,6 +20,7 @@ import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGener
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     private FinanceChecksGenerator financeChecksGenerator;
 
     @Override
+    @Transactional
     public BigDecimal getResearchParticipationPercentageFromProject(long projectId){
         List<ProjectFinanceResource> applicationFinanceResources = this.getFinanceChecksTotals(projectId);
 
@@ -83,6 +85,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     }
 
     @Override
+    @Transactional
     public ServiceResult<ProjectFinanceResource> getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId) {
         return getProjectFinanceForOrganisation(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId()).
                 andOnSuccessReturn(
@@ -106,6 +109,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     }
 
     @Override
+    @Transactional
     public List<ProjectFinanceResource> getFinanceChecksTotals(long projectId) {
         return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccessReturn(project -> {
             List<ProjectFinanceResource> financeResources = new ArrayList<>();
