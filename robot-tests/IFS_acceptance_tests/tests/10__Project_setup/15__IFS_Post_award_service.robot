@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation     IFS-6454  Ability to push projects through to ACC
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -19,15 +20,20 @@ ${grantFundProjectSetupDashboard}              ${server}/project-setup-managemen
 ${projectSetupNonPostAwardCompetitionName}     Project setup loan comp
 ${projectSetupNonPostAwardCompetitionId}       ${competition_ids["${projectSetupNonPostAwardCompetitionName}"]}
 ${NonPostAwardProjectSetupDashboard}           ${server}/project-setup-management/competition/${projectSetupNonPostAwardCompetitionId}/status/all
+${projectSetupConnectCompetitionName}          Project setup loan comp
+${projectSetupConnectCompetitionId}            ${competition_ids["${projectSetupNonPostAwardCompetitionName}"]}
+${connectCompetitionProjectSetupDashboard}     ${server}/project-setup-management/competition/${projectSetupNonPostAwardCompetitionId}/status/all
 ${viewAndUpdateCompetitionDetailsLink}         View and update competition details
 
 *** Test Cases ***
 Competition Setup - Post award service link should not display for any other funding type except grant funding
+     [Documentation]   IFS-6454
      Given the user clicks create a competition button
      When the user fills in the CS Initial details         ${nonPostAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  KTP
      Then the user should not see the element              link = ${postAwardServiceLink}
 
 Competition Setup - Ifs admin can access post award service form details for grant funding type competition
+     [Documentation]   IFS-6454
      Given the user clicks create a competition button
      When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
      And the user clicks the button/link                     link = ${postAwardServiceLink}
@@ -35,23 +41,27 @@ Competition Setup - Ifs admin can access post award service form details for gra
      And the user sees that the radio button is selected     postAwardService    CONNECT
 
 Competition Setup - Ifs admin can save the post award service selection
+     [Documentation]   IFS-6454
      When the user selects the radio button      postAwardService  IFS_POST_AWARD
      And the user clicks the button/link         css = [value="Save and return to competition"]
      Then the user check for selected value      IFS_POST_AWARD
 
 Competition Setup - comp admin should not see the post award service link for any fundtype
+     [Documentation]   IFS-6454
      Given log in as a different user             &{Comp_admin1_credentials}
      And the user navigates to the page           ${CA_UpcomingComp}
      When the user clicks the button/link         link = ${postAwardServiceCompetitionName}
      Then the user should not see the element     link = ${postAwardServiceLink}
 
 Competition Setup - Finance manager should not see the post award service link for any fund type
+     [Documentation]   IFS-6454
      Given log in as a different user             &{internal_finance_credentials}
      And the user navigates to the page           ${CA_UpcomingComp}
      When the user clicks the button/link         link = ${postAwardServiceCompetitionName}
      Then the user should not see the element     link = ${postAwardServiceLink}
 
 Project Setup - IFS admin can edit the post award service options
+     [Documentation]   IFS-6454
      Given log in as a different user                           &{ifs_admin_user_credentials}
      And the user navigates to the page                         ${grantFundProjectSetupDashboard}
      When the user clicks the button/link                       link = ${viewAndUpdateCompetitionDetailsLink}
@@ -59,16 +69,19 @@ Project Setup - IFS admin can edit the post award service options
      Then the user check for selected value                     IFS_POST_AWARD
 
 Project Setup - view and update competition details link should not display for comp admin
+     [Documentation]   IFS-6454
      Given log in as a different user             &{Comp_admin1_credentials}
      When the user navigates to the page          ${grantFundProjectSetupDashboard}
      Then the user should not see the element     link = ${viewAndUpdateCompetitionDetailsLink}
 
 Project Setup - view and update competition details link should not display for finance manager
+     [Documentation]   IFS-6454
      Given log in as a different user             &{internal_finance_credentials}
      When the user navigates to the page          ${grantFundProjectSetupDashboard}
      Then the user should not see the element     link = ${viewAndUpdateCompetitionDetailsLink}
 
 Project Setup - Post award service link should not display for any other fund type except grant fund
+     [Documentation]   IFS-6454
      Given log in as a different user             &{ifs_admin_user_credentials}
      And the user navigates to the page           ${NonPostAwardProjectSetupDashboard}
      When the user clicks the button/link         link = ${viewAndUpdateCompetitionDetailsLink}

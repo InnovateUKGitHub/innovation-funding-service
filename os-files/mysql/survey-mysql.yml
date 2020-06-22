@@ -18,6 +18,8 @@ items:
         labels:
           deploymentconfig: survey-mysql
       spec:
+        imagePullSecrets:
+          - name: imagePullSecretsName
         containers:
         - env:
           - name: MYSQL_DATABASE
