@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.fundingdecision.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
@@ -25,7 +23,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/applicationfunding")
 public class ApplicationFundingDecisionController {
-    private static final Log LOG = LogFactory.getLog(ApplicationFundingDecisionController.class);
 
     @Autowired
     private ApplicationFundingService applicationFundingService;
@@ -41,14 +38,12 @@ public class ApplicationFundingDecisionController {
 
     @PostMapping(value="/send-notifications")
     public RestResult<Void> sendFundingDecisions(@RequestBody FundingNotificationResource fundingNotificationResource) {
-        LOG.error("Start send");
         if (isReleaseFeedbackCompletionStage(fundingNotificationResource.getFundingDecisions())) {
             return applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource)
                     .toPostResponse();
         } else {
             return projectService.createProjectsFromFundingDecisions(fundingNotificationResource.getFundingDecisions())
                     .andOnSuccess(() -> applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource))
-                    .andOnSuccessReturnVoid(() -> LOG.error("end send"))
                     .toPostResponse();
         }
     }

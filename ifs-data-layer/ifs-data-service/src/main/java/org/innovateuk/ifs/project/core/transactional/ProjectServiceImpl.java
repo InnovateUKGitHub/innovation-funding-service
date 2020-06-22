@@ -222,7 +222,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(long applicationId) {
-        LOG.error("createProjectFromApplicationId start");
         return getApplication(applicationId).andOnSuccess(application -> {
             if (application.getCompetition().isNonFinanceType()) {
                 return serviceFailure(CANNOT_CREATE_PROJECT_IF_COMP_HAS_NO_FINANCES);
@@ -263,10 +262,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             return saveProjectResult.
                     andOnSuccess(newProject -> createProcessEntriesForNewProject(newProject).
                             andOnSuccess(() -> setCompetitionProjectSetupStartedDate(newProject)).
-                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject))).andOnSuccessReturn(p -> {
-                LOG.error("createProjectFromApplicationId end");
-                return p;
-            });
+                            andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
     }
 
