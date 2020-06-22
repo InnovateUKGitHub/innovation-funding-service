@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
@@ -10,6 +9,8 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -39,16 +40,11 @@ public class FormInputResponse {
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
-    @ZeroDowntime(reference = "IFS-7309", description = "TODO")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
-    private FileEntry fileEntry;
-
     @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name = "form_input_response_file_entry",
             joinColumns = @JoinColumn(name = "form_input_response_id"),
             inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
-    private List<FileEntry> formInputResponseFileEntry;
+    private List<FileEntry> fileEntries;
 
     public FormInputResponse() {
         // no-arg constructor
@@ -62,10 +58,9 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public FormInputResponse(ZonedDateTime updateDate, FileEntry fileEntry, List<FileEntry> formInputResponseFileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponse(ZonedDateTime updateDate, List<FileEntry> formInputResponseFileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
-        this.fileEntry = fileEntry;
-        this.formInputResponseFileEntry = formInputResponseFileEntry;
+        this.fileEntries = formInputResponseFileEntry;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
@@ -133,14 +128,6 @@ public class FormInputResponse {
         this.updatedBy = updatedBy;
     }
 
-    public FileEntry getFileEntry() {
-        return fileEntry;
-    }
-
-    public void setFileEntry(FileEntry fileEntry) {
-        this.fileEntry = fileEntry;
-    }
-
     @JsonIgnore
     public Application getApplication() {
         return application;
@@ -150,11 +137,19 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public List<FileEntry> getFormInputResponseFileEntry() {
-        return formInputResponseFileEntry;
+    public List<FileEntry> getFileEntries() {
+        return fileEntries;
     }
 
-    public void setFormInputResponseFileEntry(List<FileEntry> formInputResponseFileEntry) {
-        this.formInputResponseFileEntry = formInputResponseFileEntry;
+    public void setFileEntries(List<FileEntry> fileEntries) {
+        this.fileEntries = fileEntries;
+    }
+
+    public void addFileEntry(FileEntry fileEntry) {
+        if (this.fileEntries != null) {
+            this.fileEntries.add(fileEntry);
+        } else {
+            this.fileEntries = singletonList(fileEntry);
+        }
     }
 }

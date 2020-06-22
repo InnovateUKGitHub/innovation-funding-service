@@ -259,7 +259,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         assertTrue(result.isSuccess());
         FormInputResponseFileEntryResource resultParts = result.getSuccess();
         assertEquals(Long.valueOf(999), resultParts.getFileEntryResource().getId());
-        assertEquals(newFileEntry, existingFormInputResponse.getFileEntry());
+        assertEquals(newFileEntry, existingFormInputResponse.getFileEntries());
     }
 
     @Test
@@ -419,7 +419,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(unlinkedFormInputFileEntry, result.getSuccess());
-        assertNull(existingFormInputResponse.getFileEntry());
+        assertNull(existingFormInputResponse.getFileEntries());
         verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndFormInputId(456L, 123L);
         verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
     }

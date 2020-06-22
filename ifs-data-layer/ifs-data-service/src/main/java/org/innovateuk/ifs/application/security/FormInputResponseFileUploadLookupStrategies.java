@@ -49,11 +49,11 @@ public class FormInputResponseFileUploadLookupStrategies {
             }
         }
 
-        if (formInputResponse == null || formInputResponse.getFileEntry() == null || formInputResponse.getFormInputResponseFileEntry().isEmpty())  {
+        if (formInputResponse == null || formInputResponse.getFileEntries().isEmpty())  {
             return null;
         }
 
-        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(formInputResponse.getFileEntry());
+        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(formInputResponse.getFileEntries().get(0));
         return new FormInputResponseFileEntryResource(fileEntryResource, id);
     }
 }

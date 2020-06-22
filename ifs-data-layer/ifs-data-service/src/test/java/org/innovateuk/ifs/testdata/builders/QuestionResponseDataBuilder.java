@@ -92,7 +92,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                             return new FormInputResponse(ZonedDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
                         });
 
-                        formInputResponse.setFileEntry(fileEntry);
+                        formInputResponse.setFileEntries(fileEntry);
                         formInputResponse.setUpdateDate(ZonedDateTime.now());
                         formInputResponseRepository.save(formInputResponse);
                     });

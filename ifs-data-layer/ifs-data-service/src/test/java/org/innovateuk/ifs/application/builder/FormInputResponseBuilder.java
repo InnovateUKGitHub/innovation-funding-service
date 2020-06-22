@@ -44,7 +44,7 @@ public class FormInputResponseBuilder extends BaseBuilder<FormInputResponse, For
     }
 
     public FormInputResponseBuilder withFileEntry(FileEntry fileEntry) {
-        return with(response -> response.setFileEntry(fileEntry));
+        return with(response -> response.setFileEntries(fileEntry));
     }
 
     public FormInputResponseBuilder withUpdatedBy(ProcessRole updatedBy) {
