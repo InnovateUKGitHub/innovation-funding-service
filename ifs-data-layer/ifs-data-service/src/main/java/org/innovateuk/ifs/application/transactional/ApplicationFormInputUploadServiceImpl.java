@@ -207,7 +207,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                         fileService.getFileByFileEntryId(formInputResponse.getFileEntries().get(0).getId()).
                             andOnSuccessReturn(inputStreamSupplier -> {
                                 FormInputResponseFileEntryResource formInputResponseFileEntry =
-                                        formInputResponseFileEntryResource(formInputResponse.getFileEntries().get(0), fileEntry);
+                                        formInputResponseFileEntryResource(formInputResponse.getFileEntries(), fileEntry);
                                 return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
                             })
                     ));
@@ -232,7 +232,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                                                                                     FormInput formInput) {
         return getAppropriateFormInputResponse(fileEntry, formInput)
                 .andOnSuccess(formInputResponse -> serviceSuccess(
-                        formInputResponseFileEntryResource(formInputResponse.getFileEntries().get(0), fileEntry))
+                        formInputResponseFileEntryResource(formInputResponse.getFileEntries(), fileEntry))
                 );
     }
 
@@ -246,9 +246,9 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         }
     }
 
-    private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry,
+    private FormInputResponseFileEntryResource formInputResponseFileEntryResource(List<FileEntry> fileEntry,
                                                                                   FormInputResponseFileEntryId fileEntryId) {
-        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(fileEntry);
+        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(fileEntry.get(0));
         return new FormInputResponseFileEntryResource(fileEntryResource,
                 fileEntryId.getFormInputId(),
                 fileEntryId.getApplicationId(),
