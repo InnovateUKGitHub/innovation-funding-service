@@ -82,7 +82,7 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
                 .andExpect(model().attributeHasFieldErrorCode("form", "firstName", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "lastName", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("form", "email", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("form", "organisationId", "validation.grants.invite.organisation.required"));
+                .andExpect(model().attributeHasFieldErrorCode("form", "organisationId", "FieldRequiredIf"));
     }
 
     @Test
