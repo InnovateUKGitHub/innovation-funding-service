@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.grants.populator;
 
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
+import org.innovateuk.ifs.grantsinvite.builder.SentGrantsInviteResourceBuilder;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.grants.viewmodel.ManageInvitationsViewModel;
@@ -13,9 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.grantsinvite.builder.SentGrantsInviteResourceBuilder.newSentGrantsInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +48,9 @@ public class ManageInvitationsModelPopulatorTest {
 
         when(projectService.getById(projectId)).thenReturn(project);
 
-        List<SentGrantsInviteResource> grants = new ArrayList<>();
+        List<SentGrantsInviteResource> grants = newSentGrantsInviteResource()
+                .withStatus(InviteStatus.SENT, InviteStatus.CREATED, InviteStatus.SENT, InviteStatus.OPENED)
+                .build(4);
         when(grantsInviteRestService.getAllForProject(projectId)).thenReturn(restSuccess(grants));
 
         // when
@@ -56,8 +62,7 @@ public class ManageInvitationsModelPopulatorTest {
         assertEquals(projectId, result.getProjectId());
         assertEquals("projName", result.getProjectName());
         assertEquals(6L, result.getApplicationId());
-        assertEquals(grants, result.getGrants());
-
-
+        assertEquals(Arrays.asList(grants.get(0), grants.get(2)), result.getGrants());
     }
+
 }
