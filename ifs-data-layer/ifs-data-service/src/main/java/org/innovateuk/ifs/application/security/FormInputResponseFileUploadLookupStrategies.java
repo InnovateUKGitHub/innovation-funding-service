@@ -49,7 +49,7 @@ public class FormInputResponseFileUploadLookupStrategies {
             }
         }
 
-        if (formInputResponse == null || formInputResponse.getFileEntry() == null) {
+        if (formInputResponse == null || formInputResponse.getFileEntry() == null || formInputResponse.getFormInputResponseFileEntry().isEmpty())  {
             return null;
         }
 

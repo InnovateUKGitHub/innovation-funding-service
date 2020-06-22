@@ -44,11 +44,6 @@ public class FormInputResponse {
     @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
     private FileEntry fileEntry;
 
-//    @ElementCollection
-//    @CollectionTable(name = "form_input_file_entry", joinColumns = {@JoinColumn(name="file_entry_id")})
-//    @Column(name = "form_input_response_id")
-//    private Set<Long> fileEntryIds = new LinkedHashSet<>();
-
     @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name = "form_input_response_file_entry",
             joinColumns = @JoinColumn(name = "form_input_response_id"),
@@ -67,9 +62,10 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public FormInputResponse(ZonedDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponse(ZonedDateTime updateDate, FileEntry fileEntry, List<FileEntry> formInputResponseFileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
         this.fileEntry = fileEntry;
+        this.formInputResponseFileEntry = formInputResponseFileEntry;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
