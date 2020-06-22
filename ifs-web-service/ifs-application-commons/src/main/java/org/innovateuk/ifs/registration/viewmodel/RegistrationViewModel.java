@@ -2,7 +2,7 @@ package org.innovateuk.ifs.registration.viewmodel;
 
 public class RegistrationViewModel {
 
-    private static final String DEFAULT_PHONE_GUIDANCE = "We may use this number to contact you about the application.";
+    private static final String DEFAULT_PHONE_GUIDANCE = "We may use this to contact you about the application.";
     private final boolean invitee;
     private final String role;
     private final String project;

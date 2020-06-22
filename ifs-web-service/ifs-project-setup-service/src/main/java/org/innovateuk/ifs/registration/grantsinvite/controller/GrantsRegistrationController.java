@@ -68,15 +68,18 @@ public class GrantsRegistrationController {
 
     @PostMapping
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
-                                     @PathVariable long projectId,
                                      BindingResult bindingResult,
+                                     @PathVariable long projectId,
                                      HttpServletRequest request,
                                      Model model,
                                      UserResource loggedInUser) {
         String hash = cookieUtil.getCookieValue(request, AcceptGrantsInviteController.INVITE_HASH);
         return grantsInviteRestService.getInviteByHash(projectId, hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
-            model.addAttribute("invitee", true);
+            model.addAttribute("model", new RegistrationViewModel(true,
+                    invite.getGrantsInviteRole().getDisplayName(),
+                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
+                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
 
             if (bindingResult.hasErrors()) {
                 model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
