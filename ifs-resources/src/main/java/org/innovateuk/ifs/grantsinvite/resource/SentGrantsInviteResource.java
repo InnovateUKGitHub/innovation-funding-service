@@ -73,4 +73,8 @@ public class SentGrantsInviteResource extends GrantsInviteResource {
     public void setSentOn(ZonedDateTime sentOn) {
         this.sentOn = sentOn;
     }
+
+    public boolean userExists() {
+        return user != null;
+    }
 }

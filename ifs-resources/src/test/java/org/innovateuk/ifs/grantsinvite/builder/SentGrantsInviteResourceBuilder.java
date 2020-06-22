@@ -3,6 +3,7 @@ package org.innovateuk.ifs.grantsinvite.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -33,12 +34,16 @@ public class SentGrantsInviteResourceBuilder extends BaseBuilder<SentGrantsInvit
         return withArraySetFieldByReflection("userName", userName);
     }
 
-    public SentGrantsInviteResourceBuilder withEamil(String... email) {
+    public SentGrantsInviteResourceBuilder withEmail(String... email) {
         return withArraySetFieldByReflection("email", email);
     }
-
 
     public SentGrantsInviteResourceBuilder withGrantsInviteRole(GrantsInviteRole... grantsInviteRole) {
         return withArraySetFieldByReflection("grantsInviteRole", grantsInviteRole);
     }
+
+    public SentGrantsInviteResourceBuilder withStatus(InviteStatus... status) {
+        return withArraySetFieldByReflection("status", status);
+    }
+
 }

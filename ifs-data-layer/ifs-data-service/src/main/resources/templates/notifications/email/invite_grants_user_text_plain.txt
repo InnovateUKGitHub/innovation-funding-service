@@ -2,7 +2,8 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name}
 
-You have been invited to participate in this Innovation Funding Service project: ${applicationId}: ${projectName}
+You have been invited to participate in this Innovation Funding Service project:
+${applicationId}: ${projectName}
 
 You will be joining as a ${role}.
 
@@ -10,5 +11,5 @@ Accept invite here: ${inviteUrl}
 
 Yours sincerely
 
-IFS Team
+<@layout.senderPlainText />
 </@layout.defaultPlainText>

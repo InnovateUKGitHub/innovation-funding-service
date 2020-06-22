@@ -1,24 +1,26 @@
 package org.innovateuk.ifs.project.grants.form;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 
 import javax.validation.constraints.*;
 
+@FieldRequiredIf(required = "organisationId", argument = "financeContact", predicate = true, message = "{validation.grants.invite.organisation.required}")
 public class GrantsSendInviteForm {
 
-    @NotBlank(message = "{validation.standard.firstname.required}")
+    @NotBlank(message = "{validation.grants.invite.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}"),
+            @Size(min=2, message="{validation.grants.invite.firstname.min}"),
             @Size(max=70, message="{validation.standard.firstname.length.max}"),
     })
     private String firstName;
 
-    @NotBlank(message = "{validation.standard.lastname.required}")
+    @NotBlank(message = "{validation.grants.invite.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}"),
+            @Size(min=2, message="{validation.grants.invite.lastname.min}"),
             @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
@@ -30,6 +32,8 @@ public class GrantsSendInviteForm {
 
     @NotNull(message = "{validation.grants.invite.role.required}")
     private GrantsInviteRole role;
+
+    private Long organisationId;
 
     public String getFirstName() {
         return firstName;
@@ -61,5 +65,17 @@ public class GrantsSendInviteForm {
 
     public void setRole(GrantsInviteRole role) {
         this.role = role;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
+
+    public boolean isFinanceContact() {
+        return role == GrantsInviteRole.GRANTS_PROJECT_FINANCE_CONTACT;
     }
 }

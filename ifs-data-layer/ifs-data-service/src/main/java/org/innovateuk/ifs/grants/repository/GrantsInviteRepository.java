@@ -8,4 +8,6 @@ import java.util.List;
 public interface GrantsInviteRepository extends InviteRepository<GrantsInvite> {
 
     List<GrantsInvite> findByProjectId(long projectId);
+
+    boolean existsByProjectIdAndEmail(long projectId, String email);
 }

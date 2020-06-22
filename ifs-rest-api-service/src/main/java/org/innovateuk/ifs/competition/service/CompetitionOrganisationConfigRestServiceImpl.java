@@ -8,8 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionOrganisationConfigRestServiceImpl extends BaseRestService implements CompetitionOrganisationConfigRestService {
 
+    private String competitionOrganisationConfigUrl = "/competition-organisation-config";
+
     @Override
     public RestResult<CompetitionOrganisationConfigResource> findByCompetitionId(long competitionId) {
-        return getWithRestResultAnonymous("/competition-organisation-config/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class);
+        return getWithRestResultAnonymous(competitionOrganisationConfigUrl + "/find-by-competition-id/" + competitionId, CompetitionOrganisationConfigResource.class);
+    }
+
+    @Override
+    public RestResult<CompetitionOrganisationConfigResource> update(long competitionId, CompetitionOrganisationConfigResource competitionOrganisationConfigResource) {
+        return putWithRestResult(competitionOrganisationConfigUrl + "/update/" + competitionId, competitionOrganisationConfigResource, CompetitionOrganisationConfigResource.class);
     }
 }
