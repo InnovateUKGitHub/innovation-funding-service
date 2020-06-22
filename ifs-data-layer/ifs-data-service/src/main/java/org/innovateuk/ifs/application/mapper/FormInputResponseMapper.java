@@ -27,8 +27,6 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
     @Mappings({
             @Mapping(source = "formInput.question", target = "question"),
             @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount"),
-            @Mapping(source = "fileEntry.name", target = "filename"),
-            @Mapping(source = "fileEntry.filesizeBytes", target = "filesizeBytes"),
             @Mapping(source = "updatedBy.user.id", target = "updatedByUser"),
             @Mapping(source = "updatedBy.user.name", target = "updatedByUserName")
     })
@@ -40,5 +38,19 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
             return null;
         }
         return object.getId();
+    }
+
+    public String mapFileEntriesNameToFilename(FormInputResponse object) {
+        if (object.getFileEntries().isEmpty()) {
+            return null;
+        }
+        return object.getFileEntries().get(0).getName();
+    }
+
+    public Long mapFileEntriesFilesizeBytesToFilesizeBytes(FormInputResponse object) {
+        if (object.getFileEntries().isEmpty()) {
+            return null;
+        }
+        return object.getFileEntries().get(0).getFilesizeBytes();
     }
 }

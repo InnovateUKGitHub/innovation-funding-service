@@ -58,9 +58,9 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public FormInputResponse(ZonedDateTime updateDate, List<FileEntry> formInputResponseFileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponse(ZonedDateTime updateDate, List<FileEntry> fileEntries, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
-        this.fileEntries = formInputResponseFileEntry;
+        this.fileEntries = fileEntries;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
