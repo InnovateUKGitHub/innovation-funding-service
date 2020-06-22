@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.internal;
 
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.util.Set;
@@ -56,5 +58,10 @@ public class InternalProjectSetupRow {
 
     public Set<InternalProjectSetupCell> getStates() {
         return states;
+    }
+
+    public boolean isGrantOfferLetterComplete() {
+        return states.stream().anyMatch(cell -> ProjectSetupStage.GRANT_OFFER_LETTER == cell.getStage()
+                        && ProjectActivityStates.COMPLETE == cell.getState());
     }
 }
