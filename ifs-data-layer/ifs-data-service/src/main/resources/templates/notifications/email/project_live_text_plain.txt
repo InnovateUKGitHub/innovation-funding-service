@@ -2,11 +2,13 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-We have accepted your signed grant offer letter for your project:${projectName}
+We have accepted your signed grant offer letter for your project:
+${projectName}
 
 You can start your project on ${projectStartDate}.
 
-You can also review the status of your project when you sign into the (${projectSetupUrl}).
+You can also review the status of your project when you sign into the
+(${projectSetupUrl}).
 
 Please contact us if you have questions.
 
