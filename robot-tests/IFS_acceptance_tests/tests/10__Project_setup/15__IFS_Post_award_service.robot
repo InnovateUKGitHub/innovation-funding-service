@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation     IFS-6454  Ability to push projects through to ACC
 ...
+...               IFS- 7017  Update notifications & IFS when a project is live to point them to ACC instead of _Connect
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -32,7 +34,6 @@ ${otherTeamMemberLeadOrganisation}             megan.rowland@gmail.com
 ${financeContactPartnerOrganisation}           jake.reddy@gmail.com
 ${financeContactOtherPartnerOrganisation}      eve.smith@gmail.com
 ${projectLiveMessage}                          The project is now live.
-${reviewProgressMessage}                       The project is now live and you can
 ${grnatServiceUrl}                             https://grants.innovateuk.org
 ${postAwardServiceUrl}                         ${server}/live-projects-landing-page
 
@@ -114,27 +115,27 @@ Applicant - Project manager should see message project is live with review its p
      Given log in as a different user         ${projectManagerEmailLeadOrganisation}     ${short_password}
      When the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
-     And the user should see the element      partial link = review its progress.
+     And the user should see the element      link = ${reviewProgressLink}
 
 Applicant - Finance contact of lead organisation should see message project is live with review its progress link on GOL approval
      [Documentation]  IFS-7017
      Given log in as a different user         ${financeContactEmailLeadOrganisation}     ${short_password}
      when the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
-     And the user should see the element      partial link = review its progress.
+     And the user should see the element      link = ${reviewProgressLink}
 
 Applicant - Finance contact of partner organisation should see message project is live with review its progress link on GOL approval
      [Documentation]  IFS-7017
      Given log in as a different user         ${financeContactPartnerOrganisation}       ${short_password}
      When the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
-     And the user should see the element      partial link = review its progress.
+     And the user should see the element      link = ${reviewProgressLink}
 
 Applicant - User should be redirected to IFS post award service on click review its progress for post award service applications
      [Documentation]  IFS-7017
      Given log in as a different user                       ${projectManagerEmailLeadOrganisation}     ${short_password}
      When the user navigates to the page                    ${server}/project-setup/project/${postAwardServiceProjectID}
-     And the user clicks the button/link                    partial link = review its progress
+     And the user clicks the button/link                    link = ${reviewProgressLink}
      Then Url should contain live projects landing page
 
 Applicant - User should be redirected to grant application service on click review its progress for connect applications
@@ -147,9 +148,9 @@ Applicant - User should be redirected to grant application service on click revi
 
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017
-     Given the user navigates to the page                    ${server}/dashboard-selection
-     And log in as a different user                          ${projectManagerEmailLeadOrganisation}     ${short_password}
-     And the user clicks live project tile in dashboard      id = dashboard-link-LIVE_PROJECTS_USER
+     Given the user navigates to the page                        ${server}/dashboard-selection
+     And log in as a different user                              ${projectManagerEmailLeadOrganisation}     ${short_password}
+     And the user clicks the live project tile in dashboard      id = dashboard-link-LIVE_PROJECTS_USER
      Then Url should contain live projects landing page
 
 
@@ -202,7 +203,7 @@ Requesting application ID of post award service application
 the user should check for message and link
      [Arguments]    ${url}  ${message}
      the user should see the element     jQuery = p:contains("${message}")
-     the user should see the element     link = review its progress
+     the user should see the element     link = ${reviewProgressLink}
 
 Url should contain live projects landing page
     ${Url} =   Get Location
@@ -212,16 +213,16 @@ applicant clicks review its progress link
     [Arguments]  ${projectID}
     log in as a different user          ${projectManagerEmailLeadOrganisation}     ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${projectID}
-    the user clicks the button/link     partial link = review its progress
+    the user clicks the button/link     link = ${reviewProgressLink}
 
 project manager and finance contact should receive an email notification
     Requesting application ID of post award service application
-    the user reads his email     ${projectManagerEmailLeadOrganisation}      Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
-    the user reads his email     ${financeContactEmailLeadOrganisation}      Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
-    the user reads his email     ${financeContactPartnerOrganisation}        Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
-    the user reads his email     ${financeContactOtherPartnerOrganisation}   Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${projectManagerEmailLeadOrganisation}      Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${financeContactEmailLeadOrganisation}      Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${financeContactPartnerOrganisation}        Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${financeContactOtherPartnerOrganisation}   Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
 
-the user clicks live project tile in dashboard
+the user clicks the live project tile in dashboard
     [Arguments]   ${locator}
     :FOR    ${i}    IN RANGE  10
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element     ${locator}
