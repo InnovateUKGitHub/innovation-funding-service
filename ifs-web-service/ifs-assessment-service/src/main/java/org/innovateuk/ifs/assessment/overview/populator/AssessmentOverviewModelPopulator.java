@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -139,7 +140,9 @@ public class AssessmentOverviewModelPopulator {
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return applicantResponses.stream()
                 .filter(formInputResponseResource -> formInputResponseResource.getFileEntryResources() != null)
-                .map(formInputResponseResource -> getAppendix(formInputResponseResource, questionsMap))
+                .flatMap(formInputResponseResource -> formInputResponseResource.getFileEntryResources().stream()
+                    .map(file -> getAppendix(file, formInputResponseResource, questionsMap))
+                )
                 .collect(toList());
     }
 
@@ -187,16 +190,17 @@ public class AssessmentOverviewModelPopulator {
         return question.getQuestionSetupType() != APPLICATION_TEAM && question.getQuestionSetupType() != RESEARCH_CATEGORY;
     }
 
-    private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseResource formInputResponse,
-                                                            Map<Long, QuestionResource> questions) {
+    private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseFileEntryResource fileEntry,
+                                                            FormInputResponseResource formInputResponse, Map<Long, QuestionResource> questions) {
         QuestionResource question = questions.get(formInputResponse.getQuestion());
 
-        String size = String.valueOf(BigDecimal.valueOf(formInputResponse.getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
+        String size = String.valueOf(BigDecimal.valueOf(fileEntry.getFileEntryResource().getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
 
         return new AssessmentOverviewAppendixViewModel(
                 formInputResponse.getFormInput(),
+                fileEntry.getFileEntryResource().getId(),
                 ofNullable(question.getShortName()).orElse(question.getName()),
-                formInputResponse.getFilename(),
+                fileEntry.getFileEntryResource().getName(),
                 size
         );
     }

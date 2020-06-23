@@ -16,25 +16,31 @@ public class FileDetailsViewModel {
     public static final BigDecimal ONE_KB = BigDecimal.valueOf(1024L);
 
     private long formInputId;
+    private long fileEntryId;
     private String filename;
     private BigDecimal filesizeKbytes;
 
     public FileDetailsViewModel(FileEntryResource fileEntry) {
-        this(fileEntry.getName(), fileEntry.getFilesizeBytes());
+        this(fileEntry.getName(), fileEntry.getId(), fileEntry.getFilesizeBytes());
     }
 
-    public FileDetailsViewModel(String filename, long filesizeBytes) {
+    public FileDetailsViewModel(String filename, long fileEntryId, long filesizeBytes) {
         this.filename = filename;
+        this.fileEntryId = fileEntryId;
         this.filesizeKbytes = BigDecimal.valueOf(filesizeBytes).divide(ONE_KB, 0, ROUND_UP);
     }
 
-    public FileDetailsViewModel(long formInputId, String filename, long filesizeBytes) {
-        this(filename, filesizeBytes);
+    public FileDetailsViewModel(long formInputId, long fileEntryId, String filename, long filesizeBytes) {
+        this(filename, fileEntryId, filesizeBytes);
         this.formInputId = formInputId;
     }
 
     public long getFormInputId() {
         return formInputId;
+    }
+
+    public long getFileEntryId() {
+        return fileEntryId;
     }
 
     public String getFilename() {
