@@ -166,7 +166,7 @@ the internal user can see that the Generic competition has only one Application 
     the user clicks the button/link                   link = 1. Edit this question
     the user is able to configure the new question    ${customQuestion}
     the user should be able to see the read only view of question correctly  ${customQuestion}
-    the user clicks the button/link                   link = Competition setup
+    the user clicks the button/link                   link = Competition details
 
 Custom suite teardown
     Close browser and delete emails

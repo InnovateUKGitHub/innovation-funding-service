@@ -61,7 +61,7 @@ User can complete Organisational eligibility
     Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
     When the user selects the radio button                    internationalOrganisationsApplicable       false
     And the user clicks the button/link                       jQuery = button:contains("Save and continue")
-    And the user clicks the button/link                       link = Competition setup
+    And the user clicks the button/link                       link = Competition details
     Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 User can finish setting up the grant transfer
@@ -375,7 +375,7 @@ The user fills in the Competition Setup Project eligibility section
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition setup
+    the user clicks the button/link                      link = Competition details
     the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 The user is able to complete Horizon 2020 Grant transfer application

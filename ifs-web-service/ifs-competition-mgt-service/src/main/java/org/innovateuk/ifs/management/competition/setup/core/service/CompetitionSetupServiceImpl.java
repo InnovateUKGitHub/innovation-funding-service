@@ -20,6 +20,7 @@ import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.Compe
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupUpdater;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -95,13 +96,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     @Override
     public CompetitionSetupViewModel populateCompetitionSectionModelAttributes(
             CompetitionResource competitionResource,
+            UserResource userResource,
             CompetitionSetupSection section
     ) {
         CompetitionSetupViewModel viewModel = null;
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
         if (populator != null) {
-            viewModel = populator.populateModel(competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, section), competitionResource);
+            viewModel = populator.populateModel(competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, userResource, section), competitionResource);
         }
 
         return viewModel;

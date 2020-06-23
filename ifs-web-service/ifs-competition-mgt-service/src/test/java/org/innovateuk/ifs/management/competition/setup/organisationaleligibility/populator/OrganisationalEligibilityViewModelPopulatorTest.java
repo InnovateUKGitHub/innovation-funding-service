@@ -17,7 +17,7 @@ public class OrganisationalEligibilityViewModelPopulatorTest {
     public void populateModel() {
 
         CompetitionResource competition = newCompetitionResource().build();
-        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(true, competition, ORGANISATIONAL_ELIGIBILITY, CompetitionSetupSection.values(), true);
+        GeneralSetupViewModel generalSetupViewModel = new GeneralSetupViewModel(true, competition, ORGANISATIONAL_ELIGIBILITY, CompetitionSetupSection.values(), true, false);
 
         OrganisationalEligibilityViewModel viewModel = new OrganisationalEligibilityViewModel(generalSetupViewModel);
 
