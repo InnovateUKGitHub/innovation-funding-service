@@ -29,7 +29,10 @@
             <a class="govuk-link" th:href="@{/project/{projectId}/grants/invite/send(projectId=${model.projectId})}">Invite a new external user</a>
         </p>
 
-        <p class="govuk-body"><span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.totalGrants}">9 </span>Pending invitations</p>
+        <p class="govuk-body">
+            <span class="govuk-!-font-size-48 govuk-!-font-weight-bold" th:text="${model.totalGrants}">9</span>
+            <span class="govuk-!-font-size-19 govuk-!-font-weight-bold">Pending invitations</span>
+        </p>
 
         <div class="table-overflow">
             <form th:action="@{/project/{projectId}/grants/invite/resend(projectId=${model.projectId})}" method="post">
