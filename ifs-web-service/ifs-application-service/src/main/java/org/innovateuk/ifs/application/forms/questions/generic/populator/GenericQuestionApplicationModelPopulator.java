@@ -99,6 +99,20 @@ public class GenericQuestionApplicationModelPopulator {
     }
 
     private Optional<FormInputResponseResource> firstResponse(ApplicantFormInputResource input) {
+
+        /*
+        *
+        * This is why the  files are not appearing as the mapper hasnt worked and filename and filesizebytes are still null,
+        * and the only thing  we have is  a list of file entry ids
+        *
+        * so we either need to bring back a list of filenames on the FormInputResponseResource to display the multiple files or we do another
+        * look up here with the fileentry ids to bring back them
+        *
+        *
+        * but  also fix mapper :)
+        *
+        * */
+
         return input.getApplicantResponses()
                 .stream()
                 .findAny() //Generic questions only have one respsonse.
