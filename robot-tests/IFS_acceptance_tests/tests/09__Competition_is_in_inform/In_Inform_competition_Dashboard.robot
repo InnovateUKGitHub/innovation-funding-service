@@ -233,12 +233,13 @@ the user checks the research category
 
 The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${email}  ${password}
-    log in as a different user         ${email}  ${password}
-    the user clicks the button/link    jQuery = a:contains("Previous")
-    the user clicks the button/link    jQuery = button:contains("Next")
-    the user clicks the button/link    link = ${NOT_EDITABLE_COMPETITION_NAME}
-    the user expands the section       Applications
-    the user should see the element    jQuery = td:contains("${electric_application_titile}") ~ td:contains("Unsuccessful")
+    log in as a different user                   ${email}  ${password}
+    the user clicks the button/link              jQuery = a:contains("Previous")
+    the user clicks the button/link              jQuery = button:contains("Next")
+    the user clicks the pagination next link     jQuery = button:contains("Next")
+    the user clicks the button/link              link = ${NOT_EDITABLE_COMPETITION_NAME}
+    the user expands the section                 Applications
+    the user should see the element              jQuery = td:contains("${electric_application_titile}") ~ td:contains("Unsuccessful")
 
 the user should see milestones for the In inform competition
     the user should see the element    jQuery = .govuk-button:contains("Manage funding notifications")
@@ -266,3 +267,8 @@ the user checks the application details sections
     the user checks the Scope functionality
     the user checks the application team
     the user checks the research category
+
+the user clicks the pagination next link
+    [Arguments]   ${locator}
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element    link = ${NOT_EDITABLE_COMPETITION_NAME}
+    run keyword if  '${status}' == 'FAIL'  the user clicks the button/link    ${locator}
