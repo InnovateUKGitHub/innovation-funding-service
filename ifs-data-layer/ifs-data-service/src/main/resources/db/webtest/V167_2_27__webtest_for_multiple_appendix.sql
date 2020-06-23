@@ -1,3 +1,5 @@
+UPDATE form_input SET word_count = 1 WHERE form_input_type_id=4;
+
 UPDATE form_input fi
 
 inner join competition comp
