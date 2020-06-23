@@ -13,18 +13,18 @@ Resource          ../../resources/common/PS_Common.robot
 *** Variables ***
 ${postAwardServiceCompetitionName}             Post Award Competition
 ${nonPostAwardServiceCompetitionName}          Non Post Award Competition
+${projectSetupPostAwardCompetitionName}        Post award service competition
+${projectSetupPostAwardApplicationName}        Post award application
+${projectSetupNonPostAwardCompetitionName}     Project setup loan comp
+${projectSetupConnectCompetitionName}          Connect competition
+${projectSetupConnectApplicationName}          Connect application
 ${postAwardServiceLink}                        Post award service
 ${postAwardServiceTitle}                       Choose the post award service
 ${postAwardServiceGuide}                       You cannot change the post award service for any projects in this competition that are already live.
-${projectSetupPostAwardCompetitionName}        Post award service competition
-${projectSetupPostAwardApplicationName}        Post award application
 ${projectSetupPostAwardCompetitionId}          ${competition_ids["${projectSetupPostAwardCompetitionName}"]}
 ${grantFundProjectSetupDashboard}              ${server}/project-setup-management/competition/${projectSetupPostAwardCompetitionId}/status/all
-${projectSetupNonPostAwardCompetitionName}     Project setup loan comp
 ${projectSetupNonPostAwardCompetitionId}       ${competition_ids["${projectSetupNonPostAwardCompetitionName}"]}
 ${NonPostAwardProjectSetupDashboard}           ${server}/project-setup-management/competition/${projectSetupNonPostAwardCompetitionId}/status/all
-${projectSetupConnectCompetitionName}          Connect competition
-${projectSetupConnectApplicationName}          Connect application
 ${projectSetupConnectCompetitionId}            ${competition_ids["${projectSetupConnectCompetitionName}"]}
 ${connectCompetitionProjectSetupDashboard}     ${server}/project-setup-management/competition/${projectSetupConnectCompetitionId}/status/all
 ${viewAndUpdateCompetitionDetailsLink}         View and update competition details
@@ -50,7 +50,7 @@ Competition Setup - Ifs admin can access post award service form details for gra
      When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
      And the user clicks the button/link                     link = ${postAwardServiceLink}
      Then the user check for post award service fields
-     And the user sees that the radio button is selected     postAwardService    CONNECT
+     And the user sees that the radio button is selected     postAwardService  CONNECT
 
 Competition Setup - Ifs admin can save the post award service selection
      [Documentation]   IFS-6454
@@ -106,34 +106,34 @@ Emails - Project manager and finance contacts should receive an email notificati
 
 Applicant - Other team members should see message project is live on GOL approval
      [Documentation]  IFS-7017
-     Given log in as a different user            ${otherTeamMemberLeadOrganisation}         ${short_password}
+     Given log in as a different user            ${otherTeamMemberLeadOrganisation}  ${short_password}
      When the user navigates to the page         ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element        jQuery = p:contains("${projectLiveMessage}")
 
 Applicant - Project manager should see message project is live with review its progress link on GOL approval
      [Documentation]  IFS-7017
-     Given log in as a different user         ${projectManagerEmailLeadOrganisation}     ${short_password}
+     Given log in as a different user         ${projectManagerEmailLeadOrganisation}  ${short_password}
      When the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
      And the user should see the element      link = ${reviewProgressLink}
 
 Applicant - Finance contact of lead organisation should see message project is live with review its progress link on GOL approval
      [Documentation]  IFS-7017
-     Given log in as a different user         ${financeContactEmailLeadOrganisation}     ${short_password}
+     Given log in as a different user         ${financeContactEmailLeadOrganisation}  ${short_password}
      when the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
      And the user should see the element      link = ${reviewProgressLink}
 
 Applicant - Finance contact of partner organisation should see message project is live with review its progress link on GOL approval
      [Documentation]  IFS-7017
-     Given log in as a different user         ${financeContactPartnerOrganisation}       ${short_password}
+     Given log in as a different user         ${financeContactPartnerOrganisation}  ${short_password}
      When the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
      And the user should see the element      link = ${reviewProgressLink}
 
 Applicant - User should be redirected to IFS post award service on click review its progress for post award service applications
      [Documentation]  IFS-7017
-     Given log in as a different user                       ${projectManagerEmailLeadOrganisation}     ${short_password}
+     Given log in as a different user                       ${projectManagerEmailLeadOrganisation}  ${short_password}
      When the user navigates to the page                    ${server}/project-setup/project/${postAwardServiceProjectID}
      And the user clicks the button/link                    link = ${reviewProgressLink}
      Then Url should contain live projects landing page
@@ -149,7 +149,7 @@ Applicant - User should be redirected to grant application service on click revi
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017
      Given the user navigates to the page                        ${server}/dashboard-selection
-     And log in as a different user                              ${projectManagerEmailLeadOrganisation}     ${short_password}
+     And log in as a different user                              ${projectManagerEmailLeadOrganisation}  ${short_password}
      And the user clicks the live project tile in dashboard      id = dashboard-link-LIVE_PROJECTS_USER
      Then Url should contain live projects landing page
 
@@ -181,7 +181,7 @@ the user check for post award service fields
 the user check for selected value
     [Arguments]  ${postAwardLabel}
     the user clicks the button/link                     link = ${postAwardServiceLink}
-    the user sees that the radio button is selected     postAwardService    ${postAwardLabel}
+    the user sees that the radio button is selected     postAwardService  ${postAwardLabel}
 
 the user edits form with post award service option
      And the user clicks the button/link      link = ${postAwardServiceLink}
@@ -197,8 +197,8 @@ Request a project id of connect service application
      Set suite variable                ${connectServiceProjectID}
 
 Requesting application ID of post award service application
-     ${postAwardServiceApplicationID} =      get application id by name         ${projectSetupPostAwardApplicationName}
-     Set suite variable                  ${postAwardServiceApplicationID}
+     ${postAwardServiceApplicationID} =     get application id by name         ${projectSetupPostAwardApplicationName}
+     Set suite variable                     ${postAwardServiceApplicationID}
 
 the user should check for message and link
      [Arguments]    ${url}  ${message}
@@ -207,11 +207,11 @@ the user should check for message and link
 
 Url should contain live projects landing page
     ${Url} =   Get Location
-    Run Keyword And Ignore Error Without Screenshots  should be equal as strings  ${Url}   ${postAwardServiceUrl}
+    Run Keyword And Ignore Error Without Screenshots  should be equal as strings  ${Url}  ${postAwardServiceUrl}
 
 applicant clicks review its progress link
     [Arguments]  ${projectID}
-    log in as a different user          ${projectManagerEmailLeadOrganisation}     ${short_password}
+    log in as a different user          ${projectManagerEmailLeadOrganisation}  ${short_password}
     the user navigates to the page      ${server}/project-setup/project/${projectID}
     the user clicks the button/link     link = ${reviewProgressLink}
 
@@ -227,6 +227,6 @@ the user clicks the live project tile in dashboard
     :FOR    ${i}    IN RANGE  10
     \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element     ${locator}
     \  Exit For Loop If  '${status}'=='PASS'
-    \  run keyword if  '${status}'=='FAIL'   log in as a different user  ${projectManagerEmailLeadOrganisation}     ${short_password}
+    \  run keyword if  '${status}'=='FAIL'   log in as a different user     ${projectManagerEmailLeadOrganisation}  ${short_password}
     \  ${i} =  Set Variable  ${i + 1}
-    the user clicks the button/link       ${locator}
+    the user clicks the button/link     ${locator}

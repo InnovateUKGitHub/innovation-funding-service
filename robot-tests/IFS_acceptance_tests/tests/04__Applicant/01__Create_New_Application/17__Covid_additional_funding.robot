@@ -202,10 +202,10 @@ Internal user is able to reject the GOL and applicant can re-upload
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-7365
-    Given the internal user approve the GOL                                            ${ProjectID}
-    When log in as a different user                                                    &{lead_applicant_credentials}
-    And the user navigates to the page                                                 ${server}/project-setup/project/${ProjectID}
-    Then the user checks for review its progress link with project is live message
+    Given the internal user approve the GOL                                    ${ProjectID}
+    When log in as a different user                                            &{lead_applicant_credentials}
+    And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
+    Then the user should see project is live with review its progress link
 
 Competition goes into previous
     [Documentation]   IFS-7441

@@ -751,6 +751,6 @@ enter the country in the autocomplete field
     input text                          id = country        ${country}
     the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
 
-the user checks for review its progress link with project is live message
+the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
     the user should see the element     link = ${reviewProgressLink}
