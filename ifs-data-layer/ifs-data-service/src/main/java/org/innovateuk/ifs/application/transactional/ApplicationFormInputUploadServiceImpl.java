@@ -80,7 +80,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                     formInputId);
 
                             // Removing and replacing if file already exists here
-                            if (existingResponse != null && existingResponse.getFileEntries() != null) {
+                            if (existingResponse != null && existingResponse.getFileEntries() != null || !existingResponse.getFileEntries().isEmpty()) {
                                 LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + openApplication +
                                         " processRoleId " + processRoleId +
                                         " formInputId " + formInputId +

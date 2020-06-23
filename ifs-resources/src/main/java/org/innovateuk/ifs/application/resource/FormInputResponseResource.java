@@ -2,13 +2,10 @@ package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.FileUtils;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import static java.util.Collections.singletonList;
 
 public class FormInputResponseResource {
     private Long id;
@@ -41,13 +38,15 @@ public class FormInputResponseResource {
         this.application = application.getId();
     }
 
-    public FormInputResponseResource(ZonedDateTime updateDate, List<FileEntryResource> fileEntries, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, List<Long> fileEntries, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
-        this.fileEntries = singletonList(fileEntries.get(0).getId());
+        this.fileEntries = fileEntries;
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
     }
+
+
 
     public Integer getFormInputMaxWordCount() {
         return formInputMaxWordCount;
