@@ -8,9 +8,7 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.form.mapper.FormInputMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
 
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -40,17 +38,17 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
         return object.getId();
     }
 
-    public String mapFileEntriesNameToFilename(FormInputResponse object) {
-        if (object.getFileEntries().isEmpty()) {
-            return null;
+    @AfterMapping
+    public void mapFileEntriesNameToFilename(FormInputResponse object, @MappingTarget FormInputResponseResource resource) {
+        if (!object.getFileEntries().isEmpty()) {
+            resource.setFilename(object.getFileEntries().get(0).getName());
         }
-        return object.getFileEntries().get(0).getName();
     }
 
-    public Long mapFileEntriesFilesizeBytesToFilesizeBytes(FormInputResponse object) {
-        if (object.getFileEntries().isEmpty()) {
-            return null;
+    @AfterMapping
+    public void mapFileEntriesFilesizeBytesToFilesizeBytes(FormInputResponse object, @MappingTarget FormInputResponseResource resource) {
+        if (!object.getFileEntries().isEmpty()) {
+            resource.setFilesizeBytes(object.getFileEntries().get(0).getFilesizeBytes());
         }
-        return object.getFileEntries().get(0).getFilesizeBytes();
     }
 }
