@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.resource;
 
 public enum PostAwardService {
 
-    IFS_POST_AWARD("IFS Post Award Service"),
+    IFS_POST_AWARD("IFS Post Award"),
     CONNECT("_connect");
 
     private String displayName;
