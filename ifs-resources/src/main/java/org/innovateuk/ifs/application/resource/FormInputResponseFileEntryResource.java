@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.application.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+
+import java.util.Optional;
 
 /**
  * Represents a File upload against a particular FormInputResponse
@@ -17,8 +21,8 @@ public class FormInputResponseFileEntryResource {
         // for JSON marshalling
     }
 
-    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId) {
-        this(fileEntryResource, new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId));
+    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId, Optional<Long> fileEntryId) {
+        this(fileEntryResource, new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId, fileEntryId));
     }
 
     public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, FormInputResponseFileEntryId compoundId) {
@@ -40,6 +44,11 @@ public class FormInputResponseFileEntryResource {
 
     public void setCompoundId(FormInputResponseFileEntryId compoundId) {
         this.compoundId = compoundId;
+    }
+
+    @JsonIgnore
+    public String getHumanReadableFileSize() {
+        return FileUtils.byteCountToDisplaySize(fileEntryResource.getFilesizeBytes());
     }
 
     @Override

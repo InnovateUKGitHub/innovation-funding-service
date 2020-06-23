@@ -39,18 +39,4 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
         }
         return object.getId();
     }
-
-    public String mapFileEntriesNameToFilename(FormInputResponse object) {
-        if (object.getFileEntries().isEmpty()) {
-            return null;
-        }
-        return object.getFileEntries().get(0).getName();
-    }
-
-    public Long mapFileEntriesFilesizeBytesToFilesizeBytes(FormInputResponse object) {
-        if (object.getFileEntries().isEmpty()) {
-            return null;
-        }
-        return object.getFileEntries().get(0).getFilesizeBytes();
-    }
 }

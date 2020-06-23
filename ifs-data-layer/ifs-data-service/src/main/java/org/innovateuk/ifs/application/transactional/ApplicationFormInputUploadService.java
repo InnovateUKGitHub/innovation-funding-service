@@ -18,13 +18,9 @@ public interface ApplicationFormInputUploadService {
     ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry,
                                                                                         Supplier<InputStream> inputStreamSupplier);
 
-    @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
-    ServiceResult<Void> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry,
-                                                          Supplier<InputStream> inputStreamSupplier);
+    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'UPDATE')")
+    ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId id);
 
-    @PreAuthorize("hasPermission(#fileEntry, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'UPDATE')")
-    ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry);
-
-    @PreAuthorize("hasPermission(#fileEntry, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
-    ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry);
+    @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'READ')")
+    ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId id);
 }

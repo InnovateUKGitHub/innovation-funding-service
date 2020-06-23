@@ -46,7 +46,7 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
     }
 
     public FormInputResponseResourceBuilder withFileEntries(List<Long>... fileEntries) {
-        return withArray((fileEntry, formInputResponseResource) -> formInputResponseResource.setFileEntries(fileEntry), fileEntries);
+        return withArray((fileEntry, formInputResponseResource) -> formInputResponseResource.setFileEntryResources(fileEntry), fileEntries);
     }
 
     public FormInputResponseResourceBuilder withApplication(Long applicationId) {
