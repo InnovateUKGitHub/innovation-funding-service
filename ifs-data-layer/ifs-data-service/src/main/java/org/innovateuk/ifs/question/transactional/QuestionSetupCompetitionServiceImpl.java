@@ -281,7 +281,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
             writtenFeedbackFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidanceTitle());
-            writtenFeedbackFormInput.setWordCount(1);
+            writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
 
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
