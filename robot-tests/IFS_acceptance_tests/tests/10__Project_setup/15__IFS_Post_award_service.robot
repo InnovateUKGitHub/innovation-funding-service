@@ -137,12 +137,6 @@ Applicant - User should be redirected to IFS post award service on click review 
      And the user clicks the button/link                    partial link = review its progress
      Then Url should contain live projects landing page
 
-Applicant - User should be redirected to IFS post award service on click projects tab in dashboard for post award service applications
-     [Documentation]  IFS-7017
-     Given log in as a different user                        ${projectManagerEmailLeadOrganisation}     ${short_password}
-     When the user clicks the button/link                    id = dashboard-link-LIVE_PROJECTS_USER
-     Then Url should contain live projects landing page
-
 Applicant - User should be redirected to grant application service on click review its progress for connect applications
      [Documentation]  IFS-7017
      [Setup]  Request a project id of connect service application
@@ -150,6 +144,13 @@ Applicant - User should be redirected to grant application service on click revi
      And the internal user approve the GOL              ${connectServiceProjectID}
      When applicant clicks review its progress link     ${connectServiceProjectID}
      Then the user should see the element               link = _connect
+
+Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
+     [Documentation]  IFS-7017
+     Given the user navigates to the page                    ${server}/dashboard-selection
+     And log in as a different user                          ${projectManagerEmailLeadOrganisation}     ${short_password}
+     And the user clicks live project tile in dashboard      id = dashboard-link-LIVE_PROJECTS_USER
+     Then Url should contain live projects landing page
 
 
 *** Keywords ***
@@ -194,6 +195,10 @@ Request a project id of connect service application
      ${connectServiceProjectID} =      get project id by name               ${projectSetupConnectApplicationName}
      Set suite variable                ${connectServiceProjectID}
 
+Requesting application ID of post award service application
+     ${postAwardServiceApplicationID} =      get application id by name         ${projectSetupPostAwardApplicationName}
+     Set suite variable                  ${postAwardServiceApplicationID}
+
 the user should check for message and link
      [Arguments]    ${url}  ${message}
      the user should see the element     jQuery = p:contains("${message}")
@@ -210,7 +215,17 @@ applicant clicks review its progress link
     the user clicks the button/link     partial link = review its progress
 
 project manager and finance contact should receive an email notification
-    the user reads his email     ${projectManagerEmailLeadOrganisation}     Connect competition: Grant offer letter approved for project ${postAwardServiceProjectID}  We have accepted your signed grant offer letter for your project:
-    the user reads his email     ${financeContactEmailLeadOrganisation}     Connect competition: Grant offer letter approved for project ${postAwardServiceProjectID}  We have accepted your signed grant offer letter for your project:
-    the user reads his email     ${financeContactPartnerOrganisation}       Connect competition: Grant offer letter approved for project ${postAwardServiceProjectID}  We have accepted your signed grant offer letter for your project:
-    the user reads his email     ${financeContactOtherPartnerOrganisation}  Connect competition: Grant offer letter approved for project ${postAwardServiceProjectID}  We have accepted your signed grant offer letter for your project:
+    Requesting application ID of post award service application
+    the user reads his email     ${projectManagerEmailLeadOrganisation}      Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${financeContactEmailLeadOrganisation}      Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${financeContactPartnerOrganisation}        Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+    the user reads his email     ${financeContactOtherPartnerOrganisation}   Post award service competition: Grant offer letter approved for project ${postAwardServiceApplicationID}   We have accepted your signed grant offer letter for your project:
+
+the user clicks live project tile in dashboard
+    [Arguments]   ${locator}
+    :FOR    ${i}    IN RANGE  10
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element     ${locator}
+    \  Exit For Loop If  '${status}'=='PASS'
+    \  run keyword if  '${status}'=='FAIL'   log in as a different user  ${projectManagerEmailLeadOrganisation}     ${short_password}
+    \  ${i} =  Set Variable  ${i + 1}
+    the user clicks the button/link       ${locator}
