@@ -223,24 +223,66 @@
                         </textarea>
                 </div>
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.maxWords">
-                    Max word count
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.maxWords')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
-                              th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-input--width-10"
-                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
-                       type="number"
-                       id="question.maxWords"
-                       min="1"
-                       required="required"
-                       th:name="question.maxWords"
-                       th:value="${question.maxWords}"
-                       th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
-            </div>
+
+            <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item" data-target="text-area-form-group"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="text-area"
+                               type="radio"
+                               th:field="*{typeOfQuestion}"
+                               value="TEXT_AREA"
+                               required="required" />
+                        <label class="govuk-label govuk-radios__label" for="text-area">
+                            Free text box
+                        </label>
+                    </div>
+
+                    <div class="govuk-radios__item" data-target="multiple-choice-form-group"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="multiple-choice"
+                               th:field="*{typeOfQuestion}"
+                               type="radio"
+                               value="MULTIPLE_CHOICE"
+                               required="required">
+                        <label class="govuk-label govuk-radios__label" for="multiple-choice">
+                            Multiple choice
+                        </label>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:unless="${question.textArea != null && question.multipleChoice != null}">
+                <input type="hidden" th:field="*{question.textArea}">
+                <input type="hidden" th:field="*{question.multipleChoice}">
+            </th:block>
+
+            <th:block th:if="${question.textArea != null}">
+                <div id="text-area-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.maxWords">
+                        Max word count
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.maxWords')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
+                                  th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-10"
+                           th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
+                           type="number"
+                           id="question.maxWords"
+                           min="1"
+                           required="required"
+                           th:name="question.maxWords"
+                           th:value="${question.maxWords}"
+                           th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
+                </div>
+            </th:block>
+
+            <th:block th:if="${question.multipleChoice != null}">
+                <div id="multiple-choice-form-group">MULTIPLE CHOICE</div>
+            </th:block>
 
             <!--/* APPENDIX */-->
             <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
