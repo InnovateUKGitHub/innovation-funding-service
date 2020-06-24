@@ -39,17 +39,16 @@ ${phoneNumberValidation}                    Please enter a valid phone number be
 ${tAndCValidation}                          To create a new account you must agree to the website terms and conditions.
 
 *** Test Cases ***
-IFS Admin can see the link to manage invitations to external users
+IFS Admin can see and use the link to manage invitations to external users when the project is complete and live in IFS-PA(ACC)
     [Documentation]  IFS-7318
     Given the grant offer letter is accepted and project is live in IFS-PA
-    When the user clicks the button/link     link = View only completed projects for this competition
-    And the user clicks the button/link      jQuery = button:contains("Open all")
-    Then the user should see the element     link = Manage invitations to external users
+    When the user clicks the button/link                                       link = View only completed projects for this competition
+    And the user clicks the button/link                                        jQuery = button:contains("Open all")
+    Then the user clicks the button/link                                       link = Manage invitations to external users
+    And the user should see the element                                        jQuery = p:contains("${invitationPageMessage}")
 
-IFS Admin can see the link to invite new external users
-    [Documentation]  IFS-7318, IF-7316
-    Given the user clicks the button/link     link = Manage invitations to external users
-    And the user should see the element       jQuery = p:contains("${invitationPageMessage}")
+IFS Admin can invite new external users
+    [Documentation]  IF-7316
     When the user clicks the button/link      link = Invite a new external user
     Then the user should see the element      jQuery = button:contains("Send invitation")
 
