@@ -10,6 +10,6 @@ public interface CompetitionSetupPostAwardServiceService {
     @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'CHOOSE_POST_AWARD_SERVICE')")
     ServiceResult<Void> configurePostAwardService(long competitionId, PostAwardService postAwardService);
 
-    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'CHOOSE_POST_AWARD_SERVICE')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'READ_POST_AWARD_SERVICE')")
     ServiceResult<CompetitionPostAwardServiceResource> getPostAwardService(long competitionId);
 }

@@ -6,23 +6,27 @@ import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.search.CompetitionSearchResultItem;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.InnovationLeadBuilder.newInnovationLead;
 import static org.innovateuk.ifs.competition.builder.LiveCompetitionSearchResultItemBuilder.newLiveCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_USER_ROLES;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -246,5 +250,71 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
                 assertFalse(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
             }
         });
+    }
+
+    @Test
+    public void internalAdminCanReadPostAwardServiceForCompetition() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+                assertTrue(rules.internalAdminCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalAdminCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void internalUsersCanReadPostAwardServiceForCompetition() {
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanReadPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void monitoringOfficerCanReadPostAwardServiceForCompetition() {
+
+        CompetitionResource competition = newCompetitionResource().withId(15L).build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(MONITORING_OFFICER).equals(user)) {
+                when(projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+                assertTrue(rules.monitoringOfficerCanReadPostAwardServiceForCompetition(competition, user));
+            } else {
+                when(projectMonitoringOfficerRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(false);
+                assertFalse(rules.monitoringOfficerCanReadPostAwardServiceForCompetition(competition, user));
+            }
+            verify(projectMonitoringOfficerRepository).existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+        });
+    }
+
+    @Test
+    public void projectUsersCanReadPostAwardServiceForCompetition() {
+
+        UserResource user = newUserResource().withId(5L).build();
+        CompetitionResource competition = newCompetitionResource().withId(15L).build();
+
+        List<ProjectParticipantRole> projectRoles = PROJECT_USER_ROLES.stream().collect(Collectors.toList());
+        when(projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(true);
+
+        assertTrue(rules.projectUsersCanReadPostAwardServiceForCompetition(competition, user));
+        verify(projectUserRepository).existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
+
+    @Test
+    public void nonProjectUsersCannotReadPostAwardServiceForCompetition() {
+
+        UserResource user = newUserResource().withId(5L).build();
+        CompetitionResource competition = newCompetitionResource().withId(15L).build();
+
+        List<ProjectParticipantRole> projectRoles = PROJECT_USER_ROLES.stream().collect(Collectors.toList());
+        when(projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId())).thenReturn(false);
+
+        assertFalse(rules.projectUsersCanReadPostAwardServiceForCompetition(competition, user));
+        verify(projectUserRepository).existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
     }
 }
