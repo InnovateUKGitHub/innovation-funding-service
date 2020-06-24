@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -44,7 +45,7 @@ public class FormInputResponse {
     @JoinTable(name = "form_input_response_file_entry",
             joinColumns = @JoinColumn(name = "form_input_response_id"),
             inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
-    private List<FileEntry> fileEntries;
+    private List<FileEntry> fileEntries = new ArrayList<>();
 
     public FormInputResponse() {
         // no-arg constructor
