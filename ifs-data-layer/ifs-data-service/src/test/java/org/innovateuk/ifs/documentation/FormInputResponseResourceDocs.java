@@ -16,7 +16,7 @@ public class FormInputResponseResourceDocs {
             fieldWithPath("formInput").description("The form input of the form input response"),
             fieldWithPath("formInputMaxWordCount").description("The max word count of the form input response"),
             fieldWithPath("application").description("The application of the form input response"),
-            fieldWithPath("fileEntry").description("The file entry of the form input response"),
+            fieldWithPath("fileEntries").description("The file entries of the form input response"),
             fieldWithPath("filename").description("The file name of the form input response"),
             fieldWithPath("filesizeBytes").description("The file size of the form input response"),
 
