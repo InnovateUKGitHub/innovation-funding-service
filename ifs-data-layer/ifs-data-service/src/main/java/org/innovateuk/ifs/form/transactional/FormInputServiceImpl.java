@@ -72,7 +72,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     @Override
     @Transactional
     public ServiceResult<Void> delete(long id) {
-        formInputRepository.delete(formInputMapper.mapIdToDomain(id));
+        formInputRepository.deleteById(id);
         return serviceSuccess();
     }
 
