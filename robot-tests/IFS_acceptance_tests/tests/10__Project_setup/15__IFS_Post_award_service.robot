@@ -134,10 +134,10 @@ Applicant - Finance contact of partner organisation should see message project i
 
 Applicant - User should be redirected to IFS post award service on click review its progress for post award service applications
      [Documentation]  IFS-7017
-     Given log in as a different user                       ${projectManagerEmailLeadOrganisation}  ${short_password}
-     When the user navigates to the page                    ${server}/project-setup/project/${postAwardServiceProjectID}
-     And the user clicks the button/link                    link = ${reviewProgressLink}
-     Then Url should contain live projects landing page
+     Given log in as a different user                        ${projectManagerEmailLeadOrganisation}  ${short_password}
+     When the user navigates to the page                     ${server}/project-setup/project/${postAwardServiceProjectID}
+     And the user clicks the button/link                     link = ${reviewProgressLink}
+     Then the user should see live projects landing page
 
 Applicant - User should be redirected to grant application service on click review its progress for connect applications
      [Documentation]  IFS-7017
