@@ -236,4 +236,15 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
             }
         }));
     }
+
+    @Test
+    public void internalAdminCanSetPostAwardServiceForCompetition() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
+                assertTrue(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            } else {
+                assertFalse(rules.internalAdminCanSetPostAwardServiceForCompetition(newCompetitionResource().build(), user));
+            }
+        });
+    }
 }

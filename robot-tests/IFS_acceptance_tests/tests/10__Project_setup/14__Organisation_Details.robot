@@ -182,10 +182,6 @@ The user updates organisation size details with a growth table
     the user enters text to a text field  id = headCountAtLastFinancialYear   ${Employees}
     the user saves and returns to organisation details page
 
-The user saves and returns to organisation details page
-    the user clicks the button/link     jQuery = button:contains("Save and return to")
-    the user clicks the button/link     jQuery = button:contains("Update organisation size")
-
 Organisation size details are still the same in application with a growth table
     [Arguments]  ${link}  ${OrgName}  ${OrgSize}  ${Month}  ${Year}  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
     the user navigates to your organisation page on the application    ${link}  ${OrgName}
@@ -238,6 +234,11 @@ The user completes elegibility selection
     the user selects the checkbox    project-eligible
     the user selects the option from the drop-down menu   Green  id = rag-rating
 
+The user is no longer able to edit organisation size
+    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
+    the user selects an organisation                 ${SmithZoneRadioBttnValue}
+    the user should not see the element              jQuery = a:contains("Edit organisation")
+
 The user updates organisation size details without a growth table
     [Arguments]  ${Size}  ${Turnover}  ${Employees}
     the user selects the radio button     organisationSize  ${Size}
@@ -245,8 +246,7 @@ The user updates organisation size details without a growth table
     the user enters text to a text field  id = headCount   ${Employees}
     the user saves and returns to organisation details page
 
-The user is no longer able to edit organisation size
-    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
-    the user selects an organisation                 ${SmithZoneRadioBttnValue}
-    the user should not see the element              jQuery = a:contains("Edit organisation")
+The user saves and returns to organisation details page
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
+    the user clicks the button/link     jQuery = button:contains("Update organisation size")
 

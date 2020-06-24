@@ -47,9 +47,9 @@ The Investor partnership t&c's are correct
 
 T&c's can be confirmed
     [Documentation]  IFS-7213
-    Given the user clicks the button/link     jQuery = button:contains("Done")
-    When the user clicks the button/link      link = Competition setup
-    Then the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
+    Given the user clicks the button/link    jQuery = button:contains("Done")
+    When the user clicks the button/link     link = Competition details
+    Then the user should see the element     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 Applicant is able to see correct T&C's
     [Documentation]  IFS-7213
@@ -91,5 +91,5 @@ the user fills in initial details
     the user fills in the CS Initial details     Investor comp  ${month}  ${nextyear}  ${compType_Programme}  1  INVESTOR_PARTNERSHIPS
 
 navigate to comp setup of investor comp
-    the user clicks the button/link     jQuery = button:contains("Done")
-    the user clicks the button/link     link = Competition setup
+    the user clicks the button/link             jQuery = button:contains("Done")
+    the user clicks the button/link             link = Competition details

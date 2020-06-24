@@ -9,8 +9,12 @@
   </th:block>
 </th:block>
 
-<th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs, isExternalFinanceUser)">
+<th:block th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs, isExternalFinanceUser, isIfsAdmin)">
     <div class="alignright">
+        <a class="govuk-link alignright"
+           th:if="${isIfsAdmin}"
+           th:href="@{~/management/competition/setup/{competitionId}(competitionId=${competitionId})}">View and update competition details</a>
+        <span th:if="${isIfsAdmin}">|</span>
         <a class="govuk-link alignright"
            th:unless="${isExternalFinanceUser}"
            th:href="@{~/management/competition/{competitionId}/previous(competitionId=${competitionId})}">View only completed projects for this competition</a>

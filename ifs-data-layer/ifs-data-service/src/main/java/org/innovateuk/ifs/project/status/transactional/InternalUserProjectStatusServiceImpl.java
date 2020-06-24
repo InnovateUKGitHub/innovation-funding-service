@@ -136,7 +136,7 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
                 bankDetailsStatus,
                 financeChecksStatus,
                 spendProfileStatus,
-                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus),
+                getMonitoringOfficerStatus(project, projectDetailsStatus, locationPerPartnerRequired, partnerProjectLocationStatus),
                 documentsStatus,
                 getGrantOfferLetterState(project, bankDetailsStatus, spendProfileStatus, documentsStatus),
                 getProjectSetupCompleteState(project, spendProfileStatus, documentsStatus),
@@ -412,13 +412,6 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
         return getFinanceContact(project, partnerOrganisation).isPresent() ?
                 COMPLETE :
                 ACTION_REQUIRED;
-    }
-
-    private ProjectActivityStates createProjectDetailsStatus(Project project) {
-        boolean projectDetailsComplete = project.getAddress() != null
-                && project.getTargetStartDate() != null
-                && projectLocationsCompletedIfNecessary(project);
-        return projectDetailsComplete ? COMPLETE : ACTION_REQUIRED;
     }
 
     private boolean projectLocationsCompletedIfNecessary(final Project project) {
