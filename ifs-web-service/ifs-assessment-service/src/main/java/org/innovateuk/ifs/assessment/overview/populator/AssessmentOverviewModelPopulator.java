@@ -138,7 +138,7 @@ public class AssessmentOverviewModelPopulator {
         List<FormInputResponseResource> applicantResponses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return applicantResponses.stream()
-                .filter(formInputResponseResource -> formInputResponseResource.getFileEntries() != null || !formInputResponseResource.getFileEntries().isEmpty())
+                .filter(formInputResponseResource -> !formInputResponseResource.getFileEntries().isEmpty())
                 .map(formInputResponseResource -> getAppendix(formInputResponseResource, questionsMap))
                 .collect(toList());
     }
