@@ -13,7 +13,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join project',size='govuk-heading-l'" />
-        <p class="govuk-body">You have been invited to join this project.<br />
+        <p class="govuk-body">You have been invited to join this project:<br />
             <strong th:text="|${model.applicationId}: ${model.projectName}|"></strong>
         </p>
         <p class="govuk-body">You will be joining as a <strong th:text="${model.role.displayName.toLowerCase()}">project manager</strong>.</p>
