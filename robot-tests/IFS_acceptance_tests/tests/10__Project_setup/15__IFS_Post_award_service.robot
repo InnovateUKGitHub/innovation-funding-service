@@ -99,7 +99,8 @@ Project Setup - Post award service link should not display for any other fund ty
      When the user clicks the button/link         link = ${viewAndUpdateCompetitionDetailsLink}
      Then the user should not see the element     link = ${postAwardServiceLink}
 
-Emails - Project manager and finance contacts should receive an email notification stating project is live with a link to setup projcet page
+Emails - Project manager and finance contacts should receive an email notification stating project is live with a link to setup project page
+     [Documentation]   IFS-7017
      [Setup]  Request a project id of post award service application
      When the internal user approve the GOL                                            ${postAwardServiceProjectID}
      Then project manager and finance contact should receive an email notification
@@ -120,7 +121,7 @@ Applicant - Project manager should see message project is live with review its p
 Applicant - Finance contact of lead organisation should see message project is live with review its progress link on GOL approval
      [Documentation]  IFS-7017
      Given log in as a different user         ${financeContactEmailLeadOrganisation}  ${short_password}
-     when the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
+     When the user navigates to the page      ${server}/project-setup/project/${postAwardServiceProjectID}
      Then the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
      And the user should see the element      link = ${reviewProgressLink}
 
@@ -151,7 +152,7 @@ Applicant - User should be redirected to IFS post award service on click project
      Given the user navigates to the page                        ${server}/dashboard-selection
      And log in as a different user                              ${projectManagerEmailLeadOrganisation}  ${short_password}
      And the user clicks the live project tile in dashboard      id = dashboard-link-LIVE_PROJECTS_USER
-     Then Url should contain live projects landing page
+     Then the user should see live projects landing page
 
 
 *** Keywords ***
@@ -205,8 +206,8 @@ the user should check for message and link
      the user should see the element     jQuery = p:contains("${message}")
      the user should see the element     link = ${reviewProgressLink}
 
-Url should contain live projects landing page
-    ${Url} =   Get Location
+the user should see live projects landing page
+    ${Url} =   get location
     Run Keyword And Ignore Error Without Screenshots  should be equal as strings  ${Url}  ${postAwardServiceUrl}
 
 applicant clicks review its progress link
