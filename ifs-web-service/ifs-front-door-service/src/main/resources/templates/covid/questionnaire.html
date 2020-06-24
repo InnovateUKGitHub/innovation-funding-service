@@ -133,16 +133,8 @@
                     <p class="govuk-body"><a target="_blank" href="https://earlymetrics.fra1.qualtrics.com/jfe/form/SV_8Ag4hfhZTndA2Et">Apply for an innovation continuity loan (opens in a new window)</a></p>
                 </div>
             </th:block>
-            <th:block th:if="${decision == 'continuity-grant'}">
-                <div class="highlight-panel highlight-panel-padded">
-                    <h3 class="govuk-heading-s">Continuity grant application</h3>
-                    <p class="govuk-body">We may be able to offer you a continuity grant of up to £250,000 to support your project and reasonable business costs not covered by your grant. We will need you to provide confirmation of your eligibility. We will also take publicly available financial information into account to assess the continued financial viability of your business.</p>
-                    <p class="govuk-body"><a target="_blank" href="https://apply-for-innovation-funding.service.gov.uk/competition/596/overview">Apply for a continuity grant (opens in a new window)</a></p>
-                </div>
-            </th:block>
-
-
         </th:block>
+
         <table class="govuk-table govuk-!-margin-top-3" th:unless="${previousAnswers == null or previousAnswers.isEmpty()}">
             <caption class="govuk-table__caption">
                 <h2 class="govuk-heading-m">Previous answers</h2>
