@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
 import org.innovateuk.ifs.management.competition.setup.application.form.GuidanceRowForm;
 import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
@@ -45,6 +46,10 @@ public class QuestionFormPopulator implements CompetitionSetupSubsectionFormPopu
 
             if (sectionContainsMoreThanOneQuestion(objectId.get())) {
                 competitionSetupForm.setRemovable(true);
+            }
+
+            if (questionResource.getTextArea() != null && questionResource.getMultipleChoice() != null) {
+                competitionSetupForm.setTypeOfQuestion(questionResource.getTextArea() ? TypeOfQuestion.FREE_TEXT : TypeOfQuestion.MULTIPLE_CHOICE);
             }
 
             competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
