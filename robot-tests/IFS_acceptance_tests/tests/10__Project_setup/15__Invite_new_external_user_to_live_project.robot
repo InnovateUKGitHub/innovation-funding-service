@@ -1,7 +1,10 @@
 *** Settings ***
 Documentation     IFS-7316 Internal user can invite new external user when project is Live
 ...
-...               IFS-7317
+...               IFS-7317 User accepts the invite sent in IFS 7316
+...
+...               IFS-7318 Internal user can now see a link to manage external users once the project is live and in ACC
+
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        Project Setup
