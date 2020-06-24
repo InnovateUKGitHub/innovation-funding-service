@@ -164,9 +164,10 @@ Economic Benefit: Guidance
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
     Given the user should see finance overview
-    When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user sets the finance option to detailed     ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user reloads the page
     Then the users should see detailed finance overview
+    And the users should see detailed finance overview of an academic partner
 
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
@@ -236,6 +237,15 @@ The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("100.00%")
     The user should see the element       jQuery = .table-overview td:contains("990")
 
+the users should see detailed finance overview of an academic partner
+    The user should see the element     jQuery = button:contains("Directly incurred") span:contains("£132")
+    The user should see the element     jQuery = button:contains("Directly allocated") span:contains("£330")
+    The user should see the element     jQuery = button:contains("Indirect costs") span:contains("£154")
+    The user should see the element     jQuery = button:contains("Exceptions") span:contains("£374")
+    the user should see the element     jQuery = p:contains("Total project costs") span:contains("£990")
+    The user should see the element     jQuery = h2:contains("Innovate UK funding")
+    The user should see the element     jQuery = h2:contains("Financial resources")
+
 Custom suite setup
     The user logs-in in new browser  &{assessor_credentials}
     Connect To Database   @{database}
@@ -254,7 +264,7 @@ the user fills in rejection details
     The user enters text to a text field                   id = rejectComment    Have conflicts with the area of expertise.
 
 the uesr should see assessment overview details
-    the user should see the element     jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
+    the user should see the element      jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
     the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     the user should see the element      jQuery = h2:contains("Project details")
     the user should see the element      jQuery = h2:contains("Application questions")
