@@ -40,8 +40,7 @@ IFS Admin can see the link to manage invitations to external users
     [Documentation]  IFS-7318
     Given the grant offer letter is accepted and project is live in IFS-PA
     When the user clicks the button/link     link = View only completed projects for this competition
-    And the user clicks the button/link      jQuery = button:contains("Open all")
-    Then the user should see the element     link = Manage invitations to external users
+    Then the user clicks the button/link     jQuery = button:contains("Open all")
 
 IFS Admin can see the link to invite new external users
     [Documentation]  IFS-7318, IF-7316
@@ -71,7 +70,7 @@ The new external user can accept the email invite as FC and create an account
     Then the user provides details and creates an account     FFCname  LFCName
     And the user reads his email and clicks the link          ${newExternalUserFCEmail}  ${externalUserEmailVerificationSubject}  ${emailVerificationContentPattern}  1
 
-The new external user(as FC) signs in
+The new external user(as FC) signs in and can see multiple dashboard
     [Documentation]  IFS-7317
     Given the user clicks the button/link             link = Sign in
     When logging in and error checking                ${newExternalUserFCEmail}  ${short_password}
@@ -109,7 +108,7 @@ The new external user can accept the email invite as MO and create an account
     Then the user provides details and creates an account     FMOname  LMOName
     And the user reads his email and clicks the link          ${newExternalUserMOEmail}  ${externalUserEmailVerificationSubject}  ${emailVerificationContentPattern}  1
 
-The new external user(as MO) signs in
+The new external user(as MO) signs in and can see multiple dashboard
     [Documentation]  IFS-7317
     Given the user clicks the button/link             link = Sign in
     When logging in and error checking                ${newExternalUserMOEmail}  ${short_password}
@@ -174,7 +173,7 @@ the user provides details and creates an account
      validation error messages check
      The user fills in account details     ${firstName}  ${lastname}
      the user clicks the button/link       jQuery = button:contains("Create account")
-     the user should see the element       jQuery = h1:contains("Please verify your email address")
+     the user should see the element       jQuery = h1:contains("${externalUserEmailVerificationSubject}")
 
 validation error messages check
     the user clicks the button/link     jQuery = button:contains("Create account")
