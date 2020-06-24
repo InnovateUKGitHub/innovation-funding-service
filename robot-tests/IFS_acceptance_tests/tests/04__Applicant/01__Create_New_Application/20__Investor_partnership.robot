@@ -75,7 +75,7 @@ Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-7235
     Given Log in as a different user         &{troy_ward_crendentials}
     When The user navigates to the page      ${investorFeedbackLink}
-    Then the user should see the element     link = ${tandcLink}
+    Then the user should see the element     link = View ${tandcLink}
 
 *** Keywords ***
 Custom suite setup
