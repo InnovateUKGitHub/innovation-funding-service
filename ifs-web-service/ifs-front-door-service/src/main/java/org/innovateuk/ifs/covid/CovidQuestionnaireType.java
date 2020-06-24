@@ -9,7 +9,6 @@ public enum CovidQuestionnaireType {
     AWARD_RECIPIENT("award-recipient", "Are you an Innovate UK award recipient?"),
     CHALLENGE_TIMING("challenge-timing", "Is your challenge in the timing of your project activity?", "For example, do you need to extend the project period, without incurring additional costs?"),
     CHALLENGE_CASHFLOW("challenge-cashflow", "Is your challenge in managing your cashflow, so that you can meet your project costs to continue your project activity?"),
-//    CHALLENGE_LARGE_FUNDING_GAP("challenge-large-funding", "Is your challenge in meeting a larger funding gap (up to £250,000)?"),
     CHALLENGE_SIGNIFICANT_FUNDING_GAP("challenge-significant-funding",  "Is your challenge in meeting a significant funding gap (over £250,000)?");
     private String url;
     private String question;

@@ -90,12 +90,6 @@ public class CovidQuestionaireController {
                 } else {
                     return redirectToQuestion(CHALLENGE_SIGNIFICANT_FUNDING_GAP);
                 }
-//            case CHALLENGE_LARGE_FUNDING_GAP:
-//                if (answer) {
-//                    return decision(model, type, answer, "continuity-grant");
-//                } else {
-//                    return redirectToQuestion(CHALLENGE_SIGNIFICANT_FUNDING_GAP);
-//                }
             case CHALLENGE_SIGNIFICANT_FUNDING_GAP:
                 if (answer) {
                     return decision(model, type, answer, "continuity-loan");
@@ -125,8 +119,6 @@ public class CovidQuestionaireController {
                 return combineLists(getPreviousAnswers(AWARD_RECIPIENT), Pair.of(AWARD_RECIPIENT, true));
             case CHALLENGE_CASHFLOW:
                 return combineLists(getPreviousAnswers(CHALLENGE_TIMING), Pair.of(CHALLENGE_TIMING, false));
-//            case CHALLENGE_LARGE_FUNDING_GAP:
-//                return combineLists(getPreviousAnswers(CHALLENGE_CASHFLOW), Pair.of(CHALLENGE_CASHFLOW, false));
             case CHALLENGE_SIGNIFICANT_FUNDING_GAP:
                 return combineLists(getPreviousAnswers(CHALLENGE_CASHFLOW), Pair.of(CHALLENGE_CASHFLOW, false));
         }
