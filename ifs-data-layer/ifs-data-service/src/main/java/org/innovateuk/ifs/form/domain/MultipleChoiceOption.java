@@ -36,4 +36,12 @@ public class MultipleChoiceOption {
     public FormInput getFormInput() {
         return formInput;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFormInput(FormInput formInput) {
+        this.formInput = formInput;
+    }
 }
