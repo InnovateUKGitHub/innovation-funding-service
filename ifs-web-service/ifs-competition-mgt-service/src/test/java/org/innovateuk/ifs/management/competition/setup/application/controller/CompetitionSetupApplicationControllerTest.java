@@ -18,6 +18,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSet
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -189,7 +190,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
+        when(competitionSetupPopulator.populateGeneralModelAttributes(eq(competition), any(), eq(CompetitionSetupSection.APPLICATION_FORM)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.FALSE));
 
         ModelMap model = mockMvc.perform(get(URL_PREFIX + "/question/finance"))
@@ -214,10 +215,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         mockMvc.perform(get(URL_PREFIX + "/landing-page"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"));
-        ArgumentCaptor<Model> model = ArgumentCaptor.forClass(Model.class);
-        ArgumentCaptor<CompetitionResource> competitionResource = ArgumentCaptor.forClass(CompetitionResource.class);
-        ArgumentCaptor<CompetitionSetupSection> competitionSetupSection = ArgumentCaptor.forClass(CompetitionSetupSection.class);
-        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(competitionResource.capture(), competitionSetupSection.capture());
+        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(any(), any(), any());
         verify(competitionSetupRestService, never()).update(competition);
     }
 
@@ -295,7 +293,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
-        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(UserResource.class), any(CompetitionSetupSection.class)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         Map<String, Object> model = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
@@ -470,7 +468,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
-        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(UserResource.class), any(CompetitionSetupSection.class)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
@@ -546,7 +544,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
-        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(UserResource.class), any(CompetitionSetupSection.class)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
@@ -587,7 +585,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
         when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
-        when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
+        when(competitionSetupPopulator.populateGeneralModelAttributes(eq(competition), any(), eq(CompetitionSetupSection.APPLICATION_FORM)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
@@ -661,7 +659,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .build();
 
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
-        when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
+        when(competitionSetupPopulator.populateGeneralModelAttributes(eq(competition), any(), eq(CompetitionSetupSection.APPLICATION_FORM)))
                 .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         MvcResult result = mockMvc.perform(get(URL_PREFIX + "/detail/edit"))
@@ -682,7 +680,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     private GeneralSetupViewModel getBasicGeneralViewModel(CompetitionSetupSection section, CompetitionResource competition, Boolean editable) {
-        return new GeneralSetupViewModel(editable, competition, section, CompetitionSetupSection.values(), Boolean.TRUE);
+        return new GeneralSetupViewModel(editable, competition, section, CompetitionSetupSection.values(), Boolean.TRUE, Boolean.FALSE);
     }
 
     @Test

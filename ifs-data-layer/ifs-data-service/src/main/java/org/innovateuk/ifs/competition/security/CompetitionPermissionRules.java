@@ -97,4 +97,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return (isInternalAdmin(user) || isIFSAdmin(user)) &&
                 EnumSet.of(COMPETITION_SETUP, READY_TO_OPEN).contains(competition.getCompetitionStatus());
     }
+
+    @PermissionRule(value = "CHOOSE_POST_AWARD_SERVICE", description = "Competition Admin can set post award service on a competition")
+    public boolean internalAdminCanSetPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return isInternalAdmin(user);
+    }
 }

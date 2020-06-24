@@ -120,7 +120,8 @@ public class ProjectEligibilityModelPopulatorTest {
                 competition,
                 CompetitionSetupSection.PROJECT_ELIGIBILITY,
                 CompetitionSetupSection.values(),
-                Boolean.TRUE
+                Boolean.TRUE,
+                Boolean.FALSE
         );
     }
 }
