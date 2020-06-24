@@ -43,7 +43,8 @@ IFS Admin can see the link to manage invitations to external users
     [Documentation]  IFS-7318
     Given the grant offer letter is accepted and project is live in IFS-PA
     When the user clicks the button/link     link = View only completed projects for this competition
-    Then the user clicks the button/link     jQuery = button:contains("Open all")
+    And the user clicks the button/link      jQuery = button:contains("Open all")
+    Then the user should see the element     link = Manage invitations to external users
 
 IFS Admin can see the link to invite new external users
     [Documentation]  IFS-7318, IF-7316
