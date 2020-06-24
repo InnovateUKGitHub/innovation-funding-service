@@ -1,3 +1,4 @@
+-- new table for the multiple choice options linked to a form input.
 CREATE TABLE multiple_choice_option (
   id bigint(20) NOT NULL AUTO_INCREMENT,
   text varchar(255) NOT NULL,
