@@ -130,9 +130,8 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
             new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId());
 
             RestResult<Void> result = milestoneRestService.updateMilestone(new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId()));
-            if (!result.getErrors().isEmpty()) {
-                return result.getErrors();
-            }
+
+            return result.getErrors();
         }
 
         return emptyList();

@@ -71,15 +71,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             boolean isNonIfs = competition.isNonIfs();
 
-            List<MilestoneType> milestonesRequired;
-
-            if (competition.getCompletionStage() == CompetitionCompletionStage.COMPETITION_CLOSE) {
-                milestonesRequired = COMPETITION_CLOSE_MILESTONES;
-            } else {
-                milestonesRequired = PUBLIC_MILESTONES.stream()
-                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                        .collect(toList());
-            }
+            List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
+                    .filter(milestoneType -> milestoneType.ordinal() <= competition.getCompletionStage().getLastMilestone().ordinal())
+                    .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                    .collect(toList());
 
             List<Milestone> milestones = milestoneRepository
                     .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
@@ -159,35 +154,27 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                 List<Milestone> newMilestones = new ArrayList<>();
 
                 if (currentMilestones.size() > 1) {
-                    if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
-                        List<Milestone> deleteMilestones = currentMilestones.stream()
-                                .filter(milestone -> !COMPETITION_CLOSE_MILESTONES.contains(milestone.getType()))
-                                .collect(Collectors.toList());
+                    List<Milestone> milestonesToDelete = currentMilestones.stream()
+                            .filter(milestone -> milestone.getType().ordinal() > completionStage.getLastMilestone().ordinal())
+                            .collect(Collectors.toList());
 
-                        milestoneRepository.deleteAll(deleteMilestones);
-                    } else {
-                        List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
-                                .map(milestone -> milestone.getType())
-                                .collect(toList());
+                    milestoneRepository.deleteAll(milestonesToDelete);
 
-                        Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                                .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType)).forEach(type ->
-                                newMilestones.add(new Milestone(type, competition))
-                        );
-                        milestoneRepository.saveAll(newMilestones);
-                    }
+                    List<MilestoneType> currentMilestoneTypes = currentMilestones.stream()
+                            .map(milestone -> milestone.getType())
+                            .collect(toList());
+
+                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                            .filter(milestoneType -> !currentMilestoneTypes.contains(milestoneType)).forEach(type ->
+                            newMilestones.add(new Milestone(type, competition))
+                    );
+                    milestoneRepository.saveAll(newMilestones);
                 } else {
-                    if (completionStage == CompetitionCompletionStage.COMPETITION_CLOSE) {
-                        COMPETITION_CLOSE_MILESTONES.stream()
-                                .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE))
-                                .forEach(type -> newMilestones.add(new Milestone(type, competition))
-                        );
-                    } else {
-                        Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                                .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
-                                newMilestones.add(new Milestone(type, competition))
-                        );
-                    }
+                    Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
+                            .filter(milestoneType -> milestoneType.ordinal() <= completionStage.getLastMilestone().ordinal())
+                            .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
+                            newMilestones.add(new Milestone(type, competition))
+                    );
                     milestoneRepository.saveAll(newMilestones);
                 }
             }
