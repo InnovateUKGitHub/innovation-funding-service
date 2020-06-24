@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
+import org.innovateuk.ifs.commons.mapper.BaseResourceMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -17,18 +18,11 @@ import org.mapstruct.Mappings;
         FormValidatorMapper.class,
         QuestionMapper.class,
         GuidanceRowMapper.class,
-        FileEntryMapper.class
+        FileEntryMapper.class,
+        MultipleChoiceOptionMapper.class
     }
 )
-public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
-
-    @Mappings({
-            @Mapping(target = "guidanceRows", ignore = true),
-            @Mapping(target = "active", ignore = true),
-            @Mapping(target = "file", ignore = true)
-    })
-    @Override
-    public abstract FormInput mapToDomain(FormInputResource resource);
+public abstract class FormInputMapper extends BaseResourceMapper<FormInput, FormInputResource> {
 
     @Override
     public abstract FormInputResource mapToResource(FormInput domain);
