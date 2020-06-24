@@ -26,10 +26,11 @@ import java.util.function.Supplier;
 @Controller
 @RequestMapping("/application/create-authenticated")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'assessor')")
+@PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
 public class ApplicationCreationAuthenticatedController {
-    public static final String COMPETITION_ID = "competitionId";
-    public static final String FORM_NAME = "form";
+
+    private static final String COMPETITION_ID = "competitionId";
+    private static final String FORM_NAME = "form";
 
     @Autowired
     private UserService userService;
