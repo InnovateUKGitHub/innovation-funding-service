@@ -3,8 +3,10 @@ package org.innovateuk.ifs.project.status.populator;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionPostAwardServiceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupPostAwardServiceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
@@ -22,6 +24,7 @@ import org.innovateuk.ifs.sections.SectionAccess;
 import org.innovateuk.ifs.sections.SectionStatus;
 import org.innovateuk.ifs.status.StatusService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.NavigationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +61,12 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
     @Autowired
     private SetupSectionStatus sectionStatus;
 
+    @Autowired
+    private CompetitionSetupPostAwardServiceRestService competitionSetupPostAwardServiceRestService;
+
+    @Autowired
+    private NavigationUtils navigationUtils;
+
     public SetupStatusViewModel populateViewModel(long projectId,
                                                   UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
@@ -80,13 +89,22 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
 
         boolean isInvestorPartnership = FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType();
 
+        RestResult<CompetitionPostAwardServiceResource> competitionPostAwardServiceResource = competitionSetupPostAwardServiceRestService.getPostAwardService(project.getCompetition());
+
+        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
+        boolean isProjectFinanceContact = projectService.isProjectFinanceContact(loggedInUser.getId(), projectId);
+
         return new SetupStatusViewModel(
                 project,
                 monitoringOfficer,
                 stages,
                 competition.isLoan(),
                 isInvestorPartnership,
-                showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer));
+                showApplicationFeedbackLink(project, loggedInUser, monitoringOfficer),
+                isProjectManager,
+                isProjectFinanceContact,
+                competitionPostAwardServiceResource.getSuccess().getPostAwardService(),
+                navigationUtils.getLiveProjectsLandingPageUrl());
     }
 
     private boolean showBankDetails(RestResult<OrganisationResource> organisationResult, ProjectTeamStatusResource teamStatus) {
@@ -139,15 +157,15 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         partnerProjectLocationRequired);
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
-                            : "The proposed start date and location of the project.",
+                                : "The proposed start date and location of the project.",
                         projectComplete ? format("/project/%d/readonly", project.getId())
-                            : format("/project/%d/details", project.getId()),
+                                : format("/project/%d/details", project.getId()),
                         sectionStatus.projectDetailsSectionStatus(
                                 isProjectDetailsProcessCompleted,
                                 awaitingProjectDetailsActionFromOtherPartners,
                                 isLeadPartner),
                         statusAccessor.canAccessProjectDetailsSection(resolve(organisationRequest))
-                    );
+                );
             case PROJECT_TEAM:
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Add people to your project."
@@ -156,7 +174,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                 : format("/project/%d/team", project.getId()),
                         sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
                         statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))
-                    );
+                );
             case DOCUMENTS:
                 boolean isProjectManager = projectService.getProjectManager(project.getId()).map(pu -> pu.isUser(user.getId())).orElse(false);
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
@@ -204,7 +222,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 boolean pendingQueries = SectionStatus.FLAG.equals(financeChecksStatus);
 
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                       "We will review your financial information.",
+                        "We will review your financial information.",
                         format("/project/%d/finance-checks", project.getId()),
                         financeChecksStatus,
                         monitoringOfficer ? SectionAccess.NOT_ACCESSIBLE : financeChecksAccess,

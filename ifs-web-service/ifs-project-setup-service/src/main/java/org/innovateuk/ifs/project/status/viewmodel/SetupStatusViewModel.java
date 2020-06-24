@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.PostAwardService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -23,13 +24,21 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean collaborativeProject;
     private final boolean showApplicationFeedbackLink;
     private final List<SetupStatusStageViewModel> stages;
+    private final boolean projectManager;
+    private final boolean projectFinanceContact;
+    private final PostAwardService postAwardService;
+    private final String liveProjectsLandingPageUrl;
 
     public SetupStatusViewModel(ProjectResource project,
                                 boolean monitoringOfficer,
                                 List<SetupStatusStageViewModel> stages,
                                 boolean loanCompetition,
+                                boolean showApplicationFeedbackLink,
                                 boolean investorPartnershipCompetition,
-                                boolean showApplicationFeedbackLink) {
+                                boolean projectManager,
+                                boolean projectFinanceContact,
+                                PostAwardService postAwardService,
+                                String liveProjectsLandingPageUrl) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.monitoringOfficer = monitoringOfficer;
@@ -42,6 +51,10 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.investorPartnershipCompetition = investorPartnershipCompetition;
         this.collaborativeProject = project.isCollaborativeProject();
         this.showApplicationFeedbackLink = showApplicationFeedbackLink;
+        this.projectManager = projectManager;
+        this.projectFinanceContact = projectFinanceContact;
+        this.postAwardService = postAwardService;
+        this.liveProjectsLandingPageUrl = liveProjectsLandingPageUrl;
     }
 
     public Long getProjectId() {
@@ -94,5 +107,25 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     public boolean shouldShowStatus(SetupStatusStageViewModel stage) {
         return isMonitoringOfficer() || !stage.getAccess().isNotAccessible();
+    }
+
+    public boolean isProjectManager() {
+        return projectManager;
+    }
+
+    public boolean isProjectFinanceContact() {
+        return projectFinanceContact;
+    }
+
+    public PostAwardService getPostAwardService() {
+        return postAwardService;
+    }
+
+    public boolean isIfsPostAward() {
+        return this.postAwardService == PostAwardService.IFS_POST_AWARD;
+    }
+
+    public String getLiveProjectsLandingPageUrl() {
+        return liveProjectsLandingPageUrl;
     }
 }
