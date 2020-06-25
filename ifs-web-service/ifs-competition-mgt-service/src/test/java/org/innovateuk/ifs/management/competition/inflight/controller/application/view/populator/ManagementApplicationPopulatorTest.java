@@ -93,7 +93,7 @@ public class ManagementApplicationPopulatorTest {
                 .build();
         FormInputResponseResource response = newFormInputResponseResource()
                 .withFormInputs(singletonList(appendix.getId()))
-                .withFileEntries(singletonList(file.getId()))
+                .withFileEntry(file.getId())
                 .build();
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
         when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));

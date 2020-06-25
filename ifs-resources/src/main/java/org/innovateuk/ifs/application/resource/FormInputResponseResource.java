@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 public class FormInputResponseResource {
     private Long id;
@@ -18,7 +17,7 @@ public class FormInputResponseResource {
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
-    private List<Long> fileEntries;
+    private Long fileEntry;
     private String filename;
     private Long filesizeBytes;
 
@@ -38,15 +37,13 @@ public class FormInputResponseResource {
         this.application = application.getId();
     }
 
-    public FormInputResponseResource(ZonedDateTime updateDate, List<Long> fileEntries, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, Long fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
-        this.fileEntries = fileEntries;
+        this.fileEntry = fileEntry;
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
     }
-
-
 
     public Integer getFormInputMaxWordCount() {
         return formInputMaxWordCount;
@@ -145,12 +142,12 @@ public class FormInputResponseResource {
         this.updatedByUserName = updatedByUserName;
     }
 
-    public List<Long> getFileEntries() {
-        return fileEntries;
+    public Long getFileEntry() {
+        return fileEntry;
     }
 
-    public void setFileEntries(List<Long> fileEntries) {
-        this.fileEntries = fileEntries;
+    public void setFileEntry(Long fileEntry) {
+        this.fileEntry = fileEntry;
     }
 
     public String getFilename() {
