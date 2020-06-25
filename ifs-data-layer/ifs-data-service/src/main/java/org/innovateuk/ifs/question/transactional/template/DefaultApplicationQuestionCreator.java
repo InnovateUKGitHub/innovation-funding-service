@@ -2,6 +2,7 @@ package org.innovateuk.ifs.question.transactional.template;
 
 import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.innovateuk.ifs.application.validator.RequiredFileValidator;
+import org.innovateuk.ifs.application.validator.RequiredMultipleChoiceValidator;
 import org.innovateuk.ifs.application.validator.WordCountValidator;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -40,8 +41,10 @@ public class DefaultApplicationQuestionCreator {
         FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
         FormValidator requiredFileValidator = formValidatorRepository.findByClazzName(RequiredFileValidator.class.getName());
+        FormValidator requiredMultipleChoiceValidator = formValidatorRepository.findByClazzName(RequiredMultipleChoiceValidator.class.getName());
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
+        FormInput multipleChoiceInput = buildMultipleChoiceInput(competition, requiredMultipleChoiceValidator);
         FormInput appendixInput = buildAppendixInput(competition);
         FormInput templateInput = buildTemplateInput(competition, requiredFileValidator);
 
@@ -53,9 +56,24 @@ public class DefaultApplicationQuestionCreator {
         question.setQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
         question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
-        question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput, templateInput));
+        question.setFormInputs(Arrays.asList(maxWordCountInput, multipleChoiceInput,  questionScoreInput, feedbackInput, appendixInput, templateInput));
 
         return question;
+    }
+
+    private FormInput buildMultipleChoiceInput(Competition competition, FormValidator requiredMultipleChoiceValidator) {
+        FormInput input = new FormInput();
+        input.setType(FormInputType.MULTIPLE_CHOICE);
+        input.setCompetition(competition);
+        input.setIncludedInApplicationSummary(true);
+        input.setPriority(3);
+        input.setDescription("Multiple choice");
+        input.setScope(FormInputScope.APPLICATION);
+        input.setActive(false);
+
+        input.setInputValidators(singleton(requiredMultipleChoiceValidator));
+
+        return input;
     }
 
     private FormInput buildApplicantTextInput(Competition competition, FormValidator notEmptyValidator, FormValidator wordCountValidator) {
