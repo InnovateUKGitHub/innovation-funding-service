@@ -14,12 +14,9 @@ SELECT NULL                 as word_count,
        0                    as active
 FROM form_input fi
 INNER JOIN competition c on c.id = fi.competition_id
-INNER JOIN question q on q.id = fi.question_id
-INNER JOIN section s on s.id = q.section_id
 WHERE fi.form_input_type_id = 2
 AND c.template = 1
-AND fi.scope = 'APPLICATION'
-AND s.name = 'Application questions';
+AND fi.scope = 'APPLICATION';
 
 -- insert validators for multiple choice.
 INSERT INTO form_input_validator (form_input_id, form_validator_id)

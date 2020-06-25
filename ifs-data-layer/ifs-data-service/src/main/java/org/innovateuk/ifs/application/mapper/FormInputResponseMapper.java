@@ -35,11 +35,6 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
     @Override
     public abstract FormInputResponseResource mapToResource(FormInputResponse domain);
 
-    @Mappings({
-            @Mapping(target = "formInput", ignore = true)
-    })
-    public abstract FormInputResponse mapToDomain(FormInputResponseResource domain);
-
     public Long mapFormInputResponseToId(FormInputResponse object) {
         if (object == null) {
             return null;
