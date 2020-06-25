@@ -77,7 +77,7 @@ the user navigates to submitted application page
     the user navigates to the page             ${CA_Live}
     the user should see all live competitions
     the user navigates to the page             ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}
-    the user should not see the element        jQuery = a:contains("View and update competition setup")
+    the user should not see the element        jQuery = a:contains("View and update competition details")
     the user clicks the button/link            link = Applications: Submitted, ineligible
     the user clicks the button/link            link = Submitted applications
     the user should see the element            jQuery = td:contains("${IN_ASSESSMENT_APPLICATION_4_TITLE}") ~ td:contains("57,803")

@@ -354,7 +354,8 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 50L,
                 3L,
                 expectedSections,
-                expectedAppendices
+                expectedAppendices,
+                null
         );
 
         mockMvc.perform(get("/" + assessment.getId()))

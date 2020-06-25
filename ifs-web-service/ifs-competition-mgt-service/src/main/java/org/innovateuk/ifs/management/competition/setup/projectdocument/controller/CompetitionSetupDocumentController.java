@@ -69,13 +69,14 @@ public class CompetitionSetupDocumentController {
     @GetMapping("/landing-page")
     public String projectDocumentLandingPage(Model model,
                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form) {
+                                             @ModelAttribute(LANDING_FORM_ATTR_NAME) LandingPageForm form,
+                                             UserResource loggedInUser) {
 
-        Redirect redirect = doViewProjectDocument(model, competitionId);
+        Redirect redirect = doViewProjectDocument(model, competitionId, loggedInUser);
         return redirect.redirect ? redirect.url : "competition/setup";
     }
 
-    private Redirect doViewProjectDocument(Model model, long competitionId) {
+    private Redirect doViewProjectDocument(Model model, long competitionId, UserResource loggedInUser) {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Redirect redirect = new Redirect(false);
@@ -92,7 +93,7 @@ public class CompetitionSetupDocumentController {
             return redirect;
         }
 
-        model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT));
+        model.addAttribute("model", competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, loggedInUser, PROJECT_DOCUMENT));
 
         return redirect;
     }
@@ -102,9 +103,10 @@ public class CompetitionSetupDocumentController {
                                                  BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                 UserResource loggedInUser,
                                                  Model model) {
 
-        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form);
+        Supplier<String> failureView = () -> projectDocumentLandingPage(model, competitionId, form, loggedInUser);
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId;
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -124,9 +126,9 @@ public class CompetitionSetupDocumentController {
 
     @GetMapping("/add")
     public String viewAddProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                         Model model) {
+                                         UserResource loggedInUser, Model model) {
 
-        Redirect redirect = doViewProjectDocument(model, competitionId);
+        Redirect redirect = doViewProjectDocument(model, competitionId, loggedInUser);
 
         ProjectDocumentForm form = new ProjectDocumentForm(true, true);
         return redirect.redirect ? redirect.url : doViewSaveProjectDocument(model, form);
@@ -140,9 +142,10 @@ public class CompetitionSetupDocumentController {
     @GetMapping("/{projectDocumentId}/edit")
     public String viewEditProjectDocument(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("projectDocumentId") long projectDocumentId,
+                                          UserResource loggedInUser,
                                           Model model) {
 
-        Redirect redirect = doViewProjectDocument(model, competitionId);
+        Redirect redirect = doViewProjectDocument(model, competitionId, loggedInUser);
         return redirect.redirect ? redirect.url : doViewEditProjectDocument(model, projectDocumentId);
     }
 
@@ -188,7 +191,7 @@ public class CompetitionSetupDocumentController {
                                       BindingResult bindingResult, ValidationHandler validationHandler,
                                       UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> saveProjectDocumentFailureView(competitionId, model, form);
+        Supplier<String> failureView = () -> saveProjectDocumentFailureView(competitionId, model, form, loggedInUser);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -203,8 +206,8 @@ public class CompetitionSetupDocumentController {
         });
     }
 
-    private String saveProjectDocumentFailureView(long competitionId, Model model, ProjectDocumentForm form) {
-        Redirect redirect = doViewProjectDocument(model, competitionId);
+    private String saveProjectDocumentFailureView(long competitionId, Model model, ProjectDocumentForm form, UserResource loggedInUser) {
+        Redirect redirect = doViewProjectDocument(model, competitionId, loggedInUser);
         return redirect.redirect ? redirect.url : doViewSaveProjectDocument(model, form);
     }
 

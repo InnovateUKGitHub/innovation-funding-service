@@ -187,7 +187,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         finances.applicationName.equals(applicationLine.title) &&
                         finances.organisationName.equals(organisationName));
 
-            if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
+            if (applicationData.getCompetition().applicantShouldUseJesFinances(organisationType)) {
 
                 return organisationFinances.map(suppliedFinances ->
                         generateAcademicFinancesFromSuppliedData(

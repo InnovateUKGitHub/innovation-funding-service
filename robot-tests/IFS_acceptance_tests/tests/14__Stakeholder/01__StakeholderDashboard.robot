@@ -22,6 +22,7 @@ ${openProgrammeCompetitionId}    ${competition_ids['${openProgrammeCompetitionNa
 ${stakeholderEmail}              stakeHolder@test.com
 ${applicantEmail}                louis.morgan@example.com
 ${previousStakeholderEmail}      blake.wood@gmail.com
+${uk_based_applicant_new}        aastha.walia@test.com
 
 *** Test Cases ***
 The internal user cannot invite a Stakeholder when they have triggered the name validation
@@ -180,7 +181,62 @@ The Stakeholder can no longer see the competition
     When log in as a different user             &{stakeholder_user}
     Then the user should not see the element    jQuery = h3:contains("${openProgrammeCompetitionName}")
 
+The stakeholder can apply to a competition as an applicant
+    [Documentation]  IFS-7639
+    Given the user select the competition and starts application     ${openCompetitionPerformance_name}
+    When the user provides organisation details
+    Then the user should not see an error in the page
+    [Teardown]  logout as user
+
+The stakeholder can be added as a collaborator to an application
+    [Documentation]  IFS-7639
+    [Tags]  HappyPath
+    Given new user apply for competition and create account
+    When the user verifies their account                        ${uk_based_applicant_new}
+    And A new organisation logs in and sees the project         ${uk_based_applicant_new}
+    And the user clicks the button/link                         link = Untitled application (start here)
+    Then the user clicks the button/link                        link = Application team
+    And the user adds a stakeholder as partner organisation     Blake Consultants  Blake Wood  ${previousStakeholderEmail}
+
+The stakeholder partner organisation accepts the invite
+    [Documentation]    IFS-7639
+    [Tags]  HappyPath
+    [Setup]  Logout as user
+    Given the user reads his email and clicks the link    ${previousStakeholderEmail}  Invitation to collaborate in ${openCompetitionPerformance_name}  You will be joining as part of the organisation  2
+    When the user clicks the button/link                  link = Continue
+    Then logging in and error checking                    ${previousStakeholderEmail}  ${short_password}
+
+The stakeholder partner organisation provides organisation details and do not see any error
+    [Documentation]    IFS-7639
+    [Tags]  HappyPath
+    Given the user provides organisation details
+    And the user selects the checkbox                     agree
+    When the user clicks the button/link                  jQuery = button:contains("Continue")
+    Then the user should not see an error in the page
+
 *** Keywords ***
+new user apply for competition and create account
+    the user select the competition and starts application        ${openCompetitionPerformance_name}
+    the user clicks the button/link                               link = Continue and create an account
+    the user provides organisation details
+    the user enters the details and clicks the create account     Aastha  Walia  ${uk_based_applicant_new}  ${short_password}
+
+the user adds a stakeholder as partner organisation
+    [Arguments]  ${orgName}  ${name}  ${email}
+    the user clicks the button/link          link = Add a partner organisation
+    the user enters text to a text field     id = organisationName    ${orgName}
+    the user enters text to a text field     id = name   ${name}
+    the user enters text to a text field     id = email  ${email}
+    the user clicks the button/link          jQuery = button:contains("Invite partner organisation")
+
+the user provides organisation details
+    the user selects the radio button        organisationTypeId  radio-1
+    the user clicks the button/link          jQuery = button:contains("Save and continue")
+    the user enters text to a text field     id = organisationSearchName  Nomensa
+    the user clicks the button/link          id = org-search
+    the user clicks the button/link          link = NOMENSA LTD
+    the user clicks the button/link          name = save-organisation
+
 All of the calculations on the dashboard should be correct
     the total calculation in dashboard should be correct    Open           //section[1]/ul/li
     the total calculation in dashboard should be correct    Closed         //section[2]/ul/li
@@ -191,7 +247,7 @@ All of the calculations on the dashboard should be correct
 Comp admin navigate to stakeholders page
     the user logs-in in new browser    &{Comp_admin1_credentials}
     the user clicks the button/link    link = ${openProgrammeCompetitionName}
-    the user clicks the button/link    link = View and update competition setup
+    the user clicks the button/link    link = View and update competition details
     the user clicks the button/link    link = Stakeholders
 
 the user triggers the name validation
