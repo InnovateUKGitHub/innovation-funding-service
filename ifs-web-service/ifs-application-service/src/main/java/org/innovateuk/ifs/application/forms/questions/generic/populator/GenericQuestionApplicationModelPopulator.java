@@ -41,6 +41,7 @@ public class GenericQuestionApplicationModelPopulator {
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
         ofNullable(formInputs.get(FormInputType.TEXTAREA)).ifPresent(input -> buildTextAreaViewModel(viewModelBuilder, input));
+        ofNullable(formInputs.get(FormInputType.MULTIPLE_CHOICE)).ifPresent(input -> buildMultipleChoiceOptionsViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.FILEUPLOAD)).ifPresent(input -> buildAppendixViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.TEMPLATE_DOCUMENT)).ifPresent(input -> buildTemplateDocumentViewModel(viewModelBuilder, input));
 
@@ -90,6 +91,11 @@ public class GenericQuestionApplicationModelPopulator {
                 .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
                 .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
                 .withWordsLeft(firstResponse(input).map(FormInputResponseResource::getWordCountLeft).orElse(input.getFormInput().getWordCount()));
+    }
+
+    private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
+        viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
+                .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
     }
 
     private String filenameResponseOrNull(ApplicantFormInputResource input) {
