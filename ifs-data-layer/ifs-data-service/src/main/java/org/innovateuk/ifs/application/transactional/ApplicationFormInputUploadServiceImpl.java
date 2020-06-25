@@ -82,8 +82,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                     formInputId);
 
                             // Removing and replacing if file already exists here
-                            if (existingResponse != null && existingResponse.getFileEntries() != null
-                              && existingResponse.getFileEntries().size() >= existingResponse.getFormInput().getWordCount()) {
+                            if (existingResponse != null && existingResponse.getFileEntries().size() >= existingResponse.getFormInput().getWordCount()) {
                                 LOG.info("[FileLogging] FormInputResponse for upload exceeds configured maximum of " + existingResponse.getFormInput().getWordCount() +
                                         " for application id " + openApplication +
                                         " processRoleId " + processRoleId +

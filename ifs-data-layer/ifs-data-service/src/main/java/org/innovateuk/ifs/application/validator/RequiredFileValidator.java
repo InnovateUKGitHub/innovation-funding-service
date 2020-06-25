@@ -20,7 +20,7 @@ public class RequiredFileValidator extends BaseValidator {
         LOG.debug("do NotEmpty validation ");
         FormInputResponse response = (FormInputResponse) target;
 
-        if (response.getFileEntries() == null || !response.getFileEntries().isEmpty()) {
+        if (response.getFileEntries() == null || response.getFileEntries().isEmpty()) {
             rejectValue(errors, "fileEntry", "validation.file.required");
         }
     }

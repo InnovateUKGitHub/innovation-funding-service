@@ -42,6 +42,8 @@ public class FormInputResponseResource {
         this.application = application.getId();
     }
 
+
+
     public Integer getFormInputMaxWordCount() {
         return formInputMaxWordCount;
     }
