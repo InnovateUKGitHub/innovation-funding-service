@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -187,6 +189,41 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
 
         assertFalse(service.isProjectManager(loggedInUserId, projectId));
+    }
+
+    @Test
+    public void isProjectFinanceContact() {
+        final long projectId = 123;
+        final long projectFinanceContactId = 987;
+
+        List<ProjectUserResource> projectFinanceContacts = Arrays.asList(
+                newProjectUserResource().withUser(projectFinanceContactId).build(),
+                newProjectUserResource().withUser(anyLong()).build()
+        );
+
+        when(projectRestService.getProjectFinanceContacts(projectId)).thenReturn(restSuccess(projectFinanceContacts));
+        assertTrue(service.isProjectFinanceContact(projectFinanceContactId, projectId));
+    }
+
+    @Test
+    public void isProjectFinanceContact_emptyResults() {
+        final long projectId = 123;
+
+        when(projectRestService.getProjectFinanceContacts(projectId)).thenReturn(restSuccess(Collections.emptyList()));
+
+        assertFalse(service.isProjectFinanceContact(anyLong(), projectId));
+    }
+
+    @Test
+    public void isProjectFinanceContact_notUser() {
+        final long projectId = 123;
+        final long projectFinanceContactId = 987;
+        final long loggedInUserId = 742;
+
+        when(projectRestService.getProjectFinanceContacts(projectId))
+                .thenReturn(restSuccess(Collections.singletonList(newProjectUserResource().withUser(projectFinanceContactId).build())));
+
+        assertFalse(service.isProjectFinanceContact(loggedInUserId, projectId));
     }
 
     @Test

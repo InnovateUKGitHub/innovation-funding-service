@@ -6,11 +6,13 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
 import org.innovateuk.ifs.docusign.resource.DocusignType;
 import org.innovateuk.ifs.docusign.transactional.DocusignService;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.grant.repository.GrantProcessConfigurationRepository;
 import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -53,6 +55,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -86,8 +89,7 @@ import static org.innovateuk.ifs.project.core.builder.ProjectProcessBuilder.newP
 import static org.innovateuk.ifs.project.core.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.project.financecheck.builder.CostBuilder.newCost;
-import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.GRANT_OFFER_LETTER_PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.PROJECT_LIVE;
+import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.NotificationsGol.*;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -153,6 +155,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private DocusignService docusignService;
+
+    @Mock
+    private CompetitionRepository competitionRepository;
+
+    @Mock
+    private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
 
     @Before
     public void setUp() {
@@ -821,6 +829,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withProjectProcess(newProjectProcess()
                         .withActivityState(ProjectState.SETUP)
                         .build())
+                .withTargetStartDate(LocalDate.now())
                 .build();
 
         List<NotificationTarget> to = asList(
@@ -830,8 +839,10 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         );
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", "Competition 1",
-                "applicationId", project.getApplication().getId()
+                "applicationId", project.getApplication().getId(),
+                "projectName", project.getName(),
+                "projectStartDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
+                "projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId()
         );
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
@@ -894,13 +905,16 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withProjectProcess(newProjectProcess()
                         .withActivityState(ProjectState.SETUP)
                         .build())
+                .withTargetStartDate(LocalDate.now())
                 .build();
 
         NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         Map<String, Object> expectedNotificationArguments = asMap(
-                "competitionName", "Competition 1",
-                "applicationId", project.getApplication().getId()
+                "applicationId", project.getApplication().getId(),
+                "projectName", project.getName(),
+                "projectStartDate", LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy")),
+                "projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId()
         );
 
         when(projectRepositoryMock.findById(projectId)).thenReturn(Optional.of(project));
@@ -1148,5 +1162,4 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         ReflectionTestUtils.setField(projectGrantOfferService, "webBaseUrl", webBaseUrl);
         return projectGrantOfferService;
     }
-
 }
