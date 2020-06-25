@@ -36,6 +36,9 @@ IFS.competitionManagement.repeater = (function () {
         case 'dateContentGroup':
           IFS.competitionManagement.repeater.addDateContentGroup(el)
           break
+        case 'multipleChoice':
+          IFS.competitionManagement.repeater.addMultipleChoiceRow(el)
+          break
       }
       jQuery('body').trigger('updateSerializedFormState')
       return false
@@ -69,6 +72,10 @@ IFS.competitionManagement.repeater = (function () {
         case 'dateContentGroup':
           inst.closest('[id^="contentDateGroup-row-"]').remove()
           IFS.competitionManagement.repeater.reindexRows('[id^="contentDateGroup-row-"]')
+          break
+        case 'multipleChoice':
+          inst.closest('[id^="multiple-choice-row-"]').remove()
+          IFS.competitionManagement.repeater.reindexRows('[id^="multiple-choice-row-"]')
           break
       }
     },
@@ -251,6 +258,49 @@ IFS.competitionManagement.repeater = (function () {
             '</td>' +
             '<td class="govuk-table__cell"><button class="button-clear alignright remove-guidance-row" name="remove-guidance-row" data-remove-row="guidance" value="' + count + '">Remove</button></td>'
       html += '</tr>'
+      table.find('tbody').append(html)
+    },
+    addMultipleChoiceRow: function () {
+      var table = jQuery('#multiple-choice-table')
+      var currentCount = 0
+      var idCount = 0
+
+      if (table.find('tbody tr').length) {
+        currentCount = parseInt(table.find('tbody tr').length, 10) // name attribute has to be 0,1,2,3
+        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(jQuery('tr[id^=multiple-choice-row-]').last().attr('id').split('ultiple-choice-row-')[1], 10) + 1
+      }
+
+      var html =
+        '<tr id="multiple-choice-row-$index" class="govuk-table__row form-group-row-validated">' +
+        '    <td class="govuk-table__cell govuk-form-group">' +
+        '        <label class="govuk-label govuk-visually-hidden"' +
+        '               for="question.choices[$index].text">' +
+        '            Answer' +
+        '        </label>' +
+        '        <input required="required"' +
+        '               class="govuk-input"' +
+        '               id="question.choices[$index].text"' +
+        '               name="question.choices[$index].text"' +
+        '               data-required-errormessage="Something"/>' +
+        '    </td>' +
+        '    <td class="govuk-table__cell">'
+
+      if (currentCount > 1) {
+        html +=
+          '        <button class="button-clear alignright" data-remove-row="multipleChoice"' +
+          '                type="button" name="remove-multiple-choice-row"' +
+          '                value="$index"' +
+          '                id="remove-multiple-choice-row-$index">Remove' +
+          '        </button>'
+      }
+      html += '    </td>' +
+        '</tr>'
+
+      html = IFS.core.template.replaceInTemplate(html, {
+        index: idCount
+      })
+
       table.find('tbody').append(html)
     },
     reindexRows: function (rowSelector) {

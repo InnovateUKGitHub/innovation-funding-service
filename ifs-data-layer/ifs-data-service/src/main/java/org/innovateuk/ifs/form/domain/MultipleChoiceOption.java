@@ -15,6 +15,8 @@ public class MultipleChoiceOption {
     @JoinColumn(name="formInputId", referencedColumnName="id")
     private FormInput formInput;
 
+    MultipleChoiceOption() {}
+
     public MultipleChoiceOption(String text, FormInput formInput) {
         this.text = text;
         this.formInput = formInput;

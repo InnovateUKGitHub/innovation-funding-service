@@ -5,12 +5,11 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.management.competition.setup.application.form.GuidanceRowForm;
 import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSubsectionFormPopulator;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import java.util.Optional;
  * Form populator for the application form competition setup section.
  */
 @Service
-public class QuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
+public class QuestionFormPopulator extends AbstractFormInputQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
@@ -48,14 +47,12 @@ public class QuestionFormPopulator implements CompetitionSetupSubsectionFormPopu
                 competitionSetupForm.setRemovable(true);
             }
 
-            if (questionResource.getTextArea() != null && questionResource.getMultipleChoice() != null) {
-                competitionSetupForm.setTypeOfQuestion(questionResource.getTextArea() ? TypeOfQuestion.FREE_TEXT : TypeOfQuestion.MULTIPLE_CHOICE);
-            }
-
             competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
                 GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
                 competitionSetupForm.getGuidanceRows().add(grvm);
             });
+
+            populateCommon(questionResource, competitionSetupForm);
 
         } else {
             throw new ObjectNotFoundException();

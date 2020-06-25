@@ -10,7 +10,6 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -47,8 +46,9 @@ public class CompetitionSetupQuestionResource {
 
     /* text area */
     private Boolean textArea = true;
-    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
-    @NotNull(message = "{validation.field.must.not.be.blank}")
+
+    //@Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
+    //@NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
 
     /* multiple choice */

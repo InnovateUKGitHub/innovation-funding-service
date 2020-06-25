@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
 import org.innovateuk.ifs.management.competition.setup.application.form.ProjectForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSubsectionFormPopulator;
@@ -18,7 +17,7 @@ import java.util.Optional;
  * Form populator for the application form competition setup section.
  */
 @Service
-public class ProjectFormPopulator implements CompetitionSetupSubsectionFormPopulator {
+public class ProjectFormPopulator extends AbstractFormInputQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
@@ -38,9 +37,7 @@ public class ProjectFormPopulator implements CompetitionSetupSubsectionFormPopul
                     .getByQuestionId(objectId.get()).getSuccess();
             competitionSetupForm.setQuestion(questionResource);
             competitionSetupForm.setRemovable(true);
-            if (questionResource.getTextArea() != null && questionResource.getMultipleChoice() != null) {
-                competitionSetupForm.setTypeOfQuestion(questionResource.getTextArea() ? TypeOfQuestion.FREE_TEXT : TypeOfQuestion.MULTIPLE_CHOICE);
-            }
+            populateCommon(questionResource, competitionSetupForm);
         } else {
             throw new ObjectNotFoundException();
         }
