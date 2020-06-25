@@ -37,9 +37,17 @@
                     <li th:if="${model.showApplicationFeedbackLink}"><a th:href="${'/application/' + model.applicationId + '/feedback'}"
                            class="govuk-link">
                         view application feedback</a></li>
-                    <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
+                    <li>
+                        <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
                            class="govuk-link">
-                        view the award terms and conditions</a></li>
+                            <th:block th:if="${model.investorPartnershipCompetition}">
+                                view the Investor Partnerships terms and conditions
+                            </th:block>
+                            <th:block th:unless="${model.investorPartnershipCompetition}">
+                                view the award terms and conditions
+                            </th:block>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

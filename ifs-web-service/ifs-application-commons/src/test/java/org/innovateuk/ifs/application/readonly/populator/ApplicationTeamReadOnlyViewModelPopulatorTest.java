@@ -130,7 +130,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
+        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
         assertEquals((Long) application.getId(), viewModel.getApplicationId());
         assertEquals((long) question.getId(), viewModel.getQuestionId());
