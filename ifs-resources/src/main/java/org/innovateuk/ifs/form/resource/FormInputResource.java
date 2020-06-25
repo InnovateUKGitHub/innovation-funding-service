@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class FormInputResource implements CacheableWhenCompetitionOpen {
     private String guidanceTitle;
     private String guidanceAnswer;
     private List<GuidanceRowResource> guidanceRows;
+    private List<MultipleChoiceOptionResource> multipleChoiceOptions = new ArrayList<>();
     private Integer priority;
     private FormInputScope scope;
     private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
@@ -159,6 +161,14 @@ public class FormInputResource implements CacheableWhenCompetitionOpen {
 
     public void setFile(FileEntryResource file) {
         this.file = file;
+    }
+
+    public List<MultipleChoiceOptionResource> getMultipleChoiceOptions() {
+        return multipleChoiceOptions;
+    }
+
+    public void setMultipleChoiceOptions(List<MultipleChoiceOptionResource> multipleChoiceOptions) {
+        this.multipleChoiceOptions = multipleChoiceOptions;
     }
 
     @Override
