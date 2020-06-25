@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamReadOnly
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamUserReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -52,7 +53,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
 
     @Override
-    public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public ApplicationTeamReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess()
                 .stream()

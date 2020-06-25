@@ -13,10 +13,7 @@ import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
-import org.innovateuk.ifs.form.repository.SectionRepository;
+import org.innovateuk.ifs.form.repository.*;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
@@ -33,6 +30,7 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -43,6 +41,8 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.form.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
+import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionBuilder.newMultipleChoiceOption;
+import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionResourceBuilder.newMultipleChoiceOptionResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
@@ -100,6 +100,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
 
+    @Mock
+    private MultipleChoiceOptionRepository multipleChoiceOptionRepository;
+
     @Test
     public void getByQuestionId() {
         Long questionId = 1L;
@@ -111,6 +114,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                                 .withScope(FormInputScope.APPLICATION)
                                 .withAllowedFileTypes(asSet(PDF, SPREADSHEET))
                                 .withGuidanceAnswer(fileUploadGuidance)
+                                .withActive(true)
                                 .build(),
                         newFormInput()
                                 .withType(FormInputType.TEXTAREA)
@@ -118,6 +122,20 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                                 .withWordCount(maxWords)
                                 .withGuidanceTitle(guidanceTitle)
                                 .withGuidanceAnswer(guidance)
+                                .withActive(true)
+                                .build(),
+                        newFormInput()
+                                .withType(FormInputType.TEMPLATE_DOCUMENT)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withActive(true)
+                                .build(),
+                        newFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withGuidanceTitle(guidanceTitle)
+                                .withGuidanceAnswer(guidance)
+                                .withMultipleChoiceOptions(newMultipleChoiceOption().build(2))
+                                .withActive(true)
                                 .build(),
                         newFormInput()
                                 .withType(FormInputType.TEXTAREA)
@@ -126,18 +144,22 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                                 .withGuidanceTitle(assessmentGuidanceTitle)
                                 .withGuidanceAnswer(assessmentGuidanceAnswer)
                                 .withGuidanceRows(guidanceRows)
+                                .withActive(true)
                                 .build(),
                         newFormInput()
                                 .withType(FormInputType.ASSESSOR_SCORE)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
                                 .build(),
                         newFormInput()
                                 .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
                                 .build(),
                         newFormInput()
                                 .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
                                 .withScope(FormInputScope.ASSESSMENT)
+                                .withActive(true)
                                 .build()
                         )
 
@@ -171,6 +193,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getAssessmentMaxWords(), assessmentMaxWords);
         assertEquals(resource.getGuidanceTitle(), guidanceTitle);
         assertEquals(resource.getMaxWords(), maxWords);
+        assertEquals(resource.getTextArea(), true);
         assertEquals(resource.getScoreTotal(), scoreTotal);
         assertEquals(resource.getNumber(), number);
         assertEquals(resource.getQuestionId(), questionId);
@@ -181,6 +204,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getType(), QuestionSetupType.SCOPE);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
         assertEquals(resource.getAllowedAppendixResponseFileTypes(), asSet(PDF, SPREADSHEET));
+        assertEquals(resource.getTemplateDocument(), true);
+        assertEquals(resource.getMultipleChoice(), true);
+        assertEquals(resource.getChoices().size(), 2);
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
 
@@ -192,10 +218,15 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         when(guidanceRowMapper.mapToDomain(guidanceRows)).thenReturn(new ArrayList<>());
 
         CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
-                .withAppendix(false)
+                .withAppendix(true)
                 .withGuidance(guidance)
                 .withGuidanceTitle(guidanceTitle)
+                .withTextArea(true)
                 .withMaxWords(maxWords)
+                .withTemplateDocument(true)
+                .withTemplateTitle("Template")
+                .withMultipleChoice(true)
+                .withMultipleChoiceOptions(newMultipleChoiceOptionResource().withId(1L , null).withText("Update", "Create").build(2))
                 .withNumber(number)
                 .withTitle(title)
                 .withShortTitle(newShortTitle)
@@ -215,6 +246,10 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         FormInput questionFormInput = newFormInput().build();
         FormInput appendixFormInput = newFormInput().build();
+        FormInput templateFormInput = newFormInput().build();
+        FormInput multipleChoiceFormInput = newFormInput()
+                .withMultipleChoiceOptions(newMultipleChoiceOption().withId(1L, 2L).withText("to be updated", "to be deleted").build(2))
+                .build();
         FormInput researchCategoryQuestionFormInput = newFormInput().build();
         FormInput scopeQuestionFormInput = newFormInput().build();
         FormInput scoredQuestionFormInput = newFormInput().build();
@@ -224,6 +259,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEMPLATE_DOCUMENT)).thenReturn(templateFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.MULTIPLE_CHOICE)).thenReturn(multipleChoiceFormInput);
+
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
         when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
@@ -246,8 +284,20 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(writtenFeedbackFormInput.getGuidanceTitle(), assessmentGuidanceTitle);
         assertEquals(question.getShortName(), newShortTitle);
 
-        assertEquals(appendixFormInput.getActive(), false);
+        assertEquals(appendixFormInput.getActive(), true);
         assertEquals(appendixFormInput.getGuidanceAnswer(), null);
+
+        assertEquals(templateFormInput.getActive(), true);
+        assertEquals(templateFormInput.getDescription(), "Template");
+
+        assertEquals(multipleChoiceFormInput.getActive(), true);
+        //create
+        verify(multipleChoiceOptionRepository).save(argThat(lambdaMatches(choice -> choice.getId() == null)));
+        //delete
+        verify(multipleChoiceOptionRepository).delete(argThat(lambdaMatches(choice -> choice.getId().equals(2L))));
+        //update
+        assertEquals(multipleChoiceFormInput.getMultipleChoiceOptions().stream()
+                .filter(choice -> choice.getId().equals(1L)).findAny().get().getText(), "Update");
 
         assertEquals(researchCategoryQuestionFormInput.getActive(), true);
         assertEquals(scopeQuestionFormInput.getActive(), true);

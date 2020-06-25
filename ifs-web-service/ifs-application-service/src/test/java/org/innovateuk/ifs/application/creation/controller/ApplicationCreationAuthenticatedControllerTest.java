@@ -31,7 +31,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testGetRequestWithExistingApplication() throws Exception {
+    public void getRequestWithExistingApplication() throws Exception {
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(true);
         mockMvc.perform(get("/application/create-authenticated/{competitionId}", 1L))
                 .andExpect(status().is2xxSuccessful())
@@ -40,7 +40,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testGetRequestWithoutExistingApplication() throws Exception {
+    public void getRequestWithoutExistingApplication() throws Exception {
         when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(false, false)));
         mockMvc.perform(get("/application/create-authenticated/{competitionId}", 1L))
@@ -53,7 +53,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testPostEmptyFormShouldThrowError() throws Exception {
+    public void postEmptyFormShouldThrowError() throws Exception {
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(false, false)));
         mockMvc.perform(post("/application/create-authenticated/1"))
                 .andExpect(status().isOk())
@@ -63,7 +63,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testPostCreateNewApplication() throws Exception {
+    public void postCreateNewApplication() throws Exception {
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(false, false)));
         long competitionId = 1L;
         mockMvc.perform(post("/application/create-authenticated/{competitionId}", competitionId)
@@ -76,7 +76,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testPostNoNewApplication() throws Exception {
+    public void postNoNewApplication() throws Exception {
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(false, false)));
         // This should just redirect to the dashboard.
         mockMvc.perform(post("/application/create-authenticated/1").param("createNewApplication", "0"))
@@ -85,7 +85,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseControll
     }
 
     @Test
-    public void testPostInternationalOrganisationApplication() throws Exception {
+    public void postInternationalOrganisationApplication() throws Exception {
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(new CompetitionOrganisationConfigResource(true, true)));
         long competitionId = 1L;
         // This should just redirect to create international organisation.

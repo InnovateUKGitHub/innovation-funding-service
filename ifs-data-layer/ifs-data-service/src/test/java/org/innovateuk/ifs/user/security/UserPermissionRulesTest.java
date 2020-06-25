@@ -907,6 +907,28 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void stakeholderCanRequestApplicantRole() {
+        UserResource otherStakeholder = newUserResource().withRolesGlobal(singletonList(STAKEHOLDER)).build();
+
+        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(otherStakeholder.getId(), APPLICANT), stakeholderUser()));
+        assertFalse(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+
+        assertTrue(rules.stakeholderCanRequestApplicantRole(new GrantRoleCommand(stakeholderUser().getId(), APPLICANT), stakeholderUser()));
+    }
+
+    @Test
+    public void monitoringOfficerCanRequestApplicantRole() {
+        UserResource otherMonitoringOfficer = newUserResource().withRolesGlobal(singletonList(MONITORING_OFFICER)).build();
+
+        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), compAdminUser()));
+        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(otherMonitoringOfficer.getId(), APPLICANT), monitoringOfficerUser()));
+        assertFalse(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), IFS_ADMINISTRATOR), assessorUser()));
+
+        assertTrue(rules.monitoringOfficerCanRequestApplicantRole(new GrantRoleCommand(monitoringOfficerUser().getId(), APPLICANT), monitoringOfficerUser()));
+    }
+
+    @Test
     public void correctRolesCanGrantMonitoringOfficerRole() {
         GrantRoleCommand grantMonitoringOfficerRole = new GrantRoleCommand(assessorUser().getId(), MONITORING_OFFICER);
 
