@@ -6,15 +6,14 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.domain.*;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.form.repository.MultipleChoiceOptionRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
@@ -25,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.sort;
@@ -58,6 +58,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private QuestionPriorityOrderService questionPriorityOrderService;
+
+    @Autowired
+    private MultipleChoiceOptionRepository multipleChoiceOptionRepository;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(long questionId) {
@@ -96,8 +99,11 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
-                setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
-                setupResource.setGuidance(formInput.getGuidanceAnswer());
+                if (formInput.getActive()) {
+                    setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
+                    setupResource.setGuidance(formInput.getGuidanceAnswer());
+                }
+                setupResource.setTextArea(formInput.getActive());
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
             case TEMPLATE_DOCUMENT:
@@ -110,6 +116,15 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                         .orElse(null));
                 setupResource.setTemplateFormInput(formInput.getId());
                 break;
+            case MULTIPLE_CHOICE:
+                if (formInput.getActive()) {
+                    setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
+                    setupResource.setGuidance(formInput.getGuidanceAnswer());
+                }
+                setupResource.setMultipleChoice(formInput.getActive());
+                setupResource.setChoices(formInput.getMultipleChoiceOptions().stream()
+                        .map(choice -> new MultipleChoiceOptionResource(choice.getId(), choice.getText()))
+                        .collect(Collectors.toList()));
         }
     }
 
@@ -175,11 +190,9 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         question.setDescription(competitionSetupQuestionResource.getSubTitle());
         question.setAssessorMaximumScore(competitionSetupQuestionResource.getScoreTotal());
 
-        FormInput questionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA);
-        questionFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
-        questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
-        questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
-
+        /* form inputs */
+        markTextAreaAsActiveOrInactive(questionId, competitionSetupQuestionResource);
+        markMultipleChoiceAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markTemplateUploadAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource);
@@ -190,6 +203,69 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         return serviceSuccess(competitionSetupQuestionResource);
     }
 
+    private void markMultipleChoiceAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        FormInput multipleChoiceFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.MULTIPLE_CHOICE);
+        if (multipleChoiceFormInput != null && competitionSetupQuestionResource.getMultipleChoice() != null) {
+            if (competitionSetupQuestionResource.getMultipleChoice()) {
+                multipleChoiceFormInput.setActive(true);
+                multipleChoiceFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
+                multipleChoiceFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
+                createUpdateOrDeleteMultipleChoices(multipleChoiceFormInput, competitionSetupQuestionResource);
+            } else {
+                multipleChoiceFormInput.setActive(false);
+                multipleChoiceFormInput.setGuidanceTitle(null);
+                multipleChoiceFormInput.setGuidanceAnswer(null);
+                multipleChoiceFormInput.getMultipleChoiceOptions().forEach(multipleChoiceOptionRepository::delete);
+                multipleChoiceFormInput.getMultipleChoiceOptions().clear();
+            }
+        }
+    }
+
+    private void createUpdateOrDeleteMultipleChoices(FormInput multipleChoiceFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        //delete
+        multipleChoiceFormInput.getMultipleChoiceOptions().removeIf(dbChoice -> {
+            Optional<MultipleChoiceOptionResource> maybeChoiceResource = competitionSetupQuestionResource.getChoices().stream()
+                    .filter(choiceResource -> choiceResource.getId() != null && choiceResource.getId().equals(dbChoice.getId()))
+                    .findFirst();
+            boolean delete = !maybeChoiceResource.isPresent();
+            if (delete) {
+                multipleChoiceOptionRepository.delete(dbChoice);
+            }
+            return delete;
+        });
+
+        //create and update
+        competitionSetupQuestionResource.getChoices().forEach(choiceResource -> {
+            Optional<MultipleChoiceOption> maybeDbChoice = multipleChoiceFormInput.getMultipleChoiceOptions().stream()
+                    .filter(dbChoice -> dbChoice.getId().equals(choiceResource.getId()))
+                    .findFirst();
+            if (maybeDbChoice.isPresent()) {
+                //update
+                maybeDbChoice.get().setText(choiceResource.getText());
+            } else {
+                //create
+                multipleChoiceOptionRepository.save(new MultipleChoiceOption(choiceResource.getText(), multipleChoiceFormInput));
+            }
+        });
+    }
+
+    private void markTextAreaAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        FormInput textAreaFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA);
+        if (textAreaFormInput != null && competitionSetupQuestionResource.getTextArea() != null) {
+            if (competitionSetupQuestionResource.getTextArea()) {
+                textAreaFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
+                textAreaFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
+                textAreaFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
+                textAreaFormInput.setActive(true);
+            } else {
+                textAreaFormInput.setGuidanceTitle(null);
+                textAreaFormInput.setGuidanceAnswer(null);
+                textAreaFormInput.setWordCount(null);
+                textAreaFormInput.setActive(false);
+            }
+        }
+    }
+
     private void markTemplateUploadAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         FormInput templateFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
                 FormInputScope.APPLICATION,
@@ -198,9 +274,13 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             templateFormInput.setActive(competitionSetupQuestionResource.getTemplateDocument());
 
             if(competitionSetupQuestionResource.getTemplateDocument()) {
-                setTemplateSubOptions(templateFormInput, competitionSetupQuestionResource );
+                templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
+                if (competitionSetupQuestionResource.getTemplateTitle() != null) {
+                    templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateTitle());
+                }
             } else {
-                resetTemplateSubOptions(templateFormInput);
+                templateFormInput.setAllowedFileTypes(null);
+                templateFormInput.setDescription(null);
             }
         }
     }
@@ -213,40 +293,21 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
 
             if(competitionSetupQuestionResource.getAppendix()) {
-                setAppendixSubOptions(appendixFormInput, competitionSetupQuestionResource );
-            } else {
-                resetAppendixSubOptions(appendixFormInput);
-            }
-        }
-    }
-
-    private void setTemplateSubOptions(FormInput templateFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        templateFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedTemplateResponseFileTypes());
-        if (competitionSetupQuestionResource.getTemplateTitle() != null) {
-            templateFormInput.setDescription(competitionSetupQuestionResource.getTemplateTitle());
-        }
-    }
-
-    private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
-        appendixFormInput.setWordCount(1);
+                appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
+                appendixFormInput.setWordCount(1);
         if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
     }
 
-    private void resetTemplateSubOptions(FormInput appendixFormInput) {
-        appendixFormInput.setAllowedFileTypes(null);
-        appendixFormInput.setDescription(null);
-    }
-
-    private void resetAppendixSubOptions(FormInput appendixFormInput) {
-        appendixFormInput.setAllowedFileTypes(null);
-        appendixFormInput.setGuidanceAnswer(null);
+    else {
+                appendixFormInput.setAllowedFileTypes(null);
+                appendixFormInput.setGuidanceAnswer(null);
+            }
+        }
     }
 
     private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-
         FormInput scoredFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE);
 
         if (scoredFormInput != null && competitionSetupQuestionResource.getScored() != null) {
@@ -255,7 +316,6 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     }
 
     private void markResearchCategoryQuestionAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-
         FormInput researchCategoryQuestionFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY);
 
         if (researchCategoryQuestionFormInput != null && competitionSetupQuestionResource.getResearchCategoryQuestion() != null) {
@@ -264,7 +324,6 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     }
 
     private void markScopeAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-
         FormInput scopeFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE);
 
         if (scopeFormInput != null && competitionSetupQuestionResource.getScope() != null) {
@@ -273,7 +332,6 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     }
 
     private void markWrittenFeedbackAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-
         FormInput writtenFeedbackFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA);
 
         if (writtenFeedbackFormInput != null && competitionSetupQuestionResource.getWrittenFeedback() != null) {
