@@ -225,7 +225,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         //delete
         multipleChoiceFormInput.getMultipleChoiceOptions().removeIf(dbChoice -> {
             Optional<MultipleChoiceOptionResource> maybeChoiceResource = competitionSetupQuestionResource.getChoices().stream()
-                    .filter(choiceResource -> choiceResource.getId().equals(dbChoice.getId()))
+                    .filter(choiceResource -> choiceResource.getId() != null && choiceResource.getId().equals(dbChoice.getId()))
                     .findFirst();
             boolean delete = !maybeChoiceResource.isPresent();
             if (delete) {

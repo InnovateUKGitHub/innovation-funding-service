@@ -53,6 +53,7 @@ public class RequiredMultipleChoiceValidatorTest {
     @Test
     public void missingOption() {
         formInputResponse.setValue("5");
+        when(multipleChoiceOptionRepository.findById(5L)).thenReturn(Optional.empty());
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
     }

@@ -132,6 +132,8 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.MULTIPLE_CHOICE)
                                 .withScope(FormInputScope.APPLICATION)
+                                .withGuidanceTitle(guidanceTitle)
+                                .withGuidanceAnswer(guidance)
                                 .withMultipleChoiceOptions(newMultipleChoiceOption().build(2))
                                 .withActive(true)
                                 .build(),
@@ -286,11 +288,14 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         assertEquals(appendixFormInput.getGuidanceAnswer(), null);
 
         assertEquals(templateFormInput.getActive(), true);
-        assertEquals(templateFormInput.getDescription(), "TEmplate");
+        assertEquals(templateFormInput.getDescription(), "Template");
 
         assertEquals(multipleChoiceFormInput.getActive(), true);
+        //create
         verify(multipleChoiceOptionRepository).save(argThat(lambdaMatches(choice -> choice.getId() == null)));
+        //delete
         verify(multipleChoiceOptionRepository).delete(argThat(lambdaMatches(choice -> choice.getId().equals(2L))));
+        //update
         assertEquals(multipleChoiceFormInput.getMultipleChoiceOptions().stream()
                 .filter(choice -> choice.getId().equals(1L)).findAny().get().getText(), "Update");
 
