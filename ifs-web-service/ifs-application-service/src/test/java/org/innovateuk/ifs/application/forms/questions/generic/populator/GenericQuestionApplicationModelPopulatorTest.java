@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuil
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -106,7 +107,14 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .withAllowedFileTypes(singleton(FileTypeCategory.PDF)).build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileName("appendix.pdf")
+                                                .withFileEntryResources(newFormInputResponseFileEntryResource()
+                                                        .withFileEntryResource(newFileEntryResource()
+                                                                        .withName("Appendix1.pdf")
+                                                                        .build(),
+                                                                newFileEntryResource()
+                                                                        .withName("Appendix2.pdf")
+                                                                        .build())
+                                                        .build(2))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
                                         .build(1))
@@ -118,7 +126,11 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileName("templateresponse.pdf")
+                                                .withFileEntryResources(newFormInputResponseFileEntryResource()
+                                                        .withFileEntryResource(newFileEntryResource()
+                                                                        .withName("templateresponse.pdf")
+                                                                        .build())
+                                                        .build(1))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
                                         .build(1))
@@ -152,7 +164,8 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals(applicantQuestion.getApplicantFormInputs().get(1).getFormInput().getId(), viewModel.getAppendixFormInputId());
         assertEquals("Appendix guidance", viewModel.getAppendixGuidance());
         assertEquals(singleton(FileTypeCategory.PDF), viewModel.getAppendixAllowedFileTypes());
-        assertEquals("appendix.pdf", viewModel.getAppendixFilename());
+        assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());
+        assertEquals("Appendix2.pdf", viewModel.getAppendices().get(1).getFilename());
 
         assertEquals(applicantQuestion.getApplicantFormInputs().get(2).getFormInput().getId(), viewModel.getTemplateDocumentFormInputId());
         assertEquals("Template", viewModel.getTemplateDocumentTitle());

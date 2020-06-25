@@ -36,6 +36,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
@@ -214,26 +215,27 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 long applicationId = 2L;
                 long competitionId = 3L;
                 long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
+                long fileEntryId = 5L;
                 List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
                 when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId)).thenReturn(RestResult.restSuccess(inputResponse));
 
                 ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
                 when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
                 ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
-                when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId)).thenReturn(restSuccess(bar));
+                when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
                 FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-                when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
+                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, of(fileEntryId));
+                when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
-                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/download"))
+                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/file/" + fileEntryId + "/download"))
                         .andExpect(status().isOk())
                         .andExpect(content().contentType(("text/csv")))
                         .andExpect(header().string("Content-Type", "text/csv"))
                         .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
                         .andExpect(content().string("File contents"));
 
-                verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId);
-                verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId);
+                verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId, fileEntryId);
+                verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId, fileEntryId);
 
             } catch (Exception e) {
                 fail();

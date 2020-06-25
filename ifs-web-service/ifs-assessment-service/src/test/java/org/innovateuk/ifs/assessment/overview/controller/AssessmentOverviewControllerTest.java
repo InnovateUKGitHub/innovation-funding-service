@@ -64,6 +64,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBui
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -232,10 +233,14 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         List<FormInputResponseResource> applicantResponses = newFormInputResponseResource()
                 .withFormInputs(potentialMarketFileEntryFormInput.getId())
-                .withFileEntries(singletonList(1L))
+                .withFileEntryResources(newFormInputResponseFileEntryResource()
+                        .withFileEntryResource(newFileEntryResource()
+                                .withId(1L)
+                                .withName("Project-plan.pdf")
+                                .withFilesizeBytes(112640L)
+                                .build())
+                        .build(1))
                 .withQuestion(questionPotentialMarket.getId())
-                .withFileName("Project-plan.pdf")
-                .withFilesizeBytes(112640L)
                 .build(1);
 
         AssessorFormInputResponseResource assessorResponsesScope = newAssessorFormInputResponseResource()
@@ -340,6 +345,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         List<AssessmentOverviewAppendixViewModel> expectedAppendices = singletonList(
                 new AssessmentOverviewAppendixViewModel(
                         potentialMarketFileEntryFormInput.getId(),
+                        1L,
                         "Potential market",
                         "Project-plan.pdf",
                         "110 KB")
@@ -740,6 +746,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         long assessmentId = 1L;
         long applicationId = 2L;
         long formInputId = 3L;
+        long fileEntryId = 4L;
 
         UserResource assessor = getLoggedInUser();
 
@@ -747,29 +754,32 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
         FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
         FormInputResponseFileEntryResource formInputResponseFileEntry =
-                new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
+                new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId(), Optional.of(fileEntryId));
 
 
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
         when(formInputResponseRestService.getFile(formInputId,
                 applicationId,
-                assessorRole.getId()))
+                assessorRole.getId(),
+                fileEntryId))
                 .thenReturn(restSuccess(fileContents));
-        when(formInputResponseRestService.getFileDetails(formInputId, applicationId, assessorRole.getId()))
+        when(formInputResponseRestService.getFileDetails(formInputId, applicationId, assessorRole.getId(),
+                fileEntryId))
                 .thenReturn(restSuccess(formInputResponseFileEntry));
 
-        mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
+        mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download",
                 assessmentId,
                 applicationId,
-                formInputId))
+                formInputId,
+                fileEntryId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("The returned file data"))
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
 
         verify(userRestService).findProcessRole(applicationId);
-        verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId());
-        verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId());
+        verify(formInputResponseRestService).getFile(formInputId, applicationId, assessorRole.getId(), fileEntryId);
+        verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, assessorRole.getId(), fileEntryId);
     }
 
     @Test

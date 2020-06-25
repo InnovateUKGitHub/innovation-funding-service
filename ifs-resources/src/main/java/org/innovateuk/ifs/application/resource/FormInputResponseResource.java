@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FormInputResponseResource {
@@ -17,7 +18,7 @@ public class FormInputResponseResource {
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
-    private List<FormInputResponseFileEntryResource> fileEntryResources;
+    private List<FormInputResponseFileEntryResource> fileEntryResources = new ArrayList<>();
 
     public FormInputResponseResource() {
         // no-arg constructor

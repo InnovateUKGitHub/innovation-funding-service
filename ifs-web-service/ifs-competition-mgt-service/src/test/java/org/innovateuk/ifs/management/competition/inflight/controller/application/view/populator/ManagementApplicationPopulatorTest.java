@@ -4,11 +4,11 @@ import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyView
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -25,9 +25,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -88,23 +91,27 @@ public class ManagementApplicationPopulatorTest {
         when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
 
         FormInputResource appendix = newFormInputResource().build();
-        FileEntryResource file = newFileEntryResource()
-                .withName("My file")
-                .build();
         FormInputResponseResource response = newFormInputResponseResource()
-                .withFormInputs(singletonList(appendix.getId()))
-                .withFileEntries(singletonList(file.getId()))
+                .withFormInputs(singletonList(appendix.getId())).withFileEntryResources(newFormInputResponseFileEntryResource()
+                        .withFileEntryResource(newFileEntryResource()
+                                        .withName("Appendix1.pdf")
+                                        .build(),
+                                newFileEntryResource()
+                                        .withName("Appendix2.pdf")
+                                        .build())
+                        .withCompoundId(new FormInputResponseFileEntryId(appendix.getId(), application.getId(), 3L, Optional.of(1L)))
+                        .build(2))
                 .build();
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
         when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));
-        when(fileEntryRestService.findOne(file.getId())).thenReturn(restSuccess(file));
 
         ManagementApplicationViewModel actual = target.populate(application.getId(), user);
 
         assertEquals(application, actual.getApplication());
         assertEquals(competition, actual.getCompetition());
-        assertEquals(1, actual.getAppendices().size());
-        assertEquals("My file", actual.getAppendices().get(0).getName());
+        assertEquals(2, actual.getAppendices().size());
+        assertEquals("Appendix1.pdf", actual.getAppendices().get(0).getName());
+        assertEquals("Appendix2.pdf", actual.getAppendices().get(1).getName());
 
         assertTrue(actual.isCanMarkAsIneligible());
         assertTrue(actual.isCanReinstate());

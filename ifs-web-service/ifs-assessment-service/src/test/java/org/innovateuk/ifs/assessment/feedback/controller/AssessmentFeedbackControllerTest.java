@@ -52,6 +52,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -61,6 +62,7 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -70,6 +72,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -202,7 +205,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 true,
                 false,
-                null,
+                emptyList(),
                 null,
                 null,
                 null);
@@ -263,11 +266,17 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
 
-        FileDetailsViewModel expectedFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
-                "File 1",
-                1024L);
+        List<FileDetailsViewModel> expectedFileDetailsViewModel = newArrayList(new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
+                1L,
+                "Appendix1.pdf",
+                1024L),
+                new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
+                        2L,
+                        "Appendix2.pdf",
+                        1024L));
         FileDetailsViewModel expectedTemplateFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(2).getId(),
-                "File 2",
+                3L,
+                "template.pdf",
                 1024L);
         String templateTitle = "templateTitle";
         applicationFormInputs.stream()
@@ -467,7 +476,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 false,
                 true,
-                null,
+                emptyList(),
                 null,
                 null,
                 researchCategoryResources);
@@ -537,7 +546,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 false,
                 true,
-                null,
+                emptyList(),
                 null,
                 null,
                 researchCategoryResources);
@@ -921,16 +930,31 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                     if (formInput.getType() == FILEUPLOAD) {
                         return newFormInputResponseResource()
                                 .withFormInputs(formInput.getId())
+                                .withFileEntryResources(newFormInputResponseFileEntryResource()
+                                        .withFileEntryResource(newFileEntryResource()
+                                                        .withId(1L)
+                                                        .withName("Appendix1.pdf")
+                                                        .withFilesizeBytes(1024L)
+                                                        .build(),
+                                                newFileEntryResource()
+                                                        .withId(2L)
+                                                        .withName("Appendix2.pdf")
+                                                        .withFilesizeBytes(1024L)
+                                                        .build())
+                                        .build(2))
                                 .withValue("Applicant response")
-                                .withFileName("File 1")
-                                .withFilesizeBytes(1024L)
                                 .build();
                     } else if (formInput.getType() == TEMPLATE_DOCUMENT) {
                         return newFormInputResponseResource()
                                 .withFormInputs(formInput.getId())
                                 .withValue("Applicant response")
-                                .withFileName("File 2")
-                                .withFilesizeBytes(1024L)
+                                .withFileEntryResources(newFormInputResponseFileEntryResource()
+                                        .withFileEntryResource(newFileEntryResource()
+                                                        .withId(3L)
+                                                        .withName("template.pdf")
+                                                        .withFilesizeBytes(1024L)
+                                                        .build())
+                                        .build(1))
                                 .build();
                     } else {
                         return newFormInputResponseResource()
