@@ -16,8 +16,13 @@ public class InternalProjectSetupRow {
     private String projectLeadOrganisationName;
     private Long projectId;
     private Set<InternalProjectSetupCell> states;
+    private boolean grantOfferLetterComplete;
+    private boolean sentToIfsPa;
 
-    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners, long competitionId, String projectLeadOrganisationName, Long projectId, Set<InternalProjectSetupCell> states) {
+    public InternalProjectSetupRow(String projectName, Long applicationNumber, ProjectState projectState, int numberOfPartners,
+                                   long competitionId, String projectLeadOrganisationName, Long projectId,
+                                   Set<InternalProjectSetupCell> states, boolean grantOfferLetterComplete,
+                                   boolean sentToIfsPa) {
         this.projectName = projectName;
         this.applicationNumber = applicationNumber;
         this.projectState = projectState;
@@ -26,6 +31,8 @@ public class InternalProjectSetupRow {
         this.projectLeadOrganisationName = projectLeadOrganisationName;
         this.projectId = projectId;
         this.states = states;
+        this.grantOfferLetterComplete = grantOfferLetterComplete;
+        this.sentToIfsPa = sentToIfsPa;
     }
 
     public String getProjectName() {
@@ -61,7 +68,10 @@ public class InternalProjectSetupRow {
     }
 
     public boolean isGrantOfferLetterComplete() {
-        return states.stream().anyMatch(cell -> ProjectSetupStage.GRANT_OFFER_LETTER == cell.getStage()
-                        && ProjectActivityStates.COMPLETE == cell.getState());
+        return grantOfferLetterComplete;
+    }
+
+    public boolean isSentToIfsPa() {
+        return sentToIfsPa;
     }
 }
