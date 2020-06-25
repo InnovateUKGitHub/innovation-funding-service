@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
@@ -106,15 +105,15 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
         return findFormInputWithType(applicationFormInputs, FILEUPLOAD).map(appendixFormInput -> {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
-            boolean applicantAppendixResponseExists = applicantAppendixResponse != null && !applicantAppendixResponse.getFileEntryResources().isEmpty();
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null && !applicantAppendixResponse.getFileEntries().isEmpty();
             if (!applicantAppendixResponseExists) {
                 return new ArrayList<FileDetailsViewModel>();
             }
-            return applicantAppendixResponse.getFileEntryResources().stream()
+            return applicantAppendixResponse.getFileEntries().stream()
                     .map(file -> new FileDetailsViewModel(appendixFormInput.getId(),
-                            file.getFileEntryResource().getId(),
-                            file.getFileEntryResource().getName(),
-                            file.getFileEntryResource().getFilesizeBytes()))
+                            file.getId(),
+                            file.getName(),
+                            file.getFilesizeBytes()))
                     .collect(toList());
         }).orElse(new ArrayList<>());
     }
@@ -124,11 +123,11 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
         return findFormInputWithType(applicationFormInputs, TEMPLATE_DOCUMENT).map(appendixFormInput -> {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
-            boolean applicantAppendixResponseExists = applicantAppendixResponse != null && !applicantAppendixResponse.getFileEntryResources().isEmpty();
+            boolean applicantAppendixResponseExists = applicantAppendixResponse != null && !applicantAppendixResponse.getFileEntries().isEmpty();
             return applicantAppendixResponseExists ? new FileDetailsViewModel(appendixFormInput.getId(),
-                    applicantAppendixResponse.getFileEntryResources().get(0).getFileEntryResource().getId(),
-                    applicantAppendixResponse.getFileEntryResources().get(0).getFileEntryResource().getName(),
-                    applicantAppendixResponse.getFileEntryResources().get(0).getFileEntryResource().getFilesizeBytes()) : null;
+                    applicantAppendixResponse.getFileEntries().get(0).getId(),
+                    applicantAppendixResponse.getFileEntries().get(0).getName(),
+                    applicantAppendixResponse.getFileEntries().get(0).getFilesizeBytes()) : null;
         }).orElse(null);
     }
 

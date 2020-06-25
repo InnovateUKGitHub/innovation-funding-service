@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
@@ -14,7 +13,11 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,8 +142,8 @@ public class AssessmentOverviewModelPopulator {
         List<FormInputResponseResource> applicantResponses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return applicantResponses.stream()
-                .filter(formInputResponseResource -> formInputResponseResource.getFileEntryResources() != null)
-                .flatMap(formInputResponseResource -> formInputResponseResource.getFileEntryResources().stream()
+                .filter(formInputResponseResource -> formInputResponseResource.getFileEntries() != null)
+                .flatMap(formInputResponseResource -> formInputResponseResource.getFileEntries().stream()
                     .map(file -> getAppendix(file, formInputResponseResource, questionsMap))
                 )
                 .collect(toList());
@@ -190,17 +193,17 @@ public class AssessmentOverviewModelPopulator {
         return question.getQuestionSetupType() != APPLICATION_TEAM && question.getQuestionSetupType() != RESEARCH_CATEGORY;
     }
 
-    private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseFileEntryResource fileEntry,
+    private AssessmentOverviewAppendixViewModel getAppendix(FileEntryResource fileEntry,
                                                             FormInputResponseResource formInputResponse, Map<Long, QuestionResource> questions) {
         QuestionResource question = questions.get(formInputResponse.getQuestion());
 
-        String size = String.valueOf(BigDecimal.valueOf(fileEntry.getFileEntryResource().getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
+        String size = String.valueOf(BigDecimal.valueOf(fileEntry.getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
 
         return new AssessmentOverviewAppendixViewModel(
                 formInputResponse.getFormInput(),
-                fileEntry.getFileEntryResource().getId(),
+                fileEntry.getId(),
                 ofNullable(question.getShortName()).orElse(question.getName()),
-                fileEntry.getFileEntryResource().getName(),
+                fileEntry.getName(),
                 size
         );
     }

@@ -288,7 +288,7 @@ public class GenericQuestionApplicationController {
                     .getByFormInputIdAndApplication(templateDocument.get().getId(), applicationId).getOptionalSuccessObject()
                     .filter(negate(List::isEmpty))
                     .map(responses -> responses.get(0));
-            boolean filePresent = response.map(resp -> !resp.getFileEntryResources().isEmpty()).orElse(false);
+            boolean filePresent = response.map(resp -> !resp.getFileEntries().isEmpty()).orElse(false);
             if (!filePresent) {
                 bindingResult.rejectValue("templateDocument", "validation.file.required");
             }

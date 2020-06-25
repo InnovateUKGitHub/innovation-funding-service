@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,8 +100,8 @@ public class GenericQuestionApplicationModelPopulator {
 
     private List<GenericQuestionAppendix> appendices(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .map(resp -> resp.getFileEntryResources().stream().
-                        map(file -> new GenericQuestionAppendix(file.getFileEntryResource().getId(), file.getFileEntryResource().getName()))
+                .map(resp -> resp.getFileEntries().stream().
+                        map(file -> new GenericQuestionAppendix(file.getId(), file.getName()))
                         .collect(toList()))
                 .orElse(emptyList());
 
@@ -108,8 +109,8 @@ public class GenericQuestionApplicationModelPopulator {
 
     private String firstFilenameResponseOrNull(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .flatMap(resp -> resp.getFileEntryResources().stream().findFirst())
-                .map(file -> file.getFileEntryResource().getName())
+                .flatMap(resp -> resp.getFileEntries().stream().findFirst())
+                .map(FileEntryResource::getName)
                 .orElse(null);
     }
 

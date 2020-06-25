@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -73,8 +73,8 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
     public FormInputResponseResourceBuilder withValue(String value) {
         return with(response -> response.setValue(value));
     }
-    public FormInputResponseResourceBuilder withFileEntryResources(List<FormInputResponseFileEntryResource> fileEntryResources) {
-        return with(response -> response.setFileEntryResources(fileEntryResources));
+    public FormInputResponseResourceBuilder withFileEntries(List<FileEntryResource> fileEntryResources) {
+        return with(response -> response.setFileEntries(fileEntryResources));
     }
 
     @Override

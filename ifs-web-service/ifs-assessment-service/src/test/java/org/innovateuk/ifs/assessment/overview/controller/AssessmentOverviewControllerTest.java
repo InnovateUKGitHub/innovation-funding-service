@@ -11,8 +11,8 @@ import org.innovateuk.ifs.application.finance.populator.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.forms.academiccosts.form.AcademicCostForm;
-import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.populator.AcademicCostViewModelPopulator;
+import org.innovateuk.ifs.application.forms.academiccosts.populator.ApplicationAcademicCostFormPopulator;
 import org.innovateuk.ifs.application.forms.academiccosts.viewmodel.AcademicCostViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.YourProjectCostsForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
@@ -64,7 +64,6 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantFormInputResourceBui
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -233,12 +232,10 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
 
         List<FormInputResponseResource> applicantResponses = newFormInputResponseResource()
                 .withFormInputs(potentialMarketFileEntryFormInput.getId())
-                .withFileEntryResources(newFormInputResponseFileEntryResource()
-                        .withFileEntryResource(newFileEntryResource()
-                                .withId(1L)
-                                .withName("Project-plan.pdf")
-                                .withFilesizeBytes(112640L)
-                                .build())
+                .withFileEntries(newFileEntryResource()
+                        .withId(1L)
+                        .withName("Project-plan.pdf")
+                        .withFilesizeBytes(112640L)
                         .build(1))
                 .withQuestion(questionPotentialMarket.getId())
                 .build(1);

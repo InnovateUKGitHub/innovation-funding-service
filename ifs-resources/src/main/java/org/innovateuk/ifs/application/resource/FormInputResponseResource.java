@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
@@ -18,7 +19,7 @@ public class FormInputResponseResource {
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
-    private List<FormInputResponseFileEntryResource> fileEntryResources = new ArrayList<>();
+    private List<FileEntryResource> fileEntries = new ArrayList<>();
 
     public FormInputResponseResource() {
         // no-arg constructor
@@ -142,11 +143,11 @@ public class FormInputResponseResource {
         this.updatedByUserName = updatedByUserName;
     }
 
-    public List<FormInputResponseFileEntryResource> getFileEntryResources() {
-        return fileEntryResources;
+    public List<FileEntryResource> getFileEntries() {
+        return fileEntries;
     }
 
-    public void setFileEntryResources(List<FormInputResponseFileEntryResource> fileEntryResources) {
-        this.fileEntryResources = fileEntryResources;
+    public void setFileEntries(List<FileEntryResource> fileEntries) {
+        this.fileEntries = fileEntries;
     }
 }

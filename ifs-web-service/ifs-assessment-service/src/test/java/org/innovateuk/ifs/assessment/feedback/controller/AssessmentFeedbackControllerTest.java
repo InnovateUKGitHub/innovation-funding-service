@@ -62,7 +62,6 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -930,17 +929,10 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                     if (formInput.getType() == FILEUPLOAD) {
                         return newFormInputResponseResource()
                                 .withFormInputs(formInput.getId())
-                                .withFileEntryResources(newFormInputResponseFileEntryResource()
-                                        .withFileEntryResource(newFileEntryResource()
-                                                        .withId(1L)
-                                                        .withName("Appendix1.pdf")
-                                                        .withFilesizeBytes(1024L)
-                                                        .build(),
-                                                newFileEntryResource()
-                                                        .withId(2L)
-                                                        .withName("Appendix2.pdf")
-                                                        .withFilesizeBytes(1024L)
-                                                        .build())
+                                .withFileEntries(newFileEntryResource()
+                                        .withId(1L, 2L)
+                                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                                        .withFilesizeBytes(1024L)
                                         .build(2))
                                 .withValue("Applicant response")
                                 .build();
@@ -948,12 +940,10 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                         return newFormInputResponseResource()
                                 .withFormInputs(formInput.getId())
                                 .withValue("Applicant response")
-                                .withFileEntryResources(newFormInputResponseFileEntryResource()
-                                        .withFileEntryResource(newFileEntryResource()
-                                                        .withId(3L)
-                                                        .withName("template.pdf")
-                                                        .withFilesizeBytes(1024L)
-                                                        .build())
+                                .withFileEntries(newFileEntryResource()
+                                        .withId(3L)
+                                        .withName("template.pdf")
+                                        .withFilesizeBytes(1024L)
                                         .build(1))
                                 .build();
                     } else {

@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -12,8 +10,6 @@ import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 
@@ -156,17 +152,5 @@ public class FormInputResponse {
         } else {
             this.fileEntries = singletonList(fileEntry);
         }
-    }
-
-    public List<FormInputResponseFileEntryResource> getFileEntryResources() {
-        return getFileEntries().stream().map(fileEntry ->
-                new FormInputResponseFileEntryResource(
-                        FileEntryResourceAssembler.valueOf(fileEntry),
-                        getId(),
-                        getApplication().getId(),
-                        getUpdatedBy().getId(),
-                        Optional.of(fileEntry.getId())
-                ))
-                .collect(Collectors.toList());
     }
 }

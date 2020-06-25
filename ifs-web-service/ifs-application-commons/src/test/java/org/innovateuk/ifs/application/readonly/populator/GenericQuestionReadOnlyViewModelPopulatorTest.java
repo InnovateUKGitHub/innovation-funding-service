@@ -23,7 +23,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -83,18 +82,15 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .build();
         FormInputResponseResource appendixResponse = newFormInputResponseResource()
                 .withFormInputs(appendix.getId())
-                .withFileEntryResources(newFormInputResponseFileEntryResource()
-                        .withFileEntryResource(newFileEntryResource()
-                                .withName("Appendix1.pdf")
-                                .build(),
-                                newFileEntryResource()
-                                        .withName("Appendix2.pdf")
-                                        .build())
-                        .build(2))
-                .build();
+                .withFileEntries(newFileEntryResource()
+                                .withName("Appendix1.pdf", "Appendix2.pdf")
+                                .build(2))
+                        .build();
         FormInputResponseResource templateDocumentResponse = newFormInputResponseResource()
                 .withFormInputs(templateDocument.getId())
-                .withFileEntryResources(newFormInputResponseFileEntryResource().withFileEntryResource(newFileEntryResource().withName("template.pdf").build()).build(1))
+                .withFileEntries(newFileEntryResource()
+                        .withName("template.pdf")
+                        .build(1))
                 .build();
         AssessorFormInputResponseResource feedbackResponse = newAssessorFormInputResponseResource()
                 .withFormInput(feedback.getId())

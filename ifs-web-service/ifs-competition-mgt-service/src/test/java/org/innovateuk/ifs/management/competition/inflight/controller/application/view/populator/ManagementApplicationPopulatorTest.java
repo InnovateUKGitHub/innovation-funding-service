@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.readonly.populator.ApplicationReadOnlyView
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -25,12 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -92,15 +88,11 @@ public class ManagementApplicationPopulatorTest {
 
         FormInputResource appendix = newFormInputResource().build();
         FormInputResponseResource response = newFormInputResponseResource()
-                .withFormInputs(singletonList(appendix.getId())).withFileEntryResources(newFormInputResponseFileEntryResource()
-                        .withFileEntryResource(newFileEntryResource()
-                                        .withName("Appendix1.pdf")
-                                        .build(),
-                                newFileEntryResource()
-                                        .withName("Appendix2.pdf")
-                                        .build())
-                        .withCompoundId(new FormInputResponseFileEntryId(appendix.getId(), application.getId(), 3L, Optional.of(1L)))
-                        .build(2))
+                .withFormInputs(singletonList(appendix.getId()))
+                .withFileEntries(newFileEntryResource()
+                .withName("Appendix1.pdf", "Appendix2.pdf")
+                .withFilesizeBytes(1024L)
+                .build(2))
                 .build();
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
         when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));

@@ -71,10 +71,10 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     private List<GenericQuestionFileViewModel> files(FormInputResponseResource response, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
-        return response.getFileEntryResources().stream()
-                .map(file -> new GenericQuestionFileViewModel(file.getFileEntryResource().getId(),
-                        file.getFileEntryResource().getName(),
-                        urlForFormInputDownload(response.getFormInput(), file.getFileEntryResource().getId(), question, data, settings)
+        return response.getFileEntries().stream()
+                .map(file -> new GenericQuestionFileViewModel(file.getId(),
+                        file.getName(),
+                        urlForFormInputDownload(response.getFormInput(), file.getId(), question, data, settings)
                 )).collect(Collectors.toList());
     }
 

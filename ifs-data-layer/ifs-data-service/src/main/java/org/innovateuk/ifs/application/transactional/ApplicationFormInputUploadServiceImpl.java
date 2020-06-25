@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_ALREADY_UPLOADED;
@@ -199,7 +200,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
             return response.getFileEntries().stream()
                     .filter(file -> file.getId().equals(id.getFileEntryId().get()))
                     .findFirst()
-                    .orElseThrow(() -> new ObjectNotFoundException(singletonList("Unknown file entry " + id.getFileEntryId().get())));
+                    .orElseThrow(() -> new ObjectNotFoundException("Unknown file entry " + id.getFileEntryId().get(), emptyList()));
         } else {
             return response.getFileEntries().get(0);
         }

@@ -24,7 +24,6 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuil
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResourceBuilder.newApplicantQuestionStatusResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.FormInputResponseFileEntryResourceBuilder.newFormInputResponseFileEntryResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -34,9 +33,7 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -107,13 +104,8 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .withAllowedFileTypes(singleton(FileTypeCategory.PDF)).build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileEntryResources(newFormInputResponseFileEntryResource()
-                                                        .withFileEntryResource(newFileEntryResource()
-                                                                        .withName("Appendix1.pdf")
-                                                                        .build(),
-                                                                newFileEntryResource()
-                                                                        .withName("Appendix2.pdf")
-                                                                        .build())
+                                                .withFileEntries(newFileEntryResource()
+                                                        .withName("Appendix1.pdf", "Appendix2.pdf")
                                                         .build(2))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
@@ -126,10 +118,8 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileEntryResources(newFormInputResponseFileEntryResource()
-                                                        .withFileEntryResource(newFileEntryResource()
-                                                                        .withName("templateresponse.pdf")
-                                                                        .build())
+                                                .withFileEntries(newFileEntryResource()
+                                                        .withName("templateresponse.pdf")
                                                         .build(1))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
