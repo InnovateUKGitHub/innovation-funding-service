@@ -102,4 +102,24 @@ public class CompetitionPermissionRules extends BasePermissionRules {
     public boolean internalAdminCanSetPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
         return isInternalAdmin(user);
     }
+
+    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Competition Admin can read post award service on a competition")
+    public boolean internalAdminCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
+    public boolean internalUsersCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
+    public boolean monitoringOfficerCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return userIsMonitoringOfficerInCompetition(competition.getId(), user.getId());
+    }
+
+    @PermissionRule(value = "READ_POST_AWARD_SERVICE", description = "Allowed for users part of project on competition to read post award service during project setup")
+    public boolean projectUsersCanReadPostAwardServiceForCompetition(CompetitionResource competition, UserResource user) {
+        return projectUserRepository.existsByProjectApplicationCompetitionIdAndUserId(competition.getId(), user.getId());
+    }
 }

@@ -21,8 +21,6 @@ public interface FormInputRestService {
 
     RestResult<Void> delete(Long id);
 
-    RestResult<FormInputResource> save(FormInputResource formInputResource);
-
     RestResult<ByteArrayResource> downloadFile(long formInputId);
 
     RestResult<FileEntryResource> findFile(long formInputId);

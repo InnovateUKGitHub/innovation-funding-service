@@ -50,11 +50,6 @@ public class FormInputController {
         return formInputService.findByCompetitionIdAndScope(competitionId, scope).toGetResponse();
     }
 
-    @PutMapping("/")
-    public RestResult<FormInputResource> save(@RequestBody FormInputResource formInputResource) {
-        return formInputService.save(formInputResource).toGetResponse();
-    }
-
     @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable("id") Long id) {
         return formInputService.delete(id).toDeleteResponse();
