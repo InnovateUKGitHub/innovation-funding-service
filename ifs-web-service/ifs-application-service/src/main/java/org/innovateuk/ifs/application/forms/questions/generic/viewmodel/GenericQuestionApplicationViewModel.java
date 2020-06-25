@@ -267,6 +267,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return templateDocumentFormInputId != null;
     }
 
+    public boolean isMultipleChoiceOptionsActive() {
+        return multipleChoiceFormInputId != null;
+    }
+
     public static final class GenericQuestionApplicationViewModelBuilder {
         private long applicationId;
         private String competitionName;

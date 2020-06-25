@@ -104,6 +104,47 @@
                 </div>
             </div>
 
+            <div class="govuk-form-group" th:if="${model.multipleChoiceOptionsActive}"
+                 th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
+                <th:block th:if="${#fields.hasErrors('answer')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
+                </th:block>
+                <div class="govuk-radios" th:if="${#lists.size(model.multipleChoiceOptions) <= 1}">
+                    <div class="govuk-radios__item" th:each="multipleChoiceOption : ${model.multipleChoiceOptions}">
+                        <input type="radio" name="innovationAreaChoice" required="required"
+                               class="govuk-radios__input"
+                               th:id="${multipleChoiceOption.id}"
+                               th:value="${multipleChoiceOption.id}"
+                               th:checked="${model.multipleChoiceFormInputId} == ${multipleChoiceOption.id}"
+                               th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
+                        <label th:for="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                               class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
+                    </div>
+                </div>
+                <div class="govuk-radios" th:if="${#lists.size(model.multipleChoiceOptions) >= 2 and #lists.size(model.multipleChoiceOptions) <= 8}">
+                    <div class="govuk-radios__item" th:each="multipleChoiceOption : ${model.multipleChoiceOptions}">
+                        <input type="radio" name="innovationAreaChoice" required="required"
+                               class="govuk-radios__input"
+                               th:id="${multipleChoiceOption.id}"
+                               th:value="${multipleChoiceOption.id}"
+                               th:checked="${model.multipleChoiceFormInputId} == ${multipleChoiceOption.id}"
+                               th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
+                        <label th:for="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                               class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
+                    </div>
+                </div>
+                <div class="govuk-form-group" th:if="${#lists.size(model.multipleChoiceOptions) >= 9}">
+                    <select class="govuk-select"
+                            th:id="multipleChoiceOption"
+                            th:field="*{answer}"
+                            data-required-errormessage="#{validation.multiple.choice.required}"
+                            data-auto-complete="">
+                        <option value="" >Please Select</option>
+                        <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}" th:value="${multipleChoiceOption.id}" th:text="${multipleChoiceOption.text}"></option>
+                    </select>
+                </div>
+            </div>
+
             <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
                 <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s" th:text="|Download the ${model.templateDocumentTitle} template|">Download</h3>

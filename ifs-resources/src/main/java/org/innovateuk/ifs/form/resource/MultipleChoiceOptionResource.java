@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.form.resource;
 
-public class MultipleChoiceOptionResource {
+import java.io.Serializable;
+
+public class MultipleChoiceOptionResource implements Serializable {
 
     private Long id;
     private String text;
