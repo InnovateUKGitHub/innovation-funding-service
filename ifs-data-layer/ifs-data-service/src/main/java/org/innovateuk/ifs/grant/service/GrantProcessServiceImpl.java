@@ -26,6 +26,13 @@ public class GrantProcessServiceImpl implements GrantProcessService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<GrantProcess> findByApplicationId(Long applicationId) {
+        return Optional.ofNullable(grantProcessRepository.findOneByApplicationId(applicationId));
+    }
+
     @Override
     public void createGrantProcess(long applicationId) {
         Optional<Application> application = applicationRepository.findById(applicationId);
