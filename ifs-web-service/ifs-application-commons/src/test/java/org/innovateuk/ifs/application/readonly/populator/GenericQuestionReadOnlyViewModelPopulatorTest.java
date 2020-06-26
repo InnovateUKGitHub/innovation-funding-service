@@ -106,7 +106,7 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse, templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
 
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(question, data, ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data, ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
 
         assertEquals("Some text", viewModel.getAnswer());
         assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());

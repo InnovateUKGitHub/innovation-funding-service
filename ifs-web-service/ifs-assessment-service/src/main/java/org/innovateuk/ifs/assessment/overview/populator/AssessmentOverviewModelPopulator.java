@@ -11,6 +11,7 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewViewMo
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -43,6 +44,8 @@ import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
 
 /**
  * Build the model for Assessment Overview view.
@@ -80,6 +83,8 @@ public class AssessmentOverviewModelPopulator {
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
+        String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
+
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),
                 assessment.getApplicationName(),
@@ -88,7 +93,8 @@ public class AssessmentOverviewModelPopulator {
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
                 getSections(assessment, assessorViewQuestions),
-                getAppendices(assessment.getApplication(), assessorViewQuestions)
+                getAppendices(assessment.getApplication(), assessorViewQuestions),
+                termsAndConditionsTerminology
         );
     }
 
@@ -206,5 +212,12 @@ public class AssessmentOverviewModelPopulator {
                 fileEntry.getName(),
                 size
         );
+    }
+
+    private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
+        if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        return TERMS_AND_CONDITIONS_OTHER;
     }
 }

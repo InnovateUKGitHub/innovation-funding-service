@@ -36,15 +36,12 @@ public class FormInputResponseResource {
         this.formInput = formInput;
         this.application = application.getId();
     }
-
     public FormInputResponseResource(ZonedDateTime updateDate, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
     }
-
-
 
     public Integer getFormInputMaxWordCount() {
         return formInputMaxWordCount;

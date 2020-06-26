@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${'Choose the post award service'},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to competition details',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.competitionId})}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Choose the post award service', size='govuk-heading-xl'" />
+
+        <p class="govuk-body">You cannot change the post award service for any projects in this competition that are already live.</p>
+
+        <div class="govuk-form-group" th:classappend="${#fields.hasErrors('form.*')} ? 'govuk-form-group--error'">
+
+            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post"  novalidate="novalidate">
+
+                <fieldset class="govuk-fieldset">
+
+                    <legend class="govuk-fieldset__legend">Choose the post award service:</legend>
+
+                    <th:block th:if="${#fields.hasErrors('postAwardService')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('postAwardService')}" th:text="${err}"></span>
+                    </th:block>
+
+                    <div class="govuk-radios">
+
+                        <div class="govuk-radios__item" th:each="postAwardServ : ${T(org.innovateuk.ifs.competition.resource.PostAwardService).values()}">
+
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   th:id="${'postAwardService-' + postAwardServ.name()}"
+                                   th:name="postAwardService"
+                                   th:value="${postAwardServ.name()}"
+                                   th:field="*{postAwardService}"
+                               />
+
+                            <label th:for="${'postAwardService-' + postAwardServ.name()}"
+                                   class="govuk-label govuk-radios__label" th:text="${postAwardServ.displayName}">Post Award Service Name</label>
+                        </div>
+                    </div>
+
+                    <div class="govuk-body govuk-!-margin-top-6">
+                        <input type="submit" class="govuk-button" value="Save and return to competition" />
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
