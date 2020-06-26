@@ -138,6 +138,10 @@ ${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
 ${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
 ${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
 
+#Post award service live project
+${reviewProgressMessage}                  The project is now live and you can
+${reviewProgressLink}                     review its progress
+
 #Project: Growth table comp
 ${GrowthTableCompName}              Growth table comp
 ${GrowthTableCompId}                ${competition_ids["${GrowthTableCompName}"]}
@@ -746,3 +750,7 @@ enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
     input text                          id = country        ${country}
     the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+
+the user should see project is live with review its progress link
+    the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
+    the user should see the element     link = ${reviewProgressLink}

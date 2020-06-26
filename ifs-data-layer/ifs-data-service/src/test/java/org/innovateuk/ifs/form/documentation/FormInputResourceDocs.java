@@ -27,6 +27,7 @@ public class FormInputResourceDocs {
             fieldWithPath("priority").description("priority of the input, used for rendering purposes only"),
             fieldWithPath("scope").description("the scope for which the input should be rendered"),
             fieldWithPath("allowedFileTypes").description("a set of allowed file types"),
+            fieldWithPath("multipleChoiceOptions").description("choices for multiple choice form input."),
             fieldWithPath("file").description("The file attached to this form input")
     };
 

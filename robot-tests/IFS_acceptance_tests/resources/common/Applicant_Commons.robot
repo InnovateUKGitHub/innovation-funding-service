@@ -518,3 +518,25 @@ the user adds a partner organisation
     the user enters text to a text field          id = organisationName    ${orgName}
     the user enters text to a text field          id = name   ${name}
     the user enters text to a text field          id = email  ${email}
+
+team member accepts the invite to join organisation
+    [Arguments]  ${email}  ${compName}  ${fName}  ${lName}
+    the user reads his email and clicks the link       ${email}    Invitation to contribute in ${compName}    You will be joining as part of the organisation    2
+    the user should see the element                    jQuery = h1:contains("Invitation to contribute")
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user should see the element                    jQuery = h1:contains("Confirm your organisation")
+    the user should see the element                    link = email the lead applicant
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
+    the invited user fills the create account form     ${fName}  ${lName}
+    the user reads his email and clicks the link       ${email}    Please verify your email address    Once verified you can sign into your account
+    the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
+
+partner organisation accepts the invite to collaborate
+    [Arguments]  ${email}  ${compName}  ${businessTypeId}
+    the user reads his email and clicks the link  ${email}  Invitation to collaborate in ${compName}  You are invited by  2
+    The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
+    The user should see the element               jQuery = h1:contains("Choose your organisation type")
+    The user completes the new account creation   ${email}  ${businessTypeId}
+    The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
+    The user should not see an error in the page
+

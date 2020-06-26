@@ -79,7 +79,7 @@ the user fills in the CS Initial details
     the user selects the option from the drop-down menu  Robert Johnson  id = executiveUserId
     the user clicks the button twice                     css = label[for="stateAid${stateAid}"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition setup
+    the user clicks the button/link                      link = Competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the user selects procurement Terms and Conditions
@@ -88,7 +88,7 @@ the user selects procurement Terms and Conditions
     the user performs procurement Terms and Conditions validations
     the user uploads the file                                           css = .inputfile  ${valid_pdf}
     the user clicks the button/link                                     jQuery = button:contains("Done")
-    the user clicks the button/link                                     link = Competition setup
+    the user clicks the button/link                                     link = Competition details
     the user should see the element                                     jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user performs procurement Terms and Conditions validations
@@ -100,7 +100,7 @@ the user performs procurement Terms and Conditions validations
 the user selects the Terms and Conditions
     the user clicks the button/link      link = Terms and conditions
     the user clicks the button/link      jQuery = button:contains("Done")
-    the user clicks the button/link      link = Competition setup
+    the user clicks the button/link      link = Competition details
     the user should see the element      jQuery = li:contains("Terms and conditions") .task-status-complete
 
 the user fills in the CS Funding Information
@@ -113,7 +113,7 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id = activityCode  133t
     textfield should contain              css = input[name="competitionCode"]  21
     the user clicks the button/link       jQuery = button:contains("Done")
-    the user clicks the button/link       link = Competition setup
+    the user clicks the button/link       link = Competition details
     the user should see the element       jQuery = div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Project eligibility
@@ -128,7 +128,7 @@ the user fills in the CS Project eligibility
     the user selects the radio button   resubmission  yes
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
     the user clicks the button/link    jQuery = button:contains("Done")
-    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Competition details
     the user should see the element    jQuery = div:contains("Project eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
 
@@ -152,7 +152,7 @@ the user fills in the CS Milestones
       \    the user enters text to a text field  jQuery = th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
       \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link              jQuery = button:contains("Done")
-    the user clicks the button/link              link = Competition setup
+    the user clicks the button/link              link = Competition details
     the user should see the element              jQuery = div:contains("Milestones") ~ .task-status-complete
 
 the user fills in the CS Documents in other projects
@@ -164,7 +164,7 @@ the user fills in the CS Documents in other projects
     the user enters text to a text field     css = .editor    Guidance test.
     the user clicks the button/link          jQuery = button:contains('Done')
     the user should see the element          jQuery = span:contains("Test document type")
-    the user clicks the button/link          link = Competition setup
+    the user clicks the button/link          link = Competition details
 
 the user marks the procurement application as done
     [Arguments]  ${growthTable}  ${comp_type}
@@ -194,7 +194,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
-    the user clicks the button/link  link = Competition setup
+    the user clicks the button/link  link = Competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
@@ -210,7 +210,7 @@ the user fills in the CS Application section with custom questions
     the user marks the Finance section as complete if it's present    ${growthTable}
     the user should see the element    jQuery = h1:contains("Application process")  # to check i am on the right page
     the user clicks the button/link    jQuery = button:contains("Done")
-    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Competition details
     the user should see the element    jQuery = div:contains("Application") ~ .task-status-complete
 
 the user marks the Finance section as complete if it's present
@@ -259,7 +259,7 @@ the assessed questions are marked as complete(procurement)
      the user should see the element           jQuery = button:contains("Add question")
      the user fills in the Finances questions  ${growthTable}  false  true
      the user clicks the button/link           jQuery = button:contains("Done")
-     the user clicks the button/link           link = Competition setup
+     the user clicks the button/link           link = Competition details
 
 the user marks each procurement question as complete
     [Arguments]  ${question_link}
@@ -293,7 +293,7 @@ the user fills in the CS Assessors
     the user selects the radio button  averageAssessorScore  0
     the user clicks the button/link    jQuery = button:contains("Done")
     the user should see the element    jQuery = dt:contains("How many") + dd:contains("3")
-    the user clicks the button/link    link = Competition setup
+    the user clicks the button/link    link = Competition details
     the user should see the element    jQuery = div:contains("Assessors") ~ .task-status-complete
 
 the user fills in the Public content and publishes
@@ -463,7 +463,7 @@ The project finance user is able to download the Overheads file
     remove the file from the operating system     ${excel_file}
 
 the user set assessor score notification to yes
-    the user clicks the button/link         link = View and update competition setup
+    the user clicks the button/link         link = View and update competition details
     the user clicks the button/link         link = Assessors
     the user clicks the button/link         jQuery = button:contains("Edit")
     the user selects the radio button       assessorCount   5
@@ -479,7 +479,7 @@ the user selects the organisational eligibility
     the user clicks the button/link         jQuery = button:contains("Save and continue")
     the user selects the radio button       leadInternationalOrganisationsApplicable  ${CanInternationalOrganisationsLead}
     the user clicks the button/link         jQuery = button:contains("Save and continue")
-    the user clicks the button/link         link = Competition setup
+    the user clicks the button/link         link = Competition details
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 the user selects the organisational eligibility to no
@@ -487,5 +487,5 @@ the user selects the organisational eligibility to no
     the user clicks the button/link         link = ${organisationalEligibilityTitle}
     the user selects the radio button       internationalOrganisationsApplicable       ${organisationEligibilityOption}
     the user clicks the button/link         jQuery = button:contains("Save and continue")
-    the user clicks the button/link         link = Competition setup
+    the user clicks the button/link         link = Competition details
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete

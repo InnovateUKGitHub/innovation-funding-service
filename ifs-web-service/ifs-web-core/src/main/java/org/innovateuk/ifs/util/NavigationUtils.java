@@ -37,6 +37,10 @@ public class NavigationUtils {
 
     private NavigationUtils() {}
 
+    public String getLiveProjectsLandingPageUrl() {
+        return liveProjectsLandingPageUrl;
+    }
+
     public String getRedirectToDashboardUrlForRole(Role role) {
 
         if (LIVE_PROJECTS_USER.equals(role)) {
