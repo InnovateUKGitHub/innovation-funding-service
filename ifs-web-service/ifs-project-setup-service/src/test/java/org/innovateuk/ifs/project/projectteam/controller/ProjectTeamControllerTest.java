@@ -83,6 +83,25 @@ public class ProjectTeamControllerTest extends BaseControllerMockMVCTest<Project
     }
 
     @Test
+    public void viewProjectTeamInReadOnly() throws Exception {
+        UserResource loggedInUser = newUserResource().build();
+        setLoggedInUser(loggedInUser);
+        long projectId = 999L;
+        ProjectTeamViewModel expected = mock(ProjectTeamViewModel.class);
+
+        when(populator.populate(projectId, loggedInUser)).thenReturn(expected);
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/team/readonly", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("projectteam/project-team"))
+                .andExpect(model().attributeDoesNotExist("internalUserView"))
+                .andReturn();
+
+        ProjectTeamViewModel actual = (ProjectTeamViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void openAddTeamMemberForm() throws Exception {
         UserResource loggedInUser = newUserResource().build();
         setLoggedInUser(loggedInUser);
