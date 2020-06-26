@@ -88,7 +88,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     private Question question;
     private FileEntryResource fileEntryResource;
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
-    private FileEntry existingFileEntry;
+    private List<FileEntry> existingFileEntry;
     private FormInputResponse existingFormInputResponse;
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
@@ -125,7 +125,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         fileEntryResource = newFileEntryResource().with(id(999L)).build();
         formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
 
-        existingFileEntry = newFileEntry().with(id(999L)).build();
+        existingFileEntry = singletonList(newFileEntry().with(id(999L)).build());
         existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
         existingFormInputResponses = singletonList(existingFormInputResponse);
         unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
@@ -190,7 +190,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         FileEntry alreadyExistingFileEntry = newFileEntry().with(id(987L)).build();
-        FormInputResponse existingFormInputResponseWithLinkedFileEntry = newFormInputResponse().withFileEntry(alreadyExistingFileEntry).build();
+        FormInputResponse existingFormInputResponseWithLinkedFileEntry = newFormInputResponse().withFileEntry(singletonList(alreadyExistingFileEntry)).build();
 
         File fileFound = mock(File.class);
 
@@ -259,7 +259,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         assertTrue(result.isSuccess());
         FormInputResponseFileEntryResource resultParts = result.getSuccess();
         assertEquals(Long.valueOf(999), resultParts.getFileEntryResource().getId());
-        assertEquals(newFileEntry, existingFormInputResponse.getFileEntry());
+        assertEquals(newFileEntry, existingFormInputResponse.getFileEntries().get(0));
     }
 
     @Test
@@ -343,7 +343,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
 
-        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(singletonList(existingFileEntry)).build();
 
         File fileFound = mock(File.class);
 
@@ -378,7 +378,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         FileEntry fileEntry = FileEntryResourceAssembler.valueOf(fileEntryResource);
         FormInputResponse existingFormInputResponse =
-                newFormInputResponse().withFileEntry(fileEntry).build();
+                newFormInputResponse().withFileEntry(singletonList(fileEntry)).build();
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
@@ -408,9 +408,9 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(singletonList
                 (existingFormInputResponse));
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.get(0).getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
-        when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceSuccess(existingFileEntry));
+        when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceSuccess(existingFileEntry.get(0)));
         when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
                 (Optional.of(newFormInput().withQuestion(question).build()));
 
@@ -419,7 +419,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         assertTrue(result.isSuccess());
         assertEquals(unlinkedFormInputFileEntry, result.getSuccess());
-        assertNull(existingFormInputResponse.getFileEntry());
+        assertNull(existingFormInputResponse.getFileEntries());
         verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndFormInputId(456L, 123L);
         verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
     }
@@ -430,7 +430,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         //when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(singletonList(existingFormInputResponse));
-        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
+        when(fileServiceMock.getFileByFileEntryId(existingFileEntry.get(0).getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(internalServerErrorError()));
         when(formInputRepositoryMock.findById(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(
                 Optional.of(newFormInput().withQuestion(question).withType(FormInputType.FILEUPLOAD).build()));
@@ -463,7 +463,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
 
         FileEntry existingFileEntry = newFileEntry().with(id(999L)).build();
-        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        FormInputResponse existingFormInputResponse = newFormInputResponse().withFileEntry(singletonList(existingFileEntry)).build();
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
@@ -487,7 +487,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     public void getFormInputResponseFileUpload() {
 
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();
-        FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
+        FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(singletonList(fileEntry)).build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         Question question = QuestionBuilder.newQuestion().build();
@@ -520,7 +520,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     public void getFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntry fileEntry = newFileEntry().build();
-        FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
+        FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(singletonList(fileEntry)).build();
 
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);

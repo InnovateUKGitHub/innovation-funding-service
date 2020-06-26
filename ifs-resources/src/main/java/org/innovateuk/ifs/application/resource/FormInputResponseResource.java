@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.FileUtils;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
@@ -38,9 +37,9 @@ public class FormInputResponseResource {
         this.application = application.getId();
     }
 
-    public FormInputResponseResource(ZonedDateTime updateDate, FileEntryResource fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, Long fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
-        this.fileEntry = fileEntry.getId();
+        this.fileEntry = fileEntry;
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
