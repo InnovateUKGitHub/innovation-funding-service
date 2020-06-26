@@ -45,14 +45,14 @@ public class CompetitionSetupQuestionResource {
     private String guidance;
 
     /* text area */
-    private Boolean textArea = true;
+    private Boolean textArea;
 
     //@Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     //@NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
 
     /* multiple choice */
-    private Boolean multipleChoice = false;
+    private Boolean multipleChoice;
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
     /* appendix */

@@ -27,8 +27,23 @@
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
                 <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
                     ifs:utext="${question.guidance}"></dd>
-                <dt class="govuk-grid-column-one-third">Max word count</dt>
-                <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
+
+                <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
+                    <dt class="govuk-grid-column-one-third">Answer type</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.typeOfQuestion.name() == 'FREE_TEXT' ? 'Free text' : 'Multiple choice'}"></dd>
+                </th:block>
+                <th:block th:if="${question.textArea != null && question.textArea}">
+                    <dt class="govuk-grid-column-one-third">Max word count</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
+                </th:block>
+                <th:block th:if="${question.multipleChoice != null && question.multipleChoice}">
+                    <dt class="govuk-grid-column-one-third">Answers</dt>
+                    <dd class="govuk-grid-column-two-thirds">
+                        <th:block th:each="choice : ${question.choices}">
+                            <span th:text="${choice.text}"></span><br/>
+                        </th:block>
+                    </dd>
+                </th:block>
                 <th:block th:if="${question.appendix != null}">
                     <dt class="govuk-grid-column-one-third">Appendix</dt>
                     <dd class="govuk-grid-column-two-thirds" th:if="${question.appendix}">Yes</dd>
