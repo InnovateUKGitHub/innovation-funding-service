@@ -1,11 +1,19 @@
 package org.innovateuk.ifs.management.competition.setup.application.sectionupdater;
 
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.sectionupdater.CompetitionSetupSubsectionUpdater;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +24,13 @@ import java.util.ArrayList;
 @Service
 public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater implements CompetitionSetupSubsectionUpdater {
 
-	@Override
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
+
+    @Override
 	public CompetitionSetupSubsection subsectionToSave() {
 		return CompetitionSetupSubsection.QUESTIONS;
 	}
@@ -36,5 +50,20 @@ public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater im
             guidanceRowResource.setSubject(guidanceRow.getScoreFrom() + "," + guidanceRow.getScoreTo());
             form.getQuestion().getGuidanceRows().add(guidanceRowResource);
         });
+    }
+
+    @Override
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+
+        QuestionForm questionForm = (QuestionForm) competitionSetupForm;
+        QuestionResource question = questionRestService.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FILEUPLOAD).getSuccess();
+
+        CompetitionSetupQuestionResource questionResource = questionSetupCompetitionRestService.getByQuestionId(question.getId()).getSuccess();
+        questionResource.setAppendixCount(questionForm.getAppendixCount());
+        if(questionForm.getAppendixCount() == 0) {
+            questionResource.setAppendix(false);
+        }
+        questionResource.setAppendix(true);
+        return  questionSetupCompetitionRestService.save(questionResource).toServiceResult();
     }
 }

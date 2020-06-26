@@ -5,16 +5,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
-import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-
-import java.util.Optional;
-import java.util.Set;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 
 public abstract class AbstractApplicationSectionUpdater extends AbstractSectionUpdater {

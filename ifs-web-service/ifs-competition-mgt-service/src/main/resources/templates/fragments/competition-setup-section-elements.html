@@ -261,8 +261,7 @@
                             <div class="govuk-radios__item">
                                 <input id="appendix-no"
                                        class="govuk-radios__input"
-                                       th:name="question.appendix"
-                                       th:checked="${question.appendix != null and !question.appendix}"
+                                       th:field="*{appendixCount}"
                                        value="0"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
@@ -273,8 +272,7 @@
                             <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-clear-form="true">
                                 <input id="appendix-1"
                                        class="govuk-radios__input"
-                                       th:name="question.appendix"
-                                       th:checked="${question.appendix != null and question.appendix}"
+                                       th:field="*{appendixCount}"
                                        value="1"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
@@ -285,8 +283,7 @@
                             <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-clear-form="true">
                                 <input id="appendix-2"
                                        class="govuk-radios__input"
-                                       th:name="question.appendix"
-                                       th:checked="${question.appendix != null and question.appendix}"
+                                       th:field="*{appendixCount}"
                                        value="2"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
@@ -297,8 +294,7 @@
                             <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-clear-form="true">
                                 <input id="appendix-3"
                                        class="govuk-radios__input"
-                                       th:name="question.appendix"
-                                       th:checked="${question.appendix != null and question.appendix}"
+                                       th:field="*{appendixCount}"
                                        value="3"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
