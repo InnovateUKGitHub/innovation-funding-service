@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.core.domain;
 
-import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.docusign.domain.DocusignDocument;
@@ -65,8 +64,7 @@ public class Project implements ProcessActivity {
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
     private List<ProjectUser> projectUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = ProjectUser.class)
-    @Where(clause = "type = 'PROJECT_MONITORING_OFFICER'")
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = MonitoringOfficer.class)
     private List<MonitoringOfficer> monitoringOfficers = new ArrayList<>();;
 
     @OneToOne(cascade = CascadeType.ALL, targetEntity = FinanceReviewer.class,
