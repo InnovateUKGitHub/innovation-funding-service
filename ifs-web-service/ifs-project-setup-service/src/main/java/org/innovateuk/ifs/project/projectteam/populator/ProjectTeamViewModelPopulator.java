@@ -98,7 +98,7 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false,
-                isMonitoringOfficer,
+                project.getProjectState().isLive(),
                 false,
                 false);
     }

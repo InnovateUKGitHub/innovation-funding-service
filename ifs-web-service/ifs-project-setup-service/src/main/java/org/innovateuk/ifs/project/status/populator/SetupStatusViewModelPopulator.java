@@ -158,7 +158,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
                                 : "The proposed start date and location of the project.",
-                        projectComplete ? format("/project/%d/readonly", project.getId())
+                        projectComplete ? format("/project/%d/details/readonly", project.getId())
                                 : format("/project/%d/details", project.getId()),
                         sectionStatus.projectDetailsSectionStatus(
                                 isProjectDetailsProcessCompleted,
@@ -170,7 +170,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Add people to your project."
                                 : "The people on your project.",
-                        projectComplete ? format("/project/%d/readonly", project.getId())
+                        projectComplete ? format("/project/%d/team/readonly", project.getId())
                                 : format("/project/%d/team", project.getId()),
                         sectionStatus.projectTeamSectionStatus(ownOrganisation.getProjectTeamStatus()),
                         statusAccessor.canAccessProjectTeamSection(resolve(organisationRequest))

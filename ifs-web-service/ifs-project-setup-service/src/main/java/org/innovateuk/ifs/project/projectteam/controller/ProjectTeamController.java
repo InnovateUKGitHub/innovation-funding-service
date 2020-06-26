@@ -1,12 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.controller;
 
 
-import static java.lang.String.format;
-
-
-import java.util.function.Supplier;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.project.projectteam.ProjectTeamRestService;
@@ -25,6 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.function.Supplier;
+
+import static java.lang.String.format;
 
 /**
  * This controller will handle all requests that are related to the project team.
@@ -46,6 +46,17 @@ public class ProjectTeamController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @GetMapping("/{projectId}/team")
     public String viewProjectTeam(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
+                                  BindingResult bindingResult,
+                                  @PathVariable("projectId") final long projectId,
+                                  Model model,
+                                  UserResource loggedInUser) {
+        model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser));
+        return "projectteam/project-team";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
+    @GetMapping("/{projectId}/team/readonly")
+    public String viewProjectTeamInReadOnly(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
                                   BindingResult bindingResult,
                                   @PathVariable("projectId") final long projectId,
                                   Model model,
