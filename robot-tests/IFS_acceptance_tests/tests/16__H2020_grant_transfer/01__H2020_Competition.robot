@@ -165,10 +165,10 @@ Applicant is able to upload the GOL
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-5700
-    Given the internal user approve the GOL  ${HProjectID}
-    When log in as a different user          &{collaborator1_credentials}
-    And the user navigates to the page       ${server}/project-setup/project/${HProjectID}
-    Then the user should see the element     jQuery = p:contains("The project is live")
+    Given the internal user approve the GOL                                    ${HProjectID}
+    When log in as a different user                                            &{collaborator1_credentials}
+    And the user navigates to the page                                         ${server}/project-setup/project/${HProjectID}
+    Then the user should see project is live with review its progress link
 
 *** Keywords ***
 The user approves h2020 finance checks

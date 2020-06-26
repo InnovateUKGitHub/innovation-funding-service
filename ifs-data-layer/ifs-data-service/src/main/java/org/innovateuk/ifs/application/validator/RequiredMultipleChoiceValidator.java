@@ -25,6 +25,7 @@ public class RequiredMultipleChoiceValidator extends BaseValidator {
 
         if (response.getValue() == null) {
             rejectValue(errors, "value", "validation.multiple.choice.required");
+            return;
         }
 
         Optional<MultipleChoiceOption> option = multipleChoiceOptionRepository.findById(Long.valueOf(response.getValue()));

@@ -28,12 +28,6 @@ public abstract class AssessorFormInputResponseMapper extends BaseMapper<Assesso
     @Override
     public abstract AssessorFormInputResponseResource mapToResource(AssessorFormInputResponse domain);
 
-
-    @Mappings({
-            @Mapping(target = "formInput", ignore = true)
-    })
-    public abstract AssessorFormInputResponse mapToDomain(AssessorFormInputResponseResource domain);
-
     public Long mapAssessorFormInputResponseToId(final AssessorFormInputResponse object) {
         if (object == null) {
             return null;

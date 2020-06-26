@@ -30,6 +30,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,12 +144,13 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
         User application3LeadApplicant = newUser().build();
+        User inactiveapplicant = newUser().withStatus(UserStatus.INACTIVE).build();
 
         List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
-                withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant).
-                withApplication(application1, application2, application3).
-                withRole(Role.LEADAPPLICANT).
-                build(3);
+                withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant, inactiveapplicant).
+                withApplication(application1, application2, application3, application3).
+                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR).
+                build(4);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());

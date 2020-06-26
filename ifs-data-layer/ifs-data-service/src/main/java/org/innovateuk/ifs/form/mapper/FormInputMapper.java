@@ -22,7 +22,16 @@ import org.mapstruct.Mappings;
         MultipleChoiceOptionMapper.class
     }
 )
-public abstract class FormInputMapper extends BaseResourceMapper<FormInput, FormInputResource> {
+public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
+
+    @Mappings({
+            @Mapping(target = "guidanceRows", ignore = true),
+            @Mapping(target = "multipleChoiceOptions", ignore = true),
+            @Mapping(target = "active", ignore = true),
+            @Mapping(target = "file", ignore = true)
+    })
+    @Override
+    public abstract FormInput mapToDomain(FormInputResource resource);
 
     @Override
     public abstract FormInputResource mapToResource(FormInput domain);

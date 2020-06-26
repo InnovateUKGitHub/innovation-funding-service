@@ -145,7 +145,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private Question question;
     private FileEntryResource fileEntryResource;
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
-    private FileEntry existingFileEntry;
+    private List<FileEntry> existingFileEntry;
     private FormInputResponse existingFormInputResponse;
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
@@ -180,7 +180,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         fileEntryResource = newFileEntryResource().with(id(999L)).build();
         formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
 
-        existingFileEntry = newFileEntry().with(id(999L)).build();
+        existingFileEntry = singletonList(newFileEntry().with(id(999L)).build());
         existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
         existingFormInputResponses = singletonList(existingFormInputResponse);
         unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();

@@ -225,7 +225,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         //delete
         multipleChoiceFormInput.getMultipleChoiceOptions().removeIf(dbChoice -> {
             Optional<MultipleChoiceOptionResource> maybeChoiceResource = competitionSetupQuestionResource.getChoices().stream()
-                    .filter(choiceResource -> choiceResource.getId().equals(dbChoice.getId()))
+                    .filter(choiceResource -> choiceResource.getId() != null && choiceResource.getId().equals(dbChoice.getId()))
                     .findFirst();
             boolean delete = !maybeChoiceResource.isPresent();
             if (delete) {
@@ -294,10 +294,13 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
 
             if(competitionSetupQuestionResource.getAppendix()) {
                 appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
-                if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
-                    appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
-                }
-            } else {
+                appendixFormInput.setWordCount(1);
+        if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
+            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
+        }
+    }
+
+    else {
                 appendixFormInput.setAllowedFileTypes(null);
                 appendixFormInput.setGuidanceAnswer(null);
             }
@@ -337,7 +340,6 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             writtenFeedbackFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidanceTitle());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
-
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
             // Ensure form input and priority set against newly added rows
