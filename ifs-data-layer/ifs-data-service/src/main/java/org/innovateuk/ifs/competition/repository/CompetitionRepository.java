@@ -47,7 +47,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "p.projectProcess.activityState NOT IN " + IN_FLIGHT_PROJECT_STATES + ")";
 
     String COMPETITION_CLOSE_CLAUSE = " CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE'" +
-            " and m.competition.id = c.id and m.competition.completionStage = 'COMPETITION_CLOSE')";
+            " and m.competition.id = c.id and m.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE)";
 
     /* Filters competitions to those in feedback released state */
     String PREVIOUS_WHERE_CLAUSE = "WHERE " +
@@ -65,7 +65,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     /* Filters by innovation lead or stakeholder and in feedback released state */
     String INNOVATION_LEAD_STAKEHOLDER_EXTERNAL_FINANCE_PREVIOUS_WHERE_CLAUSE = "WHERE cp.user.id = :userId AND " +
             "(CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = cp.competition.id) OR " +
-            "(CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' and m.competition.id = cp.competition.id and m.competition.completionStage = 'COMPETITION_CLOSE'))) AND " +
+            "(CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'SUBMISSION_DATE' and m.competition.id = cp.competition.id and m.competition.completionStage = org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.COMPETITION_CLOSE))) AND " +
             "cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
 
     /* Filters by innovation lead or stakeholder and in live state */
