@@ -77,8 +77,10 @@
         </tr>
         <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-                <a th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrganisation.id})}"
+                <a th:unless="${model.grantOfferLetterGenerated}"
+                   th:href="@{/project/{projectId}/team/finance-contact/organisation/{organisationId}(projectId=${model.projectId},organisationId=${model.loggedInUserOrganisation.id})}"
                    class="govuk-link">Your finance contact</a>
+                <th:block th:if="${model.grantOfferLetterGenerated}">Your finance contact</th:block>
             </td>
             <td class="govuk-table__cell"
                 th:text="${model.loggedInUserOrganisation.getFinanceContact() != null ? model.loggedInUserOrganisation.getFinanceContact().name : '-'}">
@@ -164,6 +166,7 @@
         </tr>
         </tbody>
     </table>
+    <th:block th:if="${!model.readOnly}">
         <button name="add-team-member"
                 th:value="${organisation.id}"
                 class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
