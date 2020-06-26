@@ -23,13 +23,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -101,11 +97,10 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
     }
 
     private ServiceResult<ProjectFinance> getProjectFinanceForOrganisation(Long projectId, long organisationId) {
-        ProjectFinance maybeProjectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if (maybeProjectFinance != null) {
-            return serviceSuccess(maybeProjectFinance);
-        }
-        return generateFinanceCheckEntitiesForProjectOrganisation(projectId, organisationId);
+        Optional<ProjectFinance> maybeProjectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        return maybeProjectFinance
+                .map(ServiceResult::serviceSuccess)
+                .orElseGet(() -> generateFinanceCheckEntitiesForProjectOrganisation(projectId, organisationId));
     }
 
     @Override

@@ -121,7 +121,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
         costs.put(MATERIALS, new DefaultCostCategory());
 
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(projectFinance);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(Optional.of(projectFinance));
         when(projectFinanceMapperMock.mapToResource(projectFinance)).thenReturn(projectFinanceResource);
         when(organisationRepositoryMock.findById(organisationId)).thenReturn(Optional.of(organisation));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong(), anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
@@ -152,7 +152,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getFinanceChecksTotals_willCreateFinances() {
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(null);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId())).thenReturn(Optional.empty());
 
         CostCategoryType costCategoryTypeForOrganisation = newCostCategoryType().
                 withCostCategoryGroup(newCostCategoryGroup().
