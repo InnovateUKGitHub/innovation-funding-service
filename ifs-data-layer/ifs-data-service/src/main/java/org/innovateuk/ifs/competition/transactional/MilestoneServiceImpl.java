@@ -71,7 +71,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             boolean isNonIfs = competition.isNonIfs();
 
             List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
-                    .filter(milestoneType -> milestoneType.ordinal() <= competition.getCompletionStage().getLastMilestone().ordinal())
+                    .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
                     .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
                     .collect(toList());
 
@@ -154,7 +154,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
                 if (currentMilestones.size() > 1) {
                     List<Milestone> milestonesToDelete = currentMilestones.stream()
-                            .filter(milestone -> milestone.getType().ordinal() > completionStage.getLastMilestone().ordinal())
+                            .filter(milestone -> milestone.getType().getPriority() > completionStage.getLastMilestone().getPriority())
                             .collect(Collectors.toList());
 
                     milestoneRepository.deleteAll(milestonesToDelete);
@@ -170,7 +170,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
                     milestoneRepository.saveAll(newMilestones);
                 } else {
                     Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs())
-                            .filter(milestoneType -> milestoneType.ordinal() <= completionStage.getLastMilestone().ordinal())
+                            .filter(milestoneType -> milestoneType.getPriority() <= completionStage.getLastMilestone().getPriority())
                             .filter(milestoneType -> !milestoneType.equals(MilestoneType.OPEN_DATE)).forEach(type ->
                             newMilestones.add(new Milestone(type, competition))
                     );
