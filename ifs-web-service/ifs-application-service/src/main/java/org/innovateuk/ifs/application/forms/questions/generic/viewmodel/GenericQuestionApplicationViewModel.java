@@ -186,6 +186,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return templateDocumentResponseFilename;
     }
 
+    public Long getTemplateDocumentResponseFileEntryId() {
+        return templateDocumentResponseFileEntryId;
+    }
+
     public ZonedDateTime getLastUpdated() {
         return lastUpdated;
     }
