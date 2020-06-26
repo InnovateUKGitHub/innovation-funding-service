@@ -16,8 +16,8 @@ public class SentGrantsInviteResource extends GrantsInviteResource {
     public SentGrantsInviteResource() {
     }
 
-    public SentGrantsInviteResource(String organisationName, String userName, String email, GrantsInviteRole grantsInviteRole, long id, long applicationId, String projectName, Long user, InviteStatus status, ZonedDateTime sentOn) {
-        super(organisationName, userName, email, grantsInviteRole);
+    public SentGrantsInviteResource(Long organisationId, String userName, String email, GrantsInviteRole grantsInviteRole, long id, long applicationId, String projectName, Long user, InviteStatus status, ZonedDateTime sentOn) {
+        super(organisationId, userName, email, grantsInviteRole);
         this.id = id;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -72,5 +72,9 @@ public class SentGrantsInviteResource extends GrantsInviteResource {
 
     public void setSentOn(ZonedDateTime sentOn) {
         this.sentOn = sentOn;
+    }
+
+    public boolean userExists() {
+        return user != null;
     }
 }

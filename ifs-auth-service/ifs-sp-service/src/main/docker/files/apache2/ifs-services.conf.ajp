@@ -208,6 +208,22 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "/project-setup/project/\d+/grants/invite/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/project-setup/project/\d+/grants/invite/accept-authenticated">
+    AuthType shibboleth
+    ShibRequireSession On
+    ShibRequestSetting isPassive Off
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
   <Location /project-setup/registration/accept-invite-user-exist-confirm>
     AuthType shibboleth
     ShibRequireSession On
