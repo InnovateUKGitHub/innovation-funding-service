@@ -58,7 +58,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-    private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     @Autowired
     private OrganisationMapper organisationMapper;
