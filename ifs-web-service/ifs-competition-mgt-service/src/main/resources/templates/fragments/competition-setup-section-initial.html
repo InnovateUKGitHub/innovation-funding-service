@@ -254,14 +254,18 @@
                 <th:block th:if="${#fields.hasErrors('innovationLeadUserId')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('innovationLeadUserId')}" th:text="${err}"></span>
                 </th:block>
-                <select class="govuk-select govuk-!-width-one-third"
-                        name="innovationLeadUserId"
-                        id="innovationLeadUserId"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.leadtechnologistuserid.required}">
-                    <option value="" th:selected="${competitionSetupForm.innovationLeadUserId == null}" disabled="disabled">Please select &hellip;</option>
-                    <option th:each="(innovationLeadTechUser : ${model.innovationLeadTechUsers})" th:text="${innovationLeadTechUser.name}" th:value="${innovationLeadTechUser.id}" th:selected="${competitionSetupForm.innovationLeadUserId == innovationLeadTechUser.id}">Innovation Lead</option>
-                </select>
+                <span id="innovation-lead-name-hint" class="govuk-hint">Search for a first or last name.</span>
+                <div class="govuk-!-width-one-third">
+                    <select class="govuk-select govuk-!-width-one-third"
+                            name="innovationLeadUserId"
+                            id="innovationLeadUserId"
+                            required="required"
+                            data-auto-complete=""
+                            th:attr="data-required-errormessage=#{validation.initialdetailsform.leadtechnologistuserid.required}">
+                        <option value="" th:selected="${competitionSetupForm.innovationLeadUserId == null}" disabled="disabled">Please select &hellip;</option>
+                        <option th:each="(innovationLeadTechUser : ${model.innovationLeadTechUsers})" th:text="${innovationLeadTechUser.name}" th:value="${innovationLeadTechUser.id}" th:selected="${competitionSetupForm.innovationLeadUserId == innovationLeadTechUser.id}">Innovation Lead</option>
+                    </select>
+                </div>
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('executiveUserId')} ? 'govuk-form-group--error'">
@@ -271,14 +275,18 @@
                 <th:block th:if="${#fields.hasErrors('executiveUserId')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('executiveUserId')}" th:text="${err}"></span>
                 </th:block>
-                <select class="govuk-select govuk-!-width-one-third"
-                        name="executiveUserId"
-                        id="executiveUserId"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.executiveuserid.required}">
-                    <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
-                    <option th:each="(competitionExecutiveUser : ${model.competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
-                </select>
+                <span id="portfolio-manager-name-hint" class="govuk-hint">Search for a first or last name.</span>
+                <div class="govuk-!-width-one-third">
+                    <select class="govuk-select govuk-!-width-one-third"
+                            name="executiveUserId"
+                            id="executiveUserId"
+                            required="required"
+                            data-auto-complete=""
+                            th:attr="data-required-errormessage=#{validation.initialdetailsform.executiveuserid.required}">
+                        <option value="" disabled="disabled" th:selected="${competitionSetupForm.executiveUserId == null}">Please select &hellip;</option>
+                        <option th:each="(competitionExecutiveUser : ${model.competitionExecutiveUsers})" th:text="${competitionExecutiveUser.name}" th:value="${competitionExecutiveUser.id}" th:selected="${competitionSetupForm.executiveUserId == competitionExecutiveUser.id}">User</option>
+                    </select>
+                </div>
             </div>
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('stateAid')} ? 'govuk-form-group--error'">
