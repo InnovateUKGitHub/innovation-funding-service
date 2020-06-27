@@ -9,7 +9,7 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Initial details',size='govuk-heading-xl'" />
 
-    <div th:unless="${model.restricted}" class="govuk-body panel">
+    <div th:unless="${model.restricted}" class="govuk-body">
         This will create a new competition. You will be able to add more details later on.
     </div>
 
