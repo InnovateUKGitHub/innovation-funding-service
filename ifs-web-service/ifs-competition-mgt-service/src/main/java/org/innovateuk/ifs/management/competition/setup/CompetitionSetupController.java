@@ -32,6 +32,7 @@ import org.innovateuk.ifs.management.competition.setup.initialdetail.form.Initia
 import org.innovateuk.ifs.management.competition.setup.initialdetail.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.management.competition.setup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.form.ProjectEligibilityForm;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -101,7 +102,8 @@ public class CompetitionSetupController {
     public String initCompetitionSetupSection(Model model,
                                               @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                               @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
-                                              @SuppressWarnings("UnusedParameters") BindingResult bindingResult) {
+                                              @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
+                                              UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (competition.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
@@ -111,7 +113,7 @@ public class CompetitionSetupController {
         boolean canAssignFinanceUsers = competition.getCovidType() != null;
 
         model.addAttribute("canAssignFinanceUsers", canAssignFinanceUsers);
-        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(SETUP_READY_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         model.addAttribute(READY_TO_OPEN_KEY, competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
         return "competition/setup";
@@ -150,7 +152,8 @@ public class CompetitionSetupController {
     @GetMapping("/{competitionId}/section/{sectionPath}")
     public String editCompetitionSetupSection(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               @PathVariable(SECTION_PATH_KEY) String sectionPath,
-                                              Model model) {
+                                              Model model,
+                                              UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
@@ -175,7 +178,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
 
         return "competition/setup";
@@ -187,8 +190,9 @@ public class CompetitionSetupController {
             @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
+            UserResource loggedInUser,
             Model model) {
-        return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
+        return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);
     }
 
 
@@ -197,16 +201,18 @@ public class CompetitionSetupController {
                                               @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                               ValidationHandler validationHandler,
                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              UserResource loggedInUser,
                                               Model model) {
-        return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
+        return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, loggedInUser, model);
     }
 
     private String doSubmitInitialSectionDetails(InitialDetailsForm competitionSetupForm,
                                                  ValidationHandler validationHandler,
                                                  long competitionId,
+                                                 UserResource loggedInUser,
                                                  Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.INITIAL_DETAILS, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.INITIAL_DETAILS, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/additional")
@@ -214,6 +220,7 @@ public class CompetitionSetupController {
                                                  BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                 UserResource loggedInUser,
                                                  Model model, HttpServletRequest request) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -238,7 +245,7 @@ public class CompetitionSetupController {
         //Validate after competition code generated and co funders added/removed.
         validator.validate(competitionSetupForm, bindingResult);
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ADDITIONAL_INFO, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ADDITIONAL_INFO, loggedInUser,  model);
     }
 
     @PostMapping("/{competitionId}/section/project-eligibility")
@@ -246,6 +253,7 @@ public class CompetitionSetupController {
                                                   BindingResult bindingResult,
                                                   ValidationHandler validationHandler,
                                                   @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                  UserResource loggedInUser,
                                                   Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -253,7 +261,7 @@ public class CompetitionSetupController {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.PROJECT_ELIGIBILITY, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.PROJECT_ELIGIBILITY, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/completion-stage")
@@ -261,12 +269,13 @@ public class CompetitionSetupController {
                                                       BindingResult bindingResult,
                                                       ValidationHandler validationHandler,
                                                       @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                      UserResource loggedInUser,
                                                       Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition,
-                CompetitionSetupSection.COMPLETION_STAGE, model);
+                CompetitionSetupSection.COMPLETION_STAGE, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/milestones")
@@ -274,6 +283,7 @@ public class CompetitionSetupController {
                                                  BindingResult bindingResult,
                                                  ValidationHandler validationHandler,
                                                  @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                 UserResource loggedInUser,
                                                  Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
@@ -282,7 +292,7 @@ public class CompetitionSetupController {
             competitionSetupMilestoneService.sortMilestones(competitionSetupForm);
         }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.MILESTONES, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.MILESTONES, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/application")
@@ -290,10 +300,11 @@ public class CompetitionSetupController {
                                                       @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                       ValidationHandler validationHandler,
                                                       @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                      UserResource loggedInUser,
                                                       Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.APPLICATION_FORM, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.APPLICATION_FORM, loggedInUser, model);
     }
 
 
@@ -302,10 +313,11 @@ public class CompetitionSetupController {
                                                 @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                 ValidationHandler validationHandler,
                                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                UserResource loggedInUser,
                                                 Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ASSESSORS, loggedInUser, model);
     }
 
     @PostMapping("/{competitionId}/section/terms-and-conditions")
@@ -313,6 +325,7 @@ public class CompetitionSetupController {
                                                          @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                                          ValidationHandler validationHandler,
                                                          @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                                         UserResource loggedInUser,
                                                          Model model) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         if (isProcurement(competitionSetupForm.getTermsAndConditionsId())) {
@@ -323,7 +336,7 @@ public class CompetitionSetupController {
             competitionSetupRestService.deleteCompetitionTerms(competitionId);
         }
 
-        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+        return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, loggedInUser, model);
     }
 
     private boolean isProcurement(long termsAndConditionsId) {
@@ -336,8 +349,9 @@ public class CompetitionSetupController {
                                    @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                    @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
                                    BindingResult bindingResult,
-                                   ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
+                                   ValidationHandler validationHandler,
+                                   UserResource loggedInUser) {
+        Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult, loggedInUser);
 
         ServiceResult<Void> updateResult = competitionSetupService.setCompetitionAsReadyToOpen(competitionId);
 
@@ -350,8 +364,9 @@ public class CompetitionSetupController {
                          @PathVariable("competitionIdToDelete") long competitionId,
                          @Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) CompetitionSetupSummaryForm competitionSetupSummaryForm,
                          BindingResult bindingResult,
-                         ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult);
+                         ValidationHandler validationHandler,
+                         UserResource loggedInUser) {
+        Supplier<String> failureView = () -> initCompetitionSetupSection(model, competitionId, competitionSetupSummaryForm, bindingResult, loggedInUser);
 
         ServiceResult<Void> deleteResult = competitionSetupService.deleteCompetition(competitionId);
 
@@ -364,11 +379,12 @@ public class CompetitionSetupController {
                                            @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                           UserResource loggedInUser,
                                            Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         Supplier<String> success = () -> format("redirect:/competition/setup/%d/section/terms-and-conditions", + competition.getId());
-        Supplier<String> failure = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, model);
+        Supplier<String> failure = () -> genericCompetitionSetupSection(termsAndConditionsForm, validationHandler, competition, CompetitionSetupSection.TERMS_AND_CONDITIONS, loggedInUser, model);
 
         MultipartFile file = termsAndConditionsForm.getTermsAndConditionsDoc();
         RestResult<FileEntryResource> uploadResult = competitionSetupRestService.uploadCompetitionTerms(competitionId, file.getContentType(), file.getSize(),
@@ -413,6 +429,7 @@ public class CompetitionSetupController {
                                                   ValidationHandler validationHandler,
                                                   CompetitionResource competition,
                                                   CompetitionSetupSection section,
+                                                  UserResource loggedInUser,
                                                   Model model) {
         if (competition.isNonIfs()) {
             return format("redirect:/non-ifs-competition/setup/%d", competition.getId());
@@ -424,7 +441,7 @@ public class CompetitionSetupController {
 
         Supplier<String> successView = () -> format("redirect:/competition/setup/%d/section/%s", competition.getId(), section.getPostMarkCompletePath());
         Supplier<String> failureView = () -> {
-            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, section));
             return "competition/setup";
         };
 

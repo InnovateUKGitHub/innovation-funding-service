@@ -1,96 +1,104 @@
-package org.innovateuk.ifs.registration.controller;
+package org.innovateuk.ifs.registration.grantsinvite.controller;
 
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
+import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
+import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.registration.controller.AcceptProjectInviteController.*;
 
 @Controller
 @SecuredBySpring(value = "Controller",
         description = "All invitees with a valid hash are able to register and create an account on the invited project",
-        securedType = ProjectRegistrationController.class)
+        securedType = GrantsRegistrationController.class)
 @PreAuthorize("permitAll")
-public class ProjectRegistrationController {
+@RequestMapping("/project/{projectId}/grants/invite/register")
+public class GrantsRegistrationController {
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Autowired
-    private ProjectInviteRestService projectInviteRestService;
+    private GrantsInviteRestService grantsInviteRestService;
 
     @Autowired
     private EncryptedCookieService cookieUtil;
 
     private final static String EMAIL_FIELD_NAME = "email";
-    private static final String REGISTER_MAPPING = "/registration/register";
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
     private static final String REGISTRATION_REGISTER_VIEW = "registration/register";
 
-    @GetMapping(REGISTER_MAPPING)
+    @GetMapping
     public String registerForm(Model model,
+                               @PathVariable long projectId,
                                HttpServletRequest request,
                                UserResource loggedInUser) {
-        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
-                    ValidationMessages errors = errorMessages(loggedInUser, invite);
-                    if (errors.hasErrors()) {
-                        return populateModelWithErrorsAndReturnErrorView(errors, model);
-                    }
-                    model.addAttribute("invitee", true);
-                    model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
+        String hash = cookieUtil.getCookieValue(request, AcceptGrantsInviteController.INVITE_HASH);
+        return grantsInviteRestService.getInviteByHash(projectId, hash).andOnSuccess(invite -> {
+            ValidationMessages errors = AcceptGrantsInviteController.validateUserCanAcceptInvite(loggedInUser, invite);
+            if (errors.hasErrors()) {
+                return AcceptGrantsInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
+            }
+            model.addAttribute("model", new RegistrationViewModel(true,
+                    invite.getGrantsInviteRole().getDisplayName(),
+                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
+                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
+
+            model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
         ).getSuccess();
     }
 
-    @PostMapping(REGISTER_MAPPING)
+    @PostMapping
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
+                                     @PathVariable long projectId,
                                      HttpServletRequest request,
                                      Model model,
                                      UserResource loggedInUser) {
-        String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
-        return projectInviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
+        String hash = cookieUtil.getCookieValue(request, AcceptGrantsInviteController.INVITE_HASH);
+        return grantsInviteRestService.getInviteByHash(projectId, hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
-            model.addAttribute("invitee", true);
+            model.addAttribute("model", new RegistrationViewModel(true,
+                    invite.getGrantsInviteRole().getDisplayName(),
+                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
+                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
 
             if (bindingResult.hasErrors()) {
                 model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ValidationMessages errors = errorMessages(loggedInUser, invite);
+            ValidationMessages errors = AcceptGrantsInviteController.validateUserCanAcceptInvite(loggedInUser, invite);
             if (errors.hasErrors()) {
-                return populateModelWithErrorsAndReturnErrorView(errors, model);
+                return AcceptGrantsInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
             }
 
-            if (emailExists(registrationForm.getEmail())) {
+            if (invite.userExists()) {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = createUser(registrationForm, invite.getOrganisation())
+            ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserResource()).toServiceResult()
                     .andOnSuccess(newUser -> {
-                        projectInviteRestService.acceptInvite(hash, newUser.getId());
+                        grantsInviteRestService.acceptInvite(projectId, invite.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
                     });
             if (result.isSuccess()) {
@@ -101,21 +109,5 @@ public class ProjectRegistrationController {
             }
 
         }).getSuccess();
-    }
-
-    private boolean emailExists(String email) {
-        return userService.findUserByEmail(email).isPresent();
-    }
-
-    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        return userService.createOrganisationUser(
-                registrationForm.getFirstName(),
-                registrationForm.getLastName(),
-                registrationForm.getPassword(),
-                registrationForm.getEmail(),
-                registrationForm.getTitle(),
-                registrationForm.getPhoneNumber(),
-                organisationId,
-                registrationForm.getAllowMarketingEmails());
     }
 }

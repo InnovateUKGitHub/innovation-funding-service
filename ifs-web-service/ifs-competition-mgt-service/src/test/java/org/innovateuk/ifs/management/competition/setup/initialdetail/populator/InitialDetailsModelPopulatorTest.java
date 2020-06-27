@@ -107,6 +107,6 @@ public class InitialDetailsModelPopulatorTest {
     }
 
     private static GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-        return new GeneralSetupViewModel(false, competition, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSection.values(), true);
+        return new GeneralSetupViewModel(false, competition, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSection.values(), true, false);
     }
 }

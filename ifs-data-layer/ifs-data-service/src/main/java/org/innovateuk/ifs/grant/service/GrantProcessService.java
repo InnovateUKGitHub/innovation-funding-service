@@ -21,4 +21,7 @@ public interface GrantProcessService {
 
     @NotSecured(value = "Only called by scheduled process", mustBeSecuredByOtherServices = false)
     void sendFailed(long applicationId, String message);
+
+    @NotSecured(value = "Service is called from other services always")
+    Optional<GrantProcess> findByApplicationId(Long id);
 }

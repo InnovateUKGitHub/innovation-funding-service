@@ -221,6 +221,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         verify(competitionSetupService).populateCompetitionSectionModelAttributes(
                 eq(competition),
+                any(),
                 eq(CompetitionSetupSection.INITIAL_DETAILS)
         );
     }

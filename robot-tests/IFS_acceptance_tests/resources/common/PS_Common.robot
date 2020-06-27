@@ -125,18 +125,22 @@ ${Postcode}      BS14NT
 
 #Project: Super-EFFY - Super Efficient Forecasting of Freight Yields
 #LP: Live Project
-${Crystalrover_Name}   Crystalrover
-${Crystalrover_Id}     ${organisation_ids["${Crystalrover_Name}"]}
-${Jabbertype_Name}     Jabbertype
-${Jabbertype_Id}       ${organisation_ids["${Jabbertype_Name}"]}
-${Zummacity_Name}      Zummacity
-${Zummacity_Id}        ${organisation_ids["${Zummacity_Name}"]}
-${PS_LP_Application_Title}         Super-EFFY - Super Efficient Forecasting of Freight Yields
-${PS_LP_Application_No}            ${application_ids["${PS_LP_Application_Title}"]}
-${PS_LP_Application_Project_Id}    ${project_ids["${PS_LP_Application_Title}"]}
+${Crystalrover_Name}                      Crystalrover
+${Crystalrover_Id}                        ${organisation_ids["${Crystalrover_Name}"]}
+${Jabbertype_Name}                        Jabbertype
+${Jabbertype_Id}                          ${organisation_ids["${Jabbertype_Name}"]}
+${Zummacity_Name}                         Zummacity
+${Zummacity_Id}                           ${organisation_ids["${Zummacity_Name}"]}
+${PS_LP_Application_Title}                Super-EFFY - Super Efficient Forecasting of Freight Yields
+${PS_LP_Application_No}                   ${application_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Project_Id}           ${project_ids["${PS_LP_Application_Title}"]}
 ${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
 ${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
 ${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
+
+#Post award service live project
+${reviewProgressMessage}                  The project is now live and you can
+${reviewProgressLink}                     review its progress
 
 #Project: Growth table comp
 ${GrowthTableCompName}              Growth table comp
@@ -746,3 +750,7 @@ enter the country in the autocomplete field
     [Arguments]         ${country}  ${completeCountryName}
     input text                          id = country        ${country}
     the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+
+the user should see project is live with review its progress link
+    the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
+    the user should see the element     link = ${reviewProgressLink}

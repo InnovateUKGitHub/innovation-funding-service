@@ -13,7 +13,7 @@ In Assessment dashboard page
     [Documentation]    INFUND-7363
     Given The user clicks the button/link             link = ${IN_ASSESSMENT_COMPETITION_NAME}
     Then the user should see the competition details  ${IN_ASSESSMENT_COMPETITION_NAME}  In assessment  Materials and manufacturing  Digital manufacturing  Input and review funding decision  Invite assessors to assess the competition
-    And the user should see the element               link = View and update competition setup
+    And the user should see the element               link = View and update competition details
 
 Milestones for In Assessment competitions
     [Documentation]    INFUND-7561

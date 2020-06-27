@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.form;
 
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -119,5 +120,16 @@ public class RegistrationForm extends BaseBindingResultTarget {
 
     public void setAllowMarketingEmails(Boolean allowMarketingEmails) {
         this.allowMarketingEmails = allowMarketingEmails;
+    }
+
+    public UserResource constructUserResource() {
+        UserResource user = new UserResource();
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPhoneNumber(phoneNumber);
+        user.setAllowMarketingEmails(allowMarketingEmails);
+        return user;
     }
 }

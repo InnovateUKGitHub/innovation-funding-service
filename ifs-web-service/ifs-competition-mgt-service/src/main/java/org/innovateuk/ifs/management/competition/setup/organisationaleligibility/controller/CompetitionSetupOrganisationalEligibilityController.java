@@ -14,6 +14,7 @@ import org.innovateuk.ifs.management.competition.setup.organisationaleligibility
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.form.OrganisationalEligibilityForm;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationFormPopulator;
 import org.innovateuk.ifs.management.competition.setup.organisationaleligibility.populator.LeadInternationalOrganisationViewModelPopulator;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -62,7 +63,8 @@ public class CompetitionSetupOrganisationalEligibilityController {
 
     @GetMapping
     public String organisationalEligibilityPageDetails(Model model,
-                                                       @PathVariable long competitionId) {
+                                                       @PathVariable long competitionId,
+                                                       UserResource loggedInUser) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -70,7 +72,7 @@ public class CompetitionSetupOrganisationalEligibilityController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, ORGANISATIONAL_ELIGIBILITY));
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, ORGANISATIONAL_ELIGIBILITY));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, ORGANISATIONAL_ELIGIBILITY));
 
         return "competition/setup";
@@ -81,12 +83,13 @@ public class CompetitionSetupOrganisationalEligibilityController {
                                                                 BindingResult bindingResult,
                                                                 ValidationHandler validationHandler,
                                                                 @PathVariable("competitionId") long competitionId,
+                                                                UserResource loggedInUser,
                                                                 Model model) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         Supplier<String> failureView = () -> {
-            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, ORGANISATIONAL_ELIGIBILITY));
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, loggedInUser, ORGANISATIONAL_ELIGIBILITY));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, organisationalEligibilityForm);
             return "competition/setup";
         };

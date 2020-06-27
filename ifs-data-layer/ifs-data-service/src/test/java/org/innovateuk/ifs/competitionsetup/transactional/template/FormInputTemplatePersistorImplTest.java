@@ -2,17 +2,12 @@ package org.innovateuk.ifs.competitionsetup.transactional.template;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.*;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
@@ -29,6 +24,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
 import static org.innovateuk.ifs.form.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
+import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionBuilder.newMultipleChoiceOption;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
@@ -50,6 +46,9 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
     private GuidanceRowTemplatePersistorImpl guidanceRowTemplatePersistorMock;
 
     @Mock
+    private MultipleChoiceOptionTemplatePersistorImpl multipleChoiceOptionTemplatePersistor;
+
+    @Mock
     private FormInputRepository formInputRepositoryMock;
 
     @Mock
@@ -61,10 +60,12 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
         Set<FormValidator> formValidators = new HashSet<>(newFormValidator().build(2));
 
         List<GuidanceRow> guidanceRows = newFormInputGuidanceRow().build(2);
+        List<MultipleChoiceOption> multipleChoiceOptions = newMultipleChoiceOption().build(2);
         List<FormInput> formInputsList = newFormInput()
                 .withInputValidators(formValidators)
                 .withDescription()
                 .withGuidanceRows(guidanceRows)
+                .withMultipleChoiceOptions(multipleChoiceOptions)
                 .withId(1L,2L)
                 .build(2);
         Question question = newQuestion()
@@ -72,6 +73,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withFormInputs(formInputsList).build();
 
         when(guidanceRowTemplatePersistorMock.persistByParentEntity(any())).thenReturn(guidanceRows);
+        when(multipleChoiceOptionTemplatePersistor.persistByParentEntity(any())).thenReturn(multipleChoiceOptions);
 
         List<FormInput> result = service.persistByParentEntity(question);
 
@@ -82,6 +84,7 @@ public class FormInputTemplatePersistorImplTest extends BaseServiceUnitTest<Form
                 .withCompetition(competition)
                 .withInputValidators(formValidators)
                 .withGuidanceRows(guidanceRows)
+                .withMultipleChoiceOptions(multipleChoiceOptions)
                 .withActive(true)
                 .build(2);
 
