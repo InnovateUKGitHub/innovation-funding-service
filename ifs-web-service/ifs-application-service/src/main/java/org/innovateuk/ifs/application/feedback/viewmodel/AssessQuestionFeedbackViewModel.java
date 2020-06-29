@@ -70,11 +70,6 @@ public class AssessQuestionFeedbackViewModel implements BaseAnalyticsViewModel {
         return navigation;
     }
 
-    public boolean isTextArea(FormInputResponseResource response) {
-        return inputs.stream()
-                .anyMatch(input -> input.getId().equals(response.getFormInput()) && input.getType().equals(FormInputType.TEXTAREA));
-    }
-
     public boolean isAppendix(FormInputResponseResource response) {
         return inputs.stream()
                 .anyMatch(input -> input.getId().equals(response.getFormInput()) && input.getType().equals(FormInputType.FILEUPLOAD));
