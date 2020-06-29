@@ -14,6 +14,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -98,6 +99,28 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         Optional<ProjectUserResource> result = service.getProjectManager(projectId).toOptionalIfNotFound().getSuccess();
 
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void getProjectFinanceContacts() {
+        long projectId = 23;
+        List<ProjectUserResource> returnedResponse = newProjectUserResource().withProject(projectId).build(3);
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/project-finance-contacts", projectId), projectUserResourceList(), returnedResponse);
+
+        List<ProjectUserResource> result = service.getProjectFinanceContacts(projectId).getSuccess();
+
+        assertEquals(returnedResponse, result);
+    }
+
+    @Test
+    public void getProjectFinanceContacts_emptyResults() {
+        long projectId = 13;
+
+        setupGetWithRestResultExpectations(format(PROJECT_REST_URL + "/%d/project-finance-contacts", projectId), projectUserResourceList(), Collections.emptyList());
+
+        List<ProjectUserResource> result = service.getProjectFinanceContacts(projectId).getSuccess();
+
+        assertEquals(Collections.emptyList(), result);
     }
 
     @Test

@@ -78,7 +78,7 @@ the user marks the Application as done(Prince's Trust comp)
     the assessed questions are marked complete(EOI type)
     the user opts no finances for EOI comp
     the user clicks the button/link             jQuery=button:contains("Done")
-    the user clicks the button/link             link=Competition setup
+    the user clicks the button/link             link=Competition details
     the user should see the element             jQuery=div:contains("Application") ~ .task-status-complete
 
 the lead applicant answers the four sections as complete

@@ -38,6 +38,8 @@ public interface ProjectService {
 
     Boolean isProjectManager(long userId, long projectId);
 
+    Boolean isProjectFinanceContact(long userId, long projectId);
+
     boolean userIsPartnerInOrganisationForProject(long projectId, long organisationId, long userId);
 
     Long getOrganisationIdFromUser(long projectId, UserResource user) throws ForbiddenActionException;
