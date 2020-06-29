@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
@@ -529,18 +530,14 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void findWithFundingDecisionIsNotChangeableApplicationIdsByCompetitionId() {
 
-        List<Application> applications = newApplication()
-                .withFundingDecision(ON_HOLD)
-                .build(2);
+        List<Long> longs = newArrayList(1L, 2L, 3L);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(applications);
+        when(applicationRepositoryMock.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(longs);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccess().size());
-        assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
-        assertEquals(applications.get(1).getId(), result.getSuccess().get(1));
+        assertEquals(longs, result.getSuccess());
     }
 
     @Test
