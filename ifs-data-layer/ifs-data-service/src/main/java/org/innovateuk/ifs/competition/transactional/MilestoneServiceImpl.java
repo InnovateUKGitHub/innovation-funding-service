@@ -128,8 +128,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Override
     @Transactional
     public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
-        milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
-        return serviceSuccess();
+        return find(milestoneRepository.findByTypeAndCompetitionId(milestoneResource.getType(), milestoneResource.getCompetitionId()),
+                notFoundError(MilestoneResource.class, milestoneResource.getType(), milestoneResource.getCompetitionId())).andOnSuccessReturnVoid(
+                milestone -> milestoneRepository.save(milestone));
     }
 
     @Override
