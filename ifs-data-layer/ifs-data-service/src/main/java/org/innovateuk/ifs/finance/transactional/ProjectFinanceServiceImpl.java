@@ -18,16 +18,17 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
+import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
+import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static java.lang.Boolean.TRUE;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -53,6 +54,7 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
 
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId) {
@@ -133,4 +135,5 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     private ServiceResult<Project> getProjectById(long projectId) {
         return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId));
     }
+
 }
