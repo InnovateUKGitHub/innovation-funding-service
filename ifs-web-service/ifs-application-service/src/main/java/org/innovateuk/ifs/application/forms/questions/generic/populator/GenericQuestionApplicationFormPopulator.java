@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuesti
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class GenericQuestionApplicationFormPopulator {
 
