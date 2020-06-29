@@ -31,7 +31,12 @@
                 <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
                     <dt class="govuk-grid-column-one-third">Appendix uploads</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.appendixCount}">1</dd>
+                    <th:block th:if="${competitionSetupForm.appendixCount == 0}">
+                        <dd class="govuk-grid-column-two-thirds">None</dd>
+                    </th:block>
+                    <th:block th:unless="${competitionSetupForm.appendixCount == 0}">
+                        <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.appendixCount}">1</dd>
+                    </th:block>
                     <th:block th:if="${question.appendix}">
                         <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
                         <dd class="govuk-grid-column-two-thirds">
