@@ -62,16 +62,18 @@ public class ActivityLogViewModelPopulator {
         List<ActivityLogResource> activities = activityLogRestService.findByApplicationId(project.getApplication()).getSuccess();
 
         List<ActivityLogEntryViewModel> views = activities.stream()
-                .map(activity -> new ActivityLogEntryViewModel(
-                        title(activity),
-                        activity.getOrganisationName(),
-                        userText(activity, projectUserResources, partnerOrganisationResources),
-                        activity.getCreatedOn(),
-                        linkText(activity),
-                        url(activity, project),
-                        userCanSeeLink(activity, user),
-                        activity.getActivityType()
-                ))
+                .map(activity -> {
+                    String url = url(activity, project);
+                    return new ActivityLogEntryViewModel(
+                            title(activity),
+                            activity.getOrganisationName(),
+                            userText(activity, projectUserResources, partnerOrganisationResources),
+                            activity.getCreatedOn(),
+                            linkText(activity),
+                            url,
+                            url != null && userCanSeeLink(activity, user),
+                            activity.getActivityType());
+                })
                 .collect(toList());
 
         return new ActivityLogViewModel(
