@@ -50,7 +50,11 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
-${organisationEligibilityCompetitionName}                Organisation Eligibility Competition
+
+${ukLeadInternationalCompetition}                        UK based Lead International Competition
+${internationalLeadInternationalCompetition}             International Lead International Competition
+${openCompetitionPerformance_name}                       Performance testing competition
+${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
 ${projectEligibilityLink}                                Project eligibility
 ${organisationalEligibilityTitle}                        Organisational eligibility
 
@@ -286,6 +290,9 @@ ${compType_ATI}        Aerospace Technology Institute
 @{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
 @{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}        Project summary  Public description  Scope
+
+#SBRI Type 1 competition milestones
+@{sbriType1Milestones}     Open date  Briefing event  Submission date
 
 #Project Setup
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy

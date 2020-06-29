@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 public interface CompetitionSetupService {
 
     CompetitionSetupViewModel populateCompetitionSectionModelAttributes(CompetitionResource competitionResource,
+                                                                        UserResource user,
                                                                         CompetitionSetupSection section);
 
     CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(CompetitionResource competitionResource,

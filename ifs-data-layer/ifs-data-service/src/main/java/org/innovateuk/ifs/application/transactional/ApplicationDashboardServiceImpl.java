@@ -206,7 +206,6 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
         return false;
     }
 
-
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {
         PartnerOrganisation partnerOrganisation = getPartnerOrganisation(application, userId);
         return aDashboardInSetupRowResource()

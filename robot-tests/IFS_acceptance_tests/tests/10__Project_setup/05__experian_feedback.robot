@@ -178,9 +178,7 @@ The user is able to see company details with scores
     the user should see the element   jQuery = tr:nth-child(4) td:nth-child(3):contains("10 / 9")
 
 Project finance navigates to bank details requiring action
-    the user navigates to the page    ${server}/management/dashboard/project-setup
-    the user clicks the button/link   jQuery = button:contains("Next")
-    the user clicks the button/link   link = ${PS_Competition_Name}
+    the user navigates to the page    ${server}/project-setup-management/competition/${PS_Competition_Id}/status/all
     the user clicks the button/link   link = 2
     the user clicks the button/link   css = #table-project-status > tbody > tr:nth-child(2) > td:nth-child(6) a  # Complete Bank details
 

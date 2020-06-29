@@ -93,7 +93,7 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSection section = INITIAL_DETAILS;
 
-        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, null, section);
 
         verifyCommonModelAttributes(viewModel, competition, section);
         assertEquals("section-initial", viewModel.getGeneral().getCurrentSectionFragment());
@@ -119,7 +119,7 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSection section = CompetitionSetupSection.PROJECT_ELIGIBILITY;
 
-        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, null, section);
 
         verifyCommonModelAttributes(viewModel, competition, section);
         assertEquals("section-project-eligibility", viewModel.getGeneral().getCurrentSectionFragment());
@@ -357,7 +357,7 @@ public class CompetitionSetupServiceImplTest {
 
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
-        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, null, competitionSetupSection);
 
         assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
         assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
@@ -385,7 +385,7 @@ public class CompetitionSetupServiceImplTest {
 
         service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
-        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, null, competitionSetupSection);
 
         assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
         assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
@@ -432,7 +432,7 @@ public class CompetitionSetupServiceImplTest {
     }
 
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
-        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE);
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE, Boolean.FALSE);
         generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
         generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, CompetitionStatus.COMPETITION_SETUP));
 

@@ -44,7 +44,7 @@ public class ResearchCategoryReadonlyViewModelPopulatorTest {
                 .build();
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        ResearchCategoryReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
+        ResearchCategoryReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
         assertEquals("Research category", viewModel.getResearchCategory());
 

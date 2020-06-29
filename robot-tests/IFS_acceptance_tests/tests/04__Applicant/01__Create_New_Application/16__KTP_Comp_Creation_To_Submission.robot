@@ -20,15 +20,15 @@ ${KTPapplicationTitle}  KTP Application
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  project-setup-completion-stage  yes  1  true  single
+    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  yes  1  true  single
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  the user clicks the button/link      link = ${KTPcompetitionTitle}
-    Given the user clicks the button/link         link = View and update competition setup
+    Given the user clicks the button/link         link = View and update competition details
     When the user clicks the button/link          link = Initial details
     Then the user should see the element          jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
-    [Teardown]  the user clicks the button/link   link = Competition setup
+    [Teardown]  the user clicks the button/link   link = Competition details
 
 Comp Admin is able to see KTP T&C's have been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -132,10 +132,10 @@ Applicant is able to upload the GOL
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the internal user approve the GOL  ${ProjectID}
-    When log in as a different user          &{lead_applicant_credentials}
-    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}
-    Then the user should see the element     jQuery = p:contains("The project is live")
+    Given the internal user approve the GOL                                    ${ProjectID}
+    When log in as a different user                                            &{lead_applicant_credentials}
+    And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
+    Then the user should see project is live with review its progress link
 
 *** Keywords ***
 The user approves Eligibility and Viability

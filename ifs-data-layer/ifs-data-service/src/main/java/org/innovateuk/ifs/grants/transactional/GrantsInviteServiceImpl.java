@@ -15,7 +15,6 @@ import org.innovateuk.ifs.grants.repository.GrantsProjectManagerInviteRepository
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.grantsinvite.resource.SentGrantsInviteResource;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.notifications.resource.*;
@@ -25,22 +24,32 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.invite.transactional.ProjectInviteValidator;
+import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.activitylog.resource.ActivityType.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
@@ -59,6 +68,9 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private ProjectInviteValidator projectInviteValidator;
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
@@ -81,32 +93,54 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     @Autowired
     private ActivityLogService activityLogService;
 
+    @Autowired
+    private MonitoringOfficerRepository monitoringOfficerRepository;
+
+    @Autowired
+    private UserService userService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     enum Notifications {
-        INVITE_GRANTS_PROJECT_MANAGER,
-        INVITE_GRANTS_MONITORING_OFFICER,
-        INVITE_GRANTS_PROJECT_FINANCE_CONTACT,
+        INVITE_GRANTS_USER,
     }
 
     @Override
-    public ServiceResult<Void> sendInvite(long projectId, GrantsInviteResource invite) {
-        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId)).andOnSuccess(project -> {
-            InviteOrganisation inviteOrganisation = new InviteOrganisation();
-            inviteOrganisation.setOrganisationName(invite.getOrganisationName());
-            inviteOrganisation = inviteOrganisationRepository.save(inviteOrganisation);
+    public ServiceResult<List<SentGrantsInviteResource>> getByProjectId(long projectId) {
+        return serviceSuccess(grantsInviteRepository.findByProjectId(projectId).stream()
+                .map(this::mapToSentResource)
+                .collect(Collectors.toList()));
+    }
 
-            GrantsInvite grantsInvite = getInviteType(invite);
-            grantsInvite.setInviteOrganisation(inviteOrganisation);
-            grantsInvite.setEmail(invite.getEmail());
-            grantsInvite.setName(invite.getUserName());
-            grantsInvite.setHash(generateInviteHash());
-            grantsInvite.setTarget(project);
-            getInviteRepository(invite).save(grantsInvite);
-            return sendInviteNotification(grantsInvite)
-                    .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
-        });
+    @Override
+    @Transactional
+    public ServiceResult<Void> sendInvite(long projectId, GrantsInviteResource invite) {
+        return find(project(projectId), organisationIfOnResource(invite)).andOnSuccess((project, organisation) ->
+                validateInviteDoesntExist(projectId, invite).andOnSuccess(() -> {
+                GrantsInvite grantsInvite = getInviteType(invite);
+                grantsInvite.setOrganisation(organisation);
+                grantsInvite.setEmail(invite.getEmail());
+                grantsInvite.setName(invite.getUserName());
+                grantsInvite.setHash(generateInviteHash());
+                grantsInvite.setTarget(project);
+                getInviteRepository(invite).save(grantsInvite);
+                return sendInviteNotification(grantsInvite)
+                        .andOnSuccessReturnVoid((sentInvite) -> sentInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+            }));
+    }
+
+    private ServiceResult<Void> validateInviteDoesntExist(long projectId, GrantsInviteResource invite) {
+        if (grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())) {
+            return serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
+        }
+        return serviceSuccess();
+    }
+    private Supplier<ServiceResult<Organisation>> organisationIfOnResource(GrantsInviteResource invite) {
+        if (invite.getOrganisationId() != null) {
+            return organisation(invite.getOrganisationId());
+        }
+        return () -> serviceSuccess(null);
     }
 
     private InviteRepository getInviteRepository(GrantsInviteResource invite) {
@@ -148,27 +182,25 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     private Notification getNotification(GrantsInvite grantsInvite) {
 
         Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("applicationId", grantsInvite.getProject().getApplication().getId());
+        notificationArguments.put("projectName", grantsInvite.getProject().getName());
+        notificationArguments.put("role", getGrantsInviteRole(grantsInvite.getClass()).getDisplayName());
+        notificationArguments.put("inviteUrl", String.format("%s/project-setup/project/%d/grants/invite/%s", webBaseUrl, grantsInvite.getProject().getId(), grantsInvite.getHash()));
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(grantsInvite.getName(), grantsInvite.getEmail());
 
-        return new Notification(from, singletonList(to), getEmailTemplate(grantsInvite.getClass()), notificationArguments);
+        return new Notification(from, singletonList(to), Notifications.INVITE_GRANTS_USER, notificationArguments);
     }
 
-    private Notifications getEmailTemplate(Class<? extends GrantsInvite> clazz) {
-        if (GrantsProjectManagerInvite.class.equals(clazz)) {
-            return Notifications.INVITE_GRANTS_PROJECT_MANAGER;
-        } else if (GrantsMonitoringOfficerInvite.class.equals(clazz)) {
-            return Notifications.INVITE_GRANTS_MONITORING_OFFICER;
-        } else if (GrantsFinanceContactInvite.class.equals(clazz)) {
-            return Notifications.INVITE_GRANTS_PROJECT_FINANCE_CONTACT;
-        }
-        throw new IFSRuntimeException("No matching email template");
-    }
 
     @Override
+    @Transactional
     public ServiceResult<Void> resendInvite(long inviteId) {
         return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
-                .andOnSuccess(this::sendInviteNotification)
+                .andOnSuccess(invite -> {
+                    invite.setHash(generateInviteHash());
+                    return sendInviteNotification(invite);
+                })
                 .andOnSuccessReturnVoid((sentInvite) -> sentInvite.resend(loggedInUserSupplier.get(), ZonedDateTime.now()));
     }
 
@@ -180,7 +212,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     private SentGrantsInviteResource mapToSentResource(GrantsInvite grantsInvite) {
         return new SentGrantsInviteResource(
-                grantsInvite.getInviteOrganisation().getOrganisationName(),
+                ofNullable(grantsInvite.getOrganisation()).map(Organisation::getId).orElse(null),
                 grantsInvite.getName(),
                 grantsInvite.getEmail(),
                 getGrantsInviteRole(grantsInvite.getClass()),
@@ -193,24 +225,33 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
-    public ServiceResult<Void> acceptInvite(long inviteId, long organisationId) {
+    @Transactional
+    public ServiceResult<Void> acceptInvite(long inviteId) {
         return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
-                .andOnSuccess(invite ->
-                        find(organisation(organisationId))
-                                .andOnSuccess((organisation) -> {
-                                    Project project = invite.getProject();
-                                    invite.getInviteOrganisation().setOrganisation(organisation);
-                                    projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), organisation));
-                                    invite.open();
-                                    Role roleToAdd = getRole(invite.getClass());
-                                    if (invite.getUser().hasRole(roleToAdd)) {
-                                        invite.getUser().addRole(roleToAdd);
-                                    }
-                                    if (!invite.getUser().hasRole(LIVE_PROJECTS_USER)) {
-                                        invite.getUser().addRole(LIVE_PROJECTS_USER);
-                                    }
-                                    return serviceSuccess();
-                                }));
+                .andOnSuccess(invite -> {
+                    saveUserToProject(invite);
+                    invite.open();
+                    Role roleToAdd = getRole(invite.getClass());
+                    if (!invite.getUser().hasRole(roleToAdd)) {
+                        invite.getUser().addRole(roleToAdd);
+                    }
+                    if (!invite.getUser().hasRole(LIVE_PROJECTS_USER)) {
+                        invite.getUser().addRole(LIVE_PROJECTS_USER);
+                    }
+                    userService.evictUserCache(invite.getUser().getUid());
+                    return serviceSuccess();
+                });
+    }
+
+    private void saveUserToProject(GrantsInvite invite) {
+        Project project = invite.getProject();
+        if (GrantsMonitoringOfficerInvite.class.equals(invite.getClass())) {
+            monitoringOfficerRepository.save(new MonitoringOfficer(invite.getUser(), project, ProjectParticipantRole.GRANTS_MONITORING_OFFICER));
+        } else {
+            projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), invite.getOrganisation()));
+        }
+
+
     }
 
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {

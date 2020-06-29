@@ -47,9 +47,10 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     public void setUp() {
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
-                    .withId(1L)
-                    .withNonIfs(false)
-                    .build()));
+                        .withId(1L)
+                        .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                        .withNonIfs(false)
+                        .build()));
 
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {
             @Override
@@ -229,6 +230,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
                         .withId(1L)
+                        .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                         .withNonIfs(true)
                         .build()));
 
@@ -272,7 +274,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(NOTIFICATIONS, 1L);
         assertTrue(result.isFailure());
-        assertEquals(result.getErrors().size(),1);
+        assertEquals(result.getErrors().size(), 1);
         assertEquals(result.getErrors().get(0).getStatusCode(), HttpStatus.NOT_FOUND);
     }
 

@@ -104,5 +104,4 @@ public class GenericQuestionApplicationModelPopulator {
                 .findAny() //Generic questions only have one respsonse.
                 .map(ApplicantFormInputResponseResource::getResponse);
     }
-
 }

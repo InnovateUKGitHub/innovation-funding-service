@@ -16,6 +16,8 @@ public interface UserRestService {
 
     RestResult<UserResource> retrieveUserById(long id);
 
+    RestResult<UserResource> createUser(UserResource user);
+
     RestResult<List<UserResource>> findAll();
 
     RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory);

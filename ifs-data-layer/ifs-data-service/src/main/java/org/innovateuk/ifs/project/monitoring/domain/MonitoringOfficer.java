@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectParticipant;
+import org.innovateuk.ifs.project.core.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -27,6 +28,10 @@ public class MonitoringOfficer extends ProjectParticipant {
 
     public MonitoringOfficer(User user, Project project) {
         super(user, MONITORING_OFFICER);
+        this.project = project;
+    }
+    public MonitoringOfficer(User user, Project project, ProjectParticipantRole role) {
+        super(user, role);
         this.project = project;
     }
 
