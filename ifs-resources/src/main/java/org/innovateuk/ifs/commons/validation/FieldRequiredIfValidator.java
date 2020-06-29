@@ -72,6 +72,10 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
             return false;
         }
 
+        if (requiredFieldValue instanceof Long) {
+            return false;
+        }
+
         if (requiredFieldValue instanceof BigDecimal) {
             return false;
         }
@@ -89,7 +93,7 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
         }
 
         throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName
-                + "] must be of type Boolean, Integer, String, Optional, BigDecimal, or Collection. Found "
+                + "] must be of type Boolean, Integer, Long, String, Optional, BigDecimal, or Collection. Found "
                 + requiredFieldValue.getClass().getName());
     }
 

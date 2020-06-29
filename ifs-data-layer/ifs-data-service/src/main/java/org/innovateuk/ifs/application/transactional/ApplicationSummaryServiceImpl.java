@@ -188,15 +188,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
 
-        return serviceSuccess(applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+        return serviceSuccess(applicationRepository.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId,
                 filterStr,
                 sendFilter.orElse(null),
-                fundingFilter.orElse(null))
-                .stream()
-                .filter(Application::applicationFundingDecisionIsChangeable)
-                .map(Application::getId)
-                .collect(toList()));
+                fundingFilter.orElse(null)));
     }
 
     @Override

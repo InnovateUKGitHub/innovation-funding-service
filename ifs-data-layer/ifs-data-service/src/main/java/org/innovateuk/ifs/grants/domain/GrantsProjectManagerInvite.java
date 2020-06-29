@@ -2,6 +2,7 @@ package org.innovateuk.ifs.grants.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class GrantsProjectManagerInvite extends GrantsInvite<GrantsProjectManage
     public GrantsProjectManagerInvite() {
     }
 
-    public GrantsProjectManagerInvite(final String name, final String email, final String hash, final InviteOrganisation inviteOrganisation, final Project project, final InviteStatus status) {
-        super(name, email, hash, inviteOrganisation,project, status);
+    public GrantsProjectManagerInvite(final String name, final String email, final String hash, final Organisation organisation, final Project project, final InviteStatus status) {
+        super(name, email, hash, organisation,project, status);
     }
 }

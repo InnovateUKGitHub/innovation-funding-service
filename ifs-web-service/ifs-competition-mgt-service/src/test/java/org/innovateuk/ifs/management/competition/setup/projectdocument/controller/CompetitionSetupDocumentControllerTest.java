@@ -11,6 +11,7 @@ import org.innovateuk.ifs.file.service.FileTypeRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.projectdocument.form.ProjectDocumentForm;
 import org.innovateuk.ifs.management.competition.setup.projectdocument.viewmodel.ProjectDocumentViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +79,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("redirect:/non-ifs-competition/setup/" + COMPETITION_ID))
                 .andReturn().getModelAndView().getModelMap();
 
-        verify(competitionSetupService, never()).populateCompetitionSectionModelAttributes(any(), any());
+        verify(competitionSetupService, never()).populateCompetitionSectionModelAttributes(any(), any(), any());
     }
 
     @Test
@@ -96,7 +97,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID))
                 .andReturn().getModelAndView().getModelMap();
 
-        verify(competitionSetupService, never()).populateCompetitionSectionModelAttributes(any(), any());
+        verify(competitionSetupService, never()).populateCompetitionSectionModelAttributes(any(), any(), any());
     }
 
     @Test
@@ -108,14 +109,14 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
+        when(competitionSetupService.populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT))).thenReturn(viewModel);
 
         ModelMap model = mockMvc.perform(get(URL_PREFIX + "/landing-page"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
                 .andReturn().getModelAndView().getModelMap();
 
-        verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT));
         assertEquals(viewModel, model.get("model"));
     }
 
@@ -135,14 +136,14 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
+        when(competitionSetupService.populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT))).thenReturn(viewModel);
 
         ModelMap model = mockMvc.perform(get(URL_PREFIX + "/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup/save-project-document"))
                 .andReturn().getModelAndView().getModelMap();
 
-        verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT));
         assertEquals(new ProjectDocumentForm(true, true), model.get("form"));
         assertEquals(viewModel, model.get("model"));
     }
@@ -159,7 +160,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
+        when(competitionSetupService.populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT))).thenReturn(viewModel);
 
         ModelMap model = mockMvc.perform(post(URL_PREFIX + "/save")
                                             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -172,7 +173,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                                 .andReturn().getModelAndView().getModelMap();
 
         ProjectDocumentForm expectedForm = new ProjectDocumentForm(null, title, null, true, true);
-        verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT));
         verify(competitionSetupDocumentRestService, never()).save(any(CompetitionDocumentResource.class));
         assertEquals(expectedForm, model.get("form"));
 
@@ -191,7 +192,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
+        when(competitionSetupService.populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT))).thenReturn(viewModel);
         when(competitionSetupDocumentRestService.save(any(CompetitionDocumentResource.class))).thenReturn(restFailure(FILES_SELECT_AT_LEAST_ONE_FILE_TYPE));
 
         ModelMap model = mockMvc.perform(post(URL_PREFIX + "/save")
@@ -206,7 +207,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                 .andReturn().getModelAndView().getModelMap();
 
         ProjectDocumentForm expectedForm = new ProjectDocumentForm(null, title, guidance, true, true);
-        verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT));
         verify(competitionSetupDocumentRestService).save(any(CompetitionDocumentResource.class));
         assertEquals(expectedForm, model.get("form"));
     }
@@ -266,7 +267,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
 
         ProjectDocumentViewModel viewModel = new ProjectDocumentViewModel(null);
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competitionResource));
-        when(competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT)).thenReturn(viewModel);
+        when(competitionSetupService.populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT))).thenReturn(viewModel);
         when(competitionSetupDocumentRestService.findOne(projectDocumentId)).thenReturn(restSuccess(competitionDocumentResource));
         when(fileTypeRestService.findOne(fileTypeId)).thenReturn(restSuccess(fileTypeResource));
 
@@ -279,7 +280,7 @@ public class CompetitionSetupDocumentControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("competition/setup/save-project-document"))
                 .andReturn().getModelAndView().getModelMap();
 
-        verify(competitionSetupService).populateCompetitionSectionModelAttributes(competitionResource, PROJECT_DOCUMENT);
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(eq(competitionResource), any(), eq(PROJECT_DOCUMENT));
         assertEquals(expectedProjectDocumentForm, model.get("form"));
         assertEquals(viewModel, model.get("model"));
     }

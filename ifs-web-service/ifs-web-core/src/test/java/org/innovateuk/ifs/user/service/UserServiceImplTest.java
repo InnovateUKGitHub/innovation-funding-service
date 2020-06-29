@@ -192,31 +192,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void createUserForOrganisation() {
-        when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
-        ServiceResult<UserResource> result = service.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
-
-        verify(userRestService, times(1)).createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
-        verifyNoMoreInteractions(userRestService);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
     public void createLeadApplicantForOrganisationWithCompetitionId() {
         when(userRestService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
         ServiceResult<UserResource> result = service.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
 
         verify(userRestService, times(1)).createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
-        verifyNoMoreInteractions(userRestService);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void createOrganisationUser() {
-        when(userRestService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
-        ServiceResult<UserResource> result = service.createOrganisationUser(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
-
-        verify(userRestService, times(1)).createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean());
         verifyNoMoreInteractions(userRestService);
         assertTrue(result.isSuccess());
     }

@@ -247,9 +247,20 @@ function tailorAppInstance() {
 }
 
 function useContainerRegistry() {
+    sed -i.bak '/imagePullSecrets/{N;d;}' $(getBuildLocation)/**/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/**/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/**/*.yml
+}
+
+function useNexusRegistry() {
+
+    NEXUS_VERSION=$1
+
+    sed -i.bak "s/imagePullSecretsName/ifs-external-registry/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/release/#g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s#service\:.*#service\:${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 
 function pushDBResetImages() {
@@ -286,6 +297,17 @@ function pushAnonymisedDatabaseDumpImages() {
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
+}
+
+function shibInit() {
+    echo "Shib init.."
+    LDAP_POD=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }')
+    echo "Ldap pod: ${LDAP_POD}"
+
+     while RESULT=$(oc rsh ${SVC_ACCOUNT_CLAUSE} $LDAP_POD /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database 2>&1); echo $RESULT; echo $RESULT | grep "ERROR"; do
+        echo "Shibinit failed. Retrying.."
+        sleep 10
+    done
 }
 
 function blockUntilServiceIsUp() {
@@ -369,4 +391,8 @@ function getClusterAddress() {
 
 function getRemoteRegistryUrl() {
   echo "docker-registry.default.svc:5000"
+}
+
+function getNexusRegistryUrl() {
+  echo "docker-ifs.devops.innovateuk.org"
 }

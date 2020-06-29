@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupService;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.CompetitionStateSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ public class CompetitionSetupPopulator {
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
-    public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
+    public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, UserResource userResource, CompetitionSetupSection section) {
 
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
                 .getSuccess();
@@ -34,8 +36,12 @@ public class CompetitionSetupPopulator {
 
         boolean editable = isSectionEditable(statusesAndValues, section, competitionResource);
 
+        boolean isInitialComplete = competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId());
+
+        boolean isIfsAdmin = SecurityRuleUtil.isIFSAdmin(userResource);
+
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, competitionResource, section, CompetitionSetupSection.values(),
-                competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionResource.getId()));
+                isInitialComplete, isIfsAdmin);
 
         if (section.hasDisplayableSetupFragment()) {
             viewModel.setCurrentSectionFragment("section-" + section.getPath());

@@ -166,7 +166,7 @@ Milestones: Server side validations, submission time is default
     And the user clicks the button/link               jQuery = button:contains(Done)
     Then Validation summary should be visible
     Then the user should see the text in the element  jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
-    [Teardown]  the user clicks the button/link       link = Competition setup
+    [Teardown]  the user clicks the button/link       link = Competition details
 
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
@@ -232,7 +232,7 @@ Assessor: Client-side validation
     Given the user selects the radio button       assessorCount   5
     When The user enters text to a text field    id = assessorPay  120
     Then The user should not see the element     jQuery = .govuk-error-message:contains("Please select an assessment panel option.")
-    And the user clicks the button/link          link = Competition setup
+    And the user clicks the button/link          link = Competition details
 
 Documents in project setup: The competition admin is required to enter a title and guidance message
     [Documentation]
