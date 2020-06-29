@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -73,7 +73,7 @@ public class ProjectTeamViewModelPopulator {
         List<ProjectUserInviteResource> invitedUsers = projectInviteRestService.getInvitesByProject(projectId).getSuccess();
 
         boolean isLead = leadOrganisation.equals(loggedInUserOrg);
-        boolean isReadOnly = !loggedInUser.hasAnyRoles(IFS_ADMINISTRATOR, SUPPORT);
+        boolean isReadOnly = project.getProjectState().isComplete();
 
         List<ProjectTeamOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectId,
@@ -99,7 +99,7 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false,
-                isReadOnly,
+                isMonitoringOfficer,
                 false,
                 false);
     }

@@ -166,7 +166,7 @@
         </tr>
         </tbody>
     </table>
-    <th:block th:if="${!model.readOnly}">
+    <th:block th:if="${!model.grantOfferLetterGenerated}">
         <button name="add-team-member"
                 th:value="${organisation.id}"
                 class="vertical-align-baseline button-clear govuk-!-margin-bottom-6"
