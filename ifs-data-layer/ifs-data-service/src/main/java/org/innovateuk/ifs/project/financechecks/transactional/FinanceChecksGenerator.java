@@ -73,13 +73,11 @@ public class FinanceChecksGenerator {
         return serviceSuccess();
     }
 
-    public ServiceResult<Void> createFinanceChecksFigures(Project newProject, Organisation organisation) {
-        copyFinanceChecksFromApplicationFinances(newProject, organisation);
-        return serviceSuccess();
+    public ServiceResult<ProjectFinance> createFinanceChecksFigures(Project newProject, Organisation organisation) {
+        return copyFinanceChecksFromApplicationFinances(newProject, organisation);
     }
 
-    private void copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
-
+    private ServiceResult<ProjectFinance> copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
         ApplicationFinance applicationFinanceForOrganisation =
                 applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
 
@@ -129,6 +127,7 @@ public class FinanceChecksGenerator {
                 financeRowMetaValueRepository.save(metaValue);
             });
         });
+        return serviceSuccess(projectFinance);
     }
 
     private FinanceCheck createMvpFinanceCheckEmptyCosts(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
