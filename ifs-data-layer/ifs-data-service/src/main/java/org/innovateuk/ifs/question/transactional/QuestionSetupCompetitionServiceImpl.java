@@ -290,15 +290,19 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
                 FormInputScope.APPLICATION,
                 FormInputType.FILEUPLOAD);
-        if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
-            appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
+        if (appendixFormInput != null && competitionSetupQuestionResource.getAppendixCount() != null) {
 
-            if(competitionSetupQuestionResource.getAppendix() || competitionSetupQuestionResource.getAppendixCount() > 0) {
+            if(competitionSetupQuestionResource.getAppendixCount() > 0) {
                 appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
                 appendixFormInput.setWordCount(competitionSetupQuestionResource.getAppendixCount());
+                appendixFormInput.setActive(true);
                 if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
                     appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
                 }
+            } else if (competitionSetupQuestionResource.getAppendixCount() == 0) {
+                appendixFormInput.setWordCount(competitionSetupQuestionResource.getAppendixCount());
+                appendixFormInput.setActive(false);
+
             }
             else {
                 appendixFormInput.setAllowedFileTypes(null);

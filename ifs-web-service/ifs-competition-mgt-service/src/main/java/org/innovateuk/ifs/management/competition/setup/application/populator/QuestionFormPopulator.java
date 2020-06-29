@@ -47,6 +47,13 @@ public class QuestionFormPopulator implements CompetitionSetupSubsectionFormPopu
                 competitionSetupForm.setRemovable(true);
             }
 
+            if (questionResource.getAppendixCount() == 0) {
+                competitionSetupForm.setAppendixCount(0);
+                questionResource.setAppendix(false);
+            }
+            competitionSetupForm.setAppendixCount(questionResource.getAppendixCount());
+            questionResource.setAppendix(true);
+
             competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
                 GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
                 competitionSetupForm.getGuidanceRows().add(grvm);
