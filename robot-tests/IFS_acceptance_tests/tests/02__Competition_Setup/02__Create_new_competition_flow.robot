@@ -322,7 +322,7 @@ Milestones: Page should contain the correct fields
     Then the user should see the element            jQuery = h1:contains("Completion stage")
     And the user should see the element             jQuery = label:contains("Release feedback")
     And the user should see the element             jQuery = label:contains("Project setup")
-    And the user selects the radio button           selectedCompletionStage  project-setup-completion-stage
+    And the user selects the radio button           selectedCompletionStage  PROJECT_SETUP
     And the user clicks the button/link             jQuery = button:contains("Done")
     And the pre-field date should be correct
 

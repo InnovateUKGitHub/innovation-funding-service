@@ -287,6 +287,9 @@ ${compType_ATI}        Aerospace Technology Institute
 @{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}        Project summary  Public description  Scope
 
+#SBRI Type 1 competition milestones
+@{sbriType1Milestones}     Open date  Briefing event  Submission date
+
 #Project Setup
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
 ${PROJECT_SETUP_COMPETITION}          ${competition_ids["${PROJECT_SETUP_COMPETITION_NAME}"]}

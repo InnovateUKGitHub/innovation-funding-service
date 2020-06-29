@@ -489,3 +489,9 @@ the user selects the organisational eligibility to no
     the user clicks the button/link         jQuery = button:contains("Save and continue")
     the user clicks the button/link         link = Competition setup
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete
+
+the user should see the correct inputs in the Milestones form
+    the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = button:contains("Edit")
