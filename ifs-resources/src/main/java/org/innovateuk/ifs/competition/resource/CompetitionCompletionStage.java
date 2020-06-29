@@ -5,7 +5,7 @@ package org.innovateuk.ifs.competition.resource;
  */
 public enum CompetitionCompletionStage {
 
-    COMPETITION_CLOSE("Competition Close", MilestoneType.SUBMISSION_DATE),
+    COMPETITION_CLOSE("Competition close", MilestoneType.SUBMISSION_DATE),
     RELEASE_FEEDBACK("Release feedback", MilestoneType.FEEDBACK_RELEASED),
     PROJECT_SETUP("Project setup", MilestoneType.FEEDBACK_RELEASED);
 
