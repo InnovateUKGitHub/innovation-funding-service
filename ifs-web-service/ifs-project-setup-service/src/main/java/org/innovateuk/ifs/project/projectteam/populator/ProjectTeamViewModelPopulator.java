@@ -73,7 +73,6 @@ public class ProjectTeamViewModelPopulator {
         List<ProjectUserInviteResource> invitedUsers = projectInviteRestService.getInvitesByProject(projectId).getSuccess();
 
         boolean isLead = leadOrganisation.equals(loggedInUserOrg);
-        boolean isReadOnly = project.getProjectState().isComplete();
 
         List<ProjectTeamOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
                 .map(org -> mapToProjectOrganisationViewModel(projectId,
