@@ -151,8 +151,8 @@
                         <div class="ajax-upload"
                              data-js-upload-button-name="uploadAppendix"
                              data-js-upload-file-input="appendix"
-                             th:attr="data-js-number-of-files=${model.maximumAppendices}">
-                            <!--/*data-js-upload-one-at-a-time=""*/-->
+                             th:attr="data-js-number-of-files=${model.maximumAppendices}"
+                             data-js-upload-one-at-a-time="">
                             <p th:if="${model.appendices.isEmpty()}" class="govuk-body no-file-uploaded">No file currently
                                 uploaded.</p>
                             <ul class="govuk-list file-list">
@@ -164,13 +164,14 @@
                                            target="_blank"
                                            class="govuk-link"
                                            aria-describedby="file-hint">File</a>
-                                        <button name="removeAppendix" th:value="${appendix.fileEntryId}"
+                                        <button th:unless=${model.readOnly} name="removeAppendix" th:value="${appendix.fileEntryId}"
                                                 class="button-clear remove-file" aria-label="Remove uploaded document">Remove
                                         </button>
                                     </div>
                                 </li>
                             </ul>
-                            <div th:class="${#fields.hasErrors('appendix')} ? 'govuk-form-group--error' : ''">
+                            <div th:unless=${model.readOnly}
+                                 th:class="${#fields.hasErrors('appendix')} ? 'govuk-form-group--error' : ''">
                                 <th:block th:if="${#fields.hasErrors('appendix')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('appendix')}"
                                   th:text="${err}"/>
