@@ -27,8 +27,23 @@
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
                 <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}"
                     ifs:utext="${question.guidance}"></dd>
-                <dt class="govuk-grid-column-one-third">Max word count</dt>
-                <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
+
+                <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
+                    <dt class="govuk-grid-column-one-third">Answer type</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.typeOfQuestion.name() == 'FREE_TEXT' ? 'Free text' : 'Multiple choice'}"></dd>
+                </th:block>
+                <th:block th:if="${question.textArea != null && question.textArea}">
+                    <dt class="govuk-grid-column-one-third">Max word count</dt>
+                    <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
+                </th:block>
+                <th:block th:if="${question.multipleChoice != null && question.multipleChoice}">
+                    <dt class="govuk-grid-column-one-third">Answers</dt>
+                    <dd class="govuk-grid-column-two-thirds">
+                        <th:block th:each="choice : ${question.choices}">
+                            <span th:text="${choice.text}"></span><br/>
+                        </th:block>
+                    </dd>
+                </th:block>
                 <th:block th:if="${question.appendix != null}">
                     <dt class="govuk-grid-column-one-third">Appendix</dt>
                     <dd class="govuk-grid-column-two-thirds" th:if="${question.appendix}">Yes</dd>
@@ -223,24 +238,115 @@
                         </textarea>
                 </div>
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
-                <label class="govuk-label govuk-label--s" for="question.maxWords">
-                    Max word count
-                </label>
-                <th:block th:if="${#fields.hasErrors('question.maxWords')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
-                              th:text="${err}"></span>
-                </th:block>
-                <input class="govuk-input govuk-input--width-10"
-                       th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
-                       type="number"
-                       id="question.maxWords"
-                       min="1"
-                       required="required"
-                       th:name="question.maxWords"
-                       th:value="${question.maxWords}"
-                       th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
-            </div>
+
+            <input type="hidden" th:field="*{question.textArea}">
+            <input type="hidden" th:field="*{question.multipleChoice}">
+
+            <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
+                <div class="govuk-radios govuk-radios--inline">
+                    <div class="govuk-radios__item" data-target="text-area-form-group"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="text-area"
+                               type="radio"
+                               th:field="*{typeOfQuestion}"
+                               value="FREE_TEXT"
+                               required="required" />
+                        <label class="govuk-label govuk-radios__label" for="text-area">
+                            Free text box
+                        </label>
+                    </div>
+
+                    <div class="govuk-radios__item" data-target="multiple-choice-form-group"
+                         data-target-clear-validation="true" data-target-clear-form="true">
+                        <input class="govuk-radios__input"
+                               id="multiple-choice"
+                               th:field="*{typeOfQuestion}"
+                               type="radio"
+                               value="MULTIPLE_CHOICE"
+                               required="required">
+                        <label class="govuk-label govuk-radios__label" for="multiple-choice">
+                            Multiple choice
+                        </label>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:if="${question.textArea != null}">
+                <div id="text-area-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label govuk-label--s" for="question.maxWords">
+                        Max word count
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('question.maxWords')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('question.maxWords')}"
+                                  th:text="${err}"></span>
+                    </th:block>
+                    <input class="govuk-input govuk-input--width-10"
+                           th:classappend="${#fields.hasErrors('question.maxWords')} ? 'govuk-input--error'"
+                           type="number"
+                           id="question.maxWords"
+                           min="1"
+                           required="required"
+                           th:name="question.maxWords"
+                           th:value="${question.maxWords}"
+                           th:attr="data-min-errormessage=#{validation.applicationquestionform.maxwords.min}"/>
+                </div>
+            </th:block>
+
+            <th:block th:if="${question.multipleChoice != null}">
+                <div id="multiple-choice-form-group">
+                    <table id="multiple-choice-table" class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Answers</th>
+                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="(choice, iteration : ${question.choices})">
+                            <tr th:id="${'multiple-choice-row-'+iteration.index}"
+                                class="govuk-table__row form-group-row-validated"
+                                th:classappend="${#fields.hasErrors('question.choices[__${iteration.index}__].text')} ? 'govuk-form-group--error'">
+                                <td class="govuk-table__cell govuk-form-group"
+                                    th:classappend="${#fields.hasErrors('question.choices[__${iteration.index}__].text')} ? 'govuk-form-group--error'">
+                                    <label class="govuk-label govuk-visually-hidden"
+                                           th:for="question.choices[__${iteration.index}__].text">
+                                        Answer
+                                    </label>
+                                    <th:block
+                                        th:if="${#fields.hasErrors('question.choices[__${iteration.index}__].text')}">
+                                                    <span class="govuk-error-message"
+                                                          th:each="err : ${#fields.errors('question.choices[__${iteration.index}__].text')}"
+                                                          th:text="${err}"></span>
+                                    </th:block>
+                                    <input required="required"
+                                           type="text"
+                                           class="govuk-input"
+                                           th:errorclass="govuk-input--error"
+                                           th:id="question.choices[__${iteration.index}__].text"
+                                           th:field="${competitionSetupForm.question.choices[__${iteration.index}__].text}"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
+                                                    data-anychange-errormessage=#{validation.competition.setup.multiple.choice.duplicate}"/>
+                                    <input type="hidden" th:field="*{question.choices[__${iteration.index}__].id}">
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <button th:if="${iteration.index > 1}"
+                                            class="button-clear alignright" data-remove-row="multipleChoice"
+                                            type="button" name="remove-multiple-choice-row"
+                                            th:value="${iteration.index}"
+                                            th:id="'remove-multiple-choice-row-' + ${iteration.index}">Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
+                    <div class="alignright govuk-!-margin-top-6">
+                        <button class="button-clear" data-add-row="multipleChoice" type="button">+Add another answer
+                        </button>
+                    </div>
+                </div>
+            </th:block>
 
             <!--/* APPENDIX */-->
             <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
