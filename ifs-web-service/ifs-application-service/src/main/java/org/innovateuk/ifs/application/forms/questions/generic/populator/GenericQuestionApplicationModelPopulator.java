@@ -95,6 +95,8 @@ public class GenericQuestionApplicationModelPopulator {
 
     private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
         viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
+                .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
+                .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
                 .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
     }
 
