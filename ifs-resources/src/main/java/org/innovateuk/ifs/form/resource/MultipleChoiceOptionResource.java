@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.form.resource;
 
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.MultipleChoiceValidationGroup;
+
+import javax.validation.constraints.NotBlank;
+
 public class MultipleChoiceOptionResource {
 
     private Long id;
+    @NotBlank(groups = MultipleChoiceValidationGroup.class)
     private String text;
 
     public MultipleChoiceOptionResource() {

@@ -262,13 +262,9 @@ IFS.competitionManagement.repeater = (function () {
     },
     addMultipleChoiceRow: function () {
       var table = jQuery('#multiple-choice-table')
-      var currentCount = 0
-      var idCount = 0
-
+      var count = 0
       if (table.find('tbody tr').length) {
-        currentCount = parseInt(table.find('tbody tr').length, 10) // name attribute has to be 0,1,2,3
-        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-        idCount = parseInt(jQuery('tr[id^=multiple-choice-row-]').last().attr('id').split('ultiple-choice-row-')[1], 10) + 1
+        count = table.find('tbody tr').length
       }
 
       var html =
@@ -282,23 +278,19 @@ IFS.competitionManagement.repeater = (function () {
         '               class="govuk-input"' +
         '               id="question.choices[$index].text"' +
         '               name="question.choices[$index].text"' +
-        '               data-required-errormessage="Something"/>' +
+        '               data-required-errormessage="This field cannot be left blank."/>' +
         '    </td>' +
-        '    <td class="govuk-table__cell">'
-
-      if (currentCount > 1) {
-        html +=
-          '        <button class="button-clear alignright" data-remove-row="multipleChoice"' +
-          '                type="button" name="remove-multiple-choice-row"' +
-          '                value="$index"' +
-          '                id="remove-multiple-choice-row-$index">Remove' +
-          '        </button>'
-      }
-      html += '    </td>' +
+        '    <td class="govuk-table__cell">' +
+        '        <button class="button-clear alignright" data-remove-row="multipleChoice"' +
+        '                type="button" name="remove-multiple-choice-row"' +
+        '                value="$index"' +
+        '                id="remove-multiple-choice-row-$index">Remove' +
+        '        </button>' +
+        '    </td>' +
         '</tr>'
 
       html = IFS.core.template.replaceInTemplate(html, {
-        index: idCount
+        index: count
       })
 
       table.find('tbody').append(html)

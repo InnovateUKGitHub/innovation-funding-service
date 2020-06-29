@@ -239,6 +239,9 @@
                 </div>
             </div>
 
+            <input type="hidden" th:field="*{question.textArea}">
+            <input type="hidden" th:field="*{question.multipleChoice}">
+
             <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
                 <div class="govuk-radios govuk-radios--inline">
                     <div class="govuk-radios__item" data-target="text-area-form-group"
@@ -267,11 +270,6 @@
                         </label>
                     </div>
                 </div>
-            </th:block>
-
-            <th:block th:unless="${question.textArea != null && question.multipleChoice != null}">
-                <input type="hidden" th:field="*{question.textArea}">
-                <input type="hidden" th:field="*{question.multipleChoice}">
             </th:block>
 
             <th:block th:if="${question.textArea != null}">
@@ -322,11 +320,13 @@
                                                           th:text="${err}"></span>
                                     </th:block>
                                     <input required="required"
+                                           type="text"
                                            class="govuk-input"
                                            th:errorclass="govuk-input--error"
                                            th:id="question.choices[__${iteration.index}__].text"
-                                           th:field="*{question.choices[__${iteration.index}__].text}"
-                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"/>
+                                           th:field="${competitionSetupForm.question.choices[__${iteration.index}__].text}"
+                                           th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},
+                                                    data-anychange-errormessage=#{validation.competition.setup.multiple.choice.duplicate}"/>
                                     <input type="hidden" th:field="*{question.choices[__${iteration.index}__].id}">
                                 </td>
                                 <td class="govuk-table__cell">
