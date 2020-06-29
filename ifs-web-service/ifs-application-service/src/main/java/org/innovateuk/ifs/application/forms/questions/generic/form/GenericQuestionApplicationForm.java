@@ -13,6 +13,10 @@ public class GenericQuestionApplicationForm {
 
     private MultipartFile templateDocument;
 
+    private boolean isTextAreaActive;
+
+    private boolean isMultipleChoiceOptionsActive;
+
     public String getAnswer() {
         return answer;
     }
@@ -35,5 +39,21 @@ public class GenericQuestionApplicationForm {
 
     public void setTemplateDocument(MultipartFile templateDocument) {
         this.templateDocument = templateDocument;
+    }
+
+    public boolean isTextAreaActive() {
+        return isTextAreaActive;
+    }
+
+    public void setTextAreaActive(boolean textAreaActive) {
+        isTextAreaActive = textAreaActive;
+    }
+
+    public boolean isMultipleChoiceOptionsActive() {
+        return isMultipleChoiceOptionsActive;
+    }
+
+    public void setMultipleChoiceOptionsActive(boolean multipleChoiceOptionsActive) {
+        isMultipleChoiceOptionsActive = multipleChoiceOptionsActive;
     }
 }

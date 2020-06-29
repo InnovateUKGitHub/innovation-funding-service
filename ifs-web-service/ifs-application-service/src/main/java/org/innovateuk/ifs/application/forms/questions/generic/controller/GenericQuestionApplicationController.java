@@ -24,6 +24,8 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -51,11 +53,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 /**
  * This controller handles application questions which are built up of form inputs.
  */
+
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic")
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
+    private static final Logger LOG = LoggerFactory.getLogger(GenericQuestionApplicationController.class);
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -126,6 +130,9 @@ public class GenericQuestionApplicationController {
                                  @PathVariable long applicationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
+        LOG.info(form.getAnswer());
+        LOG.info(Boolean.toString(form.isTextAreaActive()));
+        LOG.info(Boolean.toString(form.isMultipleChoiceOptionsActive()));
         save(form, applicationId, questionId, user);
         return redirectToApplicationOverview(applicationId);
     }
@@ -242,7 +249,8 @@ public class GenericQuestionApplicationController {
     }
 
     private RestResult<ValidationMessages> save(GenericQuestionApplicationForm form, long applicationId, long questionId, UserResource user) {
-        FormInputResource formInput = getByType(questionId, FormInputType.TEXTAREA);
+        FormInputType formInputType = form.isTextAreaActive() ? FormInputType.TEXTAREA : FormInputType.MULTIPLE_CHOICE;
+        FormInputResource formInput = getByType(questionId, formInputType);
         return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
                 formInput.getId(), form.getAnswer(), false);
 

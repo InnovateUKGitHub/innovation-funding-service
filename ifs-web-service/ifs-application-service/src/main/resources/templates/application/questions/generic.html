@@ -74,6 +74,8 @@
 
             <th:block th:unless="${model.readOnly}">
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+                <input type="hidden" id="*{isTextAreaActive}" th:value="${model.textAreaActive}" />
+                <input type="hidden" id="*{isMultipleChoiceOptionsActive}" th:value="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
             <div class="govuk-form-group" th:if="${model.textAreaActive}"
@@ -84,7 +86,7 @@
                 <div class="textarea-wrapped word-count"
                      th:classappend="|${model.complete ?: 'marked-as-complete'}  ${model.assignButtonsViewModel.assignedToCurrentUser ?: 'assigned-to-me'}|">
 
-                    <textarea class="govuk-textarea"
+                    <textarea class="govuk-tehiddenxtarea"
                               th:field="*{answer}"
                               th:errorclass="govuk-textarea--error"
                               th:readonly="${model.readOnly}"
@@ -117,12 +119,13 @@
                                th:field="*{answer}"
                                th:value="${multipleChoiceOption.id}"
                                th:checked="${model.multipleChoiceFormInputId} == ${multipleChoiceOption.id}"
+                               th:errorclass="govuk-input--error"
                                th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
                         <label th:for="${'multipleChoiceOption-'+multipleChoiceOption.id}"
                                class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
                     </div>
                 </div>
-                <div class="govuk-form-group" th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                <div th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
                     <select class="govuk-select"
                             th:id="multipleChoiceOption"
                             th:field="*{answer}"
