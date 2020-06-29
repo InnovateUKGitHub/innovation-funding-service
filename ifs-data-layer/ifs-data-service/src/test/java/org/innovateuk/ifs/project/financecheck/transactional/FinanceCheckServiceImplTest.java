@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,9 +15,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -44,7 +41,6 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -57,10 +53,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -70,8 +64,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
-import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
+import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -80,8 +74,6 @@ import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -91,7 +83,6 @@ import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilde
 import static org.innovateuk.ifs.project.financecheck.builder.CostGroupBuilder.newCostGroup;
 import static org.innovateuk.ifs.project.financecheck.builder.FinanceCheckBuilder.newFinanceCheck;
 import static org.innovateuk.ifs.project.spendprofile.builder.SpendProfileBuilder.newSpendProfile;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -247,13 +238,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ProjectFinance projectFinanceInDB1 = new ProjectFinance();
         projectFinanceInDB1.setViabilityStatus(ViabilityRagStatus.AMBER);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(projectFinanceInDB1);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(Optional.of(projectFinanceInDB1));
         ProjectFinance projectFinanceInDB2 = new ProjectFinance();
         projectFinanceInDB2.setViabilityStatus(ViabilityRagStatus.UNSET);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(projectFinanceInDB2);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(Optional.of(projectFinanceInDB2));
         ProjectFinance projectFinanceInDB3 = new ProjectFinance();
         projectFinanceInDB3.setViabilityStatus(ViabilityRagStatus.UNSET);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(projectFinanceInDB3);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(Optional.of(projectFinanceInDB3));
 
         ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
         when(projectFinanceService.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
@@ -818,7 +809,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(projectFinanceInDB));
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
@@ -964,7 +955,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(eligibilityWorkflowHandler.getState(partnerOrganisationInDB)).thenReturn(eligibilityStateInDB);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(projectFinanceInDB));
 
         return projectFinanceInDB;
     }
@@ -981,7 +972,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setCreditReportConfirmed(true);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(projectFinanceInDB));
         ServiceResult<Boolean> result = service.getCreditReport(projectId, organisationId);
 
         assertTrue(result.isSuccess());
@@ -1000,7 +991,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(viabilityWorkflowHandler.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(projectFinanceInDB));
 
         ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);
 
@@ -1111,7 +1102,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViabilityStatus(viabilityRagStatusInDB);
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(projectFinanceInDB));
 
     }
 
@@ -1218,7 +1209,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setEligibilityStatus(eligibilityRagStatusInDB);
 
-        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(projectFinanceInDB));
 
     }
 
