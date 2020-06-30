@@ -130,9 +130,6 @@ public class GenericQuestionApplicationController {
                                  @PathVariable long applicationId,
                                  @PathVariable long questionId,
                                  UserResource user) {
-        LOG.info(form.getAnswer());
-        LOG.info(Boolean.toString(form.isTextAreaActive()));
-        LOG.info(Boolean.toString(form.isMultipleChoiceOptionsActive()));
         save(form, applicationId, questionId, user);
         return redirectToApplicationOverview(applicationId);
     }
@@ -287,6 +284,15 @@ public class GenericQuestionApplicationController {
 
     private void validate(GenericQuestionApplicationForm form, BindingResult bindingResult, long applicationId, long questionId) {
         validator.validate(form, bindingResult);
+
+        if (form.isTextAreaActive() && form.getAnswer().trim().length() < 0) {
+            bindingResult.rejectValue("answer", "validation.field.please.enter.some.text");
+        }
+
+        if (form.isMultipleChoiceOptionsActive() && form.getAnswer().isEmpty()) {
+            bindingResult.rejectValue("answer", "validation.multiple.choice.required");
+        }
+
         Optional<FormInputResource> templateDocument = findByType(questionId, FormInputType.TEMPLATE_DOCUMENT);
         if (templateDocument.isPresent()) {
             Optional<FormInputResponseResource> response = formInputResponseRestService

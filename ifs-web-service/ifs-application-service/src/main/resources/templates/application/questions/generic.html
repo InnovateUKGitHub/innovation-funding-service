@@ -74,8 +74,8 @@
 
             <th:block th:unless="${model.readOnly}">
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
-                <input type="hidden" id="*{isTextAreaActive}" th:value="${model.textAreaActive}" />
-                <input type="hidden" id="*{isMultipleChoiceOptionsActive}" th:value="${model.multipleChoiceOptionsActive}" />
+                <input type="hidden" th:field="${model.textAreaActive}" />
+                <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
             <div class="govuk-form-group" th:if="${model.textAreaActive}"
