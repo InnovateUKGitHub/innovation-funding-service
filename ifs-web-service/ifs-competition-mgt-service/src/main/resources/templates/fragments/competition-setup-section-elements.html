@@ -247,16 +247,16 @@
             </div>
 
             <!--/* APPENDIX */-->
-            <th:block th:if="${question.appendix != null or #fields.hasErrors('appendixCount')}">
+            <th:block th:if="${question.appendix != null or #fields.hasErrors('appendixCount*')}">
                 <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('appendixCount')} ? 'govuk-form-group--error'">
+                     th:classappend="${#fields.hasErrors('appendixCount*')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.appendix">
                             <h2 class="govuk-fieldset__heading">Appendix uploads</h2>
                             <span class="govuk-hint">Choose how many appendices an applicant can upload.</span>
                         </legend>
-                        <th:block th:if="${#fields.hasErrors('appendixCount')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('appendixCount')}"
+                        <th:block th:if="${#fields.hasErrors('appendixCount*')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('appendixCount*')}"
                               th:text="${err}"></span>
                         </th:block>
 
