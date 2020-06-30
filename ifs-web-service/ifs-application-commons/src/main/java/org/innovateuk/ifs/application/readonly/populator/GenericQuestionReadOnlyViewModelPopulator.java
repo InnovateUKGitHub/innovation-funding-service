@@ -5,13 +5,11 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.util.HttpServletUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -28,7 +26,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public GenericQuestionReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
-        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA))
+        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
+                || formInput.getType().equals(MULTIPLE_CHOICE))
                 .findAny();
 
         Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> formInput.getType().equals(FILEUPLOAD))
@@ -39,6 +38,20 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         Optional<FormInputResponseResource> textResponse = textInput
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
+
+        String answer = null;
+        if (textInput.isPresent()) {
+            FormInputResource input = textInput.get();
+            if (input.getType().equals(TEXTAREA)) {
+                answer = textResponse.map(FormInputResponseResource::getValue).orElse(null);
+            } else {
+                answer = textResponse.map(response -> input.getMultipleChoiceOptions().stream()
+                        .filter(multipleChoice -> multipleChoice.getId().equals(Long.getLong(response.getValue())))
+                        .findAny()
+                        .map(MultipleChoiceOptionResource::getText).orElse(null))
+                        .orElse(null);
+            }
+        }
 
         Optional<FormInputResponseResource> appendixResponse = appendix
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
@@ -64,7 +77,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
-                textResponse.map(FormInputResponseResource::getValue).orElse(null),
+                answer,
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
                 appendixResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data, settings)).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null),
