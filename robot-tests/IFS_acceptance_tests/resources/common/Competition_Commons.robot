@@ -387,7 +387,7 @@ the user is able to configure the new question
     the user enters text to a text field  id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
     the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500
-    the user selects the radio button     question.appendix  1
+    the user selects the radio button     appendixCount  1
     click element                         css = label[for="question.allowedAppendixResponseFileTypes1"]
     the user clicks the button/link       css = label[for="question.allowedAppendixResponseFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
@@ -414,9 +414,9 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery = dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("500")
-    the user should see the element  jQuery = dt:contains("Appendix") + dd:contains("Yes")
-    the user should see the element  jQuery = dt:contains("Accepted appendix file types") + dd:contains("PDF")
-    the user should see the element  jQuery = dt:contains("Accepted appendix file types") + dd:contains("spreadsheet")
+    the user should see the element  jQuery = dt:contains("Appendix uploads") + dd:contains("1")
+    the user should see the element  jQuery = dt:contains("Accepted appendix file types")
+    the user should see the element  jQuery = dt:contains("Accepted appendix file types")
     the user should see the element  jQuery = dt:contains("Appendix guidance") + dd:contains("You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.")
     the user should see the element  jQuery = dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery = dt:contains("Out of") + dd:contains("10")

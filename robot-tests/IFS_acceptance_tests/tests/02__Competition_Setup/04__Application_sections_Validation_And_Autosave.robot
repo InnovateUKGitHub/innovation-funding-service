@@ -87,7 +87,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id = question.title          ${EMPTY}
     The user enters text to a text field    id = question.guidanceTitle  ${EMPTY}
     The user enters text to a text field    id = question.maxWords       ${EMPTY}
-    the user selects the radio button       question.appendix  1
+    the user selects the radio button       appendixCount  1
     the user clicks the button/link         css = label[for="question.allowedAppendixResponseFileTypes1"]
     the user selects the radio button       question.templateDocument  1
 
