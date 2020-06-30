@@ -37,7 +37,8 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             ") " +
             "FROM Project project " +
             "LEFT JOIN MonitoringOfficer monitoringOfficer " +
-            "   ON monitoringOfficer.id = project.projectMonitoringOfficer.id " +
+            "   ON monitoringOfficer.project.id = project.id " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
             "   monitoringOfficer.id IS NULL " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES +
@@ -57,8 +58,11 @@ public interface MonitoringOfficerRepository extends PagingAndSortingRepository<
             "   AND processRole.role = org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT " +
             "JOIN Organisation organisation " +
             "   ON organisation.id = processRole.organisationId " +
+            "JOIN MonitoringOfficer monitoringOfficer " +
+            "   ON monitoringOfficer.project.id = project.id " +
+            "   AND monitoringOfficer.role = org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.MONITORING_OFFICER " +
             "WHERE " +
-            "   project.projectMonitoringOfficer.user.id = :userId " +
+            "   monitoringOfficer.user.id = :userId " +
             "   AND project.projectProcess.activityState in " + PROJECT_STATES +
             "ORDER BY project.application.id")
     List<MonitoringOfficerAssignedProjectResource> findAssignedProjects(Long userId);

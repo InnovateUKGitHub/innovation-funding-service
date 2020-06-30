@@ -141,10 +141,10 @@ Internal user is able to reject the GOL and applicant can re-upload
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-7365
-    Given the internal user approve the GOL  ${ProjectID}
-    When log in as a different user          &{lead_applicant_credentials}
-    And the user navigates to the page       ${server}/project-setup/project/${ProjectID}
-    Then the user should see the element     jQuery = p:contains("The project is live")
+    Given the internal user approve the GOL                                    ${ProjectID}
+    When log in as a different user                                            &{lead_applicant_credentials}
+    And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
+    Then the user should see project is live with review its progress link
 
 Competition goes into previous
     [Documentation]   IFS-7441
@@ -369,7 +369,7 @@ the user can change funding sought
     the user clicks the button/link        link = View finances
     the user clicks the button/link        link = Change funding sought
     the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  2100
-    the user clicks the button/link        jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link        jQuery = button:contains("Save and return to project finances")
     the user should see the element        jQuery = h3:contains("Finances summary") ~ div td:contains("£70,634") ~ td:contains("2.97%") ~ td:contains("2,100") ~ td:contains("0") ~ td:contains("68,534")
     the user clicks the button/link        link = Finance checks
 

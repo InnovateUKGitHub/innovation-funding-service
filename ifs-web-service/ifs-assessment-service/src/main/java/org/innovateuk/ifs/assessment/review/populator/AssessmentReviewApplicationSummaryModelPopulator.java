@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewApplicationSummaryViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
 
 /**
  * Build the model for the Application under review view.
@@ -49,7 +53,15 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
                 application.getName(),
                 readOnlyViewModel,
                 competition,
-                assessment.orElse(null));
+                assessment.orElse(null),
+                termsAndConditionsTerminology(competition));
+    }
+
+    private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
+        if (FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
 
 }

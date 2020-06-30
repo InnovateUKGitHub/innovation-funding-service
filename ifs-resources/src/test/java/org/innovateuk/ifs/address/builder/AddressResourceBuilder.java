@@ -8,7 +8,6 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class AddressResourceBuilder extends BaseBuilder<AddressResource, AddressResourceBuilder> {
     private AddressResourceBuilder(List<BiConsumer<Integer, AddressResource>> multiActions) {
@@ -17,7 +16,6 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
 
     public static AddressResourceBuilder newAddressResource() {
         return new AddressResourceBuilder(emptyList()).
-                with(uniqueIds()).
                 withAddressLine1("Line 1").
                 withAddressLine2("Line 2").
                 withAddressLine3("Line 3").
@@ -34,10 +32,6 @@ public class AddressResourceBuilder extends BaseBuilder<AddressResource, Address
     @Override
     protected AddressResource createInitial() {
         return new AddressResource();
-    }
-
-    public AddressResourceBuilder withId(Long... ids) {
-        return withArray((id, address) -> setField("id", id, address), ids);
     }
 
     public AddressResourceBuilder withAddressLine1(String... addressLines) {

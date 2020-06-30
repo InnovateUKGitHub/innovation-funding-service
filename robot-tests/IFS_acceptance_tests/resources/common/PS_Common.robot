@@ -125,18 +125,22 @@ ${Postcode}      BS14NT
 
 #Project: Super-EFFY - Super Efficient Forecasting of Freight Yields
 #LP: Live Project
-${Crystalrover_Name}   Crystalrover
-${Crystalrover_Id}     ${organisation_ids["${Crystalrover_Name}"]}
-${Jabbertype_Name}     Jabbertype
-${Jabbertype_Id}       ${organisation_ids["${Jabbertype_Name}"]}
-${Zummacity_Name}      Zummacity
-${Zummacity_Id}        ${organisation_ids["${Zummacity_Name}"]}
-${PS_LP_Application_Title}         Super-EFFY - Super Efficient Forecasting of Freight Yields
-${PS_LP_Application_No}            ${application_ids["${PS_LP_Application_Title}"]}
-${PS_LP_Application_Project_Id}    ${project_ids["${PS_LP_Application_Title}"]}
+${Crystalrover_Name}                      Crystalrover
+${Crystalrover_Id}                        ${organisation_ids["${Crystalrover_Name}"]}
+${Jabbertype_Name}                        Jabbertype
+${Jabbertype_Id}                          ${organisation_ids["${Jabbertype_Name}"]}
+${Zummacity_Name}                         Zummacity
+${Zummacity_Id}                           ${organisation_ids["${Zummacity_Name}"]}
+${PS_LP_Application_Title}                Super-EFFY - Super Efficient Forecasting of Freight Yields
+${PS_LP_Application_No}                   ${application_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Project_Id}           ${project_ids["${PS_LP_Application_Title}"]}
 ${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
 ${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
 ${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
+
+#Post award service live project
+${reviewProgressMessage}                  The project is now live and you can
+${reviewProgressLink}                     review its progress
 
 #Project: Growth table comp
 ${GrowthTableCompName}              Growth table comp
@@ -208,8 +212,8 @@ Applicant uploads the GOL using Docusign
     the user clicks the button/link           jQuery = button:contains("Continue")
     the user clicks the button/link           jQuery = span:contains("Start")
     the user clicks the button/link           css = div.initials-tab-content
-    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:first  ${date}
-    The user enters text to a docusign field  jQuery = input[id^="tab-form"]:last   ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
     the user clicks the button/link           css = div.signature-tab-content
     the user clicks the button/link           css = div.documents-finish-button-decoration
     the user should see the element           jQuery = h1:contains("Grant offer letter")
@@ -676,7 +680,7 @@ the user adds a new partner organisation
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
@@ -732,3 +736,21 @@ the user is able to remove a pending partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the user fills correspondence address for non-uk based organisations
+    [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
+    the user enters text to a text field            id = addressLine1       ${addresLine1}
+    the user enters text to a text field            id = addressLine2       ${addresLine2}
+    the user enters text to a text field            id = town               ${town}
+    enter the country in the autocomplete field     Argent                  ${country}
+    the user enters text to a text field            id = zipCode            ${zipCode}
+    the user clicks the button/link                 id = save-project-address-button
+
+enter the country in the autocomplete field
+    [Arguments]         ${country}  ${completeCountryName}
+    input text                          id = country        ${country}
+    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+
+the user should see project is live with review its progress link
+    the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
+    the user should see the element     link = ${reviewProgressLink}

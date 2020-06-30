@@ -16,6 +16,14 @@ IFS.core.autoComplete = (function () {
         autoCompleteElement.each(function () {
           IFS.core.autoComplete.initAutoCompletePlugin(jQuery(this))
         })
+        autoCompleteElement.closest('form').submit(function () {
+          autoCompleteElement.each(function () {
+            var autoComplete = jQuery(this).parent().find('.autocomplete__input')
+            if (autoComplete.val() === '') {
+              jQuery(this).val('')
+            }
+          })
+        })
       }
     },
     initAutoCompletePlugin: function (element) {
@@ -55,6 +63,9 @@ IFS.core.autoComplete = (function () {
         })
         if (required) {
           element.parent().find('.autocomplete__input').attr('data-required-errormessage', required)
+        }
+        if (element.hasClass('govuk-input--error')) {
+          element.parent().find('.autocomplete__input').addClass('govuk-input--error')
         }
       }
     }

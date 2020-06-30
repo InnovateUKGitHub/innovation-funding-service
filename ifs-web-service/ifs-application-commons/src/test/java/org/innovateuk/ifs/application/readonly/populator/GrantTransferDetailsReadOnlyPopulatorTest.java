@@ -62,7 +62,7 @@ public class GrantTransferDetailsReadOnlyPopulatorTest {
 
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        GrantTransferDetailsReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
+        GrantTransferDetailsReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
         assertEquals(viewModel.getActionType(), actionTypeResource);
         assertEquals(viewModel.getFundingContribution(), BigDecimal.TEN);

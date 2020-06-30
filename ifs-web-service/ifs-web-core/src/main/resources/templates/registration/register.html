@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/confirm-organisation',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/confirm-organisation',currentApplication=${currentApplication}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
@@ -22,7 +22,7 @@
 
         <p class="govuk-body">To continue, you need to create an account with the Innovation Funding Service.</p>
 
-        <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${registrationForm}" novalidate="novalidate">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="firstName">
                     First name
@@ -70,7 +70,7 @@
                 <label class="govuk-label govuk-label--s" for="phoneNumber">
                     Phone number
                 </label>
-                <span class="govuk-hint">We may use this to contact you about the application.</span>
+                <span th:text="${model.phoneGuidance}" class="govuk-hint">We may use this to contact you about the application.</span>
                 <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                     <span class="govuk-error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
                 </th:block>
@@ -82,24 +82,24 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email') and invitee == null} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('email') and !model.invitee} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="email">
                     Email
                 </label>
-                <th:block th:if="${invitee}">
-                        <span class="govuk-hint">You will need this to sign into your account, the provided email is:
+                <th:block th:if="${model.invitee}">
+                        <span class="govuk-hint">You will need this to sign into your account.
                             <br/>
                             <strong th:text="${registrationForm.email}"></strong>
                         </span>
                     <input type="hidden" th:field="*{email}">
                 </th:block>
-                <th:block th:unless="${invitee}">
+                <th:block th:unless="${model.invitee}">
                     <span class="govuk-hint">You will need this to sign into your account.</span>
                     <th:block th:if="${#fields.hasErrors('email')}">
                         <span class="govuk-error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
                     </th:block>
                 </th:block>
-                <th:block th:unless="${invitee}">
+                <th:block th:unless="${model.invitee}">
                     <input class="govuk-input govuk-!-width-one-half"
                            id="email"
                            th:errorclass="govuk-input--error"
@@ -112,6 +112,16 @@
                 </th:block>
             </div>
 
+            <div class="govuk-form-group" th:unless="${model.role == null}">
+                <p class="govuk-label govuk-label--s">Role</p>
+                <p class="govuk-body" th:text="${model.role}"></p>
+            </div>
+
+            <div class="govuk-form-group" th:unless="${model.project == null}">
+                <p class="govuk-label govuk-label--s">Project</p>
+                <p class="govuk-body" th:text="${model.project}"></p>
+            </div>
+
             <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'govuk-form-group--error'">
@@ -122,9 +132,8 @@
                     <p class="govuk-body">
                         <a href="/info/terms-and-conditions"
                            class="govuk-link"
-                           target="_blank"
-                           aria-describedby="terms-hint">Read our terms and conditions</a>
-                        <span id="terms-hint">(opens in a new window)</span>.</p>
+                           target="_blank">Read our terms and conditions (opens in a new window)</a>.
+                    </p>
                     <div class="govuk-checkboxes">
                         <span class="govuk-error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                         <div class="govuk-checkboxes">

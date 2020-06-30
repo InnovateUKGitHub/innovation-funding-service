@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.core.controller.PartnerOrganisationController;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -55,7 +54,9 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
                                 fieldWithPath("organisationName").description("Organisation name"),
                                 fieldWithPath("leadOrganisation").description("If the partner organisation is the lead partner"),
                                 fieldWithPath("postcode").description("The project location for this partner"),
-                                fieldWithPath("project").description("Project id"))
+                                fieldWithPath("internationalLocation").description("The international project location for this partner"),
+                                fieldWithPath("project").description("Project id"),
+                                fieldWithPath("internationalAddress").description("The addresses of the international organisation for this project.").optional())
                 ));
     }
 
@@ -78,7 +79,10 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
                                 fieldWithPath("[].organisationName").description("Organisation name"),
                                 fieldWithPath("[].leadOrganisation").description("If the partner organisation is the lead partner"),
                                 fieldWithPath("[].postcode").description("The project location for this partner"),
-                                fieldWithPath("[].project").description("Project id"))
+                                fieldWithPath("[].internationalLocation").description("The international project location for this partner"),
+                                fieldWithPath("[].project").description("Project id"),
+                                fieldWithPath("[].internationalAddress").description("The addresses of the international organisation for this project.").optional())
+
                 ));
     }
 

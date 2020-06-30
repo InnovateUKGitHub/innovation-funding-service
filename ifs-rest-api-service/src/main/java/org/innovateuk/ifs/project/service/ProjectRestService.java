@@ -22,6 +22,8 @@ public interface ProjectRestService {
 
     RestResult<ProjectUserResource> getProjectManager(long projectId);
 
+    RestResult<List<ProjectUserResource>> getProjectFinanceContacts(long projectId);
+
     RestResult<ProjectResource> createProjectFromApplicationId(long applicationId);
 
     RestResult<OrganisationResource> getLeadOrganisationByProject(long projectId);

@@ -121,7 +121,7 @@ Stakeholder user is able to view further Organisation details by selecting an or
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                                              &{stakeholder_user}
     Given the user navigates to the page                                             ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${Grade_Crossing_Project_Id}/organisation/${Vitruvius_Id}/details/with-growth-table
-    When the user should see further organisation details                            Business  Vitruvius Stonework Limited  60674010
+    When the user should see further organisation details                            Business  Vitruvius Stonework Limited  60674015
     And the user should see Organisation size details with a growth table            Micro or small  1  2020  100000  200000  300000  400000  60
     Then the user should not see the element                                         jQuery = a:contains("Edit organisation")
 
@@ -182,10 +182,6 @@ The user updates organisation size details with a growth table
     the user enters text to a text field  id = headCountAtLastFinancialYear   ${Employees}
     the user saves and returns to organisation details page
 
-The user saves and returns to organisation details page
-    the user clicks the button/link     jQuery = button:contains("Save and return to")
-    the user clicks the button/link     jQuery = button:contains("Update organisation size")
-
 Organisation size details are still the same in application with a growth table
     [Arguments]  ${link}  ${OrgName}  ${OrgSize}  ${Month}  ${Year}  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
     the user navigates to your organisation page on the application    ${link}  ${OrgName}
@@ -238,6 +234,11 @@ The user completes elegibility selection
     the user selects the checkbox    project-eligible
     the user selects the option from the drop-down menu   Green  id = rag-rating
 
+The user is no longer able to edit organisation size
+    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
+    the user selects an organisation                 ${SmithZoneRadioBttnValue}
+    the user should not see the element              jQuery = a:contains("Edit organisation")
+
 The user updates organisation size details without a growth table
     [Arguments]  ${Size}  ${Turnover}  ${Employees}
     the user selects the radio button     organisationSize  ${Size}
@@ -245,8 +246,7 @@ The user updates organisation size details without a growth table
     the user enters text to a text field  id = headCount   ${Employees}
     the user saves and returns to organisation details page
 
-The user is no longer able to edit organisation size
-    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
-    the user selects an organisation                 ${SmithZoneRadioBttnValue}
-    the user should not see the element              jQuery = a:contains("Edit organisation")
+The user saves and returns to organisation details page
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
+    the user clicks the button/link     jQuery = button:contains("Update organisation size")
 

@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamOrganisationReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamUserReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
@@ -30,6 +33,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings.defaultSettings;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -59,6 +63,9 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
     @Mock
     private OrganisationRestService organisationRestService;
 
+    @Mock
+    private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
+
     @Test
     public void populate() {
         UserResource user = newUserResource().withRoleGlobal(Role.SUPPORT).build();
@@ -68,6 +75,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
                 .build();
         OrganisationResource collaboratorOrganisation = newOrganisationResource()
                 .withName("Collaborator")
+                .withIsInternational(true)
                 .build();
 
         ProcessRoleResource leadRole = newProcessRoleResource()
@@ -113,13 +121,16 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
                 .build();
         QuestionResource question = newQuestionResource().build();
 
+        AddressResource address = newAddressResource().build();
+
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(leadOrganisation, collaboratorOrganisation)));
         when(userRestService.findUserByEmail(any())).thenReturn(restSuccess(newUserResource().withPhoneNumber("999").build()));
+        when(applicationOrganisationAddressRestService.getAddress(application.getId(), collaboratorOrganisation.getId(), OrganisationAddressType.INTERNATIONAL)).thenReturn(restSuccess(address));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, empty(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList());
 
-        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(question, data, defaultSettings());
+        ApplicationTeamReadOnlyViewModel viewModel = populator.populate(competition, question, data, defaultSettings());
 
         assertEquals((Long) application.getId(), viewModel.getApplicationId());
         assertEquals((long) question.getId(), viewModel.getQuestionId());
@@ -130,6 +141,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         assertEquals(1, leadOrganisationViewModel.getUsers().size());
         assertTrue(leadOrganisationViewModel.isLead());
         assertTrue(leadOrganisationViewModel.isExisting());
+        assertNull(leadOrganisationViewModel.getAddress());
 
         ApplicationTeamUserReadOnlyViewModel leadUserViewModel = leadOrganisationViewModel.getUsers().get(0);
         assertTrue(leadUserViewModel.isLead());
@@ -141,6 +153,7 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         assertEquals(1, collaboratorOrganisationViewModel.getUsers().size());
         assertFalse(collaboratorOrganisationViewModel.isLead());
         assertTrue(collaboratorOrganisationViewModel.isExisting());
+        assertSame(address, collaboratorOrganisationViewModel.getAddress());
 
         ApplicationTeamUserReadOnlyViewModel collaboratorUserViewModel = collaboratorOrganisationViewModel.getUsers().get(0);
         assertFalse(collaboratorUserViewModel.isLead());
@@ -152,6 +165,8 @@ public class ApplicationTeamReadOnlyViewModelPopulatorTest {
         assertEquals(1, inviteOrganisationViewModel.getUsers().size());
         assertFalse(inviteOrganisationViewModel.isLead());
         assertFalse(inviteOrganisationViewModel.isExisting());
+        assertNull(inviteOrganisationViewModel.getType());
+        assertNull(inviteOrganisationViewModel.getAddress());
 
         ApplicationTeamUserReadOnlyViewModel inviteViewModel = inviteOrganisationViewModel.getUsers().get(0);
         assertTrue(inviteViewModel.isInvite());

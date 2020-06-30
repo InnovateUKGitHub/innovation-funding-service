@@ -89,6 +89,16 @@
                                 </h3>
                             </div>
                         </li>
+                        <li th:if="${model.general.ifsAdmin && model.general.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).GRANT}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/post-award-service(competitionId=${competition.id})}" class="govuk-link">Post award service</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">Post award service</th:block>
+                                </h3>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
