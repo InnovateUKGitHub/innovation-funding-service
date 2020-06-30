@@ -430,8 +430,8 @@ public class CompetitionSetupApplicationController {
     }
 
     private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if(competitionSetupForm.getAppendixCount() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "appendixCount", "This field cannot be left blank."));
+        if(competitionSetupForm.getNumberOfUploads() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
         }
         if(competitionSetupForm.getQuestion().getTemplateDocument() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.templateDocument", "This field cannot be left blank."));

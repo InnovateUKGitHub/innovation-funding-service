@@ -17,7 +17,7 @@ public class QuestionForm extends AbstractQuestionForm {
 
     private MultipartFile templateDocumentFile;
     private boolean removable;
-    private Integer appendixCount;
+    private Integer numberOfUploads;
 
     public List<GuidanceRowForm> getGuidanceRows() {
         return guidanceRows;
@@ -44,11 +44,11 @@ public class QuestionForm extends AbstractQuestionForm {
         this.removable = removable;
     }
 
-    public Integer getAppendixCount() {
-        return appendixCount;
+    public Integer getNumberOfUploads() {
+        return numberOfUploads;
     }
 
-    public void setAppendixCount(Integer appendixCount) {
-        this.appendixCount = appendixCount;
+    public void setNumberOfUploads(Integer numberOfUploads) {
+        this.numberOfUploads = numberOfUploads;
     }
 }

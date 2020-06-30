@@ -95,7 +95,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 initialize(formInput.getAllowedFileTypes());
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAppendixCount(formInput.getWordCount());
+                setupResource.setNumberOfUploads(formInput.getWordCount());
                 setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
@@ -293,7 +293,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
 
             if (competitionSetupQuestionResource.getAppendix()) {
-                appendixFormInput.setWordCount(competitionSetupQuestionResource.getAppendixCount());
+                appendixFormInput.setWordCount(competitionSetupQuestionResource.getNumberOfUploads());
                 appendixFormInput.setActive(true);
                 appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
                 appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());

@@ -57,7 +57,7 @@ public class CompetitionSetupQuestionResource {
 
     /* appendix */
     private Boolean appendix;
-    private Integer appendixCount;
+    private Integer numberOfUploads;
     private Set<FileTypeCategory> allowedAppendixResponseFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
 
@@ -143,12 +143,12 @@ public class CompetitionSetupQuestionResource {
         this.appendix = appendix;
     }
 
-    public Integer getAppendixCount() {
-        return appendixCount;
+    public Integer getNumberOfUploads() {
+        return numberOfUploads;
     }
 
-    public void setAppendixCount(Integer appendixCount) {
-        this.appendixCount = appendixCount;
+    public void setNumberOfUploads(Integer numberOfUploads) {
+        this.numberOfUploads = numberOfUploads;
     }
 
     public String getAssessmentGuidance() {
@@ -354,7 +354,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance, that.guidance)
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
-                .append(appendixCount, that.appendixCount)
+                .append(numberOfUploads, that.numberOfUploads)
                 .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
                 .append(appendixGuidance, that.appendixGuidance)
                 .append(templateDocument, that.templateDocument)
@@ -385,7 +385,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance)
                 .append(maxWords)
                 .append(appendix)
-                .append(appendixCount)
+                .append(numberOfUploads)
                 .append(allowedAppendixResponseFileTypes)
                 .append(appendixGuidance)
                 .append(templateDocument)

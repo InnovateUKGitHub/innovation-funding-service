@@ -80,8 +80,8 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setAppendix(appendix));
     }
 
-    public CompetitionSetupQuestionResourceBuilder withAppendixCount(Integer appendixCount) {
-        return with(competition -> competition.setAppendixCount(appendixCount));
+    public CompetitionSetupQuestionResourceBuilder withNumberOfUploads(Integer numberOfUploads) {
+        return with(competition -> competition.setNumberOfUploads(numberOfUploads));
     }
 
     public CompetitionSetupQuestionResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {

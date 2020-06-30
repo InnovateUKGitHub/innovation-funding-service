@@ -36,8 +36,8 @@ public class QuestionSectionUpdater extends AbstractApplicationSectionUpdater<Qu
 
     @Override
     protected void mapAppendix(QuestionForm questionForm) {
-        questionForm.getQuestion().setAppendixCount(questionForm.getAppendixCount());
-        if (questionForm.getAppendixCount() == 0) {
+        questionForm.getQuestion().setNumberOfUploads(questionForm.getNumberOfUploads());
+        if (questionForm.getNumberOfUploads() == 0) {
             questionForm.getQuestion().setAppendix(false);
         } else {
             questionForm.getQuestion().setAppendix(true);
