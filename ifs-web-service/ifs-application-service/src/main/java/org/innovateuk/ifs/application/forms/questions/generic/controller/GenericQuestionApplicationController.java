@@ -8,6 +8,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.generic.validator.GenericQuestionApplicationFormValidator;
 import org.innovateuk.ifs.application.readonly.populator.GenericQuestionReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -89,8 +90,7 @@ public class GenericQuestionApplicationController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    @Qualifier("mvcValidator")
-    private Validator validator;
+    private GenericQuestionApplicationFormValidator validator;
 
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) GenericQuestionApplicationForm form,
@@ -284,15 +284,6 @@ public class GenericQuestionApplicationController {
 
     private void validate(GenericQuestionApplicationForm form, BindingResult bindingResult, long applicationId, long questionId) {
         validator.validate(form, bindingResult);
-
-        if (form.isTextAreaActive() && form.getAnswer().trim().length() < 0) {
-            bindingResult.rejectValue("answer", "validation.field.please.enter.some.text");
-        }
-
-        if (form.isMultipleChoiceOptionsActive() && form.getAnswer().isEmpty()) {
-            bindingResult.rejectValue("answer", "validation.multiple.choice.required");
-        }
-
         Optional<FormInputResource> templateDocument = findByType(questionId, FormInputType.TEMPLATE_DOCUMENT);
         if (templateDocument.isPresent()) {
             Optional<FormInputResponseResource> response = formInputResponseRestService
