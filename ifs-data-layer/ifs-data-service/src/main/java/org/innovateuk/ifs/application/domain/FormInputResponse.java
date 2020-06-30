@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.MultipleChoiceOption;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
@@ -41,6 +42,10 @@ public class FormInputResponse {
     @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
     private FileEntry fileEntry;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "multipleChoiceOptionId", referencedColumnName = "id")
+    private MultipleChoiceOption multipleChoiceOption;
+
     public FormInputResponse() {
         // no-arg constructor
     }
@@ -56,6 +61,14 @@ public class FormInputResponse {
     public FormInputResponse(ZonedDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
         this.fileEntry = fileEntry;
+        this.updatedBy = updatedBy;
+        this.formInput = formInput;
+        this.application = application;
+    }
+
+    public FormInputResponse(ZonedDateTime updateDate, MultipleChoiceOption multipleChoiceOption, ProcessRole updatedBy, FormInput formInput, Application application) {
+        this.updateDate = updateDate;
+        this.multipleChoiceOption = multipleChoiceOption;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
@@ -138,5 +151,13 @@ public class FormInputResponse {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public MultipleChoiceOption getMultipleChoiceOption() {
+        return multipleChoiceOption;
+    }
+
+    public void setMultipleChoiceOption(MultipleChoiceOption multipleChoiceOption) {
+        this.multipleChoiceOption = multipleChoiceOption;
     }
 }
