@@ -77,15 +77,13 @@ public class CompetitionKeyApplicationStatisticsServiceImpl extends BaseTransact
             long competitionId) {
         CompetitionFundedKeyApplicationStatisticsResource competitionFundedKeyApplicationStatisticsResource = new
                 CompetitionFundedKeyApplicationStatisticsResource();
-        List<Application> applications = applicationRepository
-                .findByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES);
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsSubmitted(applications.size());
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(getFundingDecisionCount(applications,
-                FundingDecisionStatus.FUNDED));
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(getFundingDecisionCount
-                (applications, FundingDecisionStatus.UNFUNDED));
-        competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(getFundingDecisionCount(applications,
-                FundingDecisionStatus.ON_HOLD));
+
+
+        competitionFundedKeyApplicationStatisticsResource
+                .setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateIn(competitionId, SUBMITTED_STATES));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.FUNDED));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.UNFUNDED));
+        competitionFundedKeyApplicationStatisticsResource.setApplicationsOnHold(applicationRepository.countByCompetitionIdAndFundingDecision(competitionId, FundingDecisionStatus.ON_HOLD));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsNotifiedOfDecision(applicationRepository
                 .countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId));
         competitionFundedKeyApplicationStatisticsResource.setApplicationsAwaitingDecision(applicationRepository
