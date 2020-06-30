@@ -47,34 +47,34 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class InitialDetailsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-	private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
+    private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
 
-	@Autowired
+    @Autowired
     private CompetitionSetupService competitionSetupService;
 
-	@Autowired
+    @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private MilestoneRestService milestoneRestService;
 
-	@Autowired
-	private CompetitionSetupMilestoneService competitionSetupMilestoneService;
+    @Autowired
+    private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
-	@Autowired
-	private CategoryRestService categoryRestService;
+    @Autowired
+    private CategoryRestService categoryRestService;
 
-	@Autowired
+    @Autowired
     private UserService userService;
 
-	@Override
-	public CompetitionSetupSection sectionToSave() {
-		return CompetitionSetupSection.INITIAL_DETAILS;
-	}
+    @Override
+    public CompetitionSetupSection sectionToSave() {
+        return CompetitionSetupSection.INITIAL_DETAILS;
+    }
 
     @Override
-	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
+    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+        InitialDetailsForm initialDetailsForm = (InitialDetailsForm) competitionSetupForm;
         if (!competition.isSetupAndAfterNotifications()) {
             List<Error> errors = saveAssignedUsers(competition, initialDetailsForm);
 
@@ -127,9 +127,12 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                 return errors;
             }
 
-            new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId());
+            MilestoneResource milestone = milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition.getId())
+                    .getOrElse(new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId()));
 
-            RestResult<Void> result = milestoneRestService.updateMilestone(new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId()));
+            milestone.setDate(startDate);
+            
+            RestResult<Void> result = milestoneRestService.updateMilestone(milestone);
 
             return result.getErrors();
         }
@@ -147,7 +150,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
             List<Long> allInnovationAreasIds = getAllInnovationAreaIdsExcludingNone(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
-            if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
+            if (CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())
                     && newInnovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 innovationAreas = allInnovationAreasIds;
             }
@@ -167,8 +170,8 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                                                 List<InnovationAreaResource> allInnovationAreas,
                                                 List<Long> allInnovationAreasIds,
                                                 List<Long> innovationAreaIds, boolean isMarkAsComplete) {
-        if(CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())) {
-            if(!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
+        if (CompetitionSpecialSectors.isOpenSector().test(competition.getInnovationSector())) {
+            if (!innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS)) {
                 boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !allInnovationAreasIds.contains(areaId));
 
                 if (foundNotMatchingId && isMarkAsComplete) {
@@ -221,14 +224,14 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
     }
 
     private boolean shouldTryToSaveStartDate(InitialDetailsForm initialDetailsForm) {
-       return initialDetailsForm.isMarkAsCompleteAction() ||
-               (initialDetailsForm.getOpeningDateYear() != null &&
-               initialDetailsForm.getOpeningDateMonth() != null &&
-               initialDetailsForm.getOpeningDateDay() != null);
-   }
+        return initialDetailsForm.isMarkAsCompleteAction() ||
+                (initialDetailsForm.getOpeningDateYear() != null &&
+                        initialDetailsForm.getOpeningDateMonth() != null &&
+                        initialDetailsForm.getOpeningDateDay() != null);
+    }
 
-	private List<Error> validateOpeningDate(ZonedDateTime openingDate) {
-	    if(openingDate.getYear() > 9999) {
+    private List<Error> validateOpeningDate(ZonedDateTime openingDate) {
+        if (openingDate.getYear() > 9999) {
             return asList(fieldError(OPENINGDATE_FIELDNAME, openingDate.toString(), "validation.initialdetailsform.openingdateyear.range"));
         }
 
@@ -256,15 +259,15 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
 
         boolean allInnovationAreaIsSelected = innovationAreaIds.contains(CompetitionUtils.ALL_INNOVATION_AREAS);
 
-        if(allInnovationAreaIsSelected) {
+        if (allInnovationAreaIsSelected) {
             innovationAreaIds = getAllInnovationAreaIdsExcludingNone();
         }
 
         competitionResource.setInnovationAreas(innovationAreaIds);
     }
 
-	@Override
-	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
-		return InitialDetailsForm.class.equals(clazz);
-	}
+    @Override
+    public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {
+        return InitialDetailsForm.class.equals(clazz);
+    }
 }

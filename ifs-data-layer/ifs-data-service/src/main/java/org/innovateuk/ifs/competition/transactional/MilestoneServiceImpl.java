@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -128,9 +129,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     @Override
     @Transactional
     public ServiceResult<Void> updateMilestone(MilestoneResource milestoneResource) {
-        return find(milestoneRepository.findByTypeAndCompetitionId(milestoneResource.getType(), milestoneResource.getCompetitionId()),
-                notFoundError(MilestoneResource.class, milestoneResource.getType(), milestoneResource.getCompetitionId())).andOnSuccessReturnVoid(
-                milestone -> milestoneRepository.save(milestone));
+        milestoneRepository.save(milestoneMapper.mapToDomain(milestoneResource));
+        return serviceSuccess();
     }
 
     @Override
