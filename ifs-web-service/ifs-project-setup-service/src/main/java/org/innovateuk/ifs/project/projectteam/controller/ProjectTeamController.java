@@ -55,17 +55,6 @@ public class ProjectTeamController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
-    @GetMapping("/{projectId}/team/readonly")
-    public String viewProjectTeamInReadOnly(@ModelAttribute(value = "form", binding = false) ProjectTeamForm form,
-                                  BindingResult bindingResult,
-                                  @PathVariable("projectId") final long projectId,
-                                  Model model,
-                                  UserResource loggedInUser) {
-        model.addAttribute("model", projectTeamPopulator.populate(projectId, loggedInUser));
-        return "projectteam/project-team";
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_TEAM_SECTION')")
     @PostMapping(value = "/{projectId}/team", params = "remove-team-member")
     public String removeUser(@PathVariable("projectId") final long projectId,
                              @RequestParam("remove-team-member") final long userId) {
