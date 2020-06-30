@@ -3,8 +3,10 @@ package org.innovateuk.ifs.application.forms.questions.generic.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.generic.validator.GenericQuestionApplicationFormValidator;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -18,6 +20,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletResponse;
@@ -66,7 +69,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Mock
-    private Validator validator;
+    private GenericQuestionApplicationFormValidator validator;
 
     private long applicationId = 1L;
     private long questionId = 2L;
@@ -161,11 +164,13 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
                 .param("complete", "true")
-                .param("answer", "answer"))
+                .param("answer", "answer")
+                .param("textAreaActive", "true"))
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
 
         verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false);
         verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
+        verify(validator).validate(any(), any());
         verifyNoMoreInteractions(questionStatusRestService);
     }
 
