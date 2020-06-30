@@ -106,6 +106,13 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    public ServiceResult<List<OrganisationResource>> getOrganisations(long userId, boolean international) {
+        return serviceSuccess(simpleMap(
+                organisationRepository.findDistinctByProcessRolesUserIdAndInternational(userId, international), organisationMapper::mapToResource
+        ));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<OrganisationResource> create(final OrganisationResource organisationToCreate) {
         return update(organisationToCreate);
@@ -142,7 +149,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<OrganisationResource> addAddress(final long organisationId, final OrganisationAddressType organisationAddressType, AddressResource addressResource) {
         return find(organisation(organisationId)).andOnSuccessReturn(organisation -> {
             Address address = addressMapper.mapToDomain(addressResource);
-            AddressType addressType = addressTypeRepository.findById(organisationAddressType.getOrdinal()).orElse(null);
+            AddressType addressType = addressTypeRepository.findById(organisationAddressType.getId()).orElse(null);
             organisation.addAddress(address, addressType);
             Organisation updatedOrganisation = organisationRepository.save(organisation);
             return organisationMapper.mapToResource(updatedOrganisation);

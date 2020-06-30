@@ -26,9 +26,4 @@ public class AddressRestServiceImpl extends BaseRestService implements AddressRe
         LOG.info(addressRestUrl + "/validate-postcode/?postcode=" + postcode);
         return getWithRestResult(addressRestUrl + "/validate-postcode?postcode=" + postcode, Boolean.class);
     }
-
-    @Override
-    public RestResult<AddressResource> getById(Long id) {
-        return getWithRestResult(addressRestUrl + "/" + id, AddressResource.class);
-    }
 }

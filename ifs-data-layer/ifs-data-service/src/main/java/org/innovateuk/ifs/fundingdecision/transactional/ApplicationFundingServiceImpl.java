@@ -37,6 +37,7 @@ import java.util.stream.StreamSupport;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FUNDING_PANEL_DECISION_NONE_PROVIDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.fundingdecision.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
@@ -84,6 +85,9 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     @Override
     @Transactional
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+        if (applicationFundingDecisions.isEmpty()) {
+            return serviceFailure(FUNDING_PANEL_DECISION_NONE_PROVIDED);
+        }
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Application> applications = findValidApplications(applicationFundingDecisions, competitionId);
             return saveFundingDecisionData(applications, applicationFundingDecisions);
@@ -234,7 +238,10 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
         applicationIds.forEach(applicationId -> {
             ServiceResult<List<ProcessRole>> processRoles = getProcessRoles(applicationId, COLLABORATOR);
             if(processRoles.isSuccess()) {
-                processRoles.getSuccess().forEach(pr -> applicationNotificationTargets.add(ServiceResult.serviceSuccess(Pair.of(applicationId, new UserNotificationTarget(pr.getUser().getName(), pr.getUser().getEmail())))));
+                processRoles.getSuccess()
+                        .stream()
+                        .filter(pr -> pr.getUser().isActive())
+                        .forEach(pr -> applicationNotificationTargets.add(ServiceResult.serviceSuccess(Pair.of(applicationId, new UserNotificationTarget(pr.getUser().getName(), pr.getUser().getEmail())))));
             }
             applicationNotificationTargets.add(getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail).andOnSuccessReturn(pr -> Pair.of(applicationId, new UserNotificationTarget(pr.getUser().getName(), pr.getUser().getEmail()))));
         });

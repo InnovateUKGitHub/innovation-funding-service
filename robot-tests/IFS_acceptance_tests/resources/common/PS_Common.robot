@@ -125,18 +125,22 @@ ${Postcode}      BS14NT
 
 #Project: Super-EFFY - Super Efficient Forecasting of Freight Yields
 #LP: Live Project
-${Crystalrover_Name}   Crystalrover
-${Crystalrover_Id}     ${organisation_ids["${Crystalrover_Name}"]}
-${Jabbertype_Name}     Jabbertype
-${Jabbertype_Id}       ${organisation_ids["${Jabbertype_Name}"]}
-${Zummacity_Name}      Zummacity
-${Zummacity_Id}        ${organisation_ids["${Zummacity_Name}"]}
-${PS_LP_Application_Title}         Super-EFFY - Super Efficient Forecasting of Freight Yields
-${PS_LP_Application_No}            ${application_ids["${PS_LP_Application_Title}"]}
-${PS_LP_Application_Project_Id}    ${project_ids["${PS_LP_Application_Title}"]}
+${Crystalrover_Name}                      Crystalrover
+${Crystalrover_Id}                        ${organisation_ids["${Crystalrover_Name}"]}
+${Jabbertype_Name}                        Jabbertype
+${Jabbertype_Id}                          ${organisation_ids["${Jabbertype_Name}"]}
+${Zummacity_Name}                         Zummacity
+${Zummacity_Id}                           ${organisation_ids["${Zummacity_Name}"]}
+${PS_LP_Application_Title}                Super-EFFY - Super Efficient Forecasting of Freight Yields
+${PS_LP_Application_No}                   ${application_ids["${PS_LP_Application_Title}"]}
+${PS_LP_Application_Project_Id}           ${project_ids["${PS_LP_Application_Title}"]}
 ${PS_LP_Application_Lead_PM_Email}        dave.adams@gmail.com
 ${PS_LP_Application_Partner_Email}        edward.morris@gmail.com
 ${PS_LP_Application_Academic_Email}       myrtle.barton@jabbertype.example.com
+
+#Post award service live project
+${reviewProgressMessage}                  The project is now live and you can
+${reviewProgressLink}                     review its progress
 
 #Project: Growth table comp
 ${GrowthTableCompName}              Growth table comp
@@ -180,20 +184,39 @@ The user adds a new team member
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
-    [Arguments]  ${projectID}
+    [Arguments]  ${setDocusign}  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user uploads the file          grantOfferLetter  ${valid_pdf}
+    the user uploads the file          grantOfferLetter  ${gol_pdf}
+    the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send to project team")
-    the user clicks the button/link    jQuery = button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
+    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
 
 Applicant uploads the GOL
     [Arguments]  ${projectID}
     the user navigates to the page        ${server}/project-setup/project/${projectID}
-    the user clicks the button/link       link = Grant offer letter
+    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
+
+Applicant uploads the GOL using Docusign
+    [Arguments]  ${projectID}  ${date}
+    the user navigates to the page            ${server}/project-setup/project/${projectID}
+    the user clicks the button/link           jquery = a:contains("Grant offer letter")
+    the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           jQuery = span:contains("Please review the documents below.")
+    the user selects the checkbox             disclosureAccepted
+    the user clicks the button/link           jQuery = button:contains("Continue")
+    the user clicks the button/link           jQuery = span:contains("Start")
+    the user clicks the button/link           css = div.initials-tab-content
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first input  ${date}
+    The user enters text to a docusign field  jQuery = .text-tab:not(.locked):first ~ .text-tab:not(.locked) input   ${date}
+    the user clicks the button/link           css = div.signature-tab-content
+    the user clicks the button/link           css = div.documents-finish-button-decoration
+    the user should see the element           jQuery = h1:contains("Grant offer letter")
 
 the internal user approve the GOL
     [Arguments]  ${projectID}
@@ -203,6 +226,22 @@ the internal user approve the GOL
     the user clicks the button/link     id = submit-button
     the user clicks the button/link     id = accept-signed-gol
     the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+
+the internal user rejects the GOL
+    [Arguments]  ${projectID}
+    log in as a different user            &{internal_finance_credentials}
+    the user navigates to the page        ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button     REJECTED  rejectGOL
+    the user enters text to a text field  id = gol-reject-reason   Rejected
+    the user clicks the button/link       id = submit-button
+    the user clicks the button/link       jQuery = button:contains("Reject signed grant offer letter")
+    the user should see the element       jQuery = .warning-alert p:contains("These documents have been reviewed and rejected. We have returned them to the Project Manager.")
+
+the applicant is able to see the rejected GOL
+    [Arguments]  ${projectID}
+    the user navigates to the page            ${server}/project-setup/project/${projectID}
+    the user clicks the button/link           link = Grant offer letter
+    the user should see the element           jQuery = .fail-alert h2:contains("Your grant offer letter has been rejected by Innovate UK")
 
 the user enters bank details
     the user clicks the button/link                      link = Bank details
@@ -641,7 +680,7 @@ the user adds a new partner organisation
 The user accepts invitation and selects organisation type
     [Arguments]   ${orgId}  ${orgName}
     the user clicks the button/link                       jQuery = .govuk-button:contains("Yes, create an account")
-    the user selects the radio button                     organisationType    1
+    the user selects the radio button                     organisationTypeId    1
     the user clicks the button/link                       jQuery = .govuk-button:contains("Save and continue")
     the user selects his organisation in Companies House  ${orgId}  ${orgName}
 
@@ -697,3 +736,21 @@ the user is able to remove a pending partner organisation
     [Arguments]  ${orgName}
     the user clicks the button/link             jQuery = h2:contains("${orgName}")~ button:contains("Remove organisation"):first
     the user should not see the element         jQuery = h2:contains(${orgName})
+
+the user fills correspondence address for non-uk based organisations
+    [Arguments]     ${addresLine1}  ${addresLine2}  ${town}  ${country}  ${zipCode}
+    the user enters text to a text field            id = addressLine1       ${addresLine1}
+    the user enters text to a text field            id = addressLine2       ${addresLine2}
+    the user enters text to a text field            id = town               ${town}
+    enter the country in the autocomplete field     Argent                  ${country}
+    the user enters text to a text field            id = zipCode            ${zipCode}
+    the user clicks the button/link                 id = save-project-address-button
+
+enter the country in the autocomplete field
+    [Arguments]         ${country}  ${completeCountryName}
+    input text                          id = country        ${country}
+    the user clicks the button/link     jQuery = ul li:contains("${completeCountryName}")
+
+the user should see project is live with review its progress link
+    the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
+    the user should see the element     link = ${reviewProgressLink}

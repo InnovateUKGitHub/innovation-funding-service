@@ -10,10 +10,10 @@ Project dashboard shows message that the project is live
     [Tags]  HappyPath
     Given the lead partner logs in and navigate to applications dashboard
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
+    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
     When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
     And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
+    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
 
 Status indicators should not show
     [Documentation]    INFUND-6376
@@ -79,10 +79,10 @@ Project dashboard shows message that the project is live for industrial partner
     [Tags]  HappyPath
     Given log in as a different user                 ${PS_LP_Application_Partner_Email}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
+    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
     When the lead partner logs in and navigate to applications dashboard
     And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
+    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
 
 Status indicators should not show for industrial partner
     [Documentation]    INFUND-6376
@@ -148,10 +148,10 @@ Project dashboard shows message that the project is live for academic partner
     [Tags]  HappyPath
     Given log in as a different user                 ${PS_LP_Application_Academic_Email}  ${short_password}
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
+    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
     When the lead partner logs in and navigate to applications dashboard
     And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is live, you can review progress at ")
+    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
 
 Status indicators should not show for academic partner
     [Documentation]    INFUND-6376
@@ -234,7 +234,7 @@ grant offer letter is sent to users
     the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
     the user clicks the button/link    id = send-gol
-    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Publish to project team")
+    the user clicks the button/link    jQuery = .modal-accept-send-gol .govuk-button:contains("Send grant offer letter")
 
 users upload signed grant offer letter and submit
     the lead partner logs in and navigate to applications dashboard

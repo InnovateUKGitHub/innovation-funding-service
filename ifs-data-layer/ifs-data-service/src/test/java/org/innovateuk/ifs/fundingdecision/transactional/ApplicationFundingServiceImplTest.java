@@ -30,12 +30,14 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
@@ -142,12 +144,13 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
         User application3LeadApplicant = newUser().build();
+        User inactiveapplicant = newUser().withStatus(UserStatus.INACTIVE).build();
 
         List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
-                withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant).
-                withApplication(application1, application2, application3).
-                withRole(Role.LEADAPPLICANT).
-                build(3);
+                withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant, inactiveapplicant).
+                withApplication(application1, application2, application3, application3).
+                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR).
+                build(4);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant.getName(), application1LeadApplicant.getEmail());
         UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant.getName(), application2LeadApplicant.getEmail());
@@ -480,6 +483,24 @@ public class ApplicationFundingServiceImplTest extends BaseServiceUnitTest<Appli
         verify(applicationWorkflowHandler).approve(any(Application.class));
         assertTrue(FundingDecisionStatus.FUNDED.equals(unsuccessfulApplication.getFundingDecision()));
 
+    }
+
+    @Test
+    public void testSaveFundingDecisionDataWithNoDecisions() {
+
+        Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationState(ApplicationState.OPENED).build();
+        Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationState(ApplicationState.OPENED).build();
+        when(applicationRepository.findAllowedApplicationsForCompetition(new HashSet<>(singletonList(1L)),  competition.getId())).thenReturn(asList(application1, application2));
+
+        Map<Long, FundingDecision> decision = new HashMap<>();
+
+        ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
+
+        assertTrue(result.isFailure());
+        assertEquals(1, result.getFailure().getErrors().size());
+        assertEquals("FUNDING_PANEL_DECISION_NONE_PROVIDED", result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals(HttpStatus.BAD_REQUEST, result.getFailure().getErrors().get(0).getStatusCode());
+        verify(applicationRepository, never()).findAllowedApplicationsForCompetition(anySet(), anyLong());
     }
 
     public static Notification createNotificationExpectationsWithGlobalArgs(Notification expectedNotification) {

@@ -21,7 +21,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplic
 import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -33,7 +32,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -241,34 +239,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 fail();
             }
         });
-    }
-
-    @Test
-    public void downloadAsPartner() throws Exception {
-        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(Role.PARTNER)).build();
-        long applicationId = 2L;
-        long competitionId = 3L;
-        setLoggedInUser(user);
-
-        Long formInputId = 35L;
-        long processRoleId = 73L;
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRoleResource));
-        ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
-        when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId)).thenReturn(restSuccess(bar));
-        FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-        FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
-        when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
-
-        mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/download"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(("text/csv")))
-                .andExpect(header().string("Content-Type", "text/csv"))
-                .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
-                .andExpect(content().string("File contents"));
-
-        verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId);
-        verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId);
     }
 
     @Override

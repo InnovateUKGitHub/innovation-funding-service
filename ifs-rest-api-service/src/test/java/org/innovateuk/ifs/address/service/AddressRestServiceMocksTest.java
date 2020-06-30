@@ -2,7 +2,6 @@ package org.innovateuk.ifs.address.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -34,16 +33,5 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
         List<AddressResource> addresses = service.doLookup(postcode).getSuccess();
         assertNotNull(addresses);
         assertEquals(returnedAddresses, addresses);
-    }
-
-    @Test
-    public void getById(){
-        AddressResource addressResource = new AddressResource();
-        String url = addressRestURL + "/" + addressResource.getId();
-        setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
-
-        AddressResource returnedAddressResource = service.getById(addressResource.getId()).getSuccess();
-        assertNotNull(returnedAddressResource);
-        Assert.assertEquals(returnedAddressResource, addressResource);
     }
 }

@@ -71,14 +71,8 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     @Transactional
-    public ServiceResult<FormInputResource> save(FormInputResource formInputResource) {
-        return serviceSuccess(formInputMapper.mapToResource(formInputRepository.save(formInputMapper.mapToDomain(formInputResource))));
-    }
-
-    @Override
-    @Transactional
     public ServiceResult<Void> delete(long id) {
-        formInputRepository.delete(formInputMapper.mapIdToDomain(id));
+        formInputRepository.deleteById(id);
         return serviceSuccess();
     }
 

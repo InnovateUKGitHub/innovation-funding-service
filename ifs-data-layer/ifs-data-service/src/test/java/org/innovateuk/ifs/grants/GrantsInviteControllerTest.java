@@ -34,7 +34,7 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
     public void invitePartnerOrganisation() throws Exception {
         long projectId = 1L;
 
-        GrantsInviteResource grantsInviteResource = new GrantsInviteResource("orgName", "userName", "email", GRANTS_PROJECT_MANAGER);
+        GrantsInviteResource grantsInviteResource = new GrantsInviteResource(1L, "userName", "email", GRANTS_PROJECT_MANAGER);
 
         when(grantsInviteService.sendInvite(projectId, grantsInviteResource)).thenReturn(serviceSuccess());
 
@@ -81,11 +81,11 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
         long inviteId = 2L;
         long organisationId = 3L;
 
-        when(grantsInviteService.acceptInvite(inviteId, organisationId)).thenReturn(serviceSuccess());
+        when(grantsInviteService.acceptInvite(inviteId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/grant-invite/{inviteId}/organisation/{organisationId}/accept", projectId, inviteId, organisationId))
+        mockMvc.perform(post("/project/{projectId}/grant-invite/{inviteId}/accept", projectId, inviteId, organisationId))
                 .andExpect(status().isOk());
 
-        verify(grantsInviteService, only()).acceptInvite(inviteId, organisationId);
+        verify(grantsInviteService, only()).acceptInvite(inviteId);
     }
 }

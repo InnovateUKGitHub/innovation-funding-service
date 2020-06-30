@@ -96,13 +96,13 @@ Funding sought validations
     [Documentation]  IFS-6293
     Given the user selects to change funding sought
     When the user enters text to a text field           id = partners[${EMPIRE_LTD_ID}].funding  ${EMPTY}
-    And the user clicks the button/link                 jQuery = button:contains("Save and return to finances")
+    And the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error  Enter the amount of funding sought.
 
 Found sought changes
     [Documentation]  IFS-6293  IFS-6298
     Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
-    When the user clicks the button/link         jQuery = button:contains("Save and return to finances")
+    When the user clicks the button/link         jQuery = button:contains("Save and return to project finances")
     Then the user should see the element         jQuery = h3:contains("Finances summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
     And the internal user should see the funding changes
     And the external user should see the funding changes

@@ -159,6 +159,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                     if (applicationFinance.getWorkPostcode() != null) {
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
                     }
+                    if (applicationFinance.getInternationalLocation() != null) {
+                        dbFinance.setInternationalLocation(applicationFinance.getInternationalLocation());
+                    }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);
@@ -224,17 +227,6 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     private Supplier<ServiceResult<ApplicationFinance>> applicationFinance(Long applicationFinanceId) {
         return () -> getApplicationFinance(applicationFinanceId);
-    }
-
-
-    private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.RESEARCH.getId() == type.getId();
-    }
-
-    private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource, Competition competition) {
-        OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(competition.getId(), organisationType.getId());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
-        applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {

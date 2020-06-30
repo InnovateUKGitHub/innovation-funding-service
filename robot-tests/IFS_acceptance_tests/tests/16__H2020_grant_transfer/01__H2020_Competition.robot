@@ -5,6 +5,7 @@ Documentation  IFS-5158 - Competition Template
 ...
 ...            IFS-5700 - Create new project team page to manage roles in project setup
 ...
+...            IFS-7195  Organisational eligibility category in Competition setup
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
 Resource          ../../resources/defaultResources.robot
@@ -41,18 +42,27 @@ User can populate Terms and Conditions
     Then the user clicks the button/link                    jQuery = button:contains("Done")
     [Teardown]  the user clicks the button/link             link = Return to setup overview
 
-User can populate Funding information and Eligibility
+User can populate Funding information and Project eligibility
     [Documentation]  IFS-5158
     Given the user clicks the button/link                                 link = Funding information
     When the user completes funding information
     Then the user clicks the button/link                                  link = Return to setup overview
-    And the user fills in the Competition Setup Eligibility section       ${BUSINESS_TYPE_ID}  4
+    And the user fills in the Competition Setup Project eligibility section       ${BUSINESS_TYPE_ID}  4
 
 User can complete the Application
     [Documentation]  IFS-5158
     Given the user clicks the button/link                      link = Application
     When the user completes the application proccess details
     Then the user clicks the button/link                       link = Return to setup overview
+
+User can complete Organisational eligibility
+    [Documentation]     IFS-7195 IFS-7246
+    [Tags]  HappyPath
+    Given the user clicks the button/link                     link = ${organisationalEligibilityTitle}
+    When the user selects the radio button                    internationalOrganisationsApplicable       false
+    And the user clicks the button/link                       jQuery = button:contains("Save and continue")
+    And the user clicks the button/link                       link = Competition details
+    Then the user should see the element                      jQuery = li:contains("Organisational eligibility") .task-status-complete
 
 User can finish setting up the grant transfer
     [Documentation]  IFS-5158
@@ -145,7 +155,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-5700
     Given proj finance approves the spend profiles  ${HProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             ${HProjectID}
+    And internal user generates the GOL             NO  ${HProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-5700
@@ -155,10 +165,10 @@ Applicant is able to upload the GOL
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-5700
-    Given the internal user approve the GOL  ${HProjectID}
-    When log in as a different user          &{collaborator1_credentials}
-    And the user navigates to the page       ${server}/project-setup/project/${HProjectID}
-    Then the user should see the element     jQuery = p:contains("The project is live")
+    Given the internal user approve the GOL                                    ${HProjectID}
+    When log in as a different user                                            &{collaborator1_credentials}
+    And the user navigates to the page                                         ${server}/project-setup/project/${HProjectID}
+    Then the user should see project is live with review its progress link
 
 *** Keywords ***
 The user approves h2020 finance checks
@@ -354,9 +364,9 @@ The user is able to go to Application overview
     the user should see the element  link = Public description
     the user should see the element  link = Horizon 2020 grant agreement
 
-The user fills in the Competition Setup Eligibility section
+The user fills in the Competition Setup Project eligibility section
     [Arguments]  ${organisationType}  ${researchParticipation}
-    the user clicks the button/link                      link = Eligibility
+    the user clicks the button/link                      link = Project eligibility
     the user clicks the button twice                     css = label[for="single-or-collaborative-single"]
     the user selects the radio button                    researchCategoriesApplicable    false
     the user selects the option from the drop-down menu  100%  fundingLevelPercentage
@@ -365,8 +375,8 @@ The user fills in the Competition Setup Eligibility section
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      css = label[for="comp-resubmissions-no"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition setup
-    the user should see the element                      jQuery = div:contains("Eligibility") ~ .task-status-complete
+    the user clicks the button/link                      link = Competition details
+    the user should see the element                      jQuery = div:contains("Project eligibility") ~ .task-status-complete
 
 The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
@@ -502,13 +512,13 @@ Validate errors on Your project Finances section
     the user clicks the button/link                      jQuery = a:contains("Your project location")
     the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter a valid postcode.
-    the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link                      jQuery = button:contains("Save and return to project finances")
     the user clicks the button/link                      jQuery = a:contains("Your organisation")
     the user clicks the button/link                      jQuery = button:contains("Mark")
     the user should see a field and summary error        Enter your organisation size.
     the user should see a field and summary error        ${empty_field_warning_message}
     the user should see a field and summary error        ${empty_field_warning_message}
-    the user clicks the button/link                      jQuery = button:contains("Save and return to finances")
+    the user clicks the button/link                      jQuery = button:contains("Save and return to project finances")
     the user clicks the button/link                      jQuery = a:contains("Return to application overview")
 
 Validate the user is unable to submit an incomplete application
