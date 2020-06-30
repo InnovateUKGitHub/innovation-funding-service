@@ -40,8 +40,9 @@
                     <th:block th:if="${question.appendix}">
                         <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
                         <dd class="govuk-grid-column-two-thirds">
-                            <ul>
-                                <li th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
+                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-left-0">
+                                <li
+                                    th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
                                     th:text="${fileType.displayName}"></li>
                             </ul>
                         </dd>
