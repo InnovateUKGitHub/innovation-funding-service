@@ -18,7 +18,7 @@
                 <dt class="govuk-grid-column-one-third">Question subtitle</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
                 <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}"
-                    th:text="${question.subTitle}"></dd>
+                    ifs:utext="${question.subTitle}"></dd>
                 <dt class="govuk-grid-column-one-third">Guidance title</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
                 <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}"
@@ -192,13 +192,17 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('question.subTitle')}"
                               th:text="${err}"></span>
                 </th:block>
-                <input th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-input--error'"
-                       class="govuk-input govuk-!-width-two-thirds"
-                       type="text"
-                       id="question.subTitle"
-                       th:name="question.subTitle"
-                       th:value="${question.subTitle}"
-                       maxlength="255"/>
+                <div class="textarea-wrapped short">
+                        <textarea data-max_words="500"
+                                  data-editor="html"
+                                  id="question.subTitle"
+                                  class="govuk-textarea"
+                                  th:classappend="${#fields.hasErrors('question.subTitle')} ? 'govuk-textarea--error'"
+                                  th:name="question.subTitle"
+                                  required="required"
+                                  ifs:utext="${question.subTitle}">
+                        </textarea>
+                </div>
             </div>
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'govuk-form-group--error'">
