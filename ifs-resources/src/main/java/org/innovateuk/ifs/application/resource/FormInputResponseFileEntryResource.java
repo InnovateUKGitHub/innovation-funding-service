@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -44,11 +42,6 @@ public class FormInputResponseFileEntryResource {
 
     public void setCompoundId(FormInputResponseFileEntryId compoundId) {
         this.compoundId = compoundId;
-    }
-
-    @JsonIgnore
-    public String getHumanReadableFileSize() {
-        return FileUtils.byteCountToDisplaySize(fileEntryResource.getFilesizeBytes());
     }
 
     @Override

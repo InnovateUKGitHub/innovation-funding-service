@@ -100,8 +100,9 @@ public class GenericQuestionApplicationModelPopulator {
 
     private List<GenericQuestionAppendix> appendices(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .map(resp -> resp.getFileEntries().stream().
-                        map(file -> new GenericQuestionAppendix(file.getId(), file.getName()))
+                .map(resp -> resp.getFileEntries()
+                        .stream()
+                        .map(file -> new GenericQuestionAppendix(file.getId(), file.getName()))
                         .collect(toList()))
                 .orElse(emptyList());
 

@@ -6,11 +6,6 @@ public enum QuestionSetupType {
     SCOPE("Scope", true),
     PROJECT_SUMMARY("Project summary", true),
     PUBLIC_DESCRIPTION("Public description", true),
-
-
-
-
-
     APPLICATION_DETAILS("Application details"),
     RESEARCH_CATEGORY("Research category"),
     APPLICATION_TEAM("Application team"),
