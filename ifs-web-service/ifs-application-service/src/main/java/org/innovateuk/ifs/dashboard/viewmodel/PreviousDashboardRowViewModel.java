@@ -80,37 +80,38 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     }
 
     /* View logic */
-    public boolean isRejected() {
+
+    private boolean isRejected() {
         return REJECTED.equals(applicationState);
     }
 
-    public boolean isApproved() {
+    private boolean isApproved() {
         return APPROVED.equals(applicationState) && !hasProject();
     }
 
-    public boolean isCreatedOrOpen() {
+    private boolean isCreatedOrOpen() {
         return OPENED.equals(applicationState)
                 ||  CREATED.equals(applicationState);
     }
 
-    public boolean isInformedIneligible() {
+    private boolean isInformedIneligible() {
         return INELIGIBLE_INFORMED.equals(applicationState);
     }
 
-    public boolean isWithdrawn() {
+    private boolean isWithdrawn() {
         return hasProject() && projectState.isWithdrawn();
     }
 
-    public boolean isLiveOrCompletedOffline() {
+    private boolean isLiveOrCompletedOffline() {
         return hasProject() && (projectState.isLive() || projectState.isCompletedOffline());
     }
 
-    public boolean isUnsuccessful() {
+    private boolean isUnsuccessful() {
         return hasProject() && projectState.isUnsuccessful();
     }
 
-    public boolean displaySubmitted() {
-        return CompetitionCompletionStage.COMPETITION_CLOSE.equals(this.competitionCompletionStage);
+    private boolean isSubmitted() {
+        return SUBMITTED.equals(applicationState) && CompetitionCompletionStage.COMPETITION_CLOSE.equals(this.competitionCompletionStage);
     }
 
     public boolean canHideApplication() {

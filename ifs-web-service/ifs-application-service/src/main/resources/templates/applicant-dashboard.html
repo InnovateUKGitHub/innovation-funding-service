@@ -175,7 +175,7 @@
                                 <p th:if="${previousView.liveOrCompletedOffline}" class="govuk-body status-msg msg-progress">Live project</p>
                                 <p th:if="${previousView.unsuccessful}" class="govuk-body status-msg msg-progress msg-negative">Unsuccessful</p>
                                 <p th:if="${previousView.withdrawn}" class="govuk-body status-msg msg-progress">Withdrawn</p>
-                                <p th:if="${previousView.displaySubmitted()}" class="govuk-body status-msg msg-progress">Application submitted</p>
+                                <p th:if="${previousView.submitted}" class="govuk-body status-msg msg-progress">Application submitted</p>
                                 <div class="action alignright">
                                     <th:block th:if="${previousView.canHideApplication()}">
                                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">

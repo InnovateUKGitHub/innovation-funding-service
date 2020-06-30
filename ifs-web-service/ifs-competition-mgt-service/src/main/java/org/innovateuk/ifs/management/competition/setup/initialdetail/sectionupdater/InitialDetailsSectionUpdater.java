@@ -131,7 +131,7 @@ public class InitialDetailsSectionUpdater extends AbstractSectionUpdater impleme
                     .getOrElse(new MilestoneResource(MilestoneType.OPEN_DATE, startDate, competition.getId()));
 
             milestone.setDate(startDate);
-            
+
             RestResult<Void> result = milestoneRestService.updateMilestone(milestone);
 
             return result.getErrors();
