@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  *
@@ -56,38 +57,24 @@ public class FormInputResponseFileUploadController {
         });
     }
 
-    @PutMapping(value = "/file", produces = "application/json")
-    public RestResult<Void> updateFile(
-            @RequestHeader(value = "Content-Type", required = false) String contentType,
-            @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam("formInputId") long formInputId,
-            @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId,
-            @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request) {
-
-        return fileControllerUtils.handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
-            FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
-            return applicationFormInputUploadService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
-        });
-    }
-
     @GetMapping("/file")
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId) {
+            @RequestParam("processRoleId") long processRoleId,
+            @RequestParam("fileEntryId") Optional<Long> fileEntryId) {
 
-        return fileControllerUtils.handleFileDownload(() -> doGetFile(formInputId, applicationId, processRoleId));
+        return fileControllerUtils.handleFileDownload(() -> doGetFile(formInputId, applicationId, processRoleId, fileEntryId));
     }
 
     @GetMapping(value = "/fileentry", produces = "application/json")
     public RestResult<FormInputResponseFileEntryResource> getFileEntryDetails(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId) throws IOException {
+            @RequestParam("processRoleId") long processRoleId,
+            @RequestParam("fileEntryId") Optional<Long> fileEntryId) throws IOException {
 
-        ServiceResult<FormInputResponseFileAndContents> result = doGetFile(formInputId, applicationId, processRoleId);
+        ServiceResult<FormInputResponseFileAndContents> result = doGetFile(formInputId, applicationId, processRoleId, fileEntryId);
         return result.andOnSuccessReturn(FormInputResponseFileAndContents::getFormInputResponseFileEntry).toGetResponse();
     }
 
@@ -95,20 +82,21 @@ public class FormInputResponseFileUploadController {
     public RestResult<Void> deleteFileEntry(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
-            @RequestParam("processRoleId") long processRoleId) {
+            @RequestParam("processRoleId") long processRoleId,
+            @RequestParam("fileEntryId") Optional<Long> fileEntryId) {
 
-        FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId, fileEntryId);
         ServiceResult<FormInputResponse> deleteResult = applicationFormInputUploadService.deleteFormInputResponseFileUpload(compoundId);
         return deleteResult.toDeleteResponse();
     }
 
-    private ServiceResult<FormInputResponseFileAndContents> doGetFile(long formInputId, long applicationId, long processRoleId) {
-        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
+    private ServiceResult<FormInputResponseFileAndContents> doGetFile(long formInputId, long applicationId, long processRoleId, Optional<Long> fileEntryId) {
+        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId, fileEntryId);
         return applicationFormInputUploadService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
     }
 
     private FormInputResponseFileEntryResource createFormInputResponseFileEntry(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId) {
         FileEntryResource fileEntry = fileAttributes.toFileEntryResource();
-        return new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        return new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, Optional.empty());
     }
 }
