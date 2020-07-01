@@ -111,11 +111,11 @@ the user should see the correct inputs in the Applications questions form
     Should Be Equal    ${input_value}    Test Heading
     ${input_value} =    Get Value    id = question.title
     Should Be Equal    ${input_value}    Test title
-    ${input_value} =    Get Value    id = question.subTitle
+    ${input_value} =    Get Value    jQuery = label:contains("Question subtitle") + div .editor
     Should Be Equal    ${input_value}    Subtitle test
     ${input_value} =    Get Value    id = question.guidanceTitle
     Should Be Equal    ${input_value}    Test guidance title
-    ${input_value} =    Get Value    id = question.guidance
+    ${input_value} =    Get Value    jQuery = label:contains("Question guidance") + div .editor
     Should Be Equal    ${input_value}    Guidance text test
     ${input_value} =    Get Value    id = question.maxWords
     Should Be Equal    ${input_value}    150
