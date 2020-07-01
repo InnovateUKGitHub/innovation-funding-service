@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.MultipleChoiceOption;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -96,21 +97,35 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
         String htmlUnescapedValue = formInputResponseCommand.getValue();
         Long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId);
+        Optional<FormInput> optionalFormInput = formInputRepository.findById(formInputId);
+        MultipleChoiceOption multipleChoiceOptionValue = optionalFormInput.filter(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE))
+                .map(input -> input.getMultipleChoiceOptions().stream()
+                .filter(multipleChoiceOption -> multipleChoiceOption.getText().equals(formInputResponseCommand.getValue()))
+                        .findFirst().orElse(null))
+                .orElse(null);
 
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->
                         getOrCreateResponse(application, formInput, userAppRole)
-                                .andOnSuccessReturn(response -> updateAndSaveResponse(response, htmlUnescapedValue, userAppRole, application))
+                                .andOnSuccessReturn(response -> updateAndSaveResponse(formInput, response, htmlUnescapedValue, userAppRole, application, multipleChoiceOptionValue))
                         .andOnSuccessReturn(response -> formInputResponseMapper.mapToResource(response))
                 );
     }
 
-    private FormInputResponse updateAndSaveResponse(FormInputResponse response, String htmlUnescapedValue, ProcessRole userAppRole, Application application) {
+    private FormInputResponse updateAndSaveResponse(FormInput formInput, FormInputResponse response, String htmlUnescapedValue, ProcessRole userAppRole,
+                                                    Application application, MultipleChoiceOption multipleChoiceOption) {
         if (response.getValue() == null || !response.getValue().equals(htmlUnescapedValue)) {
             response.setUpdateDate(ZonedDateTime.now());
             response.setUpdatedBy(userAppRole);
         }
-        response.setValue(htmlUnescapedValue);
+
+        if (formInput.getType().equals(FormInputType.MULTIPLE_CHOICE)) {
+            response.setValue(multipleChoiceOption.getText());
+            response.setMultipleChoiceOption(multipleChoiceOption);
+        } else {
+            response.setValue(htmlUnescapedValue);
+        }
+
         application.addFormInputResponse(response, userAppRole);
 
         formInputResponseRepository.save(response);

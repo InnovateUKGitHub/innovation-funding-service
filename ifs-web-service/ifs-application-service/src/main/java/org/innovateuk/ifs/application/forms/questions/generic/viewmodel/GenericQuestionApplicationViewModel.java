@@ -3,9 +3,11 @@ package org.innovateuk.ifs.application.forms.questions.generic.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
@@ -50,7 +52,21 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     private final AssignButtonsViewModel assignButtonsViewModel;
 
-    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser, String applicationName, String questionName, String questionNumber, String questionSubtitle, String questionDescription, String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType, Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, String appendixFilename, Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename, String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel) {
+    private final Long multipleChoiceFormInputId;
+    private final List<MultipleChoiceOptionResource> multipleChoiceOptions;
+    private final String multipleChoiceFormInputText;
+
+    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId,
+                                               long currentUser, String applicationName, String questionName,
+                                               String questionNumber, String questionSubtitle, String questionDescription,
+                                               String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType,
+                                               Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId,
+                                               String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, String appendixFilename,
+                                               Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename,
+                                               String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName,
+                                               Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant,
+                                               AssignButtonsViewModel assignButtonsViewModel, Long multipleChoiceFormInputId,
+                                               List<MultipleChoiceOptionResource> multipleChoiceOptions, String multipleChoiceFormInputText) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -81,6 +97,9 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.complete = complete;
         this.leadApplicant = leadApplicant;
         this.assignButtonsViewModel = assignButtonsViewModel;
+        this.multipleChoiceFormInputId = multipleChoiceFormInputId;
+        this.multipleChoiceOptions = multipleChoiceOptions;
+        this.multipleChoiceFormInputText = multipleChoiceFormInputText;
     }
 
     @Override
@@ -205,6 +224,18 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return assignButtonsViewModel;
     }
 
+    public Long getMultipleChoiceFormInputId() {
+        return multipleChoiceFormInputId;
+    }
+
+    public List<MultipleChoiceOptionResource> getMultipleChoiceOptions() {
+        return multipleChoiceOptions;
+    }
+
+    public String getMultipleChoiceFormInputText() {
+        return multipleChoiceFormInputText;
+    }
+
     /* view logic */
     public boolean isReadOnly() {
         return !open || complete || !assignButtonsViewModel.isAssignedToCurrentUser();
@@ -243,6 +274,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return templateDocumentFormInputId != null;
     }
 
+    public boolean isMultipleChoiceOptionsActive() {
+        return multipleChoiceFormInputId != null;
+    }
+
     public static final class GenericQuestionApplicationViewModelBuilder {
         private long applicationId;
         private String competitionName;
@@ -274,6 +309,9 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private boolean complete;
         private boolean leadApplicant;
         private AssignButtonsViewModel assignButtonsViewModel;
+        private Long multipleChoiceFormInputId;
+        private List<MultipleChoiceOptionResource> multipleChoiceOptions;
+        private String multipleChoiceFormInputText;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -339,11 +377,6 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
         public GenericQuestionApplicationViewModelBuilder withQuestionType(QuestionSetupType questionType) {
             this.questionType = questionType;
-            return this;
-        }
-
-        public GenericQuestionApplicationViewModelBuilder withTextAreaFormInputId(Long textAreaFormInputId) {
-            this.textAreaFormInputId = textAreaFormInputId;
             return this;
         }
 
@@ -432,8 +465,33 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withTextAreaFormInputId(Long textAreaFormInputId) {
+            this.textAreaFormInputId = textAreaFormInputId;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMultipleChoiceFormInputId(Long multipleChoiceFormInputId) {
+            this.multipleChoiceFormInputId = multipleChoiceFormInputId;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMultipleChoiceOptions(List<MultipleChoiceOptionResource> multipleChoiceOptions) {
+            this.multipleChoiceOptions = multipleChoiceOptions;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMultipleChoiceFormInputText(String multipleChoiceFormInputText) {
+            this.multipleChoiceFormInputText = multipleChoiceFormInputText;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
-            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename, templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant, assignButtonsViewModel);
+            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser,
+                    applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle,
+                    questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance,
+                    appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
+                    templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant,
+                    assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, multipleChoiceFormInputText);
         }
     }
 }

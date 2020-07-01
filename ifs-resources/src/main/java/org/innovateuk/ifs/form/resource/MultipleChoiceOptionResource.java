@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.form.resource;
 
+import java.io.Serializable;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.MultipleChoiceValidationGroup;
-
 import javax.validation.constraints.NotBlank;
 
-public class MultipleChoiceOptionResource {
+public class MultipleChoiceOptionResource implements Serializable {
 
     private Long id;
     @NotBlank(groups = MultipleChoiceValidationGroup.class)

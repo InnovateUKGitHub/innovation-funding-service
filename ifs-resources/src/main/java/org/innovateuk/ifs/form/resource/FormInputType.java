@@ -40,4 +40,11 @@ public enum FormInputType implements IdentifiableEnum {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("No FormInputType found for name: " + name));
     }
+
+    public static FormInputType findById(long id) {
+        return stream(values())
+                .filter(e -> e.id == id)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("No FormInputType found for id: " + id));
+    }
 }

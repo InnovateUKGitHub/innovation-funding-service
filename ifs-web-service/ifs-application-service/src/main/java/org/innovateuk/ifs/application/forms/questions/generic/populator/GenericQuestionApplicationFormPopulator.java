@@ -10,13 +10,17 @@ public class GenericQuestionApplicationFormPopulator {
 
     public GenericQuestionApplicationForm populate(GenericQuestionApplicationForm form, ApplicantQuestionResource applicantQuestion) {
         String value = applicantQuestion.getApplicantFormInputs().stream()
-                .filter(input -> input.getFormInput().getType().equals(FormInputType.TEXTAREA))
+                .filter(input -> input.getFormInput().getType().equals(FormInputType.TEXTAREA) ||
+                        input.getFormInput().getType().equals(FormInputType.MULTIPLE_CHOICE))
                 .findFirst()
-                .flatMap(input -> input.getApplicantResponses().stream().findAny())
-                .map(response -> response.getResponse().getValue())
+                .map(input -> input.getApplicantResponses().stream().findAny()
+                        .map(response -> input.getFormInput().getType().equals(FormInputType.MULTIPLE_CHOICE)
+                                ? response.getResponse().getMultipleChoiceOptionText() : response.getResponse().getValue())
+                        .orElse(null))
                 .orElse(null);
+
         form.setAnswer(value);
+
         return form;
     }
-
 }

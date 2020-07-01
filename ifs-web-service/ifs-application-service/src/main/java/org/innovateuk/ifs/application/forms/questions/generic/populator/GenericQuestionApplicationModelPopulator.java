@@ -41,6 +41,7 @@ public class GenericQuestionApplicationModelPopulator {
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
         ofNullable(formInputs.get(FormInputType.TEXTAREA)).ifPresent(input -> buildTextAreaViewModel(viewModelBuilder, input));
+        ofNullable(formInputs.get(FormInputType.MULTIPLE_CHOICE)).ifPresent(input -> buildMultipleChoiceOptionsViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.FILEUPLOAD)).ifPresent(input -> buildAppendixViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.TEMPLATE_DOCUMENT)).ifPresent(input -> buildTemplateDocumentViewModel(viewModelBuilder, input));
 
@@ -92,9 +93,23 @@ public class GenericQuestionApplicationModelPopulator {
                 .withWordsLeft(firstResponse(input).map(FormInputResponseResource::getWordCountLeft).orElse(input.getFormInput().getWordCount()));
     }
 
+    private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
+        viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
+                .withMultipleChoiceFormInputText(multipleChoiceOptionTextResponseOrNull(input))
+                .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
+                .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
+                .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
+    }
+
     private String filenameResponseOrNull(ApplicantFormInputResource input) {
         return firstResponse(input)
                 .map(FormInputResponseResource::getFilename)
+                .orElse(null);
+    }
+
+    private String multipleChoiceOptionTextResponseOrNull(ApplicantFormInputResource input) {
+        return firstResponse(input)
+                .map(FormInputResponseResource::getMultipleChoiceOptionText)
                 .orElse(null);
     }
 

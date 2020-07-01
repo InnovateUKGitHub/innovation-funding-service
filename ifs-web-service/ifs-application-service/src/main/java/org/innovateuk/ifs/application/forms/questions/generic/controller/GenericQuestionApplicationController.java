@@ -8,6 +8,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.questions.generic.form.GenericQuestionApplicationForm;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationFormPopulator;
 import org.innovateuk.ifs.application.forms.questions.generic.populator.GenericQuestionApplicationModelPopulator;
+import org.innovateuk.ifs.application.forms.questions.generic.validator.GenericQuestionApplicationFormValidator;
 import org.innovateuk.ifs.application.readonly.populator.GenericQuestionReadOnlyViewModelPopulator;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -24,6 +25,8 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -51,11 +54,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 /**
  * This controller handles application questions which are built up of form inputs.
  */
+
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/question/{questionId}/generic")
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
+    private static final Logger LOG = LoggerFactory.getLogger(GenericQuestionApplicationController.class);
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -85,8 +90,7 @@ public class GenericQuestionApplicationController {
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
-    @Qualifier("mvcValidator")
-    private Validator validator;
+    private GenericQuestionApplicationFormValidator validator;
 
     @GetMapping
     public String view(@ModelAttribute(name = "form", binding = false) GenericQuestionApplicationForm form,
@@ -242,7 +246,8 @@ public class GenericQuestionApplicationController {
     }
 
     private RestResult<ValidationMessages> save(GenericQuestionApplicationForm form, long applicationId, long questionId, UserResource user) {
-        FormInputResource formInput = getByType(questionId, FormInputType.TEXTAREA);
+        FormInputType formInputType = form.isTextAreaActive() ? FormInputType.TEXTAREA : FormInputType.MULTIPLE_CHOICE;
+        FormInputResource formInput = getByType(questionId, formInputType);
         return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
                 formInput.getId(), form.getAnswer(), false);
 

@@ -2,18 +2,22 @@ package org.innovateuk.ifs.application.forms.questions.generic.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
-
 public class GenericQuestionApplicationForm {
 
-    @NotBlank(message = "{validation.field.please.enter.some.text}")
     private String answer;
 
     private MultipartFile appendix;
 
     private MultipartFile templateDocument;
 
+    private boolean textAreaActive;
+
+    private boolean multipleChoiceOptionsActive;
+
     public String getAnswer() {
+        if (multipleChoiceOptionsActive && answer == null) {
+            answer = "";
+        }
         return answer;
     }
 
@@ -35,5 +39,21 @@ public class GenericQuestionApplicationForm {
 
     public void setTemplateDocument(MultipartFile templateDocument) {
         this.templateDocument = templateDocument;
+    }
+
+    public boolean isTextAreaActive() {
+        return textAreaActive;
+    }
+
+    public void setTextAreaActive(boolean textAreaActive) {
+        this.textAreaActive = textAreaActive;
+    }
+
+    public boolean isMultipleChoiceOptionsActive() {
+        return multipleChoiceOptionsActive;
+    }
+
+    public void setMultipleChoiceOptionsActive(boolean multipleChoiceOptionsActive) {
+        this.multipleChoiceOptionsActive = multipleChoiceOptionsActive;
     }
 }

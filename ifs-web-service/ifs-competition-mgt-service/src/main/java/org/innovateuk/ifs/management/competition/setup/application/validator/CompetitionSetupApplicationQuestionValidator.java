@@ -24,6 +24,7 @@ import org.springframework.validation.Validator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.management.competition.setup.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
@@ -110,7 +111,7 @@ public class CompetitionSetupApplicationQuestionValidator {
     private void validateMultipleChoice(AbstractQuestionForm form, BindingResult bindingResult) {
         ValidationUtils.invokeValidator(validator, form, bindingResult, MultipleChoiceValidationGroup.class);
 
-        List<MultipleChoiceOptionResource> nonNullChoices = form.getQuestion().getChoices().stream().filter(choice -> choice.getText() != null).collect(Collectors.toList());
+        List<MultipleChoiceOptionResource> nonNullChoices = form.getQuestion().getChoices().stream().filter(choice -> !isNullOrEmpty(choice.getText())).collect(Collectors.toList());
         Multimap<String, MultipleChoiceOptionResource> indexedByText = Multimaps.index(nonNullChoices, choice -> choice.getText().trim());
 
         indexedByText.asMap().entrySet().forEach(entry -> {

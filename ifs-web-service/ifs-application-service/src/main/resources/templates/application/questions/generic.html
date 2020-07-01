@@ -57,7 +57,7 @@
             <th:block th:text="${model.questionSubtitle}">Project team</th:block>
         </h3>
 
-        <p class="govuk-hint" th:if="${model.questionDescription != null}" th:text="${model.questionDescription}"></p>
+        <p class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"></p>
 
         <details class="govuk-details" role="group">
             <summary class="govuk-details__summary">
@@ -74,6 +74,8 @@
 
             <th:block th:unless="${model.readOnly}">
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+                <input type="hidden" th:field="${model.textAreaActive}" />
+                <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
             <div class="govuk-form-group" th:if="${model.textAreaActive}"
@@ -84,7 +86,7 @@
                 <div class="textarea-wrapped word-count"
                      th:classappend="|${model.complete ?: 'marked-as-complete'}  ${model.assignButtonsViewModel.assignedToCurrentUser ?: 'assigned-to-me'}|">
 
-                    <textarea class="govuk-textarea"
+                    <textarea class="govuk-tehiddenxtarea"
                               th:field="*{answer}"
                               th:errorclass="govuk-textarea--error"
                               th:readonly="${model.readOnly}"
@@ -101,6 +103,39 @@
                         </div>
 
                     </div>
+                </div>
+            </div>
+
+            <div class="govuk-form-group" th:if="${model.multipleChoiceOptionsActive}"
+                 th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
+                <th:block th:if="${#fields.hasErrors('answer')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
+                </th:block>
+                <div class="govuk-radios" th:classappend="${#lists.size(model.multipleChoiceOptions) <= 2} ? govuk-radios--inline" th:if="${#lists.size(model.multipleChoiceOptions) <= 9}">
+                    <div class="govuk-radios__item" th:each="multipleChoiceOption : ${model.multipleChoiceOptions}">
+                        <input type="radio" name="innovationAreaChoice" required="required"
+                               class="govuk-radios__input"
+                               th:id="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                               th:field="*{answer}"
+                               th:value="${multipleChoiceOption.text}"
+                               th:checked="${model.multipleChoiceFormInputId} == ${multipleChoiceOption.id}"
+                               th:readonly="${model.readOnly}"
+                               th:errorclass="govuk-input--error"
+                               th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
+                        <label th:for="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                               class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
+                    </div>
+                </div>
+                <div th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                    <select class="govuk-select"
+                            th:id="multipleChoiceOption"
+                            th:field="*{answer}"
+                            th:readonly="${model.readOnly}"
+                            data-required-errormessage="#{validation.multiple.choice.required}"
+                            data-auto-complete="">
+                        <option value="" >Please Select</option>
+                        <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}" th:value="${multipleChoiceOption.text}" th:text="${multipleChoiceOption.text}"></option>
+                    </select>
                 </div>
             </div>
 

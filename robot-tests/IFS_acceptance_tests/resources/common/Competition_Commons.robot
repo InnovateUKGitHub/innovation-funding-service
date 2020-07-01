@@ -383,7 +383,7 @@ the user is able to configure the new question
     [Arguments]  ${questionTitle}
     the user enters text to a text field  id = question.title  Tell us how your project is innovative.
     the user enters text to a text field  id = question.shortTitle  ${questionTitle}
-    the user enters text to a text field  id = question.subTitle  Adding value on existing projects is important to InnovateUK.
+    the user enters text to a text field  jQuery = label:contains("Question subtitle") + div .editor  Adding value on existing projects is important to InnovateUK.
     the user enters text to a text field  id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
     the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500

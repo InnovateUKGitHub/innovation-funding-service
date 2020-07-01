@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.form.mapper.FormInputMapper;
+import org.innovateuk.ifs.form.mapper.MultipleChoiceOptionMapper;
 import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.mapstruct.AfterMapping;
@@ -21,6 +22,7 @@ import org.mapstruct.Mappings;
                 FormInputMapper.class,
                 ApplicationMapper.class,
                 FileEntryMapper.class,
+                MultipleChoiceOptionMapper.class,
                 QuestionMapper.class
         }
 )
@@ -29,6 +31,7 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
     @Mappings({
             @Mapping(source = "formInput.question", target = "question"),
             @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount"),
+            @Mapping(source = "multipleChoiceOption.text", target = "multipleChoiceOptionText"),
             @Mapping(source = "updatedBy.user.id", target = "updatedByUser"),
             @Mapping(source = "updatedBy.user.name", target = "updatedByUserName")
     })
