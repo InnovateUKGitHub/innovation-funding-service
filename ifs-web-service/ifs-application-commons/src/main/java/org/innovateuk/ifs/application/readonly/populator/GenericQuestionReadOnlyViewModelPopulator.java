@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnly
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
@@ -39,20 +39,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> textResponse = textInput
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
-        String answer = null;
-        if (textInput.isPresent()) {
-            FormInputResource input = textInput.get();
-            if (input.getType().equals(MULTIPLE_CHOICE)) {
-                answer = textResponse.map(response -> input.getMultipleChoiceOptions().stream()
-                        .filter(multipleChoice -> multipleChoice.getId().equals(response.getMultipleChoiceOptionId()))
-                        .findAny()
-                        .map(MultipleChoiceOptionResource::getText).orElse(null))
-                        .orElse(null);
-            } else {
-                answer = textResponse.map(FormInputResponseResource::getValue).orElse(null);
-            }
-        }
-
         Optional<FormInputResponseResource> appendixResponse = appendix
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
@@ -77,7 +63,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
-                answer,
+                textInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
+                        ? textResponse.map(FormInputResponseResource::getMultipleChoiceOptionText).orElse(null)
+                        : textResponse.map(FormInputResponseResource::getValue).orElse(null)).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
                 appendixResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data, settings)).orElse(null),
                 appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null),

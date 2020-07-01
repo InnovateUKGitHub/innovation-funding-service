@@ -120,7 +120,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
         }
 
         if (formInput.getType().equals(FormInputType.MULTIPLE_CHOICE)) {
-            response.setValue(null);
+            response.setValue(multipleChoiceOption.getText());
             response.setMultipleChoiceOption(multipleChoiceOption);
         } else {
             response.setValue(htmlUnescapedValue);
