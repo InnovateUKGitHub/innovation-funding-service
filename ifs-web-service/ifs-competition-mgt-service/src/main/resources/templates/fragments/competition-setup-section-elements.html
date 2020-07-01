@@ -249,6 +249,7 @@
 
             <!--/* APPENDIX */-->
             <th:block th:if="${question.appendix != null or #fields.hasErrors('numberOfUploads*')}">
+                <input type="hidden" th:field="*{question.appendix}" />
                 <div class="govuk-form-group"
                      th:classappend="${#fields.hasErrors('numberOfUploads*')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
