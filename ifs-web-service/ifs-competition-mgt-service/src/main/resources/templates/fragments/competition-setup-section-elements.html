@@ -247,32 +247,44 @@
             <input type="hidden" th:field="*{question.multipleChoice}">
 
             <th:block th:if="${question.textArea != null && question.multipleChoice != null}">
-                <div class="govuk-radios govuk-radios--inline">
-                    <div class="govuk-radios__item" data-target="text-area-form-group"
-                         data-target-clear-validation="true" data-target-clear-form="true">
-                        <input class="govuk-radios__input"
-                               id="text-area"
-                               type="radio"
-                               th:field="*{typeOfQuestion}"
-                               value="FREE_TEXT"
-                               required="required" />
-                        <label class="govuk-label govuk-radios__label" for="text-area">
-                            Free text box
-                        </label>
-                    </div>
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('typeOfQuestion')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="typeOfQuestion">
+                            <h2 class="govuk-fieldset__heading">Answer type</h2>
+                        </legend>
+                        <th:block th:if="${#fields.hasErrors('typeOfQuestion')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('typeOfQuestion')}"
+                              th:text="${err}"></span>
+                        </th:block>
+                        <div class="govuk-radios govuk-radios--inline">
+                            <div class="govuk-radios__item" data-target="text-area-form-group"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input class="govuk-radios__input"
+                                       id="text-area"
+                                       type="radio"
+                                       th:field="*{typeOfQuestion}"
+                                       value="FREE_TEXT"
+                                       required="required" />
+                                <label class="govuk-label govuk-radios__label" for="text-area">
+                                    Free text box
+                                </label>
+                            </div>
 
-                    <div class="govuk-radios__item" data-target="multiple-choice-form-group"
-                         data-target-clear-validation="true" data-target-clear-form="true">
-                        <input class="govuk-radios__input"
-                               id="multiple-choice"
-                               th:field="*{typeOfQuestion}"
-                               type="radio"
-                               value="MULTIPLE_CHOICE"
-                               required="required">
-                        <label class="govuk-label govuk-radios__label" for="multiple-choice">
-                            Multiple choice
-                        </label>
-                    </div>
+                            <div class="govuk-radios__item" data-target="multiple-choice-form-group"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input class="govuk-radios__input"
+                                       id="multiple-choice"
+                                       th:field="*{typeOfQuestion}"
+                                       type="radio"
+                                       value="MULTIPLE_CHOICE"
+                                       required="required">
+                                <label class="govuk-label govuk-radios__label" for="multiple-choice">
+                                    Multiple choice
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
             </th:block>
 
@@ -302,8 +314,8 @@
                     <table id="multiple-choice-table" class="govuk-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Answers</th>
-                            <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                            <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Answers</th>
+                            <th class="govuk-table__header govuk-!-width-one-third" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
