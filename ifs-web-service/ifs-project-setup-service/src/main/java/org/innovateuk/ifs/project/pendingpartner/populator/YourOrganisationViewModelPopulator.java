@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -47,14 +46,16 @@ public class YourOrganisationViewModelPopulator {
 
         PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
-        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        Boolean isMaximumFundingLevelOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
+        boolean isMaximumFundingLevelConstant = competition.isMaximumFundingLevelConstant(
+                () -> organisationRestService.getOrganisationById(organisationId).getSuccess().getOrganisationTypeEnum(),
+                () -> grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess());
 
+        boolean showOrganisationSizeAlert = !isMaximumFundingLevelConstant && pendingPartner.isYourFundingComplete();
         return new ProjectYourOrganisationViewModel(
                 project.getApplication(),
                 competition.getName(),
                 showStateAidAgreement,
-                !competition.isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), isMaximumFundingLevelOverridden) && pendingPartner.isYourFundingComplete(),
+                showOrganisationSizeAlert,
                 competition.isH2020(),
                 projectId,
                 project.getName(),
