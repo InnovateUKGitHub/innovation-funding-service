@@ -36,6 +36,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -202,6 +203,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectUserRepository projectUserRepository;
     protected BankDetailsService bankDetailsService;
     protected SpendProfileService spendProfileService;
+    protected ProjectFinanceService projectFinanceService;
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
     protected ProfileService profileService;
@@ -335,6 +337,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
         competitionOrganisationConfigRepository = serviceLocator.getBean((CompetitionOrganisationConfigRepository.class));
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
+        projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
     }
 
     protected UserResource compAdmin() {

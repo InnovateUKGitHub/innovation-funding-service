@@ -8,8 +8,10 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.competition.setup.CompetitionSetupController;
+import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
 import org.innovateuk.ifs.management.competition.setup.application.form.DetailsForm;
 import org.innovateuk.ifs.management.competition.setup.application.form.QuestionForm;
+import org.innovateuk.ifs.management.competition.setup.application.validator.CompetitionSetupApplicationQuestionValidator;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupQuestionService;
@@ -22,14 +24,14 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -91,6 +93,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Spy
+    @InjectMocks
+    private CompetitionSetupApplicationQuestionValidator competitionSetupApplicationQuestionValidator;
+
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() {
         return new CompetitionSetupApplicationController();
@@ -101,7 +107,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();
-        ReflectionTestUtils.setField(controller, "validator", validator);
+        ReflectionTestUtils.setField(competitionSetupApplicationQuestionValidator, "validator", validator);
 
         when(competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(COMPETITION_ID)).thenReturn(true);
     }
@@ -385,6 +391,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.shortTitle", "My Short Title")
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
+                .param("question.textArea", "true")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
                 .param("question.allowedAppendixResponseFileTypes", "PDF")
@@ -613,6 +620,58 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertNull(bindingResult.getFieldError("quesiton.guidanceRows[0].subject"));
     }
 
+    @Test
+    public void validateConditionalTextArea() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(questionId)
+                .withType(ASSESSED_QUESTION).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(eq(competition), any(), eq(CompetitionSetupSection.APPLICATION_FORM)))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
+
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
+                .param("question.questionId", questionId.toString())
+                .param("question.type", "ASSESSED_QUESTION")
+                .param("typeOfQuestion", TypeOfQuestion.FREE_TEXT.name()))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeHasFieldErrorCode(CompetitionSetupController.COMPETITION_SETUP_FORM_KEY, "question.maxWords", "NotNull"));
+    }
+
+    @Test
+    public void validateMultipleChoice() throws Exception {
+        Long questionId = 4L;
+        CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource()
+                .withQuestionId(questionId)
+                .withType(ASSESSED_QUESTION).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withId(COMPETITION_ID)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(questionSetupCompetitionRestService.getByQuestionId(questionId)).thenReturn(restSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(eq(competition), any(), eq(CompetitionSetupSection.APPLICATION_FORM)))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
+
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
+                .param("question.questionId", questionId.toString())
+                .param("question.type", "ASSESSED_QUESTION")
+                .param("typeOfQuestion", TypeOfQuestion.MULTIPLE_CHOICE.name())
+                .param("question.choices[0].text", "abc")
+                .param("question.choices[1].text", "abc")
+                .param("question.choices[2].text", ""))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(model().attributeHasFieldErrorCode(CompetitionSetupController.COMPETITION_SETUP_FORM_KEY, "question.choices[0].text", "validation.competition.setup.multiple.choice.duplicate"))
+                .andExpect(model().attributeHasFieldErrorCode(CompetitionSetupController.COMPETITION_SETUP_FORM_KEY, "question.choices[1].text", "validation.competition.setup.multiple.choice.duplicate"))
+                .andExpect(model().attributeHasFieldErrorCode(CompetitionSetupController.COMPETITION_SETUP_FORM_KEY, "question.choices[2].text", "NotBlank"));
+    }
     @Test
     public void submitSectionApplicationScopeQuestionWithoutErrors() throws Exception {
         Long questionId = 4L;

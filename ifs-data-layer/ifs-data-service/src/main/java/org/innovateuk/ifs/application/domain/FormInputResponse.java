@@ -9,6 +9,10 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Response class defines the model in which the response on a {@link Question} is stored.
@@ -38,9 +42,11 @@ public class FormInputResponse {
     @JoinColumn(name = "applicationId", referencedColumnName = "id")
     private Application application;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fileEntryId", referencedColumnName = "id")
-    private FileEntry fileEntry;
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @JoinTable(name = "form_input_response_file_entry",
+            joinColumns = @JoinColumn(name = "form_input_response_id"),
+            inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
+    private List<FileEntry> fileEntries = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "multipleChoiceOptionId", referencedColumnName = "id")
@@ -58,9 +64,9 @@ public class FormInputResponse {
         this.application = application;
     }
 
-    public FormInputResponse(ZonedDateTime updateDate, FileEntry fileEntry, ProcessRole updatedBy, FormInput formInput, Application application) {
+    public FormInputResponse(ZonedDateTime updateDate, List<FileEntry> fileEntries, ProcessRole updatedBy, FormInput formInput, Application application) {
         this.updateDate = updateDate;
-        this.fileEntry = fileEntry;
+        this.fileEntries = fileEntries;
         this.updatedBy = updatedBy;
         this.formInput = formInput;
         this.application = application;
@@ -136,14 +142,6 @@ public class FormInputResponse {
         this.updatedBy = updatedBy;
     }
 
-    public FileEntry getFileEntry() {
-        return fileEntry;
-    }
-
-    public void setFileEntry(FileEntry fileEntry) {
-        this.fileEntry = fileEntry;
-    }
-
     @JsonIgnore
     public Application getApplication() {
         return application;
@@ -159,5 +157,21 @@ public class FormInputResponse {
 
     public void setMultipleChoiceOption(MultipleChoiceOption multipleChoiceOption) {
         this.multipleChoiceOption = multipleChoiceOption;
+    }
+
+    public List<FileEntry> getFileEntries() {
+        return fileEntries;
+    }
+
+    public void setFileEntries(List<FileEntry> fileEntries) {
+        this.fileEntries = fileEntries;
+    }
+
+    public void addFileEntry(FileEntry fileEntry) {
+        if (this.fileEntries != null) {
+            this.fileEntries.add(fileEntry);
+        } else {
+            this.fileEntries = singletonList(fileEntry);
+        }
     }
 }

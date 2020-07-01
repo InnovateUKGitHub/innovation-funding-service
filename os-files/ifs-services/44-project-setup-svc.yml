@@ -72,6 +72,11 @@ items:
                     configMapKeyRef:
                       name: new-relic-config
                       key: NEW_RELIC_LOG
+                - name: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: web-config
+                      key: IFS_LIVE_PROJECTS_LANDING_PAGE_URL
                 - name: JAVA_OPTS
                   value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
                 - name: NEW_RELIC_APP_NAME

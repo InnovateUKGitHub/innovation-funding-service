@@ -17,18 +17,18 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.workflow.audit.ProcessHistoryRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -36,8 +36,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<ApplicationDeletionServiceImpl> {
@@ -94,10 +93,15 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .build();
-        ProcessRole processRole = newProcessRole()
+        ProcessRole leadRole = newProcessRole()
                 .withApplication(application)
                 .withUser(user)
                 .withRole(Role.LEADAPPLICANT)
+                .build();
+        ProcessRole inactiveRole = newProcessRole()
+                .withApplication(application)
+                .withUser(newUser().withStatus(UserStatus.INACTIVE).build())
+                .withRole(Role.COLLABORATOR)
                 .build();
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationName", application.getName());
@@ -111,7 +115,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
 
         setField(application.getApplicationProcess(), "id", 1L);
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
-        when(processRoleRepository.findByApplicationId(applicationId)).thenReturn(singletonList(processRole));
+        when(processRoleRepository.findByApplicationId(applicationId)).thenReturn(newArrayList(leadRole, inactiveRole));
         when(notificationService.sendNotificationWithFlush(notification, EMAIL)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.deleteApplication(applicationId);
@@ -125,7 +129,7 @@ public class ApplicationDeletionServiceImplTest extends BaseServiceUnitTest<Appl
         verify(applicationHiddenFromDashboardRepository).deleteByApplicationId(applicationId);
         verify(processHistoryRepository).deleteByProcessId(application.getApplicationProcess().getId());
         verify(applicationRepository).delete(application);
-        verify(notificationService).sendNotificationWithFlush(notification, EMAIL);
+        verify(notificationService, only()).sendNotificationWithFlush(notification, EMAIL);
 
 
 

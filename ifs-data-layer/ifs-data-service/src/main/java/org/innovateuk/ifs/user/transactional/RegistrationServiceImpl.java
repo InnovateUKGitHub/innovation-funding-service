@@ -162,7 +162,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return validateUser(userResource).
                 andOnSuccessReturn(validUser -> assembleUserFromResource(validUser)).
                 andOnSuccess(newUser -> addApplicantRoleToUserIfNoRolesAssigned(userResource, newUser)).
-                andOnSuccess(newUserWithRole -> markLatestSiteTermsAndConditionsAgreedToIfApplicant(newUserWithRole)).
+                andOnSuccess(newUserWithRole -> markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole(newUserWithRole)).
                 andOnSuccess(newUserWithRole -> createUserWithUid(newUserWithRole, userResource.getPassword(), null)).
                 andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, organisationId, createdUser));
     }
@@ -197,8 +197,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
     }
 
-    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfApplicant(User userWithRole) {
-        return userWithRole.hasRole(Role.APPLICANT) ?
+    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole(User userWithRole) {
+        return userWithRole.hasRole(Role.APPLICANT) || userWithRole.hasRole(MONITORING_OFFICER) ?
                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
     }
 

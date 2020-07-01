@@ -57,7 +57,7 @@
             <th:block th:text="${model.questionSubtitle}">Project team</th:block>
         </h3>
 
-        <p class="govuk-hint" th:if="${model.questionDescription != null}" th:text="${model.questionDescription}"></p>
+        <p class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"></p>
 
         <details class="govuk-details" role="group">
             <summary class="govuk-details__summary">
