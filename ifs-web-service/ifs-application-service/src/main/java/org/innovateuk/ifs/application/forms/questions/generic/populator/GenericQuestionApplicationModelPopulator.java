@@ -95,6 +95,7 @@ public class GenericQuestionApplicationModelPopulator {
 
     private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
         viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
+                .withMultipleChoiceFormInputText(multipleChoiceOptionTextResponseOrNull(input))
                 .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
                 .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
                 .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
@@ -106,11 +107,16 @@ public class GenericQuestionApplicationModelPopulator {
                 .orElse(null);
     }
 
+    private String multipleChoiceOptionTextResponseOrNull(ApplicantFormInputResource input) {
+        return firstResponse(input)
+                .map(FormInputResponseResource::getMultipleChoiceOptionText)
+                .orElse(null);
+    }
+
     private Optional<FormInputResponseResource> firstResponse(ApplicantFormInputResource input) {
         return input.getApplicantResponses()
                 .stream()
                 .findAny() //Generic questions only have one respsonse.
                 .map(ApplicantFormInputResponseResource::getResponse);
     }
-
 }

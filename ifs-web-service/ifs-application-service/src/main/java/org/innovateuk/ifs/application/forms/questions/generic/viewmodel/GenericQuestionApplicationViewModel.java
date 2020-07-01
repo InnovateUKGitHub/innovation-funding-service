@@ -54,6 +54,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     private final Long multipleChoiceFormInputId;
     private final List<MultipleChoiceOptionResource> multipleChoiceOptions;
+    private final String multipleChoiceFormInputText;
 
     public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId,
                                                long currentUser, String applicationName, String questionName,
@@ -64,7 +65,8 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
                                                Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename,
                                                String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName,
                                                Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant,
-                                               AssignButtonsViewModel assignButtonsViewModel, Long multipleChoiceFormInputId, List<MultipleChoiceOptionResource> multipleChoiceOptions) {
+                                               AssignButtonsViewModel assignButtonsViewModel, Long multipleChoiceFormInputId,
+                                               List<MultipleChoiceOptionResource> multipleChoiceOptions, String multipleChoiceFormInputText) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -97,6 +99,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.assignButtonsViewModel = assignButtonsViewModel;
         this.multipleChoiceFormInputId = multipleChoiceFormInputId;
         this.multipleChoiceOptions = multipleChoiceOptions;
+        this.multipleChoiceFormInputText = multipleChoiceFormInputText;
     }
 
     @Override
@@ -229,6 +232,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return multipleChoiceOptions;
     }
 
+    public String getMultipleChoiceFormInputText() {
+        return multipleChoiceFormInputText;
+    }
+
     /* view logic */
     public boolean isReadOnly() {
         return !open || complete || !assignButtonsViewModel.isAssignedToCurrentUser();
@@ -304,6 +311,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private AssignButtonsViewModel assignButtonsViewModel;
         private Long multipleChoiceFormInputId;
         private List<MultipleChoiceOptionResource> multipleChoiceOptions;
+        private String multipleChoiceFormInputText;
 
         private GenericQuestionApplicationViewModelBuilder() {
         }
@@ -472,13 +480,18 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
+        public GenericQuestionApplicationViewModelBuilder withMultipleChoiceFormInputText(String multipleChoiceFormInputText) {
+            this.multipleChoiceFormInputText = multipleChoiceFormInputText;
+            return this;
+        }
+
         public GenericQuestionApplicationViewModel build() {
             return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser,
                     applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle,
                     questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance,
                     appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename,
                     templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant,
-                    assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions);
+                    assignButtonsViewModel, multipleChoiceFormInputId, multipleChoiceOptions, multipleChoiceFormInputText);
         }
     }
 }
