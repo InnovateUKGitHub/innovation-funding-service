@@ -71,7 +71,6 @@ Awaitting assesment status should not display for SBRI submitted applications
 
 Internal users should only see key statistics and competition navigation links related to applications when the SBRI competition is open
     [Documentation]  IFS-7315
-    #[Setup]  Requesting sbri competition ID
     Given log in as a different user                                                 &{internal_finance_credentials}
     When the user navigates to the page                                              ${server}/management/competition/${competitionId}
     Then the user should see only application related key statistics
