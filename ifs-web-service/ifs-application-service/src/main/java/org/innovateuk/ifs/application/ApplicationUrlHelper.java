@@ -38,6 +38,8 @@ public class ApplicationUrlHelper {
                     return Optional.of(format("/application/%d/form/question/%d/terms-and-conditions", applicationId, questionId));
                 case RESEARCH_CATEGORY:
                     return Optional.of(format("/application/%d/form/question/%d/research-category", applicationId, questionId));
+                case EQUALITY_DIVERSITY_INCLUSION:
+                    return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
             }
             if (questionType.hasFormInputResponses()) {
                 return Optional.of(format("/application/%d/form/question/%d/generic", applicationId, questionId));
