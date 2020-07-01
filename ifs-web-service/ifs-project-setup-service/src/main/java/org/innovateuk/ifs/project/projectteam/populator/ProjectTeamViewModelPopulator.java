@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -89,6 +89,8 @@ public class ProjectTeamViewModelPopulator {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
 
+        boolean isReadOnly = statusAccessor.isGrantOfferLetterGenerated() || project.getProjectState().isComplete();
+
         return new ProjectTeamViewModel(
                 project,
                 partnerOrgModels,
@@ -98,7 +100,7 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false,
-                isMonitoringOfficer,
+                isReadOnly,
                 false,
                 false);
     }
