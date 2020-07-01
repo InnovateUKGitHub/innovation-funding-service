@@ -4,6 +4,10 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...             IFS-5097 Update to overhead costs in procurement application
 ...
 ...             IFS-6368 Loans - Remove Documents
+...
+...             IFS-7310 Internal user can allow multiple appendices in comp creation
+...
+...             IFS-7311 Applicant can upload multiple appendices of allowed file types
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot

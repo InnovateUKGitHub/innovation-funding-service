@@ -87,6 +87,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4186 Competition Setup - change layout to separate items not required for open
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
+...
+...               IFS-7310 Internal user can allow multiple appendices in comp creation
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
