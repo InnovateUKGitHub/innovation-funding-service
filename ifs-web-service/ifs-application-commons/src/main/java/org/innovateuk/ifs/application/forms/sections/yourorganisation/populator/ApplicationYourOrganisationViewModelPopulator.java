@@ -5,8 +5,12 @@ import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.Yo
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,19 +21,16 @@ import java.util.List;
 @Component
 public class ApplicationYourOrganisationViewModelPopulator {
 
+    @Autowired
     private YourOrganisationRestService yourOrganisationRestService;
+    @Autowired
     private SectionService sectionService;
+    @Autowired
     private CompetitionRestService competitionRestService;
-
-    public ApplicationYourOrganisationViewModelPopulator(
-            YourOrganisationRestService yourOrganisationRestService,
-            SectionService sectionService,
-            CompetitionRestService competitionRestService) {
-
-        this.yourOrganisationRestService = yourOrganisationRestService;
-        this.sectionService = sectionService;
-        this.competitionRestService = competitionRestService;
-    }
+    @Autowired
+    private OrganisationRestService organisationRestService;
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     public YourOrganisationViewModel populate(long applicationId, long competitionId, long organisationId) {
 
@@ -40,11 +41,18 @@ public class ApplicationYourOrganisationViewModelPopulator {
 
         List<SectionResource> fundingSections = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES);
 
-        boolean fundingSectionComplete = fundingSections.stream().findAny().map(fundingSection -> {
-            List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
-            return completedSectionIds.contains(fundingSection.getId());
-        }).orElse(false);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        Boolean isMaximumFundingLevelOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competitionId).getSuccess();
 
-        return new YourOrganisationViewModel(applicationId, competition.getName(), showStateAidAgreement, fundingSectionComplete, competition.isH2020(), competition.isProcurement());
+        boolean showOrganisationSizeAlert = false;
+        if (!competition.isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), isMaximumFundingLevelOverridden)) {
+            boolean fundingSectionComplete = fundingSections.stream().findAny().map(fundingSection -> {
+                List<Long> completedSectionIds = sectionService.getCompleted(applicationId, organisationId);
+                return completedSectionIds.contains(fundingSection.getId());
+            }).orElse(false);
+            showOrganisationSizeAlert = fundingSectionComplete;
+        }
+
+        return new YourOrganisationViewModel(applicationId, competition.getName(), showStateAidAgreement, showOrganisationSizeAlert, competition.isH2020(), competition.isProcurement());
     }
 }

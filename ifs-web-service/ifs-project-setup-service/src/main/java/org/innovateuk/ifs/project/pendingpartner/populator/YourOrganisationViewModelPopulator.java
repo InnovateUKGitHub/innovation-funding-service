@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.pendingpartner.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
 import org.innovateuk.ifs.project.resource.PendingPartnerProgressResource;
@@ -9,6 +11,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.yourorganisation.viewmodel.ProjectYourOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +32,11 @@ public class YourOrganisationViewModelPopulator {
 
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
+    private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
     public ProjectYourOrganisationViewModel populate(long projectId, long organisationId, UserResource user) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
@@ -39,11 +47,14 @@ public class YourOrganisationViewModelPopulator {
 
         PendingPartnerProgressResource pendingPartner = pendingPartnerProgressRestService.getPendingPartnerProgress(projectId, organisationId).getSuccess();
 
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        Boolean isMaximumFundingLevelOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
+
         return new ProjectYourOrganisationViewModel(
                 project.getApplication(),
                 competition.getName(),
                 showStateAidAgreement,
-                pendingPartner.isYourFundingComplete(),
+                !competition.isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), isMaximumFundingLevelOverridden) && pendingPartner.isYourFundingComplete(),
                 competition.isH2020(),
                 projectId,
                 project.getName(),
