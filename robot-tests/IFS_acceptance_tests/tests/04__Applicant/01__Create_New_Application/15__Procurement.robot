@@ -15,6 +15,8 @@ Resource        ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${comp_name}         Procurement AT Comp
 ${appl_name}         Procurement app
+${ods_file}          file_example_ODS.ods
+${excel_file}        testing.xlsx
 
 *** Test Cases ***
 Comp Admin creates procurement competition
@@ -88,14 +90,12 @@ Comp Admin allocates assessor to application
     Then the user clicks the button/link          jQuery = button:contains("Notify assessors")
 
 Allocated assessor assess the application
-    [Documentation]  IFS-2376
-    Given Log in as a different user                       &{assessor_credentials}
-    When The user clicks the button/link                   link = ${comp_name}
-    And the user clicks the button/link                    jQuery = li:contains("${appl_name}") a:contains("Accept or reject")
-    And the user selects the radio button                  assessmentAccept  true
-    Then the user clicks the button/link                   jQuery = .govuk-button:contains("Confirm")
-    And the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard/competition/${competitionId}
-    And the user clicks the button/link                    link = ${appl_name}
+    [Documentation]  IFS-2376  IFS-7311
+    Given Log in as a different user                                                  &{assessor_credentials}
+    And the user accepts the application to assess
+    And the user should be redirected to the correct page                             ${server}/assessment/assessor/dashboard/competition/${competitionId}
+    When the user clicks the button/link                                              link = ${appl_name}
+    Then the user can see multiple appendices uploaded to the application question
     And the assessor submits the assessment
 
 the comp admin closes the assessment and releases feedback
@@ -140,6 +140,18 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
+
+the user accepts the application to assess
+    the user clicks the button/link       link = ${comp_name}
+    the user clicks the button/link       jQuery = li:contains("${appl_name}") a:contains("Accept or reject")
+    the user selects the radio button     assessmentAccept  true
+    the user clicks the button/link       jQuery = .govuk-button:contains("Confirm")
+
+the user can see multiple appendices uploaded to the application question
+    the user clicks the button/link     jQuery = a:contains("Technical approach")
+    the user should see the element     jQuery = a:contains("${ods_file}")
+    the user should see the element     jQuery = a:contains("${excel_file}")
+    the user clicks the button/link     link = Back to your assessment overview
 
 the user fills in procurement Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
