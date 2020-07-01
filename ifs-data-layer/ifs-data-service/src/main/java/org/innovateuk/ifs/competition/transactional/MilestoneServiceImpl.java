@@ -71,10 +71,18 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
             boolean isNonIfs = competition.isNonIfs();
 
-            List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
-                    .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
-                    .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
-                    .collect(toList());
+            List<MilestoneType> milestonesRequired;
+
+            if (isNonIfs) {
+                milestonesRequired= PUBLIC_MILESTONES.stream()
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .collect(toList());
+            } else {
+                milestonesRequired = PUBLIC_MILESTONES.stream()
+                        .filter(milestoneType -> milestoneType.getPriority() <= competition.getCompletionStage().getLastMilestone().getPriority())
+                        .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                        .collect(toList());
+            }
 
             List<Milestone> milestones = milestoneRepository
                     .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
