@@ -665,3 +665,8 @@ task osDeployAuthServices(type: Exec, dependsOn: prepareDeployAndUpgrade) {
     executable = 'setup-files/scripts/openshift/os-deploy-auth-services.sh'
     args = [openshiftEnv, "remote", project.version, project.findProperty("nexus_username"), project.findProperty("nexus_password"), project.findProperty("nexus_email"),  project.findProperty("nexus_version")]
 }
+
+task osDeployIfsServicesUsingNexusImages(type: Exec, dependsOn: prepareDeployAndUpgrade) {
+    executable = 'setup-files/scripts/openshift/os-deploy-using-nexus-image.sh'
+    args = [openshiftEnv, "remote", project.version, project.findProperty("nexus_username"), project.findProperty("nexus_password"), project.findProperty("nexus_email"),  project.findProperty("nexus_version")]
+}
