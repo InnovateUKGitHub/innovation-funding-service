@@ -14,8 +14,8 @@ public class GenericQuestionApplicationFormPopulator {
                         input.getFormInput().getType().equals(FormInputType.MULTIPLE_CHOICE))
                 .findFirst()
                 .map(input -> input.getApplicantResponses().stream().findAny()
-                        .map(response -> input.getFormInput().getType().equals(FormInputType.TEXTAREA)
-                                ? response.getResponse().getValue() : response.getResponse().getMultipleChoiceOptionText())
+                        .map(response -> input.getFormInput().getType().equals(FormInputType.MULTIPLE_CHOICE)
+                                ? response.getResponse().getMultipleChoiceOptionText() : response.getResponse().getValue())
                         .orElse(null))
                 .orElse(null);
 

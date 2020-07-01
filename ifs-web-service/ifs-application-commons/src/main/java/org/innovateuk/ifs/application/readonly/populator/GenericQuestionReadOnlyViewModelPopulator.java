@@ -42,14 +42,14 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         String answer = null;
         if (textInput.isPresent()) {
             FormInputResource input = textInput.get();
-            if (input.getType().equals(TEXTAREA)) {
-                answer = textResponse.map(FormInputResponseResource::getValue).orElse(null);
-            } else {
+            if (input.getType().equals(MULTIPLE_CHOICE)) {
                 answer = textResponse.map(response -> input.getMultipleChoiceOptions().stream()
-                        .filter(multipleChoice -> multipleChoice.getId().equals(Long.getLong(response.getValue())))
+                        .filter(multipleChoice -> multipleChoice.getId().equals(response.getMultipleChoiceOptionId()))
                         .findAny()
                         .map(MultipleChoiceOptionResource::getText).orElse(null))
                         .orElse(null);
+            } else {
+                answer = textResponse.map(FormInputResponseResource::getValue).orElse(null);
             }
         }
 
