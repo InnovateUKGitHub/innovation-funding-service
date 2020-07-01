@@ -23,8 +23,6 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedAppendixResponseFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {

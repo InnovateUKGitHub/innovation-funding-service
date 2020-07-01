@@ -432,7 +432,7 @@ public class CompetitionSetupApplicationController {
     }
 
     private void validateAppendixGuidance(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if(competitionSetupForm.getNumberOfUploads() >0 && competitionSetupForm.getQuestion().getAppendixGuidance() == null) {
+        if(competitionSetupForm.getNumberOfUploads() >0 && competitionSetupForm.getQuestion().getAppendixGuidance().isEmpty()) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
         }
     }
