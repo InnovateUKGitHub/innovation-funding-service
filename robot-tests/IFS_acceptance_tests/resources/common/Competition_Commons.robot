@@ -264,6 +264,8 @@ the assessed questions are marked as complete(procurement)
 the user marks each procurement question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the radio button     numberOfUploads  3
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
     the user selects the radio button      question.templateDocument  1
     the user enters text to a text field   id = question.templateTitle   ${question_link}
     the user uploads the file              css = input[id="templateDocumentFile"]   ${ods_file}

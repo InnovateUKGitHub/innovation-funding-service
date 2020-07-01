@@ -18,20 +18,20 @@ ${appl_name}         Procurement app
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368
-    Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  project-setup-completion-stage  no  2  true  single-or-collaborative
+    [Documentation]  IFS-6368  IFS-7310
+    Given Logging in and Error Checking                &{Comp_admin1_credentials}
+    Then the competition admin creates competition     ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  project-setup-completion-stage  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
-    [Setup]  get competition id and set open date to yesterday  ${comp_name}
-    Given Log in as a different user            &{RTO_lead_applicant_credentials}
-    Then logged in user applies to competition  ${comp_name}  3
+    [Setup]  get competition id and set open date to yesterday    ${comp_name}
+    Given Log in as a different user                              &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition                    ${comp_name}  3
 
 Applicant completes Application questions
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
-    Given the user clicks the button/link               link=Application details
-    When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311
+    Given the user clicks the button/link                                                 link=Application details
+    When the user fills in procurement Application details                                ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(procurement)
 
