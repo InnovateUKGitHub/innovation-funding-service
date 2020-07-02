@@ -89,7 +89,7 @@ public class ProjectTeamViewModelPopulator {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
 
-        boolean isReadOnly = statusAccessor.isGrantOfferLetterGenerated() || project.getProjectState().isComplete();
+        boolean isReadOnly = statusAccessor.isGrantOfferLetterGenerated() || project.getProjectState().isComplete() || loggedInUser.getRoles().contains(MONITORING_OFFICER);
 
         return new ProjectTeamViewModel(
                 project,
