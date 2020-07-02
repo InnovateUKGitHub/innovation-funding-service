@@ -22,12 +22,16 @@ public class ApplicationYourOrganisationViewModelPopulator {
 
     @Autowired
     private YourOrganisationRestService yourOrganisationRestService;
+
     @Autowired
     private SectionService sectionService;
+
     @Autowired
     private CompetitionRestService competitionRestService;
+
     @Autowired
     private OrganisationRestService organisationRestService;
+
     @Autowired
     private GrantClaimMaximumRestService grantClaimMaximumRestService;
 
