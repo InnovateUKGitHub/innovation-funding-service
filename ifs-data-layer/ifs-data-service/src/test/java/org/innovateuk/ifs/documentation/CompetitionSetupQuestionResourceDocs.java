@@ -21,6 +21,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("multipleChoice").description("Does this question contain the multiple choice section"),
             fieldWithPath("choices").description("The choices for a multiple choice section"),
             fieldWithPath("appendix").description("Does the question include an appendix section"),
+            fieldWithPath("numberOfUploads").description("The number of appendix uploads allowed"),
             fieldWithPath("allowedAppendixResponseFileTypes").description("Specifies types of files that will be allowed to be uploaded for appendix"),
             fieldWithPath("appendixGuidance").description("Guidance for the file upload field"),
             fieldWithPath("templateDocument").description("Does the question include a template document section"),
@@ -47,6 +48,7 @@ public class CompetitionSetupQuestionResourceDocs {
     public static final CompetitionSetupQuestionResourceBuilder competitionSetupQuestionResourceBuilder = newCompetitionSetupQuestionResource()
             .withQuestionId(1L)
             .withAppendix(false)
+            .withNumberOfUploads(0)
             .withScored(false)
             .withWrittenFeedback(false)
             .withGuidance("guidance")
