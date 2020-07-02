@@ -313,9 +313,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
+        resource.setNumberOfUploads(0);
         resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
-
 
         boolean appendixEnabled = true;
         String guidanceAnswer = "Only excel files with spaghetti VB macros allowed";
@@ -323,6 +323,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(appendixEnabled)
+                .withWordCount(1)
                 .withGuidanceAnswer(guidanceAnswer)
                 .withAllowedFileTypes(asSet(allowedFileTypes))
                 .build();
@@ -349,11 +350,13 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         FileTypeCategory allowedFileTypes = FileTypeCategory.PDF;
 
         resource.setAppendix(false);
+        resource.setNumberOfUploads(0);
         resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(true)
+                .withWordCount(1)
                 .withGuidanceAnswer("Only excel files with spaghetti VB macros allowed")
                 .withAllowedFileTypes(asSet(allowedFileTypes))
                 .build();
@@ -379,6 +382,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
+        resource.setNumberOfUploads(1);
         resource.setAllowedAppendixResponseFileTypes(asSet(PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
@@ -392,8 +396,9 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
-        assertEquals(true, result.isSuccess());
+        assertTrue(result.isSuccess());
         assertTrue(appendixFormInput.getActive());
+        assertEquals(resource.getNumberOfUploads(), appendixFormInput.getWordCount());
         assertEquals(asSet(PDF), appendixFormInput.getAllowedFileTypes());
         assertEquals(fileUploadGuidance, appendixFormInput.getGuidanceAnswer());
     }
@@ -406,6 +411,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
+        resource.setNumberOfUploads(1);
         resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
         resource.setAppendixGuidance(fileUploadGuidance);
 
@@ -415,6 +421,31 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
 
         service.update(resource);
 
+        assertTrue(appendixFormInput.getAllowedFileTypes().contains(PDF));
+        assertTrue(appendixFormInput.getAllowedFileTypes().contains(SPREADSHEET));
+    }
+
+    @Test
+    public void update_shouldAllowMultipleAppendixuploads() {
+        Long questionId = 1L;
+
+        setMocksForSuccessfulUpdate();
+        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
+
+        resource.setAppendix(true);
+        resource.setNumberOfUploads(3);
+        resource.setAllowedAppendixResponseFileTypes(newLinkedHashSet(asSet(PDF, SPREADSHEET)));
+        resource.setAppendixGuidance(fileUploadGuidance);
+
+        FormInput appendixFormInput = newFormInput().build();
+        //Override repository response set in prerequisites test prep function
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertTrue(result.isSuccess());
+        assertTrue(appendixFormInput.getActive());
+        assertEquals(resource.getNumberOfUploads(), appendixFormInput.getWordCount());
         assertTrue(appendixFormInput.getAllowedFileTypes().contains(PDF));
         assertTrue(appendixFormInput.getAllowedFileTypes().contains(SPREADSHEET));
     }
@@ -485,7 +516,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
                 withShortName(QuestionSetupType.SCOPE.getShortName()).build();
 
         FormInput questionFormInput = newFormInput().build();
-        FormInput appendixFormInput = newFormInput().build();
+        FormInput appendixFormInput = newFormInput().withWordCount(0).withActive(false).build();
         FormInput researchCategoryQuestionFormInput = newFormInput().build();
         FormInput scopeQuestionFormInput = newFormInput().build();
         FormInput scoredQuestionFormInput = newFormInput().build();
@@ -575,6 +606,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private CompetitionSetupQuestionResource createValidQuestionResourceWithoutAppendixOptions() {
         return newCompetitionSetupQuestionResource()
                 .withAppendix(false)
+                .withNumberOfUploads(0)
                 .withGuidance(guidance)
                 .withGuidanceTitle(guidanceTitle)
                 .withMaxWords(maxWords)

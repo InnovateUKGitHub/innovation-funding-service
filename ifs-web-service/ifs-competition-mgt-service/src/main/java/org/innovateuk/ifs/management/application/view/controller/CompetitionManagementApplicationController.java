@@ -132,19 +132,20 @@ public class CompetitionManagementApplicationController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
-    @GetMapping("/{applicationId}/forminput/{formInputId}/download")
+    @GetMapping("/{applicationId}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
 
         long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
         processRole = processRoleService.getById(processRoleId).get();
 
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
