@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,18 +38,31 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
     @InjectMocks
     private GenericQuestionReadOnlyViewModelPopulator populator;
 
-    @Test
-    public void populate() {
-        ApplicationResource application = newApplicationResource()
+    private ApplicationResource application;
+
+    private CompetitionResource competition;
+
+    private QuestionResource question;
+
+    private  UserResource user;
+
+    @Before
+    public void setup() {
+        application = newApplicationResource()
                 .build();
-        CompetitionResource competition = newCompetitionResource()
+        competition = newCompetitionResource()
                 .build();
-        QuestionResource question = newQuestionResource()
+        question = newQuestionResource()
                 .withShortName("Question")
                 .withName("Question text?")
                 .withQuestionNumber("1")
                 .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
                 .build();
+        user = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
+    }
+
+    @Test
+    public void populate() {
         FormInputResource textarea = newFormInputResource()
                 .withType(FormInputType.TEXTAREA)
                 .withScope(FormInputScope.APPLICATION)
@@ -97,11 +111,13 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withQuestion(question.getId())
                 .withValue("1")
                 .build();
-        UserResource user = newUserResource().withRoleGlobal(Role.IFS_ADMINISTRATOR).build();
 
-        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(), asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse, templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
+                asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
+                templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
 
-        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data, ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
 
         assertEquals("Some text", viewModel.getAnswer());
         assertEquals("Appendix.pdf", viewModel.getAppendixFilename());
@@ -120,5 +136,27 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
         assertTrue(viewModel.hasAssessorResponse());
         assertEquals("Feedback", viewModel.getFeedback());
         assertEquals("1", viewModel.getScore());
+    }
+
+    @Test
+    public void populateForMultipleChoiceOptions() {
+        FormInputResource multipleChoice = newFormInputResource()
+                .withType(FormInputType.MULTIPLE_CHOICE)
+                .withScope(FormInputScope.APPLICATION)
+                .withQuestion(question.getId())
+                .build();
+
+        FormInputResponseResource multipleChoiceResponse = newFormInputResponseResource()
+                .withFormInputs(multipleChoice.getId())
+                .withMultipleChoiceOptionText("Some text")
+                .build();
+
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
+                asList(multipleChoice), asList(multipleChoiceResponse), emptyList(), emptyList());
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
+
+        assertEquals("Some text", viewModel.getAnswer());
     }
 }

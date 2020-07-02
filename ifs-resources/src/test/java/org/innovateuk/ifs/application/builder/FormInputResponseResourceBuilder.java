@@ -85,6 +85,10 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return with(response -> response.setValue(value));
     }
 
+    public FormInputResponseResourceBuilder withMultipleChoiceOptionText(String value) {
+        return with(response -> response.setMultipleChoiceOptionText(value));
+    }
+
     @Override
     protected FormInputResponseResource createInitial() {
         return new FormInputResponseResource();
