@@ -112,7 +112,7 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
 
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId)).thenReturn(newProcessRole().build());
         when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(newUser().withId(userId).withFirstName("Test").withLastName("User").build()));
-        when(formInputRepositoryMock.findById(formInputId)).thenReturn(Optional.of(newFormInput().withId(formInputId).withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build()));
+        when(formInputRepositoryMock.findById(formInputId)).thenReturn(Optional.of(newFormInput().withId(formInputId).withType(FormInputType.TEXTAREA).withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build()));
         when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(newApplication().with(application -> application.setFormInputResponses(new ArrayList<FormInputResponse>()))
                 .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build()));
 
