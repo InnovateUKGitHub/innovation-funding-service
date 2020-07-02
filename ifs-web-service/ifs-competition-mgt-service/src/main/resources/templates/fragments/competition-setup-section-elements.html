@@ -255,8 +255,8 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="numberOfUploads">
                             <h2 class="govuk-fieldset__heading">Appendix uploads</h2>
-                            <span class="govuk-hint">Choose how many appendices an applicant can upload.</span>
                         </legend>
+                        <span class="govuk-hint">Choose how many appendices an applicant can upload.</span>
                         <th:block th:if="${#fields.hasErrors('numberOfUploads*')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('numberOfUploads*')}"
                               th:text="${err}"></span>
