@@ -263,6 +263,16 @@ function useNexusRegistry() {
     sed -i.bak "s#service\:.*#service\:${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 
+function useBaseNexusRegistry() {
+
+    NEXUS_VERSION=$1
+
+    sed -i.bak "s/imagePullSecretsName/ifs-external-registry/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s# innovateuk/# ${NEXUS_REGISTRY}/base/#g" $(getBuildLocation)/**/*.yml
+    sed -i.bak "s#service\:.*#service\:${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
+}
+
 function pushDBResetImages() {
     docker tag innovateuk/dbreset:latest \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
