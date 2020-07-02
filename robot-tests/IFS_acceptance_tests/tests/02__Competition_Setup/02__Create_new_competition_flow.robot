@@ -478,11 +478,17 @@ Application: Need or challenge
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     Then the user should not see the element     jQuery = dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
+Application: adding a multiple choice question
+    [Documentation]  IFS-7702
+    [Setup]  the user clicks the button/link    link = Edit this question
+    Given the user selects the radio button     typeOfQuestion   MULTIPLE_CHOICE
+    When the user enters three answers
+    Then the user clicks the button/link        jQuery = button:contains('Done')
+
 Application: marking questions as complete
     [Documentation]  IFS-743
     [Tags]  HappyPath
-    When the user clicks the button/link      link = Application
-    Then the user marks question as complete  Public description
+    When the user marks question as complete  Public description
     And the user marks question as complete   Approach and innovation
     And the user marks question as complete   Team and resources
     And the user marks question as complete   Market awareness
@@ -936,3 +942,14 @@ Custom suite teardown
 
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
+
+the user enters three answers
+    the user enters text to a text field    id = question.choices[0].text  Answer one
+    the user enters text to a text field    id = question.choices[1].text  Answer two
+    the user clicks the button/link         jQuery = button:contains("+Add another answer")
+    the user enters text to a text field    id = question.choices[2].text  Answer three
+    the user clicks the button/link         jQuery = button:contains("+Add another answer")
+    the user should see the element         id = question.choices[3].text
+    the user clicks the button/link         id = remove-multiple-choice-row-3
+    the user should not see the element     id = question.choices[3].text
+
