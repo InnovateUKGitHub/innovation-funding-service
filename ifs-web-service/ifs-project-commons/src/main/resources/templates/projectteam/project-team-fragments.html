@@ -8,7 +8,7 @@
             th:text="${user.email}"></td>
         <td class="govuk-table__cell"
             th:classappend="${!user.hasRole} ? 'alignright'">
-            <th:block th:if="${user.removeable}">
+            <th:block th:if="${user.removeable && !model.readOnly}">
                 <th:block th:insert="fragments/modals :: modal-project-team-remove (${user})"/>
                 <a th:attr="data-js-modal=${'modal-project-team-remove-' + user.id}"
                    th:href="@{/project/{projectId}/team/remove-user/{userId}(projectId=${model.projectId},userId=${user.id})}"
