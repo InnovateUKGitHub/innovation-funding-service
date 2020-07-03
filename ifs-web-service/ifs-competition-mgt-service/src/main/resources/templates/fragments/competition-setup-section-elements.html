@@ -40,7 +40,7 @@
                     <dt class="govuk-grid-column-one-third">Answers</dt>
                     <dd class="govuk-grid-column-two-thirds">
                         <th:block th:each="choice : ${question.choices}">
-                            <span th:text="${choice.text}"></span><br/>
+                            <p class="govuk-body" th:text="${choice.text}"></p>
                         </th:block>
                     </dd>
                 </th:block>
@@ -264,7 +264,7 @@
                         </th:block>
                         <div class="govuk-radios govuk-radios--inline">
                             <div class="govuk-radios__item" data-target="text-area-form-group"
-                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                 data-target-clear-validation="true">
                                 <input class="govuk-radios__input"
                                        id="text-area"
                                        type="radio"
@@ -277,7 +277,7 @@
                             </div>
 
                             <div class="govuk-radios__item" data-target="multiple-choice-form-group"
-                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                 data-target-clear-validation="true">
                                 <input class="govuk-radios__input"
                                        id="multiple-choice"
                                        th:field="*{typeOfQuestion}"
@@ -320,7 +320,7 @@
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Answers</th>
-                            <th class="govuk-table__header govuk-!-width-one-third" scope="col"><span class="govuk-visually-hidden">Action</span></th>
+                            <th class="govuk-table__header govuk-!-width-one-third alignright" scope="col"><span class="govuk-visually-hidden">Action</span></th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
@@ -350,7 +350,7 @@
                                                     data-anychange-errormessage=#{validation.competition.setup.multiple.choice.duplicate}"/>
                                     <input type="hidden" th:field="*{question.choices[__${iteration.index}__].id}">
                                 </td>
-                                <td class="govuk-table__cell">
+                                <td class="govuk-table__cell alignright">
                                     <button th:if="${iteration.index > 1}"
                                             class="button-clear alignright" data-remove-row="multipleChoice"
                                             type="button" name="remove-multiple-choice-row"
@@ -362,9 +362,8 @@
                         </th:block>
                         </tbody>
                     </table>
-                    <div class="alignright govuk-!-margin-top-6">
-                        <button class="button-clear" data-add-row="multipleChoice" type="button">+Add another answer
-                        </button>
+                    <div class="alignright">
+                        <button class="button-clear" data-add-row="multipleChoice" type="button">+ Add another answer</button>
                     </div>
                 </div>
             </th:block>
