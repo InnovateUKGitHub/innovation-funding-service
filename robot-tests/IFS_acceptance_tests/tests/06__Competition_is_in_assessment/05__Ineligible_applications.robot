@@ -24,6 +24,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-2994 New Stakeholder role and permissions
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
+...
+...               IFS-7772 Allow applications from all submitted states to be pushed through to project setup from the previous page.
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -31,14 +33,15 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${ineligibleApplication}  Living with Virtual Reality
-${ineligibleApplicationNumber}    ${application_ids['${ineligibleApplication}']}
-${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}
-${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
-${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
-# ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
-${submittedApplication}           Living with Digital Rights Management
-${submittedApplicationNumber}     ${application_ids['${submittedApplication}']}
+${ineligibleApplication}             Living with Virtual Reality
+${ineligibleApplicationNumber}       ${application_ids['${ineligibleApplication}']}
+${ineligibleApplicationOverview}     ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}
+${ineligibleApplications}            ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+${compLinkInPreviousTab}             ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous
+${compLinkInProjectSetup}            ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
+${ineligibleMessage}                 On checking your application we found that it did not meet these requirements.
+${submittedApplication}              Living with Digital Rights Management
+${submittedApplicationNumber}        ${application_ids['${submittedApplication}']}
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
@@ -166,7 +169,20 @@ Stakeholders cannot reinstate an application
     Then the user should see the element       jQuery = dt:contains("Competition name") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should not see the element    css = a[data-js-modal = "modal-reinstate"]
 
+IFS Admin should be able to mark the ineligible application in previous tab as successful and move it to project set up
+    [Documentation]  IFS-7772
+    Given log in as a different user                              &{ifs_admin_user_credentials}
+    And the user navigates to the page                            ${compLinkInPreviousTab}
+    When the user clicks the button/link                          jQuery = button:contains("Open all")
+    And the user clicks the button/link                           jQuery = td:contains("Ineligible") ~ td a:contains("Mark as successful")
+    Then the user clicks the button/link                          name = mark-as-successful
+    And the user should see the application in project setup
+
 *** Keywords ***
+the user should see the application in project setup
+    the user navigates to the page      ${compLinkInProjectSetup}
+    the user should see the element     link = ${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}
+
 the applicant can see his application in the right section
     [Arguments]    ${section}
     Log in as a different user         &{Ineligible_user}
