@@ -46,18 +46,19 @@ public class ApplicationDownloadController {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
     }
 
-    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download")
+    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) {
         ProcessRoleResource processRole = userRestService.findProcessRole(applicationId).getSuccess().stream()
                 .filter(role -> user.getId().equals(role.getUser()))
                 .findAny()
                 .orElseThrow(ObjectNotFoundException::new);
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 

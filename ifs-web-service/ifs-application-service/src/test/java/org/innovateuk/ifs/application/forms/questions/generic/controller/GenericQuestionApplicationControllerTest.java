@@ -99,7 +99,6 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .build();
 
         FormInputResponseResource response = newFormInputResponseResource()
-                .withFileName(null)
                 .build();
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
@@ -230,6 +229,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
     @Test
     public void removeTemplateDocument() throws Exception {
+        long fileEntryId = 10L;
 
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
@@ -250,15 +250,17 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId())).thenReturn(restSuccess());
+                userProcessRole.getId(),
+                fileEntryId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
-                .param("removeTemplateDocument", "true"))
+                .param("removeTemplateDocument", String.valueOf(fileEntryId)))
                 .andExpect(view().name("application/questions/generic"));
 
         verify(formInputResponseRestService).removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId());
+                userProcessRole.getId(),
+                fileEntryId);
         verifyNoMoreInteractions(formInputResponseRestService);
     }
 
@@ -304,6 +306,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
     @Test
     public void removeAppendix() throws Exception {
+        long fileEntryId = 10L;
 
         GenericQuestionApplicationViewModel viewModel = mock(GenericQuestionApplicationViewModel.class);
         ApplicantQuestionResource applicantQuestion = mock(ApplicantQuestionResource.class);
@@ -324,15 +327,17 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId())).thenReturn(restSuccess());
+                userProcessRole.getId(),
+                fileEntryId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
-                .param("removeAppendix", "true"))
+                .param("removeAppendix", String.valueOf(fileEntryId)))
                 .andExpect(view().name("application/questions/generic"));
 
         verify(formInputResponseRestService).removeFileEntry(formInput.getId(),
                 applicationId,
-                userProcessRole.getId());
+                userProcessRole.getId(),
+                fileEntryId);
         verifyNoMoreInteractions(formInputResponseRestService);
     }
 }

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.*;
@@ -48,7 +49,10 @@ public class QuestionFormPopulatorTest {
 
     @Test
     public void populateForm_withoutErrors() {
-        CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withNumberOfUploads(0)
+                .withAppendix(false)
+                .build();
         SectionResource sectionResource = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
@@ -64,7 +68,10 @@ public class QuestionFormPopulatorTest {
 
     @Test
     public void populateForm_questionShouldNotBeRemovableIfLastInSection() {
-        CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withAppendix(false)
+                .withNumberOfUploads(0)
+                .build();
         SectionResource sectionWithOneQuestion = newSectionResource().withQuestions(Arrays.asList(1L)).build();
 
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));
@@ -78,7 +85,10 @@ public class QuestionFormPopulatorTest {
 
     @Test
     public void populateForm_questionShouldBeRemovableIfNotLastInSection() {
-        CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withAppendix(false)
+                .withNumberOfUploads(0)
+                .build();
         SectionResource sectionWithMultipleQuestions = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
         when(questionRestService.findById(questionId)).thenReturn(restSuccess(questionResource));

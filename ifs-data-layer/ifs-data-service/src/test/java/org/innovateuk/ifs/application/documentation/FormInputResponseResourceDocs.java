@@ -16,8 +16,9 @@ public class FormInputResponseResourceDocs {
             fieldWithPath("formInput").type("Number").description("The id of the form input"),
             fieldWithPath("formInputMaxWordCount").description("The max word count of the form input"),
             fieldWithPath("application").type("Number").description("The id of the application for the application"),
-            fieldWithPath("fileEntry").type("Number").description("The id of the file entry"),
-            fieldWithPath("filename").type("String").description("The name of the file"),
-            fieldWithPath("filesizeBytes").description("The size of the file")
+            fieldWithPath("fileEntries[]").description("the file entries"),
+            fieldWithPath("fileEntry").description("The file entry of the form input response"),
+            fieldWithPath("filename").description("The file name of the form input response"),
+            fieldWithPath("filesizeBytes").description("The file size of the form input response")
     };
 }
