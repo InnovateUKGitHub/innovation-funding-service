@@ -76,6 +76,7 @@ IFS.competitionManagement.repeater = (function () {
         case 'multipleChoice':
           inst.closest('[id^="multiple-choice-row-"]').remove()
           IFS.competitionManagement.repeater.reindexRows('[id^="multiple-choice-row-"]')
+          jQuery('#add-multiple-choice-option').show()
           break
       }
     },
@@ -260,7 +261,7 @@ IFS.competitionManagement.repeater = (function () {
       html += '</tr>'
       table.find('tbody').append(html)
     },
-    addMultipleChoiceRow: function () {
+    addMultipleChoiceRow: function (button) {
       var table = jQuery('#multiple-choice-table')
       var count = 0
       if (table.find('tbody tr').length) {
@@ -292,8 +293,11 @@ IFS.competitionManagement.repeater = (function () {
       html = IFS.core.template.replaceInTemplate(html, {
         index: count
       })
-
       table.find('tbody').append(html)
+
+      if (count === 14) {
+        jQuery(button).hide()
+      }
     },
     reindexRows: function (rowSelector) {
       jQuery(rowSelector + ' [name]').each(function () {

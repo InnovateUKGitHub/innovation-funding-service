@@ -40,7 +40,7 @@
                     <dt class="govuk-grid-column-one-third">Answers</dt>
                     <dd class="govuk-grid-column-two-thirds">
                         <th:block th:each="choice : ${question.choices}">
-                            <p class="govuk-body" th:text="${choice.text}"></p>
+                            <div class="govuk-!-margin-bottom-2" th:text="${choice.text}"></div>
                         </th:block>
                     </dd>
                 </th:block>
@@ -363,7 +363,8 @@
                         </tbody>
                     </table>
                     <div class="alignright">
-                        <button class="button-clear" data-add-row="multipleChoice" type="button">+ Add another answer</button>
+                        <button id="add-multiple-choice-option" class="button-clear" data-add-row="multipleChoice" type="button"
+                                th:attr="aria-hidden=${question.choices.size() >= 15} ? 'true' : null">+ Add another answer</button>
                     </div>
                 </div>
             </th:block>
