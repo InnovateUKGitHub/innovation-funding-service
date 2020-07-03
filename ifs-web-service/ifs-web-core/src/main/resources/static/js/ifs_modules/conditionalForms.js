@@ -8,9 +8,19 @@ IFS.core.conditionalForms = (function () {
   return {
     init: function () {
       jQuery('[data-target]').each(function () {
-        var dataTargetContainer = jQuery(this)
-        var dataTarget = dataTargetContainer.attr('data-target')
-        var inputEl = dataTargetContainer.find('input[type="radio"],input[type="checkbox"]')
+        var $this = jQuery(this)
+        var dataTargetContainer
+        var dataTarget
+        var inputEl
+        if ($this.is('option')) {
+          dataTargetContainer = $this.closest('select')
+          dataTarget = $this.attr('data-target')
+          inputEl = $this
+        } else {
+          dataTargetContainer = $this
+          dataTarget = dataTargetContainer.attr('data-target')
+          inputEl = dataTargetContainer.find('input[type="radio"],input[type="checkbox"]')
+        }
 
         // for clearing the form elements in the hidden panel
         var targetClearForm = false
@@ -32,10 +42,16 @@ IFS.core.conditionalForms = (function () {
           // execute on pageload
           IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, targetClearValidation, isInverted)
 
-          // execute on click
-          jQuery('input[name="' + groupName + '"]').on('click', function () {
-            IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, targetClearValidation, isInverted)
-          })
+          if ($this.is('option')) {
+            jQuery(dataTargetContainer).on('change', function () {
+              IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, targetClearValidation, isInverted)
+            })
+          } else {
+            // execute on click
+            jQuery('input[name="' + groupName + '"]').on('click', function () {
+              IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, targetClearValidation, isInverted)
+            })
+          }
         }
       })
     },
@@ -57,6 +73,10 @@ IFS.core.conditionalForms = (function () {
           // All checked (is returns true if only one matches)
           status = !input.is(':not(:checked)')
         }
+      }
+
+      if (input.is('option')) {
+        status = input.is(':selected')
       }
 
       if (status) {

@@ -64,17 +64,21 @@ the lead applicant marks every question as complete
 
 the lead applicant marks every question as complete procurement
     [Arguments]  ${question_link}
-    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
-    the user marks the section as complete procurement
-    the user clicks the button/link             link=Back to application overview
+    the user clicks the button/link                        jQuery=h3 a:contains("${question_link}")
+    the user marks the section as complete procurement     ${question_link}
+    the user clicks the button/link                        link=Back to application overview
 
 the user marks the section as complete
     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link         name=complete
 
 the user marks the section as complete procurement
+    [Arguments]  ${question_link}
     the user enters text to a text field  css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user uploads the file             css = input[name="templateDocument"]    ${valid_pdf}
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user uploads the file  css = input[name="appendix"]    ${valid_pdf}
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user uploads the file  css = input[name="appendix"]    ${ods_file}
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user uploads the file  css = input[name="appendix"]    ${excel_file}
     the user clicks the button/link       name=complete
 
 Create new application with the same user

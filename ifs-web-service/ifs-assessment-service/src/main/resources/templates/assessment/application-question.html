@@ -49,11 +49,13 @@
                     </div>
 
                     <div th:if="${model.appendixExists}">
-                        <div th:replace="question-type/form-elements :: readonly-file-download
-                        (filename=${model.appendixDetails.filename},
-                        filesizeKbytes=${model.appendixDetails.filesizeKbytes},
-                        fileDescription=${model.appendixFileDescription}+':',
-                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
+                        <th:block th:each="appendix : ${model.appendixDetails}">
+                            <div th:replace="question-type/form-elements :: readonly-file-download
+                            (filename=${appendix.filename},
+                            filesizeKbytes=${appendix.filesizeKbytes},
+                            fileDescription=${model.appendixFileDescription}+':',
+                            downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})})" />
+                        </th:block>
                     </div>
 
                     <div th:if="${model.templateDocumentExists}">
@@ -61,7 +63,7 @@
                         (filename=${model.templateDocumentDetails.filename},
                         filesizeKbytes=${model.templateDocumentDetails.filesizeKbytes},
                         fileDescription=${model.templateDocumentFileDescription}+':',
-                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.templateDocumentDetails.formInputId})})" />
+                        downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.templateDocumentDetails.formInputId},fileEntryId=${model.templateDocumentDetails.fileEntryId})})" />
                     </div>
 
                     <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">

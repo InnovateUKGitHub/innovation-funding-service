@@ -298,7 +298,7 @@ public class Application implements ProcessActivity {
     public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {
         Optional<FormInputResponse> existing = getFormInputResponseByFormInputAndProcessRole(formInputResponse.getFormInput(), processRole);
         if (existing.isPresent()) {
-            existing.get().setFileEntry(formInputResponse.getFileEntry());
+            existing.get().setFileEntries(formInputResponse.getFileEntries());
             existing.get().setUpdateDate(formInputResponse.getUpdateDate());
             existing.get().setUpdatedBy(formInputResponse.getUpdatedBy());
             existing.get().setValue(formInputResponse.getValue());

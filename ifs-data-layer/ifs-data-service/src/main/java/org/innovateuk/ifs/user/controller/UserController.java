@@ -72,6 +72,11 @@ public class UserController {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
+    @PostMapping
+    public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
+        return registrationService.createUser(userResource).toPostCreateResponse();
+    }
+
     @GetMapping("/find-by-role/{userRole}")
     public RestResult<List<UserResource>> findByRole(@PathVariable Role userRole) {
         return baseUserService.findByProcessRole(userRole).toGetResponse();

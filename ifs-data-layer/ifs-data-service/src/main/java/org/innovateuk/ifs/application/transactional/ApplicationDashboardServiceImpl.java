@@ -198,7 +198,6 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 application.isSubmitted();
     }
 
-
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {
         PartnerOrganisation partnerOrganisation = getPartnerOrganisation(application, userId);
         return aDashboardInSetupRowResource()

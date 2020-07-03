@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.grant.service.GrantProcessService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -122,6 +123,9 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
 
     @Mock
     protected UserRepository userRepository;
+
+    @Mock
+    private GrantProcessService grantProcessService;
 
     @Before
     public void setUp() {

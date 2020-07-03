@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.Optional;
+
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -38,6 +40,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
     private static final long processRoleId = 789L;
+    private static final long fileEntryId = 111L;
 
     @Test
     public void assessorCanDownloadFilesForApplicationTheyAreAssessing() {
@@ -51,7 +54,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
         Assessment assessment = newAssessment()
                 .withProcessState(AssessmentState.ACCEPTED)
                 .build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, Optional.of(fileEntryId));
 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.ASSESSOR, applicationId))
                 .thenReturn(assessorProcessRole);
@@ -75,7 +78,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
         Assessment assessment = newAssessment()
                 .withProcessState(AssessmentState.PENDING)
                 .build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, Optional.of(fileEntryId));
 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.ASSESSOR, applicationId))
                 .thenReturn(assessorProcessRole);
@@ -94,7 +97,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         ProcessRole assessorProcessRole = newProcessRole().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, Optional.of(fileEntryId));
 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.PANEL_ASSESSOR, applicationId))
                 .thenReturn(assessorProcessRole);
@@ -111,7 +114,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
         ProcessRole assessorProcessRole = newProcessRole().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, Optional.of(fileEntryId));
 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.INTERVIEW_ASSESSOR, applicationId))
                 .thenReturn(assessorProcessRole);
@@ -127,7 +130,7 @@ public class AssessorFormInputResponseFileUploadRulesTest extends BaseUnitTestMo
                 .withRolesGlobal(singletonList(Role.ASSESSOR))
                 .build();
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, Optional.of(fileEntryId));
 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), Role.ASSESSOR, applicationId))
                 .thenReturn(null);
