@@ -27,7 +27,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public GenericQuestionReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
-        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
+        Optional<FormInputResource> answerInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
                 || formInput.getType().equals(MULTIPLE_CHOICE))
                 .findAny();
 
@@ -37,7 +37,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResource> templateDocument = formInputs.stream().filter(formInput -> formInput.getType().equals(TEMPLATE_DOCUMENT))
                 .findAny();
 
-        Optional<FormInputResponseResource> textResponse = textInput
+        Optional<FormInputResponseResource> textResponse = answerInput
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
         Optional<FormInputResponseResource> appendixResponse = appendix
@@ -64,7 +64,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
-                textInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
+                answerInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
                         ? textResponse.map(FormInputResponseResource::getMultipleChoiceOptionText).orElse(null)
                         : textResponse.map(FormInputResponseResource::getValue).orElse(null)).orElse(null),
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
