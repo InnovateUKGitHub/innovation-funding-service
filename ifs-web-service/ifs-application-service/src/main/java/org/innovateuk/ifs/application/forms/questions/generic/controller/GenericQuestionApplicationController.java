@@ -208,11 +208,12 @@ public class GenericQuestionApplicationController {
     public String removeTemplateDocument(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
+                                         @RequestParam("removeTemplateDocument") long fileEntryId,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, user, validationHandler, model);
+        return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, fileEntryId, user, validationHandler, model);
     }
 
     @PostMapping(params = "uploadAppendix")
@@ -230,11 +231,12 @@ public class GenericQuestionApplicationController {
     public String removeAppendix(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
+                                         @RequestParam("removeAppendix") long fileEntryId,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, user, validationHandler, model);
+        return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, fileEntryId, user, validationHandler, model);
     }
 
     @GetMapping("/form-input/{formInputId}/download-template-file")
@@ -269,13 +271,14 @@ public class GenericQuestionApplicationController {
         });
     }
 
-    private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {
+    private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, long fileEntryId, UserResource user, ValidationHandler validationHandler, Model model) {
         FormInputResource formInput = getByType(questionId, type);
         ProcessRoleResource processRole = getUsersProcessRole(applicationId, user);
 
         RestResult<Void> result = formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
-                processRole.getId());
+                processRole.getId(),
+                fileEntryId);
 
         Supplier<String> view = () -> getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
 
@@ -290,7 +293,7 @@ public class GenericQuestionApplicationController {
                     .getByFormInputIdAndApplication(templateDocument.get().getId(), applicationId).getOptionalSuccessObject()
                     .filter(negate(List::isEmpty))
                     .map(responses -> responses.get(0));
-            boolean filePresent = response.map(FormInputResponseResource::getFilename).isPresent();
+            boolean filePresent = response.map(resp -> !resp.getFileEntries().isEmpty()).orElse(false);
             if (!filePresent) {
                 bindingResult.rejectValue("templateDocument", "validation.file.required");
             }

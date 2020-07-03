@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
+import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormInputResponseResource {
     private Long id;
@@ -18,6 +21,9 @@ public class FormInputResponseResource {
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
+    private List<FileEntryResource> fileEntries = new ArrayList<>();
+
+    @ZeroDowntime(description = "remove", reference = "IFS-7311")
     private Long fileEntry;
     private String filename;
     private Long filesizeBytes;
@@ -39,10 +45,8 @@ public class FormInputResponseResource {
         this.formInput = formInput;
         this.application = application.getId();
     }
-
-    public FormInputResponseResource(ZonedDateTime updateDate, Long fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
-        this.fileEntry = fileEntry;
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
@@ -153,6 +157,14 @@ public class FormInputResponseResource {
         this.updatedByUserName = updatedByUserName;
     }
 
+    public List<FileEntryResource> getFileEntries() {
+        return fileEntries;
+    }
+
+    public void setFileEntries(List<FileEntryResource> fileEntries) {
+        this.fileEntries = fileEntries;
+    }
+
     public Long getFileEntry() {
         return fileEntry;
     }
@@ -191,10 +203,5 @@ public class FormInputResponseResource {
 
     public void setMultipleChoiceOptionText(String multipleChoiceOptionText) {
         this.multipleChoiceOptionText = multipleChoiceOptionText;
-    }
-
-    @JsonIgnore
-    public String getHumanReadableFileSize() {
-        return FileUtils.byteCountToDisplaySize(filesizeBytes);
     }
 }

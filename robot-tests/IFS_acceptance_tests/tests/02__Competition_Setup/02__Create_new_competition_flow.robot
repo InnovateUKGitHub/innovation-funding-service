@@ -87,6 +87,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4186 Competition Setup - change layout to separate items not required for open
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
+...
+...               IFS-7310 Internal user can allow multiple appendices in comp creation
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -478,11 +480,17 @@ Application: Need or challenge
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     Then the user should not see the element     jQuery = dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
+Application: adding a multiple choice question
+    [Documentation]  IFS-7702
+    [Setup]  the user clicks the button/link    link = Edit this question
+    Given the user selects the radio button     typeOfQuestion   MULTIPLE_CHOICE
+    When the user enters three answers
+    Then the user clicks the button/link        jQuery = button:contains('Done')
+
 Application: marking questions as complete
-    [Documentation]  IFS-743
+    [Documentation]  IFS-743  IFS-7310
     [Tags]  HappyPath
-    When the user clicks the button/link      link = Application
-    Then the user marks question as complete  Public description
+    When the user marks question as complete  Public description
     And the user marks question as complete   Approach and innovation
     And the user marks question as complete   Team and resources
     And the user marks question as complete   Market awareness
@@ -895,10 +903,12 @@ The user should not see the selected option again
 
 the user marks question as complete
     [Arguments]  ${question_link}
-    the user should not see the element    jQuery = li:contains("${question_link}") .task-status-complete
-    the user clicks the button/link        jQuery = a:contains("${question_link}")
-    the user clicks the button/link        jQuery = button:contains('Done')
-    the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
+    the user should not see the element     jQuery = li:contains("${question_link}") .task-status-complete
+    the user clicks the button/link         jQuery = a:contains("${question_link}")
+    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the radio button     numberOfUploads  3
+    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
+    the user clicks the button/link         jQuery = button:contains('Done')
+    the user should see the element         jQuery = li:contains("${question_link}") .task-status-complete
 
 the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Competition title")
@@ -936,3 +946,14 @@ Custom suite teardown
 
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
+
+the user enters three answers
+    the user enters text to a text field    id = question.choices[0].text  Answer one
+    the user enters text to a text field    id = question.choices[1].text  Answer two
+    the user clicks the button/link         jQuery = button:contains("+Add another answer")
+    the user enters text to a text field    id = question.choices[2].text  Answer three
+    the user clicks the button/link         jQuery = button:contains("+Add another answer")
+    the user should see the element         id = question.choices[3].text
+    the user clicks the button/link         id = remove-multiple-choice-row-3
+    the user should not see the element     id = question.choices[3].text
+

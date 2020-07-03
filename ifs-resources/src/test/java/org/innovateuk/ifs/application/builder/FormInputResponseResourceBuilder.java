@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -45,20 +46,8 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return withList(owningFormInputs, (formInput, formInputResponseResource) -> formInputResponseResource.setFormInput(formInput));
     }
 
-    public FormInputResponseResourceBuilder withFileEntry(Long... fileEntries) {
-        return withArray((fileEntry, formInputResponseResource) -> formInputResponseResource.setFileEntry(fileEntry), fileEntries);
-    }
-
     public FormInputResponseResourceBuilder withApplication(Long applicationId) {
         return with(response -> response.setApplication(applicationId));
-    }
-
-    public FormInputResponseResourceBuilder withFileName(String fileName) {
-        return with(response -> response.setFilename(fileName));
-    }
-
-    public FormInputResponseResourceBuilder withFilesizeBytes(Long filesizeBytes) {
-        return with(response -> response.setFilesizeBytes(filesizeBytes));
     }
 
     public FormInputResponseResourceBuilder withFormInputMaxWordCount(Integer formInputMaxWordCount) {
@@ -84,6 +73,9 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
     public FormInputResponseResourceBuilder withValue(String value) {
         return with(response -> response.setValue(value));
     }
+    public FormInputResponseResourceBuilder withFileEntries(List<FileEntryResource> fileEntryResources) {
+        return with(response -> response.setFileEntries(fileEntryResources));
+    }
 
     public FormInputResponseResourceBuilder withMultipleChoiceOptionId(Long multipleChoiceOptionId) {
         return with(response -> response.setMultipleChoiceOptionId(multipleChoiceOptionId));
@@ -97,4 +89,5 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
     protected FormInputResponseResource createInitial() {
         return new FormInputResponseResource();
     }
+
 }

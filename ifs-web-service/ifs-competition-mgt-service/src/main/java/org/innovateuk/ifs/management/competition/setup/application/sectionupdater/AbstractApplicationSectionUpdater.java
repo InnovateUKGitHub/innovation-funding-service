@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 
 
-public abstract class AbstractApplicationSectionUpdater extends AbstractSectionUpdater {
+public abstract class AbstractApplicationSectionUpdater<T extends AbstractQuestionForm> extends AbstractSectionUpdater {
 
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
@@ -24,8 +24,9 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        AbstractQuestionForm form = (AbstractQuestionForm) competitionSetupForm;
+        T form = (T) competitionSetupForm;
         mapGuidanceRows(form);
+        mapAppendix(form);
         if (form.getTypeOfQuestion() != null) {
             if (form.getTypeOfQuestion() == TypeOfQuestion.FREE_TEXT) {
                 form.getQuestion().setTextArea(true);
@@ -38,6 +39,8 @@ public abstract class AbstractApplicationSectionUpdater extends AbstractSectionU
         return questionSetupCompetitionRestService.save(form.getQuestion()).toServiceResult();
     }
 
-    protected abstract void mapGuidanceRows(AbstractQuestionForm form);
+    protected abstract void mapAppendix(T form);
+
+    protected abstract void mapGuidanceRows(T form);
 
 }

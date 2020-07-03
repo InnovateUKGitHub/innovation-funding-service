@@ -2,6 +2,8 @@
 Documentation    INFUND-5629 As a Competitions team member I want to be able to edit Application Questions individually in Competition Setup so that I can manage the question and associated applicant and assessor guidance in one place
 ...
 ...              INFUND-6468 Competition setup autosave should be validating types, allowing invalid data and doing a complete validate on mark as complete
+...
+...              IFS-7702  Configurable multiple choice questions - Comp setup
 Suite Setup      Custom suite setup
 Force Tags       CompAdmin
 Resource         ../../resources/defaultResources.robot
@@ -25,6 +27,20 @@ Business opportunity Server-side validations setup questions
     And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted upload file types") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see a summary error    ${empty_field_warning_message}
 
+Error messages for Multiple choice question
+    [Documentation]  IFS-7702
+    Given the user selects the radio button     typeOfQuestion   MULTIPLE_CHOICE
+    When the user enters text to a text field   id = question.choices[0].text     ${EMPTY}
+    The user should see the element         jQuery = table:contains("Answers") .govuk-error-message:contains("${empty_field_warning_message}")
+
+Duplicate error for multiple choice question
+    [Documentation]  IFS-7702
+    Given the user enters text to a text field             id = question.choices[0].text     Duplicate
+    And the user enters text to a text field               id = question.choices[1].text     Duplicate
+    When The user clicks the button/link                   jQuery = button:contains("Done")
+    Then the user should see a field and summary error     This is a duplicate.
+    [Teardown]   the user selects the radio button         typeOfQuestion   FREE_TEXT
+
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]
@@ -39,7 +55,7 @@ Business opportunity: Client side validations
     [Tags]
     Given the user fills the empty question fields
     And the user enters text to a text field                            id = question.shortTitle    Test Heading
-    And the user selects the radio button                               question.appendix  0
+    And the user selects the radio button                               numberOfUploads  0
     And the user selects the radio button                               question.templateDocument  0
     And the user fills the empty assessment fields
     Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            ${empty_field_warning_message}
@@ -87,7 +103,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id = question.title          ${EMPTY}
     The user enters text to a text field    id = question.guidanceTitle  ${EMPTY}
     The user enters text to a text field    id = question.maxWords       ${EMPTY}
-    the user selects the radio button       question.appendix  1
+    the user selects the radio button       numberOfUploads  1
     the user clicks the button/link         css = label[for="question.allowedAppendixResponseFileTypes1"]
     the user selects the radio button       question.templateDocument  1
 
@@ -111,11 +127,11 @@ the user should see the correct inputs in the Applications questions form
     Should Be Equal    ${input_value}    Test Heading
     ${input_value} =    Get Value    id = question.title
     Should Be Equal    ${input_value}    Test title
-    ${input_value} =    Get Value    id = question.subTitle
+    ${input_value} =    Get Value    jQuery = label:contains("Question subtitle") + div .editor
     Should Be Equal    ${input_value}    Subtitle test
     ${input_value} =    Get Value    id = question.guidanceTitle
     Should Be Equal    ${input_value}    Test guidance title
-    ${input_value} =    Get Value    id = question.guidance
+    ${input_value} =    Get Value    jQuery = label:contains("Question guidance") + div .editor
     Should Be Equal    ${input_value}    Guidance text test
     ${input_value} =    Get Value    id = question.maxWords
     Should Be Equal    ${input_value}    150

@@ -4,6 +4,10 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...             IFS-5097 Update to overhead costs in procurement application
 ...
 ...             IFS-6368 Loans - Remove Documents
+...
+...             IFS-7310 Internal user can allow multiple appendices in comp creation
+...
+...             IFS-7311 Applicant can upload multiple appendices of allowed file types
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -15,23 +19,25 @@ Resource        ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${comp_name}         Procurement AT Comp
 ${appl_name}         Procurement app
+${ods_file}          file_example_ODS.ods
+${excel_file}        testing.xlsx
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368
-    Given Logging in and Error Checking                          &{Comp_admin1_credentials}
-    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  project-setup-completion-stage  no  2  true  single-or-collaborative
+    [Documentation]  IFS-6368  IFS-7310
+    Given Logging in and Error Checking                &{Comp_admin1_credentials}
+    Then the competition admin creates competition     ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  project-setup-completion-stage  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
-    [Setup]  get competition id and set open date to yesterday  ${comp_name}
-    Given Log in as a different user            &{RTO_lead_applicant_credentials}
-    Then logged in user applies to competition  ${comp_name}  3
+    [Setup]  get competition id and set open date to yesterday    ${comp_name}
+    Given Log in as a different user                              &{RTO_lead_applicant_credentials}
+    Then logged in user applies to competition                    ${comp_name}  3
 
 Applicant completes Application questions
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097
-    Given the user clicks the button/link               link=Application details
-    When the user fills in procurement Application details      ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311
+    Given the user clicks the button/link                                                 link=Application details
+    When the user fills in procurement Application details                                ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
     Then the lead applicant fills all the questions and marks as complete(procurement)
 
@@ -88,14 +94,12 @@ Comp Admin allocates assessor to application
     Then the user clicks the button/link          jQuery = button:contains("Notify assessors")
 
 Allocated assessor assess the application
-    [Documentation]  IFS-2376
-    Given Log in as a different user                       &{assessor_credentials}
-    When The user clicks the button/link                   link = ${comp_name}
-    And the user clicks the button/link                    jQuery = li:contains("${appl_name}") a:contains("Accept or reject")
-    And the user selects the radio button                  assessmentAccept  true
-    Then the user clicks the button/link                   jQuery = .govuk-button:contains("Confirm")
-    And the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard/competition/${competitionId}
-    And the user clicks the button/link                    link = ${appl_name}
+    [Documentation]  IFS-2376  IFS-7311
+    Given Log in as a different user                                                  &{assessor_credentials}
+    And the user accepts the application to assess
+    And the user should be redirected to the correct page                             ${server}/assessment/assessor/dashboard/competition/${competitionId}
+    When the user clicks the button/link                                              link = ${appl_name}
+    Then the user can see multiple appendices uploaded to the application question
     And the assessor submits the assessment
 
 the comp admin closes the assessment and releases feedback
@@ -140,6 +144,18 @@ Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
     Connect to database  @{database}
+
+the user accepts the application to assess
+    the user clicks the button/link       link = ${comp_name}
+    the user clicks the button/link       jQuery = li:contains("${appl_name}") a:contains("Accept or reject")
+    the user selects the radio button     assessmentAccept  true
+    the user clicks the button/link       jQuery = .govuk-button:contains("Confirm")
+
+the user can see multiple appendices uploaded to the application question
+    the user clicks the button/link     jQuery = a:contains("Technical approach")
+    the user should see the element     jQuery = a:contains("${ods_file}")
+    the user should see the element     jQuery = a:contains("${excel_file}")
+    the user clicks the button/link     link = Back to your assessment overview
 
 the user fills in procurement Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
