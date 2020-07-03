@@ -103,9 +103,10 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
                 .filter(multipleChoiceOption -> multipleChoiceOption.getText().equals(formInputResponseCommand.getValue()))
                         .findFirst().orElse(null))
                 .orElse(null);
+        FormInput formInput = optionalFormInput.orElse(null);
 
-        return find(user(userId), formInput(formInputId), openApplication(applicationId)).
-                andOnSuccess((user, formInput, application) ->
+        return find(user(userId), openApplication(applicationId)).
+                andOnSuccess((user, application) ->
                         getOrCreateResponse(application, formInput, userAppRole)
                                 .andOnSuccessReturn(response -> updateAndSaveResponse(formInput, response, htmlUnescapedValue, userAppRole, application, multipleChoiceOptionValue))
                         .andOnSuccessReturn(response -> formInputResponseMapper.mapToResource(response))

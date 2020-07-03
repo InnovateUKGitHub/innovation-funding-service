@@ -25,17 +25,13 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +56,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
-    private static final Logger LOG = LoggerFactory.getLogger(GenericQuestionApplicationController.class);
 
     @Autowired
     private ApplicantRestService applicantRestService;
