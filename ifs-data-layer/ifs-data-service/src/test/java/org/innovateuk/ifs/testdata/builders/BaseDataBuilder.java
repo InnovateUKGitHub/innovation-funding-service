@@ -299,6 +299,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
+        questionSetupCompetitionService = serviceLocator.getBean(QuestionSetupCompetitionService.class);
         questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
