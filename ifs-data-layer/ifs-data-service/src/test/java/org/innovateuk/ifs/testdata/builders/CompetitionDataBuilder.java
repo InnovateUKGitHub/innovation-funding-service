@@ -214,7 +214,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 questionRepository.save(question);
             }
 
-            if (data.getCompetition().getName().equals("Multiple choice comp")) {
+            if (data.getCompetition().getName().contains("Multiple choice")) {
                 CompetitionSetupQuestionResource yesNoQuestion = addMultipleChoiceQuestion(data.getCompetition().getId());
                 yesNoQuestion.setShortTitle("Can you answer this question?");
                 yesNoQuestion.setTitle("Answer this.");
