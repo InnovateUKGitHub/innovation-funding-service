@@ -26,7 +26,7 @@ items:
           name: cache-provider
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 6379
+            - containerPort: 6379
           resources:
             requests:
               memory: 50M
