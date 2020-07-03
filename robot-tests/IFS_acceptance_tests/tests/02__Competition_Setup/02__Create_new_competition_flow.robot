@@ -89,6 +89,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 ...
 ...               IFS-7310 Internal user can allow multiple appendices in comp creation
+...
+...               IFS-7702  Configurable multiple choice questions - Comp setup
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -482,9 +484,9 @@ Application: Need or challenge
 
 Application: adding a multiple choice question
     [Documentation]  IFS-7702
-    [Setup]  the user clicks the button/link    link = Edit this question
-    Given the user selects the radio button     typeOfQuestion   MULTIPLE_CHOICE
-    When the user enters three answers
+    Given the user clicks the button/link       link = Edit this question
+    And the user selects the radio button       typeOfQuestion   MULTIPLE_CHOICE
+    When Comp Admin enters three answer options
     Then the user clicks the button/link        jQuery = button:contains('Done')
 
 Application: marking questions as complete
@@ -947,13 +949,13 @@ Custom suite teardown
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
 
-the user enters three answers
-    the user enters text to a text field    id = question.choices[0].text  Answer one
-    the user enters text to a text field    id = question.choices[1].text  Answer two
-    the user clicks the button/link         jQuery = button:contains("+Add another answer")
-    the user enters text to a text field    id = question.choices[2].text  Answer three
-    the user clicks the button/link         jQuery = button:contains("+Add another answer")
-    the user should see the element         id = question.choices[3].text
-    the user clicks the button/link         id = remove-multiple-choice-row-3
-    the user should not see the element     id = question.choices[3].text
+Comp Admin enters three answer options
+    the user enters text to a text field     id = question.choices[0].text  Answer one
+    the user enters text to a text field     id = question.choices[1].text  Answer two
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+    the user enters text to a text field     id = question.choices[2].text  Answer three
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+    the user should see the element          id = question.choices[3].text
+    the user clicks the button/link          id = remove-multiple-choice-row-3
+    the user should not see the element      id = question.choices[3].text
 

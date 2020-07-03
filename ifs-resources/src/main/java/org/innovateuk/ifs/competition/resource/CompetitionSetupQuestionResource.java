@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -56,6 +57,7 @@ public class CompetitionSetupQuestionResource {
     /* multiple choice */
     private Boolean multipleChoice;
     @Valid
+    @Size(min = 2, max = 15, groups = MultipleChoiceValidationGroup.class)
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
     /* appendix */

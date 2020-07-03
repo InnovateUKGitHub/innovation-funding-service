@@ -214,7 +214,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 questionRepository.save(question);
             }
 
-            if (data.getCompetition().getName().equals("Multiple choice comp")) {
+            if (data.getCompetition().getName().contains("Multiple choice")) {
                 CompetitionSetupQuestionResource yesNoQuestion = addMultipleChoiceQuestion(data.getCompetition().getId());
                 yesNoQuestion.setShortTitle("Can you answer this question?");
                 yesNoQuestion.setTitle("Answer this.");
@@ -230,8 +230,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 questionSetupCompetitionService.update(surveyQuestion);
                 CompetitionSetupQuestionResource manyAnswers = addMultipleChoiceQuestion(data.getCompetition().getId());
                 manyAnswers.setShortTitle("This question has loads of answers");
-                manyAnswers.setTitle("Answer this.");
-                manyAnswers.setSubTitle("<strong>Try picking an answer</strong>");
+                manyAnswers.setTitle("so many answers.");
+                manyAnswers.setSubTitle("<strong>Best letter?</strong>");
                 manyAnswers.setChoices(newArrayList(new MultipleChoiceOptionResource("A"), new MultipleChoiceOptionResource("B"),
                         new MultipleChoiceOptionResource("C"), new MultipleChoiceOptionResource("D"), new MultipleChoiceOptionResource("E"),
                         new MultipleChoiceOptionResource("F"), new MultipleChoiceOptionResource("G"), new MultipleChoiceOptionResource("H"),
