@@ -33,7 +33,7 @@ Error message validation when answer type selected as multiple choice
     When the user enters text to a text field     id = question.choices[0].text     ${EMPTY}
     The user should see the element               jQuery = table:contains("Answers") .govuk-error-message:contains("${empty_field_warning_message}")
 
-Duplicate error message validation when same answers added to multiple choice answers type.
+Duplicate error message validation when same answers added to multiple choice answers type
     [Documentation]  IFS-7702
     Given the user enters text to a text field             id = question.choices[0].text     Duplicate
     And the user enters text to a text field               id = question.choices[1].text     Duplicate
