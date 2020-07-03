@@ -952,9 +952,9 @@ the user check for competition code
 Comp Admin enters three answer options
     the user enters text to a text field     id = question.choices[0].text  Answer one
     the user enters text to a text field     id = question.choices[1].text  Answer two
-    the user clicks the button/link          jQuery = button:contains("+Add another answer")
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
     the user enters text to a text field     id = question.choices[2].text  Answer three
-    the user clicks the button/link          jQuery = button:contains("+Add another answer")
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
     the user should see the element          id = question.choices[3].text
     the user clicks the button/link          id = remove-multiple-choice-row-3
     the user should not see the element      id = question.choices[3].text
