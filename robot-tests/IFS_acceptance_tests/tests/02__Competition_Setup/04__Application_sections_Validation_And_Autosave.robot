@@ -38,7 +38,7 @@ Duplicate error message validation when same answers added to multiple choice an
     Given the user enters text to a text field             id = question.choices[0].text     Duplicate
     And the user enters text to a text field               id = question.choices[1].text     Duplicate
     When The user clicks the button/link                   jQuery = button:contains("Done")
-    Then the user should see a field and summary error     This is a duplicate.
+    Then the user should see a field and summary error     Enter a different answer.
     [Teardown]   the user selects the radio button         typeOfQuestion   FREE_TEXT
 
 Business opportunity Sever-side validations assessment questions

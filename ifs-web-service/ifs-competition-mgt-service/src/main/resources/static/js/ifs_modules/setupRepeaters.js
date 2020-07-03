@@ -280,7 +280,7 @@ IFS.competitionManagement.repeater = (function () {
         '               name="question.choices[$index].text"' +
         '               data-required-errormessage="This field cannot be left blank."/>' +
         '    </td>' +
-        '    <td class="govuk-table__cell">' +
+        '    <td class="govuk-table__cell alignright">' +
         '        <button class="button-clear alignright" data-remove-row="multipleChoice"' +
         '                type="button" name="remove-multiple-choice-row"' +
         '                value="$index"' +
