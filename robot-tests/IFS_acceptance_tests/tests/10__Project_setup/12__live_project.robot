@@ -11,9 +11,6 @@ Project dashboard shows message that the project is live
     Given the lead partner logs in and navigate to applications dashboard
     When the user navigates to the page              ${server}/project-setup/project/${PS_LP_Application_Project_Id}
     Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
-    When log in as a different user                  ${PS_LP_Application_Lead_PM_Email}  ${short_password}
-    And the user navigates to the page               ${server}/project-setup/project/${PS_LP_Application_Project_Id}
-    Then the user should see the element             jQuery = .success-alert:contains("The project is now live and you can review its progress.")
 
 Status indicators should not show
     [Documentation]    INFUND-6376
@@ -31,6 +28,14 @@ Project details section is read-only
     And the user should not see the element     link = Correspondence address
     And the user should not see the element     link = Project Manager
     And the user should not see the element     link = ${Crystalrover_Name}
+    [Teardown]    the user goes back to the previous page
+
+Project Team section is read-only
+    [Documentation]    IFS-7735
+    When the user clicks the button/link        link = Project team
+    Then the user should not see the element    link = Your finance contact
+    And the user should not see the element     name = add-team-member
+    And the user should not see the element     jQuery = button:contains("Remove")
     [Teardown]    the user goes back to the previous page
 
 Bank details section is read-only
