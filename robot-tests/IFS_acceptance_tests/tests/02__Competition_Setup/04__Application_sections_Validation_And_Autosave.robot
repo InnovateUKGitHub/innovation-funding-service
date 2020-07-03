@@ -27,13 +27,13 @@ Business opportunity Server-side validations setup questions
     And the user should see the element    jQuery = .govuk-fieldset__legend:contains("Accepted upload file types") ~ .govuk-error-message:contains("${empty_field_warning_message}")
     And the user should see a summary error    ${empty_field_warning_message}
 
-Error messages for Multiple choice question
+Error message validation when answer type selected as multiple choice
     [Documentation]  IFS-7702
-    Given the user selects the radio button     typeOfQuestion   MULTIPLE_CHOICE
-    When the user enters text to a text field   id = question.choices[0].text     ${EMPTY}
-    The user should see the element         jQuery = table:contains("Answers") .govuk-error-message:contains("${empty_field_warning_message}")
+    Given the user selects the radio button       typeOfQuestion   MULTIPLE_CHOICE
+    When the user enters text to a text field     id = question.choices[0].text     ${EMPTY}
+    The user should see the element               jQuery = table:contains("Answers") .govuk-error-message:contains("${empty_field_warning_message}")
 
-Duplicate error for multiple choice question
+Duplicate error message validation when same answers added to multiple choice answers type.
     [Documentation]  IFS-7702
     Given the user enters text to a text field             id = question.choices[0].text     Duplicate
     And the user enters text to a text field               id = question.choices[1].text     Duplicate
