@@ -165,10 +165,40 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
                 .param("complete", "true")
                 .param("answer", "answer")
-                .param("textAreaActive", "true"))
+                .param("textAreaActive", "true")
+                .param("MultipleChoiceOptionsActive", "false"))
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
 
         verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false);
+        verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
+        verify(validator).validate(any(), any());
+        verifyNoMoreInteractions(questionStatusRestService);
+    }
+
+    @Test
+    public void completeMultipleChoiceOptions() throws Exception {
+
+        ProcessRoleResource userProcessRole = newProcessRoleResource()
+                .withRole(COLLABORATOR)
+                .withUser(loggedInUser)
+                .build();
+        FormInputResource formInput = newFormInputResource()
+                .withType(MULTIPLE_CHOICE)
+                .build();
+
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
+        when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
+        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", false)).thenReturn(restSuccess(noErrors()));
+        when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
+                .param("complete", "true")
+                .param("answer", "Yes")
+                .param("textAreaActive", "false")
+                .param("MultipleChoiceOptionsActive", "true"))
+                .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
+
+        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", false);
         verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
         verify(validator).validate(any(), any());
         verifyNoMoreInteractions(questionStatusRestService);

@@ -13,7 +13,7 @@ public class GenericQuestionApplicationFormValidator {
     }
 
     private void validateTextArea(GenericQuestionApplicationForm form, BindingResult bindingResult) {
-        if (form.isTextAreaActive() && form.getAnswer().trim().length() < 0) {
+        if (form.isTextAreaActive() && form.getAnswer().trim().length() <= 0) {
             bindingResult.rejectValue("answer", "validation.field.please.enter.some.text");
         }
     }

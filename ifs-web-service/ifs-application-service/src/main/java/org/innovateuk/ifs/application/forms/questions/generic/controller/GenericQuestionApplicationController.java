@@ -246,7 +246,7 @@ public class GenericQuestionApplicationController {
     }
 
     private RestResult<ValidationMessages> save(GenericQuestionApplicationForm form, long applicationId, long questionId, UserResource user) {
-        FormInputType formInputType = form.isTextAreaActive() ? FormInputType.TEXTAREA : FormInputType.MULTIPLE_CHOICE;
+        FormInputType formInputType = form.isMultipleChoiceOptionsActive() ? FormInputType.MULTIPLE_CHOICE : FormInputType.TEXTAREA;
         FormInputResource formInput = getByType(questionId, formInputType);
         return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
                 formInput.getId(), form.getAnswer(), false);
