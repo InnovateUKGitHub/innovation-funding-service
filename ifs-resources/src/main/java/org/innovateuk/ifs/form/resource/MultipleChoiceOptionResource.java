@@ -17,6 +17,9 @@ public class MultipleChoiceOptionResource {
         this.id = id;
         this.text = text;
     }
+    public MultipleChoiceOptionResource(String text) {
+        this(null, text);
+    }
 
     public Long getId() {
         return id;
