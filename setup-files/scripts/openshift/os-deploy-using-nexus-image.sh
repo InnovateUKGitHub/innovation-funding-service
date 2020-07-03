@@ -29,9 +29,9 @@ function deploy() {
     if ! $(isNamedEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/shib/55-ldap.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mail/ ${SVC_ACCOUNT_CLAUSE}
-        #oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
-        #oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
-        #oc create -f $(getBuildLocation)/mysql/survey-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/survey-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/redis/cache-provider.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
