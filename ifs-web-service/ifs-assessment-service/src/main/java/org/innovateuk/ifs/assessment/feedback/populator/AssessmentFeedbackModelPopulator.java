@@ -23,15 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Build the model for Assessment Feedback view.
@@ -132,8 +131,16 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
     }
 
     private String getApplicantResponseValue(List<FormInputResource> applicationFormInputs, Map<Long, FormInputResponseResource> applicantResponses) {
-        FormInputResponseResource applicantResponse = applicantResponses.get(applicationFormInputs.get(0).getId());
-        return applicantResponse != null ? applicantResponse.getValue() : null;
+        String applicantResponseValue = applicationFormInputs.stream()
+                .findFirst()
+                .flatMap(input -> applicantResponses.entrySet().stream()
+                        .filter(applicantResponse -> applicantResponse.getKey().equals(input.getId()))
+                        .findFirst()
+                        .map(applicantResponse -> applicantResponse.getValue())
+                        .map(applicantResponse -> input.getType().equals(MULTIPLE_CHOICE) ? applicantResponse.getMultipleChoiceOptionText() : applicantResponse.getValue()))
+                .orElse(null);
+
+        return applicantResponseValue;
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
