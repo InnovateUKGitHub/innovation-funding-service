@@ -12,6 +12,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.MultipleChoiceOption;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -85,8 +86,9 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                         return new FormInputResponse(ZonedDateTime.now(), String.valueOf(choice.getId()), processRoleEntity, formInputEntity, application);
                     });
 
-                    //TODO update with new column on 7703.
-                    formInputResponse.setValue(String.valueOf(choice.getId()));
+                    MultipleChoiceOption multipleChoiceOption = new MultipleChoiceOption(choice.getText(), formInputResponse.getFormInput());
+                    formInputResponse.setMultipleChoiceOption(multipleChoiceOption);
+                    formInputResponse.setValue(choice.getText());
                     formInputResponse.setUpdateDate(ZonedDateTime.now());
                     formInputResponseRepository.save(formInputResponse);
                 })
