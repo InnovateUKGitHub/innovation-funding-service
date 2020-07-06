@@ -60,6 +60,19 @@ public class GrantsInviteControllerTest extends BaseControllerMockMVCTest<Grants
     }
 
     @Test
+    public void deleteInvite() throws Exception {
+        long projectId = 1L;
+        long inviteId = 2L;
+
+        when(grantsInviteService.deleteInvite(inviteId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/grant-invite/{inviteId}/delete", projectId, inviteId))
+                .andExpect(status().isOk());
+
+        verify(grantsInviteService, only()).deleteInvite(inviteId);
+    }
+
+    @Test
     public void getInviteByHash() throws Exception {
         long projectId = 1L;
         final String inviteHash = new UUID(1L, 1L).toString();

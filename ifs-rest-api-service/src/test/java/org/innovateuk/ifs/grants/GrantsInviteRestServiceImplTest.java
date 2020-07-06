@@ -56,6 +56,16 @@ public class GrantsInviteRestServiceImplTest extends BaseRestServiceUnitTest<Gra
     }
 
     @Test
+    public void delete() {
+        long projectId = 1L;
+        long inviteId = 2L;
+
+        setupPostWithRestResultExpectations(format(BASE_URL + "/%d/delete", projectId, inviteId), HttpStatus.OK);
+        RestResult<Void> result = service.deleteInvite(projectId, inviteId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void getInviteByHash() {
         long projectId = 1L;
         String hash = "hashy";

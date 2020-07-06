@@ -67,11 +67,11 @@ public class ManageInvitationsController {
 
         Supplier<String> failureView = () -> viewInvitations(model, projectId, form);
         Supplier<String> successView = () -> {
-            cookieFlashMessageFilter.setFlashMessage(response, "cancelInvite");
+            cookieFlashMessageFilter.setFlashMessage(response, "deleteInvite");
             return String.format("redirect:/project/%d/grants/invite", projectId);
         };
 
-        validationHandler.addAnyErrors(grantsInviteRestService.removeInvite(projectId, inviteId));
+        validationHandler.addAnyErrors(grantsInviteRestService.deleteInvite(projectId, inviteId));
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 }

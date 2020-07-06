@@ -257,8 +257,6 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         } else {
             projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), invite.getOrganisation()));
         }
-
-
     }
 
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {
