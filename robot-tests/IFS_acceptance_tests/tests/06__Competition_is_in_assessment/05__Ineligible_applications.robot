@@ -113,14 +113,14 @@ Support user should see the inelibible application with reason
     And the user should see the element         jQuery = h2:contains("Removed by") ~ p:contains("Ian Cooper, ${today}")
     And the user should see the element         jQuery = h2:contains("Reason for removal") ~ p:contains("This is the reason of why this application is ineligible")
 
-The Administrator should see the ineligible applications in unsuccessful list but he cannot reinstate it
-    [Documentation]  IFS-1458 IFS-1459 IFS-50
+The Administrator should see the ineligible applications in unsuccessful list and he can reinstate it
+    [Documentation]  IFS-1458 IFS-1459 IFS-50 IFS-7772
     [Tags]  Administrator
-    [Setup]  log in as a different user        &{ifs_admin_user_credentials}
-    Given the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/previous
-    And the user expands the section           Applications
-    Then the user should see the element       jQuery = td:contains("${ineligibleApplication}")
-    And the user should not see the element    jQuery = td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
+    [Setup]  log in as a different user      &{ifs_admin_user_credentials}
+    Given the user navigates to the page     ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/previous
+    And the user expands the section         Applications
+    Then the user should see the element     jQuery = td:contains("${ineligibleApplication}")
+    And the user should see the element      jQuery = td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
 Inform a user their application is ineligible
     [Documentation]  INFUND-7374  IFS-1491  IFS-3132
