@@ -16,7 +16,7 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
     public ProjectYourOrganisationViewModel(long applicationId,
                                             String competitionName,
                                             boolean showStateAidAgreement,
-                                            boolean fundingSectionComplete,
+                                            boolean showOrganisationSizeAlert,
                                             boolean h2020,
                                             long projectId,
                                             String projectName,
@@ -26,7 +26,7 @@ public class ProjectYourOrganisationViewModel extends YourOrganisationViewModel 
                                             boolean procurementCompetition,
                                             UserResource loggedInUser,
                                             boolean isAllEligibilityAndViabilityInReview) {
-        super(applicationId, competitionName, showStateAidAgreement, fundingSectionComplete, h2020, procurementCompetition);
+        super(applicationId, competitionName, showStateAidAgreement, showOrganisationSizeAlert, h2020, procurementCompetition);
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;

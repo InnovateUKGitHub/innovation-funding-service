@@ -47,6 +47,14 @@ public class QuestionFormPopulator extends AbstractFormInputQuestionFormPopulato
                 competitionSetupForm.setRemovable(true);
             }
 
+            if (questionResource.getNumberOfUploads() == 0) {
+                competitionSetupForm.setNumberOfUploads(0);
+                questionResource.setAppendix(false);
+            } else {
+                competitionSetupForm.setNumberOfUploads(questionResource.getNumberOfUploads());
+                questionResource.setAppendix(true);
+            }
+
             competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
                 GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
                 competitionSetupForm.getGuidanceRows().add(grvm);

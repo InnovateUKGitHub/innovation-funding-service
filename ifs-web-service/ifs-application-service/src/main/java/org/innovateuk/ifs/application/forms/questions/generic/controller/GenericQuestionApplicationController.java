@@ -25,17 +25,13 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +56,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 @SecuredBySpring(value = "Controller", description = "Only applicants can edit generic question", securedType = GenericQuestionApplicationController.class)
 @PreAuthorize("hasAnyAuthority('applicant')")
 public class GenericQuestionApplicationController {
-    private static final Logger LOG = LoggerFactory.getLogger(GenericQuestionApplicationController.class);
 
     @Autowired
     private ApplicantRestService applicantRestService;
@@ -208,11 +203,12 @@ public class GenericQuestionApplicationController {
     public String removeTemplateDocument(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
+                                         @RequestParam("removeTemplateDocument") long fileEntryId,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, user, validationHandler, model);
+        return handleRemoveFile("templateDocument", FormInputType.TEMPLATE_DOCUMENT, questionId, applicationId, fileEntryId, user, validationHandler, model);
     }
 
     @PostMapping(params = "uploadAppendix")
@@ -230,11 +226,12 @@ public class GenericQuestionApplicationController {
     public String removeAppendix(@ModelAttribute(name = "form") GenericQuestionApplicationForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult,
                                          ValidationHandler validationHandler,
+                                         @RequestParam("removeAppendix") long fileEntryId,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, user, validationHandler, model);
+        return handleRemoveFile("appendix", FormInputType.FILEUPLOAD, questionId, applicationId, fileEntryId, user, validationHandler, model);
     }
 
     @GetMapping("/form-input/{formInputId}/download-template-file")
@@ -246,7 +243,7 @@ public class GenericQuestionApplicationController {
     }
 
     private RestResult<ValidationMessages> save(GenericQuestionApplicationForm form, long applicationId, long questionId, UserResource user) {
-        FormInputType formInputType = form.isTextAreaActive() ? FormInputType.TEXTAREA : FormInputType.MULTIPLE_CHOICE;
+        FormInputType formInputType = form.isMultipleChoiceOptionsActive() ? FormInputType.MULTIPLE_CHOICE : FormInputType.TEXTAREA;
         FormInputResource formInput = getByType(questionId, formInputType);
         return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
                 formInput.getId(), form.getAnswer(), false);
@@ -269,13 +266,14 @@ public class GenericQuestionApplicationController {
         });
     }
 
-    private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {
+    private String handleRemoveFile(String field, FormInputType type, long questionId, long applicationId, long fileEntryId, UserResource user, ValidationHandler validationHandler, Model model) {
         FormInputResource formInput = getByType(questionId, type);
         ProcessRoleResource processRole = getUsersProcessRole(applicationId, user);
 
         RestResult<Void> result = formInputResponseRestService.removeFileEntry(formInput.getId(),
                 applicationId,
-                processRole.getId());
+                processRole.getId(),
+                fileEntryId);
 
         Supplier<String> view = () -> getView(model, applicantRestService.getQuestion(user.getId(), applicationId, questionId));
 
@@ -290,7 +288,7 @@ public class GenericQuestionApplicationController {
                     .getByFormInputIdAndApplication(templateDocument.get().getId(), applicationId).getOptionalSuccessObject()
                     .filter(negate(List::isEmpty))
                     .map(responses -> responses.get(0));
-            boolean filePresent = response.map(FormInputResponseResource::getFilename).isPresent();
+            boolean filePresent = response.map(resp -> !resp.getFileEntries().isEmpty()).orElse(false);
             if (!filePresent) {
                 bindingResult.rejectValue("templateDocument", "validation.file.required");
             }

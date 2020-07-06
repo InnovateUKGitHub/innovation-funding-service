@@ -94,36 +94,32 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     public ServiceResult<FormInputResponseResource> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
         Long applicationId = formInputResponseCommand.getApplicationId();
         Long formInputId = formInputResponseCommand.getFormInputId();
-        String htmlUnescapedValue = formInputResponseCommand.getValue();
+        String value = formInputResponseCommand.getValue();
         Long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId);
-        Optional<FormInput> optionalFormInput = formInputRepository.findById(formInputId);
-        MultipleChoiceOption multipleChoiceOptionValue = optionalFormInput.filter(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE))
-                .map(input -> input.getMultipleChoiceOptions().stream()
-                .filter(multipleChoiceOption -> multipleChoiceOption.getText().equals(formInputResponseCommand.getValue()))
-                        .findFirst().orElse(null))
-                .orElse(null);
 
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->
                         getOrCreateResponse(application, formInput, userAppRole)
-                                .andOnSuccessReturn(response -> updateAndSaveResponse(formInput, response, htmlUnescapedValue, userAppRole, application, multipleChoiceOptionValue))
+                                .andOnSuccessReturn(response -> updateAndSaveResponse(formInput, response, value, userAppRole, application))
                         .andOnSuccessReturn(response -> formInputResponseMapper.mapToResource(response))
                 );
     }
 
-    private FormInputResponse updateAndSaveResponse(FormInput formInput, FormInputResponse response, String htmlUnescapedValue, ProcessRole userAppRole,
-                                                    Application application, MultipleChoiceOption multipleChoiceOption) {
-        if (response.getValue() == null || !response.getValue().equals(htmlUnescapedValue)) {
+    private FormInputResponse updateAndSaveResponse(FormInput formInput, FormInputResponse response, String value, ProcessRole userAppRole, Application application) {
+        if (response.getValue() == null || !response.getValue().equals(value)) {
             response.setUpdateDate(ZonedDateTime.now());
             response.setUpdatedBy(userAppRole);
         }
 
         if (formInput.getType().equals(FormInputType.MULTIPLE_CHOICE)) {
-            response.setValue(multipleChoiceOption.getText());
-            response.setMultipleChoiceOption(multipleChoiceOption);
+            Optional<MultipleChoiceOption> optionalMultipleChoiceOption = formInput.getMultipleChoiceOptions().stream()
+                    .filter(multipleChoiceOption -> multipleChoiceOption.getText().equals(value))
+                    .findFirst();
+            response.setValue(optionalMultipleChoiceOption.map(MultipleChoiceOption::getText).orElse(null));
+            response.setMultipleChoiceOption(optionalMultipleChoiceOption.orElse(null));
         } else {
-            response.setValue(htmlUnescapedValue);
+            response.setValue(value);
         }
 
         application.addFormInputResponse(response, userAppRole);

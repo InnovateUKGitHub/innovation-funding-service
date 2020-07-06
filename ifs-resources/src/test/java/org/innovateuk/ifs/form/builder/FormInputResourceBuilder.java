@@ -6,6 +6,7 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 
 import java.util.List;
 import java.util.Set;
@@ -79,6 +80,10 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
 
     public FormInputResourceBuilder withGuidanceAnswer(String... guidanceAnswers) {
         return withArray((guidanceAnswer, formInput) -> formInput.setGuidanceAnswer(guidanceAnswer), guidanceAnswers);
+    }
+
+    public FormInputResourceBuilder withMultipleChoiceOptions(List<MultipleChoiceOptionResource>... multipleChoiceOptions) {
+        return withArray((multipleChoiceOption, formInput) -> formInput.setMultipleChoiceOptions(multipleChoiceOption), multipleChoiceOptions);
     }
 
     @SafeVarargs
