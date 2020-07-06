@@ -74,7 +74,6 @@ public class FormInput {
     private boolean active = true;
 
     @OneToMany(mappedBy = "formInput", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("text")
     private List<MultipleChoiceOption> multipleChoiceOptions = new ArrayList<>();
 
     @ElementCollection
