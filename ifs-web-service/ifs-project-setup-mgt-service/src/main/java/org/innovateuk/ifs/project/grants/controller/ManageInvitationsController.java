@@ -59,4 +59,19 @@ public class ManageInvitationsController {
         return validationHandler.failNowOrSucceedWith(failureView, successView);
     }
 
+    @SecuredBySpring(value = "MANAGE_INVITATIONS", description = "Only project finance users can manage invitations")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @PostMapping("/grants/invite/cancel")
+    public String cancelInvitation(Model model, @PathVariable long projectId, @ModelAttribute("form") ResendInvitationForm form,
+                                   BindingResult bindingResult, ValidationHandler validationHandler, HttpServletResponse response) {
+
+        Supplier<String> failureView = () -> viewInvitations(model, projectId, form);
+        Supplier<String> successView = () -> {
+            cookieFlashMessageFilter.setFlashMessage(response, "cancelInvite");
+            return String.format("redirect:/project/%d/grants/invite", projectId);
+        };
+
+        validationHandler.addAnyErrors(grantsInviteRestService.cancelInvite(projectId, form.getInviteId()));
+        return validationHandler.failNowOrSucceedWith(failureView, successView);
+    }
 }

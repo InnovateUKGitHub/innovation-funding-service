@@ -205,6 +205,13 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
+    public ServiceResult<Void> cancelInvite(long inviteId) {
+        return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
+                .andOnSuccessReturnVoid(invite -> grantsInviteRepository.deleteById(inviteId));
+    }
+
+    @Override
     public ServiceResult<SentGrantsInviteResource> getInviteByHash(String hash) {
         return find(grantsInviteRepository.getByHash(hash), notFoundError(GrantsInvite.class, hash))
                 .andOnSuccessReturn(this::mapToSentResource);
