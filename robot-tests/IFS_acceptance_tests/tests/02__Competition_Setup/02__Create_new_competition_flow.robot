@@ -87,6 +87,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4186 Competition Setup - change layout to separate items not required for open
 ...
 ...               IFS-4982 Move Funding type selection from front door to Initial details
+...
+...               IFS-7310 Internal user can allow multiple appendices in comp creation
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -479,7 +481,7 @@ Application: Need or challenge
     Then the user should not see the element     jQuery = dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
 Application: marking questions as complete
-    [Documentation]  IFS-743
+    [Documentation]  IFS-743  IFS-7310
     [Tags]  HappyPath
     When the user clicks the button/link      link = Application
     Then the user marks question as complete  Public description
@@ -895,10 +897,12 @@ The user should not see the selected option again
 
 the user marks question as complete
     [Arguments]  ${question_link}
-    the user should not see the element    jQuery = li:contains("${question_link}") .task-status-complete
-    the user clicks the button/link        jQuery = a:contains("${question_link}")
-    the user clicks the button/link        jQuery = button:contains('Done')
-    the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
+    the user should not see the element     jQuery = li:contains("${question_link}") .task-status-complete
+    the user clicks the button/link         jQuery = a:contains("${question_link}")
+    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the radio button     numberOfUploads  3
+    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
+    the user clicks the button/link         jQuery = button:contains('Done')
+    the user should see the element         jQuery = li:contains("${question_link}") .task-status-complete
 
 the user should see the read-only view of the initial details
     the user should see the element    jQuery = dd:contains("Competition title")
