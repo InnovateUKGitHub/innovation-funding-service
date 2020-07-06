@@ -86,8 +86,12 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                         return new FormInputResponse(ZonedDateTime.now(), String.valueOf(choice.getId()), processRoleEntity, formInputEntity, application);
                     });
 
-                    MultipleChoiceOption multipleChoiceOption = new MultipleChoiceOption(choice.getText(), formInputResponse.getFormInput());
-                    formInputResponse.setMultipleChoiceOption(multipleChoiceOption);
+                    FormInput formInput = formInputResponse.getFormInput();
+                    List<MultipleChoiceOption> multipleChoiceOptions = formInput.getMultipleChoiceOptions();
+
+                    formInputResponse.setMultipleChoiceOption(multipleChoiceOptions.stream()
+                            .filter(multipleChoiceOption -> multipleChoiceOption.getId().equals(choice.getId()))
+                            .findFirst().orElse(null));
                     formInputResponse.setValue(choice.getText());
                     formInputResponse.setUpdateDate(ZonedDateTime.now());
                     formInputResponseRepository.save(formInputResponse);
