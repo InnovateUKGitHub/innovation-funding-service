@@ -53,10 +53,10 @@
         </th:block>
 
         <th:block th:unless="${model.readOnly and model.multipleChoiceOptionsActive}">
-            <h3 class="govuk-heading-s">
-                <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
-                <th:block th:text="${model.questionSubtitle}">Project team</th:block>
-            </h3>
+        <h3 class="govuk-heading-s">
+            <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
+            <th:block th:text="${model.questionSubtitle}">Project team</th:block>
+        </h3>
         </th:block>
 
         <th:block th:unless="${model.readOnly}">
@@ -153,7 +153,7 @@
                             </h3>
                         </div>
                         <div class="govuk-grid-column-one-half alignleft">
-                            <p class="govuk-body" th:text="${model.multipleChoiceFormInputText}">Answer</p>
+                            <p class="govuk-body" th:text="${model.multipleChoiceFormInputText ?: 'Question not answered.'}">Answer</p>
                         </div>
                     </div>
                 </div>
