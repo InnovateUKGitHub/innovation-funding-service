@@ -31,8 +31,8 @@ public class GrantsInviteRestServiceImpl extends BaseRestService implements Gran
     }
 
     @Override
-    public RestResult<Void> cancelInvite(long projectId, long inviteId) {
-        return postWithRestResult(format(BASE_URL + "/%d/cancel", projectId, inviteId), Void.class);
+    public RestResult<Void> removeInvite(long projectId, long inviteId) {
+        return postWithRestResult(format(BASE_URL + "/%d/delete", projectId, inviteId), Void.class);
     }
 
     @Override

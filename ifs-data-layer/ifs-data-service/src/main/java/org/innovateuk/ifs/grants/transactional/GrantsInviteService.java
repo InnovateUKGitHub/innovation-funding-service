@@ -28,7 +28,7 @@ public interface GrantsInviteService {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "CANCEL_INVITE",
             description = "The Project finance user can cancel an invite")
-    ServiceResult<Void> cancelInvite(long inviteId);
+    ServiceResult<Void> deleteInvite(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_INVITE_BY_HASH",

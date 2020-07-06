@@ -13,7 +13,7 @@ public interface GrantsInviteRestService {
     RestResult<List<SentGrantsInviteResource>> getAllForProject(long projectId);
     RestResult<Void> invite(long projectId, GrantsInviteResource grantsInviteResource);
     RestResult<Void> resendInvite(long projectId, long inviteId);
-    RestResult<Void> cancelInvite(long projectId, long inviteId);
+    RestResult<Void> removeInvite(long projectId, long inviteId);
     RestResult<SentGrantsInviteResource> getInviteByHash(long projectId, String hash);
     RestResult<Void> acceptInvite(long projectId, long inviteId);
 }

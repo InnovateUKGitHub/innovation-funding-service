@@ -49,11 +49,9 @@
                             <td class="govuk-table__cell verticalalignmiddle" th:text="${grant.grantsInviteRole.displayName}"></td>
                             <td class="govuk-table__cell verticalalignmiddle" th:text="${grant.email}"></td>
                             <td class="govuk-table__cell buttoncolumn alignright">
-                                <form th:action="@{/project/{projectId}/grants/invite/resend(projectId=${model.projectId})}" method="post">
-                                <button name="inviteId" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Resend this invitation</button>
-                                </form>
-                                <form th:action="@{/project/{projectId}/grants/invite/cancel(projectId=${model.projectId})}" method="post">
-                                <button name="inviteId" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Remove</button>
+                                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                <button name="resend-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Resend invitation</button>
+                                <button name="delete-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Remove</button>
                                 </form>
                             </td>
                         </tr>

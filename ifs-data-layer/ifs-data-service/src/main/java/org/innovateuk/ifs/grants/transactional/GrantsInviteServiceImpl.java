@@ -206,7 +206,7 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<Void> cancelInvite(long inviteId) {
+    public ServiceResult<Void> deleteInvite(long inviteId) {
         return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
                 .andOnSuccessReturnVoid(invite -> grantsInviteRepository.deleteById(inviteId));
     }
