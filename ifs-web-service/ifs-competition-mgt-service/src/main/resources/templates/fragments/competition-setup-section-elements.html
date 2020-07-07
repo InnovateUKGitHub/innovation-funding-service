@@ -222,7 +222,7 @@
                        class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        id="question.guidanceTitle"
-                       required="required"
+                       th:required="${question.guidanceRequired ? 'required' : null}"
                        th:name="question.guidanceTitle"
                        th:value="${question.guidanceTitle}"
                        maxlength="255"/>
@@ -242,7 +242,7 @@
                                   class="govuk-textarea"
                                   th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-textarea--error'"
                                   th:name="question.guidance"
-                                  required="required"
+                                  th:required="${question.guidanceRequired ? 'required' : null}"
                                   ifs:utext="${question.guidance}">
                         </textarea>
                 </div>
