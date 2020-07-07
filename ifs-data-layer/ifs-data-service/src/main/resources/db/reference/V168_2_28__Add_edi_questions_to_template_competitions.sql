@@ -1,6 +1,5 @@
 -- competitions 2-9 are template competitions
--- our edi questions will go in the project details section, which are ids:
--- 19, 34, 49, 64, 66, 81, 96, 103
+-- our edi questions will go in the project details section
 
 update question set priority = 3 where competition_id in (2,3,4,5,6,7,8,9) and question_setup_type = 'APPLICATION_DETAILS';
 
