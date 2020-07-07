@@ -52,12 +52,19 @@
             </div>
         </th:block>
 
-        <th:block th:unless="${model.readOnly and model.multipleChoiceOptionsActive}">
-        <h3 class="govuk-heading-s">
-            <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
-            <th:block th:text="${model.questionSubtitle}">Project team</th:block>
-        </h3>
-        </th:block>
+        <div class="clear-floats" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+            <div class="govuk-grid-row govuk-!-margin-top-6" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+                <div class="govuk-grid-column-one-half" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+                    <h3 class="govuk-heading-s">
+                        <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
+                        <th:block th:text="${model.questionSubtitle}">Project team</th:block>
+                    </h3>
+                </div>
+                <div class="govuk-grid-column-one-half alignleft" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+                    <p class="govuk-body" th:text="${model.multipleChoiceFormInputText ?: 'Question not answered.'}">Answer</p>
+                </div>
+            </div>
+        </div>
 
         <th:block th:unless="${model.readOnly}">
             <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"></div>
@@ -141,20 +148,6 @@
                             <option value="" >Please Select</option>
                             <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}" th:value="${multipleChoiceOption.text}" th:text="${multipleChoiceOption.text}"></option>
                         </select>
-                    </div>
-                </div>
-
-                <div class="clear-floats" th:if="${model.readOnly}">
-                    <div class="govuk-grid-row govuk-!-margin-top-6">
-                        <div class="govuk-grid-column-one-half">
-                            <h3 class="govuk-heading-s">
-                                <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
-                                <th:block th:text="${model.questionSubtitle}">Project team</th:block>
-                            </h3>
-                        </div>
-                        <div class="govuk-grid-column-one-half alignleft">
-                            <p class="govuk-body" th:text="${model.multipleChoiceFormInputText ?: 'Question not answered.'}">Answer</p>
-                        </div>
                     </div>
                 </div>
             </th:block>
