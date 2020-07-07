@@ -63,6 +63,19 @@ public class CompetitionSetupApplicationQuestionValidator {
         }
     }
 
+    private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+        if (competitionSetupForm.getNumberOfUploads() != null) {
+            if (competitionSetupForm.getNumberOfUploads() > 0
+                    && isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
+            }
+            if (competitionSetupForm.getNumberOfUploads() > 0
+                    && competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.allowedAppendixResponseFileTypes", "This field cannot be left blank."));
+            }
+        }
+    }
+
     private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
         if(competitionSetupForm.getNumberOfUploads() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
