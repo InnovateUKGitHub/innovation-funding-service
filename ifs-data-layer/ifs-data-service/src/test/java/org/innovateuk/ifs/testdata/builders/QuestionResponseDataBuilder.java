@@ -87,11 +87,11 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                     });
 
                     FormInput formInput = formInputResponse.getFormInput();
-                    List<MultipleChoiceOption> multipleChoiceOptions = formInput.getMultipleChoiceOptions();
+                    MultipleChoiceOption multipleChoiceOption = formInput.getMultipleChoiceOptions().stream()
+                            .filter(option -> option.getId().equals(choice.getId()))
+                            .findFirst().orElse(null);
 
-                    formInputResponse.setMultipleChoiceOption(multipleChoiceOptions.stream()
-                            .filter(multipleChoiceOption -> multipleChoiceOption.getId().equals(choice.getId()))
-                            .findFirst().orElse(null));
+                    formInputResponse.setMultipleChoiceOption(multipleChoiceOption);
                     formInputResponse.setValue(choice.getText());
                     formInputResponse.setUpdateDate(ZonedDateTime.now());
                     formInputResponseRepository.save(formInputResponse);

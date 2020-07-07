@@ -115,7 +115,7 @@ public class CompetitionSetupApplicationQuestionValidator {
         ValidationUtils.invokeValidator(validator, form, bindingResult, MultipleChoiceValidationGroup.class);
 
         List<MultipleChoiceOptionResource> nonNullChoices = form.getQuestion().getChoices().stream().filter(choice -> !isNullOrEmpty(choice.getText())).collect(Collectors.toList());
-        Multimap<String, MultipleChoiceOptionResource> indexedByText = Multimaps.index(nonNullChoices, choice -> choice.getText().trim());
+        Multimap<String, MultipleChoiceOptionResource> indexedByText = Multimaps.index(nonNullChoices, choice -> choice.getText().toLowerCase().trim());
 
         indexedByText.asMap().entrySet().forEach(entry -> {
             if (entry.getValue().size() > 1) {
