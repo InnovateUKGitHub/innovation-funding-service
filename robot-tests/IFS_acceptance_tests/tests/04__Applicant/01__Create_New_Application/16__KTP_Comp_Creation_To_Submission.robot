@@ -20,7 +20,7 @@ ${KTPapplicationTitle}  KTP Application
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  project-setup-completion-stage  yes  1  true  single
+    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  yes  1  true  single
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148

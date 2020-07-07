@@ -49,58 +49,97 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
 
     @Override
     public void configure(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
+        configureOpen(transitions);
+        configureSubmit(transitions);
+        configureReopen(transitions);
+        configureIneligible(transitions);
+        configureReject(transitions);
+        configureApprove(transitions);
+    }
+
+    private void configureOpen(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                    .source(ApplicationState.CREATED)
-                    .event(ApplicationEvent.OPEN)
-                    .action(autoCompleteSectionsAction)
-                    .target(ApplicationState.OPENED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.OPENED)
-                    .event(ApplicationEvent.SUBMIT)
-                    .action(sendFinanceTotalsAction)
-                    .target(ApplicationState.SUBMITTED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.MARK_INELIGIBLE)
-                    .action(markIneligibleAction)
-                    .target(ApplicationState.INELIGIBLE)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.INELIGIBLE)
-                    .event(ApplicationEvent.INFORM_INELIGIBLE)
-                    .target(ApplicationState.INELIGIBLE_INFORMED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.INELIGIBLE)
-                    .event(ApplicationEvent.REINSTATE_INELIGIBLE)
-                    .target(ApplicationState.SUBMITTED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.INELIGIBLE_INFORMED)
-                    .event(ApplicationEvent.REINSTATE_INELIGIBLE)
-                    .target(ApplicationState.SUBMITTED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.APPROVE)
-                    .target(ApplicationState.APPROVED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.REJECT)
-                    .target(ApplicationState.REJECTED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.REJECTED)
-                    .event(ApplicationEvent.APPROVE)
-                    .target(ApplicationState.APPROVED)
-                .and()
-                .withExternal()
-                    .source(ApplicationState.SUBMITTED)
-                    .event(ApplicationEvent.REOPEN)
-                    .target(ApplicationState.OPENED);
+                .source(ApplicationState.CREATED)
+                .event(ApplicationEvent.OPEN)
+                .action(autoCompleteSectionsAction)
+                .target(ApplicationState.OPENED);
     }
+
+    private void configureSubmit(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(ApplicationState.OPENED)
+                .event(ApplicationEvent.SUBMIT)
+                .action(sendFinanceTotalsAction)
+                .target(ApplicationState.SUBMITTED);
+    }
+
+
+    private void configureReopen(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(ApplicationState.SUBMITTED)
+                .event(ApplicationEvent.REOPEN)
+                .target(ApplicationState.OPENED);
+    }
+
+    private void configureIneligible(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(ApplicationState.SUBMITTED)
+                .event(ApplicationEvent.MARK_INELIGIBLE)
+                .action(markIneligibleAction)
+                .target(ApplicationState.INELIGIBLE)
+                .and()
+                .withExternal()
+                .source(ApplicationState.INELIGIBLE)
+                .event(ApplicationEvent.INFORM_INELIGIBLE)
+                .target(ApplicationState.INELIGIBLE_INFORMED)
+                .and()
+                .withExternal()
+                .source(ApplicationState.INELIGIBLE)
+                .event(ApplicationEvent.REINSTATE_INELIGIBLE)
+                .target(ApplicationState.SUBMITTED)
+                .and()
+                .withExternal()
+                .source(ApplicationState.INELIGIBLE_INFORMED)
+                .event(ApplicationEvent.REINSTATE_INELIGIBLE)
+                .target(ApplicationState.SUBMITTED);
+
+    }
+
+    private void configureReject(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(ApplicationState.SUBMITTED)
+                .event(ApplicationEvent.REJECT)
+                .target(ApplicationState.REJECTED);
+    }
+
+
+    private void configureApprove(StateMachineTransitionConfigurer<ApplicationState, ApplicationEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(ApplicationState.SUBMITTED)
+                .event(ApplicationEvent.APPROVE)
+                .target(ApplicationState.APPROVED)
+                .and()
+                .withExternal()
+                .source(ApplicationState.REJECTED)
+                .event(ApplicationEvent.APPROVE)
+                .target(ApplicationState.APPROVED)
+                .and()
+                .withExternal()
+                .source(ApplicationState.INELIGIBLE)
+                .event(ApplicationEvent.APPROVE)
+                .target(ApplicationState.APPROVED)
+                .and()
+                .withExternal()
+                .source(ApplicationState.INELIGIBLE_INFORMED)
+                .event(ApplicationEvent.APPROVE)
+                .target(ApplicationState.APPROVED);
+
+    }
+
 }

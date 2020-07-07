@@ -5,6 +5,23 @@ package org.innovateuk.ifs.competition.resource;
  */
 public enum CompetitionCompletionStage {
 
-    RELEASE_FEEDBACK,
-    PROJECT_SETUP
+    COMPETITION_CLOSE("Competition close", MilestoneType.SUBMISSION_DATE),
+    RELEASE_FEEDBACK("Release feedback", MilestoneType.FEEDBACK_RELEASED),
+    PROJECT_SETUP("Project setup", MilestoneType.FEEDBACK_RELEASED);
+
+    private String displayName;
+    private MilestoneType lastMilestone;
+
+    CompetitionCompletionStage(String displayName, MilestoneType lastMilestone) {
+        this.displayName = displayName;
+        this.lastMilestone = lastMilestone;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public MilestoneType getLastMilestone() {
+        return lastMilestone;
+    }
 }
