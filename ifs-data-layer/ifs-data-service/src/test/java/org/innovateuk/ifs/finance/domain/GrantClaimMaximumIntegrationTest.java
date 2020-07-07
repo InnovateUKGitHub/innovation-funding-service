@@ -217,7 +217,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         50, false, "", FundingType.GRANT, CompetitionCompletionStage.PROJECT_SETUP,
                         true, STANDARD, true, true).
                 withApplicationFormFromTemplate().
-                withNewMilestones().
+                withNewMilestones(CompetitionCompletionStage.PROJECT_SETUP).
                 withOpenDate(ZonedDateTime.now().minus(1, ChronoUnit.DAYS)).
                 withBriefingDate(addDays(1)).
                 withSubmissionDate(addDays(2)).
