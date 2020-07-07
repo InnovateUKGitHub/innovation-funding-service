@@ -42,6 +42,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
@@ -260,6 +262,12 @@ public class CompetitionSetupApplicationController {
                                          Model model) {
         competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult, questionId);
 
+        validateRadioButtons(competitionSetupForm, bindingResult);
+
+        validateAppendix(competitionSetupForm, bindingResult);
+
+        validateFileUploaded(competitionSetupForm, bindingResult, questionId);
+
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
@@ -410,6 +418,55 @@ public class CompetitionSetupApplicationController {
                         successView
                 );
 
+    }
+
+    private void validateAssessmentGuidanceRows(QuestionForm applicationQuestionForm, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(applicationQuestionForm.getQuestion().getWrittenFeedback())) {
+            ValidationUtils.invokeValidator(validator, applicationQuestionForm, bindingResult, GuidanceRowForm.GuidanceRowViewGroup.class);
+        }
+    }
+
+    private void validateScopeGuidanceRows(ProjectForm applicationProjectForm, BindingResult bindingResult) {
+        if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
+            ValidationUtils.invokeValidator(validator, applicationProjectForm, bindingResult, GuidanceRowResource.GuidanceRowGroup.class);
+        }
+    }
+
+    private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+        if (competitionSetupForm.getNumberOfUploads() != null) {
+            if (competitionSetupForm.getNumberOfUploads() > 0
+                && isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
+            }
+            if (competitionSetupForm.getNumberOfUploads() > 0
+                && competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.allowedAppendixResponseFileTypes", "This field cannot be left blank."));
+            }
+        }
+    }
+
+    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+        if (competitionSetupForm.getNumberOfUploads() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
+        }
+        if (competitionSetupForm.getQuestion().getTemplateDocument() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.templateDocument", "This field cannot be left blank."));
+        }
+        if (competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.writtenFeedback", "This field cannot be left blank."));
+        }
+        if (competitionSetupForm.getQuestion().getScored() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.scored", "This field cannot be left blank."));
+        }
+    }
+
+    private void validateFileUploaded(QuestionForm questionForm, BindingResult bindingResult, long questionId) {
+        if (TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
+            CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
+            if (question.getTemplateFilename() == null) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "templateDocumentFile", "You must upload a file."));
+            }
+        }
     }
 
     private String getFinancePage(Model model, CompetitionResource competitionResource, UserResource loggedInUser, boolean isEditable, CompetitionSetupForm form) {
