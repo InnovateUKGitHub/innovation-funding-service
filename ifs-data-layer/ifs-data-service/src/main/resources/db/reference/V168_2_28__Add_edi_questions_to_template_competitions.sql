@@ -4,41 +4,23 @@
 
 update question set priority = 3 where competition_id in (2,3,4,5,6,7,8,9) and question_setup_type = 'APPLICATION_DETAILS';
 
-insert into question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, competition_id, section_id, question_type, question_setup_type)
-values (0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 2, 19, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 3, 34, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 4, 49, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 5, 64, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 6, 66, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 7, 81, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 8, 96, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION'),
-(0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 9, 103, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION');
+insert into question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_type, question_setup_type, competition_id, section_id)
+select 0, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION', c.id as competition_id, s.id as section_id
+FROM section s, competition c
+where s.competition_id = c.id and s.name = 'Project details' and c.template = 1;
 
-insert into form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, priority, question_id, scope, active)
-values (2, 30, 2, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 2 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 3, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 3 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 4, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 4 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 5, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 5 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 6, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 6 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 7, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 7 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 8, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 8 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1),
-(2, 30, 9, 1, 'Equality, diversity and inclusion', 0, (select id from question where competition_id = 9 and short_name = 'Equality, diversity and inclusion'), 'APPLICATION', 1);
+insert into form_input (word_count, form_input_type_id, included_in_application_summary, description, priority, scope, active, competition_id, question_id)
+select 2, 30, 1, 'Equality, diversity and inclusion', 0, 'APPLICATION', 1, c.id as competition_id, q.id as question_id
+FROM competition c, question q
+where q.competition_id = c.id and q.short_name = 'Equality, diversity and inclusion' and c.template = 1;
 
 insert into multiple_choice_option (text, form_input_id)
-values ('Yes', (select id from form_input where competition_id = 2 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 2 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 3 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 3 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 4 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 4 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 5 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 5 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 6 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 6 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 7 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 7 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 8 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 8 and description = 'Equality, diversity and inclusion')),
-('Yes', (select id from form_input where competition_id = 9 and description = 'Equality, diversity and inclusion')),
-('No', (select id from form_input where competition_id = 9 and description = 'Equality, diversity and inclusion'));
+select 'Yes', fi.id as form_input_id
+from form_input fi, competition c
+where fi.competition_id = c.id and c.template = 1 and fi.description = 'Equality, diversity and inclusion';
+
+insert into multiple_choice_option (text, form_input_id)
+select 'No', fi.id as form_input_id
+from form_input fi, competition c
+where fi.competition_id = c.id and c.template = 1 and fi.description = 'Equality, diversity and inclusion';
 
