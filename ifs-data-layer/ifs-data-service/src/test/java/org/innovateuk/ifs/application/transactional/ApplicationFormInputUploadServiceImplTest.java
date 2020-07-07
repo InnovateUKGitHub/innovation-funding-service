@@ -173,7 +173,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(applicationRepositoryMock.findById(456L)).thenReturn(Optional.of(openApplication));
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
         FormInputResponseFileEntryResource resultParts = result.getSuccess();
@@ -214,7 +214,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(fileServiceMock.getFileByFileEntryId(987L)).thenReturn(serviceSuccess(inputStreamSupplier));
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
 
@@ -252,7 +252,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(fileServiceMock.getFileByFileEntryId(987L)).thenReturn(serviceSuccess(inputStreamSupplier));
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(FILES_ALREADY_UPLOADED));
@@ -269,7 +269,7 @@ public class ApplicationFormInputUploadServiceImplTest {
                 thenReturn(serviceFailure(internalServerErrorError()));
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(internalServerErrorError()));
@@ -291,7 +291,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
         FormInputResponseFileEntryResource resultParts = result.getSuccess();
@@ -316,7 +316,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.empty());
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(ProcessRole.class, 789L)));
@@ -340,7 +340,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(FormInput.class, 123L)));
@@ -365,7 +365,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(applicationRepositoryMock.findById(456L)).thenReturn(Optional.empty());
 
         ServiceResult<FormInputResponseFileEntryResource> result =
-                service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
+                service.uploadResponse(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Application.class, 456L)));
