@@ -120,6 +120,7 @@ public class InitialDetailsSectionSaverTest {
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);
         when(milestoneRestService.updateMilestone(any(MilestoneResource.class))).thenReturn(restSuccess());
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(any(), any())).thenReturn(restFailure(new Error("No milestone", HttpStatus.BAD_REQUEST)));
 
         service.saveSection(competition, competitionSetupForm);
 
@@ -328,6 +329,7 @@ public class InitialDetailsSectionSaverTest {
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);
         when(milestoneRestService.updateMilestone(any(MilestoneResource.class))).thenReturn(restSuccess());
+        when(milestoneRestService.getMilestoneByTypeAndCompetitionId(any(), any())).thenReturn(restSuccess(getMilestoneList().get(0)));
 
         service.saveSection(competition, competitionSetupForm);
 
