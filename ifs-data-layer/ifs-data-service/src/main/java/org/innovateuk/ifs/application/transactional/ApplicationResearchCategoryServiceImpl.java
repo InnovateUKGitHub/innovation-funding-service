@@ -14,7 +14,6 @@ import org.innovateuk.ifs.finance.transactional.GrantClaimMaximumService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -140,12 +139,9 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private boolean canResetFundingLevels(Application application) {
-        OrganisationResource organisation = organisationService.findById(application.getLeadOrganisationId()).getSuccess();
-
-        boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(
-                application.getCompetition().getId()).getSuccess();
-
         return !application.getCompetition()
-                .isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), maximumFundingLevelOverridden);
+                .isMaximumFundingLevelConstant(() -> organisationService.findById(application.getLeadOrganisationId()).getSuccess().getOrganisationTypeEnum(),
+                        () -> grantClaimMaximumService.isMaximumFundingLevelOverridden(
+                                application.getCompetition().getId()).getSuccess());
     }
 }

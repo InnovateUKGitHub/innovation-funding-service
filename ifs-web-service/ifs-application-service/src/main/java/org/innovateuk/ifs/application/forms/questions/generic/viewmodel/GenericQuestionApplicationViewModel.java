@@ -6,6 +6,7 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
@@ -33,12 +34,14 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     private final Long appendixFormInputId;
     private final String appendixGuidance;
     private final Set<FileTypeCategory> appendixAllowedFileTypes;
-    private final String appendixFilename;
+    private final List<GenericQuestionAppendix> appendices;
+    private final Integer maximumAppendices;
 
     private final Long templateDocumentFormInputId;
     private final String templateDocumentTitle;
     private final String templateDocumentFilename;
     private final String templateDocumentResponseFilename;
+    private final Long templateDocumentResponseFileEntryId;
 
     private final ZonedDateTime lastUpdated;
     private final String lastUpdatedByName;
@@ -50,7 +53,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     private final AssignButtonsViewModel assignButtonsViewModel;
 
-    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser, String applicationName, String questionName, String questionNumber, String questionSubtitle, String questionDescription, String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType, Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, String appendixFilename, Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename, String templateDocumentResponseFilename, ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel) {
+    public GenericQuestionApplicationViewModel(long applicationId, String competitionName ,long questionId, long currentUser, String applicationName, String questionName, String questionNumber, String questionSubtitle, String questionDescription, String questionGuidanceTitle, String questionGuidance, QuestionSetupType questionType, Long textAreaFormInputId, Integer wordCount, Integer wordsLeft, Long appendixFormInputId, String appendixGuidance, Set<FileTypeCategory> appendixAllowedFileTypes, List<GenericQuestionAppendix> appendices, Integer maximumAppendices, Long templateDocumentFormInputId, String templateDocumentTitle, String templateDocumentFilename, String templateDocumentResponseFilename, Long templateDocumentResponseFileEntryId, ZonedDateTime lastUpdated, String lastUpdatedByName, Long lastUpdatedBy, boolean open, boolean complete, boolean leadApplicant, AssignButtonsViewModel assignButtonsViewModel) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.questionId = questionId;
@@ -69,11 +72,13 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         this.appendixFormInputId = appendixFormInputId;
         this.appendixGuidance = appendixGuidance;
         this.appendixAllowedFileTypes = appendixAllowedFileTypes;
-        this.appendixFilename = appendixFilename;
+        this.appendices = appendices;
+        this.maximumAppendices = maximumAppendices;
         this.templateDocumentFormInputId = templateDocumentFormInputId;
         this.templateDocumentTitle = templateDocumentTitle;
         this.templateDocumentFilename = templateDocumentFilename;
         this.templateDocumentResponseFilename = templateDocumentResponseFilename;
+        this.templateDocumentResponseFileEntryId = templateDocumentResponseFileEntryId;
         this.lastUpdated = lastUpdated;
         this.lastUpdatedByName = lastUpdatedByName;
         this.lastUpdatedBy = lastUpdatedBy;
@@ -157,8 +162,12 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         return appendixAllowedFileTypes;
     }
 
-    public String getAppendixFilename() {
-        return appendixFilename;
+    public List<GenericQuestionAppendix> getAppendices() {
+        return appendices;
+    }
+
+    public Integer getMaximumAppendices() {
+        return maximumAppendices;
     }
 
     public Long getTemplateDocumentFormInputId() {
@@ -175,6 +184,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
     public String getTemplateDocumentResponseFilename() {
         return templateDocumentResponseFilename;
+    }
+
+    public Long getTemplateDocumentResponseFileEntryId() {
+        return templateDocumentResponseFileEntryId;
     }
 
     public ZonedDateTime getLastUpdated() {
@@ -244,10 +257,10 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
     }
 
     public static final class GenericQuestionApplicationViewModelBuilder {
-        private long applicationId;
-        private String competitionName;
         private long questionId;
         private long currentUser;
+        private long applicationId;
+        private String competitionName;
         private String applicationName;
         private String questionName;
         private String questionNumber;
@@ -262,11 +275,13 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         private Long appendixFormInputId;
         private String appendixGuidance;
         private Set<FileTypeCategory> appendixAllowedFileTypes;
-        private String appendixFilename;
+        private List<GenericQuestionAppendix> appendices;
+        private Integer maximumAppendices;
         private Long templateDocumentFormInputId;
         private String templateDocumentTitle;
         private String templateDocumentFilename;
         private String templateDocumentResponseFilename;
+        private Long templateDocumentResponseFileEntryId;
         private ZonedDateTime lastUpdated;
         private String lastUpdatedByName;
         private Long lastUpdatedBy;
@@ -282,11 +297,6 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return new GenericQuestionApplicationViewModelBuilder();
         }
 
-        public GenericQuestionApplicationViewModelBuilder withApplicationId(long applicationId) {
-            this.applicationId = applicationId;
-            return this;
-        }
-
         public GenericQuestionApplicationViewModelBuilder withQuestionId(long questionId) {
             this.questionId = questionId;
             return this;
@@ -297,13 +307,18 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withApplicationName(String applicationName) {
-            this.applicationName = applicationName;
+        public GenericQuestionApplicationViewModelBuilder withApplicationId(long applicationId) {
+            this.applicationId = applicationId;
             return this;
         }
 
         public GenericQuestionApplicationViewModelBuilder withCompetitionName(String competitionName) {
             this.competitionName = competitionName;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withApplicationName(String applicationName) {
+            this.applicationName = applicationName;
             return this;
         }
 
@@ -372,8 +387,13 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
             return this;
         }
 
-        public GenericQuestionApplicationViewModelBuilder withAppendixFilename(String appendixFilename) {
-            this.appendixFilename = appendixFilename;
+        public GenericQuestionApplicationViewModelBuilder withAppendices(List<GenericQuestionAppendix> appendices) {
+            this.appendices = appendices;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withMaximumAppendices(Integer maximumAppendices) {
+            this.maximumAppendices = maximumAppendices;
             return this;
         }
 
@@ -394,6 +414,11 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
 
         public GenericQuestionApplicationViewModelBuilder withTemplateDocumentResponseFilename(String templateDocumentResponseFilename) {
             this.templateDocumentResponseFilename = templateDocumentResponseFilename;
+            return this;
+        }
+
+        public GenericQuestionApplicationViewModelBuilder withTemplateDocumentResponseFileEntryId(Long templateDocumentResponseFileEntryId) {
+            this.templateDocumentResponseFileEntryId = templateDocumentResponseFileEntryId;
             return this;
         }
 
@@ -433,7 +458,7 @@ public class GenericQuestionApplicationViewModel implements BaseAnalyticsViewMod
         }
 
         public GenericQuestionApplicationViewModel build() {
-            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes, appendixFilename, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename, templateDocumentResponseFilename, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant, assignButtonsViewModel);
+            return new GenericQuestionApplicationViewModel(applicationId, competitionName, questionId, currentUser, applicationName, questionName, questionNumber, questionSubtitle, questionDescription, questionGuidanceTitle, questionGuidance, questionType, textAreaFormInputId, wordCount, wordsLeft, appendixFormInputId, appendixGuidance, appendixAllowedFileTypes, appendices, maximumAppendices, templateDocumentFormInputId, templateDocumentTitle, templateDocumentFilename, templateDocumentResponseFilename, templateDocumentResponseFileEntryId, lastUpdated, lastUpdatedByName, lastUpdatedBy, open, complete, leadApplicant, assignButtonsViewModel);
         }
     }
 }

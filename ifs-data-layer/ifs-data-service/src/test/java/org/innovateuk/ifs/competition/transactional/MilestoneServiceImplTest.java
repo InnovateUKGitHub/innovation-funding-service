@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -46,9 +47,10 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     public void setUp() {
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
-                    .withId(1L)
-                    .withNonIfs(false)
-                    .build()));
+                        .withId(1L)
+                        .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                        .withNonIfs(false)
+                        .build()));
 
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {
             @Override
@@ -228,6 +230,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         when(competitionRepository.findById(1L))
                 .thenReturn(Optional.of(newCompetition()
                         .withId(1L)
+                        .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
                         .withNonIfs(true)
                         .build()));
 
@@ -271,7 +274,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         ServiceResult<MilestoneResource> result = service.getMilestoneByTypeAndCompetitionId(NOTIFICATIONS, 1L);
         assertTrue(result.isFailure());
-        assertEquals(result.getErrors().size(),1);
+        assertEquals(result.getErrors().size(), 1);
         assertEquals(result.getErrors().get(0).getStatusCode(), HttpStatus.NOT_FOUND);
     }
 
@@ -338,18 +341,33 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     }
 
     @Test
-    public void updateCompletionStage() {
+    public void updateCompletionStage_noChange() {
 
-        Competition competition = newCompetition().build();
-
-        assertNull(competition.getCompletionStage());
+        Competition competition = newCompetition()
+                .withCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
+                .build();
 
         when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
 
         ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
 
         assertTrue(result.isSuccess());
-        assertEquals(CompetitionCompletionStage.PROJECT_SETUP, competition.getCompletionStage());
+        verifyNoMoreInteractions(milestoneRepository);
+    }
+
+    @Test
+    @Rollback
+    public void updateCompletionStage() {
+
+        Competition competition = newCompetition()
+                .withStartDate(ZonedDateTime.now())
+                .build();
+
+        when(competitionRepository.findById(1L)).thenReturn(Optional.of(competition));
+
+        ServiceResult<Void> result = service.updateCompletionStage(1L, CompetitionCompletionStage.PROJECT_SETUP);
+
+        assertTrue(result.isSuccess());
     }
 
     @Override

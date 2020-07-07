@@ -20,12 +20,16 @@ Documentation   IFS-2945 Withdraw a project from Project Setup
 ...             IFS-6054 Display completed projects in the previous tab
 ...
 ...             IFS-6187 Remove competitions from Project Setup once all projects are completed
+...
+...             IFS-7772 Allow applications from all submitted states to be pushed through to project setup from the previous page.
 Force Tags      Administrator  HappyPath
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/PS_Common.robot
 Resource        ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
+${compLinkInPreviousTab}              ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous
+${compLinkInProjectSetup}             ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
 ${externalProjectWithdrawnMessage}    This project has been withdrawn
 ${unsuccessfulState}                  Unsuccessful
 ${withdrawnState}                     Withdrawn
@@ -72,7 +76,18 @@ The IFS admin checks for compeleted projects on previous tab
     Then the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
     And the user should see applications and withdrawn projects
 
+IFS Admin should be able to mark the ineligible application in previous tab as successful and move it to project set up
+    [Documentation]  IFS-7772
+    Given the user navigates to the page                         ${compLinkInPreviousTab}
+    When the user clicks the button/link                         jQuery = td:contains("Ineligible") ~ td a:contains("Mark as successful")
+    Then the user clicks the button/link                         name = mark-as-successful
+    And the user should see the application in project setup
+
 *** Keywords ***
+the user should see the application in project setup
+    the user navigates to the page      ${compLinkInProjectSetup}
+    the user should see the element     link = ${INELIGIBLE_PROJECT_COMPETITION_NAME_2_NUMBER}
+
 All project sections should be read only
     the user clicks the button/link      css = #table-project-status td:nth-child(3).status.ok a
     the user should not see the element  link = Add team member
