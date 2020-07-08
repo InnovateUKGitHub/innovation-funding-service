@@ -45,7 +45,7 @@ Comp Admin starts a new Competition
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user selects the organisational eligibility to no   false
-    And the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -126,7 +126,7 @@ Once the project growth table is selected
     And the user fills in the CS Funding Information
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user selects the organisational eligibility to no   false
-    And the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     Then the user marks the Application as done                 yes  Sector
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects

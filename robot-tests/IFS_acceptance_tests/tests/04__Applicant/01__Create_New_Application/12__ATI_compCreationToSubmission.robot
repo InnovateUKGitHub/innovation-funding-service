@@ -23,7 +23,7 @@ ${ATIapplicationTitle}  ATI application
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  project-setup-completion-stage  yes  1  true  collaborative
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  PROJECT_SETUP  yes  1  true  collaborative
     And user fills in funding overide
 
 Applicant applies to newly created ATI competition

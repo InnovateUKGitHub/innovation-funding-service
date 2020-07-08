@@ -8,6 +8,14 @@ public class MilestoneResource {
     private ZonedDateTime date;
     private Long competitionId;
 
+    public MilestoneResource() {
+    }
+
+    public MilestoneResource(MilestoneType type, ZonedDateTime date, Long competitionId) {
+        this.type = type;
+        this.date = date;
+        this.competitionId = competitionId;
+    }
 
     public Long getId() {
         return id;
