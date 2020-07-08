@@ -4199,6 +4199,7 @@ Does it meet the scope of the competition as defined in the competition brief?</
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
               <elementProp name="numberOfUploads" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">0</stringProp>
