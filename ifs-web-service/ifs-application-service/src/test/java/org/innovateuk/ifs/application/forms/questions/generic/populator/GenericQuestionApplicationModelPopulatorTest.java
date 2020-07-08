@@ -33,9 +33,7 @@ import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestio
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -106,7 +104,9 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .withAllowedFileTypes(singleton(FileTypeCategory.PDF)).build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileName("appendix.pdf")
+                                                .withFileEntries(newFileEntryResource()
+                                                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                                                        .build(2))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
                                         .build(1))
@@ -118,7 +118,9 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                         .build())
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
-                                                .withFileName("templateresponse.pdf")
+                                                .withFileEntries(newFileEntryResource()
+                                                        .withName("templateresponse.pdf")
+                                                        .build(1))
                                                 .withUpdateDate(now.minusDays(2))
                                                 .build())
                                         .build(1))
@@ -152,7 +154,8 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals(applicantQuestion.getApplicantFormInputs().get(1).getFormInput().getId(), viewModel.getAppendixFormInputId());
         assertEquals("Appendix guidance", viewModel.getAppendixGuidance());
         assertEquals(singleton(FileTypeCategory.PDF), viewModel.getAppendixAllowedFileTypes());
-        assertEquals("appendix.pdf", viewModel.getAppendixFilename());
+        assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());
+        assertEquals("Appendix2.pdf", viewModel.getAppendices().get(1).getFilename());
 
         assertEquals(applicantQuestion.getApplicantFormInputs().get(2).getFormInput().getId(), viewModel.getTemplateDocumentFormInputId());
         assertEquals("Template", viewModel.getTemplateDocumentTitle());

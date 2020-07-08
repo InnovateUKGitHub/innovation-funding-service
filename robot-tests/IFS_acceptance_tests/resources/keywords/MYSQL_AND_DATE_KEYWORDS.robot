@@ -235,18 +235,20 @@ Set predefined date variables
     Run Keyword If  '${status}' == 'FAIL'  Set global date variables
 
 Set global date variables
-    ${month} =          get tomorrow month
+    ${month} =      get tomorrow month
     set global variable  ${month}
-    ${nextMonth} =  get next month
+    ${nextMonth} =      get next month
     set global variable  ${nextMonth}
     ${nextyear} =       get next year
     Set global variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
+    ${tomorrowday} =        get tomorrow day
     Set global variable  ${tomorrowday}
     ${monthWord} =      get month as word
     set global variable  ${monthWord}
     ${nextyearintwodigits}=     get next year in two digits
-    set global variable     ${nextyearintwodigits}
+    set global variable  ${nextyearintwodigits}
+    ${tomorrowMonthWord} =      get tomorrow month as word
+    set global variable  ${tomorrowMonthWord}
 
 Delete user from terms and conditions database
     [Arguments]    ${user_id}

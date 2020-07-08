@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
@@ -264,6 +265,8 @@ public class CompetitionSetupApplicationController {
 
         validateRadioButtons(competitionSetupForm, bindingResult);
 
+        validateAppendix(competitionSetupForm, bindingResult);
+
         validateFileUploaded(competitionSetupForm, bindingResult, questionId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -429,17 +432,30 @@ public class CompetitionSetupApplicationController {
         }
     }
 
-    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if(competitionSetupForm.getQuestion().getAppendix() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendix", "This field cannot be left blank."));
+    private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+        if (competitionSetupForm.getNumberOfUploads() != null) {
+            if (competitionSetupForm.getNumberOfUploads() > 0
+                && isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
+            }
+            if (competitionSetupForm.getNumberOfUploads() > 0
+                && competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.allowedAppendixResponseFileTypes", "This field cannot be left blank."));
+            }
         }
-        if(competitionSetupForm.getQuestion().getTemplateDocument() == null) {
+    }
+
+    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
+        if (competitionSetupForm.getNumberOfUploads() == null) {
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
+        }
+        if (competitionSetupForm.getQuestion().getTemplateDocument() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.templateDocument", "This field cannot be left blank."));
         }
-        if(competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
+        if (competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.writtenFeedback", "This field cannot be left blank."));
         }
-        if(competitionSetupForm.getQuestion().getScored() == null) {
+        if (competitionSetupForm.getQuestion().getScored() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.scored", "This field cannot be left blank."));
         }
     }
