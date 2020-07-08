@@ -251,6 +251,8 @@ the user marks each question as complete
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the radio button     numberOfUploads  3
     Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes1
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user enters text to a text field    css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
     the user clicks the button/link  jQuery = button:contains('Done')
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
 
