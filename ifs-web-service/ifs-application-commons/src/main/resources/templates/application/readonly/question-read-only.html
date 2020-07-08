@@ -17,9 +17,10 @@
                 Uploaded project plan and methodology
             </h1>
             <p class="uploaded-file govuk-body">
-               <a class="govuk-link"
-                   th:href="${model.templateDocumentUrl}"
-                   th:text="|${model.templateDocumentFilename} (opens in a new window)|"
+            <p class="uploaded-file govuk-body">
+                <a class="govuk-link"
+                   th:href="${model.templateFile.url}"
+                   th:text="|${model.templateFile.filename} (opens in a new window)|"
                    target="_blank">file</a>.
             </p>
         </div>
@@ -27,8 +28,8 @@
         <div class="govuk-!-margin-top-6" th:unless="${model.appendices.isEmpty()}">
             <p class="uploaded-file govuk-body" th:each="appendix : ${model.appendices}">
                 <a class="govuk-link"
-                   th:href="${model.appendixUrl}"
-                   th:text="|${model.appendixFilename} (opens in a new window)|"
+                   th:href="${appendix.url}"
+                   th:text="|${appendix.filename} (opens in a new window)|"
                    target="_blank">file</a>.
             </p>
         </div>
