@@ -11,9 +11,14 @@ import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentOverviewViewMo
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +44,8 @@ import static org.innovateuk.ifs.form.resource.SectionType.TERMS_AND_CONDITIONS;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.APPLICATION_TEAM;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_OTHER;
 
 /**
  * Build the model for Assessment Overview view.
@@ -76,6 +83,8 @@ public class AssessmentOverviewModelPopulator {
         List<QuestionResource> questions = questionRestService.findByCompetition(assessment.getCompetition()).getSuccess();
         List<QuestionResource> assessorViewQuestions = new ArrayList<>(questions);
 
+        String termsAndConditionsTerminology = termsAndConditionsTerminology(competition);
+
         return new AssessmentOverviewViewModel(assessmentId,
                 assessment.getApplication(),
                 assessment.getApplicationName(),
@@ -84,7 +93,8 @@ public class AssessmentOverviewModelPopulator {
                 competition.getAssessmentDaysLeftPercentage(),
                 competition.getAssessmentDaysLeft(),
                 getSections(assessment, assessorViewQuestions),
-                getAppendices(assessment.getApplication(), assessorViewQuestions)
+                getAppendices(assessment.getApplication(), assessorViewQuestions),
+                termsAndConditionsTerminology
         );
     }
 
@@ -138,8 +148,10 @@ public class AssessmentOverviewModelPopulator {
         List<FormInputResponseResource> applicantResponses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return applicantResponses.stream()
-                .filter(formInputResponseResource -> formInputResponseResource.getFileEntry() != null)
-                .map(formInputResponseResource -> getAppendix(formInputResponseResource, questionsMap))
+                .filter(formInputResponseResource -> formInputResponseResource.getFileEntries() != null)
+                .flatMap(formInputResponseResource -> formInputResponseResource.getFileEntries().stream()
+                    .map(file -> getAppendix(file, formInputResponseResource, questionsMap))
+                )
                 .collect(toList());
     }
 
@@ -187,17 +199,25 @@ public class AssessmentOverviewModelPopulator {
         return question.getQuestionSetupType() != APPLICATION_TEAM && question.getQuestionSetupType() != RESEARCH_CATEGORY;
     }
 
-    private AssessmentOverviewAppendixViewModel getAppendix(FormInputResponseResource formInputResponse,
-                                                            Map<Long, QuestionResource> questions) {
+    private AssessmentOverviewAppendixViewModel getAppendix(FileEntryResource fileEntry,
+                                                            FormInputResponseResource formInputResponse, Map<Long, QuestionResource> questions) {
         QuestionResource question = questions.get(formInputResponse.getQuestion());
 
-        String size = String.valueOf(BigDecimal.valueOf(formInputResponse.getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
+        String size = String.valueOf(BigDecimal.valueOf(fileEntry.getFilesizeBytes()).divide(ONE_KB, 0, ROUND_UP)) + " KB";
 
         return new AssessmentOverviewAppendixViewModel(
                 formInputResponse.getFormInput(),
+                fileEntry.getId(),
                 ofNullable(question.getShortName()).orElse(question.getName()),
-                formInputResponse.getFilename(),
+                fileEntry.getName(),
                 size
         );
+    }
+
+    private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
+        if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
+            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+        }
+        return TERMS_AND_CONDITIONS_OTHER;
     }
 }

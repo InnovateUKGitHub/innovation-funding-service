@@ -425,21 +425,21 @@ Internal user accepts signed grant offer letter
     [Teardown]   Sleep   60s
 
 Project manager's status should be updated
-    [Documentation]   INFUND-5998, INFUND-6377  IFS-6021
+    [Documentation]   INFUND-5998, INFUND-6377  IFS-6021  IFS-7017
     [Tags]
-    [Setup]    log in as a different user      ${Elbow_Grease_Lead_PM_Email}  ${short_password}
+    [Setup]    log in as a different user                                      ${Elbow_Grease_Lead_PM_Email}  ${short_password}
     Given the user should see live project on dashboard
-    When the user clicks the button/link       link = ${Elbow_Grease_Title}
-    Then the user should see the element       jQuery = .success-alert:contains("The project is live, you can review progress at")
-    And the user should see the element        link = _connect
+    When the user clicks the button/link                                       link = ${Elbow_Grease_Title}
+    Then the user should see project is live with review its progress link
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
     [Tags]
-    [Setup]    log in as a different user    ${Elbow_Grease_Partner_Email}  ${short_password}
-    Given the user navigates to the page     ${server}/project-setup/project/${Elbow_Grease_Project_Id}
-    And the user should see the element      css = li.complete:nth-child(7)
-    And the user should see the element      link = _connect
+    [Setup]    log in as a different user                                      ${Elbow_Grease_Partner_Email}  ${short_password}
+    Given the user navigates to the page                                       ${server}/project-setup/project/${Elbow_Grease_Project_Id}
+    And the user should see the element                                        css = li.complete:nth-child(7)
+    #And the user should see the element      link = review its progress
+    Then the user should see project is live with review its progress link
 
 Non lead can see the GOL approved
     [Documentation]  INFUND-6377
@@ -465,17 +465,17 @@ Non lead cannot see the signed GOL
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Lead_PM_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Lead_PM_Email}    Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Partner_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Partner_Email}    Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
     [Tags]
-    Then the user reads his email    ${Elbow_Grease_Academic_Email}    ${PROJECT_SETUP_COMPETITION_NAME}: Grant offer letter approval for project ${Elbow_Grease_Application_No}    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
+    Then the user reads his email    ${Elbow_Grease_Academic_Email}    Grant offer letter approved for project ${Elbow_Grease_Application_No}    We have accepted your signed grant offer letter for your project:
 
 Internal user should see completed project in previous tab
     [Documentation]  IFS-6054
@@ -559,4 +559,4 @@ the user should see live project on dashboard
 Custom suite setup
     Connect to database  @{database}
     the user logs-in in new browser     ${Elbow_Grease_Lead_PM_Email}  ${short_password}
-    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`id`, `competition_id`, `send_by_default`) VALUES ('1', '${PROJECT_SETUP_COMPETITION}', '1');
+    execute sql string  INSERT INTO `ifs`.`grant_process_configuration` (`competition_id`, `send_by_default`) VALUES ('${PROJECT_SETUP_COMPETITION}', '1');

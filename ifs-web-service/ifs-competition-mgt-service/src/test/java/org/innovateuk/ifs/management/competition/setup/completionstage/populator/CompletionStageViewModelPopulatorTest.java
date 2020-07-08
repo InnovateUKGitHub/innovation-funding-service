@@ -21,6 +21,7 @@ public class CompletionStageViewModelPopulatorTest {
         CompletionStageViewModel viewModel =
                 new CompletionStageViewModelPopulator().populateModel(null, competition);
 
+        assertThat(viewModel.getCompetitionCloseCompletionStage()).isEqualTo(CompetitionCompletionStage.COMPETITION_CLOSE);
         assertThat(viewModel.getReleaseFeedbackCompletionStage()).isEqualTo(CompetitionCompletionStage.RELEASE_FEEDBACK);
         assertThat(viewModel.getProjectSetupCompletionStage()).isEqualTo(CompetitionCompletionStage.PROJECT_SETUP);
     }

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 import javax.validation.Valid;
@@ -22,8 +23,6 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedAppendixResponseFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
@@ -44,34 +43,46 @@ public class CompetitionSetupQuestionResource {
     @NotBlank
     private String guidance;
 
+    /* text area */
+    private Boolean textArea = true;
     @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
 
+    /* multiple choice */
+    private Boolean multipleChoice = false;
+    private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
+
+    /* appendix */
     private Boolean appendix;
+    private Integer numberOfUploads;
     private Set<FileTypeCategory> allowedAppendixResponseFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
 
+    /* template document */
     private Boolean templateDocument;
     private Set<FileTypeCategory> allowedTemplateResponseFileTypes = new LinkedHashSet<>();
     private String templateTitle;
     private String templateFilename;
     private Long templateFormInput;
 
+    /* assessment */
+    private Boolean writtenFeedback;
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
     @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     private Integer assessmentMaxWords;
 
+    /* score */
     private Boolean scored;
     private Integer scoreTotal;
-
-    private Boolean writtenFeedback;
-
     @Valid
     private List<GuidanceRowResource> guidanceRows = new ArrayList<>();
 
+    /* research cat */
     private Boolean researchCategoryQuestion;
+
+    /* scope */
     private Boolean scope;
 
     public Long getQuestionId() {
@@ -128,6 +139,14 @@ public class CompetitionSetupQuestionResource {
 
     public void setAppendix(Boolean appendix) {
         this.appendix = appendix;
+    }
+
+    public Integer getNumberOfUploads() {
+        return numberOfUploads;
+    }
+
+    public void setNumberOfUploads(Integer numberOfUploads) {
+        this.numberOfUploads = numberOfUploads;
     }
 
     public String getAssessmentGuidance() {
@@ -290,6 +309,30 @@ public class CompetitionSetupQuestionResource {
         return asList(PDF, SPREADSHEET, DOCUMENT);
     }
 
+    public List<MultipleChoiceOptionResource> getChoices() {
+        return choices;
+    }
+
+    public void setChoices(List<MultipleChoiceOptionResource> choices) {
+        this.choices = choices;
+    }
+
+    public Boolean getTextArea() {
+        return textArea;
+    }
+
+    public void setTextArea(Boolean textArea) {
+        this.textArea = textArea;
+    }
+
+    public Boolean getMultipleChoice() {
+        return multipleChoice;
+    }
+
+    public void setMultipleChoice(Boolean multipleChoice) {
+        this.multipleChoice = multipleChoice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -309,6 +352,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance, that.guidance)
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
+                .append(numberOfUploads, that.numberOfUploads)
                 .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
                 .append(appendixGuidance, that.appendixGuidance)
                 .append(templateDocument, that.templateDocument)
@@ -339,6 +383,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance)
                 .append(maxWords)
                 .append(appendix)
+                .append(numberOfUploads)
                 .append(allowedAppendixResponseFileTypes)
                 .append(appendixGuidance)
                 .append(templateDocument)

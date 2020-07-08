@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.populator;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GrantTransferDetailsReadOnlyViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.granttransfer.resource.EuGrantTransferResource;
 import org.innovateuk.ifs.granttransfer.service.EuGrantTransferRestService;
@@ -24,7 +25,7 @@ public class GrantTransferDetailsReadOnlyPopulator implements QuestionReadOnlyVi
     }
 
     @Override
-    public GrantTransferDetailsReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public GrantTransferDetailsReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Optional<EuGrantTransferResource> grantTransferResource = grantTransferRestService.findDetailsByApplicationId(data.getApplication().getId()).getOptionalSuccessObject();
         if (grantTransferResource.isPresent()) {
             return new GrantTransferDetailsReadOnlyViewModel(

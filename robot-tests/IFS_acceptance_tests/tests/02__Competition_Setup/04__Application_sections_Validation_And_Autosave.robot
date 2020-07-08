@@ -39,7 +39,7 @@ Business opportunity: Client side validations
     [Tags]
     Given the user fills the empty question fields
     And the user enters text to a text field                            id = question.shortTitle    Test Heading
-    And the user selects the radio button                               question.appendix  0
+    And the user selects the radio button                               numberOfUploads  0
     And the user selects the radio button                               question.templateDocument  0
     And the user fills the empty assessment fields
     Then the validation error above the question should not be visible  css = label[for="question.shortTitle"]            ${empty_field_warning_message}
@@ -87,7 +87,7 @@ the user leaves all the question field empty
     The user enters text to a text field    id = question.title          ${EMPTY}
     The user enters text to a text field    id = question.guidanceTitle  ${EMPTY}
     The user enters text to a text field    id = question.maxWords       ${EMPTY}
-    the user selects the radio button       question.appendix  1
+    the user selects the radio button       numberOfUploads  1
     the user clicks the button/link         css = label[for="question.allowedAppendixResponseFileTypes1"]
     the user selects the radio button       question.templateDocument  1
 
@@ -144,4 +144,4 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    John Doe    id = executiveUserId
     And the user clicks the button twice        css = label[for="stateAid2"]
     And the user clicks the button/link         jQuery = button:contains("Done")
-    And the user clicks the button/link         link = Competition setup
+    And the user clicks the button/link         link = Competition details

@@ -23,7 +23,7 @@ ${ATIapplicationTitle}  ATI application
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
     Given The user logs-in in new browser          &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  project-setup-completion-stage  yes  1  true  collaborative
+    Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  PROJECT_SETUP  yes  1  true  collaborative
     And user fills in funding overide
 
 Applicant applies to newly created ATI competition
@@ -104,14 +104,14 @@ Requesting Project ID of this Project
 
 User fills in funding overide
     the user clicks the button/link                      link = ${ATIcompetitionTitle}
-    the user clicks the button/link                      link = View and update competition setup
+    the user clicks the button/link                      link = View and update competition details
     the user clicks the button/link                      link = Project eligibility
     the user clicks the button/link                      css = .govuk-button[type=submit]
     the user clicks the button twice                     css = label[for="comp-overrideFundingRules-yes"]
     the user enters text to a text field                 id = fundingLevelPercentageOverride  100
     the user clicks the button/link                      jQuery = button:contains("Done")
     the user should see the element                      jQuery = dt:contains("Funding level") ~ dd:contains("100%")
-    the user clicks the button/link                      link = Competition setup
+    the user clicks the button/link                      link = Competition details
     the user clicks the button/link                      jQuery = a:contains("Complete")
     the user clicks the button/link                      css = button[type="submit"]
 

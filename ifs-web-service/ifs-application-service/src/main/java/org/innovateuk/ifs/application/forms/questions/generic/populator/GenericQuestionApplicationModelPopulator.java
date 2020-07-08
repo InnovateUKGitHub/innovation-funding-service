@@ -3,23 +3,28 @@ package org.innovateuk.ifs.application.forms.questions.generic.populator;
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionAppendix;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel.GenericQuestionApplicationViewModelBuilder;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel.GenericQuestionApplicationViewModelBuilder.aGenericQuestionApplicationViewModel;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
@@ -74,14 +79,15 @@ public class GenericQuestionApplicationModelPopulator {
         viewModelBuilder.withTemplateDocumentFormInputId(input.getFormInput().getId())
                 .withTemplateDocumentTitle(input.getFormInput().getDescription())
                 .withTemplateDocumentFilename(input.getFormInput().getFile().getName())
-                .withTemplateDocumentResponseFilename(filenameResponseOrNull(input));
+                .withTemplateDocumentResponseFilename(firstFilenameResponseOrNull(input));
     }
 
     private void buildAppendixViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
         viewModelBuilder.withAppendixFormInputId(input.getFormInput().getId())
                 .withAppendixGuidance(input.getFormInput().getGuidanceAnswer())
-                .withAppendixFilename(filenameResponseOrNull(input))
-                .withAppendixAllowedFileTypes(input.getFormInput().getAllowedFileTypes());
+                .withAppendices(appendices(input))
+                .withAppendixAllowedFileTypes(input.getFormInput().getAllowedFileTypes())
+                .withMaximumAppendices(input.getFormInput().getWordCount());
     }
 
     private void buildTextAreaViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
@@ -92,9 +98,20 @@ public class GenericQuestionApplicationModelPopulator {
                 .withWordsLeft(firstResponse(input).map(FormInputResponseResource::getWordCountLeft).orElse(input.getFormInput().getWordCount()));
     }
 
-    private String filenameResponseOrNull(ApplicantFormInputResource input) {
+    private List<GenericQuestionAppendix> appendices(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .map(FormInputResponseResource::getFilename)
+                .map(resp -> resp.getFileEntries()
+                        .stream()
+                        .map(file -> new GenericQuestionAppendix(file.getId(), file.getName()))
+                        .collect(toList()))
+                .orElse(emptyList());
+
+    }
+
+    private String firstFilenameResponseOrNull(ApplicantFormInputResource input) {
+        return firstResponse(input)
+                .flatMap(resp -> resp.getFileEntries().stream().findFirst())
+                .map(FileEntryResource::getName)
                 .orElse(null);
     }
 
@@ -104,5 +121,4 @@ public class GenericQuestionApplicationModelPopulator {
                 .findAny() //Generic questions only have one respsonse.
                 .map(ApplicantFormInputResponseResource::getResponse);
     }
-
 }

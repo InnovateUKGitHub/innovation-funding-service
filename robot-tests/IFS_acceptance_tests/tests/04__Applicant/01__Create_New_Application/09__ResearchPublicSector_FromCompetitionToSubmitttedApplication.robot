@@ -96,7 +96,7 @@ The competition admin creates a competition for
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%
     the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
+    the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user removes the Project details questions and marks the Application section as done  yes  Generic
     the user fills in the CS Assessors
@@ -166,7 +166,7 @@ the internal user can see that the Generic competition has only one Application 
     the user clicks the button/link                   link = 1. Edit this question
     the user is able to configure the new question    ${customQuestion}
     the user should be able to see the read only view of question correctly  ${customQuestion}
-    the user clicks the button/link                   link = Competition setup
+    the user clicks the button/link                   link = Competition details
 
 Custom suite teardown
     Close browser and delete emails

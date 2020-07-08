@@ -54,7 +54,7 @@ The competition admin creates The Prince's Trust Comp
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  false  single-or-collaborative  # 1 means 30%
     the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     release-feedback-completion-stage   ${month}   ${nextyear}
+    the user fills in the CS Milestones                     RELEASE_FEEDBACK   ${month}   ${nextyear}
     the user marks the Application as done(Prince's Trust comp)
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
@@ -78,7 +78,7 @@ the user marks the Application as done(Prince's Trust comp)
     the assessed questions are marked complete(EOI type)
     the user opts no finances for EOI comp
     the user clicks the button/link             jQuery=button:contains("Done")
-    the user clicks the button/link             link=Competition setup
+    the user clicks the button/link             link=Competition details
     the user should see the element             jQuery=div:contains("Application") ~ .task-status-complete
 
 the lead applicant answers the four sections as complete

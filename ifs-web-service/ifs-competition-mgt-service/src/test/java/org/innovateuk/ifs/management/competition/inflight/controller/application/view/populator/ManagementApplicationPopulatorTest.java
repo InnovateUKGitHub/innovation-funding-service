@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -88,23 +87,23 @@ public class ManagementApplicationPopulatorTest {
         when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
 
         FormInputResource appendix = newFormInputResource().build();
-        FileEntryResource file = newFileEntryResource()
-                .withName("My file")
-                .build();
         FormInputResponseResource response = newFormInputResponseResource()
                 .withFormInputs(singletonList(appendix.getId()))
-                .withFileEntry(file.getId())
+                .withFileEntries(newFileEntryResource()
+                .withName("Appendix1.pdf", "Appendix2.pdf")
+                .withFilesizeBytes(1024L)
+                .build(2))
                 .build();
         when(formInputResponseRestService.getResponsesByApplicationId(application.getId())).thenReturn(restSuccess(singletonList(response)));
         when(formInputRestService.getById(appendix.getId())).thenReturn(restSuccess(appendix));
-        when(fileEntryRestService.findOne(file.getId())).thenReturn(restSuccess(file));
 
         ManagementApplicationViewModel actual = target.populate(application.getId(), user);
 
         assertEquals(application, actual.getApplication());
         assertEquals(competition, actual.getCompetition());
-        assertEquals(1, actual.getAppendices().size());
-        assertEquals("My file", actual.getAppendices().get(0).getName());
+        assertEquals(2, actual.getAppendices().size());
+        assertEquals("Appendix1.pdf", actual.getAppendices().get(0).getName());
+        assertEquals("Appendix2.pdf", actual.getAppendices().get(1).getName());
 
         assertTrue(actual.isCanMarkAsIneligible());
         assertTrue(actual.isCanReinstate());

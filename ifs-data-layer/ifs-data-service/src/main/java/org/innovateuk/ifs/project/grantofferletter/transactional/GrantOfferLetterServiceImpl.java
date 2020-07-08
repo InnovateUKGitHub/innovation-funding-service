@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -494,7 +495,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("applicationId", project.getApplication().getId());
-        notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
+        notificationArguments.put("projectName", project.getName());
+        notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+        notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
 
         Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 

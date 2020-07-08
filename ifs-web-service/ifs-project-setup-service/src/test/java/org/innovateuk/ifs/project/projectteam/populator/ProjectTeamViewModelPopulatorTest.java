@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBui
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -75,6 +76,7 @@ public class ProjectTeamViewModelPopulatorTest {
                 .withCompetition(competition.getId())
                 .withName("Imaginative project name")
                 .withMonitoringOfficerUser(789L)
+                .withProjectState(SETUP)
                 .build();
         OrganisationResource leadOrg = newOrganisationResource()
                 .withName("Imaginative organisation name")
@@ -121,6 +123,7 @@ public class ProjectTeamViewModelPopulatorTest {
         assertFalse(model.isUserLeadPartner());
         assertEquals((long) loggedInUser.getId(), model.getLoggedInUserId());
         assertFalse(model.isInternalUserView());
+        assertFalse(model.isReadOnly());
         assertEquals(2, model.getPartners().size());
 
         ProjectTeamOrganisationViewModel partnerOneViewModel = model.getPartners().stream().filter(view -> view.getId() == partnerOne.getId()).findAny().get();

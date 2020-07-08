@@ -184,7 +184,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details/readonly", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details"))
                 .andReturn();

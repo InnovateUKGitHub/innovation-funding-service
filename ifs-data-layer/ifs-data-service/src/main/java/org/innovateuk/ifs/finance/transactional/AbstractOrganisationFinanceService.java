@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -161,10 +160,9 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
                                               long competitionId,
                                               long userId) {
         CompetitionResource competition = competitionService.getCompetitionById(competitionId).getSuccess();
-        OrganisationResource organisation = organisationService.findById(finance.getOrganisation()).getSuccess();
-        boolean maximumFundingLevelOverridden = grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).getSuccess();
 
-        if (!competition.isMaximumFundingLevelConstant(organisation.getOrganisationTypeEnum(), maximumFundingLevelOverridden)) {
+        if (!competition.isMaximumFundingLevelConstant(() -> organisationService.findById(finance.getOrganisation()).getSuccess().getOrganisationTypeEnum(),
+                () -> grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId).getSuccess())) {
             resetYourFundingSection(finance, competitionId, userId);
             resetFundingLevel(finance);
         }
