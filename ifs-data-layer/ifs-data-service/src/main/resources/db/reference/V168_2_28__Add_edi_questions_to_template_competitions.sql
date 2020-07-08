@@ -11,6 +11,11 @@ select 2, 30, 1, 'Equality, diversity and inclusion', 0, 'APPLICATION', 1, c.id 
 FROM competition c, question q
 where q.competition_id = c.id and q.short_name = 'Equality, diversity and inclusion' and c.template = 1;
 
+insert into form_input_validator (form_validator_id, form_input_id)
+select 11, fi.id as form_input_id
+from form_input fi, competition c
+where fi.competition_id = c.id and c.template = 1 and fi.description = 'Equality, diversity and inclusion';
+
 insert into multiple_choice_option (text, form_input_id)
 select 'Yes', fi.id as form_input_id
 from form_input fi, competition c
