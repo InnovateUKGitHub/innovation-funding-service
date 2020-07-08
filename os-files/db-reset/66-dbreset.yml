@@ -69,11 +69,11 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: LDAP_PORT
-            - name: LDAP_PASS
+            - name: LDAP_PASSWORD
               valueFrom:
                 configMapKeyRef:
                   name: ldap-config
-                  key: LDAP_PASS
+                  key: LDAP_PASSWORD
             - name: LDAP_DOMAIN
               valueFrom:
                 configMapKeyRef:

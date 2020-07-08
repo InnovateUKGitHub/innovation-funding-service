@@ -301,8 +301,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidanceTitle", "My Title")
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
-                .param("numberOfUploads", "1")
-                .param("question.appendix", "true")
+                .param("numberOfUploads", "0")
+                .param("question.appendix", "false")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
                 .param("question.writtenFeedback", "true")
@@ -455,8 +455,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
-        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getCode());
-        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.appendixGuidance").getCode());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.appendixGuidance").getDefaultMessage());
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(QuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
@@ -500,8 +500,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult) result.getModelAndView().getModel().get("org.springframework.validation.BindingResult." + CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
-        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getCode());
-        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.appendixGuidance").getCode());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.allowedAppendixResponseFileTypes").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("question.appendixGuidance").getDefaultMessage());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedTemplateResponseFileTypes").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.templateTitle").getCode());
 
