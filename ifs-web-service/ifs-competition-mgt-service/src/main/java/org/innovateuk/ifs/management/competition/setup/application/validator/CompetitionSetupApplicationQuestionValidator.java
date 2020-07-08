@@ -43,6 +43,7 @@ public class CompetitionSetupApplicationQuestionValidator {
         validateAssessmentGuidanceRows(form, bindingResult);
         validateFileUploaded(form, bindingResult, questionId);
         validateTypeOfQuestion(form, bindingResult);
+        validateAppendix(form, bindingResult);
     }
 
     public void validate(ProjectForm form, BindingResult bindingResult) {
@@ -64,13 +65,11 @@ public class CompetitionSetupApplicationQuestionValidator {
     }
 
     private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if (competitionSetupForm.getNumberOfUploads() != null) {
-            if (competitionSetupForm.getNumberOfUploads() > 0
-                    && isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
+        if (competitionSetupForm.getNumberOfUploads() != null && competitionSetupForm.getNumberOfUploads() > 0) {
+            if (isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
             }
-            if (competitionSetupForm.getNumberOfUploads() > 0
-                    && competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
+            if (competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
                 bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.allowedAppendixResponseFileTypes", "This field cannot be left blank."));
             }
         }
@@ -79,9 +78,6 @@ public class CompetitionSetupApplicationQuestionValidator {
     private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
         if(competitionSetupForm.getNumberOfUploads() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
-        }
-        if(competitionSetupForm.getNumberOfUploads() >0 && competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.allowedAppendixResponseFileTypes", "This field cannot be left blank."));
         }
         if(competitionSetupForm.getQuestion().getTemplateDocument() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.templateDocument", "This field cannot be left blank."));
