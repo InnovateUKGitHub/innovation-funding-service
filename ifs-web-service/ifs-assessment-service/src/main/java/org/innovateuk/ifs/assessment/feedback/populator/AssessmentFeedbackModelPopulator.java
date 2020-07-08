@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
@@ -135,9 +134,10 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 .findFirst()
                 .flatMap(input -> applicantResponses.entrySet().stream()
                         .filter(applicantResponse -> applicantResponse.getKey().equals(input.getId()))
-                        .findFirst()
-                        .map(applicantResponse -> applicantResponse.getValue())
-                        .map(applicantResponse -> input.getType().equals(MULTIPLE_CHOICE) ? applicantResponse.getMultipleChoiceOptionText() : applicantResponse.getValue()))
+                        .map(Map.Entry::getValue)
+                        .map(formInputResponse -> input.getType().equals(MULTIPLE_CHOICE)
+                                ? formInputResponse.getMultipleChoiceOptionText()
+                                : formInputResponse.getValue()).findFirst())
                 .orElse(null);
 
         return applicantResponseValue;

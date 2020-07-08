@@ -95,7 +95,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withAssesorsInvited(30)
                 .build();
 
-        CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withName("Test Competition").withCompetitionStatus(CompetitionStatus.OPEN).build();
         when(competitionRestService.getCompetitionById(anyLong())).thenReturn(restSuccess(competitionResource));
     }
 

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.identity.IdentifiableEnum;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -89,5 +90,9 @@ public enum ApplicationState implements ProcessState, IdentifiableEnum {
 
     public static ApplicationState fromState(State state) {
         return ProcessState.fromState(ApplicationState.values(), state);
+    }
+
+    public boolean canBeMadeSuccessfulFromPrevious() {
+        return EnumSet.of(SUBMITTED, INELIGIBLE, INELIGIBLE_INFORMED, REJECTED).contains(this);
     }
 }
