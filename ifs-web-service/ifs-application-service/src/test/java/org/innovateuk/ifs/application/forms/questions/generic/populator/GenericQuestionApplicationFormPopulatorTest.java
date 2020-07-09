@@ -88,6 +88,6 @@ public class GenericQuestionApplicationFormPopulatorTest {
         genericQuestionApplicationFormPopulator.populate(genericQuestionApplicationForm, applicantQuestion);
 
         assertTrue(genericQuestionApplicationForm.isMultipleChoiceOptionsActive());
-        assertEquals(multipleChoiceOptionText, genericQuestionApplicationForm.getAnswer());
+        assertEquals(multipleChoiceOptionId, genericQuestionApplicationForm.getMultipleChoiceOptionId());
     }
 }

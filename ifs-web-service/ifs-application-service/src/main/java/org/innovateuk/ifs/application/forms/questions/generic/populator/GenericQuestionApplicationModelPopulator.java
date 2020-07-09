@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -101,7 +102,7 @@ public class GenericQuestionApplicationModelPopulator {
 
     private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
         viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
-                .withMultipleChoiceFormInputText(multipleChoiceOptionTextResponseOrNull(input))
+                .withSelectedMultipleChoiceOption(multipleChoiceOptionResponseOrNull(input))
                 .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
                 .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
                 .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
@@ -124,9 +125,10 @@ public class GenericQuestionApplicationModelPopulator {
                 .orElse(null);
     }
 
-    private String multipleChoiceOptionTextResponseOrNull(ApplicantFormInputResource input) {
+    private MultipleChoiceOptionResource multipleChoiceOptionResponseOrNull(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .map(FormInputResponseResource::getMultipleChoiceOptionText)
+                .map(formInputResponse -> new MultipleChoiceOptionResource(formInputResponse.getMultipleChoiceOptionId(),
+                        formInputResponse.getMultipleChoiceOptionText()))
                 .orElse(null);
     }
 

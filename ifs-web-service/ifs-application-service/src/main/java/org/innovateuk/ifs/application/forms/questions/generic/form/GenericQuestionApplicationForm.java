@@ -14,6 +14,8 @@ public class GenericQuestionApplicationForm {
 
     private boolean multipleChoiceOptionsActive;
 
+    private Long multipleChoiceOptionId;
+
     public String getAnswer() {
         if (multipleChoiceOptionsActive && answer == null) {
             answer = "";
@@ -55,5 +57,13 @@ public class GenericQuestionApplicationForm {
 
     public void setMultipleChoiceOptionsActive(boolean multipleChoiceOptionsActive) {
         this.multipleChoiceOptionsActive = multipleChoiceOptionsActive;
+    }
+
+    public Long getMultipleChoiceOptionId() {
+        return multipleChoiceOptionId;
+    }
+
+    public void setMultipleChoiceOptionId(Long multipleChoiceOptionId) {
+        this.multipleChoiceOptionId = multipleChoiceOptionId;
     }
 }

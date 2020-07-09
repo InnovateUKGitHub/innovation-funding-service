@@ -246,8 +246,7 @@ public class GenericQuestionApplicationController {
         FormInputType formInputType = form.isMultipleChoiceOptionsActive() ? FormInputType.MULTIPLE_CHOICE : FormInputType.TEXTAREA;
         FormInputResource formInput = getByType(questionId, formInputType);
         return formInputResponseRestService.saveQuestionResponse(user.getId(), applicationId,
-                formInput.getId(), form.getAnswer(), false);
-
+                formInput.getId(), form.getAnswer(), form.getMultipleChoiceOptionId(), false);
     }
 
     private String handleFileUpload(String field, FormInputType type, MultipartFile file, long questionId, long applicationId, UserResource user, ValidationHandler validationHandler, Model model) {

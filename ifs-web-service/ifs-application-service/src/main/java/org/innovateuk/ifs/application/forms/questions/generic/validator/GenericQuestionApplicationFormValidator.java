@@ -19,8 +19,8 @@ public class GenericQuestionApplicationFormValidator {
     }
 
     private void validateMultipleChoiceOptions(GenericQuestionApplicationForm form, BindingResult bindingResult) {
-        if (form.isMultipleChoiceOptionsActive() && form.getAnswer().isEmpty()) {
-            bindingResult.rejectValue("answer", "validation.multiple.choice.required");
+        if (form.isMultipleChoiceOptionsActive() && form.getMultipleChoiceOptionId() == null) {
+            bindingResult.rejectValue("multipleChoiceOptionId", "validation.multiple.choice.required");
         }
     }
 }
