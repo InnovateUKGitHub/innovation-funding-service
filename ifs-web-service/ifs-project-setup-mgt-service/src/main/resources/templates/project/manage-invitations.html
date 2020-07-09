@@ -51,7 +51,7 @@
                             <td class="govuk-table__cell buttoncolumn alignright">
                                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                                 <button name="resend-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Resend invitation</button>
-                                    |
+                                    <span class="verticalLine"></span>
                                 <button name="delete-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-left-1" type="submit">Cancel invitation</button>
                                 </form>
                             </td>
