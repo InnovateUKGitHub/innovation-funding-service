@@ -323,10 +323,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withNewMilestones() {
+    public CompetitionDataBuilder withNewMilestones(CompetitionCompletionStage competitionCompletionStage) {
         return asCompAdmin(data ->
             Stream.of(MilestoneType.presetValues())
                     .filter(m -> !m.isOnlyNonIfs())
+                    .filter(milestoneType -> milestoneType.getPriority() <= competitionCompletionStage.getLastMilestone().getPriority())
                     .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(

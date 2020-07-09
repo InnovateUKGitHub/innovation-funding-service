@@ -84,8 +84,8 @@
                                 <td class="govuk-table__cell" th:text="${row.name}">Automated Project Title generator</td>
                                 <td class="govuk-table__cell" th:text="${row.leadOrganisationName}">B.Systems</td>
                                 <td class="govuk-table__cell" th:text="${#messages.msg('ifs.application.previous.' + row.applicationState.getStateName())}"
-                                    th:colspan="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED') ? '1' : '2'}">Not funded</td>
-                                <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
+                                    th:colspan="${(model.ifsAdmin and row.applicationState.canBeMadeSuccessfulFromPrevious()) ? '1' : '2'}">Not funded</td>
+                                <th:block th:if="${model.ifsAdmin and row.applicationState.canBeMadeSuccessfulFromPrevious()}">
                                     <td class="govuk-table__cell alignright cta">
                                         <a
                                             data-js-modal="mark-as-successful-modal"

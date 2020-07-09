@@ -96,7 +96,7 @@ public class ProjectDetailsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/readonly")
+    @GetMapping("/{projectId}/details/readonly")
     public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
                                                UserResource loggedInUser) {
 

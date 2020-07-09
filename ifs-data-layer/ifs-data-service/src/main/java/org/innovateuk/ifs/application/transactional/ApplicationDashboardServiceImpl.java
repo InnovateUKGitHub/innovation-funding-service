@@ -112,7 +112,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 return PREVIOUS;
             }
         }
-        if (applicationInPreviousState(application)) {
+        if (applicationInPreviousState(application) || competitionIsInPrevious(application)) {
             return PREVIOUS;
         }
         return IN_PROGRESS; //Submitted and awaiting a decision.
@@ -124,6 +124,10 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
 
     private boolean competitionStillOpen(Application application) {
         return application.getCompetition().getCompetitionStatus().equals(OPEN);
+    }
+
+    private boolean competitionIsInPrevious(Application application) {
+        return application.getCompetition().getCompetitionStatus().equals(CompetitionStatus.PREVIOUS);
     }
 
     private boolean applicantHasBeenNotifiedOfFundingDecision(Application application) {
@@ -153,6 +157,7 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
                 .withProjectId(ofNullable(application.getProject()).map(Project::getId).orElse(null))
                 .withProjectState(ofNullable(application.getProject()).map(project -> project.getProjectProcess().getProcessState()).orElse(null))
                 .withCollaborationLevelSingle(!application.isCollaborativeProject())
+                .withCompetitionCompletionStage(application.getCompetition().getCompletionStage())
                 .build();
     }
 

@@ -32,6 +32,7 @@ public class CompetitionInFlightViewModel {
     private boolean interviewPanelEnabled;
     private boolean competitionHasAssessmentStage;
     private AssessorFinanceView assessorFinanceView;
+    private CompetitionCompletionStage competitionCompletionStage;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         CompetitionAssessmentConfigResource competitionAssessmentConfigResource,
@@ -41,6 +42,7 @@ public class CompetitionInFlightViewModel {
                                         boolean readOnly) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
+        this.competitionCompletionStage = competitionResource.getCompletionStage();
         this.competitionStatus = competitionResource.getCompetitionStatus();
         this.competitionType = competitionResource.getCompetitionTypeName();
         this.fundingDecisionAllowedBeforeAssessment = !competitionResource.isHasAssessmentStage();
@@ -113,6 +115,10 @@ public class CompetitionInFlightViewModel {
 
     public boolean isReadOnly() {
         return readOnly;
+    }
+
+    public CompetitionCompletionStage getCompetitionCompletionStage() {
+        return competitionCompletionStage;
     }
 
     public boolean isAssessmentPanelEnabled() {
