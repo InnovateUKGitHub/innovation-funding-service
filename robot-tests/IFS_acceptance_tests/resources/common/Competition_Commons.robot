@@ -254,24 +254,37 @@ the user marks each question as complete
 
 the assessed questions are marked as complete(procurement)
     [Arguments]   ${growthTable}
-    :FOR   ${ELEMENT}   IN    @{programme_questions}
-     \    the user marks each procurement question as complete    ${ELEMENT}
-     the user should see the element           jQuery = button:contains("Add question")
-     the user fills in the Finances questions  ${growthTable}  false  true
-     the user clicks the button/link           jQuery = button:contains("Done")
-     the user clicks the button/link           link = Competition details
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement}
+     \    the user marks each procurement question as complete      ${ELEMENT}
+     the user marks the question as complete with other options     Technical approach  3
+     the user marks the question as complete with other options     Project team  2
+     the user should see the element                                jQuery = button:contains("Add question")
+     the user fills in the Finances questions                       ${growthTable}  false  true
+     the user clicks the button/link                                jQuery = button:contains("Done")
+     the user clicks the button/link                                link = Competition details
 
 the user marks each procurement question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link        jQuery = h4 a:contains("${question_link}")
-    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the radio button     numberOfUploads  3
-    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
     the user selects the radio button      question.templateDocument  1
     the user enters text to a text field   id = question.templateTitle   ${question_link}
     the user uploads the file              css = input[id="templateDocumentFile"]   ${ods_file}
     the user selects the checkbox          question.allowedTemplateResponseFileTypes1
     the user clicks the button/link        jQuery = button:contains('Done')
     the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
+
+the user marks the question as complete with other options
+    [Arguments]  ${question_link}  ${numberOfUploads}
+    the user should not see the element     jQuery = li:contains("${question_link}") .task-status-complete
+    the user clicks the button/link         jQuery = a:contains("${question_link}")
+    the user selects the radio button       typeOfQuestion   MULTIPLE_CHOICE
+    Run Keyword If  '${question_link}' in ["Technical approach", "Approach and innovation"]     comp admin enters three answer options           option1  option2  option3
+    Run Keyword If  '${question_link}' in ["Project team", "Project management"]                comp admin enters more than 9 answer options
+    Run Keyword If  '${question_link}' == 'Risks'                                               comp admin enters two answer options             Yes  No
+    the user selects the radio button       numberOfUploads  ${numberOfUploads}
+    the user selects the checkbox           question.allowedAppendixResponseFileTypes2
+    the user clicks the button/link         jQuery = button:contains('Done')
+    the user should see the element         jQuery = li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}
@@ -497,3 +510,29 @@ the user should see the correct inputs in the Milestones form
     the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery = button:contains("Edit")
+
+comp admin enters two answer options
+    [Arguments]  ${answer1}  ${answer2}
+    the user enters text to a text field     id = question.choices[0].text  ${answer1}
+    the user enters text to a text field     id = question.choices[1].text  ${answer2}
+
+comp admin enters three answer options
+    [Arguments]  ${answer1}  ${answer2}  ${answer3}
+    the user enters text to a text field     id = question.choices[0].text  ${answer1}
+    the user enters text to a text field     id = question.choices[1].text  ${answer2}
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+    the user enters text to a text field     id = question.choices[2].text  ${answer3}
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+    the user should see the element          id = question.choices[3].text
+    the user clicks the button/link          id = remove-multiple-choice-row-3
+    the user should not see the element      id = question.choices[3].text
+
+comp admin enters more than 9 answer options
+    the user enters text to a text field     id = question.choices[0].text  Answer1
+    ${i} =  Set Variable   1
+    :FOR   ${ELEMENT}   IN    @{multiple_answer_choice}
+         \    the user enters text to a text field     id = question.choices[${i}].text  ${ELEMENT}
+         \    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+         \    ${i} =   Evaluate   ${i} + 1
+    the user clicks the button/link          id = remove-multiple-choice-row-10
+    the user should not see the element      id = question.choices[10].text
