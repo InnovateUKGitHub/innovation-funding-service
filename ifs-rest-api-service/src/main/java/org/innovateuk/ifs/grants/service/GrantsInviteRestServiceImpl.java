@@ -32,7 +32,7 @@ public class GrantsInviteRestServiceImpl extends BaseRestService implements Gran
 
     @Override
     public RestResult<Void> deleteInvite(long projectId, long inviteId) {
-        return postWithRestResult(format(BASE_URL + "/%d/delete", projectId, inviteId), Void.class);
+        return deleteWithRestResult(format(BASE_URL + "/%d", projectId, inviteId), Void.class);
     }
 
     @Override

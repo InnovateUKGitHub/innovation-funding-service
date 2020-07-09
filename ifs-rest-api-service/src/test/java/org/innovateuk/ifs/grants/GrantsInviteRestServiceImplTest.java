@@ -60,7 +60,7 @@ public class GrantsInviteRestServiceImplTest extends BaseRestServiceUnitTest<Gra
         long projectId = 1L;
         long inviteId = 2L;
 
-        setupPostWithRestResultExpectations(format(BASE_URL + "/%d/delete", projectId, inviteId), HttpStatus.OK);
+        setupDeleteWithRestResultExpectations(format(BASE_URL + "/%d", projectId, inviteId), HttpStatus.OK);
         RestResult<Void> result = service.deleteInvite(projectId, inviteId);
         assertTrue(result.isSuccess());
     }
