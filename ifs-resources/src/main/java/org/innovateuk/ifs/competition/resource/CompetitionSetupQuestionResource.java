@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
@@ -340,6 +341,7 @@ public class CompetitionSetupQuestionResource {
         this.multipleChoice = multipleChoice;
     }
 
+    @JsonIgnore
     public boolean isGuidanceRequired() {
         return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type;
     }
