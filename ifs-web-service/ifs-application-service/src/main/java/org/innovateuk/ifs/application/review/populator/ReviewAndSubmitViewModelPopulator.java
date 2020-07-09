@@ -34,12 +34,11 @@ public class ReviewAndSubmitViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         boolean userIsLeadApplicant = userService.isLeadApplicant(user.getId(), application);
         boolean isApplicationReadyForSubmit = applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess();
-        boolean displaySubmitWarning = competition.getCovidType() == null;
 
         ApplicationReadOnlyViewModel applicationSummaryViewModel = applicationRowsSummaryViewModelPopulator.populate(application, competition, user, defaultSettings()
                 .setIncludeQuestionLinks(true)
                 .setIncludeStatuses(true));
         return new ReviewAndSubmitViewModel(applicationSummaryViewModel, application, competition,
-                isApplicationReadyForSubmit, userIsLeadApplicant, displaySubmitWarning);
+                isApplicationReadyForSubmit, userIsLeadApplicant);
     }
 }
