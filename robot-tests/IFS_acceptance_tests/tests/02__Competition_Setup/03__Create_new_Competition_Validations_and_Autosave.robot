@@ -160,7 +160,7 @@ Milestones: Server side validations, submission time is default
     Given the user clicks the button/link             link = Milestones
     When the user clicks the button/link              jQuery = button:contains("Done")
     Then the user should see a field error            Select a completion stage.
-    And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
+    And the user selects the radio button             selectedCompletionStage  PROJECT_SETUP
     And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
     And the user clicks the button/link               jQuery = button:contains(Done)
@@ -171,7 +171,7 @@ Milestones: Server side validations, submission time is default
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]
-    Given the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
+    Given the user fills in the CS Milestones   PROJECT_SETUP   ${month}   ${nextyear}
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632
@@ -179,7 +179,7 @@ Milestones: Autosave
     When the user clicks the button/link              link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  PROJECT_SETUP
     Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     Then the user should see the correct inputs in the Milestones form
 
@@ -380,12 +380,6 @@ The user should not see the error text in the page
     Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
-
-the user should see the correct inputs in the Milestones form
-    the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = button:contains("Edit")
 
 the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id = question.title
