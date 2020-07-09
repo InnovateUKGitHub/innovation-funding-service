@@ -22,6 +22,8 @@ items:
         labels:
           deploymentconfig: sil-stub
       spec:
+        imagePullSecrets:
+          - name: imagePullSecretsName
         containers:
         - image: innovateuk/sil-stub:${silStubVersion}
           name: sil-stub
