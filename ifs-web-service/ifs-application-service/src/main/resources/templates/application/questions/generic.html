@@ -52,9 +52,9 @@
             </div>
         </th:block>
 
-        <div class="clear-floats" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
-            <div class="govuk-grid-row govuk-!-margin-top-6" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
-                <div class="govuk-grid-column-one-half" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+        <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'clear-floats'">
+            <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'govuk-grid-row govuk-!-margin-top-6'">
+                <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'govuk-grid-column-one-half'">
                     <h3 class="govuk-heading-s">
                         <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
                         <th:block th:text="${model.questionSubtitle}">Project team</th:block>
