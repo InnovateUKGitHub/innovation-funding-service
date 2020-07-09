@@ -30,16 +30,6 @@ function deploy() {
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 }
 
-function addAbilityToPullFromNexus() {
-    oc secrets new-dockercfg ifs-external-registry \
-        --docker-username=${NEXUS_USER} \
-        --docker-password=${NEXUS_PASS} \
-        --docker-email=${NEXUS_EMAIL} \
-        --docker-server=${NEXUS_REGISTRY}
-
-    oc secrets add serviceaccount/builder secrets/ifs-external-registry ${SVC_ACCOUNT_CLAUSE}
-}
-
 # Entry point
 if [[ ${TARGET} == "local" ]]
 then
