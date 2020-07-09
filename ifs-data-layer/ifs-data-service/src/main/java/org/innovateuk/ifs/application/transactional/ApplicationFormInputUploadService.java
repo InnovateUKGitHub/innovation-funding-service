@@ -15,8 +15,8 @@ import java.util.function.Supplier;
  */
 public interface ApplicationFormInputUploadService {
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
-    ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry,
-                                                                                        Supplier<InputStream> inputStreamSupplier);
+    ServiceResult<FormInputResponseFileEntryResource> uploadResponse(FormInputResponseFileEntryResource fileEntry,
+                                                                     Supplier<InputStream> inputStreamSupplier);
 
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource', 'UPDATE')")
     ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId id);

@@ -38,10 +38,12 @@
                 <h3 th:if="${model.isTemplateDocument(item)}"
                     class="govuk-heading-s govuk-!-margin-0"
                     th:text="|View ${model.templateDocumentTitle}|">View template:</h3>
-                <a th:each="file : ${item.fileEntries}"
-                   th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/file/{fileEntryId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput},fileEntryId=${file.id})}"
-                   th:text="|${file.name} (${file.humanReadableFileSize})|"
-                   class="govuk-link">Project-plan.pdf (161.96 KB)</a>
+                <th:block th:each="file : ${item.fileEntries}">
+                    <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/file/{fileEntryId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput},fileEntryId=${file.id})}"
+                       th:text="|${file.name} (${file.humanReadableFileSize}) (opens in new window)|"
+                       target="_blank"
+                       class="govuk-link">Project-plan.pdf (161.96 KB)</a><br/>
+                </th:block>
             </th:block>
         </th:block>
 

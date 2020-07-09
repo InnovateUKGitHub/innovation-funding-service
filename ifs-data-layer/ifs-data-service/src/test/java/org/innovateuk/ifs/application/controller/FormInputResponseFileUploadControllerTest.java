@@ -91,7 +91,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");
 
         when(fileValidatorMock.validateFileHeaders("application/pdf", "1000", "original.pdf", formInputId, 1234L)).thenReturn(serviceSuccess(fileAttributesAfterValidation));
-        when(applicationFormInputUploadService.createFormInputResponseFileUpload(createFileEntryResourceExpectations("original.pdf"), createInputStreamExpectations(dummyContent))).thenReturn(successResponse);
+        when(applicationFormInputUploadService.uploadResponse(createFileEntryResourceExpectations("original.pdf"), createInputStreamExpectations(dummyContent))).thenReturn(successResponse);
 
         MvcResult response = mockMvc.
                 perform(
@@ -130,7 +130,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         assertEquals(1111L, createdResponse.getFileEntryId());
 
         verify(fileValidatorMock).validateFileHeaders("application/pdf", "1000", "original.pdf", formInputId, 1234L);
-        verify(applicationFormInputUploadService).createFormInputResponseFileUpload(createFileEntryResourceExpectations("original.pdf"), createInputStreamExpectations(dummyContent));
+        verify(applicationFormInputUploadService).uploadResponse(createFileEntryResourceExpectations("original.pdf"), createInputStreamExpectations(dummyContent));
     }
 
     private FormInputResponseFileEntryResource createFileEntryResourceExpectations(String expectedFilename) {
@@ -158,7 +158,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         ServiceResult<FormInputResponseFileEntryResource> failureResponse = serviceFailure(generalError);
 
         when(fileValidatorMock.validateFileHeaders(isA(String.class), isA(String.class), isA(String.class), isA(Long.class), isA(Long.class))).thenReturn(serviceSuccess(new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000, "original.pdf")));
-        when(applicationFormInputUploadService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);
+        when(applicationFormInputUploadService.uploadResponse(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);
 
         MvcResult response = mockMvc.
                 perform(
@@ -652,7 +652,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         ServiceResult<FormInputResponseFileEntryResource> failureResponse = serviceFailure(errorToReturn);
 
         when(fileValidatorMock.validateFileHeaders(isA(String.class), isA(String.class), isA(String.class), isA(Long.class), isA(Long.class))).thenReturn(serviceSuccess(new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000, "original.pdf")));
-        when(applicationFormInputUploadService.createFormInputResponseFileUpload(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);
+        when(applicationFormInputUploadService.uploadResponse(isA(FormInputResponseFileEntryResource.class), isSupplierMatcher())).thenReturn(failureResponse);
 
         MvcResult response = mockMvc.
                 perform(
