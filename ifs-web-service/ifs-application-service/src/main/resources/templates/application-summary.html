@@ -11,7 +11,7 @@
 
         <div class="govuk-width-container">
             <th:block th:insert="fragments/layout :: phase-banner" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to applications',linkUrl=@{/applicant/dashboard}, dynamicBackLink=${true}"/>
             <main class="govuk-main-wrapper" id="main-content" role="main">
                 <th:block>
                     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${model.application.name},size='govuk-heading-xl'" />

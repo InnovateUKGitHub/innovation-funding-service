@@ -58,7 +58,7 @@
         <div th:if="${model.competition.isOpen() and model.application.isOpen()}" class="govuk-!-margin-top-9">
             <th:block th:if="${model.userIsLeadApplicant}">
 
-                 <form th:unless="${model.displaySubmitWarning}" id="submit-application-form" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{/application/{id}/confirm-submit(id=${applicationId})}" novalidate="novalidate" method="post">
+                 <form id="submit-application-form" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{/application/{id}/confirm-submit(id=${applicationId})}" novalidate="novalidate" method="post">
                     <button id="submit-application-button"
                             th:disabled="${!model.applicationReadyForSubmit}"
                             class="govuk-button"
