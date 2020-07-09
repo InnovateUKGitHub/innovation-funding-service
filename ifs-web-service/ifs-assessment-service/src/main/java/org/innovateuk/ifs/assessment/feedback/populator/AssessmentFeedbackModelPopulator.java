@@ -131,13 +131,14 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
 
     private String getApplicantResponseValue(List<FormInputResource> applicationFormInputs, Map<Long, FormInputResponseResource> applicantResponses) {
         String applicantResponseValue = applicationFormInputs.stream()
-                .findFirst()
-                .flatMap(input -> applicantResponses.entrySet().stream()
+                .filter(formInput -> formInput.getType().equals(TEXTAREA) || formInput.getType().equals(MULTIPLE_CHOICE))
+                .map(input -> applicantResponses.entrySet().stream()
                         .filter(applicantResponse -> applicantResponse.getKey().equals(input.getId()))
                         .map(Map.Entry::getValue)
                         .map(formInputResponse -> input.getType().equals(MULTIPLE_CHOICE)
                                 ? formInputResponse.getMultipleChoiceOptionText()
-                                : formInputResponse.getValue()).findFirst())
+                                : formInputResponse.getValue()).findFirst().orElse(null))
+                .findFirst()
                 .orElse(null);
 
         return applicantResponseValue;
