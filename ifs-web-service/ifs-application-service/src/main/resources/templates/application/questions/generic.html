@@ -142,8 +142,8 @@
                         <select class="govuk-select"
                                 th:id="multipleChoiceOption"
                                 th:field="*{answer}"
-                                th:readonly="${model.readOnly}"
-                                data-required-errormessage="#{validation.multiple.choice.required}"
+                                th:attr="data-required-errormessage=#{validation.multiple.choice.required}"
+                                th:errorclass="govuk-input--error"
                                 data-auto-complete="">
                             <option value="" >Please Select</option>
                             <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}" th:value="${multipleChoiceOption.text}" th:text="${multipleChoiceOption.text}"></option>
