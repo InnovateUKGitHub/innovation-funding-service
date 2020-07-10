@@ -135,4 +135,13 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return putWithRestResult(format("%s/%d/%s", applicationRestURL, applicationId, "reopen-application"), Void.class);
     }
 
+    @Override
+    public RestResult<Boolean> applicationInReopenedState(long applicationId) {
+        return getWithRestResult(applicationRestURL + "/application-in-reopened-state/" + applicationId, Boolean.class);
+    }
+
+    @Override
+    public RestResult<ZonedDateTime> getApplicationReopenedDate(long applicationId) {
+        return getWithRestResult(applicationRestURL + "/application-reopened-date/" + applicationId, ZonedDateTime.class);
+    }
 }
