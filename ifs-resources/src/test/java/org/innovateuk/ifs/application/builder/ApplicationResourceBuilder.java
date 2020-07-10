@@ -121,4 +121,11 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((title, application) -> setField("previousApplicationTitle", title, application), titles);
     }
 
+    public ApplicationResourceBuilder withEvent(String... events) {
+        return withArray((event, application) -> application.setEvent(event), events);
+    }
+    public ApplicationResourceBuilder withLastModified(ZonedDateTime... lastModifiedDates) {
+        return withArray((lastModifiedDate, application) -> application.setLastModified(lastModifiedDate), lastModifiedDates);
+    }
+
 }
