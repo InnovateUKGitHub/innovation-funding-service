@@ -263,6 +263,16 @@ function useNexusRegistry() {
     sed -i.bak "s#service\:.*#service\:${NEXUS_VERSION}#g" $(getBuildLocation)/**/*.yml
 }
 
+function addAbilityToPullFromNexus() {
+    oc secrets new-dockercfg ifs-external-registry \
+        --docker-username=${NEXUS_USER} \
+        --docker-password=${NEXUS_PASS} \
+        --docker-email=${NEXUS_EMAIL} \
+        --docker-server=${NEXUS_REGISTRY}
+
+    oc secrets add serviceaccount/builder secrets/ifs-external-registry ${SVC_ACCOUNT_CLAUSE}
+}
+
 function pushDBResetImages() {
     docker tag innovateuk/dbreset:latest \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}

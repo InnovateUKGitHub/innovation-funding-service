@@ -18,6 +18,8 @@ items:
         labels:
           deploymentconfig: cache-provider
       spec:
+        imagePullSecrets:
+          - name: imagePullSecretsName
         containers:
         - env:
           image: innovateuk/cache-provider:5.0.5

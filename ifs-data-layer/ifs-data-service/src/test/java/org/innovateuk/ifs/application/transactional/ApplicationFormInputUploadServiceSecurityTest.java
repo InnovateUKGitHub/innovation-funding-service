@@ -37,7 +37,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
                 (true);
 
-        classUnderTest.createFormInputResponseFileUpload(file, () -> null);
+        classUnderTest.uploadResponse(file, () -> null);
 
         verify(fileUploadRules).applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser());
     }
@@ -52,7 +52,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
                 (false);
 
         try {
-            classUnderTest.createFormInputResponseFileUpload(file, () -> null);
+            classUnderTest.uploadResponse(file, () -> null);
             fail("Should not have been able to create the file upload, as access was denied");
         } catch (AccessDeniedException e) {
             // expected behaviour
