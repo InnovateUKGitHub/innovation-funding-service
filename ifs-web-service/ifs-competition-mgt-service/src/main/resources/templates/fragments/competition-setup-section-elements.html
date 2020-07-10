@@ -30,14 +30,19 @@
                 <dt class="govuk-grid-column-one-third">Max word count</dt>
                 <dd class="govuk-grid-column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
-                    <dt class="govuk-grid-column-one-third">Appendix</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:if="${question.appendix}">Yes</dd>
-                    <dd class="govuk-grid-column-two-thirds" th:unless="${question.appendix}">No</dd>
+                    <dt class="govuk-grid-column-one-third">Appendix uploads</dt>
+                    <th:block th:if="${competitionSetupForm.numberOfUploads == 0}">
+                        <dd class="govuk-grid-column-two-thirds">None</dd>
+                    </th:block>
+                    <th:block th:unless="${competitionSetupForm.numberOfUploads == 0}">
+                        <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.numberOfUploads}">1</dd>
+                    </th:block>
                     <th:block th:if="${question.appendix}">
                         <dt class="govuk-grid-column-one-third">Accepted appendix file types</dt>
                         <dd class="govuk-grid-column-two-thirds">
-                            <ul>
-                                <li th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
+                            <ul class="govuk-list govuk-list--bullet govuk-!-margin-left-0">
+                                <li
+                                    th:each="fileType : ${question.allowedAppendixResponseFileTypes}"
                                     th:text="${fileType.displayName}"></li>
                             </ul>
                         </dd>
@@ -243,43 +248,67 @@
             </div>
 
             <!--/* APPENDIX */-->
-            <th:block th:if="${question.appendix != null or #fields.hasErrors('question.appendix')}">
+            <th:block th:if="${question.appendix != null or #fields.hasErrors('numberOfUploads*')}">
+                <input type="hidden" th:field="*{question.appendix}" />
                 <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('question.appendix')} ? 'govuk-form-group--error'">
+                     th:classappend="${#fields.hasErrors('numberOfUploads*')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="question.appendix">
-                            <h2 class="govuk-fieldset__heading">Appendix</h2>
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="numberOfUploads">
+                            <h2 class="govuk-fieldset__heading">Appendix uploads</h2>
                         </legend>
-                        <th:block th:if="${#fields.hasErrors('question.appendix')}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors('question.appendix')}"
+                        <span class="govuk-hint">Choose how many appendices an applicant can upload.</span>
+                        <th:block th:if="${#fields.hasErrors('numberOfUploads*')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('numberOfUploads*')}"
                               th:text="${err}"></span>
                         </th:block>
-                        <div class="govuk-radios govuk-radios--inline">
-                            <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-clear-form="true">
-                                <input id="appendix-yes"
-                                       class="govuk-radios__input"
-                                       th:name="question.appendix"
-                                       th:checked="${question.appendix != null and question.appendix}"
-                                       value="1"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                                       type="radio"/>
-                                <label for="appendix-yes"
-                                       class="govuk-label govuk-radios__label">Yes</label>
-                            </div>
-                            <div class="govuk-radios__item">
+
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item" data-target="allowedAppendixFileTypesDiv" data-target-inverted="true">
                                 <input id="appendix-no"
                                        class="govuk-radios__input"
-                                       th:name="question.appendix"
-                                       th:checked="${question.appendix != null and !question.appendix}"
+                                       th:field="*{numberOfUploads}"
                                        value="0"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                                        type="radio"/>
                                 <label for="appendix-no"
-                                       class="govuk-label govuk-radios__label">No</label>
+                                       class="govuk-label govuk-radios__label">None</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="appendix-1"
+                                       class="govuk-radios__input"
+                                       th:field="*{numberOfUploads}"
+                                       value="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-1"
+                                       class="govuk-label govuk-radios__label">1</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="appendix-2"
+                                       class="govuk-radios__input"
+                                       th:field="*{numberOfUploads}"
+                                       value="2"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-2"
+                                       class="govuk-label govuk-radios__label">2</label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="appendix-3"
+                                       class="govuk-radios__input"
+                                       th:field="*{numberOfUploads}"
+                                       value="3"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                       type="radio"/>
+                                <label for="appendix-3"
+                                       class="govuk-label govuk-radios__label">3</label>
                             </div>
                         </div>
+
                     </fieldset>
                 </div>
                 <div id="allowedAppendixFileTypesDiv" class="panel">

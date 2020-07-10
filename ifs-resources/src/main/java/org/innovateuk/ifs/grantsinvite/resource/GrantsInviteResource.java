@@ -6,32 +6,47 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class GrantsInviteResource {
 
     public enum GrantsInviteRole {
-        GRANTS_PROJECT_MANAGER,
-        GRANTS_PROJECT_FINANCE_CONTACT,
-        GRANTS_MONITORING_OFFICER
+        GRANTS_PROJECT_MANAGER("Project manager"),
+        GRANTS_PROJECT_FINANCE_CONTACT("Finance contact"),
+        GRANTS_MONITORING_OFFICER("Monitor officer");
+
+        GrantsInviteRole(String displayName) {
+            this.displayName = displayName;
+        }
+
+        private String displayName;
+
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
-    private String organisationName;
     private String userName;
     private String email;
     private GrantsInviteRole grantsInviteRole;
 
+    //Optionaly link invite to an existing project organisation.
+    private Long organisationId;
+
     public GrantsInviteResource() {
     }
 
-    public GrantsInviteResource(String organisationName, String userName, String email, GrantsInviteRole grantsInviteRole) {
-        this.organisationName = organisationName;
+    public GrantsInviteResource(Long organisationId, String userName, String email, GrantsInviteRole grantsInviteRole) {
         this.userName = userName;
         this.email = email;
         this.grantsInviteRole = grantsInviteRole;
+        this.organisationId = organisationId;
+    }
+    public GrantsInviteResource(String userName, String email, GrantsInviteRole grantsInviteRole) {
+        this(null, userName, email, grantsInviteRole);
     }
 
-    public String getOrganisationName() {
-        return organisationName;
+    public Long getOrganisationId() {
+        return organisationId;
     }
 
-    public void setOrganisationName(String organisationName) {
-        this.organisationName = organisationName;
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public String getUserName() {
@@ -67,7 +82,7 @@ public class GrantsInviteResource {
         GrantsInviteResource that = (GrantsInviteResource) o;
 
         return new EqualsBuilder()
-                .append(organisationName, that.organisationName)
+                .append(organisationId, that.organisationId)
                 .append(userName, that.userName)
                 .append(email, that.email)
                 .append(grantsInviteRole, that.grantsInviteRole)
@@ -77,7 +92,7 @@ public class GrantsInviteResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(organisationName)
+                .append(organisationId)
                 .append(userName)
                 .append(email)
                 .append(grantsInviteRole)

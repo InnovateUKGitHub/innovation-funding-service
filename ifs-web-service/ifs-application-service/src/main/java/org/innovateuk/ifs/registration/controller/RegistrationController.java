@@ -20,6 +20,7 @@ import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -47,6 +48,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ORGANISATION_ALREADY_EXISTS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
 
 @Controller
 @RequestMapping("/registration")
@@ -250,7 +252,7 @@ public class RegistrationController {
             if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
                 ApplicationInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
-                model.addAttribute("invitee", true);
+                model.addAttribute("model", anInvitedUserViewModel());
                 return true;
             } else {
                 LOG.debug("Invite already accepted.");
@@ -263,13 +265,14 @@ public class RegistrationController {
             if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
                 SentProjectPartnerInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
-                model.addAttribute("invitee", true);
+                model.addAttribute("model", anInvitedUserViewModel());
                 return true;
             } else {
                 LOG.debug("Invite already accepted.");
                 throw new InviteAlreadyAcceptedException();
             }
         }
+        model.addAttribute("model", new RegistrationViewModel(false));
         return false;
     }
 

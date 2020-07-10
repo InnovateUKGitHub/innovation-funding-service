@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accessibility'" />
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accessibility',size='govuk-heading-xl'" />
+        <div class="inner">
+            <div class="summary">
+                <p class="govuk-body">This service is run by Innovate UK, part of UK Research and Innovation. We want as many people as
+                    possible to able to use this website.</p>
+            </div>
+            <p class="govuk-body">For example, this means you should be able to:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>change colours, contrast levels and fonts</li>
+                <li>zoom in up to 200% without the text spilling off the screen</li>
+                <li>navigate most of the website using just a keyboard</li>
+                <li>navigate most of the website using speech recognition software</li>
+                <li>listen to most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
+            </ul>
+            <p class="govuk-body">We have also made the website text as simple as possible to understand.</p>
+            <p class="govuk-body"><a rel="external" target="_blank" href="https://mcmw.abilitynet.org.uk/">AbilityNet (opens in a new window)</a> has advice on making your device easier to use if you have a disability.</p>
+
+            <h2 class="govuk-heading-m">Information about this website's accessibility</h2>
+            <p class="govuk-body">We are committed to making our website accessible, in accordance with the Public Sector Bodies
+                (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
+            <p class="govuk-body">Our website is only partially compliant with the <a rel="external" target="_blank" href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility
+                Guidelines version 2.1 (opens in a new window)</a> (known as WCAG 2.1).</p>
+
+            <p class="govuk-body">Here are the types of non-accessible content on our website:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>some images do not have any descriptive text for people using screen readers</li>
+                <li>there are gaps in some page structures, because headings are skipped</li>
+                <li>some table text fields do not have labels</li>
+                <li>several tables are missing headings and data</li>
+                <li>some information that informs users on what to enter in form fields is not announced to screen reader users</li>
+                <li>some form fields only use colour to show that invalid data has been entered and need supporting text to explain this in more detail</li>
+                <li>page scrolling occurs in both directions (horizontal and vertical) when zooming in on some tables</li>
+                <li>some focus indicators do not meet the minimum colour contrast ratio</li>
+                <li>not all page titles describe the content of the page</li>
+                <li>some links on the same page have the same descriptions</li>
+                <li>optional form fields have not been clearly marked on some pages</li>
+                <li>messages about an action a user has taken are not announced to those using screen readers</li>
+                <li>there are several downloadable documents in PDF and Microsoft Office formats only</li>
+            </ul>
+            <p class="govuk-body">We’re always looking to improve our website’s accessibility and we are actively working towards reaching WCAG 2.1 AA level compliance.</p>
+
+            <h2 class="govuk-heading-m">What to do if you cannot access parts of this website</h2>
+            <p class="govuk-body">If you need information on this website in large print or braille, please <a rel="external" href="/info/contact">contact us</a>.</p>
+
+            <h2 class="govuk-heading-m">Report accessibility problems with this website</h2>
+            <p class="govuk-body">If you find any problems that are not listed on this page or think we are not meeting the requirements
+                of the accessibility regulations, please <a rel="external" href="/info/contact">contact us</a>.</p>
+
+            <h2 class="govuk-heading-m">Contact us for assistance</h2>
+            <p class="govuk-body">We provide personalised assistance to people who have trouble using our online funding service.</p>
+            <p class="govuk-body">Please <a rel="external" href="/info/contact">contact us</a> well before you need to meet any deadlines, to make sure we have enough time to tailor
+                a solution for you.</p>
+            <p class="govuk-body">You can also <a rel="external" target="_blank" href="https://twitter.com/innovateuk">contact us on Twitter (opens in a new window)</a>.</p>
+
+            <h2 class="govuk-heading-m">Enforcement procedure</h2>
+            <p class="govuk-body">The Equality and Human Rights Commission (EHRC) is responsible for enforcing the accessibility regulations.
+                If you are not happy with how we respond to your request, <a rel="external" target="_blank" href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service (EASS) (opens in a new window)</a>.</p>
+
+            <h2 class="govuk-heading-m">How we tested this website</h2>
+            <p class="govuk-body">The service was last tested on 27 September 2019 and was checked for compliance with WCAG 2.1 AA.</p>
+            <p class="govuk-body">It was tested by <a rel="external" target="_blank" href="https://digitalaccessibilitycentre.org/">DAC (opens in a new window)</a>
+                and <a rel="external" target="_blank" href="https://www.nomensa.com/">Nomensa (opens in a new window)</a>.</p>
+            <p class="govuk-body">This statement was prepared on 02 March 2020.</p>
+        </div>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

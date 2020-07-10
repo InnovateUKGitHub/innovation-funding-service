@@ -87,12 +87,10 @@
                                         <div class="govuk-grid-column-two-thirds">
                                             <!--/* empty file input so that spring form is complete */-->
                                             <input type="file" name="feedback" class="govuk-visually-hidden">
-                                            <a th:text="${app.filename}"
+                                            <a th:text="|${app.filename} (opens in a new window)|"
                                                th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${app.applicationId})}"
                                                target="_blank"
-                                               class="govuk-link"
-                                               aria-describedby="attachment-hint">Uploaded-file.pdf</a>
-                                            <p class="govuk-hint"><span id="attachment-hint">(opens in a new window)</span>.</p>
+                                               class="govuk-link">Uploaded-file.pdf</a>.
                                         </div>
                                         <div class="govuk-grid-column-one-third">
                                             <button name="removeFeedbackApplicationId" th:value="${app.applicationId}" class="button-clear">Remove</button>

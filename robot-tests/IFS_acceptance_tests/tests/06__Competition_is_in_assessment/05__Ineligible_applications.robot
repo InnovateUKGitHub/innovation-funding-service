@@ -24,6 +24,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-2994 New Stakeholder role and permissions
 ...
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
+...
+...               IFS-7772 Allow applications from all submitted states to be pushed through to project setup from the previous page.
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -31,14 +33,13 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Competition_Commons.robot
 
 *** Variables ***
-${ineligibleApplication}  Living with Virtual Reality
-${ineligibleApplicationNumber}    ${application_ids['${ineligibleApplication}']}
-${ineligibleApplicationOverview}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}
-${ineligibleApplications}  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
-${ineligibleMessage}  On checking your application we found that it did not meet these requirements.
-# ${IN_ASSESSMENT_COMPETITION} is the Sustainable living models for the future
-${submittedApplication}           Living with Digital Rights Management
-${submittedApplicationNumber}     ${application_ids['${submittedApplication}']}
+${ineligibleApplication}             Living with Virtual Reality
+${ineligibleApplicationNumber}       ${application_ids['${ineligibleApplication}']}
+${ineligibleApplicationOverview}     ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/application/${ineligibleApplicationNumber}
+${ineligibleApplications}            ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+${ineligibleMessage}                 On checking your application we found that it did not meet these requirements.
+${submittedApplication}              Living with Digital Rights Management
+${submittedApplicationNumber}        ${application_ids['${submittedApplication}']}
 
 *** Test Cases ***
 A non submitted application cannot be marked as ineligible
@@ -110,14 +111,14 @@ Support user should see the inelibible application with reason
     And the user should see the element         jQuery = h2:contains("Removed by") ~ p:contains("Ian Cooper, ${today}")
     And the user should see the element         jQuery = h2:contains("Reason for removal") ~ p:contains("This is the reason of why this application is ineligible")
 
-The Administrator should see the ineligible applications in unsuccessful list but he cannot reinstate it
-    [Documentation]  IFS-1458 IFS-1459 IFS-50
+The Administrator should see the ineligible applications in unsuccessful list and he can reinstate it
+    [Documentation]  IFS-1458 IFS-1459 IFS-50 IFS-7772
     [Tags]  Administrator
-    [Setup]  log in as a different user        &{ifs_admin_user_credentials}
-    Given the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/previous
-    And the user expands the section           Applications
-    Then the user should see the element       jQuery = td:contains("${ineligibleApplication}")
-    And the user should not see the element    jQuery = td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
+    [Setup]  log in as a different user      &{ifs_admin_user_credentials}
+    Given the user navigates to the page     ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/previous
+    And the user expands the section         Applications
+    Then the user should see the element     jQuery = td:contains("${ineligibleApplication}")
+    And the user should see the element      jQuery = td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
 Inform a user their application is ineligible
     [Documentation]  INFUND-7374  IFS-1491  IFS-3132

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle=|Invite a new external user - ${model.projectName}|"/>
+</head>
+<body class="govuk-template__body">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Manage invitations to external users',linkUrl=@{/project/{projectId}/grants/invite(projectId=${model.projectId})}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite a new external user',subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl'" />
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="firstName">
+                    First name
+                </label>
+                <th:block th:if="${#fields.hasErrors('firstName')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
+                </th:block>
+                <input id="firstName"
+                       class="govuk-input"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{firstName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       pattern="\D{2,}"
+                       th:attr="data-minlength-errormessage=#{validation.grants.invite.firstname.min},
+                                data-pattern-errormessage=#{validation.standard.firstname.invalid},
+                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-required-errormessage=#{validation.grants.invite.firstname.required}" />
+            </div>
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="lastName">
+                    Last name
+                </label>
+                <th:block th:if="${#fields.hasErrors('lastName')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></span>
+                </th:block>
+                <input id="lastName"
+                       class="govuk-input"
+                       type="text"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{lastName}"
+                       required="required"
+                       minlength="2"
+                       maxlength="70"
+                       pattern="\D{2,}"
+                       th:attr="data-minlength-errormessage=#{validation.grants.invite.lastname.min},
+                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                                data-pattern-errormessage=#{validation.standard.lastname.invalid},
+                                data-required-errormessage=#{validation.grants.invite.lastname.required}" />
+            </div>
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{email}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="email">
+                    Email address
+                </label>
+                <th:block th:if="${#fields.hasErrors('email')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
+                </th:block>
+                <input id="email"
+                       class="govuk-input"
+                       type="email"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{email}"
+                       maxlength="256"
+                       required="required"
+                       th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                        data-required-errormessage=#{validation.invite.email.required}" />
+            </div>
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-!-font-weight-bold" for="role">
+                    Role
+                </label>
+                <th:block th:if="${#fields.hasErrors('role')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                </th:block>
+                <select name="role"
+                        class="govuk-select"
+                        id="role"
+                        required="required"
+                        data-required-errormessage="Please select a role.">
+                    <option value="" disabled="disabled" th:selected="${form.role == null}">Please select...</option>
+                    <option th:each="inviteRole : ${T(org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).values()}"
+                            th:value="${inviteRole}"
+                            th:selected="${inviteRole == form.role}"
+                            th:text="${inviteRole.displayName}"
+                            th:attr="data-target=${inviteRole == T(org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole).GRANTS_PROJECT_FINANCE_CONTACT ? 'organisation-id-form-group' : null}"></option>
+                </select>
+            </div>
+
+            <div id="organisation-id-form-group" class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationId}')} ? 'govuk-form-group--error' : ''">
+                <label class="govuk-label govuk-!-font-weight-bold" for="organisationId">
+                    Organisation
+                </label>
+                <th:block th:if="${#fields.hasErrors('organisationId')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('organisationId')}" th:text="${err}"></span>
+                </th:block>
+                <select name="organisationId"
+                        class="govuk-select"
+                        id="organisationId"
+                        required="required"
+                        data-required-errormessage="Please select an organisation.">
+                    <option value="" disabled="disabled" th:selected="${form.organisationId == null}">Please select...</option>
+                    <option th:each="pair : ${model.organisationNameIdPairs}"
+                            th:value="${pair.left}"
+                            th:selected="${pair.left.equals(form.organisationId)}"
+                            th:text="${pair.right}"></option>
+                </select>
+            </div>
+
+            <div class="govuk-body govuk-!-margin-top-8">
+                <button type="submit" class="govuk-button">Send invitation</button>
+                <a th:href="@{/}"
+                   class="button-clear">Cancel</a>
+            </div>
+
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>
