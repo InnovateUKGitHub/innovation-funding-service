@@ -1,6 +1,6 @@
 
 insert into question (assign_enabled, description, mark_as_completed_enabled, multiple_statuses, name, short_name, priority, question_type, question_setup_type, competition_id, section_id)
-select 1, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 2, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION', c.id as competition_id, s.id as section_id
+select 1, '<a href="https://www.surveymonkey.co.uk/r/ifsaccount" target="_blank" rel="external">Complete the survey (opens in new window).</a><p>We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.</p>', 1, 0, 'Have you completed the EDI survey?', 'Equality, diversity and inclusion', 3, 'GENERAL', 'EQUALITY_DIVERSITY_INCLUSION', c.id as competition_id, s.id as section_id
 FROM section s, competition c
 where s.competition_id = c.id and s.name = 'Project details' and c.template = 1;
 
