@@ -61,7 +61,7 @@
                     </h3>
                 </div>
                 <div class="govuk-grid-column-one-half alignleft" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
-                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption.text ?: 'Question not answered.'}">Answer</p>
+                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption?.text ?: 'Question not answered.'}">Answer</p>
                 </div>
             </div>
         </div>
@@ -130,7 +130,7 @@
                                    th:id="${'multipleChoiceOption-'+multipleChoiceOption.id}"
                                    th:field="*{multipleChoiceOptionId}"
                                    th:value="${multipleChoiceOption.id}"
-                                   th:checked="${model.selectedMultipleChoiceOption == null ? false : model.selectedMultipleChoiceOption.id == multipleChoiceOption.id}"
+                                   th:checked="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"
                                    th:readonly="${model.readOnly}"
                                    th:errorclass="govuk-input--error"
                                    th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
@@ -149,7 +149,7 @@
                             <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}"
                                     th:value="${multipleChoiceOption.id}"
                                     th:text="${multipleChoiceOption.text}"
-                                    th:selected="${model.selectedMultipleChoiceOption == null ? false : model.selectedMultipleChoiceOption.id == multipleChoiceOption.id}"></option>
+                                    th:selected="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"></option>
                         </select>
                     </div>
                 </div>
