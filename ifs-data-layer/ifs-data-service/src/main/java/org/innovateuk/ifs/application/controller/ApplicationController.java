@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.application.domain.ApplicationProcess;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationDeletionService;
@@ -164,15 +163,5 @@ public class ApplicationController {
     @GetMapping("/get-latest-email-funding-date/{competitionId}")
     public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
         return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
-    }
-
-    @GetMapping("/application-in-reopened-state/{applicationId}")
-    public RestResult<Boolean> applicationInReopenedState(@PathVariable final long applicationId) {
-        return applicationService.getApplicationProcess(applicationId).andOnSuccessReturn(app -> app.getProcessEvent().equals(ApplicationEvent.REOPEN.getType())).toGetResponse();
-    }
-
-    @GetMapping("/application-reopened-date/{applicationId}")
-    public RestResult<ZonedDateTime> getApplicationReopenedDate(@PathVariable final long applicationId) {
-        return applicationService.getApplicationProcess(applicationId).andOnSuccessReturn(ApplicationProcess::getLastModified).toGetResponse();
     }
 }

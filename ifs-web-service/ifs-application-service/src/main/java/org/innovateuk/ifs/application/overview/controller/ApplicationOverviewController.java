@@ -65,8 +65,6 @@ public class ApplicationOverviewController {
         changeApplicationStatusToOpen(application, user);
 
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, user));
-        model.addAttribute("reopened", applicationRestService.applicationInReopenedState(applicationId).getSuccess());
-        model.addAttribute("reopenedDate", applicationRestService.getApplicationReopenedDate(applicationId).getSuccess());
         return "application-overview";
     }
 

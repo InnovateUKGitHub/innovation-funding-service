@@ -31,6 +31,4 @@ public interface ApplicationRestService {
     RestResult<Void> hideApplication(long applicationId, long userId);
     RestResult<Void> deleteApplication(long applicationId);
     RestResult<Void> reopenApplication(long applicationId);
-    RestResult<Boolean> applicationInReopenedState(long applicationId);
-    RestResult<ZonedDateTime> getApplicationReopenedDate(long applicationId);
 }

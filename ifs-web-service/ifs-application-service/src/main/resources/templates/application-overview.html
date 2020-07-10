@@ -24,11 +24,7 @@
 
         <div class="govuk-!-margin-bottom-6">
             <div class="message-alert" th:if="${model.application.completion.intValue() == 100 and !model.application.submitted and model.lead}">
-                <p th:unless="${reopened}" class="govuk-body">Now your application is complete, you need to <a href="#application-overview-submit-cta">review and submit</a> at the bottom of this page.</p>
-                <p th:if="${reopened}" class="govuk-body">Your application was reopened on
-                    <th:block th:text="${#temporals.format(reopenedDate, 'd MMM yyyy')}"></th:block>
-                    . You must <a href="#application-overview-submit-cta">review and submit</a> this application for it to be assessed, even if you haven’t made any changes. No previously submitted versions will be assessed.</p>
-
+                <p class="govuk-body">Now your application is complete, you need to <a href="#application-overview-submit-cta">review and submit</a> at the bottom of this page.</p>
             </div>
         </div>
 
