@@ -104,6 +104,10 @@
     margin: 0;
   }
 
+  .reopen-application-link {
+    font-size: 16px;
+  }
+
   .status-msg {
     @include govuk-font(14);
     display: block;
@@ -305,7 +309,7 @@
     }
 
     .status{
-      width: 39%;
+      width: 42%;
     }
 
     .status-msg{
