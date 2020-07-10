@@ -45,7 +45,7 @@ sed -i -e '/<!-- ${MEMCACHE_ENDPOINT}/d' -e '/${MEMCACHE_ENDPOINT} -->/d' \
 sed -i -e 's/#idp.replayCache.StorageService = shibboleth.StorageService/idp.replayCache.StorageService = shibboleth.MemcachedStorageService/g' \
        -e 's/#idp.artifact.StorageService = shibboleth.StorageService/idp.artifact.StorageService = shibboleth.MemcachedStorageService/g' /opt/shibboleth-idp/conf/idp.properties
 
-sed -i "s/\${GOOGLEANALYTICS_TRACKINGID}/$GOOGLEANALYTICS_TRACKINGID/" /opt/shibboleth-idp/messages/messages.properties
+sed -i "s/\${IFS_WEB_GOOGLEANALYTICS_TRACKINGID}/$IFS_WEB_GOOGLEANALYTICS_TRACKINGID/" /opt/shibboleth-idp/messages/messages.properties
 sed -i "s/\${BUILD_TIMESTAMP}/$BUILD_TIMESTAMP/" /opt/shibboleth-idp/messages/messages.properties
 sed -i "s#\${RESOURCE_DOMAIN}#$RESOURCE_DOMAIN#g" /opt/shibboleth-idp/messages/messages.properties
 
