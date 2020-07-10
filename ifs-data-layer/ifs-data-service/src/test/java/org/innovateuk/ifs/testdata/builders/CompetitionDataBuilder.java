@@ -235,7 +235,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 manyAnswers.setChoices(newArrayList(new MultipleChoiceOptionResource("A"), new MultipleChoiceOptionResource("B"),
                         new MultipleChoiceOptionResource("C"), new MultipleChoiceOptionResource("D"), new MultipleChoiceOptionResource("E"),
                         new MultipleChoiceOptionResource("F"), new MultipleChoiceOptionResource("G"), new MultipleChoiceOptionResource("H"),
-                        new MultipleChoiceOptionResource("I")));
+                        new MultipleChoiceOptionResource("I"), new MultipleChoiceOptionResource("J"), new MultipleChoiceOptionResource("K")));
                 questionSetupCompetitionService.update(manyAnswers);
             }
         });
