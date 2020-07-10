@@ -28,6 +28,7 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
     @Mappings({
             @Mapping(source = "formInput.question", target = "question"),
             @Mapping(source = "formInput.wordCount", target = "formInputMaxWordCount"),
+            @Mapping(source = "multipleChoiceOption.id", target = "multipleChoiceOptionId"),
             @Mapping(source = "multipleChoiceOption.text", target = "multipleChoiceOptionText"),
             @Mapping(source = "updatedBy.user.id", target = "updatedByUser"),
             @Mapping(source = "updatedBy.user.name", target = "updatedByUserName")

@@ -52,6 +52,6 @@ public class GenericQuestionApplicationFormValidatorTest {
 
         FieldError actualError =  (FieldError) bindingResult.getAllErrors().get(0);
         assertEquals("validation.multiple.choice.required", actualError.getCode());
-        assertEquals("answer", actualError.getField());
+        assertEquals("multipleChoiceOptionId", actualError.getField());
     }
 }

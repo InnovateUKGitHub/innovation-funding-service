@@ -158,7 +158,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
-        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false)).thenReturn(restSuccess(noErrors()));
+        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", null, false)).thenReturn(restSuccess(noErrors()));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
@@ -168,7 +168,7 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
                 .param("MultipleChoiceOptionsActive", "false"))
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
 
-        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", false);
+        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "answer", null, false);
         verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
         verify(validator).validate(any(), any());
         verifyNoMoreInteractions(questionStatusRestService);
@@ -187,17 +187,18 @@ public class GenericQuestionApplicationControllerTest extends BaseControllerMock
 
         when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
         when(userRestService.findProcessRole(loggedInUser.getId(), applicationId)).thenReturn(restSuccess(userProcessRole));
-        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", false)).thenReturn(restSuccess(noErrors()));
+        when(formInputResponseRestService.saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", 1L, false)).thenReturn(restSuccess(noErrors()));
         when(questionStatusRestService.markAsComplete(questionId, applicationId, userProcessRole.getId())).thenReturn(restSuccess(emptyList()));
 
         mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/generic", applicationId, questionId)
                 .param("complete", "true")
                 .param("answer", "Yes")
                 .param("textAreaActive", "false")
-                .param("MultipleChoiceOptionsActive", "true"))
+                .param("multipleChoiceOptionId", "1")
+                .param("multipleChoiceOptionsActive", "true"))
                 .andExpect(redirectedUrl(String.format("/application/%d/form/question/%d/generic", applicationId, questionId)));
 
-        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", false);
+        verify(formInputResponseRestService).saveQuestionResponse(loggedInUser.getId(), applicationId, formInput.getId(), "Yes", 1L, false);
         verify(questionStatusRestService).markAsComplete(questionId, applicationId, userProcessRole.getId());
         verify(validator).validate(any(), any());
         verifyNoMoreInteractions(questionStatusRestService);

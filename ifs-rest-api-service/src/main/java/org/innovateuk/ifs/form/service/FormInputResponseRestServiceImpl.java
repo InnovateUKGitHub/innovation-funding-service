@@ -37,6 +37,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                                                                long applicationId,
                                                                long formInputId,
                                                                String value,
+                                                               Long multipleChoiceOptionId,
                                                                boolean ignoreEmpty) {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
@@ -44,6 +45,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
         node.put("applicationId", applicationId);
         node.put("formInputId", formInputId);
         node.put("value", HtmlUtils.htmlEscape(value));
+        node.put("multipleChoiceOptionId", multipleChoiceOptionId);
         node.put("ignoreEmpty", ignoreEmpty);
         return postWithRestResult(formInputResponseRestURL + "/save-question-response/", node, ValidationMessages.class);
     }

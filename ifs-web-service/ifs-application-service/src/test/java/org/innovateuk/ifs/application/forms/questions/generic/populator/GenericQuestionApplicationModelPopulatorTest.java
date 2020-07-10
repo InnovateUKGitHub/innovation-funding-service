@@ -257,7 +257,8 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals((long) applicantQuestion.getCurrentUser().getId(), viewModel.getCurrentUser());
 
         assertEquals(applicantQuestion.getApplicantFormInputs().get(0).getFormInput().getId(), viewModel.getMultipleChoiceFormInputId());
-        assertEquals(applicantQuestion.getApplicantFormInputs().get(0).getFormInput().getMultipleChoiceOptions().get(0).getText(), viewModel.getMultipleChoiceFormInputText());
+        assertEquals(multipleChoiceOptionId, viewModel.getSelectedMultipleChoiceOption().getId());
+        assertEquals(multipleChoiceOptionText, viewModel.getSelectedMultipleChoiceOption().getText());
 
         assertEquals(toUkTimeZone(now), viewModel.getLastUpdated());
         assertEquals("Bob", viewModel.getLastUpdatedByName());

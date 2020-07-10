@@ -61,7 +61,7 @@
                     </h3>
                 </div>
                 <div class="govuk-grid-column-one-half alignleft" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
-                    <p class="govuk-body" th:text="${model.multipleChoiceFormInputText ?: 'Question not answered.'}">Answer</p>
+                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption.text ?: 'Question not answered.'}">Answer</p>
                 </div>
             </div>
         </div>
@@ -119,18 +119,18 @@
 
             <th:block th:if="${model.multipleChoiceOptionsActive}">
                 <div class="govuk-form-group" th:unless="${model.readOnly}"
-                     th:classappend="${#fields.hasErrors('answer')} ? 'govuk-form-group--error'">
-                    <th:block th:if="${#fields.hasErrors('answer')}">
-                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('answer')}" th:text="${err}"></span>
+                     th:classappend="${#fields.hasErrors('multipleChoiceOptionId')} ? 'govuk-form-group--error'">
+                    <th:block th:if="${#fields.hasErrors('multipleChoiceOptionId')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('multipleChoiceOptionId')}" th:text="${err}"></span>
                     </th:block>
                     <div class="govuk-radios" th:classappend="${#lists.size(model.multipleChoiceOptions) <= 2} ? govuk-radios--inline" th:if="${#lists.size(model.multipleChoiceOptions) <= 9}">
                         <div class="govuk-radios__item" th:each="multipleChoiceOption : ${model.multipleChoiceOptions}">
                             <input type="radio" name="innovationAreaChoice" required="required"
                                    class="govuk-radios__input"
                                    th:id="${'multipleChoiceOption-'+multipleChoiceOption.id}"
-                                   th:field="*{answer}"
-                                   th:value="${multipleChoiceOption.text}"
-                                   th:checked="${model.multipleChoiceFormInputId} == ${multipleChoiceOption.id}"
+                                   th:field="*{multipleChoiceOptionId}"
+                                   th:value="${multipleChoiceOption.id}"
+                                   th:checked="${model.selectedMultipleChoiceOption.id == multipleChoiceOption.id}"
                                    th:readonly="${model.readOnly}"
                                    th:errorclass="govuk-input--error"
                                    th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
@@ -141,12 +141,15 @@
                     <div th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
                         <select class="govuk-select"
                                 th:id="multipleChoiceOption"
-                                th:field="*{answer}"
+                                th:field="*{multipleChoiceOptionId}"
                                 th:attr="data-required-errormessage=#{validation.multiple.choice.required}"
                                 th:errorclass="govuk-input--error"
                                 data-auto-complete="">
                             <option value="" >Please Select</option>
-                            <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}" th:value="${multipleChoiceOption.text}" th:text="${multipleChoiceOption.text}"></option>
+                            <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}"
+                                    th:value="${multipleChoiceOption.id}"
+                                    th:text="${multipleChoiceOption.text}"
+                                    th:selected="${model.selectedMultipleChoiceOption.id == multipleChoiceOption.id}"></option>
                         </select>
                     </div>
                 </div>

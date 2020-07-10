@@ -114,7 +114,7 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
         final long applicationId = 5921L;
         final long userId = 9523L;
         final String value = "<html>This is my html saving</html>";
-        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, value);
+        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, value, null);
 
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId)).thenReturn(newProcessRole().build());
         when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(newUser().withId(userId).withFirstName("Test").withLastName("User").build()));
@@ -138,11 +138,15 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
         final long formInputId = 1234L;
         final long applicationId = 5921L;
         final long userId = 9523L;
-        final String value = "Yes";
+        final long multipleChoiceOptionId = 1L;
+        final String multipleChoiceOptionText = "Yes";
         final FormInput formInput = newFormInput().withId(formInputId).withType(FormInputType.MULTIPLE_CHOICE)
                 .withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build();
-        final MultipleChoiceOption multipleChoiceOption = new MultipleChoiceOption(value, formInput);
-        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, value);
+
+        MultipleChoiceOption multipleChoiceOption = new MultipleChoiceOption(multipleChoiceOptionText, formInput);
+        multipleChoiceOption.setId(multipleChoiceOptionId);
+
+        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, multipleChoiceOptionText, multipleChoiceOptionId);
 
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId)).thenReturn(newProcessRole().build());
         when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(newUser().withId(userId).withFirstName("Test").withLastName("User").build()));
@@ -157,7 +161,7 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
 
         List<FormInputResponse> formInputResponses = formInputResponseArgumentCaptor.getAllValues();
         assertEquals(1, formInputResponses.size());
-        assertEquals(value, formInputResponses.get(0).getValue());
+        assertEquals(multipleChoiceOptionText, formInputResponses.get(0).getValue());
         assertEquals(multipleChoiceOption, formInputResponses.get(0).getMultipleChoiceOption());
     }
 

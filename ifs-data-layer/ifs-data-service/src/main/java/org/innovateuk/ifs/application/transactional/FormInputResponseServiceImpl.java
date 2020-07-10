@@ -95,18 +95,19 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
         Long applicationId = formInputResponseCommand.getApplicationId();
         Long formInputId = formInputResponseCommand.getFormInputId();
         String value = formInputResponseCommand.getValue();
+        Long multipleChoiceOptionId = formInputResponseCommand.getMultipleChoiceOptionId();
         Long userId = formInputResponseCommand.getUserId();
         ProcessRole userAppRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId);
 
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->
                         getOrCreateResponse(application, formInput, userAppRole)
-                                .andOnSuccessReturn(response -> updateAndSaveResponse(formInput, response, value, userAppRole, application))
+                                .andOnSuccessReturn(response -> updateAndSaveResponse(formInput, response, value,  multipleChoiceOptionId, userAppRole, application))
                         .andOnSuccessReturn(response -> formInputResponseMapper.mapToResource(response))
                 );
     }
 
-    private FormInputResponse updateAndSaveResponse(FormInput formInput, FormInputResponse response, String value, ProcessRole userAppRole, Application application) {
+    private FormInputResponse updateAndSaveResponse(FormInput formInput, FormInputResponse response, String value, Long multipleChoiceOptionId, ProcessRole userAppRole, Application application) {
         if (response.getValue() == null || !response.getValue().equals(value)) {
             response.setUpdateDate(ZonedDateTime.now());
             response.setUpdatedBy(userAppRole);
@@ -114,7 +115,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
 
         if (formInput.getType().equals(FormInputType.MULTIPLE_CHOICE)) {
             Optional<MultipleChoiceOption> optionalMultipleChoiceOption = formInput.getMultipleChoiceOptions().stream()
-                    .filter(multipleChoiceOption -> multipleChoiceOption.getText().equals(value))
+                    .filter(multipleChoiceOption -> multipleChoiceOption.getId().equals(multipleChoiceOptionId))
                     .findFirst();
             response.setValue(optionalMultipleChoiceOption.map(MultipleChoiceOption::getText).orElse(null));
             response.setMultipleChoiceOption(optionalMultipleChoiceOption.orElse(null));
