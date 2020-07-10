@@ -61,7 +61,7 @@
                     </h3>
                 </div>
                 <div class="govuk-grid-column-one-half alignleft" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
-                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption.text ?: 'Question not answered.'}">Answer</p>
+                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption?.text ?: 'Question not answered.'}">Answer</p>
                 </div>
             </div>
         </div>
