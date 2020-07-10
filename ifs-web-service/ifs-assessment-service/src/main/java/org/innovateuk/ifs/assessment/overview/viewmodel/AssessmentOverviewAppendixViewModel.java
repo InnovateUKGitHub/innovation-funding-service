@@ -8,13 +8,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class AssessmentOverviewAppendixViewModel {
 
-    private long formInputId;
-    private String title;
-    private String name;
-    private String size;
+    private final long formInputId;
+    private final long fileEntryId;
+    private final String title;
+    private final String name;
+    private final String size;
 
-    public AssessmentOverviewAppendixViewModel(long formInputId, String title, String name, String size) {
+    public AssessmentOverviewAppendixViewModel(long formInputId, long fileEntryId, String title, String name, String size) {
         this.formInputId = formInputId;
+        this.fileEntryId = fileEntryId;
         this.title = title;
         this.name = name;
         this.size = size;
@@ -22,6 +24,10 @@ public class AssessmentOverviewAppendixViewModel {
 
     public long getFormInputId() {
         return formInputId;
+    }
+
+    public long getFileEntryId() {
+        return fileEntryId;
     }
 
     public String getTitle() {

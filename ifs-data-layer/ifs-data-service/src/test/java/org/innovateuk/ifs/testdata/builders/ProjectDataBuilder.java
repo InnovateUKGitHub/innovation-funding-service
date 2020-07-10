@@ -103,12 +103,17 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         return with(data -> doAs(anyProjectFinanceUser(), () -> {
             Set<OrganisationResource> organisations = organisationService.findByApplicationId(data.getApplication().getId()).getSuccess();
             for (OrganisationResource org : organisations) {
+                intialiseFinances(data.getProject().getId(), org.getId());
                 updateFinanceChecks(data.getProject().getId(), org.getId());
             }
             if (generateSpendProfile) {
                 spendProfileService.generateSpendProfile(data.getProject().getId()).getSuccess();
             }
         }));
+    }
+
+    private void intialiseFinances(Long projectId, Long organisationId) {
+        projectFinanceService.financeChecksDetails(projectId, organisationId).getSuccess();
     }
 
     public ProjectDataBuilder withSpendProfile(Boolean approveSpendProfile) {

@@ -57,7 +57,7 @@ Assessor dashboard contains the correct competitions
 User can view the competition brief
     [Documentation]    INFUND-5494
     Given the user clicks the button/link        link = ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    When the user clicks the button/link         link = View competition brief
+    When the user clicks the button/link         link = View competition brief (opens in a new window)
     Then The user should get a competition brief window
     And the user should see competition details
     And The user closes the competition brief

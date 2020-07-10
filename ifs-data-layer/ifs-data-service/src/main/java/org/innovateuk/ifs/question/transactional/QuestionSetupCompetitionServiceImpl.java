@@ -95,6 +95,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 initialize(formInput.getAllowedFileTypes());
                 setupResource.setAppendix(formInput.getActive());
+                setupResource.setNumberOfUploads(formInput.getWordCount());
                 setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
@@ -290,14 +291,15 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 FormInputScope.APPLICATION,
                 FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
-            appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
 
-            if(competitionSetupQuestionResource.getAppendix()) {
+            if (competitionSetupQuestionResource.getAppendix()) {
+                appendixFormInput.setWordCount(competitionSetupQuestionResource.getNumberOfUploads());
+                appendixFormInput.setActive(true);
                 appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
-                if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
-                    appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
-                }
+                appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
             } else {
+                appendixFormInput.setWordCount(0);
+                appendixFormInput.setActive(false);
                 appendixFormInput.setAllowedFileTypes(null);
                 appendixFormInput.setGuidanceAnswer(null);
             }

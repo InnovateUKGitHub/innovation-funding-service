@@ -373,11 +373,9 @@
     <div class="govuk-form-group download">
         <h3 class="govuk-heading-s govuk-!-margin-0" th:text="${fileDescription}">View the file:</h3>
         <a th:href="${downloadURL}"
-           th:text="${filename + ', ' + filesizeKbytes + ' KB'}"
+           th:text="${filename + ', ' + filesizeKbytes + ' KB (opens in a new window)'}"
            class="govuk-link"
-           target="_blank"
-           aria-describedby="file-download-hint">filename.pdf, 161.96 KB</a>
-        <span id="file-download-hint" class="govuk-body">(opens in a new window).</span>
+           target="_blank">filename.pdf, 161.96 KB</a>.
     </div>
 </th:block>
 

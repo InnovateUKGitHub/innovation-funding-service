@@ -95,14 +95,14 @@ public class ManagementApplicationPopulator {
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {
         List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
-        return responses.stream().filter(fir -> fir.getFileEntry() != null).
-                map(fir -> {
-                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
-                    FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
-                    String title = fileTitle(formInputResource, fileEntryResource);
-                    return new AppendixViewModel(applicationId, formInputResource.getId(), title, fileEntryResource);
-                }).
-                collect(Collectors.toList());
+        return responses.stream().filter(fir -> fir.getFileEntries() != null && !fir.getFileEntries().isEmpty())
+                .flatMap(fir -> fir.getFileEntries().stream()
+                    .map(file -> {
+                        FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
+                        String title = fileTitle(formInputResource, file);
+                        return new AppendixViewModel(applicationId, formInputResource.getId(), title, file);
+                    }))
+                .collect(Collectors.toList());
     }
 
     private static String fileTitle(FormInputResource formInputResource, FileEntryResource fileEntryResource) {
