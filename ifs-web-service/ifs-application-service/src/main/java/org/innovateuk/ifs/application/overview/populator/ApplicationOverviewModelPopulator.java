@@ -50,13 +50,15 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final QuestionStatusRestService questionStatusRestService;
     private final SectionStatusRestService sectionStatusRestService;
     private final QuestionService questionService;
+    private final ApplicationService applicationService;
 
     public ApplicationOverviewModelPopulator(AsyncFuturesGenerator asyncFuturesGenerator, CompetitionRestService competitionRestService,
                                              SectionRestService sectionRestService, QuestionRestService questionRestService,
                                              UserRestService userRestService, MessageSource messageSource,
                                              OrganisationRestService organisationRestService, QuestionStatusRestService questionStatusRestService,
                                              SectionStatusRestService sectionStatusRestService,
-                                             QuestionService questionService) {
+                                             QuestionService questionService,
+                                             ApplicationService applicationService) {
         super(asyncFuturesGenerator);
         this.competitionRestService = competitionRestService;
         this.sectionRestService = sectionRestService;
@@ -67,6 +69,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         this.questionStatusRestService = questionStatusRestService;
         this.sectionStatusRestService = sectionStatusRestService;
         this.questionService = questionService;
+        this.applicationService = applicationService;
     }
 
     public ApplicationOverviewViewModel populateModel(ApplicationResource application, UserResource user) {
@@ -96,7 +99,9 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels);
+
+
+        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels, application.hasBeenReopened(), application.getLastModified());
     }
 
     private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {
