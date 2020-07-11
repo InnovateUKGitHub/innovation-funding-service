@@ -225,9 +225,11 @@ the user opts no finances for EOI comp
     the user clicks the button/link    jQuery = button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
-    :FOR   ${ELEMENT}   IN    @{programme_questions}
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement_ati}
      \    the user marks each question as complete    ${ELEMENT}
-     the user should see the element           jQuery = button:contains("Add question")
+     the user marks the question as complete with other options     Technical approach  3
+     the user marks the question as complete with other options     Project team  2
+     the user should see the element                                jQuery = button:contains("Add question")
 
 the assessed questions are marked complete except finances(sector type)
     :FOR   ${ELEMENT}   IN    @{sector_questions}
@@ -254,7 +256,7 @@ the user marks each question as complete
 
 the assessed questions are marked as complete(procurement)
     [Arguments]   ${growthTable}
-    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement}
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement_ati}
      \    the user marks each procurement question as complete      ${ELEMENT}
      the user marks the question as complete with other options     Technical approach  3
      the user marks the question as complete with other options     Project team  2
