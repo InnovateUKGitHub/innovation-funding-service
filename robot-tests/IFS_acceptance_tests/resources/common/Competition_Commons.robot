@@ -180,11 +180,11 @@ the user marks the Application as done
     ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
 
 The user removes the Project details questions and marks the Application section as done
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                      link = Application
     the user marks each question as complete             Application details
     the user removes some of the Project details questions
-    the user marks the Assessed questions as complete    ${growthTable}  ${comp_type}
+    the user marks the Assessed questions as complete    ${growthTable}  ${comp_type}  ${competition}
 
 the user marks the Assessed questions as complete
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}

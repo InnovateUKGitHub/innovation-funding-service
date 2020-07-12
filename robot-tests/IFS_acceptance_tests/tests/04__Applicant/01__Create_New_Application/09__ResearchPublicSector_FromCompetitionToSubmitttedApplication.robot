@@ -98,7 +98,7 @@ The competition admin creates a competition for
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
-    the user removes the Project details questions and marks the Application section as done  yes  Generic
+    the user removes the Project details questions and marks the Application section as done  yes  Generic  ${competition}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
