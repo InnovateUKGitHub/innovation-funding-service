@@ -2,6 +2,9 @@
 Documentation   IFS-2688 As a Portfolio manager I am able to create a Prince's Trust competition
 ...
 ...             IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
+...
+...             IFS-7718 EDI question - application form
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -29,7 +32,7 @@ Applicant applies to newly created The Prince's Trust competition
     Then logged in user applies to competition               ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688  IFS-3287  IFS-5920
+    [Documentation]  IFS-2688  IFS-3287  IFS-5920  IFS-7718
     [Tags]
     Given the user clicks the button/link                            link = Application details
     When the user fills in the Application details                   ${application_name}  ${tomorrowday}  ${month}  ${nextyear}

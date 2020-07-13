@@ -93,6 +93,9 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-7702  Configurable multiple choice questions - Comp setup
 ...
 ...               IFS-7703 Applicant can answer multiple choice questions
+...
+...               IFS-7700 EDI application question configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -423,11 +426,11 @@ Application: Application details
 
 External user edits the EDI question.
     [Documentation]  IFS-7700
-    Given When the user clicks the button/link     link = Application
-    And the user clicks the button/link            link = Equality, diversity and inclusion
-    When the user clicks the button/link           jQuery = a:contains("Edit this question")
-    And the user clicks the button/link            jQuery = button:contains("Done")
-    Then the user should see the element           jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
+    Given the user marks each question as complete     Equality, diversity and inclusion
+    And the user clicks the button/link                link = Equality, diversity and inclusion
+    When the user clicks the button/link               jQuery = a:contains("Edit this question")
+    And the user clicks the button/link                jQuery = button:contains("Done")
+    Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635

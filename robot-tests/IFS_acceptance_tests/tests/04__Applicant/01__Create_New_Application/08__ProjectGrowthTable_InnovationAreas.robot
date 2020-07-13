@@ -62,7 +62,7 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     Then the user clicks the button/link     link = Competition details
 
 Comp admin completes ths competition setup
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-7700
     [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition details")
     Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}

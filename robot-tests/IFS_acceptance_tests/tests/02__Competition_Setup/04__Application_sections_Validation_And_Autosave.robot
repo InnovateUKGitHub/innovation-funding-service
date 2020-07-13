@@ -4,11 +4,19 @@ Documentation    INFUND-5629 As a Competitions team member I want to be able to 
 ...              INFUND-6468 Competition setup autosave should be validating types, allowing invalid data and doing a complete validate on mark as complete
 ...
 ...              IFS-7702  Configurable multiple choice questions - Comp setup
+...
+...              IFS-7700 EDI application question configuration
+...
 Suite Setup      Custom suite setup
 Force Tags       CompAdmin
 Resource         ../../resources/defaultResources.robot
 Resource         ../../resources/common/Competition_Commons.robot
 
+*** Variables ***
+${questionSubTitleInfo}     We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.
+${surveyMonkeyUrl}          https://www.surveymonkey.co.uk/r/ifsaccount
+${ediQuestion}              Have you completed the EDI survey?
+${ediQuestionTitle}         Equality, diversity and inclusion
 *** Test Cases ***
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
@@ -77,7 +85,7 @@ Test Heading: Mark as done
     And the user should see the element          jQuery = dt:contains("Max word count") + dd:contains("150")
     [Teardown]  the user clicks the button/link  link = Application
 
-Equality, diversity and inclusion hould display default content
+Equality, diversity and inclusion should display default content
     [Documentation]    IFS-7700
     When The user clicks the button/link                      jQuery = a:contains("Equality, diversity and inclusion")
     Then the user should see EDI question default content
@@ -200,10 +208,10 @@ the user should see the summary validation messages
     the user should see the element     css = [href='#question.choices[1].text']
 
 the user should see EDI question default content
-    the user should see the element     css = [value="Equality, diversity and inclusion"]
-    the user should see the element     css = [value="Have you completed the EDI survey?"]
-    the user should see the element     css = [href="https://www.surveymonkey.co.uk/r/ifsaccount"]
-    the user should see the element     jQuery = p:contains("We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.")
+    the user should see the element     css = [value="${ediQuestionTitle}"]
+    the user should see the element     css = [value="${ediQuestion}"]
+    the user should see the element     css = [href="${surveyMonkeyUrl}"]
+    the user should see the element     jQuery = p:contains("${questionSubTitleInfo}")
     the user should see the element     css = [value="Yes"]
     the user should see the element     css = [value="No"]
 

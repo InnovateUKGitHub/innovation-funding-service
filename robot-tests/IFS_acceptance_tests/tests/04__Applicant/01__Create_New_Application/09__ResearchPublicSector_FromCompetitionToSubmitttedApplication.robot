@@ -8,6 +8,9 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...               IFS-2832 As a Portfolio manager I am able to remove the Project details questions
 ...
 ...               IFS-4046 Person to organisation acceptance test updates
+...
+...               IFS-7718 EDI question - application form
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -27,7 +30,7 @@ ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
-    [Documentation]  IFS-1012 IFS-182 IFS-2832
+    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700
     [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
@@ -44,8 +47,8 @@ The Applicant is able to apply to the competition once is Open and see the corre
     And the user should not see the element              jQuery = li:contains("Public description")
     And the user should not see the element              jQuery = li:contains("Project summary")
 
-Applicant Applies to Research leading Competition
-    [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920
+The Applicant completing the application details
+    [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920  IFS-7718
     [Tags]  Applicant
     When the user clicks the button/link                        link = Application details
     Then the user fills in the Application details              ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
@@ -53,7 +56,7 @@ Applicant Applies to Research leading Competition
     And the applicant marks EDI question as complete
     And the user selects Research category                      Feasibility studies
     And the lead applicant marks every question as complete     Scope
-    And the lead applicant marks every question as complete     1. How innovative is your project?
+    And the lead applicant marks every question as complete     1. ${customQuestion}
     And The user clicks the button/link                         link = Your project finances
     When the user marks the finances as complete                ${researchLeadApp}   Calculate  52,214  yes
     And the user accept the competition terms and conditions    Return to application overview
@@ -111,7 +114,7 @@ The competition admin creates a competition for
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user removes some of the Project details questions
-    [Documentation]  IFS-2832
+    [Documentation]  IFS-2832  IFS-7718
     the user clicks the button/link              jQuery = li:contains("Project summary") button:contains("Remove")
     the user should not see the element          jQuery = li:contains("Project summary")
     the user marks each question as complete     Public description

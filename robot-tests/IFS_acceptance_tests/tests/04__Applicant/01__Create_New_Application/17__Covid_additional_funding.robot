@@ -320,7 +320,7 @@ the user completes covid application
     the user fills in the Application details                ${COVIDapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the applicant adds contributor to Application Team
-    the user selects research category                   Feasibility studies
+    the user selects research category                       Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user accept the competition terms and conditions     Return to application overview
     the user navigates to Your-finances page                 ${COVIDapplicationTitle1}

@@ -14,6 +14,9 @@ Documentation     Suite description
 ...               IFS-5920 Acceptance tests for T's and C's
 ...
 ...               IFS-6054 Display completed projects in the previous tab
+...
+...               IFS-7718 EDI question - application form
+...
 Suite Setup       custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin  Applicant  Assessor
@@ -45,7 +48,7 @@ Applicant applies to newly created EOI competition
     Then logged in user applies to competition  ${comp_name}  1
 
 Applicant submits his application
-    [Documentation]  IFS-2196  IFS-2941  IFS-4046  IFS-5920
+    [Documentation]  IFS-2196  IFS-2941  IFS-4046  IFS-5920  IFS-7718
     Given the user clicks the button/link                                                   link = Application details
     When the user fills in the Application details                                          ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant marks EDI question as complete
