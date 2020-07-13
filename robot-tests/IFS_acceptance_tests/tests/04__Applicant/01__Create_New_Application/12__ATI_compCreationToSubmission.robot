@@ -35,25 +35,6 @@ Applicant applies to newly created ATI competition
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
-<<<<<<< HEAD
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725
-    Given the user clicks the button/link                                                link=Application details
-    When the user fills in the Application details                                       ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    And the applicant completes Application Team
-    And the applicant marks EDI question as complete
-    Then the lead applicant fills all the questions and marks as complete(Programme)
-    When the user navigates to Your-finances page                                        ${ATIapplicationTitle}
-    And the user does not see state aid information
-    And the user marks the finances as complete                                          ${ATIapplicationTitle}   Calculate  52,214  yes
-    And the user clicks the button/link                                                  link = Your project finances
-    And the user checks for funding level guidance at application level
-    And the user accept the competition terms and conditions                             Return to application overview
-    And the user checks the override value is applied
-    And the user selects research category                                               Feasibility studies
-    And the finance overview is marked as incomplete
-    And the application cannot be submited
-
-Invite a collaborator and check the application can the be submitted
     [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725  IFS-7703
     When the user completes the application
     Then the application cannot be submited
@@ -142,6 +123,7 @@ the user completes the application
     the user clicks the button/link                                                         link=Application details
     the user fills in the Application details                                               ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme ATI)
     the lead completes the questions with multiple answer choice and multiple appendices
     the user navigates to Your-finances page                                                ${ATIapplicationTitle}

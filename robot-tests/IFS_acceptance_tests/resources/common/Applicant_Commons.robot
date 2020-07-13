@@ -48,10 +48,11 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
-    ${applicationId} =  get application id by name  ${applicationTitle}
-    the user navigates to the page   ${server}/application/${applicationId}
-    the user clicks the button/link  link = Application details
-    the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    ${applicationId} =  get application id by name     ${applicationTitle}
+    the user navigates to the page                     ${server}/application/${applicationId}
+    the applicant marks EDI question as complete
+    the user clicks the button/link                    link = Application details
+    the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
