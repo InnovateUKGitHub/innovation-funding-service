@@ -20,7 +20,7 @@ The competition admin creates competition
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
-    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}
+    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
     the user fills in the CS Assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
@@ -173,23 +173,23 @@ the user marks the procurement application as done
     the assessed questions are marked as complete(procurement)    ${growthTable}
 
 the user marks the Application as done
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
-    ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
+    ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
 
 The user removes the Project details questions and marks the Application section as done
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                      link = Application
     the user marks each question as complete             Application details
     the user removes some of the Project details questions
-    the user marks the Assessed questions as complete    ${growthTable}  ${comp_type}
+    the user marks the Assessed questions as complete    ${growthTable}  ${comp_type}  ${competition}
 
 the user marks the Assessed questions as complete
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
-    Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
+    Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
@@ -225,9 +225,20 @@ the user opts no finances for EOI comp
     the user clicks the button/link    jQuery = button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
+    [Arguments]  ${competition}
+    Run Keyword If  '${competition}' in ["ATI Competition", "Procurement AT Comp"]     the assessment questions are marked complete for procurement and ati comp
+    ...  ELSE  the assessment questions are marked complete for other programme type competitions
+     the user should see the element                  jQuery = button:contains("Add question")
+
+the assessment questions are marked complete for procurement and ati comp
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement_ati}
+     \    the user marks each question as complete    ${ELEMENT}
+     the user marks the question as complete with other options     Technical approach  3
+     the user marks the question as complete with other options     Project team  2
+
+the assessment questions are marked complete for other programme type competitions
     :FOR   ${ELEMENT}   IN    @{programme_questions}
      \    the user marks each question as complete    ${ELEMENT}
-     the user should see the element           jQuery = button:contains("Add question")
 
 the assessed questions are marked complete except finances(sector type)
     :FOR   ${ELEMENT}   IN    @{sector_questions}
@@ -258,7 +269,7 @@ the user marks each question as complete
 
 the assessed questions are marked as complete(procurement)
     [Arguments]   ${growthTable}
-    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement}
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement_ati}
      \    the user marks each procurement question as complete      ${ELEMENT}
      the user marks the question as complete with other options     Technical approach  3
      the user marks the question as complete with other options     Project team  2
