@@ -10,7 +10,9 @@ Documentation     IFS-7195  Organisational eligibility category in Competition s
 ...               IFS-7199 Read only page for organisation details should not have a banner mentioning only UK based organisations can apply for the International Competition..
 ...
 ...               IFS-7252 When an existing organisation is applying for an international competition, we need to return their organisations based on whether they are UK or International
-
+...
+...               IFS-7793 Partner organisation can not upload a new appendices file
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin Applicant
@@ -55,6 +57,8 @@ ${leadApplicantOrganisationName}                       New Empire 1
 ${ukLeadOrganisationName}                              Organisation2
 ${internationalPartnerOrganisation}                    New Empire
 ${ukBasedOrganisationName}                             NOMENSA LTD
+${ods_file}                                            file_example_ODS.ods
+${excel_file}                                          testing.xlsx
 
 
 *** Test Cases ***
@@ -398,7 +402,7 @@ Lead applicant submits the application
     [Documentation]  IFS-7264
     [Tags]  HappyPath
     Given log in as a different user                      ${lead_international_email}  ${short_password}
-    And the user clicks the button/link                 link = ${internationalApplicationTitle}
+    And the user clicks the button/link                   link = ${internationalApplicationTitle}
     When the applicant submits the application
     Then the user should not see an error in the page
 
@@ -582,11 +586,17 @@ Monitoring office can see the correspondence address entered by non uk based lea
     When the user navigates to the page                                 ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
     Then the user should see the element                                jQuery = p:contains("Argentina")
 
+Partner applicant can upload appendix file
+    [Documentation]  IFS-7793
+    Given lead applicant assigns technical approach section to partner applicant
+    When partner uploads the appendix file
+    Then the lead can see multiple appendices uploaded to the technical approach question
+
 Uk based lead applicant moves application to project setup and generates GOL
     [Documentation]  IFS-7197
     [Tags]  HappyPath
-    When uk lead applicant completes application form
-    And international partner submits finance details
+    Given uk lead applicant completes application form
+    When international partner submits finance details
     Then Uk lead submits international competition application to assesment
     And Uk lead completes project setup details and generated GOL
 
@@ -1127,21 +1137,19 @@ Requesting nomensa organisation IDs
 
 uk lead applicant completes application form
     Requesting nomensa organisation IDs
-    log in as a different user                                      &{ukLeadOrganisationCredentials}
-    the user navigates to the page                                  ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link                                 link = Untitled application (start here)
-    the user clicks the button/link                                 link = Application details
-    the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the user clicks the button/link                                 link = Application team
-    the user clicks the button/link                                 id = remove-organisation-${nomensaLtdOrganisationName}
-    the user clicks the button/link                                 name = remove-team-member
-    the user clicks the button/link                                 id = application-question-complete
-    the user clicks the button/link                                 link = Return to application overview
-    the user should see the element                                 jQuery = li:contains("Application team") > .task-status-complete
+    the user clicks the button/link                          jQuery = button:contains("Save and return to application overview")
+    the user clicks the button/link                          link = Application details
+    the user fills in the Application details                ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                          link = Application team
+    the user clicks the button/link                          id = remove-organisation-${nomensaLtdOrganisationName}
+    the user clicks the button/link                          name = remove-team-member
+    the user clicks the button/link                          id = application-question-complete
+    the user clicks the button/link                          link = Return to application overview
+    the user should see the element                          jQuery = li:contains("Application team") > .task-status-complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                        ${ukLeadInternationalApplicationTitle}
-    lead marks the finance as complete                              ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
-    the user accept the competition terms and conditions            Return to application overview
+    the user navigates to Your-finances page                 ${ukLeadInternationalApplicationTitle}
+    lead marks the finance as complete                       ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
+    the user accept the competition terms and conditions     Return to application overview
 
 international partner submits finance details
     log in as a different user                               &{internationalPartnerOrganisationCredentials}
@@ -1207,3 +1215,28 @@ the user clicks enter details manually on companies house link
     the user clicks the button/link       jQuery = span:contains("Enter details manually")
     The user enters text to a text field  name = organisationName    ${ukLeadOrganisationName}
     the user clicks the button/link       jQuery = button:contains("Continue")
+
+lead applicant assigns technical approach section to partner applicant
+    log in as a different user            &{ukLeadOrganisationCredentials}
+    the user clicks the button/link       link = Untitled application (start here)
+    the user clicks the button/link       jQuery = a:contains("Technical approach")
+    the user uploads the file             css = input[name="appendix"]    ${valid_pdf}
+    the user clicks the button/link       link = Assign to someone else.
+    the user selects the radio button     assignee  assignee3
+    the user clicks the button/link       jQuery = button:contains("Save and return")
+
+partner uploads the appendix file
+    Log in as a different user          &{internationalPartnerOrganisationCredentials}
+    the user clicks the button/link     link = Untitled application (start here)
+    the user clicks the button/link     jQuery = a:contains("Technical approach")
+    the user uploads the file           css = input[name="appendix"]    ${ods_file}
+    the user uploads the file           css = input[name="appendix"]    ${excel_file}
+    the user clicks the button/link     jQuery = button:contains("Assign to lead for review")
+    Log in as a different user           &{ukLeadOrganisationCredentials}
+    the user clicks the button/link     link = Untitled application (start here)
+    the user clicks the button/link     jQuery = a:contains("Technical approach")
+
+the lead can see multiple appendices uploaded to the technical approach question
+    the user should see the element     jQuery = a:contains("${valid_pdf}")
+    the user should see the element     jQuery = a:contains("${ods_file}")
+    the user should see the element     jQuery = a:contains("${excel_file}")

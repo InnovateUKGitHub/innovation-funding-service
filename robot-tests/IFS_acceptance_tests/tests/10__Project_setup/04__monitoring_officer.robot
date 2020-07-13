@@ -219,6 +219,15 @@ Mo is able to view application feedback on a competition which as been through a
     Given the user clicks the button/link   link = view application feedback
     Then the user should see the element    jQuery = h1:contains("Feedback overview")
 
+MO is able to download the appendix file
+    [Documentation]  IFS-7230
+    Given log in as a different user         &{monitoring_officer_one_credentials}
+    And the user clicks the button/link      link = ${PS_LP_Application_Title}
+    When the user clicks the button/link     link = view application feedback
+    And the user clicks the button/link      jQuery = a:contains("Technical approach")
+    Then the user downloads the file         ${monitoring_officer_one_credentials["email"]}    ${server}/application/${PS_LP_Application_No}/form/question/442/forminput/1266/file/298/download   ${DOWNLOAD_FOLDER}/super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
+    [Teardown]    remove the file from the operating system    super-effy---super-efficient-forecasting-of-freight-yields-technical-approach.pdf
+
 Assign MO role to existing IFS user
     [Documentation]  IFS-5104
     [Setup]  log in as a different user         &{Comp_admin1_credentials}

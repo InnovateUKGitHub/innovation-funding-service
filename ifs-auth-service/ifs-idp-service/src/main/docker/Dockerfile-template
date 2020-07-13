@@ -53,7 +53,7 @@ ENV HTTP_PORT=9080 \
   LDAP_ATTRIBUTE_SEARCHFILTER="(mail=\$resolutionContext.principal)" \
   LDAP_VALIDATEPERIOD="PT20S" \
 
-  GOOGLEANALYTICS_TRACKINGID="" \
+  IFS_WEB_GOOGLEANALYTICS_TRACKINGID="" \
   BUILD_TIMESTAMP="@build_timestamp@" \
   RESOURCE_DOMAIN="@resource_domain@" \
 
