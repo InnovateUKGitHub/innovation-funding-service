@@ -752,7 +752,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
         FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
         FormInputResponseFileEntryResource formInputResponseFileEntry =
-                new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId(), Optional.of(fileEntryId));
+                new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId(), fileEntryId);
 
 
         when(userRestService.findProcessRole(applicationId)).thenReturn(restSuccess(asList(assessorRole)));
