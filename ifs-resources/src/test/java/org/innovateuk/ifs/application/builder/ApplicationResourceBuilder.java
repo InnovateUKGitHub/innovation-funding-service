@@ -124,8 +124,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
     public ApplicationResourceBuilder withEvent(String... events) {
         return withArray((event, application) -> application.setEvent(event), events);
     }
-    public ApplicationResourceBuilder withLastModified(ZonedDateTime... lastModifiedDates) {
-        return withArray((lastModifiedDate, application) -> application.setLastModified(lastModifiedDate), lastModifiedDates);
+    public ApplicationResourceBuilder withLastStateChangeDate(ZonedDateTime... lastStateChangeDates) {
+        return withArray((lastStateChangeDate, application) -> application.setLastStateChangeDate(lastStateChangeDate), lastStateChangeDates);
     }
 
 }

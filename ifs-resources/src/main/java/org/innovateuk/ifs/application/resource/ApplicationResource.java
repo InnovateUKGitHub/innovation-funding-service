@@ -52,7 +52,7 @@ public class ApplicationResource {
     private CompanyAge companyAge;
     private CompanyPrimaryFocus companyPrimaryFocus;
     private String event;
-    private ZonedDateTime lastModified;
+    private ZonedDateTime lastStateChangeDate;
 
     public Long getId() {
         return id;
@@ -311,12 +311,12 @@ public class ApplicationResource {
         this.event = event;
     }
 
-    public ZonedDateTime getLastModified() {
-        return lastModified;
+    public ZonedDateTime getLastStateChangeDate() {
+        return lastStateChangeDate;
     }
 
-    public void setLastModified(ZonedDateTime lastModified) {
-        this.lastModified = lastModified;
+    public void setLastStateChangeDate(ZonedDateTime lastStateChangeDate) {
+        this.lastStateChangeDate = lastStateChangeDate;
     }
 
     @Override
@@ -353,7 +353,7 @@ public class ApplicationResource {
                 .append(companyAge, that.companyAge)
                 .append(companyPrimaryFocus, that.companyPrimaryFocus)
                 .append(event, that.event)
-                .append(lastModified, that.lastModified)
+                .append(lastStateChangeDate, that.lastStateChangeDate)
                 .isEquals();
     }
 
@@ -385,7 +385,7 @@ public class ApplicationResource {
                 .append(companyAge)
                 .append(companyPrimaryFocus)
                 .append(event)
-                .append(lastModified)
+                .append(lastStateChangeDate)
                 .toHashCode();
     }
 }

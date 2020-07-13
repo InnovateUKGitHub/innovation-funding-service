@@ -43,7 +43,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "leadOrganisationId", target = "leadOrganisationId"),
             @Mapping(source = "competition.collaborationLevel", target = "collaborationLevel"),
             @Mapping(source = "applicationProcess.processEvent", target ="event"),
-            @Mapping(source = "applicationProcess.lastModified", target ="lastModified")
+            @Mapping(source = "applicationProcess.lastModified", target ="lastStateChangeDate")
     })
     @Override
     public abstract ApplicationResource mapToResource(Application domain);
