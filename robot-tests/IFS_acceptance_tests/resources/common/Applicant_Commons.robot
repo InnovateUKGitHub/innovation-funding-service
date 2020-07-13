@@ -543,6 +543,8 @@ partner organisation accepts the invite to collaborate
 
 the applicant marks EDI question as complete
     the user clicks the button/link     link = Equality, diversity and inclusion
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
     the user clicks the button/link     jQuery = label:contains("Yes")
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
