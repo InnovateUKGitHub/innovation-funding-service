@@ -138,20 +138,21 @@
                                    class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
                         </div>
                     </div>
-                    <div th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                    <th:block th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                        <label class="govuk-label govuk-visually-hidden" for="multipleChoiceOptionId">Please select an answer.</label>
                         <select class="govuk-select"
-                                th:id="multipleChoiceOption"
+                                id="multipleChoiceOptionId"
                                 th:field="*{multipleChoiceOptionId}"
                                 th:attr="data-required-errormessage=#{validation.multiple.choice.required}"
                                 th:errorclass="govuk-input--error"
                                 data-auto-complete="">
-                            <option value="" >Please Select</option>
+                            <option value="">Please select</option>
                             <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}"
                                     th:value="${multipleChoiceOption.id}"
                                     th:text="${multipleChoiceOption.text}"
                                     th:selected="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"></option>
                         </select>
-                    </div>
+                    </th:block>
                 </div>
             </th:block>
 
