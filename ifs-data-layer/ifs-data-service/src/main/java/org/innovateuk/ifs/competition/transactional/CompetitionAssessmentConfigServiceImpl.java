@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.CompetitionAssessmentConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionAssessmentConfigMapper;
@@ -30,6 +31,7 @@ public class CompetitionAssessmentConfigServiceImpl extends RootTransactionalSer
     
     @Override
     @Transactional
+    @ZeroDowntime(reference = "IFS-7369", description = "Remove setting of data on competition table.")
     public ServiceResult<Void> update(long competitionId, CompetitionAssessmentConfigResource competitionAssessmentConfigResource) {
         return find(competitionAssessmentConfigRepository.findOneByCompetitionId(competitionId), notFoundError(CompetitionAssessmentConfig.class, competitionId))
                 .andOnSuccessReturnVoid((config) -> {
@@ -39,6 +41,12 @@ public class CompetitionAssessmentConfigServiceImpl extends RootTransactionalSer
                     config.setHasAssessmentPanel(competitionAssessmentConfigResource.getHasAssessmentPanel());
                     config.setHasInterviewStage(competitionAssessmentConfigResource.getHasInterviewStage());
                     config.setAssessorFinanceView(competitionAssessmentConfigResource.getAssessorFinanceView());
+
+                    config.getCompetition().setAssessorPay(competitionAssessmentConfigResource.getAssessorPay());
+                    config.getCompetition().setAssessorCount(competitionAssessmentConfigResource.getAssessorCount());
+                    config.getCompetition().setHasAssessmentPanel(competitionAssessmentConfigResource.getHasAssessmentPanel());
+                    config.getCompetition().setHasInterviewStage(competitionAssessmentConfigResource.getHasInterviewStage());
+                    config.getCompetition().setAssessorFinanceView(competitionAssessmentConfigResource.getAssessorFinanceView());
                 });
     }
 }
