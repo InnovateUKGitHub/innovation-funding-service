@@ -38,28 +38,4 @@ public abstract class FormInputResponseMapper extends BaseMapper<FormInputRespon
         }
         return object.getId();
     }
-
-    @AfterMapping
-    @ZeroDowntime(description = "remove", reference = "IFS-7311")
-    public void mapFileEntriesNameToFilename(FormInputResponse object, @MappingTarget FormInputResponseResource resource) {
-        if (!object.getFileEntries().isEmpty()) {
-            resource.setFilename(object.getFileEntries().get(0).getName());
-        }
-    }
-
-    @AfterMapping
-    @ZeroDowntime(description = "remove", reference = "IFS-7311")
-    public void mapFileEntriesFilesizeBytesToFilesizeBytes(FormInputResponse object, @MappingTarget FormInputResponseResource resource) {
-        if (!object.getFileEntries().isEmpty()) {
-            resource.setFilesizeBytes(object.getFileEntries().get(0).getFilesizeBytes());
-        }
-    }
-
-    @AfterMapping
-    @ZeroDowntime(description = "remove", reference = "IFS-7311")
-    public void mapFileEntryIdToFileEntryId(FormInputResponse object, @MappingTarget FormInputResponseResource resource) {
-        if (!object.getFileEntries().isEmpty()) {
-            resource.setFileEntry(object.getFileEntries().get(0).getId());
-        }
-    }
 }
