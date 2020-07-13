@@ -139,9 +139,9 @@
                         </div>
                     </div>
                     <th:block th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
-                        <label class="govuk-label govuk-visually-hidden" for="multipleChoiceOption">Please select an answer.</label>
+                        <label class="govuk-label govuk-visually-hidden" for="multipleChoiceOptionId">Please select an answer.</label>
                         <select class="govuk-select"
-                                id="multipleChoiceOption"
+                                id="multipleChoiceOptionId"
                                 th:field="*{multipleChoiceOptionId}"
                                 th:attr="data-required-errormessage=#{validation.multiple.choice.required}"
                                 th:errorclass="govuk-input--error"

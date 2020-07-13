@@ -284,14 +284,14 @@ ${compType_ATI}        Aerospace Technology Institute
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
-@{milestones}                         Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
-@{programme_questions}                Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
-@{programme_questions_procurement}    Business opportunity  Potential market  Project exploitation  Economic benefit  Innovation  Risks  Funding  Adding value
-@{other_questions_procurement}        Technical approach  Project team
-@{sector_questions}                   Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
-@{EOI_questions}                      Business opportunity and potential market  Innovation  Project team  Funding and adding value
-@{APC_questions}                      How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{project_details}                    Project summary  Public description  Scope
+@{milestones}                             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
+@{programme_questions}                    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
+@{programme_questions_procurement_ati}    Business opportunity  Potential market  Project exploitation  Economic benefit  Innovation  Risks  Funding  Adding value
+@{other_questions_procurement_ati}        Technical approach  Project team
+@{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
+@{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
+@{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
+@{project_details}                        Project summary  Public description  Scope
 
 #SBRI Type 1 competition milestones
 @{sbriType1Milestones}     Open date  Briefing event  Submission date
