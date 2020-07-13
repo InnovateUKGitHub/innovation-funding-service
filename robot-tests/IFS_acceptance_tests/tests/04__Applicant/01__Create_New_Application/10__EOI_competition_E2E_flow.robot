@@ -46,11 +46,12 @@ Applicant applies to newly created EOI competition
 
 Applicant submits his application
     [Documentation]  IFS-2196  IFS-2941  IFS-4046  IFS-5920
-    Given the user clicks the button/link               link = Application details
-    When the user fills in the Application details      ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
+    Given the user clicks the button/link                                                   link = Application details
+    When the user fills in the Application details                                          ${EOI_application}  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant marks EDI question as complete
     And the lead applicant fills all the questions and marks as complete(EOI comp type)
     And the applicant checks for competition terms and conditions
-    Then the user should not see the element            jQuery = h2:contains("Finances")
+    Then the user should not see the element                                                jQuery = h2:contains("Finances")
     And the applicant submits the application
 
 Invite a registered assessor

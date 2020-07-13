@@ -34,18 +34,19 @@ Applicant applies to newly created ATI competition
 
 Single applicant cannot submit his application to a collaborative comp
     [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725
-    Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    Given the user clicks the button/link                                                link=Application details
+    When the user fills in the Application details                                       ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
+    And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(Programme)
-    When the user navigates to Your-finances page       ${ATIapplicationTitle}
+    When the user navigates to Your-finances page                                        ${ATIapplicationTitle}
     And the user does not see state aid information
-    And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
-    And the user clicks the button/link                 link = Your project finances
+    And the user marks the finances as complete                                          ${ATIapplicationTitle}   Calculate  52,214  yes
+    And the user clicks the button/link                                                  link = Your project finances
     And the user checks for funding level guidance at application level
-    And the user accept the competition terms and conditions     Return to application overview
+    And the user accept the competition terms and conditions                             Return to application overview
     And the user checks the override value is applied
-    And the user selects research category              Feasibility studies
+    And the user selects research category                                               Feasibility studies
     And the finance overview is marked as incomplete
     And the application cannot be submited
 

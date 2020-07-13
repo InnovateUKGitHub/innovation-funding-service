@@ -47,17 +47,18 @@ The Applicant is able to apply to the competition once is Open and see the corre
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920
     [Tags]  Applicant
-    When the user clicks the button/link                  link = Application details
-    Then the user fills in the Application details        ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
-    the applicant completes Application Team
-    the user selects Research category                    Feasibility studies
-    the lead applicant marks every question as complete   Scope
-    the lead applicant marks every question as complete   1. How innovative is your project?
-    And The user clicks the button/link                   link = Your project finances
-    When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
+    When the user clicks the button/link                        link = Application details
+    Then the user fills in the Application details              ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant completes Application Team
+    And the applicant marks EDI question as complete
+    And the user selects Research category                      Feasibility studies
+    And the lead applicant marks every question as complete     Scope
+    And the lead applicant marks every question as complete     1. How innovative is your project?
+    And The user clicks the button/link                         link = Your project finances
+    When the user marks the finances as complete                ${researchLeadApp}   Calculate  52,214  yes
     And the user accept the competition terms and conditions    Return to application overview
     Then user is not able to submit his application as he exceeds research participation
-    And the user clicks the button/link                   link = Application overview
+    And the user clicks the button/link                         link = Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
 
 Applicant Applies to Public content leading Competition
@@ -111,13 +112,14 @@ The competition admin creates a competition for
 
 the user removes some of the Project details questions
     [Documentation]  IFS-2832
-    the user clicks the button/link             jQuery = li:contains("Project summary") button:contains("Remove")
-    the user should not see the element         jQuery = li:contains("Project summary")
-    the user marks each question as complete    Public description
-    the user marks each question as complete    Scope
-    the user clicks the button/link             link = Public description
-    the user clicks the button/link             css = button[name = "deleteQuestion"]
-    the user should not see the element         jQuery = li:contains("Public description")
+    the user clicks the button/link              jQuery = li:contains("Project summary") button:contains("Remove")
+    the user should not see the element          jQuery = li:contains("Project summary")
+    the user marks each question as complete     Public description
+    the user marks each question as complete     Equality, diversity and inclusion
+    the user marks each question as complete     Scope
+    the user clicks the button/link              link = Public description
+    the user clicks the button/link              css = button[name = "deleteQuestion"]
+    the user should not see the element          jQuery = li:contains("Public description")
 
 user is not able to submit his application as he exceeds research participation
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}

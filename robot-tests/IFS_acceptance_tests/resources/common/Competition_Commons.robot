@@ -241,10 +241,11 @@ the assessed questions are marked complete(EOI type)
 
 the user marks the Application details section as complete
     [Arguments]  ${compType}
-    the user marks each question as complete  Application details
-    the user marks each question as complete  Project summary
-    Run Keyword If    '${compType}'!= '${compType_EOI}'    the user marks each question as complete  Public description
-    the user marks each question as complete  Scope
+    the user marks each question as complete                Application details
+    the user marks each question as complete                Project summary
+    the user marks each question as complete                Equality, diversity and inclusion
+    Run Keyword If    '${compType}'!= '${compType_EOI}'     the user marks each question as complete  Public description
+    the user marks each question as complete                Scope
 
 the user marks each question as complete
     [Arguments]  ${question_link}

@@ -494,7 +494,7 @@ Correspondence address field validations
     And the user clicks the button/link                                    id = save-project-address-button
     Then the user should see field and summary validation messages
 
-United kingdom should displaying in country list of correspondence address for non-uk based organisations
+United kingdom should display in country list of correspondence address for non-uk based organisations
     [Documentation]     IFS - 7241
     [Tags]
     When enter the country in the autocomplete field     United King        United Kingdom
@@ -787,6 +787,7 @@ the user gets an error message on not filling mandatory fields
 
 The user completes the application
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                       ${internationalApplicationTitle}
     lead marks the finance as complete                                             ${internationalApplicationTitle}   Calculate  52,214    id = town       Sydney
@@ -1138,6 +1139,7 @@ uk lead applicant completes application form
     the user clicks the button/link                                 id = application-question-complete
     the user clicks the button/link                                 link = Return to application overview
     the user should see the element                                 jQuery = li:contains("Application team") > .task-status-complete
+    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                        ${ukLeadInternationalApplicationTitle}
     lead marks the finance as complete                              ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT

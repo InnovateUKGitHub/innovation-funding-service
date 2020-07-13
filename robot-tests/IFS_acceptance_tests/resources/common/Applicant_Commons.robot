@@ -540,3 +540,9 @@ partner organisation accepts the invite to collaborate
     The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page
 
+the applicant marks EDI question as complete
+    the user clicks the button/link     link = Equality, diversity and inclusion
+    the user clicks the button/link     jQuery = label:contains("Yes")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete

@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../defaultResources.robot
+Resource          ../Applicant_Commons.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
@@ -18,10 +19,11 @@ Login new application invite academic
 
 the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}
-    the user navigates to the page    ${server}
-    the user clicks the button/link    link=${application_name}
+    the user navigates to the page                       ${server}
+    the user clicks the button/link                      link=${application_name}
     the applicant completes Application Team
-    the user selects Research category  ${rescat}
+    the applicant marks EDI question as complete
+    the user selects Research category                   ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
 the user selects Research category

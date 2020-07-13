@@ -77,6 +77,25 @@ Test Heading: Mark as done
     And the user should see the element          jQuery = dt:contains("Max word count") + dd:contains("150")
     [Teardown]  the user clicks the button/link  link = Application
 
+Equality, diversity and inclusion hould display default content
+    [Documentation]    IFS-7700
+    When The user clicks the button/link                      jQuery = a:contains("Equality, diversity and inclusion")
+    Then the user should see EDI question default content
+
+Equality, diversity and inclusion: validations
+    [Documentation]    IFS-7700
+    [Tags]
+    Given the user clears predefined text in EDI question
+    And The user clicks the button/link                        jQuery = button:contains("Done")
+    Then the user should see the field validation messages
+    And the user should see the summary validation messages
+
+Equality, diversity and inclusion can be removed from application section
+    [Documentation]    IFS-7700
+    Given the user clicks the button/link        link = Application
+    When the user clicks the button/link         name = deleteQuestion
+    Then the user should not see the element     jQuery = a:contains("Equality, diversity and inclusion")
+
 Scope: Sever-side validations assessment questions
     [Documentation]    INFUND-6444
     [Tags]
@@ -161,3 +180,30 @@ User creates a new competition for Application tests
     And the user clicks the button twice        css = label[for="stateAid2"]
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user clicks the button/link         link = Competition details
+
+the user clears predefined text in EDI question
+    The user enters text to a text field    id = question.shortTitle        ${EMPTY}
+    The user enters text to a text field    id = question.title             ${EMPTY}
+    The user enters text to a text field    id = question.guidanceTitle     ${EMPTY}
+    The user enters text to a text field    id = question.choices[0].text   ${EMPTY}
+    The user enters text to a text field    id = question.choices[1].text   ${EMPTY}
+
+the user should see the field validation messages
+    the user should see the element     jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element     jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element     jQuery = table:contains("Answers") .govuk-error-message:contains("${empty_field_warning_message}")
+
+the user should see the summary validation messages
+    the user should see the element     css = [href='#question.shortTitle']
+    the user should see the element     css = [href='#question.title']
+    the user should see the element     css = [href='#question.choices[0].text']
+    the user should see the element     css = [href='#question.choices[1].text']
+
+the user should see EDI question default content
+    the user should see the element     css = [value="Equality, diversity and inclusion"]
+    the user should see the element     css = [value="Have you completed the EDI survey?"]
+    the user should see the element     css = [href="https://www.surveymonkey.co.uk/r/ifsaccount"]
+    the user should see the element     jQuery = p:contains("We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.")
+    the user should see the element     css = [value="Yes"]
+    the user should see the element     css = [value="No"]
+
