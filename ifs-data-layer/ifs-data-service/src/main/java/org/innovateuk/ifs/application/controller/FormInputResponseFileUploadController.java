@@ -52,7 +52,7 @@ public class FormInputResponseFileUploadController {
 
         return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
-            ServiceResult<FormInputResponseFileEntryResource> uploadResult = applicationFormInputUploadService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
+            ServiceResult<FormInputResponseFileEntryResource> uploadResult = applicationFormInputUploadService.uploadResponse(formInputResponseFile, inputStreamSupplier);
             return uploadResult.andOnSuccessReturn(file -> new FormInputResponseFileEntryCreatedResponse(file.getFileEntryResource().getId()));
         });
     }
