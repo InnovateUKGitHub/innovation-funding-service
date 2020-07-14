@@ -101,6 +101,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY);
+        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION);
     }
 }

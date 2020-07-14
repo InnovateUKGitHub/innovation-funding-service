@@ -79,6 +79,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return markQuestionComplete(markAsComplete, APPLICATION_DETAILS);
     }
 
+    public ApplicationDataBuilder markEdiComplete(boolean markAsComplete) {
+        return markQuestionComplete(markAsComplete, EQUALITY_DIVERSITY_INCLUSION);
+    }
+
     public ApplicationDataBuilder markApplicationTeamComplete(boolean markAsComplete) {
         return markQuestionComplete(markAsComplete, APPLICATION_TEAM);
     }

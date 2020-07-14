@@ -8,6 +8,9 @@ Documentation     IFS-2396  ATI Competition type template
 ...               IFS-3421  As a Lead applicant I am unable submit an ineligible application to a Collaborative competition
 ...
 ...               IFS-6725  Guidance Improvement to 'Funding level' in 'Your Funding' in application
+...
+...               IFS-7718  EDI question - application form
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -35,7 +38,7 @@ Applicant applies to newly created ATI competition
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725  IFS-7703
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725  IFS-7703  IFS-7718
     When the user completes the application
     Then the application cannot be submited
 
@@ -123,6 +126,7 @@ the user completes the application
     the user clicks the button/link                                                         link=Application details
     the user fills in the Application details                                               ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme ATI)
     the lead completes the questions with multiple answer choice and multiple appendices
     the user navigates to Your-finances page                                                ${ATIapplicationTitle}

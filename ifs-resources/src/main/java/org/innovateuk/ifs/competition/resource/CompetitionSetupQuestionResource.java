@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
@@ -26,6 +27,8 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "guidance", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "guidanceTitle", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     public interface TextAreaValidationGroup { }
     public interface MultipleChoiceValidationGroup { }
@@ -41,10 +44,8 @@ public class CompetitionSetupQuestionResource {
     private String title;
     private String subTitle;
 
-    @NotBlank
     private String guidanceTitle;
 
-    @NotBlank
     private String guidance;
 
     /* text area */
@@ -338,6 +339,11 @@ public class CompetitionSetupQuestionResource {
 
     public void setMultipleChoice(Boolean multipleChoice) {
         this.multipleChoice = multipleChoice;
+    }
+
+    @JsonIgnore
+    public boolean isGuidanceRequired() {
+        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type;
     }
 
     @Override

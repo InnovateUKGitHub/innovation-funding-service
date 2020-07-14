@@ -10,6 +10,11 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...             IFS-7311 Applicant can upload multiple appendices of allowed file types
 ...
 ...             IFS-7703 Applicant can answer multiple choice questions
+...
+...             IFS-7700 EDI application question configuration
+...
+...             IFS-7718 EDI question - application form
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -28,9 +33,9 @@ ${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310  IFS-7703
-    Given Logging in and Error Checking                &{Comp_admin1_credentials}
-    Then the competition admin creates competition     ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700
+    Given Logging in and Error Checking                          &{Comp_admin1_credentials}
+    Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
 
 Applicant applies to newly created procurement competition
     [Documentation]  IFS-2688
@@ -39,10 +44,11 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition                    ${comp_name}  3
 
 Applicant completes Application questions
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311  IFS-7703
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311  IFS-7703  IFS-7718
     Given the user clicks the button/link                                                        link=Application details
     When the user fills in procurement Application details                                       ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
+    And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(procurement)
     And the lead completes the questions with multiple answer choice and multiple appendices
 
