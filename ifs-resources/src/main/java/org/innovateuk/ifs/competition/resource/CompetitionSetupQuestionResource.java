@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,6 +27,9 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
+    public interface TextAreaValidationGroup { }
+    public interface MultipleChoiceValidationGroup { }
+
     private Long questionId;
 
     private QuestionSetupType type;
@@ -44,13 +48,16 @@ public class CompetitionSetupQuestionResource {
     private String guidance;
 
     /* text area */
-    private Boolean textArea = true;
-    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
-    @NotNull(message = "{validation.field.must.not.be.blank}")
+    private Boolean textArea;
+
+    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}", groups = TextAreaValidationGroup.class)
+    @NotNull(message = "{validation.field.must.not.be.blank}", groups = TextAreaValidationGroup.class)
     private Integer maxWords;
 
     /* multiple choice */
-    private Boolean multipleChoice = false;
+    private Boolean multipleChoice;
+    @Valid
+    @Size(min = 2, max = 15, groups = MultipleChoiceValidationGroup.class)
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
     /* appendix */
