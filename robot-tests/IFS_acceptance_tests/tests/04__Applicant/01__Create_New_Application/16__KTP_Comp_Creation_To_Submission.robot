@@ -167,6 +167,7 @@ The user completes the application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${KTPapplicationTitle}
     the user marks the finances as complete                  ${KTPapplicationTitle}   Calculate  52,214  yes

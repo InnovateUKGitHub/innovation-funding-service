@@ -2,6 +2,9 @@
 Documentation   IFS-2688 As a Portfolio manager I am able to create a Prince's Trust competition
 ...
 ...             IFS-3287 As a Portfolio Manager I am able to switch off requirement for Research category
+...
+...             IFS-7718 EDI question - application form
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -29,14 +32,11 @@ Applicant applies to newly created The Prince's Trust competition
     Then logged in user applies to competition               ${comp_name}  3
 
 Applicant submits his application
-    [Documentation]  IFS-2688  IFS-3287  IFS-5920
+    [Documentation]  IFS-2688  IFS-3287  IFS-5920  IFS-7718
     [Tags]
-    Given the user clicks the button/link                      link = Application details
-    When the user fills in the Application details             ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
-    Then the applicant completes application team
-    And the lead applicant answers the four sections as complete
-    And the user accept the competition terms and conditions    Return to application overview
-    And the user should not see the element                     jQuery = h2:contains("Finances")
+    Given the user clicks the button/link                            link = Application details
+    When the user fills in the Application details                   ${application_name}  ${tomorrowday}  ${month}  ${nextyear}
+    And the user completes all other sections of an application
     Then the applicant submits the application
 
 *** Keywords ***
@@ -73,19 +73,27 @@ the lead applicant fills all the questions and marks as complete(Prince's Trust 
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
 the user marks the Application as done(Prince's Trust comp)
-    the user clicks the button/link             link=Application
-    the user marks each question as complete    Application details
+    the user clicks the button/link                          link=Application
+    the user marks each question as complete                 Application details
+    the user marks each question as complete                 Equality, diversity and inclusion
     the assessed questions are marked complete(EOI type)
     the user opts no finances for EOI comp
-    the user clicks the button/link             jQuery=button:contains("Done")
-    the user clicks the button/link             link=Competition details
-    the user should see the element             jQuery=div:contains("Application") ~ .task-status-complete
+    the user clicks the button/link                          jQuery=button:contains("Done")
+    the user clicks the button/link                          link=Competition details
+    the user should see the element                          jQuery=div:contains("Application") ~ .task-status-complete
 
 the lead applicant answers the four sections as complete
     the lead applicant marks every question as complete  1. Business opportunity and potential market
     the lead applicant marks every question as complete  2. Innovation
     the lead applicant marks every question as complete  3. Project team
     the lead applicant marks every question as complete  4. Funding and adding value
+
+the user completes all other sections of an application
+    the applicant completes application team
+    the applicant marks EDI question as complete
+    the lead applicant answers the four sections as complete
+    the user accept the competition terms and conditions         Return to application overview
+    the user should not see the element                          jQuery = h2:contains("Finances")
 
 Custom suite teardown
     Close browser and delete emails
