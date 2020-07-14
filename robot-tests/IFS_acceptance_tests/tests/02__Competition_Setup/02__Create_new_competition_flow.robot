@@ -93,6 +93,9 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-7702  Configurable multiple choice questions - Comp setup
 ...
 ...               IFS-7703 Applicant can answer multiple choice questions
+...
+...               IFS-7700 EDI application question configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -408,18 +411,26 @@ Application: Application details validations
 Application: Application details
     [Documentation]  INFUND-5633 IFS-2776
     [Tags]  HappyPath
-    Given the user clicks the button/link         link = Application details
-    And the user should see the element           jQuery = h1:contains("Details")
-    When the user selects the radio button        useResubmissionQuestion  false
-    Then the user enters text to a text field     id = minProjectDuration  2
-    And the user enters text to a text field      id = maxProjectDuration  60
-    And The user clicks the button/link           jQuery = button:contains('Done')
-    And the user should see the element           jQuery = li:contains("Application details") .task-status-complete
-    When the user clicks the button/link          link = Application details
-    Then the user should see the element          jQuery = dt:contains("resubmission") + dd:contains("No")
-    And the user should see the element           jQuery = dt:contains("Minimum") + dd:contains("2")
-    And the user should see the element           jQuery = dt:contains("Maximum") + dd:contains("60")
-    [Teardown]  The user clicks the button/link   link = Application
+    Given the user clicks the button/link           link = Application details
+    And the user should see the element             jQuery = h1:contains("Details")
+    When the user selects the radio button          useResubmissionQuestion  false
+    Then the user enters text to a text field       id = minProjectDuration  2
+    And the user enters text to a text field        id = maxProjectDuration  60
+    And The user clicks the button/link             jQuery = button:contains('Done')
+    And the user should see the element             jQuery = li:contains("Application details") .task-status-complete
+    When the user clicks the button/link            link = Application details
+    Then the user should see the element            jQuery = dt:contains("resubmission") + dd:contains("No")
+    And the user should see the element             jQuery = dt:contains("Minimum") + dd:contains("2")
+    And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("60")
+    [Teardown]  the user clicks the button/link     link = Application
+
+External user edits the EDI question.
+    [Documentation]  IFS-7700
+    Given the user marks each question as complete     Equality, diversity and inclusion
+    And the user clicks the button/link                link = Equality, diversity and inclusion
+    When the user clicks the button/link               jQuery = a:contains("Edit this question")
+    And the user clicks the button/link                jQuery = button:contains("Done")
+    Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635

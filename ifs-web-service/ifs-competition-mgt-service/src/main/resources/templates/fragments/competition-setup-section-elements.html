@@ -17,7 +17,7 @@
                     th:text="${question.title}"></dd>
                 <dt class="govuk-grid-column-one-third">Question subtitle</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.subTitle)}">None</dd>
-                <dd class="govuk-grid-column-two-thirds" th:unless="${#strings.isEmpty(question.subTitle)}"
+                <dd class="govuk-grid-column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.subTitle)}"
                     ifs:utext="${question.subTitle}"></dd>
                 <dt class="govuk-grid-column-one-third">Guidance title</dt>
                 <dd class="govuk-grid-column-two-thirds" th:if="${#strings.isEmpty(question.guidanceTitle)}">None</dd>
@@ -222,7 +222,7 @@
                        class="govuk-input govuk-!-width-two-thirds"
                        type="text"
                        id="question.guidanceTitle"
-                       required="required"
+                       th:required="${question.guidanceRequired ? 'required' : null}"
                        th:name="question.guidanceTitle"
                        th:value="${question.guidanceTitle}"
                        maxlength="255"/>
@@ -242,7 +242,7 @@
                                   class="govuk-textarea"
                                   th:classappend="${#fields.hasErrors('question.guidance')} ? 'govuk-textarea--error'"
                                   th:name="question.guidance"
-                                  required="required"
+                                  th:required="${question.guidanceRequired ? 'required' : null}"
                                   ifs:utext="${question.guidance}">
                         </textarea>
                 </div>

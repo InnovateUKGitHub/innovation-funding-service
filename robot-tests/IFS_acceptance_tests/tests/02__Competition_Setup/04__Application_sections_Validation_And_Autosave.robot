@@ -4,11 +4,19 @@ Documentation    INFUND-5629 As a Competitions team member I want to be able to 
 ...              INFUND-6468 Competition setup autosave should be validating types, allowing invalid data and doing a complete validate on mark as complete
 ...
 ...              IFS-7702  Configurable multiple choice questions - Comp setup
+...
+...              IFS-7700 EDI application question configuration
+...
 Suite Setup      Custom suite setup
 Force Tags       CompAdmin
 Resource         ../../resources/defaultResources.robot
 Resource         ../../resources/common/Competition_Commons.robot
 
+*** Variables ***
+${questionSubTitleInfo}     We will not use this data when we assess your application. We collect this data anonymously and only use it to help us understand our funding recipients better.
+${surveyMonkeyUrl}          https://www.surveymonkey.co.uk/r/ifsaccount
+${ediQuestion}              Have you completed the EDI survey?
+${ediQuestionTitle}         Equality, diversity and inclusion
 *** Test Cases ***
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
@@ -76,6 +84,25 @@ Test Heading: Mark as done
     And the user should see the element          jQuery = dt:contains("Question title") + dd:contains("Test title")
     And the user should see the element          jQuery = dt:contains("Max word count") + dd:contains("150")
     [Teardown]  the user clicks the button/link  link = Application
+
+Equality, diversity and inclusion should display default content
+    [Documentation]    IFS-7700
+    When The user clicks the button/link                      jQuery = a:contains("Equality, diversity and inclusion")
+    Then the user should see EDI question default content
+
+Equality, diversity and inclusion: validations
+    [Documentation]    IFS-7700
+    [Tags]
+    Given the user clears predefined text in EDI question
+    And The user clicks the button/link                        jQuery = button:contains("Done")
+    Then the user should see the field validation messages
+    And the user should see the summary validation messages
+
+Equality, diversity and inclusion can be removed from application section
+    [Documentation]    IFS-7700
+    Given the user clicks the button/link        link = Application
+    When the user clicks the button/link         name = deleteQuestion
+    Then the user should not see the element     jQuery = a:contains("Equality, diversity and inclusion")
 
 Scope: Sever-side validations assessment questions
     [Documentation]    INFUND-6444
@@ -161,3 +188,30 @@ User creates a new competition for Application tests
     And the user clicks the button twice        css = label[for="stateAid2"]
     And the user clicks the button/link         jQuery = button:contains("Done")
     And the user clicks the button/link         link = Competition details
+
+the user clears predefined text in EDI question
+    The user enters text to a text field    id = question.shortTitle        ${EMPTY}
+    The user enters text to a text field    id = question.title             ${EMPTY}
+    The user enters text to a text field    id = question.guidanceTitle     ${EMPTY}
+    The user enters text to a text field    id = question.choices[0].text   ${EMPTY}
+    The user enters text to a text field    id = question.choices[1].text   ${EMPTY}
+
+the user should see the field validation messages
+    the user should see the element     jQuery = .govuk-label:contains("Question heading") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element     jQuery = .govuk-label:contains("Question title") ~ .govuk-error-message:contains("${empty_field_warning_message}")
+    the user should see the element     jQuery = table:contains("Answers") .govuk-error-message:contains("${empty_field_warning_message}")
+
+the user should see the summary validation messages
+    the user should see the element     css = [href='#question.shortTitle']
+    the user should see the element     css = [href='#question.title']
+    the user should see the element     css = [href='#question.choices[0].text']
+    the user should see the element     css = [href='#question.choices[1].text']
+
+the user should see EDI question default content
+    the user should see the element     css = [value="${ediQuestionTitle}"]
+    the user should see the element     css = [value="${ediQuestion}"]
+    the user should see the element     css = [href="${surveyMonkeyUrl}"]
+    the user should see the element     jQuery = p:contains("${questionSubTitleInfo}")
+    the user should see the element     css = [value="Yes"]
+    the user should see the element     css = [value="No"]
+
