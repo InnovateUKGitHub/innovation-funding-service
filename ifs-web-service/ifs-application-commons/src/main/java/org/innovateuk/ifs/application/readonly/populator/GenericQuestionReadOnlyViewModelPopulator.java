@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
@@ -26,7 +27,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public GenericQuestionReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
-        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA))
+        Optional<FormInputResource> answerInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
+                || formInput.getType().equals(MULTIPLE_CHOICE))
                 .findAny();
 
         Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> formInput.getType().equals(FILEUPLOAD))
@@ -35,7 +37,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResource> templateDocument = formInputs.stream().filter(formInput -> formInput.getType().equals(TEMPLATE_DOCUMENT))
                 .findAny();
 
-        Optional<FormInputResponseResource> textResponse = textInput
+        Optional<FormInputResponseResource> textResponse = answerInput
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
         Optional<FormInputResponseResource> appendixResponse = appendix
@@ -62,7 +64,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
-                textResponse.map(FormInputResponseResource::getValue).orElse(null),
+                answerInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
+                        ? textResponse.map(FormInputResponseResource::getMultipleChoiceOptionText).orElse(null)
+                        : textResponse.map(FormInputResponseResource::getValue).orElse(null)).orElse(null),
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),

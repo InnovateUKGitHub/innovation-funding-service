@@ -30,8 +30,10 @@
         <h3 class="govuk-heading-m govuk-!-margin-top-6">Your answer:</h3>
         <th:block th:each="item : ${model.responses}">
             <th:block th:if="${item.fileEntries.isEmpty()}">
-                <div th:text="${item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
+                <div th:text="${model.isMultipleChoiceOptions(item) ? item.multipleChoiceOptionText : item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
             </th:block>
+        </th:block>
+        <th:block th:each="item : ${model.responses}">
             <th:block th:unless="${item.fileEntries.isEmpty()}">
                 <h3 th:if="${model.isAppendix(item)}"
                     class="govuk-heading-s govuk-!-margin-0">View appendix:</h3>

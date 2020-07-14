@@ -89,6 +89,10 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 ...
 ...               IFS-7310 Internal user can allow multiple appendices in comp creation
+...
+...               IFS-7702  Configurable multiple choice questions - Comp setup
+...
+...               IFS-7703 Applicant can answer multiple choice questions
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -97,10 +101,13 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
-${peter_freeman}     Peter Freeman
-${competitionTitle}  Competition title   #Test competition
-${amendedQuestion}   Need or challenge
-${customQuestion}    How innovative is your project?
+${peter_freeman}            Peter Freeman
+${competitionTitle}         Competition title   #Test competition
+${amendedQuestion}          Need or challenge
+${customQuestion}           How innovative is your project?
+
+#application questions to be completed
+@{applicationQuestions}     Public description  Team and resources  Market awareness  Outcomes and route to market  Wider impacts  Additionality  Costs and value for money
 
 *** Test Cases ***
 User can create a new competition
@@ -480,20 +487,17 @@ Application: Need or challenge
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     Then the user should not see the element     jQuery = dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
+Application: adding a multiple choice question
+    [Documentation]  IFS-7702
+    Given the user clicks the button/link           link = Edit this question
+    And the user selects the radio button           typeOfQuestion   MULTIPLE_CHOICE
+    When comp admin enters three answer options     one  two  three
+    Then the user clicks the button/link            jQuery = button:contains('Done')
+
 Application: marking questions as complete
-    [Documentation]  IFS-743  IFS-7310
+    [Documentation]  IFS-743  IFS-7310  IFS-7703
     [Tags]  HappyPath
-    When the user clicks the button/link      link = Application
-    Then the user marks question as complete  Public description
-    And the user marks question as complete   Approach and innovation
-    And the user marks question as complete   Team and resources
-    And the user marks question as complete   Market awareness
-    And the user marks question as complete   Outcomes and route to market
-    And the user marks question as complete   Wider impacts
-    And the user marks question as complete   Project management
-    And the user marks question as complete   Risks
-    And the user marks question as complete   Additionality
-    And the user marks question as complete   Costs and value for money
+    Given the user marks every application question as complete
 
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
@@ -895,12 +899,17 @@ the user enters multiple innovation areas
 The user should not see the selected option again
     List Should not Contain Value    css = [id="innovationAreaCategoryIds[1]"]    Biosciences
 
+the user marks every application question as complete
+    :FOR   ${ELEMENT}   IN    @{applicationQuestions}
+         \    the user marks question as complete  ${ELEMENT}
+    the user marks the question as complete with other options     Approach and innovation  3
+    the user marks the question as complete with other options     Project management  2
+    the user marks the question as complete with other options     Risks  2
+
 the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element     jQuery = li:contains("${question_link}") .task-status-complete
     the user clicks the button/link         jQuery = a:contains("${question_link}")
-    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the radio button     numberOfUploads  3
-    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
     the user clicks the button/link         jQuery = button:contains('Done')
     the user should see the element         jQuery = li:contains("${question_link}") .task-status-complete
 
@@ -940,3 +949,4 @@ Custom suite teardown
 
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
+

@@ -16,7 +16,7 @@ import java.util.List;
 public interface FormInputResponseRestService {
     RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(long applicationId);
 
-    RestResult<ValidationMessages> saveQuestionResponse(long userId, long applicationId, long formInputId, String value, boolean ignoreEmpty);
+    RestResult<ValidationMessages> saveQuestionResponse(long userId, long applicationId, long formInputId, String value, Long multipleChoiceOptionId, boolean ignoreEmpty);
 
     RestResult<FileEntryResource> createFileEntry(long formInputId, long applicationId, long processRoleId, String contentType, long contentLength, String originalFilename, byte[] file);
 

@@ -281,6 +281,14 @@ tr {
 .textarea-wrapped {
   position: relative;
 
+  &.short {
+    textarea,
+    [contenteditable="true"],
+    .readonly {
+      min-height: 150px;
+    }
+  }
+
   .textarea-header {
     @include govuk-font(14);
     border: 2px solid $govuk-border-colour;

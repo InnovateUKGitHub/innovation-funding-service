@@ -52,21 +52,32 @@
             </div>
         </th:block>
 
-        <h3 class="govuk-heading-s">
-            <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
-            <th:block th:text="${model.questionSubtitle}">Project team</th:block>
-        </h3>
-
-        <p class="govuk-hint" th:if="${model.questionDescription != null}" th:text="${model.questionDescription}"></p>
-
-        <details class="govuk-details" role="group">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles"
-                 ifs:utext="${model.questionGuidance}">Guidance
+        <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'clear-floats'">
+            <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'govuk-grid-row govuk-!-margin-top-6'">
+                <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'govuk-grid-column-one-half'">
+                    <h3 class="govuk-heading-s">
+                        <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
+                        <th:block th:text="${model.questionSubtitle}">Project team</th:block>
+                    </h3>
+                </div>
+                <div class="govuk-grid-column-one-half alignleft" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption?.text ?: 'Question not answered.'}">Answer</p>
+                </div>
             </div>
-        </details>
+        </div>
+
+        <th:block th:unless="${model.readOnly}">
+            <p class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"></p>
+
+            <details class="govuk-details" role="group">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
+                </summary>
+                <div class="govuk-details__text wysiwyg-styles"
+                     ifs:utext="${model.questionGuidance}">Guidance
+                </div>
+            </details>
+        </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
               data-autosave="autosaveFormPost" enctype="multipart/form-data"
@@ -74,6 +85,8 @@
 
             <th:block th:unless="${model.readOnly}">
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+                <input type="hidden" th:field="${model.textAreaActive}" />
+                <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
             <div class="govuk-form-group" th:if="${model.textAreaActive}"
@@ -103,6 +116,45 @@
                     </div>
                 </div>
             </div>
+
+            <th:block th:if="${model.multipleChoiceOptionsActive}">
+                <div class="govuk-form-group" th:unless="${model.readOnly}"
+                     th:classappend="${#fields.hasErrors('multipleChoiceOptionId')} ? 'govuk-form-group--error'">
+                    <th:block th:if="${#fields.hasErrors('multipleChoiceOptionId')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('multipleChoiceOptionId')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios" th:classappend="${#lists.size(model.multipleChoiceOptions) <= 2} ? govuk-radios--inline" th:if="${#lists.size(model.multipleChoiceOptions) <= 9}">
+                        <div class="govuk-radios__item" th:each="multipleChoiceOption : ${model.multipleChoiceOptions}">
+                            <input type="radio" name="innovationAreaChoice" required="required"
+                                   class="govuk-radios__input"
+                                   th:id="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                                   th:field="*{multipleChoiceOptionId}"
+                                   th:value="${multipleChoiceOption.id}"
+                                   th:checked="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"
+                                   th:readonly="${model.readOnly}"
+                                   th:errorclass="govuk-input--error"
+                                   th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
+                            <label th:for="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                                   class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
+                        </div>
+                    </div>
+                    <th:block th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                        <label class="govuk-label govuk-visually-hidden" for="multipleChoiceOptionId">Please select an answer.</label>
+                        <select class="govuk-select"
+                                id="multipleChoiceOptionId"
+                                th:field="*{multipleChoiceOptionId}"
+                                th:attr="data-required-errormessage=#{validation.multiple.choice.required}"
+                                th:errorclass="govuk-input--error"
+                                data-auto-complete="">
+                            <option value="">Please select</option>
+                            <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}"
+                                    th:value="${multipleChoiceOption.id}"
+                                    th:text="${multipleChoiceOption.text}"
+                                    th:selected="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"></option>
+                        </select>
+                    </th:block>
+                </div>
+            </th:block>
 
             <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
                 <div class="govuk-form-group download">
