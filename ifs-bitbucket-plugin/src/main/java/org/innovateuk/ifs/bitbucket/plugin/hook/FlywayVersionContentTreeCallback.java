@@ -5,16 +5,15 @@ import com.atlassian.bitbucket.content.ContentTreeNode;
 import com.atlassian.bitbucket.content.ContentTreeSummary;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
-import static java.util.Collections.sort;
 import static org.apache.commons.lang3.tuple.Pair.of;
 
 /**
@@ -29,13 +28,8 @@ public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallbac
     private static final Pattern FLYWAY_MINOR_PATCH_PATTERN = Pattern.compile(FLYWAY_MINOR_PATCH);
     private static final String FLYWAY_END_PATCH = "__.*\\.sql\\z";
     private static final Pattern FLYWAY_PATCH_PATTERN = Pattern.compile(FLYWAY_MAJOR_PATCH + FLYWAY_MINOR_PATCH + "*" + FLYWAY_END_PATCH);
-    private static final Comparator<Pair<String, List<Integer>>> FLYWAY_VERSION_COMPARATOR = new Comparator<Pair<String, List<Integer>>>() {
-        @Override
-        public int compare(Pair<String, List<Integer>> o1, Pair<String, List<Integer>> o2) {
-            return new FlywayVersionComparator().compare(o1.getValue(), o2.getValue());
-        }
-    };
-    private final List<Pair<String, List<Integer>>> versionNumbers = new ArrayList<Pair<String, List<Integer>>>();
+    private static final Comparator<Pair<String, List<Integer>>> FLYWAY_VERSION_COMPARATOR = (o1, o2) -> new FlywayVersionComparator().compare(o1.getValue(), o2.getValue());
+    private final List<Pair<String, List<Integer>>> versionNumbers = new ArrayList<>();
     private final Consumer<List<Pair<String, List<Integer>>>> callBack;
 
     public FlywayVersionContentTreeCallback(final Consumer<List<Pair<String, List<Integer>>>> callBack) {
@@ -43,20 +37,20 @@ public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallbac
     }
 
     @Override
-    public boolean onTreeNode(final ContentTreeNode node) throws IOException {
+    public boolean onTreeNode(final ContentTreeNode node) {
         final String name = node.getPath().getName();
         versionNumbers.add(versionFromName(name)); // Might be empty
         return true; // Keep going
     }
 
     @Override
-    public void onEnd(final ContentTreeSummary summary) throws IOException {
+    public void onEnd(final ContentTreeSummary summary) {
         final List<Pair<String, List<Integer>>> sorted = sortAndFilter(versionNumbers);
         callBack.accept(sorted);
     }
 
     static List<Pair<String, List<Integer>>> sortAndFilter(final List<Pair<String, List<Integer>>> unsorted) {
-        final List<Pair<String, List<Integer>>> sorted = new ArrayList<Pair<String, List<Integer>>>(unsorted);
+        final List<Pair<String, List<Integer>>> sorted = new ArrayList<>(unsorted);
         final Iterator<Pair<String, List<Integer>>> iterator = sorted.iterator();
         while (iterator.hasNext()) {
             final Pair<String, List<Integer>> toRemove = iterator.next();
@@ -64,12 +58,12 @@ public class FlywayVersionContentTreeCallback extends AbstractContentTreeCallbac
                 iterator.remove();
             }
         }
-        sort(sorted, FLYWAY_VERSION_COMPARATOR);
+        sorted.sort(FLYWAY_VERSION_COMPARATOR);
         return sorted;
     }
 
     static Pair<String, List<Integer>> versionFromName(final String name) {
-        final List<Integer> version = new ArrayList<Integer>();
+        final List<Integer> version = new ArrayList<>();
         final Matcher matcher = FLYWAY_PATCH_PATTERN.matcher(name);
         if (matcher.find()) {
             final Matcher major = FLYWAY_MAJOR_PATCH_PATTERN.matcher(name);
