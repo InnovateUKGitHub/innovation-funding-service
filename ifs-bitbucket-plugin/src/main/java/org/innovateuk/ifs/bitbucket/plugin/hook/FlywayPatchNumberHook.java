@@ -53,7 +53,8 @@ public class FlywayPatchNumberHook implements RepositoryMergeCheck {
         if (errors.isEmpty()) {
             return RepositoryHookResult.accepted();
         } else {
-            return RepositoryHookResult.rejected("Flyway versioning issues", String.join("/n", errors));
+            String message = String.join("/n", errors);
+            return RepositoryHookResult.rejected(message, message);
         }
     }
 }
