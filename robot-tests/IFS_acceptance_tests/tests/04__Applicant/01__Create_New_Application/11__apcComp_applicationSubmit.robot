@@ -8,6 +8,9 @@ Documentation     IFS-2284 Assign new Ts and Cs for APC competition type templat
 ...               IFS-4221  As an applicant I am only able to invite contributors to a single project type competition application
 ...
 ...               IFS-5920 Acceptance tests for T's and C's
+...
+...               IFS-7718 EDI question - application form
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -35,13 +38,14 @@ Applicant applies to newly created APC competition
     And the applicant sees single comp finance summary
 
 Applicant submits his application
-    [Documentation]  IFS-2286  IFS-5920
-    Given the user clicks the button/link               link = Application details
-    When the user fills in the Application details      ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    [Documentation]  IFS-2286  IFS-5920  IFS-7718
+    Given the user clicks the button/link                                          link = Application details
+    When the user fills in the Application details                                 ${apcApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(APC)
     When the user navigates to Your-finances page       ${apcApplicationTitle}
-    And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
-    And the user accept the competition terms and conditions    Return to application overview
+    And the user marks the finances as complete         ${apcApplicationTitle}     labour costs  54,000  yes
+    And the user accept the competition terms and conditions                       Return to application overview
     Then the applicant submits the application
 
 The internal user checks accepted terms and conditions for submitted application

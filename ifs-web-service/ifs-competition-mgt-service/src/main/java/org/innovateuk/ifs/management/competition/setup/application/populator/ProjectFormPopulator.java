@@ -17,7 +17,7 @@ import java.util.Optional;
  * Form populator for the application form competition setup section.
  */
 @Service
-public class ProjectFormPopulator implements CompetitionSetupSubsectionFormPopulator {
+public class ProjectFormPopulator extends AbstractFormInputQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
@@ -37,6 +37,7 @@ public class ProjectFormPopulator implements CompetitionSetupSubsectionFormPopul
                     .getByQuestionId(objectId.get()).getSuccess();
             competitionSetupForm.setQuestion(questionResource);
             competitionSetupForm.setRemovable(true);
+            populateCommon(questionResource, competitionSetupForm);
         } else {
             throw new ObjectNotFoundException();
         }

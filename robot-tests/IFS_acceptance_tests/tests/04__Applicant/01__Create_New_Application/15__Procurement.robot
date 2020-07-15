@@ -8,6 +8,13 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...             IFS-7310 Internal user can allow multiple appendices in comp creation
 ...
 ...             IFS-7311 Applicant can upload multiple appendices of allowed file types
+...
+...             IFS-7703 Applicant can answer multiple choice questions
+...
+...             IFS-7700 EDI application question configuration
+...
+...             IFS-7718 EDI question - application form
+...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
 Resource        ../../../resources/defaultResources.robot
@@ -17,14 +24,16 @@ Resource        ../../../resources/common/Assessor_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${comp_name}         Procurement AT Comp
-${appl_name}         Procurement app
-${ods_file}          file_example_ODS.ods
-${excel_file}        testing.xlsx
+${comp_name}                  Procurement AT Comp
+${appl_name}                  Procurement app
+${ods_file}                   file_example_ODS.ods
+${excel_file}                 testing.xlsx
+${pdf_file}                   testing.pdf
+${multiple_choice_answer}     option2
 
 *** Test Cases ***
 Comp Admin creates procurement competition
-    [Documentation]  IFS-6368   IFS-7310
+    [Documentation]  IFS-6368   IFS-7310  IFS-7703  IFS-7700
     Given Logging in and Error Checking                          &{Comp_admin1_credentials}
     Then the competition admin creates competition               ${rto_type_id}  ${comp_name}  procurement  Programme  2  PROCUREMENT  PROJECT_SETUP  no  2  true  single-or-collaborative
 
@@ -35,11 +44,13 @@ Applicant applies to newly created procurement competition
     Then logged in user applies to competition                    ${comp_name}  3
 
 Applicant completes Application questions
-    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311
-    Given the user clicks the button/link                                                 link=Application details
-    When the user fills in procurement Application details                                ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
+    [Documentation]  IFS-2688 IFS-3287  IFS-5920  IFS-6096  IFS-5097  IFS-7311  IFS-7703  IFS-7718
+    Given the user clicks the button/link                                                        link=Application details
+    When the user fills in procurement Application details                                       ${appl_name}  ${tomorrowday}  ${month}  ${nextyear}
     And the applicant completes Application Team
+    And the applicant marks EDI question as complete
     Then the lead applicant fills all the questions and marks as complete(procurement)
+    And the lead completes the questions with multiple answer choice and multiple appendices
 
 Applicant fills in project costs with VAT
     [Documentation]  IFS-5098
@@ -94,7 +105,7 @@ Comp Admin allocates assessor to application
     Then the user clicks the button/link          jQuery = button:contains("Notify assessors")
 
 Allocated assessor assess the application
-    [Documentation]  IFS-2376  IFS-7311
+    [Documentation]  IFS-2376  IFS-7311 IFS-7703
     Given Log in as a different user                                                  &{assessor_credentials}
     And the user accepts the application to assess
     And the user should be redirected to the correct page                             ${server}/assessment/assessor/dashboard/competition/${competitionId}
@@ -153,6 +164,8 @@ the user accepts the application to assess
 
 the user can see multiple appendices uploaded to the application question
     the user clicks the button/link     jQuery = a:contains("Technical approach")
+    the user should see the element     jQuery = p:contains("${multiple_choice_answer}")
+    the user should see the element     jQuery = a:contains("${pdf_file}")
     the user should see the element     jQuery = a:contains("${ods_file}")
     the user should see the element     jQuery = a:contains("${excel_file}")
     the user clicks the button/link     link = Back to your assessment overview
@@ -245,14 +258,19 @@ the user checks the VAT calculations
     the user clicks the button/link                link = Your project finances
 
 the user completes the project details
-    log in as a different user            &{RTO_lead_applicant_credentials}
-    the user navigates to the page        ${server}/project-setup/project/${ProjectID}
-    the user should not see the element   jQuery = h2:contains("Documents")
-    the user clicks the button/link       link = Project details
-    the user clicks the button/link       link = Correspondence address
+    log in as a different user                   &{RTO_lead_applicant_credentials}
+    the user navigates to the page                ${server}/project-setup/project/${ProjectID}
+    the user clicks the button/link               link = view application feedback
+    the user clicks the button/link               link = 5. Technical approach
+    the user should see the element               jQuery = p:contains("${multiple_choice_answer}")
+    the user clicks the button/link               link = Feedback overview
+    the user clicks the button/link               link = Back to set up your project
+    the user should not see the element           jQuery = h2:contains("Documents")
+    the user clicks the button/link               link = Project details
+    the user clicks the button/link               link = Correspondence address
     the user enter the Correspondence address
-    the user clicks the button/link       link = Return to set up your project
-    the user should see the element       css = ul li.complete:nth-child(1)
+    the user clicks the button/link               link = Return to set up your project
+    the user should see the element               css = ul li.complete:nth-child(1)
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${appl_name}
