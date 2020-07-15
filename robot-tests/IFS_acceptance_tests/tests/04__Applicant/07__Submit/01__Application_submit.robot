@@ -125,7 +125,6 @@ Status of the submitted application
 *** Keywords ***
 the applicant clicks Yes in the submit modal
     the user clicks the button/link    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link    jQuery = .govuk-button:contains("Yes, I want to submit my application")
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled Without Screenshots    jQuery = .govuk-button:contains("Submit application")

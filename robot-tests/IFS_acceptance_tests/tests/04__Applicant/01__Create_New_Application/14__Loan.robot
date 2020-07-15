@@ -160,8 +160,7 @@ the user enters empty funding amount
 the user submits the loan application
     the user clicks the button/link           link = Application overview
     the user clicks the button/link           link = Review and submit
-    the user clicks the button/link           id = submit-application-button-modal
-    the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
+    the user clicks the button/link           id = submit-application-button
 
 the user completes the project details
     log in as a different user            &{lead_applicant_credentials}

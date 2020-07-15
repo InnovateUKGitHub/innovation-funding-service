@@ -198,7 +198,6 @@ the applicant submits the procurement application
     the user clicks the button/link                             link = Review and submit
     the user should not see the element                         jQuery = .task-status-incomplete
     the user clicks the button/link                             jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                             jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page           track
     the user should see the element                             link = Print application
     the user navigates to the page without the usual headers    ${SERVER}/application/${application_id}/print?noprint    #This URL its only for testing purposes
