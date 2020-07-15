@@ -72,7 +72,7 @@ Application overview complete status
 
 Applicant dashboard shows correct status
     [Documentation]  IFS-4265
-    Given the user clicks the button/link   link = Applications
+    Given the user clicks the button/link   link = Back to applications
     Then the user should see the element    jQuery = .task:contains("${application_rto_name}") ~ .status:contains("Ready to review and submit")
     [Teardown]  the user clicks the button/link  link = ${application_rto_name}
 
@@ -125,7 +125,6 @@ Status of the submitted application
 *** Keywords ***
 the applicant clicks Yes in the submit modal
     the user clicks the button/link    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link    jQuery = .govuk-button:contains("Yes, I want to submit my application")
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
     Wait Until Element Is Enabled Without Screenshots    jQuery = .govuk-button:contains("Submit application")

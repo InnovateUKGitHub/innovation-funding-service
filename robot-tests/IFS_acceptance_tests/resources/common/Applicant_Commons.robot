@@ -48,10 +48,11 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
-    ${applicationId} =  get application id by name  ${applicationTitle}
-    the user navigates to the page   ${server}/application/${applicationId}
-    the user clicks the button/link  link = Application details
-    the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    ${applicationId} =  get application id by name     ${applicationTitle}
+    the user navigates to the page                     ${server}/application/${applicationId}
+    the applicant marks EDI question as complete
+    the user clicks the button/link                    link = Application details
+    the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
@@ -433,7 +434,6 @@ the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
@@ -540,3 +540,18 @@ partner organisation accepts the invite to collaborate
     The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page
 
+the applicant marks EDI question as complete
+    the user clicks the button/link     link = Equality, diversity and inclusion
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+    the user clicks the button/link     jQuery = label:contains("Yes")
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+    the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
+
+the user uploads an appendix
+    the user clicks the button/link     link = 8. Project team
+    the user clicks the button/link     id = edit
+    the user uploads the file           css = .inputfile    ${5mb_pdf}
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview

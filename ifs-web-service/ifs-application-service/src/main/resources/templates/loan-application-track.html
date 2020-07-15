@@ -37,6 +37,8 @@
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View part A</a>
+                    <a th:if=${model.reopenLinkVisible} th:href="@{/application/{id}/confirm-reopen(id=${model.currentApplication.getId()})}"
+                       class="govuk-link govuk-!-margin-right-6">Reopen application</a>
                     <a th:href="@{/application/{id}/print(id=${model.currentApplication.getId()})}"
                        class="govuk-link">Print part A</a>
                 </div>

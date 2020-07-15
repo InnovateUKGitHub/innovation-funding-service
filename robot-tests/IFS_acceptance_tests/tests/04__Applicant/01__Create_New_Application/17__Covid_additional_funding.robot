@@ -318,8 +318,9 @@ the user completes covid application
     the user clicks the button/link                          jQuery = button:contains("Save and continue")
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant marks EDI question as complete
     the applicant adds contributor to Application Team
-    And the user selects research category                   Feasibility studies
+    the user selects research category                       Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user accept the competition terms and conditions     Return to application overview
     the user navigates to Your-finances page                 ${COVIDapplicationTitle1}
@@ -399,10 +400,3 @@ the internal user can complete PS
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}
     Set suite variable    ${ProjectID}
-
-the user uploads an appendix
-    the user clicks the button/link     link = 5. Technical approach
-    the user clicks the button/link     id = edit
-    the user uploads the file           css = .inputfile    ${5mb_pdf}
-    the user clicks the button/link     id = application-question-complete
-    the user clicks the button/link     link = Back to application overview
