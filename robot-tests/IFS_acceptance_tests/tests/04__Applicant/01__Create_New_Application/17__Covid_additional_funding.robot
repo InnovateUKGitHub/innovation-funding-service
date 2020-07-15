@@ -400,10 +400,3 @@ the internal user can complete PS
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}
     Set suite variable    ${ProjectID}
-
-the user uploads an appendix
-    the user clicks the button/link     link = 5. Technical approach
-    the user clicks the button/link     id = edit
-    the user uploads the file           css = .inputfile    ${5mb_pdf}
-    the user clicks the button/link     id = application-question-complete
-    the user clicks the button/link     link = Back to application overview

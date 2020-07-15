@@ -10,7 +10,7 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
+    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to applications',linkUrl=@{/applicant/dashboard}"></th:block>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
 
@@ -31,8 +31,9 @@
         <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Competition:</h3>
         <p class="govuk-body" th:text="${competitionName}"/>
 
-        <p class="govuk-body">You will be able to make changes to this application when you reopen it. After you have made  all your changes,
-            you must resubmit the application.</p>
+        <p class="govuk-body">You will be able to make changes to this application after you reopen it.</p>
+        <p class="govuk-body"><strong>You must resubmit this application</strong> for it to be assessed, even if you haven't made any changes.</p>
+        <p class="govuk-body">No previously submitted versions of this application will be assessed.</p>
 
         <form method="post" id="reopen-application" th:action="@{/application/{id}/confirm-reopen(id=${applicationId})}">
             <input type="submit" tabindex="0" class="govuk-button" value="Reopen the application" />
