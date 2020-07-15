@@ -434,7 +434,6 @@ the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
@@ -549,3 +548,10 @@ the applicant marks EDI question as complete
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
     the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
+
+the user uploads an appendix
+    the user clicks the button/link     link = 8. Project team
+    the user clicks the button/link     id = edit
+    the user uploads the file           css = .inputfile    ${5mb_pdf}
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview

@@ -473,8 +473,7 @@ The user is able to validate conversion spredsheet links works
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user clicks the button/link           id = submit-application-button-modal
-    the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
+    the user clicks the button/link           id = submit-application-button
 
 The user is able to verify validation on each page
     validate errors on Application details page
