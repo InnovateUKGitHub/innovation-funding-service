@@ -72,7 +72,7 @@ Application overview complete status
 
 Applicant dashboard shows correct status
     [Documentation]  IFS-4265
-    Given the user clicks the button/link   link = Applications
+    Given the user clicks the button/link   link = Back to applications
     Then the user should see the element    jQuery = .task:contains("${application_rto_name}") ~ .status:contains("Ready to review and submit")
     [Teardown]  the user clicks the button/link  link = ${application_rto_name}
 

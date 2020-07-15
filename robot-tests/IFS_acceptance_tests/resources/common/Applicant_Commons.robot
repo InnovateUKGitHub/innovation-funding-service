@@ -548,3 +548,10 @@ the applicant marks EDI question as complete
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
     the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
+
+the user uploads an appendix
+    the user clicks the button/link     link = 8. Project team
+    the user clicks the button/link     id = edit
+    the user uploads the file           css = .inputfile    ${5mb_pdf}
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview

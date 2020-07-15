@@ -11,6 +11,7 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-7718  EDI question - application form
 ...
+...               IFS-7547  Lead applicant can reopen a submitted application
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -74,12 +75,40 @@ The lead can now submit the application
      When the user clicks the button/link          link = Back to application overview
      Then the applicant submits the application
 
+Collaborator cannot reopen the application
+    [Documentation]  IFS-7547
+    Given log in as a different user             &{collaborator1_credentials}
+    When the user should see the element         link = ${ATIapplicationTitle}
+    Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+
+Lead can reopen application
+    [Documentation]  IFS-7547
+    [Setup]  log in as a different user       &{lead_applicant_credentials}
+    Given the user clicks the button/link     link = Dashboard
+    When the user clicks the button/link      jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+    And the user clicks the button/link       css = input[type="submit"]
+    Then the user should see the element      jQuery = .message-alert:contains("Now your application is complete")
+
+Lead can make changes and resubmit
+    [Documentation]  IFS-7547
+    Given the user uploads an appendix
+    When the user clicks the button/link        id = application-overview-submit-cta
+    And the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
+    Then the user clicks the button/link        id = submit-application-button
+
+Lead does not see reopen when the comp is closed
+    [Documentation]  IFS-7547
+    Given Log in as a different user              &{internal_finance_credentials}
+    Then moving competition to Closed            ${competitionId}
+    log in as a different user                   &{lead_applicant_credentials}
+    then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+
+
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
-    When Log in as a different user                    &{internal_finance_credentials}
-    Then moving competition to Closed                  ${competitionId}
-    And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup            ${competitionId}
+    Given Log in as a different user                     &{internal_finance_credentials}
+    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup              ${competitionId}
 
 Internal user add new partner orgnisation
     [Documentation]  IFS-6725
