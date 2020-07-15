@@ -213,6 +213,7 @@ the applicant submits the procurement application
     the user clicks the button/link                             jQuery = .govuk-button:contains("Submit application")
     the user should be redirected to the correct page           track
     the user should see the element                             link = Print application
+    the user should see the element                             link = Reopen application
     the user navigates to the page without the usual headers    ${SERVER}/application/${application_id}/print?noprint    #This URL its only for testing purposes
     the user should see the element                             jQuery = .govuk-button:contains("Print your application")
     the user navigates to the page                              ${server}

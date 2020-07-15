@@ -24,6 +24,9 @@ ${ATIcompetitionTitle}     ATI Competition
 ${ATIapplicationTitle}     ATI application
 ${questionLink}            8. Project team
 ${answerToSelect}          answer2
+${noMoreChangesMessage}    You will not be able to make changes
+${applicationIsComplete}   Now your application is complete
+
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
@@ -87,18 +90,18 @@ Lead can reopen application
     Given the user clicks the button/link     link = Dashboard
     When the user clicks the button/link      jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
     And the user clicks the button/link       css = input[type="submit"]
-    Then the user should see the element      jQuery = .message-alert:contains("Now your application is complete")
+    Then the user should see the element      jQuery = .message-alert:contains("${applicationIsComplete}")
 
 Lead can make changes and resubmit
     [Documentation]  IFS-7547
     Given the user uploads an appendix
     When the user clicks the button/link        id = application-overview-submit-cta
-    And the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
+    And the user should not see the element     jQuery = .message-alert:contains("${noMoreChangesMessage}")
     Then the user clicks the button/link        id = submit-application-button
 
 Lead does not see reopen when the comp is closed
     [Documentation]  IFS-7547
-    Given Log in as a different user              &{internal_finance_credentials}
+    Given Log in as a different user             &{internal_finance_credentials}
     Then moving competition to Closed            ${competitionId}
     log in as a different user                   &{lead_applicant_credentials}
     then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
