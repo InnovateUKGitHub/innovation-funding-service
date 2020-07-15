@@ -281,6 +281,7 @@ the user completes the covid deminimus application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDdeminimusapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant adds contributor to Application Team
+    the applicant marks EDI question as complete
     the user selects research category                       Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user accept the competition terms and conditions     Return to application overview

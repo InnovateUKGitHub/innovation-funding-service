@@ -9,9 +9,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -123,12 +121,28 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
                 QuestionResponseDataBuilder responseBuilder = baseBuilder.
                         forQuestion(question.getName()).
-                        withAssignee(leadApplicantEmail).
-                        withAnswer(answerValue, leadApplicantEmail);
+                        withAssignee(leadApplicantEmail);
 
                 List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
 
-                if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
+                if (formInputs.stream().anyMatch(fi -> fi.getScope().equals(FormInputScope.APPLICATION) && fi.getType().equals(FormInputType.TEXTAREA))) {
+                    responseBuilder = responseBuilder.withAnswer(answerValue, leadApplicantEmail);
+                }
+
+                if (formInputs.stream().anyMatch(fi -> fi.getScope().equals(FormInputScope.APPLICATION) && fi.getType().equals(FormInputType.MULTIPLE_CHOICE))) {
+                    FormInputResource multipleChoice = formInputs.stream().filter(fi -> fi.getType().equals(FormInputType.MULTIPLE_CHOICE)).findFirst().get();
+                    List<MultipleChoiceOptionResource> choices = multipleChoice.getMultipleChoiceOptions();
+
+                    String applicationName = applicationData.getApplication().getName();
+                    String questionName = question.getName();
+
+                    //Pick a choice based on the application name and question name. Ensures we have a random choice, but is the same choice each time generator is ran.
+                    int choice = (applicationName + questionName).length() % choices.size();
+
+                    responseBuilder = responseBuilder.withChoice(choices.get(choice), leadApplicantEmail);
+                }
+
+                if (formInputs.stream().anyMatch(fi -> fi.getScope().equals(FormInputScope.APPLICATION) && fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
                     String applicationName = applicationData.getApplication().getName();
                     String questionName = question.getShortName().toLowerCase();
@@ -257,6 +271,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
                 markApplicationDetailsComplete(applicationLine.markQuestionsComplete).
+                markEdiComplete(applicationLine.markQuestionsComplete).
                 markApplicationTeamComplete(applicationLine.markQuestionsComplete).
                 markResearchCategoryComplete(applicationLine.markQuestionsComplete);
         if (applicationLine.submittedDate != null) {
