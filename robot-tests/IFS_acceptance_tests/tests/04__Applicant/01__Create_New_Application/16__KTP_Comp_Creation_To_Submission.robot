@@ -53,7 +53,7 @@ Moving KTP Competition to Project Setup
     And making the application a successful project    ${competitionId}  ${KTPapplicationTitle}
     And moving competition to Project Setup            ${competitionId}
     [Teardown]  Requesting IDs of this Project
-    
+
 The user is able to complete Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  the user logs-in in new browser     &{lead_applicant_credentials}

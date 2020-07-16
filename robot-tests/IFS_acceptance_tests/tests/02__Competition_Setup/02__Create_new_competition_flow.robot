@@ -942,17 +942,16 @@ the comp admin creates competition
     the user navigates to the page        ${CA_UpcomingComp}
 
 the user fills new application details
-    the user enters text to a text field  id = name  New application
-    the user enters text to a text field  id = startDate  ${tomorrowday}
-    the user enters text to a text field  css = #application_details-startdate_month  ${month}
-    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  id = durationInMonths  45
-    the user clicks the button twice      css = label[for="resubmission-no"]
-    the user clicks the button/link       id = innovationAreaName
-    the user selects the radio button     innovationAreaChoice  NOT_APPLICABLE
-    the user clicks the button/link       jQuery = button:contains("Save")
-    the user clicks the button/link       id = application-question-complete
-    the user clicks the button/link       link = Back to application overview
+    the user enters text to a text field             id = name  New application
+    the user enters text to a text field             id = startDate  ${tomorrowday}
+    the user enters text to a text field             css = #application_details-startdate_month  ${month}
+    the user enters text to a text field             css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field             id = durationInMonths  45
+    the user clicks the button twice                 css = label[for="resubmission-no"]
+    the user clicks the button/link                  id = innovationAreaName
+    the user selects the radio button                innovationAreaChoice  NOT_APPLICABLE
+    the user clicks the button/link                  jQuery = button:contains("Save")
+    the user can mark the question as complete
 
 Custom suite teardown
     The user closes the browser
