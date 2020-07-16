@@ -4,6 +4,8 @@ Documentation     IFS-7316 Internal user can invite new external user when proje
 ...               IFS-7317 User accepts the invite sent in IFS 7316
 ...
 ...               IFS-7318 Internal user can now see a link to manage external users once the project is live and in ACC
+...
+...               IFS-7556 Internal user can cancel the invite to external user once the project is live and in ACC
 
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    The user closes the browser
@@ -37,6 +39,7 @@ ${externalUserRoleValidation}               Please select a role.
 ${createAccountValidationError}             We were unable to create your account.
 ${phoneNumberValidation}                    Please enter a valid phone number between 8 and 20 digits.
 ${tAndCValidation}                          To create a new account you must agree to the website terms and conditions.
+${invalidEmailInvitationLink}               Sorry, you are unable to accept this invitation
 
 *** Test Cases ***
 IFS Admin can see and use the link to manage invitations to external users when the project is complete and live in IFS-PA(ACC)
@@ -86,6 +89,26 @@ IFS Admin is able to invite an existing user as an external project manager to a
     When the user clicks the button/link           link = Manage invitations to external users
     And the user clicks the button/link            link = Invite a new external user
     Then ifs admin invites a new external user     Daniel  Tan  ${existingUser}  GRANTS_PROJECT_MANAGER
+
+IFS Admin cancels the invitation to external project manager
+     [Documentation]  IFS-7556
+     When the user clicks the button/link         jQuery = td:contains("${existingUser}") ~ td button:contains("Cancel invitation")
+     Then the user should not see the element     jQuery = td:contains("${existingUser}")
+     [Teardown]  logout as user
+
+The existing user should not be able to access ifs via the email invite link
+    [Documentation]  IFS-7556
+    When the user reads his email and clicks the link     ${existingUser}  ${externalUserEmailInviteSubject}  ${emailInviteContentPattern}  1
+    Then the user should see the element                  jQuery = h1:contains("${invalidEmailInvitationLink}")
+
+IFS Admin logs in and invites an existing user as an external project manager to a live project again
+    [Documentation]  IFS-7316  IFS-7318
+    [Setup]  the user clicks the button/link      link = Sign in
+    Given logging in and error checking           &{ifs_admin_user_credentials}
+    When the user navigates to the page           ${liveProjectInIFSPA}
+    And the user clicks the button/link           link = Manage invitations to external users
+    Then the user clicks the button/link          link = Invite a new external user
+    And ifs admin invites a new external user     Daniel  Tan  ${existingUser}  GRANTS_PROJECT_MANAGER
     [Teardown]  logout as user
 
 The existing user can accept the email invite

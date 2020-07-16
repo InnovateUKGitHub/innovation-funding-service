@@ -68,12 +68,28 @@ public class ManageInvitationsControllerTest  extends BaseControllerMockMVCTest<
 
         when(grantsInviteRestService.resendInvite(projectId, inviteId)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/grants/invite/resend", projectId)
+        mockMvc.perform(post("/project/{projectId}/grants/invite", projectId)
                 .param("projectId", Long.toString(projectId))
-                .param("inviteId", Long.toString(inviteId)))
+                .param("resend-invite", Long.toString(inviteId)))
                 .andExpect(redirectedUrl("/project/123/grants/invite"));
 
         verify(grantsInviteRestService).resendInvite(projectId, inviteId);
         verify(cookieFlashMessageFilter).setFlashMessage(any(), eq("emailSent"));
+    }
+
+    @Test
+    public void deleteInvitation() throws Exception {
+        long projectId = 123L;
+        long inviteId = 567L;
+
+        when(grantsInviteRestService.deleteInvite(projectId, inviteId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/grants/invite", projectId)
+                .param("projectId", Long.toString(projectId))
+                .param("delete-invite", Long.toString(inviteId)))
+                .andExpect(redirectedUrl("/project/123/grants/invite"));
+
+        verify(grantsInviteRestService).deleteInvite(projectId, inviteId);
+        verify(cookieFlashMessageFilter).setFlashMessage(any(), eq("deleteInvite"));
     }
 }
