@@ -27,11 +27,6 @@ ${ATIapplicationTitle}            ATI application
 ${project_team_question}          8. Project team
 ${technicalApproach_question}     5. Technical approach
 ${answerToSelect}                 answer2
-${noMoreChangesMessage}           You will not be able to make changes
-${applicationIsComplete}          Now your application is complete
-${assignedQuestionMessage}        This question is assigned to you.
-${textBoxText}                    Entering text to allow valid mark as complete
-${newText}                        New text by collaborator
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
@@ -80,20 +75,19 @@ The lead can now submit the application
 
 Comp admin can see the ATI application submitted
     [Documentation]  IFS-7550
-    [Setup]  log in as a different user     &{Comp_admin1_credentials}
-    When the user navigates to the page       ${server}/management/competition/${competitionId}/applications/submitted
-    Then the user should see the element      jQuery = td:contains("${ATIapplicationTitle}")
+    [Setup]  log in as a different user      &{Comp_admin1_credentials}
+    When the user navigates to the page      ${server}/management/competition/${competitionId}/applications/submitted
+    Then the user should see the element     jQuery = td:contains("${ATIapplicationTitle}")
 
 Collaborator cannot reopen the application
     [Documentation]  IFS-7547
     Given log in as a different user             &{collaborator1_credentials}
-#    Given logging in and error checking          &{collaborator1_credentials}
     When the user should see the element         link = ${ATIapplicationTitle}
     Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
 
 Lead can reopen application
     [Documentation]  IFS-7547  IFS-7550
-    [Setup]  log in as a different user       &{lead_applicant_credentials}
+    [Setup]  log in as a different user      &{lead_applicant_credentials}
     When the user clicks the button/link     link = Dashboard
     Then the user can reopen application     ${ATIapplicationTitle}
 #
