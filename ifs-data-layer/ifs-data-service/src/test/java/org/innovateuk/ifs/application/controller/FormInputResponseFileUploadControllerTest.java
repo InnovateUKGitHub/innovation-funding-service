@@ -84,7 +84,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         // than JSON and XML
         String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
 
-        FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), formInputId, 456L, 789L, null);
+        FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), formInputId, 456L, 789L, 987L);
         ServiceResult<FormInputResponseFileEntryResource> successResponse = serviceSuccess(createdResource);
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");

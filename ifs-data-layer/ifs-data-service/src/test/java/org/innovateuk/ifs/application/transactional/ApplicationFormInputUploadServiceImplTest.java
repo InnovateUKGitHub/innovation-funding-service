@@ -279,7 +279,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     @Test
     public void createFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
         FileEntryResource fileEntryResource = newFileEntryResource().build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, null);
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, 987L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         File fileFound = mock(File.class);
