@@ -431,6 +431,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
@@ -511,6 +512,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
@@ -529,7 +531,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/file").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId))).
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
@@ -616,6 +619,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNotFound()).
                 andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
@@ -689,7 +693,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         delete("/forminputresponse/file").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId))).
                 andDo(document("forminputresponsefileupload/file_fileDelete_" + documentationSuffix)).
                 andReturn();
 

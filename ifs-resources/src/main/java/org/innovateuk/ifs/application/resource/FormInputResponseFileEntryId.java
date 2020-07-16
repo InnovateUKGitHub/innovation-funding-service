@@ -14,7 +14,7 @@ public class FormInputResponseFileEntryId implements Serializable {
     private long formInputId;
     private long applicationId;
     private long processRoleId;
-    private long fileEntryId;
+    private Long fileEntryId;
 
     public FormInputResponseFileEntryId() {
         // for JSON marshalling
@@ -39,7 +39,7 @@ public class FormInputResponseFileEntryId implements Serializable {
         return processRoleId;
     }
 
-    public long getFileEntryId() {
+    public Long getFileEntryId() {
         return fileEntryId;
     }
 
