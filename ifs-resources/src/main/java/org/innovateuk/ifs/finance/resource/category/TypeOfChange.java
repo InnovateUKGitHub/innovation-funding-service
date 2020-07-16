@@ -16,7 +16,7 @@ public enum TypeOfChange {
         return typeName;
     }
 
-    public void setTypeName(String typeName) {
+    private void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 }

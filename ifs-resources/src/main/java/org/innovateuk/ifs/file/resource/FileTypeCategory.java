@@ -59,18 +59,18 @@ public enum FileTypeCategory {
         private MimeTypes() {}
         public static final Set<String> PDF = singleton("application/pdf");
 
-        public static final Set<String> MS_SPREADSHEET = asSet("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        public static final Set<String> OPEN_SPREADSHEET = singleton("application/vnd.oasis.opendocument.spreadsheet");
+        private static final Set<String> MS_SPREADSHEET = asSet("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        private static final Set<String> OPEN_SPREADSHEET = singleton("application/vnd.oasis.opendocument.spreadsheet");
 
-        public static final Set<String> MS_DOCUMENT =  asSet("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        public static final Set<String> OPEN_DOCUMENT = singleton("application/vnd.oasis.opendocument.text");
+        private static final Set<String> MS_DOCUMENT =  asSet("application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        private static final Set<String> OPEN_DOCUMENT = singleton("application/vnd.oasis.opendocument.text");
     }
 
     public static class FileExtensions {
         private FileExtensions() {}
         public static final Set<String> PDF = singleton(".pdf");
 
-        public static final Set<String> SPREADSHEET = asSet(".ods", ".xls", ".xlsx");
-        public static final Set<String> DOCUMENT =  asSet(".odt", ".doc", ".docx");
+        private static final Set<String> SPREADSHEET = asSet(".ods", ".xls", ".xlsx");
+        private static final Set<String> DOCUMENT =  asSet(".odt", ".doc", ".docx");
     }
 }
