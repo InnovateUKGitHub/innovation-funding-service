@@ -81,13 +81,11 @@ Non lead does not see reopen on submitted page
 
 Lead can reopen application
     [Documentation]  IFS-7440
-    [Setup]  log in as a different user   &{lead_applicant_credentials}
-    Given the user clicks the button/link  link = Dashboard
-    When the user clicks the button/link   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
-    And the user clicks the button/link    css = input[type="submit"]
-    Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
-    And the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
-    And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+    [Setup]  log in as a different user     &{lead_applicant_credentials}
+    Given the user clicks the button/link   link = Dashboard
+    When the user can reopen application    ${COVIDdeminimusapplicationTitle1}
+    Then the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email            steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can resubmit the application
     [Documentation]  IFS-7440

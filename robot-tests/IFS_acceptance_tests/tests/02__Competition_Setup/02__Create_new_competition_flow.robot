@@ -951,7 +951,7 @@ the user fills new application details
     the user clicks the button/link                  id = innovationAreaName
     the user selects the radio button                innovationAreaChoice  NOT_APPLICABLE
     the user clicks the button/link                  jQuery = button:contains("Save")
-    the user can marks the question as complete
+    the user can mark the question as complete
 
 Custom suite teardown
     The user closes the browser

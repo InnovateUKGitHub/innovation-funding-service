@@ -67,7 +67,7 @@ The lead should see the answer selected by partner and mark it as complete
      Given the user clicks the button/link               link = ${ATIapplicationTitle}
      When the user clicks the button/link                link = ${project_team_question}
      Then the user should not see the element            link = testing.pdf (opens in a new window)
-     And the user can marks the question as complete
+     And the user can mark the question as complete
 
 The lead can now submit the application
      [Documentation]  IFS-3421  IFS-5920  IFS-7703
@@ -115,12 +115,12 @@ Lead can review the question and submit the application
     [Setup]  log in as a different user                  &{lead_applicant_credentials}
     Given the user clicks the button/link                link = ${ATIapplicationTitle}
     When the user clicks the button/link                 link = ${technicalApproach_question}
-    Then the user can marks the question as complete
+    Then the user can mark the question as complete
     And the user can submit the application
 
 Lead does not see reopen when the comp is closed
     [Documentation]  IFS-7547
-    Given Log in as a different user             &{internal_finance_credentials}
+    Given Log in as a different user             &{Comp_admin1_credentials}
     When moving competition to Closed            ${competitionId}
     And log in as a different user               &{lead_applicant_credentials}
     Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")

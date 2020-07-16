@@ -72,13 +72,11 @@ Non lead cannot reopen competition
 
 Lead can reopen application
    [Documentation]  IFS-7440
-   [Setup]  log in as a different user   &{lead_applicant_credentials}
-   Given the user clicks the button/link  link = Dashboard
-   When the user clicks the button/link   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
-   And the user clicks the button/link    css = input[type="submit"]
-   Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
-   And the user reads his email           collaborator@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
-   And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+   [Setup]  log in as a different user      &{lead_applicant_credentials}
+   Given the user clicks the button/link    link = Dashboard
+   When the user can reopen application     ${COVIDapplicationTitle1}
+   Then the user reads his email            collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+   And the user reads his email             steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
     [Documentation]  IFS-7440  IFS-7552

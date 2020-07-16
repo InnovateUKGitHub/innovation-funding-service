@@ -183,7 +183,7 @@ the user fills in procurement Application details
     the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    the user can marks the question as complete
+    the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user marks the procurement finances as complete
