@@ -90,7 +90,7 @@ Lead can reopen application
     [Setup]  log in as a different user      &{lead_applicant_credentials}
     When the user clicks the button/link     link = Dashboard
     Then the user can reopen application     ${ATIapplicationTitle}
-#
+
 Lead can make changes to the application and assign a question to collaborator
     [Documentation]  IFS-7547  IFS-7550
     When the user uploads an appendix                       ${project_team_question}  ${5mb_pdf}

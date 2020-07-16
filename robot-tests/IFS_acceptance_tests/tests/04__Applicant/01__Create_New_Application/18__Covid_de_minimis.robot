@@ -89,7 +89,7 @@ Lead can reopen application
     And the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
     And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
-Lead can make changes and resubmit
+Lead can resubmit the application
     [Documentation]  IFS-7440
     Given the user can submit the application
 
