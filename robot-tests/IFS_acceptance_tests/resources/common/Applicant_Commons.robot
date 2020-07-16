@@ -68,16 +68,14 @@ the user fills in the Application details
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       id = application-question-complete
-    the user clicks the button/link       link = Back to application overview
+    the user can marks the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user selects research category from funding
     [Arguments]  ${res_category}
     the user clicks the button/link   link = research category
     the user clicks the button twice  jQuery = label:contains("${res_category}")
-    the user clicks the button/link   id = application-question-complete
-    the user clicks the button/link   link = Back to application overview
+    the user can marks the question as complete
     the user should see the element   jQuery = li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete
@@ -545,13 +543,35 @@ the applicant marks EDI question as complete
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
     the user clicks the button/link     jQuery = label:contains("Yes")
-    the user clicks the button/link     id = application-question-complete
-    the user clicks the button/link     link = Back to application overview
+    the user can marks the question as complete
     the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
 
 the user uploads an appendix
-    the user clicks the button/link     link = 8. Project team
-    the user clicks the button/link     id = edit
-    the user uploads the file           css = .inputfile    ${5mb_pdf}
+    [Arguments]  ${question_link}  ${appendix_file}
+    the user clicks the button/link                link = ${question_link}
+    the user clicks the button/link                id = edit
+    the user uploads the file                      css = .inputfile  ${appendix_file}
+    the user can marks the question as complete
+
+the user can reopen application
+    [Arguments]  ${application}
+    the user clicks the button/link     jQuery = li:contains("${application}") a:contains("Reopen")
+    the user clicks the button/link     css = input[type="submit"]
+    the user should see the element     link = review and submit
+
+lead assigns a question to partner organisation
+     [Arguments]  ${questionLink}
+     the user clicks the button/link       link = ${questionLink}
+     the user clicks the button/link       id = edit
+     the user clicks the button/link       link = Assign to someone else.
+     the user selects the radio button     assignee  assignee2
+     the user clicks the button/link       css = button[type="submit"]
+
+the user can marks the question as complete
     the user clicks the button/link     id = application-question-complete
     the user clicks the button/link     link = Back to application overview
+
+the user can submit the application
+    the user clicks the button/link         id = application-overview-submit-cta
+    the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
+    the user clicks the button/link         id = submit-application-button
