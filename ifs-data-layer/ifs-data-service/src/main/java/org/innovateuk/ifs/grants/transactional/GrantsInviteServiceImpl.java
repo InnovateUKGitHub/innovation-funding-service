@@ -205,6 +205,13 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
     }
 
     @Override
+    @Transactional
+    public ServiceResult<Void> deleteInvite(long inviteId) {
+        return find(grantsInviteRepository.findById(inviteId), notFoundError(GrantsInvite.class, inviteId))
+                .andOnSuccessReturnVoid(invite -> grantsInviteRepository.deleteById(inviteId));
+    }
+
+    @Override
     public ServiceResult<SentGrantsInviteResource> getInviteByHash(String hash) {
         return find(grantsInviteRepository.getByHash(hash), notFoundError(GrantsInvite.class, hash))
                 .andOnSuccessReturn(this::mapToSentResource);
@@ -250,8 +257,6 @@ public class GrantsInviteServiceImpl extends BaseTransactionalService implements
         } else {
             projectUserRepository.save(new ProjectUser(invite.getUser(), project, getProjectParticipantRole(invite.getClass()), invite.getOrganisation()));
         }
-
-
     }
 
     private ActivityType getActivityType(Class<? extends GrantsInvite> clazz) {

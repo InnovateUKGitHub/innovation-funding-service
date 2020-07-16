@@ -35,28 +35,30 @@
         </p>
 
         <div class="table-overflow">
-            <form th:action="@{/project/{projectId}/grants/invite/resend(projectId=${model.projectId})}" method="post">
-
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header">Name</th>
-                            <th class="govuk-table__header">Role</th>
-                            <th class="govuk-table__header" colspan="2">Email address</th>
+                            <th class="govuk-table__header width-100">Name</th>
+                            <th class="govuk-table__header width-150">Role</th>
+                            <th class="govuk-table__header width-200">Email address</th>
+                            <th class="govuk-table__header"></th>
                         </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row" th:each="grant : ${model.grants}">
-                            <td class="govuk-table__cell verticalalignmiddle" th:text="${grant.userName}"></td>
-                            <td class="govuk-table__cell verticalalignmiddle" th:text="${grant.grantsInviteRole.displayName}"></td>
-                            <td class="govuk-table__cell verticalalignmiddle" th:text="${grant.email}"></td>
+                            <td class="govuk-table__cell verticalaligntop" th:text="${grant.userName}"></td>
+                            <td class="govuk-table__cell verticalaligntop" th:text="${grant.grantsInviteRole.displayName}"></td>
+                            <td class="govuk-table__cell verticalaligntop ifs-table__email" th:text="${grant.email}"></td>
                             <td class="govuk-table__cell buttoncolumn alignright">
-                                <button name="inviteId" th:value="${grant.id}" class="govuk-button govuk-button--secondary govuk-!-margin-0 alignright">Resend this invitation</button>
+                                <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
+                                <button name="resend-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-right-1" type="submit">Resend invitation</button>
+                                    <span class="vertical-line"></span>
+                                <button name="delete-invite" th:value="${grant.id}" class="button-clear govuk-!-margin-left-1" type="submit">Cancel invitation</button>
+                                </form>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </form>
         </div>
 
         <th:block th:insert="fragments/layout :: main-content-end"/>
