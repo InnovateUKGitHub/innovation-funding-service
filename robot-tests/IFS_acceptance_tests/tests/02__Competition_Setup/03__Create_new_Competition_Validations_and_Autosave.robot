@@ -278,9 +278,9 @@ the validation error above the question should be visible
 
 the user fills the empty question fields
     The user enters text to a text field    id = question.title    Test title
-    The user enters text to a text field    id = question.subTitle    Subtitle test
+    The user enters text to a text field    jQuery = label:contains("Question subtitle") + div .editor   Subtitle test
     The user enters text to a text field    id = question.guidanceTitle    Test guidance title
-    The user enters text to a text field    css = .editor    Guidance text test
+    The user enters text to a text field    jQuery = label:contains("Question guidance") + div .editor    Guidance text test
     The user enters text to a text field    id = question.maxWords    150
 
 the validation error above the question should not be visible
@@ -384,11 +384,11 @@ The user should not see the error text in the page
 the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id = question.title
     Should Be Equal    ${input_value}    Test title
-    ${input_value} =    Get Value    id = question.subTitle
+    ${input_value} =    Get Value    jQuery = label:contains("Question subtitle") + div .editor
     Should Be Equal    ${input_value}    Subtitle test
     ${input_value} =    Get Value    id = question.guidanceTitle
     Should Be Equal    ${input_value}    Test guidance title
-    ${input_value} =    Get Value    css = .editor
+    ${input_value} =    Get Value    jQuery = label:contains("Question guidance") + div .editor
     Should Be Equal    ${input_value}    Guidance text test
     ${input_value} =    Get Value    id = question.maxWords
     Should Be Equal    ${input_value}    150

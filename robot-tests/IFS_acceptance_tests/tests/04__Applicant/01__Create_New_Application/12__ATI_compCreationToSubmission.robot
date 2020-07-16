@@ -8,6 +8,10 @@ Documentation     IFS-2396  ATI Competition type template
 ...               IFS-3421  As a Lead applicant I am unable submit an ineligible application to a Collaborative competition
 ...
 ...               IFS-6725  Guidance Improvement to 'Funding level' in 'Your Funding' in application
+...
+...               IFS-7718  EDI question - application form
+...
+...               IFS-7547  Lead applicant can reopen a submitted application
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -16,13 +20,18 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ATIcompetitionTitle}  ATI Competition
-${ATIapplicationTitle}  ATI application
+${ATIcompetitionTitle}     ATI Competition
+${ATIapplicationTitle}     ATI application
+${questionLink}            8. Project team
+${answerToSelect}          answer2
+${noMoreChangesMessage}    You will not be able to make changes
+${applicationIsComplete}   Now your application is complete
+
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
-    Given The user logs-in in new browser          &{Comp_admin1_credentials}
+    Given The user logs-in in new browser               &{Comp_admin1_credentials}
     Then the competition admin creates competition      ${business_type_id}  ${ATIcompetitionTitle}  ATI  ${compType_Programme}  2  GRANT  PROJECT_SETUP  yes  1  true  collaborative
     And user fills in funding overide
 
@@ -33,33 +42,76 @@ Applicant applies to newly created ATI competition
     Then logged in user applies to competition               ${ATIcompetitionTitle}  1
 
 Single applicant cannot submit his application to a collaborative comp
-    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725
-    Given the user clicks the button/link               link=Application details
-    When the user fills in the Application details      ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    And the applicant completes Application Team
-    Then the lead applicant fills all the questions and marks as complete(Programme)
-    When the user navigates to Your-finances page       ${ATIapplicationTitle}
-    And the user does not see state aid information
-    And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
-    And the user clicks the button/link                 link = Your project finances
-    And the user checks for funding level guidance at application level
-    And the user accept the competition terms and conditions     Return to application overview
-    And the user checks the override value is applied
-    And the user selects research category              Feasibility studies
-    And the finance overview is marked as incomplete
-    And the application cannot be submited
+    [Documentation]  IFS-2286  IFS-2332  IFS-1497  IFS-3421  IFS-5920  IFS-6725  IFS-7703  IFS-7718
+    When the user completes the application
+    Then the application cannot be submited
 
-Invite a collaborator and check the application can the be submitted
+The lead invites a collaborator
     [Documentation]  IFS-3421  IFS-5920
     Given the lead invites already registered user
-    Then the applicant submits the application
+
+Assign an application question to partner organisation
+     [Documentation]  IFS-7703
+     Given the user clicks the button/link     link = ${questionLink}
+     And the user clicks the button/link       id = edit
+     When the user clicks the button/link      link = Assign to someone else.
+     Then the user selects the radio button    assignee  assignee2
+     And the user clicks the button/link       jQuery = button:contains("Save and return to project team")
+
+The partner answers the question and assigns the question back to lead for review
+     [Documentation]  IFS-7703
+     [Setup]  log in as a different user            &{collaborator1_credentials}
+     Given the user clicks the button/link          link = ${ATIapplicationTitle}
+     When the user clicks the button/link           link = ${questionLink}
+     Then the partner selects new answer choice
+
+The lead should see the answer selected by partner and mark it as complete
+     [Documentation]  IFS-7703
+     [Setup]  log in as a different user          &{lead_applicant_credentials}
+     Given the user clicks the button/link        link = ${ATIapplicationTitle}
+     When the user clicks the button/link         link = ${questionLink}
+     Then the user should not see the element     link = testing.pdf (opens in a new window)
+     And the user clicks the button/link          id = application-question-complete
+
+The lead can now submit the application
+     [Documentation]  IFS-3421  IFS-5920  IFS-7703
+     When the user clicks the button/link          link = Back to application overview
+     Then the applicant submits the application
+
+Collaborator cannot reopen the application
+    [Documentation]  IFS-7547
+    Given log in as a different user             &{collaborator1_credentials}
+    When the user should see the element         link = ${ATIapplicationTitle}
+    Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+
+Lead can reopen application
+    [Documentation]  IFS-7547
+    [Setup]  log in as a different user       &{lead_applicant_credentials}
+    Given the user clicks the button/link     link = Dashboard
+    When the user clicks the button/link      jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+    And the user clicks the button/link       css = input[type="submit"]
+    Then the user should see the element      jQuery = .message-alert:contains("${applicationIsComplete}")
+
+Lead can make changes and resubmit
+    [Documentation]  IFS-7547
+    Given the user uploads an appendix
+    When the user clicks the button/link        id = application-overview-submit-cta
+    And the user should not see the element     jQuery = .message-alert:contains("${noMoreChangesMessage}")
+    Then the user clicks the button/link        id = submit-application-button
+
+Lead does not see reopen when the comp is closed
+    [Documentation]  IFS-7547
+    Given Log in as a different user             &{internal_finance_credentials}
+    Then moving competition to Closed            ${competitionId}
+    log in as a different user                   &{lead_applicant_credentials}
+    then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+
 
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
-    When Log in as a different user                    &{internal_finance_credentials}
-    Then moving competition to Closed                  ${competitionId}
-    And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup            ${competitionId}
+    Given Log in as a different user                     &{internal_finance_credentials}
+    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup              ${competitionId}
 
 Internal user add new partner orgnisation
     [Documentation]  IFS-6725
@@ -71,8 +123,8 @@ Internal user add new partner orgnisation
 
 New partner orgination checks for funding level guidance
     [Documentation]  IFS-6725
-    Given log in as a different user      test1@test.nom    ${short_password}
-    When the user clicks the button/link   link = ${ATIapplicationTitle}
+    Given log in as a different user                                test1@test.nom    ${short_password}
+    When the user clicks the button/link                            link = ${ATIapplicationTitle}
     And The new partner can complete Your organisation
     Then the user checks for funding level guidance at PS level
 
@@ -101,6 +153,29 @@ Custom Suite Setup
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
+
+the user completes the application
+    the user clicks the button/link                                                         link=Application details
+    the user fills in the Application details                                               ${ATIapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the applicant completes Application Team
+    the applicant marks EDI question as complete
+    the lead applicant fills all the questions and marks as complete(programme ATI)
+    the lead completes the questions with multiple answer choice and multiple appendices
+    the user navigates to Your-finances page                                                ${ATIapplicationTitle}
+    the user does not see state aid information
+    the user marks the finances as complete                                                  ${ATIapplicationTitle}   Calculate  52,214  yes
+    the user clicks the button/link                                                          link = Your project finances
+    the user checks for funding level guidance at application level
+    the user accept the competition terms and conditions                                     Return to application overview
+    the user checks the override value is applied
+    the user selects research category                                                       Feasibility studies
+    the finance overview is marked as incomplete
+
+the partner selects new answer choice
+     input text                          id = multipleChoiceOptionId  ${answerToSelect}
+     the user clicks the button/link     jQuery = ul li:contains("${answerToSelect}")
+     the user clicks the button/link     name = removeAppendix
+     the user clicks the button/link     jQuery = button:contains("Assign to lead for review")
 
 User fills in funding overide
     the user clicks the button/link                      link = ${ATIcompetitionTitle}

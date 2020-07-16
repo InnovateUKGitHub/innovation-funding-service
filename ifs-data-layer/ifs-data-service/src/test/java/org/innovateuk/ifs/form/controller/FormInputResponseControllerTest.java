@@ -9,12 +9,14 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
+import scala.util.parsing.json.JSON;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUMMARY;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -126,16 +129,51 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 assertEquals(userId, firArgument.getUserId());
                 assertEquals(formInputId, firArgument.getFormInputId());
                 assertEquals("", firArgument.getValue());
+                assertEquals(0L, firArgument.getMultipleChoiceOptionId().longValue());
                 return true;
             }
         }))).thenReturn(serviceSuccess(responseResource));
 
-        String contentString = String.format("{\"userId\":%s,\"applicationId\":%s,\"formInputId\":%s,\"value\":\"\"}",userId, appId, formInputId);
+        String contentString = String.format("{\"userId\":%s,\"applicationId\":%s,\"formInputId\":%s,\"value\":\"\",\"multipleChoiceOptionId\":%s}",userId, appId, formInputId, null);
         mockMvc.perform(post("/forminputresponse/save-question-response/")
                     .content(contentString)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                 )
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(expected)));
+    }
+
+    @Test
+    public void testSaveMultipleChoiceQuestionResponse() throws Exception {
+        long appId = 456L;
+        long userId = 123L;
+        long formInputId = 789L;
+        long multipleChoiceOptionId = 1L;
+        FormInputResponseResource responseResource = newFormInputResponseResource().build();
+        FormInputResponse formInputResponse = newFormInputResponse().build();
+        BindingResult bindingResult = new DataBinder(formInputResponse).getBindingResult();
+        ValidationMessages expected = new ValidationMessages(bindingResult);
+        when(validationUtilMock.validateResponse(responseResource, false)).thenReturn(bindingResult);
+
+        when(formInputResponseServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
+            @Override
+            public boolean matches(FormInputResponseCommand firArgument) {
+                assertEquals(appId, firArgument.getApplicationId());
+                assertEquals(userId, firArgument.getUserId());
+                assertEquals(formInputId, firArgument.getFormInputId());
+                assertEquals("Yes", firArgument.getValue());
+                assertEquals(multipleChoiceOptionId, firArgument.getMultipleChoiceOptionId().longValue());
+                return true;
+            }
+        }))).thenReturn(serviceSuccess(responseResource));
+
+        String contentString = String.format("{\"userId\":%s,\"applicationId\":%s,\"formInputId\":%s,\"value\":\"Yes\",\"multipleChoiceOptionId\":%s}",userId, appId, formInputId, multipleChoiceOptionId);
+        mockMvc.perform(post("/forminputresponse/save-question-response/")
+                .content(contentString)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        )
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
     }

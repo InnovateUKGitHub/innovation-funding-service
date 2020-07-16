@@ -19,6 +19,8 @@ public class FormInputResponseResourceDocs {
             fieldWithPath("fileEntries[]").description("The file entries of the form input response"),
             fieldWithPath("fileEntry").description("The file entry of the form input response"),
             fieldWithPath("filename").description("The file name of the form input response"),
-            fieldWithPath("filesizeBytes").description("The file size of the form input response")
+            fieldWithPath("filesizeBytes").description("The file size of the form input response"),
+            fieldWithPath("multipleChoiceOptionId").description("The id of the multiple choice form input response"),
+            fieldWithPath("multipleChoiceOptionText").description("The value of the multiple choice form input response")
     };
 }
