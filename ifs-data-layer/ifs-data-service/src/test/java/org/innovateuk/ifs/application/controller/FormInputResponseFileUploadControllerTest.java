@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -85,7 +84,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         // than JSON and XML
         String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
 
-        FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), formInputId, 456L, 789L, Optional.empty());
+        FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), formInputId, 456L, 789L, null);
         ServiceResult<FormInputResponseFileEntryResource> successResponse = serviceSuccess(createdResource);
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");
@@ -305,7 +304,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFile() throws Exception {
 
-        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, 456L, 789L, fileEntryId);
         FormInputResponse unlinkedFormInputResponse = newFormInputResponse().build();
 
         when(applicationFormInputUploadService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(serviceSuccess(unlinkedFormInputResponse));
@@ -388,7 +387,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         FormInputResponseFileEntryId fileEntryIdExpectations = fileEntryExpectations();
 
-        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, fileEntryId);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(applicationFormInputUploadService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(fileEntryResource, inputStreamSupplier)));
@@ -470,7 +469,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         FormInputResponseFileEntryId fileEntryIdExpectations = fileEntryExpectations();
 
-        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, fileEntryId);
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
         when(applicationFormInputUploadService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(fileEntryResource, inputStreamSupplier)));
@@ -574,7 +573,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 withMediaType("application/pdf").
                 build();
 
-        FormInputResponseFileEntryResource formInputFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryResource formInputFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, formInputId, 456L, 789L, fileEntryId);
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 

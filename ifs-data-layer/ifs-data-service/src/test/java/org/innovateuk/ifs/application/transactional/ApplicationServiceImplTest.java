@@ -178,7 +178,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         question.setFormInputs(singletonList(formInput));
 
         fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, Optional.of(111L));
+        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, 111L);
 
         existingFileEntry = singletonList(newFileEntry().with(id(999L)).build());
         existingFormInputResponse = newFormInputResponse().withFileEntries(existingFileEntry).build();
