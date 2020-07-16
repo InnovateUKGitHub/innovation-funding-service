@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="bankDetailsStatus(statusName)">
   <th:block th:switch="${statusName}">
     <div th:case="'NOT_REQUIRED'" class="task-status"><span>No action required</span></div>

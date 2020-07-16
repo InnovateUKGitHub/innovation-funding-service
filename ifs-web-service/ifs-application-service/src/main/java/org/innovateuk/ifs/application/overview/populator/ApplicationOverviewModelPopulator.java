@@ -96,7 +96,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                 .map(section -> sectionViewModel(section, data))
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels);
+        return new ApplicationOverviewViewModel(data.getUserProcessRole(), data.getCompetition(), application, sectionViewModels, application.hasBeenReopened(), application.getLastStateChangeDate());
     }
 
     private ApplicationOverviewSectionViewModel sectionViewModel(SectionResource section, ApplicationOverviewData data) {

@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.invite.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -71,8 +70,6 @@ public class ApplicationOverviewModelPopulatorTest {
     private QuestionStatusRestService questionStatusRestService;
     @Mock
     private SectionStatusRestService sectionStatusRestService;
-    @Mock
-    private InviteService inviteService;
     @Mock
     private QuestionService questionService;
     @Mock

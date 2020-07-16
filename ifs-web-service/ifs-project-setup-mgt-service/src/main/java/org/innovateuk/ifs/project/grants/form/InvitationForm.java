@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.project.grants.form;
 
-public class ResendInvitationForm {
+public class InvitationForm {
     private long inviteId;
 
     public long getInviteId() {
