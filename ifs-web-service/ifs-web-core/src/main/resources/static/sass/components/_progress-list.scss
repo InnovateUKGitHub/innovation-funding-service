@@ -104,6 +104,10 @@
     margin: 0;
   }
 
+  .reopen-application-link {
+    font-size: 16px;
+  }
+
   .status-msg {
     @include govuk-font(14);
     display: block;
@@ -133,6 +137,7 @@
       color: $govuk-text-colour;
       font-weight: bold;
       float: right;
+      text-align: right;
     }
 
     &.msg-positive {
@@ -304,7 +309,7 @@
     }
 
     .status{
-      width: 39%;
+      width: 42%;
     }
 
     .status-msg{

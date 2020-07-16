@@ -197,14 +197,10 @@ public class ApplicationDashboardServiceImpl extends RootTransactionalService im
     }
 
     private boolean showReopenLinkVisible(Application application, long userId) {
-        if (application.getCompetition().getCovidType() != null) {
-            return application.getLeadApplicant().getId().equals(userId) &&
-                    CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
-                    application.getFundingDecision() == null &&
-                    application.isSubmitted();
-        }
-
-        return false;
+        return application.getLeadApplicant().getId().equals(userId) &&
+                CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus()) &&
+                application.getFundingDecision() == null &&
+                application.isSubmitted();
     }
 
     private DashboardInSetupRowResource toSetupResource(Application application, long userId) {

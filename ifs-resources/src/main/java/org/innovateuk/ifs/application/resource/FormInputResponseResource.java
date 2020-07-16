@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
@@ -20,6 +21,8 @@ public class FormInputResponseResource {
     private Integer formInputMaxWordCount;
     private Long application;
     private List<FileEntryResource> fileEntries = new ArrayList<>();
+    private Long multipleChoiceOptionId;
+    private String multipleChoiceOptionText;
 
     public FormInputResponseResource() {
         // no-arg constructor
@@ -38,6 +41,14 @@ public class FormInputResponseResource {
     }
     public FormInputResponseResource(ZonedDateTime updateDate, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
+        this.updatedBy = updatedBy.getId();
+        this.formInput = formInput;
+        this.application = application.getId();
+    }
+
+    public FormInputResponseResource(ZonedDateTime updateDate, MultipleChoiceOptionResource multipleChoiceOption, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+        this.updateDate = updateDate;
+        this.multipleChoiceOptionId = multipleChoiceOption.getId();
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
@@ -148,4 +159,19 @@ public class FormInputResponseResource {
         this.fileEntries = fileEntries;
     }
 
+    public Long getMultipleChoiceOptionId() {
+        return multipleChoiceOptionId;
+    }
+
+    public void setMultipleChoiceOptionId(Long multipleChoiceOptionId) {
+        this.multipleChoiceOptionId = multipleChoiceOptionId;
+    }
+
+    public String getMultipleChoiceOptionText() {
+        return multipleChoiceOptionText;
+    }
+
+    public void setMultipleChoiceOptionText(String multipleChoiceOptionText) {
+        this.multipleChoiceOptionText = multipleChoiceOptionText;
+    }
 }
