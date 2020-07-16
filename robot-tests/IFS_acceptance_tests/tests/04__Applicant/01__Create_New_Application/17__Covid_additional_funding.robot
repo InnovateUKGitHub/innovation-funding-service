@@ -26,6 +26,7 @@ ${COVIDcompetitionId}      ${competition_ids['${COVIDcompetitionTitle}']}
 ${COVIDapplicationTitle1}  Covid Application
 ${COVIDapplicationTitle2}  Covid Application2
 ${exfinanceemail}          exfinance2@example.com
+${project_team_question}   8. Project team
 
 *** Test Cases ***
 IFS admin is able to invite an external PF
@@ -60,10 +61,8 @@ Applicant is asked for funding sought
 
 Submit application
     [Documentation]  IFS-7440
-    Given the user clicks the button/link    id = application-overview-submit-cta
-    And the user should not see the element  jQuery = .message-alert:contains("You will not be able to make changes")
-    When the user clicks the button/link     id = submit-application-button
-    Then the user should see the element     link = Reopen application
+    Given the user can submit the application
+    Then the user should see the element          link = Reopen application
 
 Non lead cannot reopen competition
     [Documentation]  IFS-7440
@@ -73,20 +72,16 @@ Non lead cannot reopen competition
 
 Lead can reopen application
    [Documentation]  IFS-7440
-   [Setup]  log in as a different user   &{lead_applicant_credentials}
-   Given the user clicks the button/link  link = Dashboard
-   When the user clicks the button/link   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
-   And the user clicks the button/link    css = input[type="submit"]
-   Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
-   And the user reads his email           collaborator@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
-   And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+   [Setup]  log in as a different user      &{lead_applicant_credentials}
+   Given the user clicks the button/link    link = Dashboard
+   When the user can reopen application     ${COVIDapplicationTitle1}
+   Then the user reads his email            collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+   And the user reads his email             steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
     [Documentation]  IFS-7440  IFS-7552
-    Given the user uploads an appendix
-    When the user clicks the button/link      id = application-overview-submit-cta
-    And the user should not see the element   jQuery = .message-alert:contains("You will not be able to make changes")
-    Then the user clicks the button/link      id = submit-application-button
+    When the user uploads an appendix             ${project_team_question}  ${5mb_pdf}
+    Then the user can submit the application
 
 Internal user cannot invite to assesment
     [Documentation]  IFS-7441
