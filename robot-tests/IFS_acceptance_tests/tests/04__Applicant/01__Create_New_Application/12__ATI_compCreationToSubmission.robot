@@ -85,11 +85,13 @@ Collaborator cannot reopen the application
     When the user should see the element         link = ${ATIapplicationTitle}
     Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
 
-Lead can reopen application
-    [Documentation]  IFS-7547  IFS-7550
+Lead can reopen application and gets an email notification including collaborators
+    [Documentation]  IFS-7547  IFS-7550  IFS-7549
     [Setup]  log in as a different user      &{lead_applicant_credentials}
     When the user clicks the button/link     link = Dashboard
     Then the user can reopen application     ${ATIapplicationTitle}
+    And the user reads his email             jessica.doe@ludlow.co.uk     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email             steve.smith@empire.com          An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes to the application and assign a question to collaborator
     [Documentation]  IFS-7547  IFS-7550
