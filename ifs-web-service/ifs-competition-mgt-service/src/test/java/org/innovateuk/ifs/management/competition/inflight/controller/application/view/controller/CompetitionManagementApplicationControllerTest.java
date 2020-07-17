@@ -36,7 +36,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
@@ -224,7 +223,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
                 when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
                 FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, of(fileEntryId));
+                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, fileEntryId);
                 when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
                 mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/file/" + fileEntryId + "/download"))

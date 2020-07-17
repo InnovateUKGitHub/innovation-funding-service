@@ -2,10 +2,8 @@ package org.innovateuk.ifs.application.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 /**
  * Represents a compound key for looking up a FormInputResponse, or potentially discovering that one does not yet
@@ -16,14 +14,13 @@ public class FormInputResponseFileEntryId implements Serializable {
     private long formInputId;
     private long applicationId;
     private long processRoleId;
-    @ZeroDowntime(description = "This should no longer be optional", reference = "IFS-7311")
-    private Optional<Long> fileEntryId;
+    private Long fileEntryId;
 
     public FormInputResponseFileEntryId() {
         // for JSON marshalling
     }
 
-    public FormInputResponseFileEntryId(long formInputId, long applicationId, long processRoleId, Optional<Long> fileEntryId) {
+    public FormInputResponseFileEntryId(long formInputId, long applicationId, long processRoleId, Long fileEntryId) {
         this.formInputId = formInputId;
         this.applicationId = applicationId;
         this.processRoleId = processRoleId;
@@ -42,7 +39,7 @@ public class FormInputResponseFileEntryId implements Serializable {
         return processRoleId;
     }
 
-    public Optional<Long> getFileEntryId() {
+    public Long getFileEntryId() {
         return fileEntryId;
     }
 
