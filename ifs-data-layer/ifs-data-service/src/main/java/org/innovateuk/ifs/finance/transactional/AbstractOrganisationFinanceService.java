@@ -103,7 +103,10 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         return serviceSuccess(new OrganisationFinancesKtpYearsResource(
                 organisationSize,
                 ktpYears.map(KtpYearsResource::getYears).orElse(Collections.emptyList()),
-                ktpYears.map(KtpYearsResource::getGroupEmployees).orElse(null)));
+                ktpYears.map(KtpYearsResource::getGroupEmployees).orElse(null),
+                ktpYears.map(KtpYearsResource::getFinancialYearEnd)
+                        .map(YearMonth::from)
+                        .orElse(null)));
     }
 
     @Override

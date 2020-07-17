@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -13,6 +14,8 @@ public class KtpFinancialYears extends FinancialYearAccounts {
 
     private Long groupEmployees;
 
+    private LocalDate financialYearEnd;
+
     public KtpFinancialYears() {}
 
     public KtpFinancialYears(KtpFinancialYears ktpFinancialYears) {
@@ -20,6 +23,7 @@ public class KtpFinancialYears extends FinancialYearAccounts {
                 .map((year) -> new KtpFinancialYear(year, this))
                 .collect(toList());
         groupEmployees = ktpFinancialYears.getGroupEmployees();
+        financialYearEnd = ktpFinancialYears.getFinancialYearEnd();
     }
     public List<KtpFinancialYear> getYears() {
         return years;
@@ -35,5 +39,13 @@ public class KtpFinancialYears extends FinancialYearAccounts {
 
     public void setGroupEmployees(Long groupEmployees) {
         this.groupEmployees = groupEmployees;
+    }
+
+    public LocalDate getFinancialYearEnd() {
+        return financialYearEnd;
+    }
+
+    public void setFinancialYearEnd(LocalDate financialYearEnd) {
+        this.financialYearEnd = financialYearEnd;
     }
 }

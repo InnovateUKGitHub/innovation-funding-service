@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource;
 
+import java.time.YearMonth;
 import java.util.List;
 
 public class OrganisationFinancesKtpYearsResource extends AbstractOrganisationFinanceResource {
@@ -8,13 +9,16 @@ public class OrganisationFinancesKtpYearsResource extends AbstractOrganisationFi
 
     private Long groupEmployees;
 
+    private YearMonth financialYearEnd;
+
     public OrganisationFinancesKtpYearsResource() {
     }
 
-    public OrganisationFinancesKtpYearsResource(OrganisationSize organisationSize, List<KtpYearResource> years, Long groupEmployees) {
+    public OrganisationFinancesKtpYearsResource(OrganisationSize organisationSize, List<KtpYearResource> years, Long groupEmployees, YearMonth financialYearEnd) {
         super(organisationSize);
         this.years = years;
         this.groupEmployees = groupEmployees;
+        this.financialYearEnd = financialYearEnd;
     }
 
     public List<KtpYearResource> getYears() {
@@ -31,5 +35,13 @@ public class OrganisationFinancesKtpYearsResource extends AbstractOrganisationFi
 
     public void setGroupEmployees(Long groupEmployees) {
         this.groupEmployees = groupEmployees;
+    }
+
+    public YearMonth getFinancialYearEnd() {
+        return financialYearEnd;
+    }
+
+    public void setFinancialYearEnd(YearMonth financialYearEnd) {
+        this.financialYearEnd = financialYearEnd;
     }
 }

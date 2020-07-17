@@ -108,4 +108,13 @@ public class YourOrganisationKtpFinancialYearForm {
     public void setEmployees(Long employees) {
         this.employees = employees;
     }
+
+    /* view logic */
+    public String getYearText() {
+        if (year == 0) {
+            return "Previous year";
+        } else {
+            return "Year " + (year + 1);
+        }
+    }
 }

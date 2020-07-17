@@ -27,7 +27,8 @@ public class YourOrganisationKtpFinancialYearsFormSaver {
                         year.getLoans(),
                         year.getEmployees()
                 )).collect(Collectors.toList()),
-                form.getGroupEmployees());
+                form.getGroupEmployees(),
+                form.getFinancialYearEnd());
 
         return service.updateOrganisationFinancesKtpYears(targetId, organisationId, finances);
     }

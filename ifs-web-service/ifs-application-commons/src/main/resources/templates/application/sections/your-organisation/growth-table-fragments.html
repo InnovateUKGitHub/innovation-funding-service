@@ -169,6 +169,24 @@
         <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
                                         organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, isProcurementCompetition=${isProcurementCompetition}, isInternalUser=${isInternalUser}, readOnly=${readOnly})" />
 
+        <th:block th:insert="fragments/form-elements/date ::
+                month-and-year(
+                    legend='End of last financial year',
+                    hint='Enter the date of your last financial year.',
+                    id='financialYearEnd',
+                    monthValue=${form.financialYearEnd != null ? form.financialYearEnd.monthValue : ''},
+                    yearValue=${form.financialYearEnd != null ? form.financialYearEnd.year : ''},
+                    showHints=${showHints},
+                    required=true,
+                    readOnly=${readOnly},
+                    pastDate=true,
+                )" />
+
+
+        <h2 class="govuk-heading-s govuk-!-margin-0">Financial overview</h2>
+        <p class="govuk-body">Enter your organisations audited figures for the last 3 financial years</p>
+
+
         <input type="hidden"
                th:each="year, iter : ${form.years}"
                th:field="*{years[__${iter.index}__].year}" />
@@ -176,33 +194,46 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header">Financial years</th>
+                    <th class="govuk-table__header">Section</th>
                     <th th:each="year : ${form.years}"
                         class="govuk-table__header"
-                        th:text="|Year ${year.year}|"></th>
+                        th:text="${year.yearText}"></th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
 
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='turnover', rowName='Turnover', readOnly=${readOnly})" />
+                                        ktp-year(form=${form}, field='turnover', rowName='Turnover (£)', readOnly=${readOnly})" />
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='preTaxProfit', rowName='Net pre-tax profits', readOnly=${readOnly})" />
+                                        ktp-year(form=${form}, field='preTaxProfit', rowName='Net pre-tax profits (£)', readOnly=${readOnly})" />
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='currentAssets', rowName='Net current assets', readOnly=${readOnly})" />
+                                        ktp-year(form=${form}, field='currentAssets', rowName='Net current assets (£)', readOnly=${readOnly})" />
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='liabilities', rowName='Liabilities', readOnly=${readOnly})" />
+                                        ktp-year(form=${form}, field='liabilities', rowName='Liabilities (£)', readOnly=${readOnly})" />
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='shareholderValue', rowName='Value of shareholder funds', readOnly=${readOnly})" />
-                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='loans', rowName='Long term loans', readOnly=${readOnly})" />
-                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        ktp-year(form=${form}, field='employees', rowName='Number of employees', readOnly=${readOnly})" />
+                                        ktp-year(form=${form}, field='shareholderValue', rowName='Value of shareholder funds (£)', readOnly=${readOnly})" />
 
                 </tbody>
             </table>
         </div>
 
+        <h2 class="govuk-heading-s govuk-!-margin-0">Employee data</h2>
+        <div class="table-overflow">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Section</th>
+                    <th th:each="year : ${form.years}"
+                        class="govuk-table__header"
+                        th:text="${year.yearText}"></th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='employees', rowName='Number of full time employees in your company', readOnly=${readOnly})" />
+                </tbody>
+            </table>
+        </div>
         <th:block th:insert="fragments/form-elements/textfield ::
                         textfield-integer(
                             label='Group employees',
@@ -226,7 +257,7 @@
                 class="govuk-table__cell govuk-form-group">
                 <th:block th:unless="${readOnly}">
                     <label th:for="__${path}__.__${field}__">
-                        <span class="govuk-visually-hidden" th:text="|Year ${iter.index} ${rowName}|"></span>
+                        <span class="govuk-visually-hidden" th:text="|${year.yearText} ${rowName}|"></span>
                     </label>
                     <th:block
                         th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.__${field}__)"/>

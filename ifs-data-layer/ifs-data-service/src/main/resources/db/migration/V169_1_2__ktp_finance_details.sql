@@ -1,7 +1,8 @@
 
 CREATE TABLE ktp_financial_years (
   id bigint(20) PRIMARY KEY AUTO_INCREMENT,
-  group_employees int
+  group_employees int,
+  financial_year_end date
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE ktp_financial_year (
