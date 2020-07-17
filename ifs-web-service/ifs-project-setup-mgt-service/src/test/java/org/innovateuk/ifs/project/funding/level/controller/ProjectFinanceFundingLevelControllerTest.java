@@ -184,6 +184,39 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     }
 
     @Test
+    public void saveFundingLevels_validZeroFundingLevel() throws Exception {
+        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
+        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
+        when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
+        when(applicationFinanceRestService.getFinanceTotals(project.getApplication())).thenReturn(restSuccess(asList(applicationIndustrialFinances, applicationAcademicFinances)));
+        when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
+
+        /*mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+                .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
+                .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("project/financecheck/funding-level"))
+                .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"DecimalMin"))
+                .andReturn();
+
+        verifyZeroInteractions(financeRowRestService);*/
+
+        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
+                .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
+                .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/project/%d/finance-check-overview", projectId)))
+                .andReturn();
+
+        verify(financeRowRestService).update(academicFinances.getGrantClaim());
+        verify(financeRowRestService).update(industrialFinances.getGrantClaim());
+
+        assertEquals(BigDecimal.valueOf(0), academicFinances.getGrantClaimPercentage());
+        assertEquals(BigDecimal.valueOf(0), industrialFinances.getGrantClaimPercentage());
+    }
+
+    @Test
     public void viewFundingLevels_withChangeInOrganisationSize() throws Exception {
         industrialFinances.setOrganisationSize(OrganisationSize.LARGE);
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
