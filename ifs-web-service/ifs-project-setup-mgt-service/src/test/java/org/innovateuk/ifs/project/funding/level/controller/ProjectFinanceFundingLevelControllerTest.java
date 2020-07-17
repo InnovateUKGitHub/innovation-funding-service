@@ -184,25 +184,6 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void saveFundingLevels_invalidZeroFundingLevel() throws Exception {
-        when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
-        when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(project));
-        when(projectRestService.getLeadOrganisationByProject(projectId)).thenReturn(restSuccess(newOrganisationResource().withId(1L).build()));
-        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competition));
-        when(applicationFinanceRestService.getFinanceTotals(project.getApplication())).thenReturn(restSuccess(asList(applicationIndustrialFinances, applicationAcademicFinances)));
-
-        mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
-                .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
-                .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("project/financecheck/funding-level"))
-                .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"DecimalMin"))
-                .andReturn();
-
-        verifyZeroInteractions(financeRowRestService);
-    }
-
-    @Test
     public void viewFundingLevels_withChangeInOrganisationSize() throws Exception {
         industrialFinances.setOrganisationSize(OrganisationSize.LARGE);
         when(projectFinanceRestService.getProjectFinances(projectId)).thenReturn(restSuccess(asList(industrialFinances, academicFinances)));
