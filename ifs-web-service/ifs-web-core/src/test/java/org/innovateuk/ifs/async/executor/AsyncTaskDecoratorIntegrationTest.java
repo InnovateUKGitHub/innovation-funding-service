@@ -5,6 +5,7 @@ import org.innovateuk.ifs.async.controller.AwaitModelFuturesCompletionMethodInte
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.async.util.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -90,6 +91,7 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
      * completed populating the Spring Model before passing to Thymeleaf to render.
      */
     @Test
+    @Ignore
     public void testFuturesListTransferredToChildThreads() throws ExecutionException, InterruptedException {
 
         Runnable setNewThreadLocalValueFn = () -> AsyncFuturesHolder.setFutures(new ConcurrentLinkedQueue<>());
