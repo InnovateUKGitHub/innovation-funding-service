@@ -192,16 +192,6 @@ public class ProjectFinanceFundingLevelControllerTest extends BaseControllerMock
         when(applicationFinanceRestService.getFinanceTotals(project.getApplication())).thenReturn(restSuccess(asList(applicationIndustrialFinances, applicationAcademicFinances)));
         when(financeRowRestService.update(any())).thenReturn(restSuccess(ValidationMessages.noErrors()));
 
-        /*mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
-                .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
-                .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("project/financecheck/funding-level"))
-                .andExpect(model().attributeHasFieldErrorCode("form", format("partners[%d].fundingLevel", industrialOrganisation),"DecimalMin"))
-                .andReturn();
-
-        verifyZeroInteractions(financeRowRestService);*/
-
         mockMvc.perform(post("/project/{projectId}/funding-level", projectId)
                 .param(format("partners[%d].fundingLevel", industrialOrganisation), "0")
                 .param(format("partners[%d].fundingLevel", academicOrganisation), "0"))
