@@ -16,7 +16,7 @@ public enum ApplicationFinanceType {
         return displayLabel;
     }
 
-    private void setDisplayLabel(String displayLabel) {
+    public void setDisplayLabel(String displayLabel) {
         this.displayLabel = displayLabel;
     }
 }
