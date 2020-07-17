@@ -158,6 +158,98 @@
         </tr>
     </th:block>
 
+    <th:block
+        th:fragment="ktp-financial-years(form, organisationSizeOptions, isH2020, isProcurementCompetition, isInternalUser, showOrganisationSizeAlert, showStateAidAgreement, readOnly)">
+
+        <div class="message-alert govuk-!-margin-bottom-6" th:if="${showOrganisationSizeAlert}">
+            <h2 class="govuk-heading-s govuk-!-margin-0">Organisation size determines funding</h2>
+            <p class="govuk-body">The organisation size is used to calculate your funding level. Changing this selection will reset your funding level.</p>
+        </div>
+
+        <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        organisation-size(form=${form}, organisationSizeOptions=${organisationSizeOptions}, isH2020=${isH2020}, isProcurementCompetition=${isProcurementCompetition}, isInternalUser=${isInternalUser}, readOnly=${readOnly})" />
+
+        <input type="hidden"
+               th:each="year, iter : ${form.years}"
+               th:field="*{years[__${iter.index}__].year}" />
+        <div class="table-overflow">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Financial years</th>
+                    <th th:each="year : ${form.years}"
+                        class="govuk-table__header"
+                        th:text="|Year ${year.year}|"></th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='turnover', rowName='Turnover', readOnly=${readOnly})" />
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='preTaxProfit', rowName='Net pre-tax profits', readOnly=${readOnly})" />
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='currentAssets', rowName='Net current assets', readOnly=${readOnly})" />
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='liabilities', rowName='Liabilities', readOnly=${readOnly})" />
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='shareholderValue', rowName='Value of shareholder funds', readOnly=${readOnly})" />
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='loans', rowName='Long term loans', readOnly=${readOnly})" />
+                <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
+                                        ktp-year(form=${form}, field='employees', rowName='Number of employees', readOnly=${readOnly})" />
+
+                </tbody>
+            </table>
+        </div>
+
+        <th:block th:insert="fragments/form-elements/textfield ::
+                        textfield-integer(
+                            label='Group employees',
+                            hint='Number of full time employees at your organisation group.',
+                            id='groupEmployees',
+                            value=${form.groupEmployees},
+                            required=true,
+                            readOnly=${readOnly},
+                            )" />
+
+        <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
+    </th:block>
+
+    <th:block th:fragment="ktp-year(form, field, rowName, readOnly)">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" th:text="${rowName}">
+                Turnover
+            </td>
+            <td th:each="year, iter: ${form.years}"
+                th:with="path=${'years[__${iter.index}__]'}"
+                class="govuk-table__cell govuk-form-group">
+                <th:block th:unless="${readOnly}">
+                    <label th:for="__${path}__.__${field}__">
+                        <span class="govuk-visually-hidden" th:text="|Year ${iter.index} ${rowName}|"></span>
+                    </label>
+                    <th:block
+                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.__${field}__)"/>
+                    <input type="number"
+                           th:id="__${path}__.__${field}__"
+                           th:field="*{__${path}__.__${field}__}"
+                           th:errorclass="govuk-input--error"
+                           class="govuk-input"
+                           placeholder="0"
+                           required="required"
+                           min="1"
+                           max="9999999999999999999"
+                           data-field-errormessage="This field can only accept whole numbers.">
+                </th:block>
+                <th:block th:if="${readOnly}"
+                          th:text="*{__${path}__.__${field}__}">
+                </th:block>
+            </td>
+        </tr>
+
+    </th:block>
+
+
     <th:block th:fragment="organisation-size(form, organisationSizeOptions, isH2020, isProcurementCompetition, isInternalUser, readOnly)">
         <th:block th:with="h2020Hint=${'Please provide your
                                       business size using the <a class=&quot;govuk-link&quot; href=&quot;http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm&quot;

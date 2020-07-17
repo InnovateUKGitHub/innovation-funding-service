@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
-import org.innovateuk.ifs.finance.domain.Finance;
-import org.innovateuk.ifs.finance.domain.GrowthTable;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
+import org.innovateuk.ifs.finance.resource.KtpYearsResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 
 import static java.lang.Boolean.TRUE;
@@ -16,11 +17,34 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
         if (financeResource.getOrganisationSize() != null) {
             dbFinance.setOrganisationSize(financeResource.getOrganisationSize());
         }
-        if (TRUE.equals(dbFinance.getCompetition().getIncludeProjectGrowthTable())) {
+        if (dbFinance.getCompetition().getFundingType() == FundingType.KTP) {
+            updateKtpYears(financeResource, dbFinance);
+        } else if (TRUE.equals(dbFinance.getCompetition().getIncludeProjectGrowthTable())) {
             updateGrowthTable(financeResource, dbFinance);
         } else {
             updateEmployeesAndTurnover(financeResource, dbFinance);
         }
+    }
+
+    private void updateKtpYears(F financeResource, D dbFinance) {
+        KtpFinancialYears dbYears = dbFinance.getKtpFinancialYears();
+        KtpYearsResource ktpYearsResource = (KtpYearsResource) financeResource.getFinancialYearAccounts();
+        ktpYearsResource.getYears().forEach(year -> {
+            KtpFinancialYear dbYear = dbYears.getYears()
+                    .stream()
+                    .filter(filterYear -> filterYear.getYear().equals(year.getYear()))
+                    .findFirst()
+                    .orElseThrow(ObjectNotFoundException::new);
+            dbYear.setTurnover(year.getTurnover());
+            dbYear.setPreTaxProfit(year.getPreTaxProfit());
+            dbYear.setCurrentAssets(year.getCurrentAssets());
+            dbYear.setLiabilities(year.getLiabilities());
+            dbYear.setShareholderValue(year.getShareholderValue());
+            dbYear.setLoans(year.getLoans());
+            dbYear.setEmployees(year.getEmployees());
+
+        });
+        dbYears.setGroupEmployees(ktpYearsResource.getGroupEmployees());
     }
 
     private void updateEmployeesAndTurnover(F financeResource, D dbFinance) {

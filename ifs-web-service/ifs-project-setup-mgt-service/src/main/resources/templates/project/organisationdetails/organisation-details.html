@@ -27,7 +27,7 @@
 
             <form th:object="${form}">
                 <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                                with-growth-table(
+                                                __${formFragment}__(
                                                        form=${form},
                                                        organisationSizeOptions=${yourOrganisation.organisationSizeOptions},
                                                        isH2020=${yourOrganisation.h2020},
@@ -40,7 +40,7 @@
             </form>
 
             <th:block th:unless="${!yourOrganisation.isAllowedToEditOrganisationSize()}">
-                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/with-growth-table (projectId=${yourOrganisation.projectId}, organisationId=${yourOrganisation.organisationId})}"
+                <a th:href="@{/project/{projectId}/organisation/{organisationId}/edit/{urlPart} (projectId=${yourOrganisation.projectId}, organisationId=${yourOrganisation.organisationId}, urlPart=${formFragment})}"
                    class="button-clear govuk-link govuk-!-font-weight-regular govuk-!-margin-top-0">Edit organisation
                     size</a>
             </th:block>

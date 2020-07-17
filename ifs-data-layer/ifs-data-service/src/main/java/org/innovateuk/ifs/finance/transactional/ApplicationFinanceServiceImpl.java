@@ -4,11 +4,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
-import org.innovateuk.ifs.finance.domain.GrowthTable;
+import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
@@ -16,12 +15,10 @@ import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
 import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
+import org.innovateuk.ifs.finance.repository.KtpFinancialYearsRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.organisation.domain.OrganisationType;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -66,6 +63,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     @Autowired
     private GrowthTableRepository growthTableRepository;
+
+    @Autowired
+    private KtpFinancialYearsRepository ktpFinancialYearsRepository;
 
     @Override
     @Transactional
@@ -127,7 +127,16 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             return getOpenApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
                         ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
-                        if (TRUE.equals(application.getCompetition().getIncludeProjectGrowthTable())) {
+                        if (application.getCompetition().getFundingType() == FundingType.KTP) {
+                            KtpFinancialYears ktpFinancialYears = new KtpFinancialYears();
+                            ktpFinancialYears.setYears(newArrayList(
+                                    new KtpFinancialYear(0, ktpFinancialYears),
+                                    new KtpFinancialYear(1, ktpFinancialYears),
+                                    new KtpFinancialYear(2, ktpFinancialYears)
+                            ));
+                            applicationFinance.setKtpFinancialYears(ktpFinancialYears);
+                            ktpFinancialYearsRepository.save(ktpFinancialYears);
+                        } else if (TRUE.equals(application.getCompetition().getIncludeProjectGrowthTable())) {
                             applicationFinance.setGrowthTable(new GrowthTable());
                             growthTableRepository.save(applicationFinance.getGrowthTable());
                         } else {

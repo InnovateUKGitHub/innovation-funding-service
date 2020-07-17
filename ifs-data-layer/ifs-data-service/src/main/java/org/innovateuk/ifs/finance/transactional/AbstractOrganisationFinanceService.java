@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
@@ -90,6 +91,22 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
     }
 
     @Override
+    public ServiceResult<OrganisationFinancesKtpYearsResource> getOrganisationKtpYears(long targetId, long organisationId) {
+        Finance finance = getFinance(targetId, organisationId).getSuccess();
+
+        OrganisationSize organisationSize = finance.getOrganisationSize();
+
+        Optional<KtpYearsResource> ktpYears = ofNullable(finance.getFinancialYearAccounts())
+                .filter(KtpYearsResource.class::isInstance)
+                .map(KtpYearsResource.class::cast);
+
+        return serviceSuccess(new OrganisationFinancesKtpYearsResource(
+                organisationSize,
+                ktpYears.map(KtpYearsResource::getYears).orElse(Collections.emptyList()),
+                ktpYears.map(KtpYearsResource::getGroupEmployees).orElse(null)));
+    }
+
+    @Override
     @Transactional
     public ServiceResult<Void> updateOrganisationWithGrowthTable(long targetId, long organisationId, OrganisationFinancesWithGrowthTableResource finances) {
         long competitionId = getCompetitionId(targetId);
@@ -121,6 +138,23 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         EmployeesAndTurnoverResource employeesAndTurnover = (EmployeesAndTurnoverResource) finance.getFinancialYearAccounts();
         employeesAndTurnover.setTurnover(finances.getTurnover());
         employeesAndTurnover.setEmployees(finances.getHeadCount());
+
+        updateFinance(finance).getSuccess();
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateOrganisationKtpYears(long targetId, long organisationId, OrganisationFinancesKtpYearsResource finances) {
+        long competitionId = getCompetitionId(targetId);
+
+        // finance
+        Finance finance = getFinance(targetId, organisationId).getSuccess();
+        updateOrganisationSize(finance, competitionId, finances.getOrganisationSize());
+        KtpYearsResource ktpYearsResource = (KtpYearsResource) finance.getFinancialYearAccounts();
+        ktpYearsResource.setYears(finances.getYears());
+        ktpYearsResource.setGroupEmployees(finances.getGroupEmployees());
 
         updateFinance(finance).getSuccess();
 

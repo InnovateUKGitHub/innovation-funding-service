@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.organisationdetails.view.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsForm;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationKtpFinancialYearsFormPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,25 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * This controller will allow the user to view organisation details with a growth table.
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table")
+@RequestMapping("/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/ktp-financial-years")
 @SecuredBySpring(value = "Controller", description = "Internal users can view organisation details",
-        securedType = OrganisationDetailsWithGrowthTableController.class)
+        securedType = OrganisationDetailsKtpFinancialYearsController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder')")
-public class OrganisationDetailsWithGrowthTableController extends AbstractOrganisationDetailsController<YourOrganisationWithGrowthTableForm> {
+public class OrganisationDetailsKtpFinancialYearsController extends AbstractOrganisationDetailsController<YourOrganisationKtpFinancialYearsForm> {
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
 
     @Autowired
-    private YourOrganisationWithGrowthTableFormPopulator withGrowthTableFormPopulator;
+    private YourOrganisationKtpFinancialYearsFormPopulator formPopulator;
 
     @Override
     protected String formFragment() {
-        return "with-growth-table";
+        return "ktp-financial-years";
     }
 
     @Override
-    protected YourOrganisationWithGrowthTableForm getForm(long projectId, long organisationId) {
-        return withGrowthTableFormPopulator.populate(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId).getSuccess());
+    protected YourOrganisationKtpFinancialYearsForm getForm(long projectId, long organisationId) {
+        return formPopulator.populate(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId).getSuccess());
     }
 }
