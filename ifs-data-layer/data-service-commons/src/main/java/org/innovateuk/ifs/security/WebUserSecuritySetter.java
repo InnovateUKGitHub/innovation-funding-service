@@ -25,7 +25,7 @@ public class WebUserSecuritySetter {
     @Value("${ifs.web.system.user.uid}")
     private String webUserId;
 
-    public static UserResource webUser;
+    private static final UserResource webUser;
 
     static {
         webUser = new UserResource();
