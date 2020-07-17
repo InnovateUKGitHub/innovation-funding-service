@@ -16,18 +16,8 @@ sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.branch.name", "feature/IFS-7846-resolve-sonarqube-vulnerabilities"
+        property "sonar.branch", "development"
         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
-        property "sonar.exclusions", "**/*MapperImpl.java," +
-                "**/CategoryRepositoryIntegrationTest.java," +
-                "**/ProjectPartnerInviteServiceImpl.java," +
-                "**/GrantsInviteServiceImpl.java," +
-                "**/OverheadFileServiceImpl.java," +
-                "**/InterviewInviteServiceImpl.java," +
-                "**/AssessmentInviteServiceImpl.java," +
-                "**/FinanceReviewerServiceImpl.java," +
-                "**/ApplicationFinanceServiceImpl.java," +
-                "**/ReviewInviteServiceImpl.java,"
-        property "sonar.login", "a3f04c12ddc8b0220b6358ac426e7ec8804ccfd4"
+        property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
