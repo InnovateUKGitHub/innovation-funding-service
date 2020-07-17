@@ -143,6 +143,12 @@ function startPybot() {
       else
         local includeEuTags='--exclude EU2020'
     fi
+    if [[ ${ats} -eq 1 ]]
+      then
+        local includeAtsTags='--include ATS2020'
+      else
+        local includeAtsTags='--exclude ATS2020'
+    fi
 
 
     python3 -m robot --outputdir target/${targetDir} ${rerunString} ${dryRunString} --pythonpath IFS_acceptance_tests/libs \
@@ -161,6 +167,7 @@ function startPybot() {
     $includeBespokeTags \
     $excludeBespokeTags \
     $includeEuTags \
+    $includeAtsTags \
     --exclude Failing --exclude Pending --name ${targetDir} ${1} &
 }
 
@@ -306,11 +313,12 @@ stopGrid=0
 showZapReport=0
 compress=0
 eu=0
+ats=0
 dryRun=0
 openReports=1
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :o" opt ; do
+while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :a: :o" opt ; do
     case ${opt} in
         q)
             quickTest=1
@@ -352,6 +360,9 @@ while getopts ":q :h :t :r :c :w :z :d: :x :R :B :I: :E: :o" opt ; do
         ;;
         B)
           eu=1
+        ;;
+        a)
+          ats=1
         ;;
 	o)
 	  openReports=0
