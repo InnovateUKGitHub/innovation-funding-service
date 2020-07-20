@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+</head>
+<body class="govuk-template__body create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/international-organisation',currentApplication=${currentApplication},dynamicBackLink=${true}" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a knowledge base organisation',subTitle=${subtitle},size='govuk-heading-xl'" />
+
+        <div th:if="${#fields.hasErrors('${form.*}')}"
+             class="govuk-error-summary"
+             role="alert"
+             aria-labelledby="error-summary-heading"
+             tabindex="-1">
+            <h2 class="govuk-error-summary__title"
+                id="error-summary-heading">
+                We were unable to save your changes.
+            </h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <p class="govuk-body">Only a knowledge base organisation can lead this application.</p>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="POST"
+              th:object="${form}">
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="userId">
+                    Find your organisation
+                </label>
+                <p class="govuk-hint">Select your knowledge base organisation.</p>
+                <select id="userId"
+                        class="govuk-select"
+                        th:field="*{knowledgeBase}"
+                        data-auto-complete="">
+                    <option value="">Select Monitoring Officer</option>
+                    <option th:each="knowledgeBase : ${knowledgeBases}"
+                            th:value="${knowledgeBase}"
+                            th:text="${knowledgeBase}"></option>
+                </select>
+            </div>
+            <div class="govuk-form-group">
+                <button type="submit"
+                        class="govuk-button"
+                        data-auto-complete-submit="">Save and continue</button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>
