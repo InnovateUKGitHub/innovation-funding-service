@@ -90,8 +90,8 @@ Lead can reopen application and gets an email notification including collaborato
     [Setup]  log in as a different user      &{lead_applicant_credentials}
     When the user clicks the button/link     link = Dashboard
     Then the user can reopen application     ${ATIapplicationTitle}
-    And the user reads his email             jessica.doe@ludlow.co.uk     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
-    And the user reads his email             steve.smith@empire.com          An Innovation Funding Service funding application has been reopened   You reopened this application
+    And the user reads his email             ${collaborator1_credentials["email"]}     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email             ${lead_applicant_credentials["email"]}      An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes to the application and assign a question to collaborator
     [Documentation]  IFS-7547  IFS-7550
