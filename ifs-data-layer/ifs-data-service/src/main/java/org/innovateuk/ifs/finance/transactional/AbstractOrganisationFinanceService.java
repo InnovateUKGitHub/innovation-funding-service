@@ -158,6 +158,7 @@ public abstract class AbstractOrganisationFinanceService<Finance extends BaseFin
         KtpYearsResource ktpYearsResource = (KtpYearsResource) finance.getFinancialYearAccounts();
         ktpYearsResource.setYears(finances.getYears());
         ktpYearsResource.setGroupEmployees(finances.getGroupEmployees());
+        ktpYearsResource.setFinancialYearEnd(ofNullable(finances.getFinancialYearEnd()).map(YearMonth::atEndOfMonth).orElse(null));
 
         updateFinance(finance).getSuccess();
 
