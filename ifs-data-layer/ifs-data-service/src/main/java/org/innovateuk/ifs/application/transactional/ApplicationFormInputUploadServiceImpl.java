@@ -143,7 +143,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                             formInputId,
                             applicationId,
                             processRoleId,
-                            Optional.of(fileEntry.getId())
+                            fileEntry.getId()
                     );
                     return serviceSuccess(fileEntryResource);
                 });
@@ -198,22 +198,14 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
     }
 
     private FileEntry getFileEntry(FormInputResponse response, FormInputResponseFileEntryId id) {
-        if (id.getFileEntryId().isPresent()) {
-            return response.getFileEntries().stream()
-                    .filter(file -> file.getId().equals(id.getFileEntryId().get()))
-                    .findFirst()
-                    .orElseThrow(() -> new ObjectNotFoundException("Unknown file entry " + id.getFileEntryId().get(), emptyList()));
-        } else {
-            return response.getFileEntries().get(0);
-        }
+        return response.getFileEntries().stream()
+                .filter(file -> file.getId().equals(id.getFileEntryId()))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException("Unknown file entry " + id.getFileEntryId(), emptyList()));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse, FormInputResponseFileEntryId id) {
-        if (id.getFileEntryId().isPresent()) {
-            formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId().get()));
-        } else {
-            formInputResponse.getFileEntries().clear();
-        }
+        formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId()));
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
         LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() +
                 " and application " + formInputResponse.getApplication());

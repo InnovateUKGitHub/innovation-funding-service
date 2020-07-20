@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.util.Optional;
-
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
@@ -32,7 +30,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testCreateFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
                 (true);
@@ -46,7 +44,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testCreateFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
                 (false);
@@ -65,7 +63,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testDeleteFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
@@ -80,7 +78,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testDeleteFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
@@ -100,7 +98,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testDeleteFormInputResponseButResourceLookupFails() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(null);
         when(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, getLoggedInUser())).thenReturn
@@ -120,7 +118,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testGetFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
         when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser()))
@@ -135,7 +133,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testGetFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(file);
         when(fileUploadRules.applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser()))
@@ -155,7 +153,7 @@ public class ApplicationFormInputUploadServiceSecurityTest extends
     public void testGetFormInputResponseFileUploadButLookupFails() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, Optional.of(111L));
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L, 111L);
 
         when(fileUploadLookup.getFormInputResponseFileEntryResource(file.getCompoundId())).thenReturn(null);
 
