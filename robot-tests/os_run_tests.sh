@@ -67,9 +67,9 @@ function startPybot() {
     fi
     if [[ ${ats} -eq 1 ]]
       then
-        local includeAtsTags='--include ATS2020'
+        local includeAtsTags='--include AuthServiceTests'
       else
-        local includeAtsTags='--exclude ATS2020'
+        local includeAtsTags='--exclude AuthServiceTests'
     fi
     if [[ ${rerunFailed} -eq 1 ]]; then
       local rerunString='--rerunfailed target/${targetDir}/output.xml --output rerun.xml'
