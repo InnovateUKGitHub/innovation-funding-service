@@ -92,7 +92,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             model.addAttribute("formFragment", formFragment());
-            return formFragment();
+            return TEMPLATE;
         };
 
         Supplier<String> successHandler = () -> {
