@@ -46,6 +46,10 @@ public class ProjectFinance extends Finance {
         this.project = project;
     }
 
+    public ProjectFinance(Organisation organisation, OrganisationSize organisationSize, Project project) {
+        this(organisation, organisationSize, project, null, null, null);
+    }
+
     public Project getProject() {
         return project;
     }

@@ -229,7 +229,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
         ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(SMALL).withApplication(newApplication().withCompetition(newCompetition().build()).build()).build();
         when(competitionService.getCompetitionById(applicationFinance.getApplication().getCompetition().getId())).thenReturn(serviceSuccess(competition));
-        ProjectFinance newProjectFinance = new ProjectFinance(organisation, SMALL, newProject, null, null);
+        ProjectFinance newProjectFinance = new ProjectFinance(organisation, SMALL, newProject);
         newProjectFinance.setId(999L);
         List<Question> financeQuestions = newQuestion().build(2);
 

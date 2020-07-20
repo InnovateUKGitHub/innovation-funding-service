@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/ktp-financial-years")
-public class EditOrganisationDetailsControlleKtpFinancialYears extends AbstractEditOrganisationDetailsController<YourOrganisationKtpFinancialYearsForm> {
+public class EditOrganisationDetailsKtpFinancialYearsController extends AbstractEditOrganisationDetailsController<YourOrganisationKtpFinancialYearsForm> {
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;

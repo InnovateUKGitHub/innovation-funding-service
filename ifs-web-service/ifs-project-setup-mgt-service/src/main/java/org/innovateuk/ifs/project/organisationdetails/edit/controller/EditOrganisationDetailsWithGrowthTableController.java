@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/with-growth-table")
-public class EditOrganisationDetailsControllerWithGrowthTable extends AbstractEditOrganisationDetailsController<YourOrganisationWithGrowthTableForm> {
+public class EditOrganisationDetailsWithGrowthTableController extends AbstractEditOrganisationDetailsController<YourOrganisationWithGrowthTableForm> {
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
