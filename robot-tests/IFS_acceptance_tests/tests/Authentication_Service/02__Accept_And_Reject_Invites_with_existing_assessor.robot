@@ -30,7 +30,7 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
-Force Tags        Assessor  ATS2020
+Force Tags        Assessor  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 

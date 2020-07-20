@@ -11,7 +11,7 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown
-Force Tags        Applicant  ATS2020
+Force Tags        Applicant  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 

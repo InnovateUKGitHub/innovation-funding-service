@@ -17,7 +17,7 @@ Documentation   IFS-6096 SBRI - Project Cost Guidance Review
 ...
 Suite Setup     Custom suite setup
 Suite Teardown  Custom suite teardown
-Force Tags      ATS2020
+Force Tags      AuthServiceTests
 Resource        ../../resources/defaultResources.robot
 Resource        ../../resources/common/Applicant_Commons.robot
 Resource        ../../resources/common/Competition_Commons.robot

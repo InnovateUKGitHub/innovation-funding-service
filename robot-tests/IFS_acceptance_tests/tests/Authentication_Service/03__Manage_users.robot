@@ -24,7 +24,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-7483 Inactive innovation lead appearing in list of available innovation leads
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
-Force Tags        Administrator  CompAdmin  ATS2020
+Force Tags        Administrator  CompAdmin  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 Resource          ../../resources/common/PS_Common.robot

@@ -7,7 +7,7 @@ Documentation     IFS-7316 Internal user can invite new external user when proje
 
 Suite Setup       The user logs-in in new browser  &{ifs_admin_user_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        Project Setup   ATS2020
+Force Tags        Project Setup   AuthServiceTests
 Resource          ../../resources/common/PS_Common.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 

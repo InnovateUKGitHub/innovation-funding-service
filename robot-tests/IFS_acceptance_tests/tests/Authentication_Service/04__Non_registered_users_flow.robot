@@ -12,7 +12,7 @@ Documentation     INFUND-669 As an applicant I want to create a new application 
 ...               INFUND-1040: As an applicant I want to be able to create more than one application so..
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
-Force Tags        Applicant  ATS2020
+Force Tags        Applicant  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/PS_Common.robot
 Resource          ../../resources/common/Applicant_Commons.robot

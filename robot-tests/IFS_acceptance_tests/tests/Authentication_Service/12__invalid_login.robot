@@ -3,7 +3,7 @@ Documentation     INFUND-703: As a user and I have provided the wrong login deta
 Suite Setup       Run Keywords    The guest user opens the browser
 ...               AND    the user navigates to the page    ${LOGIN_URL}
 Suite Teardown    The user closes the browser
-Force Tags        Guest  ATS2020
+Force Tags        Guest  AuthServiceTests
 Test Template     Email persists on invalid login
 Resource          ../../resources/defaultResources.robot
 

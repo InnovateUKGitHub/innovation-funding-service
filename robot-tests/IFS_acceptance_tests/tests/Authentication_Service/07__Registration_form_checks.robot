@@ -16,7 +16,7 @@ Documentation     INFUND-885: As an applicant I want to be able to submit a user
 ...               IFS-4048 Server side validation on password does not disappear on registration page
 Suite Setup       the guest user opens the browser
 Suite Teardown    Close browser and delete emails
-Force Tags        Applicant  ATS2020
+Force Tags        Applicant  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/PS_Common.robot
 

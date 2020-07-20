@@ -12,7 +12,7 @@ Documentation     INFUND-399 As a client, I would like to demo the system with r
 ...               IFS-188 Stakeholder views – Support team
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
-Force Tags        Guest  ATS2020
+Force Tags        Guest  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***

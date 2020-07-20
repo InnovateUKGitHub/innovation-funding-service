@@ -6,7 +6,7 @@ Documentation     INFUND-1458 As a existing user with an invitation to collabora
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
 Suite Teardown    The user closes the browser
-Force Tags        Applicant  ATS2020
+Force Tags        Applicant  AuthServiceTests
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
