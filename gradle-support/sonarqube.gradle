@@ -16,7 +16,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.branch.name", "development"
+        property "sonar.branch.name", "feature/IFS-7814-SonarQube"
         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         // These exclusions are because SonarQube fails to parse the files
         // Raised DHS-400 to contact SonarQube for support
@@ -31,5 +31,6 @@ sonarqube {
                 "**/ReviewInviteServiceImpl.java,"
         property "sonar.java.source", "1.8"
         property "sonar.java.target", "1.8"
+        property "sonar.qualitygate.wait", "true"
     }
 }
