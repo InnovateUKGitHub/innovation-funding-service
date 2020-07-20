@@ -55,7 +55,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
 
     static final String EMAIL_MUST_BE_VALID = "EMAIL_MUST_BE_VALID";
 
-    static final String EMAIL_FIELD_KEY = "email";
+    static final String PASSWORD_EMAIL_FIELD_KEY = "email";
     static final String PASSWORD_FIELD_KEY = "password";
 
     @Autowired
@@ -119,7 +119,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
                 case PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER:
                     return Error.fieldError(PASSWORD_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
                 case EMAIL_MUST_BE_VALID:
-                    return Error.fieldError(EMAIL_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
+                    return Error.fieldError(PASSWORD_EMAIL_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
             }
         }
 
