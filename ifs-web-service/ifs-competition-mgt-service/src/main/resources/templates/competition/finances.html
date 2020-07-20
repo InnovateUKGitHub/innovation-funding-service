@@ -101,6 +101,10 @@
                 </fieldset>
             </div>
 
+            <th:block th:if="${model.subsection.KTPCompetition}">
+                <input type="hidden" th:field="*{includeGrowthTable}" value="false"/>
+            </th:block>
+
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('includeJesForm')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
                 <fieldset class="govuk-fieldset">
