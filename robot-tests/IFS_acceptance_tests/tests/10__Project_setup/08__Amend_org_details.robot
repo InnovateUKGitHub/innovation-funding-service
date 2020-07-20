@@ -33,9 +33,14 @@ Project finance cannot add an invalid percentage
     When the user clicks the button/link                  jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error    Funding level must be 45% or lower.
 
+User can change a percentage to be not requesting funding
+    [Documentation]  IFS-7872
+    Given the user enters text to a text field     id = partners[${orgId}].fundingLevel  0
+    Then the user should not see a field error     The level of funding must be above 0%.
+
 Values are updated dynamically as new percentages are added
     [Documentation]  IFS-6695  IFS-7128
-    Given the user enters text to a text field      id = partners[${orgId}].fundingLevel  32.23
+    Given the user enters text to a text field           id = partners[${orgId}].fundingLevel  32.23
     Then the user should see the correct revised values  £62,283  51.44%  £121,076
     And the user should see the element                  jQuery = .message-alert:contains("The revised amount is higher")
 

@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -85,7 +84,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
         // than JSON and XML
         String dummyContent = "{\"description\":\"The request body is the binary content of the file being uploaded - it is NOT JSON as seen here!\"}";
 
-        FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), formInputId, 456L, 789L, Optional.empty());
+        FormInputResponseFileEntryResource createdResource = new FormInputResponseFileEntryResource(newFileEntryResource().with(id(1111L)).build(), formInputId, 456L, 789L, 987L);
         ServiceResult<FormInputResponseFileEntryResource> successResponse = serviceSuccess(createdResource);
 
         FileHeaderAttributes fileAttributesAfterValidation = new FileHeaderAttributes(MediaType.valueOf("application/pdf"), 1000L, "original.pdf");
@@ -305,7 +304,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteFile() throws Exception {
 
-        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, 456L, 789L, fileEntryId);
         FormInputResponse unlinkedFormInputResponse = newFormInputResponse().build();
 
         when(applicationFormInputUploadService.deleteFormInputResponseFileUpload(formInputResponseFileEntryId)).thenReturn(serviceSuccess(unlinkedFormInputResponse));
@@ -388,7 +387,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         FormInputResponseFileEntryId fileEntryIdExpectations = fileEntryExpectations();
 
-        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, fileEntryId);
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         when(applicationFormInputUploadService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(fileEntryResource, inputStreamSupplier)));
@@ -432,6 +431,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileEntry_internalServerError")).
@@ -470,7 +470,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
 
         FormInputResponseFileEntryId fileEntryIdExpectations = fileEntryExpectations();
 
-        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(newFileEntryResource().build(), formInputId, 456L, 789L, fileEntryId);
         Supplier<InputStream> inputStreamSupplier = () -> new ByteArrayInputStream("The returned binary file data".getBytes());
 
         when(applicationFormInputUploadService.getFormInputResponseFileUpload(fileEntryIdExpectations)).thenReturn(serviceSuccess(new FormInputResponseFileAndContents(fileEntryResource, inputStreamSupplier)));
@@ -512,6 +512,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isInternalServerError()).
                 andDo(document("forminputresponsefileupload/file_fileDownload_internalServerError")).
@@ -530,7 +531,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         get("/forminputresponse/file").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId))).
                 andExpect(status().isInternalServerError()).
                 andReturn();
 
@@ -574,7 +576,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 withMediaType("application/pdf").
                 build();
 
-        FormInputResponseFileEntryResource formInputFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, formInputId, 456L, 789L, Optional.of(fileEntryId));
+        FormInputResponseFileEntryResource formInputFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, formInputId, 456L, 789L, fileEntryId);
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
@@ -617,6 +619,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
                                 param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId)).
                                 header("IFS_AUTH_TOKEN", "123abc")).
                 andExpect(status().isNotFound()).
                 andDo(document("forminputresponsefileupload/file_fileDownload_" + documentationSuffix)).
@@ -690,7 +693,8 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                         delete("/forminputresponse/file").
                                 param("formInputId", formInputId + "").
                                 param("applicationId", "456").
-                                param("processRoleId", "789")).
+                                param("processRoleId", "789").
+                                param("fileEntryId", String.valueOf(fileEntryId))).
                 andDo(document("forminputresponsefileupload/file_fileDelete_" + documentationSuffix)).
                 andReturn();
 

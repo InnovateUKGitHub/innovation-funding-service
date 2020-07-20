@@ -15,7 +15,7 @@ public abstract class AbstractPublicContentGroupViewModel extends AbstractPublic
         return fileEntries;
     }
 
-    public List<ContentGroupResource> contentGroups;
+    private List<ContentGroupResource> contentGroups;
 
     public void setFileEntries(Map<Long, FileEntryResource> fileEntries) {
         this.fileEntries = fileEntries;

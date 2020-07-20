@@ -2,7 +2,8 @@
 Resource    ../../resources/defaultResources.robot
 
 *** Variables ***
-${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+${bannerMessageForLead}     Your application was reopened on
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -48,10 +49,11 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
-    ${applicationId} =  get application id by name  ${applicationTitle}
-    the user navigates to the page   ${server}/application/${applicationId}
-    the user clicks the button/link  link = Application details
-    the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    ${applicationId} =  get application id by name     ${applicationTitle}
+    the user navigates to the page                     ${server}/application/${applicationId}
+    the applicant marks EDI question as complete
+    the user clicks the button/link                    link = Application details
+    the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
@@ -67,16 +69,14 @@ the user fills in the Application details
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       id = application-question-complete
-    the user clicks the button/link       link = Back to application overview
+    the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user selects research category from funding
     [Arguments]  ${res_category}
     the user clicks the button/link   link = research category
     the user clicks the button twice  jQuery = label:contains("${res_category}")
-    the user clicks the button/link   id = application-question-complete
-    the user clicks the button/link   link = Back to application overview
+    the user can mark the question as complete
     the user should see the element   jQuery = li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete
@@ -433,7 +433,6 @@ the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
@@ -540,3 +539,41 @@ partner organisation accepts the invite to collaborate
     The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
     The user should not see an error in the page
 
+the applicant marks EDI question as complete
+    the user clicks the button/link     link = Equality, diversity and inclusion
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+    the user clicks the button/link     jQuery = label:contains("Yes")
+    the user can mark the question as complete
+    the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
+
+the user uploads an appendix
+    [Arguments]  ${question_link}  ${appendix_file}
+    the user clicks the button/link                link = ${question_link}
+    the user clicks the button/link                id = edit
+    the user uploads the file                      css = .inputfile  ${appendix_file}
+    the user can mark the question as complete
+
+the user can reopen application
+    [Arguments]  ${application}
+    the user clicks the button/link     jQuery = li:contains("${application}") a:contains("Reopen")
+    the user clicks the button/link     css = input[type="submit"]
+    the user should see the element     jQuery = p:contains("${bannerMessageForLead}")
+    the user should see the element     link = review and submit
+
+lead assigns a question to partner organisation
+     [Arguments]  ${questionLink}
+     the user clicks the button/link       link = ${questionLink}
+     the user clicks the button/link       id = edit
+     the user clicks the button/link       link = Assign to someone else.
+     the user selects the radio button     assignee  assignee2
+     the user clicks the button/link       css = button[type="submit"]
+
+the user can mark the question as complete
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+
+the user can submit the application
+    the user clicks the button/link         id = application-overview-submit-cta
+    the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
+    the user clicks the button/link         id = submit-application-button

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
@@ -21,11 +21,8 @@ public class FormInputResponseResource {
     private Integer formInputMaxWordCount;
     private Long application;
     private List<FileEntryResource> fileEntries = new ArrayList<>();
-
-    @ZeroDowntime(description = "remove", reference = "IFS-7311")
-    private Long fileEntry;
-    private String filename;
-    private Long filesizeBytes;
+    private Long multipleChoiceOptionId;
+    private String multipleChoiceOptionText;
 
     public FormInputResponseResource() {
         // no-arg constructor
@@ -44,6 +41,14 @@ public class FormInputResponseResource {
     }
     public FormInputResponseResource(ZonedDateTime updateDate, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
+        this.updatedBy = updatedBy.getId();
+        this.formInput = formInput;
+        this.application = application.getId();
+    }
+
+    public FormInputResponseResource(ZonedDateTime updateDate, MultipleChoiceOptionResource multipleChoiceOption, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+        this.updateDate = updateDate;
+        this.multipleChoiceOptionId = multipleChoiceOption.getId();
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
@@ -154,27 +159,19 @@ public class FormInputResponseResource {
         this.fileEntries = fileEntries;
     }
 
-    public Long getFileEntry() {
-        return fileEntry;
+    public Long getMultipleChoiceOptionId() {
+        return multipleChoiceOptionId;
     }
 
-    public void setFileEntry(Long fileEntry) {
-        this.fileEntry = fileEntry;
+    public void setMultipleChoiceOptionId(Long multipleChoiceOptionId) {
+        this.multipleChoiceOptionId = multipleChoiceOptionId;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getMultipleChoiceOptionText() {
+        return multipleChoiceOptionText;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Long getFilesizeBytes() {
-        return filesizeBytes;
-    }
-
-    public void setFilesizeBytes(Long filesizeBytes) {
-        this.filesizeBytes = filesizeBytes;
+    public void setMultipleChoiceOptionText(String multipleChoiceOptionText) {
+        this.multipleChoiceOptionText = multipleChoiceOptionText;
     }
 }

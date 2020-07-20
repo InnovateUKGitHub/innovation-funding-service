@@ -53,7 +53,7 @@ Moving KTP Competition to Project Setup
     And making the application a successful project    ${competitionId}  ${KTPapplicationTitle}
     And moving competition to Project Setup            ${competitionId}
     [Teardown]  Requesting IDs of this Project
-    
+
 The user is able to complete Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  the user logs-in in new browser     &{lead_applicant_credentials}
@@ -167,6 +167,7 @@ The user completes the application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${KTPapplicationTitle}
     the user marks the finances as complete                  ${KTPapplicationTitle}   Calculate  52,214  yes

@@ -17,8 +17,7 @@ public class FormInputResponseResourceDocs {
             fieldWithPath("formInputMaxWordCount").description("The max word count of the form input"),
             fieldWithPath("application").type("Number").description("The id of the application for the application"),
             fieldWithPath("fileEntries[]").description("the file entries"),
-            fieldWithPath("fileEntry").description("The file entry of the form input response"),
-            fieldWithPath("filename").description("The file name of the form input response"),
-            fieldWithPath("filesizeBytes").description("The file size of the form input response")
+            fieldWithPath("multipleChoiceOptionId").type("String").description("Id of the multiple choice FormInputResponseResource"),
+            fieldWithPath("multipleChoiceOptionText").description("Text of the multiple choice FormInputResponseResource")
     };
 }

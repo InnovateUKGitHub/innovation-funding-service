@@ -77,6 +77,14 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return with(response -> response.setFileEntries(fileEntryResources));
     }
 
+    public FormInputResponseResourceBuilder withMultipleChoiceOptionId(Long multipleChoiceOptionId) {
+        return with(response -> response.setMultipleChoiceOptionId(multipleChoiceOptionId));
+    }
+
+    public FormInputResponseResourceBuilder withMultipleChoiceOptionText(String value) {
+        return with(response -> response.setMultipleChoiceOptionText(value));
+    }
+
     @Override
     protected FormInputResponseResource createInitial() {
         return new FormInputResponseResource();

@@ -63,7 +63,8 @@ Navigation using previous button
 Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     Given the user clicks the button/link       link = Back to your assessment overview
-    And Application detail section should not be scorable
+    When Application detail section should not be scorable
+    And EDI question section should not be scorable
     Then Project summary section should not be scorable
     And Public description section should not be scorable
     And Scope section should not be scorable
@@ -80,14 +81,14 @@ Assessor should see terms and conditions question
 
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
-    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB
+    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
-    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB
+    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
-    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB
+    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
     When the user clicks the button/link         jQuery = a:contains("6. Innovation")
-    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
 
 Scope: Validations
@@ -105,7 +106,7 @@ Scope: Status in the overview is updated
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
     And Wait for autosave
     Then the user clicks the button with resubmission        jquery = button:contains("Save and return to assessment overview")
-    And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
+    And the user should see the element                      jQuery = li:nth-child(5) span:contains("In scope") ~ .task-status-complete
 
 Scope: Autosave
     [Documentation]    INFUND-1483  INFUND-3780
@@ -278,6 +279,7 @@ the user navigate to previous pages
     the user clicks previous and goes to the page   Scope
     the user clicks previous and goes to the page   Public description
     the user clicks previous and goes to the page   Project summary
+    the user clicks previous and goes to the page   Equality, diversity and inclusion
     the user clicks previous and goes to the page   Application details
     the user should not see the element             jQuery = span:contains("Previous")
 
@@ -289,6 +291,12 @@ Application detail section should not be scorable
 
 Project summary section should not be scorable
     the user should see the element        jQuery = p:contains("This is the applicant response for project summary.")
+    the user should not see the element    jQuery = label:contains("Question score")
+    the user clicks the button/link        jQuery = span:contains("Next")
+
+EDI question section should not be scorable
+    the user should see the element        jQuery = h2:contains("Have you completed the EDI survey?")
+    the user should see the element        jQuery = p:contains("Yes")
     the user should not see the element    jQuery = label:contains("Question score")
     the user clicks the button/link        jQuery = span:contains("Next")
 

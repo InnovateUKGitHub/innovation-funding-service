@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../defaultResources.robot
+Resource          ../common/Applicant_Commons.robot
 
 *** Keywords ***
 log in and create new application if there is not one already
@@ -18,10 +19,11 @@ Login new application invite academic
 
 the user marks every section but one as complete
     [Arguments]  ${application_name}  ${rescat}
-    the user navigates to the page    ${server}
-    the user clicks the button/link    link=${application_name}
+    the user navigates to the page                                                 ${server}
+    the user clicks the button/link                                                link=${application_name}
     the applicant completes Application Team
-    the user selects Research category  ${rescat}
+    the applicant marks EDI question as complete
+    the user selects Research category                                             ${rescat}
     the lead applicant fills all the questions and marks as complete(programme)
 
 the user selects Research category
@@ -42,10 +44,19 @@ the lead applicant fills all the questions and marks as complete(programme)
     :FOR  ${ELEMENT}    IN    @{programme_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
+the lead applicant fills all the questions and marks as complete(programme ATI)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
 the lead applicant fills all the questions and marks as complete(procurement)
     the user marks the project details as complete
-    :FOR  ${ELEMENT}    IN    @{programme_questions}
+    :FOR  ${ELEMENT}    IN    @{programme_questions_procurement_ati}
      \     the lead applicant marks every question as complete procurement    ${ELEMENT}
+
+the lead completes the questions with multiple answer choice and multiple appendices
+    :FOR  ${ELEMENT}    IN    @{other_questions_procurement_ati}
+         \     the lead applicant marks the questions as complete (multiple appendices and multiple answer choice)    ${ELEMENT}
 
 the lead applicant fills all the questions and marks as complete(sector)
     the user marks the project details as complete
@@ -68,18 +79,33 @@ the lead applicant marks every question as complete procurement
     the user marks the section as complete procurement     ${question_link}
     the user clicks the button/link                        link=Back to application overview
 
+the lead applicant marks the questions as complete (multiple appendices and multiple answer choice)
+    [Arguments]  ${question_link}
+    the user clicks the button/link     jQuery = h3 a:contains("${question_link}")
+    the user can't complete the question without selecting answer (validation error messages check)
+    Run Keyword If  '${question_link}' == 'Technical approach'                     the user clicks the button/link     jQuery = label:contains("option2")
+    Run Keyword If  '${question_link}' in ["Technical approach", "Project team"]   the user uploads the file           css = input[name="appendix"]    ${valid_pdf}
+    Run Keyword If  '${question_link}' in ["Technical approach", "Project team"]   the user uploads the file           css = input[name="appendix"]    ${ods_file}
+    Run Keyword If  '${question_link}' == 'Technical approach'                     the user uploads the file           css = input[name="appendix"]    ${excel_file}
+    Run Keyword If  '${question_link}' == 'Project team'                           input text                          id = multipleChoiceOptionId  answer7
+    Run Keyword If  '${question_link}' == 'Project team'                           the user clicks the button/link     jQuery = ul li:contains("answer7")
+    the user clicks the button/link     name = complete
+    the user clicks the button/link     link = Back to application overview
+
+the user can't complete the question without selecting answer (validation error messages check)
+    the user clicks the button/link     id = application-question-complete
+    the user should see the element     link = Please select an answer.
+
 the user marks the section as complete
     the user enters text to a text field    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     the user clicks the button/link         name=complete
 
 the user marks the section as complete procurement
     [Arguments]  ${question_link}
-    the user enters text to a text field  css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
-    the user uploads the file             css = input[name="templateDocument"]    ${valid_pdf}
-    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user uploads the file  css = input[name="appendix"]    ${valid_pdf}
-    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user uploads the file  css = input[name="appendix"]    ${ods_file}
-    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user uploads the file  css = input[name="appendix"]    ${excel_file}
-    the user clicks the button/link       name=complete
+    the user enters text to a text field     css=.textarea-wrapped .editor             Entering text to allow valid mark as complete
+    the user uploads the file                css = input[name="templateDocument"]      ${valid_pdf}
+    Run Keyword If  '${question_link}' == 'Innovation'   the user uploads the file     css = input[name="appendix"]    ${valid_pdf}
+    the user clicks the button/link          name=complete
 
 Create new application with the same user
     [Arguments]  ${Application_title}   ${orgType}

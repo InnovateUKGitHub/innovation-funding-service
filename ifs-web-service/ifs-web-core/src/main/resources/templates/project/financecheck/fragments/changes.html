@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="labour">
     <th:block th:if="${typeOfChange == 'Change'}">
         <th:block th:unless="${changePair.submitted.name == T(org.innovateuk.ifs.finance.resource.category.LabourCostCategory).WORKING_DAYS_KEY}">

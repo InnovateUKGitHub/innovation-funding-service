@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm;
+import org.innovateuk.ifs.management.competition.setup.application.form.AbstractQuestionForm.TypeOfQuestion;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,15 @@ public abstract class AbstractApplicationSectionUpdater<T extends AbstractQuesti
         T form = (T) competitionSetupForm;
         mapGuidanceRows(form);
         mapAppendix(form);
+        if (form.getTypeOfQuestion() != null) {
+            if (form.getTypeOfQuestion() == TypeOfQuestion.FREE_TEXT) {
+                form.getQuestion().setTextArea(true);
+                form.getQuestion().setMultipleChoice(false);
+            } else if (form.getTypeOfQuestion() == TypeOfQuestion.MULTIPLE_CHOICE) {
+                form.getQuestion().setTextArea(false);
+                form.getQuestion().setMultipleChoice(true);
+            }
+        }
         return questionSetupCompetitionRestService.save(form.getQuestion()).toServiceResult();
     }
 

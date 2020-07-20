@@ -89,6 +89,13 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-4982 Move Funding type selection from front door to Initial details
 ...
 ...               IFS-7310 Internal user can allow multiple appendices in comp creation
+...
+...               IFS-7702  Configurable multiple choice questions - Comp setup
+...
+...               IFS-7703 Applicant can answer multiple choice questions
+...
+...               IFS-7700 EDI application question configuration
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -97,10 +104,13 @@ Resource          ../../resources/common/Competition_Commons.robot
 Resource          ../../resources/common/Applicant_Commons.robot
 
 *** Variables ***
-${peter_freeman}     Peter Freeman
-${competitionTitle}  Competition title   #Test competition
-${amendedQuestion}   Need or challenge
-${customQuestion}    How innovative is your project?
+${peter_freeman}            Peter Freeman
+${competitionTitle}         Competition title   #Test competition
+${amendedQuestion}          Need or challenge
+${customQuestion}           How innovative is your project?
+
+#application questions to be completed
+@{applicationQuestions}     Public description  Team and resources  Market awareness  Outcomes and route to market  Wider impacts  Additionality  Costs and value for money
 
 *** Test Cases ***
 User can create a new competition
@@ -401,18 +411,26 @@ Application: Application details validations
 Application: Application details
     [Documentation]  INFUND-5633 IFS-2776
     [Tags]  HappyPath
-    Given the user clicks the button/link         link = Application details
-    And the user should see the element           jQuery = h1:contains("Details")
-    When the user selects the radio button        useResubmissionQuestion  false
-    Then the user enters text to a text field     id = minProjectDuration  2
-    And the user enters text to a text field      id = maxProjectDuration  60
-    And The user clicks the button/link           jQuery = button:contains('Done')
-    And the user should see the element           jQuery = li:contains("Application details") .task-status-complete
-    When the user clicks the button/link          link = Application details
-    Then the user should see the element          jQuery = dt:contains("resubmission") + dd:contains("No")
-    And the user should see the element           jQuery = dt:contains("Minimum") + dd:contains("2")
-    And the user should see the element           jQuery = dt:contains("Maximum") + dd:contains("60")
-    [Teardown]  The user clicks the button/link   link = Application
+    Given the user clicks the button/link           link = Application details
+    And the user should see the element             jQuery = h1:contains("Details")
+    When the user selects the radio button          useResubmissionQuestion  false
+    Then the user enters text to a text field       id = minProjectDuration  2
+    And the user enters text to a text field        id = maxProjectDuration  60
+    And The user clicks the button/link             jQuery = button:contains('Done')
+    And the user should see the element             jQuery = li:contains("Application details") .task-status-complete
+    When the user clicks the button/link            link = Application details
+    Then the user should see the element            jQuery = dt:contains("resubmission") + dd:contains("No")
+    And the user should see the element             jQuery = dt:contains("Minimum") + dd:contains("2")
+    And the user should see the element             jQuery = dt:contains("Maximum") + dd:contains("60")
+    [Teardown]  the user clicks the button/link     link = Application
+
+External user edits the EDI question.
+    [Documentation]  IFS-7700
+    Given the user marks each question as complete     Equality, diversity and inclusion
+    And the user clicks the button/link                link = Equality, diversity and inclusion
+    When the user clicks the button/link               jQuery = a:contains("Edit this question")
+    And the user clicks the button/link                jQuery = button:contains("Done")
+    Then the user should see the element               jQuery = li:contains("Equality, diversity and inclusion") .task-status-complete
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
@@ -480,20 +498,17 @@ Application: Need or challenge
     When the user clicks the button/link         jQuery = h4 a:contains("${amendedQuestion}")
     Then the user should not see the element     jQuery = dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
+Application: adding a multiple choice question
+    [Documentation]  IFS-7702
+    Given the user clicks the button/link           link = Edit this question
+    And the user selects the radio button           typeOfQuestion   MULTIPLE_CHOICE
+    When comp admin enters three answer options     one  two  three
+    Then the user clicks the button/link            jQuery = button:contains('Done')
+
 Application: marking questions as complete
-    [Documentation]  IFS-743  IFS-7310
+    [Documentation]  IFS-743  IFS-7310  IFS-7703
     [Tags]  HappyPath
-    When the user clicks the button/link      link = Application
-    Then the user marks question as complete  Public description
-    And the user marks question as complete   Approach and innovation
-    And the user marks question as complete   Team and resources
-    And the user marks question as complete   Market awareness
-    And the user marks question as complete   Outcomes and route to market
-    And the user marks question as complete   Wider impacts
-    And the user marks question as complete   Project management
-    And the user marks question as complete   Risks
-    And the user marks question as complete   Additionality
-    And the user marks question as complete   Costs and value for money
+    Given the user marks every application question as complete
 
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
@@ -895,12 +910,17 @@ the user enters multiple innovation areas
 The user should not see the selected option again
     List Should not Contain Value    css = [id="innovationAreaCategoryIds[1]"]    Biosciences
 
+the user marks every application question as complete
+    :FOR   ${ELEMENT}   IN    @{applicationQuestions}
+         \    the user marks question as complete  ${ELEMENT}
+    the user marks the question as complete with other options     Approach and innovation  3
+    the user marks the question as complete with other options     Project management  2
+    the user marks the question as complete with other options     Risks  2
+
 the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element     jQuery = li:contains("${question_link}") .task-status-complete
     the user clicks the button/link         jQuery = a:contains("${question_link}")
-    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the radio button     numberOfUploads  3
-    Run Keyword If  '${question_link}' in ["Project management", "Approach and innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
     the user clicks the button/link         jQuery = button:contains('Done')
     the user should see the element         jQuery = li:contains("${question_link}") .task-status-complete
 
@@ -922,17 +942,16 @@ the comp admin creates competition
     the user navigates to the page        ${CA_UpcomingComp}
 
 the user fills new application details
-    the user enters text to a text field  id = name  New application
-    the user enters text to a text field  id = startDate  ${tomorrowday}
-    the user enters text to a text field  css = #application_details-startdate_month  ${month}
-    the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  id = durationInMonths  45
-    the user clicks the button twice      css = label[for="resubmission-no"]
-    the user clicks the button/link       id = innovationAreaName
-    the user selects the radio button     innovationAreaChoice  NOT_APPLICABLE
-    the user clicks the button/link       jQuery = button:contains("Save")
-    the user clicks the button/link       id = application-question-complete
-    the user clicks the button/link       link = Back to application overview
+    the user enters text to a text field             id = name  New application
+    the user enters text to a text field             id = startDate  ${tomorrowday}
+    the user enters text to a text field             css = #application_details-startdate_month  ${month}
+    the user enters text to a text field             css = #application_details-startdate_year  ${nextyear}
+    the user enters text to a text field             id = durationInMonths  45
+    the user clicks the button twice                 css = label[for="resubmission-no"]
+    the user clicks the button/link                  id = innovationAreaName
+    the user selects the radio button                innovationAreaChoice  NOT_APPLICABLE
+    the user clicks the button/link                  jQuery = button:contains("Save")
+    the user can mark the question as complete
 
 Custom suite teardown
     The user closes the browser
@@ -940,3 +959,4 @@ Custom suite teardown
 
 the user check for competition code
     the user sees the text in the text field    name = competitionCode     ${nextyearintwodigits}
+
