@@ -112,7 +112,7 @@ public class YourOrganisationKtpFinancialYearForm {
     /* view logic */
     public String getYearText() {
         if (year == 0) {
-            return "Previous year";
+            return "Last year";
         } else {
             return "Year " + (year + 1);
         }

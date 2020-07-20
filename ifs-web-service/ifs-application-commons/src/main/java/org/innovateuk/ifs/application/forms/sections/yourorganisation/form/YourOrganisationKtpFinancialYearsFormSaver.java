@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class YourOrganisationKtpFinancialYearsFormSaver {
 
     public ServiceResult<Void> save(long targetId, long organisationId, YourOrganisationKtpFinancialYearsForm form, YourOrganisationRestService service) {
-        OrganisationFinancesKtpYearsResource finances = new OrganisationFinancesKtpYearsResource(
+            OrganisationFinancesKtpYearsResource finances = new OrganisationFinancesKtpYearsResource(
                 form.getOrganisationSize(),
                 form.getYears().stream().map(year -> new KtpYearResource(
                         year.getYear(),

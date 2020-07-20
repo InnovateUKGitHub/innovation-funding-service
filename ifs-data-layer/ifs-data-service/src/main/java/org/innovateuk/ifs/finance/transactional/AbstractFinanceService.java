@@ -45,6 +45,7 @@ public abstract class AbstractFinanceService<D extends Finance, F extends BaseFi
 
         });
         dbYears.setGroupEmployees(ktpYearsResource.getGroupEmployees());
+        dbYears.setFinancialYearEnd(ktpYearsResource.getFinancialYearEnd());
     }
 
     private void updateEmployeesAndTurnover(F financeResource, D dbFinance) {
