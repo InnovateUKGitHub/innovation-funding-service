@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.competition.setup.application.populator;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.management.competition.setup.application.viewmodel.FinanceViewModel;
@@ -35,6 +36,7 @@ public class FinanceModelPopulatorTest {
                 .withId(competitionId)
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
                 .withNonFinanceType(true)
+                .withFundingType(FundingType.KTP)
                 .build();
 
         assertTrue(competition.isNonFinanceType());
@@ -43,5 +45,6 @@ public class FinanceModelPopulatorTest {
 
         assertEquals(FinanceViewModel.class, viewModel.getClass());
         assertTrue(viewModel.isNoFinancesCompetition());
+        assertTrue(viewModel.isKTPCompetition());
     }
 }

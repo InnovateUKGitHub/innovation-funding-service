@@ -62,7 +62,7 @@
             </div>
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
+                 th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition || model.subsection.KTPCompetition}">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeGrowthTable">
                         <h2 class="govuk-fieldset__heading">Include project growth table</h2>
@@ -225,9 +225,11 @@
                 <dt class="govuk-grid-column-one-third">Finances form</dt>
                 <dd class="govuk-grid-column-two-thirds"
                     th:text="${competitionSetupForm.applicationFinanceType.displayLabel}" />
-                <th:block th:unless="${model.subsection.noFinancesCompetition}">
-                    <dt class="govuk-grid-column-one-third clear-floats">Include project growth table</dt>
-                    <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+                <th:block th:unless="${model.subsection.noFinancesCompetition }">
+                    <th:block th:unless="${model.subsection.KTPCompetition}">
+                        <dt class="govuk-grid-column-one-third clear-floats">Include project growth table</dt>
+                        <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
+                    </th:block>
                     <dt class="govuk-grid-column-one-third clear-floats">Include Je-S form for research organisations</dt>
                     <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeJesForm ? 'Yes' :  'No'}" />
                     <dt class="govuk-grid-column-one-third clear-floats">Include the 'Your organisation' section for research organisations</dt>
