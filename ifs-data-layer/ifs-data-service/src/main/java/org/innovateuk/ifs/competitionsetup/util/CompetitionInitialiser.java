@@ -46,8 +46,10 @@ public final class CompetitionInitialiser {
             case PROCUREMENT:
                 addProcurementFinanceTypes(competition);
                 break;
-            case GRANT:
             case KTP:
+                addKtpFinanceTypes(competition);
+                break;
+            case GRANT:
             case INVESTOR_PARTNERSHIPS:
                 addDefaultFinanceTypes(competition);
                 break;
@@ -55,6 +57,23 @@ public final class CompetitionInitialiser {
                 throw new IllegalArgumentException("Unrecognised funding type when initialising competition.");
         }
         return competition;
+    }
+
+    private static void addKtpFinanceTypes(Competition competition) {
+        competition.getFinanceRowTypes().addAll(EnumSet.of(
+                ASSOCIATE_SALARY_COSTS,
+                ASSOCIATE_DEVELOPMENT_COSTS,
+                KNOWLEDGE_BASE,
+                ADDITIONAL_COMPANY_COSTS,
+                CONSUMABLES,
+                TRAVEL,
+                OTHER_COSTS,
+                ASSOCIATE_SUPPORT,
+                ESTATE_COSTS,
+                FINANCE,
+                OTHER_FUNDING,
+                YOUR_FINANCE
+        ));
     }
 
     private static void addLoanFinanceTypes(Competition competition) {

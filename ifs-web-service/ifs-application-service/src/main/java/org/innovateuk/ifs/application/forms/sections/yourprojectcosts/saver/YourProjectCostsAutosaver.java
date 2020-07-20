@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -51,6 +52,8 @@ public class YourProjectCostsAutosaver {
                 financeRowRestService.update(workingDaysCost).getSuccess();
             } else if (field.startsWith("labour.rows")) {
                 return autosaveLabourCost(field, value, finance);
+            } else if (field.startsWith("associateSalaryCostRows")) {
+                return autosaveAssociateSalaryCost(field, value, finance);
             } else if (field.startsWith("overhead")) {
                 return autosaveOverheadCost(field, value, finance, applicationId, organisation.getId());
             } else if (field.startsWith("materialRows")) {
@@ -63,6 +66,10 @@ public class YourProjectCostsAutosaver {
                 return autosaveTravelCost(field, value, finance);
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
+            } else if (field.startsWith("associateSupportCostRows")) {
+                return autosaveAssociateSupportCost(field, value, finance);
+            } else if (field.startsWith("estateCostRows")) {
+                return autosaveEstateCost(field, value, finance);
             } else if (field.startsWith("procurementOverheadRows")) {
                 return autosaveProcurementOverheadCost(field, value, finance);
             } else if (field.startsWith("vat")) {
@@ -94,6 +101,60 @@ public class YourProjectCostsAutosaver {
                 break;
             default:
                 throw new IFSRuntimeException(format("Auto save labour field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveAssociateSalaryCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        AssociateSalaryCost cost = getCost(id, () -> new AssociateSalaryCost(finance.getId()));
+        switch (rowField) {
+            case "role":
+                cost.setRole(value);
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save associate salary field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveAssociateSupportCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        AssociateSupportCost cost = getCost(id, () -> new AssociateSupportCost(finance.getId()));
+        switch (rowField) {
+            case "description":
+                cost.setDescription(value);
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save associate support field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveEstateCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        EstateCost cost = getCost(id, () -> new EstateCost(finance.getId()));
+        switch (rowField) {
+            case "description":
+                cost.setDescription(value);
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save estate costs field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());

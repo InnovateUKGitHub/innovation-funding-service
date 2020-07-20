@@ -174,10 +174,10 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 build();
 
         List<CostCategory> costCategories = newCostCategory().
-                withName(DIRECTLY_INCURRED_STAFF.getName(),
-                        INDIRECT_COSTS_STAFF.getName(),
-                        DIRECTLY_INCURRED_OTHER_COSTS.getName(),
-                        INDIRECT_COSTS_OTHER_COSTS.getName()).
+                withName(DIRECTLY_INCURRED_STAFF.getDisplayName(),
+                        INDIRECT_COSTS_STAFF.getDisplayName(),
+                        DIRECTLY_INCURRED_OTHER_COSTS.getDisplayName(),
+                        INDIRECT_COSTS_OTHER_COSTS.getDisplayName()).
                 withLabel(DIRECTLY_INCURRED_STAFF.getLabel(),
                         INDIRECT_COSTS_STAFF.getLabel(),
                         DIRECTLY_INCURRED_OTHER_COSTS.getLabel(),

@@ -9,8 +9,8 @@ public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewMode
 
     private final FinanceRowType editableRowType;
 
-    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, FinanceRowType editableRowType, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty) {
-        super(open, true, false, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
+    public FinanceChecksProjectCostsViewModel(long applicationId, String competitionName, boolean open, FinanceRowType editableRowType, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, boolean ktpCompetition) {
+        super(open, true, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
         this.editableRowType = editableRowType;
     }
 

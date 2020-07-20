@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
-    public FinanceChecksProjectCostsViewModel(long applicationId, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName) {
-        super(false, false, false, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
+    public FinanceChecksProjectCostsViewModel(long applicationId, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, boolean ktpCompetition) {
+        super(false, false, false, ktpCompetition, financeRowTypes, overheadAlwaysTwenty, competitionName, applicationId);
     }
 }

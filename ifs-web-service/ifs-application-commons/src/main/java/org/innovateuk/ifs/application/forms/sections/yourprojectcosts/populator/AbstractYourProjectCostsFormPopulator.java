@@ -4,12 +4,10 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
+import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -25,14 +23,36 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
 
         form.setOverhead(overhead(finance));
-        form.setProcurementOverheadRows(procurementOverheadRows(finance));
         form.setLabour(labour(finance));
-        form.setCapitalUsageRows(capitalUsageRows(finance));
-        form.setMaterialRows(materialRows(finance));
-        form.setOtherRows(otherRows(finance));
-        form.setSubcontractingRows(subcontractingRows(finance));
-        form.setTravelRows(travelRows(finance));
+        form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
+                CapitalUsageRowForm.class, CapitalUsage.class));
+        form.setMaterialRows(toRows(finance, FinanceRowType.MATERIALS,
+                MaterialRowForm.class,  Materials.class));
+        form.setOtherRows(toRows(finance, FinanceRowType.OTHER_COSTS,
+                OtherCostRowForm.class, OtherCost.class));
+        form.setSubcontractingRows(toRows(finance, FinanceRowType.SUBCONTRACTING_COSTS,
+                SubcontractingRowForm.class, SubContractingCost.class));
+        form.setTravelRows(toRows(finance, FinanceRowType.TRAVEL,
+                TravelRowForm.class, TravelCost.class));
+
         form.setVatForm(vat(finance));
+        form.setProcurementOverheadRows(toRows(finance, FinanceRowType.PROCUREMENT_OVERHEADS,
+                ProcurementOverheadRowForm.class, ProcurementOverhead.class));
+
+        form.setAssociateSalaryCostRows(toRows(finance, FinanceRowType.ASSOCIATE_SALARY_COSTS,
+                AssociateSalaryCostRowForm.class, AssociateSalaryCost.class));
+        form.setAssociateDevelopmentCostRows(toRows(finance, FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
+                AssociateDevelopmentCostRowForm.class, AssociateDevelopmentCost.class));
+        form.setConsumableCostRows(toRows(finance, FinanceRowType.CONSUMABLES,
+                ConsumablesRowForm.class, Consumable.class));
+        form.setKnowledgeBaseCostRows(toRows(finance, FinanceRowType.KNOWLEDGE_BASE,
+                KnowledgeBaseCostRowForm.class, KnowledgeBaseCost.class));
+        form.setAssociateSupportCostRows(toRows(finance, FinanceRowType.ASSOCIATE_SUPPORT,
+                AssociateSupportCostRowForm.class, AssociateSupportCost.class));
+        form.setEstateCostRows(toRows(finance, FinanceRowType.ESTATE_COSTS,
+                EstateCostRowForm.class, EstateCost.class));
+        form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
+
         return form;
     }
 
@@ -69,98 +89,6 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return rows;
     }
 
-    private Map<String, ProcurementOverheadRowForm> procurementOverheadRows(BaseFinanceResource finance) {
-        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.PROCUREMENT_OVERHEADS);
-        if (costCategory != null) {
-            Map<String, ProcurementOverheadRowForm> rows = costCategory.getCosts().stream()
-                    .map(ProcurementOverhead.class::cast)
-                    .map(ProcurementOverheadRowForm::new)
-                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
-                rows.put(generateUnsavedRowId(), new ProcurementOverheadRowForm());
-            }
-            return rows;
-        }
-        return new HashMap<>();
-    }
-
-    private Map<String, MaterialRowForm> materialRows(BaseFinanceResource finance) {
-        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.MATERIALS);
-        if (costCategory != null) {
-            Map<String, MaterialRowForm> rows = costCategory.getCosts().stream()
-                    .map(Materials.class::cast)
-                    .map(MaterialRowForm::new)
-                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
-                rows.put(generateUnsavedRowId(), new MaterialRowForm());
-            }
-            return rows;
-        }
-        return new HashMap<>();
-    }
-
-    private Map<String, CapitalUsageRowForm> capitalUsageRows(BaseFinanceResource finance) {
-        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.CAPITAL_USAGE);
-        if (costCategory != null) {
-
-            Map<String, CapitalUsageRowForm> rows = costCategory.getCosts().stream()
-                    .map(CapitalUsage.class::cast)
-                    .map(CapitalUsageRowForm::new)
-                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
-                rows.put(generateUnsavedRowId(), new CapitalUsageRowForm());
-            }
-            return rows;
-        }
-        return new HashMap<>();
-    }
-
-    private Map<String, OtherCostRowForm> otherRows(BaseFinanceResource finance) {
-        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.OTHER_COSTS);
-
-        if (costCategory != null) {
-            Map<String, OtherCostRowForm> rows = costCategory.getCosts().stream()
-                    .map(OtherCost.class::cast)
-                    .map(OtherCostRowForm::new)
-                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
-                rows.put(generateUnsavedRowId(), new OtherCostRowForm());
-            }
-            return rows;
-        }
-        return new HashMap<>();
-    }
-
-    private Map<String, SubcontractingRowForm> subcontractingRows(BaseFinanceResource finance) {
-        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.SUBCONTRACTING_COSTS);
-        if (costCategory != null) {
-            Map<String, SubcontractingRowForm> rows = costCategory.getCosts().stream()
-                    .map(SubContractingCost.class::cast)
-                    .map(SubcontractingRowForm::new)
-                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
-                rows.put(generateUnsavedRowId(), new SubcontractingRowForm());
-            }
-            return rows;
-        }
-        return new HashMap<>();
-    }
-
-    private Map<String, TravelRowForm> travelRows(BaseFinanceResource finance) {
-        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.TRAVEL);
-        if (costCategory != null) {
-            Map<String, TravelRowForm> rows = costCategory.getCosts().stream()
-                    .map(TravelCost.class::cast)
-                    .map(TravelRowForm::new)
-                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
-                rows.put(generateUnsavedRowId(), new TravelRowForm());
-            }
-            return rows;
-        }
-        return new HashMap<>();
-    }
-
      private VatForm vat(BaseFinanceResource finance) {
         VatCostCategory costCategory = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
          if (costCategory != null) {
@@ -168,6 +96,44 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             return new VatForm(vat);
          }
          return new VatForm();
+    }
+
+    private AdditionalCompanyCostForm additionalCompanyCostForm(BaseFinanceResource finance) {
+        AdditionalCompanyCostCategory costCategory = (AdditionalCompanyCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ADDITIONAL_COMPANY_COSTS);
+        if (costCategory != null) {
+            return new AdditionalCompanyCostForm(costCategory);
+        }
+        return null;
+    }
+
+    private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz) {
+        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(financeRowType);
+
+        if (costCategory != null) {
+            Map<String, F> rows = costCategory.getCosts().stream()
+                    .map((cost) -> (C) cost)
+                    .map(cost -> {
+                        try {
+                            return formClazz.getConstructor(costClazz).newInstance(cost);
+                        } catch (NoSuchMethodException |
+                                IllegalAccessException |
+                                InstantiationException |
+                                InvocationTargetException e) {
+                            throw new IFSRuntimeException(e);
+                        }
+                    })
+                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+            if (shouldAddEmptyRow()) {
+                try {
+                    rows.put(generateUnsavedRowId(), formClazz.newInstance());
+                } catch (IllegalAccessException |
+                        InstantiationException e) {
+                    throw new IFSRuntimeException(e);
+                }
+            }
+            return rows;
+        }
+        return new HashMap<>();
     }
 
     protected abstract BaseFinanceResource getFinanceResource(long targetId, long organisationId);

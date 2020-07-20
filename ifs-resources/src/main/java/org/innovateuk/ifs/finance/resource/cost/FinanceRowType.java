@@ -12,9 +12,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * FinanceRow types are used to identify the different categories that costs can have
  */
 public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
+    /* Grant */
     LABOUR("labour", "Labour", INCLUDE_IN_SPEND_PROFILE, COST),
     OVERHEADS("overheads", "Overheads", INCLUDE_IN_SPEND_PROFILE, COST),
-    PROCUREMENT_OVERHEADS("procurement_overheads", "Procurement overheads", INCLUDE_IN_SPEND_PROFILE, COST),
     MATERIALS("materials", "Materials", INCLUDE_IN_SPEND_PROFILE, COST),
     CAPITAL_USAGE("capital_usage", "Capital usage", INCLUDE_IN_SPEND_PROFILE, COST),
     SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", INCLUDE_IN_SPEND_PROFILE, COST),
@@ -22,9 +22,23 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     OTHER_COSTS("other_costs", "Other costs", INCLUDE_IN_SPEND_PROFILE, COST),
     YOUR_FINANCE("your_finance"), // Only used for TSB Reference in Je-S finances.
     FINANCE("finance", "Finance"), // Grant claim percentage
-    GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
     OTHER_FUNDING("other_funding", "Other Funding"),
-    VAT("vat", "", COST);
+
+    /* Loans */
+    GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
+
+    /* Procurement */
+    VAT("vat", "", COST),
+    PROCUREMENT_OVERHEADS("procurement_overheads", "Procurement overheads", INCLUDE_IN_SPEND_PROFILE, COST),
+
+    /* KTP */
+    ASSOCIATE_SALARY_COSTS("associate_salary_costs", "Associate salary costs", INCLUDE_IN_SPEND_PROFILE, COST),
+    ASSOCIATE_DEVELOPMENT_COSTS("associate_development", "Associate development costs", INCLUDE_IN_SPEND_PROFILE, COST),
+    CONSUMABLES("consumables", "Consumables", INCLUDE_IN_SPEND_PROFILE, COST),
+    ASSOCIATE_SUPPORT("associate_support", "Associate support costs", INCLUDE_IN_SPEND_PROFILE, COST),
+    KNOWLEDGE_BASE("knowledge_base", "Knowledge base advisor", INCLUDE_IN_SPEND_PROFILE, COST),
+    ESTATE_COSTS("estate_costs", "Estate", INCLUDE_IN_SPEND_PROFILE, COST),
+    ADDITIONAL_COMPANY_COSTS("additional_company_costs", "Additional company costs");
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,
@@ -32,16 +46,16 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     }
 
     private String type;
-    private String name;
+    private String displayName;
     private Set<FinanceRowOptions> financeRowOptionsList;
 
     FinanceRowType(String type) {
         this(type, null);
     }
 
-    FinanceRowType(String type, String name, FinanceRowOptions... options) {
+    FinanceRowType(String type, String displayName, FinanceRowOptions... options) {
         this.type = type;
-        this.name = name;
+        this.displayName = displayName;
         this.financeRowOptionsList = asSet(options);
     }
 
@@ -64,14 +78,14 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public static Optional<FinanceRowType> getByName(String name) {
         return simpleFindFirst(
                 FinanceRowType.values(),
-                frt -> frt.getName().equals(name)
+                frt -> frt.getDisplayName().equals(name)
         );
     }
 }

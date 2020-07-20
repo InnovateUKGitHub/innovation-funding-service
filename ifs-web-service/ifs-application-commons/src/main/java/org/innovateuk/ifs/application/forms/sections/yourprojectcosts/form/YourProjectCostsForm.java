@@ -28,6 +28,21 @@ public class YourProjectCostsForm {
 
     private VatForm vatForm;
 
+
+    private Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows = new LinkedHashMap<>();
+
+    private Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows = new LinkedHashMap<>();
+
+    private Map<String, ConsumablesRowForm> consumableCostRows = new LinkedHashMap<>();
+
+    private Map<String, KnowledgeBaseCostRowForm> knowledgeBaseCostRows = new LinkedHashMap<>();
+
+    private Map<String, AssociateSupportCostRowForm> associateSupportCostRows = new LinkedHashMap<>();
+
+    private Map<String, EstateCostRowForm> estateCostRows = new LinkedHashMap<>();
+
+    private AdditionalCompanyCostForm additionalCompanyCostForm;
+
     private Boolean eligibleAgreement;
 
     public VatForm getVatForm() {
@@ -110,17 +125,77 @@ public class YourProjectCostsForm {
         this.labour = labour;
     }
 
-    /* View methods. */
-    public BigDecimal getTotalLabourCosts() {
-        return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
+    public Map<String, AssociateSalaryCostRowForm> getAssociateSalaryCostRows() {
+        return associateSalaryCostRows;
     }
 
+    public void setAssociateSalaryCostRows(Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows) {
+        this.associateSalaryCostRows = associateSalaryCostRows;
+    }
+
+    public Map<String, AssociateSupportCostRowForm> getAssociateSupportCostRows() {
+        return associateSupportCostRows;
+    }
+
+    public void setAssociateSupportCostRows(Map<String, AssociateSupportCostRowForm> associateSupportCostRows) {
+        this.associateSupportCostRows = associateSupportCostRows;
+    }
+
+    public Map<String, EstateCostRowForm> getEstateCostRows() {
+        return estateCostRows;
+    }
+
+    public void setEstateCostRows(Map<String, EstateCostRowForm> estateCostRows) {
+        this.estateCostRows = estateCostRows;
+    }
+
+    public AdditionalCompanyCostForm getAdditionalCompanyCostForm() {
+        return additionalCompanyCostForm;
+    }
+
+    public void setAdditionalCompanyCostForm(AdditionalCompanyCostForm additionalCompanyCostForm) {
+        this.additionalCompanyCostForm = additionalCompanyCostForm;
+    }
+
+    public Map<String, AssociateDevelopmentCostRowForm> getAssociateDevelopmentCostRows() {
+        return associateDevelopmentCostRows;
+    }
+
+    public void setAssociateDevelopmentCostRows(Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows) {
+        this.associateDevelopmentCostRows = associateDevelopmentCostRows;
+    }
+
+    public Map<String, ConsumablesRowForm> getConsumableCostRows() {
+        return consumableCostRows;
+    }
+
+    public void setConsumableCostRows(Map<String, ConsumablesRowForm> consumableCostRows) {
+        this.consumableCostRows = consumableCostRows;
+    }
+
+    public Map<String, KnowledgeBaseCostRowForm> getKnowledgeBaseCostRows() {
+        return knowledgeBaseCostRows;
+    }
+
+    public void setKnowledgeBaseCostRows(Map<String, KnowledgeBaseCostRowForm> knowledgeBaseCostRows) {
+        this.knowledgeBaseCostRows = knowledgeBaseCostRows;
+    }
+
+    /* View methods. */
     public BigDecimal getVatTotal() {
         return getOrganisationFinanceTotal().multiply(VAT_RATE).divide(BigDecimal.valueOf(100));
     }
 
     public BigDecimal getProjectVatTotal() {
         return getOrganisationFinanceTotal().add(getVatTotal());
+    }
+
+    public BigDecimal getTotalLabourCosts() {
+        return labour == null ? BigDecimal.ZERO : calculateTotal(labour.getRows());
+    }
+
+    public BigDecimal getTotalAssociateSalaryCosts() {
+        return calculateTotal(associateSalaryCostRows);
     }
 
     public BigDecimal getTotalOverheadCosts() {
@@ -161,6 +236,26 @@ public class YourProjectCostsForm {
         return calculateTotal(otherRows);
     }
 
+    public BigDecimal getTotalAssociateSupportCosts() {
+        return calculateTotal(associateSupportCostRows);
+    }
+
+    public BigDecimal getTotalAssociateDevelopmentCosts() {
+        return calculateTotal(associateDevelopmentCostRows);
+    }
+
+    public BigDecimal getTotalConsumableCosts() {
+        return calculateTotal(consumableCostRows);
+    }
+
+    public BigDecimal getTotalKnowledgeBaseCosts() {
+        return calculateTotal(knowledgeBaseCostRows);
+    }
+
+    public BigDecimal getTotalEstateCosts() {
+        return calculateTotal(estateCostRows);
+    }
+
     public BigDecimal getOrganisationFinanceTotal() {
         return getTotalLabourCosts()
                 .add(getTotalOverheadCosts())
@@ -169,7 +264,13 @@ public class YourProjectCostsForm {
                 .add(getTotalCapitalUsageCosts())
                 .add(getTotalSubcontractingCosts())
                 .add(getTotalTravelCosts())
-                .add(getTotalOtherCosts());
+                .add(getTotalOtherCosts())
+                .add(getTotalAssociateSalaryCosts())
+                .add(getTotalAssociateDevelopmentCosts())
+                .add(getTotalAssociateSupportCosts())
+                .add(getTotalConsumableCosts())
+                .add(getTotalKnowledgeBaseCosts())
+                .add(getTotalEstateCosts());
     }
 
     private BigDecimal calculateTotal(Map<String, ? extends AbstractCostRowForm> costRows) {

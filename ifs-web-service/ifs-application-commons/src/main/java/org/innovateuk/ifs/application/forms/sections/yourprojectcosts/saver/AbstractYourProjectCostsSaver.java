@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
@@ -15,6 +18,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.util.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +34,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
+    private static final Log LOG = LogFactory.getLog(AbstractYourProjectCostsSaver.class);
 
     public ServiceResult<Void> saveType(YourProjectCostsForm form, FinanceRowType type, long targetId, long organisationId) {
         try {
@@ -63,6 +68,27 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     break;
                 case VAT:
                     messages.addAll(saveVat(form.getVatForm(), finance).get());
+                    break;
+                case ASSOCIATE_SALARY_COSTS:
+                    messages.addAll(saveRows(form.getAssociateSalaryCostRows(), finance).get());
+                    break;
+                case ASSOCIATE_DEVELOPMENT_COSTS:
+                    messages.addAll(saveRows(form.getAssociateDevelopmentCostRows(), finance).get());
+                    break;
+                case ASSOCIATE_SUPPORT:
+                    messages.addAll(saveRows(form.getAssociateSupportCostRows(), finance).get());
+                    break;
+                case ESTATE_COSTS:
+                    messages.addAll(saveRows(form.getEstateCostRows(), finance).get());
+                    break;
+                case KNOWLEDGE_BASE:
+                    messages.addAll(saveRows(form.getKnowledgeBaseCostRows(), finance).get());
+                    break;
+                case CONSUMABLES:
+                    messages.addAll(saveRows(form.getConsumableCostRows(), finance).get());
+                    break;
+                case ADDITIONAL_COMPANY_COSTS:
+                    messages.addAll(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance).get());
                     break;
             }
             if (messages.getErrors().isEmpty()) {
@@ -106,6 +132,27 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.VAT)) {
             futures.add(saveVat(form.getVatForm(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ASSOCIATE_SALARY_COSTS)) {
+            futures.add(saveRows(form.getAssociateSalaryCostRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS)) {
+            futures.add(saveRows(form.getAssociateDevelopmentCostRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ASSOCIATE_SUPPORT)) {
+            futures.add(saveRows(form.getAssociateSupportCostRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ESTATE_COSTS)) {
+            futures.add(saveRows(form.getEstateCostRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.KNOWLEDGE_BASE)) {
+            futures.add(saveRows(form.getKnowledgeBaseCostRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.CONSUMABLES)) {
+            futures.add(saveRows(form.getConsumableCostRows(), finance));
+        }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
+            futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
 
         ValidationMessages messages = new ValidationMessages();
@@ -163,6 +210,35 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         });
     }
 
+    private CompletableFuture<ValidationMessages> saveAdditionalCompanyCosts(AdditionalCompanyCostForm additionalCompanyCostForm, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            AdditionalCompanyCostCategory costCategory = (AdditionalCompanyCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.ADDITIONAL_COMPANY_COSTS);
+
+            AdditionalCompanyCost associateSalary = costCategory.getAssociateSalary();
+            associateSalary.setCost(additionalCompanyCostForm.getAssociateSalary());
+            messages.addAll(getFinanceRowService().update(associateSalary).getSuccess());
+
+            AdditionalCompanyCost managementSupervision = costCategory.getManagementSupervision();
+            managementSupervision.setCost(additionalCompanyCostForm.getManagementSupervision());
+            messages.addAll(getFinanceRowService().update(managementSupervision).getSuccess());
+
+            AdditionalCompanyCost otherStaff = costCategory.getOtherStaff();
+            otherStaff.setCost(additionalCompanyCostForm.getOtherStaff());
+            messages.addAll(getFinanceRowService().update(otherStaff).getSuccess());
+
+            AdditionalCompanyCost capitalEquipment = costCategory.getCapitalEquipment();
+            capitalEquipment.setCost(additionalCompanyCostForm.getCapitalEquipment());
+            messages.addAll(getFinanceRowService().update(capitalEquipment).getSuccess());
+
+            AdditionalCompanyCost otherCosts = costCategory.getOtherCosts();
+            otherCosts.setCost(additionalCompanyCostForm.getOtherCosts());
+            messages.addAll(getFinanceRowService().update(otherCosts).getSuccess());
+
+            return messages;
+        });
+    }
+
     private <R extends AbstractCostRowForm> CompletableFuture<ValidationMessages> saveRows(Map<String, R> rows, BaseFinanceResource finance) {
         return async(() -> {
             ValidationMessages messages = new ValidationMessages();
@@ -174,7 +250,11 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                         messages.addAll(getFinanceRowService().update(result)); //TODO these two rest calls really could be a single one if the response contained the validation messages.
                     }
                 } else {
-                    messages.addAll(getFinanceRowService().update(row.toCost(finance.getId())).getSuccess());
+                    try {
+                        messages.addAll(getFinanceRowService().update(row.toCost(finance.getId())).getSuccess());
+                    } catch (Exception e) {
+                        LOG.error(JsonUtil.getSerializedObject(row.toCost(finance.getId())), e);
+                    }
                 }
             });
 
@@ -233,6 +313,24 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case PROCUREMENT_OVERHEADS:
                 map = form.getProcurementOverheadRows();
                 break;
+            case ASSOCIATE_SALARY_COSTS:
+                map = form.getAssociateSalaryCostRows();
+                break;
+            case ASSOCIATE_DEVELOPMENT_COSTS:
+                map = form.getAssociateDevelopmentCostRows();
+                break;
+            case ASSOCIATE_SUPPORT:
+                map = form.getAssociateSupportCostRows();
+                break;
+            case ESTATE_COSTS:
+                map = form.getEstateCostRows();
+                break;
+            case KNOWLEDGE_BASE:
+                map = form.getKnowledgeBaseCostRows();
+                break;
+            case CONSUMABLES:
+                map = form.getConsumableCostRows();
+                break;
             default:
                 throw new RuntimeException("Unknown row type");
         }
@@ -262,6 +360,24 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case PROCUREMENT_OVERHEADS:
                 clazz = ProcurementOverheadRowForm.class;
+                break;
+            case ASSOCIATE_SALARY_COSTS:
+                clazz = AssociateSalaryCostRowForm.class;
+                break;
+            case ASSOCIATE_DEVELOPMENT_COSTS:
+                clazz = AssociateDevelopmentCostRowForm.class;
+                break;
+            case ASSOCIATE_SUPPORT:
+                clazz = AssociateSupportCostRowForm.class;
+                break;
+            case ESTATE_COSTS:
+                clazz = EstateCostRowForm.class;
+                break;
+            case KNOWLEDGE_BASE:
+                clazz = KnowledgeBaseCostRowForm.class;
+                break;
+            case CONSUMABLES:
+                clazz = ConsumablesRowForm.class;
                 break;
             default:
                 throw new RuntimeException("Unknown row type");
