@@ -70,6 +70,7 @@ public final class CompetitionInitialiser {
                 OTHER_COSTS,
                 ASSOCIATE_SUPPORT,
                 ESTATE_COSTS,
+                SUBCONTRACTING_COSTS,
                 FINANCE,
                 OTHER_FUNDING,
                 YOUR_FINANCE
