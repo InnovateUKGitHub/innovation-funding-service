@@ -51,11 +51,10 @@ public class RestIdentityProviderService implements IdentityProviderService, App
     static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_LOWER_CASE_LETTER = "PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_LOWER_CASE_LETTER";
     static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_UPPER_CASE_LETTER = "PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_UPPER_CASE_LETTER";
     static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER = "PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER";
-    static final String PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER_TEST = "PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER_TEST";
 
     static final String EMAIL_MUST_BE_VALID = "EMAIL_MUST_BE_VALID";
 
-    static final String PASSWORD_EMAIL_FIELD_KEY = "email";
+    static final String EMAIL_FIELD_KEY = "email";
     static final String PASSWORD_FIELD_KEY = "password";
 
     @Autowired
@@ -119,7 +118,7 @@ public class RestIdentityProviderService implements IdentityProviderService, App
                 case PASSWORD_MUST_CONTAIN_AT_LEAST_ONE_NUMBER:
                     return Error.fieldError(PASSWORD_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
                 case EMAIL_MUST_BE_VALID:
-                    return Error.fieldError(PASSWORD_EMAIL_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
+                    return Error.fieldError(EMAIL_FIELD_KEY, code.getReasonPhrase(), identityProviderError.getKey());
             }
         }
 
