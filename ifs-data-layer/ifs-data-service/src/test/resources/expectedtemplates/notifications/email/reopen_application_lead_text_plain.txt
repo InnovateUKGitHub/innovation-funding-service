@@ -1,9 +1,7 @@
-<#import "layout/default.html" as layout>
-<@layout.defaultPlainText>
-Dear ${name}
+Dear User 2
 
-You reopened this application on ${date}:
-${applicationNumber} : ${applicationName}
+You reopened this application on 12 June 2020:
+1234 : Application 1
 
 You can now make changes to the application.
 
@@ -11,11 +9,10 @@ You must resubmit this application for it to be assessed, even if you haven't ma
 
 No previously submitted versions of this application will be assessed.
 
-${link}
+https://ifs.local-dev/application/1234
 
 Yours sincerely
 
 Innovate UK, part of UK Research and Innovation
 Tel: 0300 321 4357
 Email: competitions@innovateuk.ukri.org
-</@layout.defaultPlainText>
