@@ -74,7 +74,8 @@
                                 form=${form},
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
-                               maximumFundingLevel=${model.maximumFundingLevel}
+                               maximumFundingLevel=${model.maximumFundingLevel},
+                               hideAreYourRequestingFunding=${model.isKtpFundingType() && !model.leadApplicant}
                                                )"/>
 
                 <div class="form-footer" th:if="${model.open}">

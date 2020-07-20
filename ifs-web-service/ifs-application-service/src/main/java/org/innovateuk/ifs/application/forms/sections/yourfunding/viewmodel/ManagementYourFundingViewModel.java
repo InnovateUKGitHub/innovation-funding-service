@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+
 public class ManagementYourFundingViewModel extends YourFundingViewModel {
 
     public ManagementYourFundingViewModel(long applicationId,
@@ -8,7 +10,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                                           long organisationId,
                                           long competitionId,
                                           String applicationName,
-                                          String url) {
+                                          String url,
+                                          FundingType fundingType) {
         super(
                 applicationId,
                 competitionName,
@@ -27,7 +30,8 @@ public class ManagementYourFundingViewModel extends YourFundingViewModel {
                 0,
                 0,
                 url,
-                false
+                false,
+                fundingType
         );
     }
 }

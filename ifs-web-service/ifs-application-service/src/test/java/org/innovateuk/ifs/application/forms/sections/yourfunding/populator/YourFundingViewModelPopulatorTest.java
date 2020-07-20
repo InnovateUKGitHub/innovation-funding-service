@@ -55,9 +55,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
     private QuestionRestService questionRestService;
 
     @Mock
-    private SectionRestService sectionRestService;
-
-    @Mock
     private SectionService sectionService;
 
     @Mock
@@ -145,13 +142,22 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
     public void populateManagement() {
         long organisationId = 3L;
         long competitionId = 4L;
+        CompetitionResource competition = newCompetitionResource().build();
+        UserResource user = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
+
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withName("name")
                 .withCompetition(competitionId)
                 .build()));
 
-        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withCompetition(competition)
+                .withCurrentUser(user)
+                .build();
+        when(applicantRestService.getSection(user.getId(), APPLICATION_ID, SECTION_ID)).thenReturn(section);
+
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, user);
 
 
         assertEquals(viewModel.getApplicationId(), APPLICATION_ID);

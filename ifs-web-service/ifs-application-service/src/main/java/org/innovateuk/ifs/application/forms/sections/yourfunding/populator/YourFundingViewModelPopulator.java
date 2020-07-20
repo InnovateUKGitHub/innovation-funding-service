@@ -55,7 +55,7 @@ public class YourFundingViewModelPopulator {
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
-            return populateManagement(applicationId, sectionId, organisationId);
+            return populateManagement(applicationId, sectionId, organisationId, user);
         }
         return populate(applicationId, sectionId, user);
     }
@@ -96,13 +96,16 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
                 format("/application/%d/form/FINANCE", applicationId),
-                overridingFundingRules);
+                overridingFundingRules,
+                section.getCompetition().getFundingType());
     }
 
-    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
+    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), section.getCompetition().getFundingType());
 
     }
 
