@@ -197,49 +197,40 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void downloadAsInternalUser() {
+    public void downloadAsInternalUser() throws Exception {
         Role.internalRoles().forEach(role -> {
-            downloadAsRole(role);
+            try {
+                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
+                Long formInputId = 35L;
+                long applicationId = 2L;
+                long competitionId = 3L;
+                long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
+                long fileEntryId = 5L;
+                List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
+                when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId)).thenReturn(RestResult.restSuccess(inputResponse));
+
+                ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
+                when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
+                ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
+                when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
+                FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
+                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, fileEntryId);
+                when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
+
+                mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/file/" + fileEntryId + "/download"))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentType(("text/csv")))
+                        .andExpect(header().string("Content-Type", "text/csv"))
+                        .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
+                        .andExpect(content().string("File contents"));
+
+                verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId, fileEntryId);
+                verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId, fileEntryId);
+
+            } catch (Exception e) {
+                fail();
+            }
         });
-    }
-
-    @Test
-    public void downloadAsMonitoringOfficer() {
-        downloadAsRole(Role.MONITORING_OFFICER);
-    }
-
-    private void downloadAsRole(Role role) {
-        try {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
-            Long formInputId = 35L;
-            long applicationId = 2L;
-            long competitionId = 3L;
-            long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
-            long fileEntryId = 5L;
-            List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
-            when(formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId)).thenReturn(RestResult.restSuccess(inputResponse));
-
-            ProcessRoleResource processRoleResource = newProcessRoleResource().withId(processRoleId).build();
-            when(processRoleService.getById(processRoleId)).thenReturn(settable(processRoleResource));
-            ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
-            when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
-            FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-            FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, fileEntryId);
-            when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
-
-            mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/file/" + fileEntryId + "/download"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(("text/csv")))
-                    .andExpect(header().string("Content-Type", "text/csv"))
-                    .andExpect(header().string("Content-disposition", "inline; filename=\"file1\""))
-                    .andExpect(content().string("File contents"));
-
-            verify(formInputResponseRestService).getFile(formInputId, applicationId, processRoleId, fileEntryId);
-            verify(formInputResponseRestService).getFileDetails(formInputId, applicationId, processRoleId, fileEntryId);
-
-        } catch (Exception e) {
-            fail();
-        }
     }
 
     @Override

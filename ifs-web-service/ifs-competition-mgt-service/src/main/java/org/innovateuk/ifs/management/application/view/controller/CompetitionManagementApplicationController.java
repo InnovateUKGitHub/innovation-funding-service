@@ -128,7 +128,7 @@ public class CompetitionManagementApplicationController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
