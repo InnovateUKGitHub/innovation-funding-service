@@ -13,6 +13,7 @@
           data-section="project-eligibility">
         <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />
+            <input type="hidden" name="ktpCompetition" th:value="${model.general.competition.isKtp()}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="singleOrCollaborative">
@@ -200,9 +201,7 @@
                 </fieldset>
             </div>
 
-
             <th:block th:unless="${model.general.competition.isKtp()}">
-                <input type="hidden" th:field="*{ktpCompetition}" value="false">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="leadApplicantTypes">
@@ -230,10 +229,6 @@
 
                     </fieldset>
                 </div>
-            </th:block>
-
-            <th:block th:if="${model.general.competition.isKtp()}">
-                <input type="hidden" th:field="*{ktpCompetition}" value="true">
             </th:block>
 
             <div class="govuk-form-group"
