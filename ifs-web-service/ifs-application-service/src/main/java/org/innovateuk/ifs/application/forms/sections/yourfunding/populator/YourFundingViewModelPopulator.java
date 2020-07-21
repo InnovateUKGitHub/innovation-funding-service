@@ -105,7 +105,7 @@ public class YourFundingViewModelPopulator {
         CompetitionResource competition = competitionRestService.getCompetition(application.getCompetition()).getSuccess();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), section.getCompetition().getFundingType());
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType());
 
     }
 
