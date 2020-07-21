@@ -198,7 +198,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
-                            class="govuk-table__header alignright"
+                            class="govuk-table__header govuk-table__header--numeric"
                             th:text="${year.yearText}"></th>
                     </tr>
                     </thead>
@@ -228,7 +228,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header table-header-width-40-percent">Section</th>
                         <th th:each="year : ${form.years}"
-                            class="govuk-table__header alignright"
+                            class="govuk-table__header govuk-table__header--numeric"
                             th:text="${year.yearText}"></th>
                     </tr>
                     </thead>
@@ -258,8 +258,8 @@
             </td>
             <td th:each="year, iter: ${form.years}"
                 th:with="path=${'years[__${iter.index}__]'}"
-                class="govuk-table__cell govuk-form-group"
-                th:classappend="${readOnly} ? 'alignright' : ''">
+                class="govuk-table__cell"
+                th:classappend="${readOnly} ? 'govuk-table__cell--numeric' : 'govuk-form-group'">
                 <th:block th:unless="${readOnly}">
                     <label th:for="__${path}__.__${field}__">
                         <span class="govuk-visually-hidden" th:text="|${year.yearText} ${rowName}|"></span>
