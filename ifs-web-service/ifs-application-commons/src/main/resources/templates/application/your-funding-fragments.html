@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYourRequestingFunding)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
-        <div th:if="${form.fundingPercentage && !hideAreYourRequestingFunding}" class="govuk-form-group"
+        <div th:if="${form.fundingPercentage && !hideAreYouRequestingFunding}" class="govuk-form-group"
              th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -43,6 +43,12 @@
                 </div>
             </fieldset>
         </div>
+
+        <th:block th:if="${form.fundingPercentage && hideAreYouRequestingFunding}">
+            <input type="hidden" name="grantClaimPercentage" value="0"/>
+            <input type="hidden" name="requestingFunding" value="false"/>
+        </th:block>
+
 
         <div th:if="${form.fundingAmount}"
              class="govuk-form-group govuk-!-margin-bottom-9"
