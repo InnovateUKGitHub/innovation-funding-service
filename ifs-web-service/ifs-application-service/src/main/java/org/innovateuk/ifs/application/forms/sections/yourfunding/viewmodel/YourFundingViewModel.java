@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 public class YourFundingViewModel implements BaseAnalyticsViewModel {
     private final long applicationId;
@@ -42,6 +43,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     private final FundingType fundingType;
 
+    private final OrganisationTypeEnum organisationType;
+
     public YourFundingViewModel(long applicationId,
                                 String competitionName,
                                 long sectionId,
@@ -60,7 +63,8 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
                                 Integer maximumFundingLevel,
                                 String financesUrl,
                                 boolean overridingFundingRules,
-                                FundingType fundingType) {
+                                FundingType fundingType,
+                                OrganisationTypeEnum organisationType) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.sectionId = sectionId;
@@ -80,6 +84,7 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         this.financesUrl = financesUrl;
         this.overridingFundingRules = overridingFundingRules;
         this.fundingType = fundingType;
+        this.organisationType = organisationType;
     }
 
     @Override
@@ -162,6 +167,14 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
 
     public boolean isKtpFundingType() {
         return FundingType.KTP == fundingType;
+    }
+
+    public OrganisationTypeEnum getOrganisationType() {
+        return organisationType;
+    }
+
+    public boolean isKnowledgeBaseOrganisation() {
+        return OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType;
     }
 
     /* view logic */

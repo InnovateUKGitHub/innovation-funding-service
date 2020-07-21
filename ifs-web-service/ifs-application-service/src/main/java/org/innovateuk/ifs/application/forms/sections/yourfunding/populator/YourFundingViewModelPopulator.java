@@ -102,7 +102,8 @@ public class YourFundingViewModelPopulator {
                 applicationFinance.getMaximumFundingLevel(),
                 format("/application/%d/form/FINANCE", applicationId),
                 overridingFundingRules,
-                section.getCompetition().getFundingType());
+                section.getCompetition().getFundingType(),
+                section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum());
     }
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, UserResource user) {

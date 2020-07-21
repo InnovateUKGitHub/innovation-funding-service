@@ -48,20 +48,17 @@ public class ProjectYourFundingViewModelPopulator {
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        ApplicationResource application = applicationRestService.getApplicationById(project.getApplication()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         boolean locked = organisationSectionRequired && !progress.isYourOrganisationComplete();
         boolean fundingOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
-        boolean isLead = application.getLeadOrganisationId() == organisationId;
 
         return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),
-                organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.BUSINESS),
                 projectFinance.getMaximumFundingLevel(),
                 locked,
                 competition.getId(),
                 fundingOverridden,
-                isLead,
-                competition.getFundingType());
+                competition.getFundingType(),
+                organisation.getOrganisationTypeEnum());
     }
 }
