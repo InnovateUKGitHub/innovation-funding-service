@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.pendingpartner.viewmodel;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 public class ProjectYourFundingViewModel {
@@ -13,6 +14,8 @@ public class ProjectYourFundingViewModel {
     private final boolean fundingSectionLocked;
     private final long competitionId;
     private final boolean overridingFundingRules;
+    private final boolean leadApplicant;
+    private final FundingType fundingType;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -21,7 +24,9 @@ public class ProjectYourFundingViewModel {
                                        int maximumFundingLevel,
                                        boolean fundingSectionLocked,
                                        long competitionId,
-                                       boolean overridingFundingRules) {
+                                       boolean overridingFundingRules,
+                                       boolean leadApplicant,
+                                       FundingType fundingType) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -31,6 +36,8 @@ public class ProjectYourFundingViewModel {
         this.fundingSectionLocked = fundingSectionLocked;
         this.competitionId = competitionId;
         this.overridingFundingRules = overridingFundingRules;
+        this.leadApplicant = leadApplicant;
+        this.fundingType = fundingType;
     }
 
     public String getProjectName() {
@@ -69,4 +76,15 @@ public class ProjectYourFundingViewModel {
         return overridingFundingRules;
     }
 
+    public boolean isLeadApplicant() {
+        return leadApplicant;
+    }
+
+    public FundingType getFundingType() {
+        return fundingType;
+    }
+
+    public boolean isKtpFundingType() {
+        return FundingType.KTP == fundingType;
+    }
 }

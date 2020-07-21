@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.pendingpartner.populator;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -30,6 +32,9 @@ public class ProjectYourFundingViewModelPopulator {
     private ProjectRestService projectRestService;
 
     @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
     private OrganisationRestService organisationRestService;
 
     @Autowired
@@ -43,16 +48,20 @@ public class ProjectYourFundingViewModelPopulator {
         ProjectFinanceResource projectFinance = projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
+        ApplicationResource application = applicationRestService.getApplicationById(project.getApplication()).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
         boolean organisationSectionRequired = !competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         boolean locked = organisationSectionRequired && !progress.isYourOrganisationComplete();
         boolean fundingOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
+        boolean isLead = application.getLeadOrganisationId() == organisationId;
 
         return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),
                 organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.BUSINESS),
                 projectFinance.getMaximumFundingLevel(),
                 locked,
                 competition.getId(),
-                fundingOverridden);
+                fundingOverridden,
+                isLead,
+                competition.getFundingType());
     }
 }
