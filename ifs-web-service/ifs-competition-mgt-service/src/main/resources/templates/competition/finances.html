@@ -63,7 +63,7 @@
 
             <th:block th:unless="${model.subsection.noFinancesCompetition}">
                 <div class="govuk-form-group"
-                     th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.KtpCompetition}">
+                     th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.ktpCompetition}">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeGrowthTable">
                             <h2 class="govuk-fieldset__heading">Include project growth table</h2>
@@ -102,7 +102,7 @@
                     </fieldset>
                 </div>
 
-                <th:block th:if="${model.subsection.KtpCompetition}">
+                <th:block th:if="${model.subsection.ktpCompetition}">
                     <input type="hidden" th:field="*{includeGrowthTable}" value="false"/>
                 </th:block>
 
@@ -232,7 +232,7 @@
                 <dd class="govuk-grid-column-two-thirds"
                     th:text="${competitionSetupForm.applicationFinanceType.displayLabel}" />
                 <th:block th:unless="${model.subsection.noFinancesCompetition }">
-                    <th:block th:unless="${model.subsection.KtpCompetition}">
+                    <th:block th:unless="${model.subsection.ktpCompetition}">
                         <dt class="govuk-grid-column-one-third clear-floats">Include project growth table</dt>
                         <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
                     </th:block>
