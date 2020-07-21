@@ -101,7 +101,7 @@
                 </fieldset>
             </div>
 
-            <th:block th:if="${model.subsection.KTPCompetition}">
+            <th:block th:if="${model.subsection.KtpCompetition}">
                 <input type="hidden" th:field="*{includeGrowthTable}" value="false"/>
             </th:block>
 
@@ -230,7 +230,7 @@
                 <dd class="govuk-grid-column-two-thirds"
                     th:text="${competitionSetupForm.applicationFinanceType.displayLabel}" />
                 <th:block th:unless="${model.subsection.noFinancesCompetition }">
-                    <th:block th:unless="${model.subsection.KTPCompetition}">
+                    <th:block th:unless="${model.subsection.KtpCompetition}">
                         <dt class="govuk-grid-column-one-third clear-floats">Include project growth table</dt>
                         <dd class="govuk-grid-column-two-thirds" th:text="${competitionSetupForm.includeGrowthTable ? 'Yes' :  'No'}" />
                     </th:block>

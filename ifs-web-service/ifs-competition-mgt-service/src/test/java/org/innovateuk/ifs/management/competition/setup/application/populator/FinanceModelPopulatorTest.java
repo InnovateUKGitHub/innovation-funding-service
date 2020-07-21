@@ -45,6 +45,6 @@ public class FinanceModelPopulatorTest {
 
         assertEquals(FinanceViewModel.class, viewModel.getClass());
         assertTrue(viewModel.isNoFinancesCompetition());
-        assertTrue(viewModel.isKTPCompetition());
+        assertTrue(viewModel.isKtpCompetition());
     }
 }

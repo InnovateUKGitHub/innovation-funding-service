@@ -6,18 +6,18 @@ public class FinanceViewModel implements CompetitionSetupSubsectionViewModel {
 
     private boolean noFinancesCompetition;
 
-    private boolean KTPCompetition;
+    private boolean KtpCompetition;
 
-    public FinanceViewModel(boolean noFinancesCompetition, boolean KTPCompetition) {
+    public FinanceViewModel(boolean noFinancesCompetition, boolean KtpCompetition) {
         this.noFinancesCompetition = noFinancesCompetition;
-        this.KTPCompetition = KTPCompetition;
+        this.KtpCompetition = KtpCompetition;
     }
 
     public boolean isNoFinancesCompetition() {
         return noFinancesCompetition;
     }
 
-    public boolean isKTPCompetition() {
-        return KTPCompetition;
+    public boolean isKtpCompetition() {
+        return KtpCompetition;
     }
 }

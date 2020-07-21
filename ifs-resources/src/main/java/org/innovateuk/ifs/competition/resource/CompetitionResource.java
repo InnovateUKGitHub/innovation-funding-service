@@ -180,7 +180,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
-    public boolean isKTP() {
+    public boolean isKtp() {
         return KTP.equals(fundingType);
     }
 
