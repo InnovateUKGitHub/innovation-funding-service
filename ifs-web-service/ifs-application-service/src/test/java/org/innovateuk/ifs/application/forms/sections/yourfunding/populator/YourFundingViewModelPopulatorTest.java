@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourF
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
@@ -59,6 +60,9 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
     @Mock
     private ApplicantRestService applicantRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private QuestionService questionService;
@@ -143,7 +147,6 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         long organisationId = 3L;
         long competitionId = 4L;
         CompetitionResource competition = newCompetitionResource().build();
-        UserResource user = newUserResource().withRoleGlobal(Role.COMP_ADMIN).build();
 
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
@@ -151,14 +154,9 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
                 .withCompetition(competitionId)
                 .build()));
 
-        ApplicantSectionResource section = newApplicantSectionResource()
-                .withCompetition(competition)
-                .withCurrentUser(user)
-                .build();
-        when(applicantRestService.getSection(user.getId(), APPLICATION_ID, SECTION_ID)).thenReturn(section);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
-        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, user);
-
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
         assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
         assertEquals(viewModel.getCompetitionId(), competitionId);

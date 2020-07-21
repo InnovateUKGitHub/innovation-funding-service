@@ -10,7 +10,9 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
@@ -46,6 +48,9 @@ public class YourFundingViewModelPopulator {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private QuestionService questionService;
@@ -102,7 +107,7 @@ public class YourFundingViewModelPopulator {
 
     private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetition(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
                 format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType());
