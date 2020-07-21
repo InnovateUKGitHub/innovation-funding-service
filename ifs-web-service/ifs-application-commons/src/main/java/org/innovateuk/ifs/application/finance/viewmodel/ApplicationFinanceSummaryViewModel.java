@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.finance.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,25 +23,25 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     private final boolean collaborativeProject;
     private final CollaborationLevel collaborationLevel;
     private final boolean fundingLevelFirst;
-
     private final Long currentUsersOrganisationId;
+    private final BigDecimal competitionMaximumFundingSought;
 
     public ApplicationFinanceSummaryViewModel(long applicationId,
-                                              String competitionName,
+                                              CompetitionResource competition,
                                               List<FinanceSummaryTableRow> rows,
                                               boolean readOnly,
                                               boolean collaborativeProject,
-                                              CollaborationLevel collaborationLevel,
-                                              boolean fundingLevelFirst,
-                                              Long currentUsersOrganisationId) {
+                                              Long currentUsersOrganisationId,
+                                              BigDecimal competitionMaximumFundingSought) {
         this.applicationId = applicationId;
-        this.competitionName = competitionName;
+        this.competitionName = competition.getName();
         this.rows = rows;
         this.readOnly = readOnly;
         this.collaborativeProject = collaborativeProject;
-        this.collaborationLevel = collaborationLevel;
-        this.fundingLevelFirst = fundingLevelFirst;
+        this.collaborationLevel = competition.getCollaborationLevel();
+        this.fundingLevelFirst = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.currentUsersOrganisationId = currentUsersOrganisationId;
+        this.competitionMaximumFundingSought = competitionMaximumFundingSought;
     }
 
 
@@ -75,6 +77,10 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
 
     public boolean isFundingSoughtFirst() {
         return !isFundingLevelFirst();
+    }
+
+    public BigDecimal getCompetitionMaximumFundingSought() {
+        return competitionMaximumFundingSought;
     }
 
     public boolean isAllFinancesComplete() {
@@ -131,8 +137,20 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
                 && !atLeastTwoCompleteOrganisationFinances();
     }
 
+    public boolean showFundingSoughtWarning() {
+        
+        if (competitionMaximumFundingSought == null) {
+            return false;
+        }
+
+        return rows.stream()
+                .map(row -> row.getFundingSought())
+                .reduce(BigDecimal::add).get().compareTo(competitionMaximumFundingSought) > 0;
+    }
+
     private boolean atLeastTwoCompleteOrganisationFinances() {
         return rows.stream().filter(FinanceSummaryTableRow::isComplete)
                 .count() > 1;
     }
+
 }

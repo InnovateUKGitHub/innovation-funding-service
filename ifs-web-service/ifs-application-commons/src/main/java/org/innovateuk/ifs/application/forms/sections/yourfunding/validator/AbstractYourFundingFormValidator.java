@@ -4,7 +4,9 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYo
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
@@ -19,6 +21,9 @@ import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 
 public class AbstractYourFundingFormValidator {
+
+    @Autowired
+    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
 
     protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier) {
 
@@ -109,6 +114,11 @@ public class AbstractYourFundingFormValidator {
                     BaseFinanceResource finance = financeSupplier.get();
                     if (form.getGrantClaimPercentage().compareTo(BigDecimal.valueOf(finance.getMaximumFundingLevel())) > 0) {
                         errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
+                    }
+                    if (finance.getMaximumFundingAmount() != null) {
+                        if (finance.getTotalFundingSought().compareTo(finance.getMaximumFundingAmount()) > 0) {
+                            errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.more.than.funding.amount", new String[]{String.valueOf(finance.getMaximumFundingAmount())}, "");
+                        }
                     }
                 }
             }

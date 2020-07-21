@@ -31,8 +31,13 @@
             <div th:if="${summary.showCollaborationWarning()}" class="warning-alert">
                 <p class="govuk-body">This competition only accepts collaborations. At least 2 partners must request funding.</p>
             </div>
-        </th:block>
 
+            <div th:if="${summary.showFundingSoughtWarning()}" class="warning-alert">
+                <p class="govuk-body">Your total funding sought exceeds £<span th:text="${summary.competitionMaximumFundingSought}">1000</span>. You
+                    must change your funding level percentage or total project costs.
+                </p>
+            </div>
+        </th:block>
 
         <div class="govuk-form-group finance-summary table-overflow">
             <table class="govuk-table">
