@@ -13,7 +13,7 @@
           data-section="project-eligibility">
         <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />
-            <input type="hidden" name="ktpCompetition" th:value="${model.general.competition.isKtp()}">
+            <input type="hidden" th:field="*{ktpCompetition}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="singleOrCollaborative">

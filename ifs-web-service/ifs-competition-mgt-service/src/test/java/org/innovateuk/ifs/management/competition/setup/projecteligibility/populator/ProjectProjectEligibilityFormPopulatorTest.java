@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.projecteligibility.popul
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -29,9 +30,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -67,6 +66,7 @@ public class ProjectProjectEligibilityFormPopulatorTest {
                 .withLeadApplicantType(asList(2L))
                 .withCompetitionType(OrganisationTypeEnum.BUSINESS.getId())
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
@@ -86,7 +86,49 @@ public class ProjectProjectEligibilityFormPopulatorTest {
         assertEquals(null, form.getStreamName());
         assertTrue(form.getResearchCategoriesApplicable());
         assertEquals("collaborative", form.getSingleOrCollaborative());
+        assertFalse(form.isKtpCompetition());
         assertEquals(asList(2L), form.getLeadApplicantTypes());
+        assertEquals(2, form.getResearchParticipationAmountId());
+        assertEquals(gcms.get(0).getMaximum(), form.getFundingLevelPercentage());
+    }
+
+    @Test
+    public void populateForm_Ktp() {
+        List<GrantClaimMaximumResource> gcms = newGrantClaimMaximumResource()
+                .withMaximum(60)
+                .build(2);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withMaxResearchRatio(50)
+                .withMultiStream(true)
+                .withStreamName("streamname")
+                .withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
+                .withLeadApplicantType(null)
+                .withCompetitionType(OrganisationTypeEnum.BUSINESS.getId())
+                .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
+                .withFundingType(FundingType.KTP)
+                .build();
+
+        QuestionResource researchCategoryQuestion = newQuestionResource().build();
+
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()))
+                .thenReturn(restSuccess(true));
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
+                RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
+        when(grantClaimMaximumRestService.getGrantClaimMaximumById(gcms.get(0).getId())).thenReturn(restSuccess(gcms.get(0)));
+
+        CompetitionSetupForm result = service.populateForm(competition);
+
+        assertTrue(result instanceof ProjectEligibilityForm);
+        ProjectEligibilityForm form = (ProjectEligibilityForm) result;
+        assertEquals(CollectionFunctions.asLinkedSet(2L, 3L), form.getResearchCategoryId());
+        assertEquals("no", form.getMultipleStream());
+        assertEquals(null, form.getStreamName());
+        assertTrue(form.getResearchCategoriesApplicable());
+        assertEquals("collaborative", form.getSingleOrCollaborative());
+        assertTrue(form.isKtpCompetition());
+        assertNull(form.getLeadApplicantTypes());
         assertEquals(2, form.getResearchParticipationAmountId());
         assertEquals(gcms.get(0).getMaximum(), form.getFundingLevelPercentage());
     }

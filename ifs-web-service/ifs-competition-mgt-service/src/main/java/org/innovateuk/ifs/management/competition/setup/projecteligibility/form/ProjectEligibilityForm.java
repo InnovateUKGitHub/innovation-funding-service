@@ -198,17 +198,4 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
             return true;
         }
     }
-
-    /*public static class KtpCompetitionPredicateProvider implements BiPredicateProvider<List<Long>, Boolean> {
-        public BiPredicate<List<Long>, Boolean> predicate() {
-            return (leadApplicantTypes, ktpCompetition) -> isLeadApplicantRequired(leadApplicantTypes, ktpCompetition);
-        }
-
-        private boolean isLeadApplicantRequired(List<Long> leadApplicantTypes, Boolean ktpCompetition) {
-            if (ktpCompetition) {
-                return false;
-            }
-            return (leadApplicantTypes == null || leadApplicantTypes.size() == 0);
-        }
-    }*/
 }
