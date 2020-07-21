@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class KnowledgeBaseForm {
 
-    @NotNull
+    @NotNull(message = "{validation.standard.organisation.required}")
     private String knowledgeBase;
 
     public String getKnowledgeBase() {
