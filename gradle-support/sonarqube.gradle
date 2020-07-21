@@ -33,3 +33,14 @@ sonarqube {
         property "sonar.java.target", "1.8"
     }
 }
+
+jacocoTestReport{
+    additionalSourceDirs.from = files(sourceSets.main.allJava.srcDirs)
+    reports {
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+        html.destination file("build/reports/jacoco/html")
+    }
+    executionData.from = files('build/jacoco/test.exec')
+}
