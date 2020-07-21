@@ -65,6 +65,12 @@ function startPybot() {
       else
         local emailsString=''
     fi
+    if [[ ${ats} -eq 1 ]]
+      then
+        local includeAtsTags='--include AuthServiceTests'
+      else
+        local includeAtsTags='--exclude AuthServiceTests'
+    fi
     if [[ ${rerunFailed} -eq 1 ]]; then
       local rerunString='--rerunfailed target/${targetDir}/output.xml --output rerun.xml'
     else
@@ -85,6 +91,7 @@ function startPybot() {
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
+    $includeAtsTags \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
@@ -185,9 +192,10 @@ rerunFailed=0
 parallel=0
 stopGrid=0
 noDeploy=0
+ats=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
+while getopts ":p :q :h :t :r :c :n :a :w :d: :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -224,6 +232,9 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
         ;;
         n)
             noDeploy=1
+        ;;
+        a)
+          ats=1
         ;;
         w)
           vnc=1
