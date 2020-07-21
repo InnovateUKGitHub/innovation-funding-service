@@ -24,6 +24,7 @@ Available parameters:
     * readOnly - whether this field is displayed as a definition list or not
     * required - whether this field is required - defaults to false
     * requiredMessage - a custom message to display if this textfield is required and is not filled in
+    * placeholder - placeholder value for the field
 */-->
 <th:block th:fragment="textfield(id, value)">
 
@@ -61,7 +62,8 @@ Available parameters:
                         min=${min ?: null},
                         max=${max ?: null},
                         required=${#bools.isTrue(required) ? 'required' : null},
-                        data-required-errormessage=${requiredMessage ?: null}
+                        data-required-errormessage=${requiredMessage ?: null},
+                        placeholder=${placeholder ?: null}
                    " />
 
         </th:block>
@@ -111,6 +113,7 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
             preventInputRegex='[^0-9]',
             min=${min ?: 0},
             max=${max ?: 2147483647},
+            placeholder=${placeholder}
           )" />
 
 </html>
