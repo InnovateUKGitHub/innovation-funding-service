@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0'
     }
 
 }
@@ -16,8 +16,21 @@ sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.branch", "development"
+        property "sonar.branch.name", "development"
         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
-        property "sonar.exclusions", "**/*MapperImpl.java"
+        // These exclusions are because SonarQube fails to parse the files
+        // Raised DHS-400 to contact SonarQube for support
+        property "sonar.exclusions", "**/*MapperImpl.java," +
+                "**/ProjectPartnerInviteServiceImpl.java," +
+                "**/GrantsInviteServiceImpl.java," +
+                "**/OverheadFileServiceImpl.java," +
+                "**/InterviewInviteServiceImpl.java," +
+                "**/AssessmentInviteServiceImpl.java," +
+                "**/FinanceReviewerServiceImpl.java," +
+                "**/ApplicationFinanceServiceImpl.java," +
+                "**/ReviewInviteServiceImpl.java,"
+        property "sonar.java.source", "1.8"
+        property "sonar.java.target", "1.8"
     }
 }
+
