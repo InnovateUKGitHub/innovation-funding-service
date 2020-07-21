@@ -19,6 +19,8 @@ public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSal
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
+    private Integer duration;
+
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
@@ -29,7 +31,12 @@ public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSal
     public AssociateSalaryCostRowForm(AssociateSalaryCost cost) {
         super(cost);
         this.role = cost.getRole();
+        this.duration = cost.getDuration();
         this.cost = cost.getCost();
+    }
+
+    public AssociateSalaryCostRowForm(String role) {
+        this.role = role;
     }
 
     public String getRole() {
@@ -38,6 +45,14 @@ public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSal
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public BigInteger getCost() {
@@ -60,6 +75,6 @@ public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSal
 
     @Override
     public AssociateSalaryCost toCost(Long financeId) {
-        return new AssociateSalaryCost(financeId, getCostId(), role, cost);
+        return new AssociateSalaryCost(financeId, getCostId(), role, duration, cost);
     }
 }

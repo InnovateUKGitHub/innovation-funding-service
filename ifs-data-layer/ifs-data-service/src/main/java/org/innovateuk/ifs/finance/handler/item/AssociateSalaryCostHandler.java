@@ -20,17 +20,17 @@ public class AssociateSalaryCostHandler extends FinanceRowHandler<AssociateSalar
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(AssociateSalaryCost cost) {
-        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, cost.getRole(), null, cost.getTotal(), null, cost.getCostType());
+        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, cost.getRole(), cost.getDuration(), cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(AssociateSalaryCost cost) {
-        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, cost.getRole(), null, cost.getTotal(), null, cost.getCostType());
+        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, cost.getRole(), cost.getDuration(), cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
     public AssociateSalaryCost toResource(FinanceRow cost) {
-        return new AssociateSalaryCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getCost().toBigInteger());
+        return new AssociateSalaryCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getQuantity(), cost.getCost().toBigInteger());
     }
 
     @Override

@@ -39,10 +39,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setProcurementOverheadRows(toRows(finance, FinanceRowType.PROCUREMENT_OVERHEADS,
                 ProcurementOverheadRowForm.class, ProcurementOverhead.class));
 
-        form.setAssociateSalaryCostRows(toRows(finance, FinanceRowType.ASSOCIATE_SALARY_COSTS,
-                AssociateSalaryCostRowForm.class, AssociateSalaryCost.class));
-        form.setAssociateDevelopmentCostRows(toRows(finance, FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
-                AssociateDevelopmentCostRowForm.class, AssociateDevelopmentCost.class));
+        form.setAssociateSalaryCostRows(associateSalaryCostRows(finance));
+        form.setAssociateDevelopmentCostRows(associateDevelopment(finance));
         form.setConsumableCostRows(toRows(finance, FinanceRowType.CONSUMABLES,
                 ConsumablesRowForm.class, Consumable.class));
         form.setKnowledgeBaseCostRows(toRows(finance, FinanceRowType.KNOWLEDGE_BASE,
@@ -106,6 +104,50 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return null;
     }
 
+    private Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows(BaseFinanceResource finance) {
+        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS);
+        if (costCategory != null) {
+            Map<String, AssociateSalaryCostRowForm> rows = costCategory.getCosts().stream()
+                    .map((cost) -> (AssociateSalaryCost) cost)
+                    .map(AssociateSalaryCostRowForm::new)
+                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+            if (rows.isEmpty()) {
+                rows.put(generateUnsavedRowId(), new AssociateSalaryCostRowForm("Associate 1"));
+            }
+            if (rows.size() == 1) {
+                rows.put(generateUnsavedRowId(), new AssociateSalaryCostRowForm("Associate 2"));
+            }
+            return rows;
+        }
+        return new HashMap<>();
+    }
+    private Map<String, AssociateDevelopmentCostRowForm> associateDevelopment(BaseFinanceResource finance) {
+        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS);
+        if (costCategory != null) {
+            Map<String, AssociateDevelopmentCostRowForm> rows = costCategory.getCosts().stream()
+                    .map((cost) -> (AssociateDevelopmentCost) cost)
+                    .map(AssociateDevelopmentCostRowForm::new)
+                    .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+            if (rows.isEmpty()) {
+                rows.put(generateUnsavedRowId(), new AssociateDevelopmentCostRowForm("Associate 1", getAssociateSalaryDuration(finance, 0)));
+            }
+            if (rows.size() == 1) {
+                rows.put(generateUnsavedRowId(), new AssociateDevelopmentCostRowForm("Associate 2", getAssociateSalaryDuration(finance, 1)));
+            }
+            return rows;
+        }
+        return new HashMap<>();
+    }
+
+    private Integer getAssociateSalaryDuration(BaseFinanceResource finance, int index) {
+        DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_SALARY_COSTS);
+        if (costCategory.getCosts().size() > index) {
+            AssociateSalaryCost cost = (AssociateSalaryCost) costCategory.getCosts().get(index);
+            return cost.getDuration();
+        }
+        return null;
+
+    }
     private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz) {
         DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(financeRowType);
 

@@ -23,6 +23,8 @@ public class AdditionalCompanyCost extends AbstractFinanceRowItem {
 
     private AdditionalCompanyCostType type;
 
+    private String description;
+
     private BigInteger cost;
 
     private AdditionalCompanyCost() {
@@ -38,10 +40,11 @@ public class AdditionalCompanyCost extends AbstractFinanceRowItem {
         this.type = type;
     }
 
-    public AdditionalCompanyCost(Long targetId, Long id, AdditionalCompanyCostType type, BigInteger cost) {
+    public AdditionalCompanyCost(Long targetId, Long id, AdditionalCompanyCostType type, String description, BigInteger cost) {
         super(targetId);
         this.id = id;
         this.type = type;
+        this.description = description;
         this.cost = cost;
     }
 
@@ -60,6 +63,14 @@ public class AdditionalCompanyCost extends AbstractFinanceRowItem {
 
     public void setType(AdditionalCompanyCostType type) {
         this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigInteger getCost() {

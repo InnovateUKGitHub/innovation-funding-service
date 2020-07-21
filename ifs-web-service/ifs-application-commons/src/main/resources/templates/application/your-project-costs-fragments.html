@@ -8,6 +8,8 @@
             LABOUR
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="labour"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -286,12 +288,15 @@
 
     </div>
 </th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             OVERHEADS
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="overheads"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -565,12 +570,15 @@
         </table>
     </div>
 </th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             PROCUREMENT OVERHEADS
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="procurement-overheads"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -813,13 +821,15 @@
         </table>
     </div>
 </th:block>
-
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             MATERIALS
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="materials"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).MATERIALS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -1063,13 +1073,15 @@
         </table>
     </div>
 </th:block>
-
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             CAPITAL USAGE
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="capital_usage"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CAPITAL_USAGE}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -1373,13 +1385,15 @@
         </table>
     </div>
 </th:block>
-
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             SUB CONTRACTING
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="subcontracting_costs"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).SUBCONTRACTING_COSTS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -1590,13 +1604,15 @@
         </table>
     </div>
 </th:block>
-
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             TRAVEL
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="travel"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).TRAVEL}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -1830,12 +1846,15 @@
         </table>
     </div>
 </th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             OTHER COSTS
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="other_costs"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OTHER_COSTS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -2010,8 +2029,7 @@
         </table>
     </div>
 </th:block>
-
-
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
@@ -2019,6 +2037,7 @@
 
 *********************************/-->
 
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="vat">
 <div class="govuk-form-group" th:if="${model.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
      th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
@@ -2119,11 +2138,15 @@
     </fieldset>
 </div>
 </th:block>
+<!--/*</editor-fold>*/-->
+
 <!--/***************************
 
             ASSOCIATE SALARY COSTS
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="associate_salary_costs"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_SALARY_COSTS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -2147,41 +2170,27 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please note that legal or project audit and accountancy fees are not eligible and
-                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                    within any other cost headings.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-salary-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="associate-salary-description" scope="col">Description and
-                                justification of the cost
+                            <th class="govuk-table__header" id="associate-salary-description" scope="col">
+                                Associate</th>
+                            <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                                Duration of employment (months)
                             </th>
-                            <th id="associate-salary-cost" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric">
-                                Estimated cost (&pound;)
-                            </th>
-                            <th class="govuk-table__header" scope="col"><span
-                                class="govuk-visually-hidden">Actions</span>
+                            <th id="associate-salary-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                                Associate employment cost (&pound;)
                             </th>
                         </tr>
                         </thead>
                         <tbody class="govuk-table__body">
-                        <th:block th:each="entry : *{associateSalaryCostRows}">
+                        <th:block th:each="entry, iter : *{associateSalaryCostRows}">
                             <th:block
-                                th:insert="application/your-project-costs-fragments :: associate_salary_costs_row (${entry.key}, ${entry.value})"/>
+                                th:insert="application/your-project-costs-fragments :: associate_salary_costs_row (${iter.index}, ${entry.key}, ${entry.value})"/>
                         </th:block>
                         </tbody>
                     </table>
-                    <p class="alignright">
-                        <button type="submit"
-                                name="add_cost"
-                                th:value="${financeRowType}"
-                                class="button-clear"
-                                data-repeatable-rowcontainer="#associate-salary-costs-table tbody">Add another cost
-                        </button>
-                    </p>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total associate salary costs
@@ -2202,36 +2211,48 @@
     </div>
 </th:block>
 
-<th:block th:fragment="ajax_associate_salary_costs_row">
-    <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: associate_salary_costs_row (${id}, ${row})"/>
-    </th:block>
-</th:block>
-
-<th:block th:fragment="associate_salary_costs_row (id, row)">
+<th:block th:fragment="associate_salary_costs_row (index, id, row)">
     <tr class="form-group-row-validated" th:with="path=${'associateSalaryCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
         th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
-                <span class="govuk-visually-hidden">Description and justification of the cost</span>
+                <span class="govuk-visually-hidden">Associate</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
-            <textarea
-                class="govuk-textarea"
+            <input
+                class="govuk-input"
                 th:id="__${path}__.role"
                 th:field="*{__${path}__.role}"
-                th:errorclass="govuk-input--error"
                 maxlength="255"
-                rows="4"
-                required="required">
-                            </textarea>
+                readonly="readonly" />
+            <span th:if="${index != 0}" class="govuk-hint">(Optional)</span>
+
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+            <label th:for="__${path}__.duration">
+                <span class="govuk-visually-hidden">Duration of employment (months)</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+            <input th:id="__${path}__.duration"
+                   th:field="*{__${path}__.duration}"
+                   th:errorclass="govuk-input--error"
+                   th:classappend="${'associate-salary-' + index}"
+                   type="number"
+                   class="govuk-input"
+                   placeholder="0"
+                   min="1"
+                   max="9999999999999999999"
+                   step="1"
+                   th:attr="required=${index == 0 ? 'required' : null},
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
-                <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
+                <span class="govuk-visually-hidden">Associate employment cost (&pound;)</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
@@ -2244,15 +2265,8 @@
                    min="1"
                    max="9999999999999999999"
                    step="1"
-                   required="required"
-                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
-        </td>
-        <td class="govuk-table__cell">
-            <button type="submit"
-                    th:name="remove_cost"
-                    th:value="${id}"
-                    class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
-            </button>
+                   th:attr="required=${index == 0 ? 'required' : null},
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </td>
     </tr>
 </th:block>
@@ -2262,13 +2276,13 @@
         <table class="govuk-table" id="associate-salary-costs-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th id="associate-salary-role" class="govuk-table__header" scope="col">Description and
-                    justification
-                    of the cost
+                <th class="govuk-table__header" id="associate-salary-description" scope="col">
+                Associate</th>
+                <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Duration of employment (months)
                 </th>
                 <th id="associate-salary-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                    Estimated
-                    cost (&pound;)
+                    Associate employment cost (&pound;)
                 </th>
             </tr>
             </thead>
@@ -2276,6 +2290,7 @@
             <th:block th:each="entry : *{associateSalaryCostRows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.role}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.duration}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <th:block
                             th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">
@@ -2287,7 +2302,7 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">Total associate salary costs</th>
+                <th class="govuk-table__header" colspan="2" scope="row">Total associate salary costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-associate-salary-costs"
                     th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0, 'DEFAULT')}"/>
@@ -2297,12 +2312,185 @@
         </table>
     </div>
 </th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
+            ASSOCIATE_DEVELOPMENT_COSTS
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="associate_development_costs"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_DEVELOPMENT_COSTS}">
+    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
+                    Associate development costs
+                </span>
+                <span class="finance-total" data-mirror="#section-total-associate-development-costs"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-associate-development-costs"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalAssociateDevelopmentCosts, form.organisationFinanceTotal) + '%'}"></span>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
+             aria-labelledby="accordion-finances-heading-9">
+            <th:block
+                th:if="${model.isReadOnly(financeRowType)}">
+                <th:block th:insert="application/your-project-costs-fragments :: associate_development_costs_read_only"/>
+            </th:block>
+            <th:block
+                th:unless="${model.isReadOnly(financeRowType)}">
+                <div class="govuk-form-group table-overflow">
+                    <table class="govuk-table" id="associate-development-costs-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" id="associate-development-description" scope="col">
+                                Associate</th>
+                            <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                                Duration of employment (months)
+                            </th>
+                            <th id="associate-development-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                                Associate development cost (&pound;)
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="entry, iter : *{associateDevelopmentCostRows}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: associate_development_costs_row (${iter.index}, ${entry.key}, ${entry.value})"/>
+                        </th:block>
+                        </tbody>
+                    </table>
+                </div>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total associate development costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-associate-development-costs"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalAssociateDevelopmentCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".associate-development-costs-totals"
+                       data-calculation-operations="+"
+                       id="section-total-associate-development-costs"
+                       th:attr="data-calculation-rawvalue=${form.totalAssociateDevelopmentCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalAssociateDevelopmentCosts, 0,'DEFAULT')}"/>
+            </th:block>
+            <th:block th:if="${model.internal}"
+                      th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="associate_development_costs_row (index, id, row)">
+    <tr class="form-group-row-validated" th:with="path=${'associateDevelopmentCostRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}"
+        th:id="${path}">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.role">
+                <span class="govuk-visually-hidden">Associate</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
+            <input
+                class="govuk-input"
+                th:id="__${path}__.role"
+                th:field="*{__${path}__.role}"
+                maxlength="255"
+                readonly="readonly" />
+            <span th:if="${index != 0}" class="govuk-hint">(Optional)</span>
+
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+            <label th:for="__${path}__.duration">
+                <span class="govuk-visually-hidden">Duration of employment (months)</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+            <input th:id="__${path}__.duration"
+                   th:field="*{__${path}__.duration}"
+                   class="govuk-input"
+                   readonly="readonly"
+                   data-calculation-operations="*"
+                   data-calculation-format="integer"
+                   th:attr="data-calculation-fields=${'.associate-salary-' + index + ',1'},
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+            <label th:for="__${path}__.cost">
+                <span class="govuk-visually-hidden">Associate development cost (&pound;)</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+            <input th:id="__${path}__.cost"
+                   th:field="*{__${path}__.cost}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input associate-development-costs-totals"
+                   placeholder="0"
+                   min="1"
+                   max="9999999999999999999"
+                   step="1"
+                   th:attr="required=${index == 0 ? 'required' : null},
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+        </td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="associate_development_costs_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="associate-development-costs-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" id="associate-development-description" scope="col">
+                    Associate</th>
+                <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Duration of employment (months)
+                </th>
+                <th id="associate-development-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Associate employment cost (&pound;)
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{associateDevelopmentCostRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.role}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.duration}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block
+                            th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">
+                            1500
+                        </th:block>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" colspan="2" scope="row">Total associate development costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-associate-development-costs"
+                    th:attr="data-calculation-rawvalue=${form.totalAssociateDevelopmentCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalAssociateDevelopmentCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             ASSOCIATE SUPPORT
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="associate_support"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_SUPPORT}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -2398,15 +2586,15 @@
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
-            <textarea
-                class="govuk-textarea"
+            <input
+                class="govuk-input"
+                type="text"
                 th:id="__${path}__.description"
                 th:field="*{__${path}__.description}"
                 th:errorclass="govuk-input--error"
                 maxlength="255"
-                rows="4"
                 required="required">
-                            </textarea>
+                            </input>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
@@ -2476,19 +2664,22 @@
         </table>
     </div>
 </th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             ESTATE COSTS
 
 *********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="estate_costs"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ESTATE_COSTS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Estate costs
+                    Estates
                 </span>
                 <span class="finance-total" data-mirror="#section-total-estate-costs"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2505,20 +2696,14 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please note that legal or project audit and accountancy fees are not eligible and
-                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                    within any other cost headings.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="estate-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="estate-costs-description" scope="col">Description and
-                                justification of the cost
-                            </th>
+                            <th class="govuk-table__header" id="estate-costs-description" scope="col">Description</th>
                             <th id="estate-costs-cost" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric">
-                                Estimated cost (&pound;)
+                                Cost (&pound;)
                             </th>
                             <th class="govuk-table__header" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
@@ -2573,23 +2758,22 @@
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
-                <span class="govuk-visually-hidden">Description and justification of the cost</span>
+                <span class="govuk-visually-hidden">Description</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
-            <textarea
-                class="govuk-textarea"
+            <input
+                class="govuk-input"
+                type="text"
                 th:id="__${path}__.description"
                 th:field="*{__${path}__.description}"
                 th:errorclass="govuk-input--error"
                 maxlength="255"
-                rows="4"
-                required="required">
-                            </textarea>
+                required="required" />
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
-                <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
+                <span class="govuk-visually-hidden">Cost (&pound;)</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
@@ -2655,12 +2839,14 @@
         </table>
     </div>
 </th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             CONSUMABLES
 
 *********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="consumables"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).CONSUMABLES}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -2683,9 +2869,23 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please provide a breakdown of the consumables you
+                <th:block  th:unless="${model.internal}">
+                <p class="govuk-body">Please provide a breakdown of the consumables you
                     expect to use during the
                     project</p>
+                <p class="govuk-body">You can claim the costs of consumables used on your project
+                    providing:</p>
+                <ul class="list-bullet">
+                    <li>they are not already purchased or included in the overheads</li>
+                    <li>they are purchased from third parties</li>
+                    <li>they won’t have a residual/resale value at the end of your project. If they do you
+                        can
+                        claim
+                        the
+                        costs minus this value
+                    </li>
+                </ul>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="material-costs-table">
                         <thead class="govuk-table__head">
@@ -2734,43 +2934,6 @@
                        id="section-total-material"
                        th:attr="data-calculation-rawvalue=${form.totalConsumableCosts}"
                        th:value="'£' + ${#numbers.formatInteger(form.totalConsumableCosts, 0,'DEFAULT')}"/>
-
-                <th:block th:unless="${model.internal}">
-                    <div class="govuk-body"><p>You can claim the costs of consumables used on your project
-                        providing:</p>
-                        <ul class="list-bullet">
-                            <li>they are not already purchased or included in the overheads</li>
-                            <li>they are purchased from third parties</li>
-                            <li>they won’t have a residual/resale value at the end of your project. If they do you
-                                can
-                                claim
-                                the
-                                costs minus this value
-                            </li>
-                        </ul>
-                        <p><a
-                            href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Please
-                            refer to our guide to project costs for further information.</a></p>
-                    </div>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary" role="group">
-                            <span class="govuk-details__summary-text">consumables costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>consumables
-                                supplied
-                                by associated companies or project partners should be charged at cost.</p>
-                            <p>Software that you have purchased specifically for use during your project may be
-                                included. If
-                                you
-                                already own the software then only additional costs which are incurred and paid
-                                during
-                                your
-                                project, will be eligible. For example, installation, training or customisation.</p>
-                            <p>Material costs must be itemised to justify that they are eligible.</p>
-                        </div>
-                    </details>
-                </th:block>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
@@ -2904,191 +3067,14 @@
         </table>
     </div>
 </th:block>
-
-<!--/***************************
-
-            ASSOCIATE_DEVELOPMENT_COSTS
-
-*********************************/-->
-<th:block th:fragment="associate_development_costs"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ASSOCIATE_DEVELOPMENT_COSTS}">
-    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
-        <div class="govuk-accordion__section-header">
-            <h3 class="govuk-accordion__section-heading">
-                <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Associate development costs
-                </span>
-                <span class="finance-total" data-mirror="#section-total-associate-development-costs"></span>
-                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                      data-calculation-operations="/,*"
-                      data-calculation-fields="100, #total-cost, #section-total-associate-development-costs"
-                      th:text="${#ifsUtil.calculatePercentage(form.totalAssociateDevelopmentCosts, form.organisationFinanceTotal) + '%'}"></span>
-            </h3>
-        </div>
-        <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
-             aria-labelledby="accordion-finances-heading-9">
-            <th:block
-                th:if="${model.isReadOnly(financeRowType)}">
-                <th:block th:insert="application/your-project-costs-fragments :: associate_development_costs_read_only"/>
-            </th:block>
-            <th:block
-                th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please note that legal or project audit and accountancy fees are not eligible and
-                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                    within any other cost headings.</p>
-                <div class="govuk-form-group table-overflow">
-                    <table class="govuk-table" id="associate-development-costs-table">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="associate-development-costs-description" scope="col">Description and
-                                justification of the cost
-                            </th>
-                            <th id="associate-development-costs-cost" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric">
-                                Estimated cost (&pound;)
-                            </th>
-                            <th class="govuk-table__header" scope="col"><span
-                                class="govuk-visually-hidden">Actions</span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <th:block th:each="entry : *{associateDevelopmentCostRows}">
-                            <th:block
-                                th:insert="application/your-project-costs-fragments :: associate_development_costs_row (${entry.key}, ${entry.value})"/>
-                        </th:block>
-                        </tbody>
-                    </table>
-                    <p class="alignright">
-                        <button type="submit"
-                                name="add_cost"
-                                th:value="${financeRowType}"
-                                class="button-clear"
-                                data-repeatable-rowcontainer="#associate-development-costs-table tbody">Add another cost
-                        </button>
-                    </p>
-                </div>
-                <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total associate development costs
-                    <span class="govuk-heading-s"
-                          data-mirror="#section-total-associate-development-costs"
-                          th:text="'£' + ${#numbers.formatInteger(form.totalAssociateDevelopmentCosts, 0,'DEFAULT')}"></span>
-                </h4>
-                <input type="hidden"
-                       data-calculation-fields=".associate-development-costs-totals"
-                       data-calculation-operations="+"
-                       id="section-total-associate-development-costs"
-                       th:attr="data-calculation-rawvalue=${form.totalAssociateDevelopmentCosts}"
-                       th:value="'£' + ${#numbers.formatInteger(form.totalAssociateDevelopmentCosts, 0,'DEFAULT')}"/>
-            </th:block>
-            <th:block th:if="${model.internal}"
-                      th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
-        </div>
-    </div>
-</th:block>
-
-<th:block th:fragment="ajax_associate_development_costs_row">
-    <th:block th:object="${form}">
-        <th:block th:insert="application/your-project-costs-fragments :: associate_development_costs_row (${id}, ${row})"/>
-    </th:block>
-</th:block>
-
-<th:block th:fragment="associate_development_costs_row (id, row)">
-    <tr class="form-group-row-validated" th:with="path=${'associateDevelopmentCostRows[__${id}__]'}"
-        th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
-        <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.description">
-                <span class="govuk-visually-hidden">Description and justification of the cost</span>
-            </label>
-            <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
-            <textarea
-                class="govuk-textarea"
-                th:id="__${path}__.description"
-                th:field="*{__${path}__.description}"
-                th:errorclass="govuk-input--error"
-                maxlength="255"
-                rows="4"
-                required="required">
-                            </textarea>
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
-            <label th:for="__${path}__.cost">
-                <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
-            </label>
-            <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
-            <input th:id="__${path}__.cost"
-                   th:field="*{__${path}__.cost}"
-                   th:errorclass="govuk-input--error"
-                   type="number"
-                   class="govuk-input associate-development-costs-totals"
-                   placeholder="0"
-                   min="1"
-                   max="9999999999999999999"
-                   step="1"
-                   required="required"
-                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
-        </td>
-        <td class="govuk-table__cell">
-            <button type="submit"
-                    th:name="remove_cost"
-                    th:value="${id}"
-                    class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
-            </button>
-        </td>
-    </tr>
-</th:block>
-
-<th:block th:fragment="associate_development_costs_read_only">
-    <div class="table-overflow">
-        <table class="govuk-table" id="associate-development-costs-table">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th id="associate-development-costs-description" class="govuk-table__header" scope="col">Description and
-                    justification
-                    of the cost
-                </th>
-                <th id="associate-development-costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                    Estimated
-                    cost (&pound;)
-                </th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <th:block th:each="entry : *{associateDevelopmentCostRows}" th:with="cost=${entry.value}">
-                <tr class="govuk-table__row" th:unless="${cost.blank}">
-                    <td class="govuk-table__cell" th:text="${cost.description}"></td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <th:block
-                            th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">
-                            1500
-                        </th:block>
-                    </td>
-                </tr>
-            </th:block>
-            </tbody>
-            <tfoot class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">Total associate development costs</th>
-                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-associate-development-costs"
-                    th:attr="data-calculation-rawvalue=${form.totalAssociateDevelopmentCosts}">
-                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalAssociateDevelopmentCosts, 0, 'DEFAULT')}"/>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-</th:block>
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             KNOWLEDGE BASE
 
 *********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="knowledge_base"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).KNOWLEDGE_BASE}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -3112,20 +3098,16 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please note that legal or project audit and accountancy fees are not eligible and
-                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                    within any other cost headings.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="knowledge-base-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" id="knowledge-base-description" scope="col">Description and
-                                justification of the cost
+                                Name
                             </th>
                             <th id="knowledge-base-cost" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric">
-                                Estimated cost (&pound;)
+                                Cost (&pound;)
                             </th>
                             <th class="govuk-table__header" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
@@ -3149,7 +3131,7 @@
                     </p>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total knowledege base supervisor costs
+                    Total knowledge base supervisor costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-knowledge-base"
                           th:text="'£' + ${#numbers.formatInteger(form.totalKnowledgeBaseCosts, 0,'DEFAULT')}"></span>
@@ -3180,23 +3162,22 @@
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
-                <span class="govuk-visually-hidden">Description and justification of the cost</span>
+                <span class="govuk-visually-hidden">Name</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
-            <textarea
-                class="govuk-textarea"
+            <input
+                type="text"
+                class="govuk-input"
                 th:id="__${path}__.description"
                 th:field="*{__${path}__.description}"
                 th:errorclass="govuk-input--error"
                 maxlength="255"
-                rows="4"
-                required="required">
-                            </textarea>
+                required="required" />
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
-                <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
+                <span class="govuk-visually-hidden">Cost (&pound;)</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
@@ -3262,13 +3243,14 @@
         </table>
     </div>
 </th:block>
-
+<!--/*</editor-fold>*/-->
 
 <!--/***************************
 
             ADDITIONAL_COMPANY_COSTS
 
 *********************************/-->
+<!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="additional_company_costs"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
     <div th:if="${model.financeRowTypes.contains(financeRowType)}"
@@ -3322,32 +3304,66 @@
 <!--/*@thymesVar id="label" type="java.lang.String"*/-->
 <th:block th:fragment="additional_cost_field (fieldName, label)">
     <th:block th:if="${model.isReadOnly(financeRowType)}"
-              th:with="value = *{__${fieldName}__}">
+              th:with="value = *{__${fieldName}__.cost}">
         <dt th:text="${label}">Name</dt>
         <dd th:text="'£' + ${#numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT')}"></dd>
+        <dt th:text="${label}">Name</dt>
+        <dd th:text="*{__${fieldName}__.description}"></dd>
     </th:block>
     <th:block th:unless="${model.isReadOnly(financeRowType)}">
-        <div class="govuk-form-group"
-             th:classappend="${#fields.hasErrors('__${fieldName}__')} ? 'govuk-form-group--error'">
-            <label class="govuk-label govuk-!-font-weight-bold" th:for="${fieldName}"
-                   th:text="|${label} (£)|">Associate salary (&pound;)</label>
-            <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=${fieldName})"/>
-            <div>
-                <input th:id="${fieldName}"
-                       type="number"
-                       data-prevent-input-non-number
-                       class="govuk-input govuk-input--width-5 additional-company-cost"
-                       th:field="*{__${fieldName}__}"
-                       min="0"
-                       th:attr="data-min-errormessage=#{validation.standard.non.negative.integer.format}"
-                       placeholder="0"
-                       step="1"
-                       th:errorclass="govuk-input--error"/>
-            </div>
+        <h2 class="govuk-heading-s" th:text="${label}"></h2>
+        <div class="govuk-form-group table-overflow">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-two-thirds" scope="col">Description</th>
+                    <th class="govuk-table__header govuk-table__header--numeric govuk-!-width-one-third" scope="col" >Cost (&pound;)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell govuk-form-group">
+                        <label th:for="__${path}__.description">
+                            <span class="govuk-visually-hidden">Description</span>
+                        </label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${fieldName}__.description)"/>
+                        <textarea
+                            class="govuk-textarea"
+                            th:id="__${fieldName}__.description"
+                            th:field="*{__${fieldName}__.description}"
+                            th:errorclass="govuk-input--error"
+                            maxlength="255"
+                            rows="4"
+                            required="required">
+                        </textarea>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+                        <label th:for="__${fieldName}__.cost">
+                            <span class="govuk-visually-hidden">Cost (&pound;)</span>
+                        </label>
+                        <th:block
+                            th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${fieldName}__.cost)"/>
+                        <input th:id="__${fieldName}__.cost"
+                               th:field="*{__${fieldName}__.cost}"
+                               th:errorclass="govuk-input--error"
+                               type="number"
+                               class="govuk-input additional-company-cost"
+                               placeholder="0"
+                               min="1"
+                               max="9999999999999999999"
+                               step="1"
+                               required="required"
+                               th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </th:block>
 </th:block>
+<!--/*</editor-fold>*/-->
+
 <th:block th:fragment="internal_view_buttons (financeType)">
     <div class="alignright-button" th:if="${model.open}">
         <a th:href="@{?financeType={financeType}(financeType=${financeType})}"

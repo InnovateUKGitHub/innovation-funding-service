@@ -17,7 +17,9 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    private String description;
+    private String role;
+
+    private Integer duration;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
@@ -28,16 +30,30 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
 
     public AssociateDevelopmentCostRowForm(AssociateDevelopmentCost cost) {
         super(cost);
-        this.description = cost.getDescription();
+        this.role = cost.getRole();
+        this.duration = cost.getDuration();
         this.cost = cost.getCost();
     }
 
-    public String getDescription() {
-        return description;
+    public AssociateDevelopmentCostRowForm(String role, Integer duration) {
+        this.role = role;
+        this.duration = duration;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public BigInteger getCost() {
@@ -50,7 +66,7 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
 
     @Override
     public boolean isBlank() {
-        return isNullOrEmpty(description) && cost == null;
+        return isNullOrEmpty(role) && cost == null && duration == null;
     }
 
     @Override
@@ -60,6 +76,6 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
 
     @Override
     public AssociateDevelopmentCost toCost(Long financeId) {
-        return new AssociateDevelopmentCost(financeId, getCostId(), description, cost);
+        return new AssociateDevelopmentCost(financeId, getCostId(), role, duration, cost);
     }
 }

@@ -15,6 +15,8 @@ public class AssociateSalaryCost extends AbstractFinanceRowItem {
 
     private String role;
 
+    private Integer duration;
+
     private BigInteger cost;
 
     private AssociateSalaryCost() {
@@ -25,10 +27,11 @@ public class AssociateSalaryCost extends AbstractFinanceRowItem {
         super(targetId);
     }
 
-    public AssociateSalaryCost(Long targetId, Long id, String role, BigInteger cost) {
+    public AssociateSalaryCost(Long targetId, Long id, String role, Integer duration, BigInteger cost) {
         super(targetId);
         this.id = id;
         this.role = role;
+        this.duration = duration;
         this.cost = cost;
     }
 
@@ -47,6 +50,14 @@ public class AssociateSalaryCost extends AbstractFinanceRowItem {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public BigInteger getCost() {

@@ -13,7 +13,9 @@ public class AssociateDevelopmentCost extends AbstractFinanceRowItem {
 
     private Long id;
 
-    private String description;
+    private String role;
+
+    private Integer duration;
 
     private BigInteger cost;
 
@@ -25,10 +27,11 @@ public class AssociateDevelopmentCost extends AbstractFinanceRowItem {
         super(targetId);
     }
 
-    public AssociateDevelopmentCost(Long targetId, Long id, String description, BigInteger cost) {
+    public AssociateDevelopmentCost(Long targetId, Long id, String role, Integer duration, BigInteger cost) {
         super(targetId);
         this.id = id;
-        this.description = description;
+        this.role = role;
+        this.duration = duration;
         this.cost = cost;
     }
 
@@ -41,12 +44,20 @@ public class AssociateDevelopmentCost extends AbstractFinanceRowItem {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getRole() {
+        return role;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public BigInteger getCost() {

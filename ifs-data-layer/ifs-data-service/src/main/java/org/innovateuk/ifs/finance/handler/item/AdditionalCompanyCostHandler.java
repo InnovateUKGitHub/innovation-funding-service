@@ -27,17 +27,17 @@ public class AdditionalCompanyCostHandler extends FinanceRowHandler<AdditionalCo
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(AdditionalCompanyCost cost) {
-        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, null, null, cost.getTotal(), null, cost.getCostType());
+        return new ApplicationFinanceRow(cost.getId(), cost.getName() , null, cost.getDescription(), null, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(AdditionalCompanyCost cost) {
-        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, null, null, cost.getTotal(), null, cost.getCostType());
+        return new ProjectFinanceRow(cost.getId(), cost.getName() , null, cost.getDescription(), null, cost.getTotal(), null, cost.getCostType());
     }
 
     @Override
     public AdditionalCompanyCost toResource(FinanceRow cost) {
-        return new AdditionalCompanyCost(cost.getTarget().getId(), cost.getId(), AdditionalCompanyCostType.valueOf(cost.getName()), ofNullable(cost.getCost()).map(BigDecimal::toBigInteger).orElse(null));
+        return new AdditionalCompanyCost(cost.getTarget().getId(), cost.getId(), AdditionalCompanyCostType.valueOf(cost.getName()), cost.getDescription(), ofNullable(cost.getCost()).map(BigDecimal::toBigInteger).orElse(null));
     }
 
     @Override

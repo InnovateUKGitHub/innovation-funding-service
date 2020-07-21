@@ -4,62 +4,64 @@ import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategor
 
 import java.math.BigInteger;
 
+import static java.util.Optional.ofNullable;
+
 public class AdditionalCompanyCostForm {
 
-    private BigInteger associateSalary;
-    private BigInteger managementSupervision;
-    private BigInteger otherStaff;
-    private BigInteger capitalEquipment;
-    private BigInteger otherCosts;
+    private AdditionalCostAndDescription associateSalary;
+    private AdditionalCostAndDescription managementSupervision;
+    private AdditionalCostAndDescription otherStaff;
+    private AdditionalCostAndDescription capitalEquipment;
+    private AdditionalCostAndDescription otherCosts;
 
     public AdditionalCompanyCostForm() {
     }
 
     public AdditionalCompanyCostForm(AdditionalCompanyCostCategory costCategory) {
-        associateSalary = costCategory.getAssociateSalary().getCost();
-        managementSupervision = costCategory.getManagementSupervision().getCost();
-        otherStaff = costCategory.getOtherStaff().getCost();
-        capitalEquipment = costCategory.getCapitalEquipment().getCost();
-        otherCosts = costCategory.getOtherCosts().getCost();
+        associateSalary = new AdditionalCostAndDescription(costCategory.getAssociateSalary());
+        managementSupervision = new AdditionalCostAndDescription(costCategory.getManagementSupervision());
+        otherStaff = new AdditionalCostAndDescription(costCategory.getOtherStaff());
+        capitalEquipment = new AdditionalCostAndDescription(costCategory.getCapitalEquipment());
+        otherCosts = new AdditionalCostAndDescription(costCategory.getOtherCosts());
     }
 
-    public BigInteger getAssociateSalary() {
+    public AdditionalCostAndDescription getAssociateSalary() {
         return associateSalary;
     }
 
-    public void setAssociateSalary(BigInteger associateSalary) {
+    public void setAssociateSalary(AdditionalCostAndDescription associateSalary) {
         this.associateSalary = associateSalary;
     }
 
-    public BigInteger getManagementSupervision() {
+    public AdditionalCostAndDescription getManagementSupervision() {
         return managementSupervision;
     }
 
-    public void setManagementSupervision(BigInteger managementSupervision) {
+    public void setManagementSupervision(AdditionalCostAndDescription managementSupervision) {
         this.managementSupervision = managementSupervision;
     }
 
-    public BigInteger getOtherStaff() {
+    public AdditionalCostAndDescription getOtherStaff() {
         return otherStaff;
     }
 
-    public void setOtherStaff(BigInteger otherStaff) {
+    public void setOtherStaff(AdditionalCostAndDescription otherStaff) {
         this.otherStaff = otherStaff;
     }
 
-    public BigInteger getCapitalEquipment() {
+    public AdditionalCostAndDescription getCapitalEquipment() {
         return capitalEquipment;
     }
 
-    public void setCapitalEquipment(BigInteger capitalEquipment) {
+    public void setCapitalEquipment(AdditionalCostAndDescription capitalEquipment) {
         this.capitalEquipment = capitalEquipment;
     }
 
-    public BigInteger getOtherCosts() {
+    public AdditionalCostAndDescription getOtherCosts() {
         return otherCosts;
     }
 
-    public void setOtherCosts(BigInteger otherCosts) {
+    public void setOtherCosts(AdditionalCostAndDescription otherCosts) {
         this.otherCosts = otherCosts;
     }
 
@@ -72,10 +74,9 @@ public class AdditionalCompanyCostForm {
                 .add(zeroIfNull(otherCosts));
     }
 
-    private BigInteger zeroIfNull(BigInteger cost) {
-        if (cost == null) {
-            return BigInteger.ZERO;
-        }
-        return cost;
+    private BigInteger zeroIfNull(AdditionalCostAndDescription cost) {
+        return ofNullable(cost)
+                .map(AdditionalCostAndDescription::getCost)
+                .orElse(BigInteger.ZERO);
     }
 }

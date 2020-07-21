@@ -216,23 +216,28 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             AdditionalCompanyCostCategory costCategory = (AdditionalCompanyCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.ADDITIONAL_COMPANY_COSTS);
 
             AdditionalCompanyCost associateSalary = costCategory.getAssociateSalary();
-            associateSalary.setCost(additionalCompanyCostForm.getAssociateSalary());
+            associateSalary.setCost(additionalCompanyCostForm.getAssociateSalary().getCost());
+            associateSalary.setDescription(additionalCompanyCostForm.getAssociateSalary().getDescription());
             messages.addAll(getFinanceRowService().update(associateSalary).getSuccess());
 
             AdditionalCompanyCost managementSupervision = costCategory.getManagementSupervision();
-            managementSupervision.setCost(additionalCompanyCostForm.getManagementSupervision());
+            managementSupervision.setCost(additionalCompanyCostForm.getManagementSupervision().getCost());
+            managementSupervision.setDescription(additionalCompanyCostForm.getManagementSupervision().getDescription());
             messages.addAll(getFinanceRowService().update(managementSupervision).getSuccess());
 
             AdditionalCompanyCost otherStaff = costCategory.getOtherStaff();
-            otherStaff.setCost(additionalCompanyCostForm.getOtherStaff());
+            otherStaff.setCost(additionalCompanyCostForm.getOtherStaff().getCost());
+            otherStaff.setDescription(additionalCompanyCostForm.getOtherStaff().getDescription());
             messages.addAll(getFinanceRowService().update(otherStaff).getSuccess());
 
             AdditionalCompanyCost capitalEquipment = costCategory.getCapitalEquipment();
-            capitalEquipment.setCost(additionalCompanyCostForm.getCapitalEquipment());
+            capitalEquipment.setCost(additionalCompanyCostForm.getCapitalEquipment().getCost());
+            capitalEquipment.setDescription(additionalCompanyCostForm.getCapitalEquipment().getDescription());
             messages.addAll(getFinanceRowService().update(capitalEquipment).getSuccess());
 
             AdditionalCompanyCost otherCosts = costCategory.getOtherCosts();
-            otherCosts.setCost(additionalCompanyCostForm.getOtherCosts());
+            otherCosts.setCost(additionalCompanyCostForm.getOtherCosts().getCost());
+            otherCosts.setDescription(additionalCompanyCostForm.getOtherCosts().getDescription());
             messages.addAll(getFinanceRowService().update(otherCosts).getSuccess());
 
             return messages;
