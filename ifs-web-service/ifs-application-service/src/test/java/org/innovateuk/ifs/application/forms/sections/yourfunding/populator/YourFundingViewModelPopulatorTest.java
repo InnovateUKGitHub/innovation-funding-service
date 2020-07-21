@@ -18,6 +18,7 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -63,6 +64,9 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private OrganisationRestService organisationRestService;
 
     @Mock
     private QuestionService questionService;
