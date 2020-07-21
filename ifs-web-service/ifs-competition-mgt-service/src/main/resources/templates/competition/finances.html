@@ -61,166 +61,168 @@
                 </fieldset>
             </div>
 
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition || model.subsection.KTPCompetition}">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeGrowthTable">
-                        <h2 class="govuk-fieldset__heading">Include project growth table</h2>
-                        <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
-                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
-                        </th:block>
-                    </legend>
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input id="include-growth-table-yes"
-                                   class="govuk-radios__input"
-                                   value="true"
-                                   type="radio"
-                                   th:field="*{includeGrowthTable}"
-                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
-                                   required="required" />
-                            <label for="include-growth-table-yes"
-                                   class="govuk-label govuk-radios__label">
-                                Yes
-                            </label>
+            <th:block th:unless="${model.subsection.noFinancesCompetition}">
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('includeGrowthTable')} ? 'govuk-form-group--error'" th:unless="${model.subsection.KtpCompetition}">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeGrowthTable">
+                            <h2 class="govuk-fieldset__heading">Include project growth table</h2>
+                            <th:block th:if="${#fields.hasErrors('includeGrowthTable')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeGrowthTable')}" th:text="${err}"></span>
+                            </th:block>
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input id="include-growth-table-yes"
+                                       class="govuk-radios__input"
+                                       value="true"
+                                       type="radio"
+                                       th:field="*{includeGrowthTable}"
+                                       th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
+                                       required="required" />
+                                <label for="include-growth-table-yes"
+                                       class="govuk-label govuk-radios__label">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="include-growth-table-no"
+                                       class="govuk-radios__input"
+                                       value="false"
+                                       type="radio"
+                                       th:field="*{includeGrowthTable}"
+                                       th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
+                                       required="required" />
+                                <label for="include-growth-table-no"
+                                       class="govuk-label govuk-radios__label">
+                                    No
+                                </label>
+                            </div>
                         </div>
-                        <div class="govuk-radios__item">
-                            <input id="include-growth-table-no"
-                                   class="govuk-radios__input"
-                                   value="false"
-                                   type="radio"
-                                   th:field="*{includeGrowthTable}"
-                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeGrowthTable.required}"
-                                   required="required" />
-                            <label for="include-growth-table-no"
-                                   class="govuk-label govuk-radios__label">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <th:block th:if="${model.subsection.KtpCompetition}">
-                <input type="hidden" th:field="*{includeGrowthTable}" value="false"/>
-            </th:block>
-
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('includeJesForm')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeJesForm">
-                        <h2 class="govuk-fieldset__heading">Include Je-S form for research organisations</h2>
-                        <th:block th:if="${#fields.hasErrors('includeJesForm')}">
-                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeJesForm')}" th:text="${err}"></span>
-                        </th:block>
-                    </legend>
-                    <details class="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">When to include a Je-S form</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            For standard competitions the answer to this question is 'Yes', unless you know otherwise.
-                        </div>
-                    </details>
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input id="include-jes-form-yes"
-                                   class="govuk-radios__input"
-                                   value="true"
-                                   type="radio"
-                                   th:field="*{includeJesForm}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeJesForm.required}"/>
-                            <label for="include-jes-form-yes"
-                                   class="govuk-label govuk-radios__label">
-                                Yes
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input id="include-jes-form-no"
-                                   class="govuk-radios__input"
-                                   value="false"
-                                   type="radio"
-                                   th:field="*{includeJesForm}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeJesForm.required}"/>
-                            <label for="include-jes-form-no"
-                                   class="govuk-label govuk-radios__label">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <div class="govuk-form-group" id="include-your-organisation-section"
-                 th:classappend="${#fields.hasErrors('includeYourOrganisationSection')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeYourOrganisationSection">
-                        <h2 class="govuk-fieldset__heading">Include the 'Your organisation' section for research organisations</h2>
-                        <th:block th:if="${#fields.hasErrors('includeYourOrganisationSection')}">
-                            <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeYourOrganisationSection')}" th:text="${err}"></span>
-                        </th:block>
-                    </legend>
-                    <details class="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">When to include the 'Your organisation' section for research organisations</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            For standard competitions the answer to this question is 'No', unless you know otherwise.
-                        </div>
-                    </details>
-                    <div class="govuk-radios">
-                        <div class="govuk-radios__item">
-                            <input id="include-your-organisation-section-yes"
-                                   class="govuk-radios__input"
-                                   value="true"
-                                   type="radio"
-                                   th:field="*{includeYourOrganisationSection}"
-                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeYourOrganisationSection.required}"
-                                   required="required" />
-                            <label for="include-your-organisation-section-yes"
-                                   class="govuk-label govuk-radios__label">
-                                Yes
-                            </label>
-                        </div>
-                        <div class="govuk-radios__item">
-                            <input id="include-your-organisation-section-no"
-                                   class="govuk-radios__input"
-                                   value="false"
-                                   type="radio"
-                                   th:field="*{includeYourOrganisationSection}"
-                                   th:attr="data-required-errormessage=#{competition.setup.finances.includeYourOrganisationSection.required}"
-                                   required="required"/>
-                            <label for="include-your-organisation-section-no"
-                                   class="govuk-label govuk-radios__label">
-                                No
-                            </label>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'" th:unless="${model.subsection.noFinancesCompetition}">
-                <label class="govuk-label" for="fundingRules">
-                  Funding rules for this competition
-                </label>
-                <th:block th:if="${#fields.hasErrors('fundingRules')}">
-                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
-                </th:block>
-                <div class="textarea-wrapped ">
-                    <textarea data-editor="html"
-                            class="govuk-textarea"
-                            id="fundingRules"
-                            th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-textarea--error'"
-                            th:field="${competitionSetupForm.fundingRules}"
-                            required="required"
-                            th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
-                            ifs:utext="${competitionSetupForm.fundingRules}">
-                    </textarea>
+                    </fieldset>
                 </div>
-            </div>
+
+                <th:block th:if="${model.subsection.KtpCompetition}">
+                    <input type="hidden" th:field="*{includeGrowthTable}" value="false"/>
+                </th:block>
+
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('includeJesForm')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeJesForm">
+                            <h2 class="govuk-fieldset__heading">Include Je-S form for research organisations</h2>
+                            <th:block th:if="${#fields.hasErrors('includeJesForm')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeJesForm')}" th:text="${err}"></span>
+                            </th:block>
+                        </legend>
+                        <details class="govuk-details">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">When to include a Je-S form</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                For standard competitions the answer to this question is 'Yes', unless you know otherwise.
+                            </div>
+                        </details>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input id="include-jes-form-yes"
+                                       class="govuk-radios__input"
+                                       value="true"
+                                       type="radio"
+                                       th:field="*{includeJesForm}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{competition.setup.finances.includeJesForm.required}"/>
+                                <label for="include-jes-form-yes"
+                                       class="govuk-label govuk-radios__label">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="include-jes-form-no"
+                                       class="govuk-radios__input"
+                                       value="false"
+                                       type="radio"
+                                       th:field="*{includeJesForm}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{competition.setup.finances.includeJesForm.required}"/>
+                                <label for="include-jes-form-no"
+                                       class="govuk-label govuk-radios__label">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group" id="include-your-organisation-section"
+                     th:classappend="${#fields.hasErrors('includeYourOrganisationSection')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="includeYourOrganisationSection">
+                            <h2 class="govuk-fieldset__heading">Include the 'Your organisation' section for research organisations</h2>
+                            <th:block th:if="${#fields.hasErrors('includeYourOrganisationSection')}">
+                                <span class="govuk-error-message"  th:each="err : ${#fields.errors('includeYourOrganisationSection')}" th:text="${err}"></span>
+                            </th:block>
+                        </legend>
+                        <details class="govuk-details">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">When to include the 'Your organisation' section for research organisations</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                For standard competitions the answer to this question is 'No', unless you know otherwise.
+                            </div>
+                        </details>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input id="include-your-organisation-section-yes"
+                                       class="govuk-radios__input"
+                                       value="true"
+                                       type="radio"
+                                       th:field="*{includeYourOrganisationSection}"
+                                       th:attr="data-required-errormessage=#{competition.setup.finances.includeYourOrganisationSection.required}"
+                                       required="required" />
+                                <label for="include-your-organisation-section-yes"
+                                       class="govuk-label govuk-radios__label">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input id="include-your-organisation-section-no"
+                                       class="govuk-radios__input"
+                                       value="false"
+                                       type="radio"
+                                       th:field="*{includeYourOrganisationSection}"
+                                       th:attr="data-required-errormessage=#{competition.setup.finances.includeYourOrganisationSection.required}"
+                                       required="required"/>
+                                <label for="include-your-organisation-section-no"
+                                       class="govuk-label govuk-radios__label">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group"
+                     th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-form-group--error'">
+                    <label class="govuk-label" for="fundingRules">
+                      Funding rules for this competition
+                    </label>
+                    <th:block th:if="${#fields.hasErrors('fundingRules')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('fundingRules')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="textarea-wrapped ">
+                        <textarea data-editor="html"
+                                class="govuk-textarea"
+                                id="fundingRules"
+                                th:classappend="${#fields.hasErrors('fundingRules')} ? 'govuk-textarea--error'"
+                                th:field="${competitionSetupForm.fundingRules}"
+                                required="required"
+                                th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                                ifs:utext="${competitionSetupForm.fundingRules}">
+                        </textarea>
+                    </div>
+                </div>
+            </th:block>
             <button type="submit" class="govuk-button">Done</button>
 
         </form>
