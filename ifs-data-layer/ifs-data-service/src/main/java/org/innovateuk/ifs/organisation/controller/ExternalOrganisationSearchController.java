@@ -70,4 +70,20 @@ public class ExternalOrganisationSearchController {
 
         return RestResult.restFailure(new Error("Search for organisation failed", HttpStatus.NOT_FOUND));
     }
+
+    @GetMapping("/get-organisation/enum/}")
+    public RestResult<OrganisationSearchResult> knowledgeBase(@PathVariable("organisationType") final OrganisationTypeEnum organisationType, @PathVariable("organisationSearchId") final String organisationSearchId) {
+        switch (organisationType){
+            case BUSINESS:
+            case RTO:
+            case PUBLIC_SECTOR_OR_CHARITY:
+                return companiesHouseService.getOrganisationById(organisationSearchId).toGetResponse();
+            case RESEARCH:
+                return organisationService.getSearchOrganisation(Long.valueOf(organisationSearchId)).toGetResponse();
+            default:
+                break;
+        }
+
+        return RestResult.restFailure(new Error("Search for organisation failed", HttpStatus.NOT_FOUND));
+    }
 }

@@ -45,7 +45,8 @@
                          <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{organisationTypeId}')}" th:text="${err}"></span>
                      </th:block>
                      <div class="govuk-radios">
-                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}" th:each="type : ${model.types}">
+                         <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}"
+                              th:each="type : ${model.types}">
                             <input th:id="'radio-'+ ${type.id}" type="radio"
                                    class="govuk-radios__input"
                                    th:field="*{organisationTypeId}"
