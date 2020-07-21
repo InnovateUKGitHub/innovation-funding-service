@@ -11,25 +11,18 @@ public class YourOrganisationKtpFinancialYearForm {
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer year;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal turnover;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal preTaxProfit;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal currentAssets;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal liabilities;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal shareholderValue;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private BigDecimal loans;
 
-    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Long employees;
 
     public YourOrganisationKtpFinancialYearForm() {}

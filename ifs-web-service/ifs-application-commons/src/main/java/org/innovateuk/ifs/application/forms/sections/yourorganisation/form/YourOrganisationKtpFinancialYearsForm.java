@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.validation.constraints.LastFinancialYearEnd;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.YearMonth;
 import java.util.List;
@@ -15,6 +16,7 @@ public class YourOrganisationKtpFinancialYearsForm {
     @NotNull(message = "{validation.yourorganisation.organisation.size.required}")
     private OrganisationSize organisationSize;
 
+    @Valid
     private List<YourOrganisationKtpFinancialYearForm> years;
 
     private Long groupEmployees;

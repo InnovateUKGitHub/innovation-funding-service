@@ -185,10 +185,10 @@
 
 
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
-            <span th:if="${showHints}" class="govuk-hint">Enter your organisation's audited figures for the last 3 financial years.</span><br>
+            <span th:unless="${readOnly}" class="govuk-hint">Enter your organisation's audited figures for the last 3 financial years.</span><br>
             <input type="hidden"
                    th:each="year, iter : ${form.years}"
                    th:field="*{years[__${iter.index}__].year}" />
@@ -244,7 +244,6 @@
                             label='Number of full time employees in your corporate group (if applicable)',
                             id='groupEmployees',
                             value=${form.groupEmployees},
-                            required=true,
                             readOnly=${readOnly},
                             placeholder='0'
                             )" />
@@ -273,8 +272,6 @@
                            th:errorclass="govuk-input--error"
                            class="govuk-input"
                            placeholder="0"
-                           required="required"
-                           min="1"
                            max="9999999999999999999"
                            data-field-errormessage="This field can only accept whole numbers.">
                 </th:block>
