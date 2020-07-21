@@ -26,6 +26,7 @@
               data-th-attr="data-competition=${model.general.competition.id}"
               data-section="application"
               data-subsection="finance">
+            <input type="hidden" th:field="*{growthTableRequired}" />
             <input type="hidden" th:field="*{financesRequired}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('applicationFinanceType')}? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
