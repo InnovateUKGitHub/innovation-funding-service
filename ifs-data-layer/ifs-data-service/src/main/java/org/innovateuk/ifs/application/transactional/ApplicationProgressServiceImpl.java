@@ -67,7 +67,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
             BigDecimal totalFundingSought = applicationFinanceResource.stream()
                     .map(ApplicationFinanceResource::getTotalFundingSought)
                     .reduce(BigDecimal::add)
-                    .get();
+                    .orElse(BigDecimal.ZERO);
 
             Competition competition = application.getCompetition();
 
