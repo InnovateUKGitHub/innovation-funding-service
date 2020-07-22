@@ -2514,10 +2514,6 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal}">Please note that legal or project audit and accountancy fees are not eligible and
-                    should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
-                    limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
-                    within any other cost headings.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-support-table">
                         <thead class="govuk-table__head">
@@ -2593,8 +2589,7 @@
                 th:field="*{__${path}__.description}"
                 th:errorclass="govuk-input--error"
                 maxlength="255"
-                required="required">
-                            </input>
+                required="required" />
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
