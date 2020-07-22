@@ -70,12 +70,21 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
                     .get();
 
             Competition competition = application.getCompetition();
+
 //tidy this
             return progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
-                    && totalFundingSought.compareTo(competition.getCompetitionApplicationConfig().getMaximumFundingSought()) <= 0
+                    && isFundingSoughtValid(competition, totalFundingSought)
                     && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
         }).getSuccess();
     }
+
+    private boolean isFundingSoughtValid(Competition competition, BigDecimal totalFundingSought) {
+        if (competition.getCompetitionApplicationConfig().getMaximumFundingSought() != null) {
+            return totalFundingSought.compareTo(competition.getCompetitionApplicationConfig().getMaximumFundingSought()) <= 0;
+        }
+        return true;
+    }
+
 
     private BigDecimal calculateApplicationProgress(Application application) {
         long competitionId = application.getCompetition().getId();

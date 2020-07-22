@@ -11,7 +11,7 @@ public class CompetitionApplicationConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "competitionOrganisationConfig",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "competitionApplicationConfig",fetch = FetchType.LAZY)
     private Competition competition;
 
     @Column
