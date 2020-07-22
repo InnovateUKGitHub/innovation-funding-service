@@ -32,8 +32,8 @@ public class AbstractFinanceServiceTest extends BaseServiceUnitTest<AbstractFina
     protected AbstractFinanceService supplyServiceUnderTest() {
         return new AbstractFinanceService() {
             @Override
-            protected void updateFinanceDetails(Finance finance, BaseFinanceResource financeResource) {
-                super.updateFinanceDetails(finance, financeResource);
+            protected void updateFinancialYearData(Finance finance, BaseFinanceResource financeResource) {
+                super.updateFinancialYearData(finance, financeResource);
             }
         };
     }
@@ -58,7 +58,7 @@ public class AbstractFinanceServiceTest extends BaseServiceUnitTest<AbstractFina
         employeesAndTurnoverResource.setEmployees(expectedEmployees);
         when(financeResource.getFinancialYearAccounts()).thenReturn(employeesAndTurnoverResource);
 
-        service.updateFinanceDetails(finance, financeResource);
+        service.updateFinancialYearData(finance, financeResource);
 
         assertEquals(expectedEmployees, employeesAndTurnover.getEmployees());
         assertEquals(expectedTurnover, employeesAndTurnover.getTurnover());
@@ -87,7 +87,7 @@ public class AbstractFinanceServiceTest extends BaseServiceUnitTest<AbstractFina
         growthTableResource.setEmployees(expectedEmployees);
         when(financeResource.getFinancialYearAccounts()).thenReturn(growthTableResource);
 
-        service.updateFinanceDetails(finance, financeResource);
+        service.updateFinancialYearData(finance, financeResource);
 
         assertEquals(expectedAnnualExport, growthTable.getAnnualExport());
         assertEquals(expectedAnnualProfits, growthTable.getAnnualProfits());
@@ -124,7 +124,7 @@ public class AbstractFinanceServiceTest extends BaseServiceUnitTest<AbstractFina
 
         when(financeResource.getFinancialYearAccounts()).thenReturn(ktpYearsResource);
 
-        service.updateFinanceDetails(finance, financeResource);
+        service.updateFinancialYearData(finance, financeResource);
 
         assertEquals(ktpYearsResource.getGroupEmployees(), ktpFinancialYears.getGroupEmployees());
         assertEquals(ktpYearsResource.getFinancialYearEnd(), ktpFinancialYears.getFinancialYearEnd());

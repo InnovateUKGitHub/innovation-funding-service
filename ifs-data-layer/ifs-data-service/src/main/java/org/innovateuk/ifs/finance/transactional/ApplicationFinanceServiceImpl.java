@@ -4,10 +4,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
-import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
@@ -30,8 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.COLLABORATIVE;
@@ -127,22 +124,8 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             return getOpenApplication(applicationId).andOnSuccess(application ->
                     find(organisation(organisationId)).andOnSuccess(organisation -> {
                         ApplicationFinance applicationFinance = applicationFinanceRepository.save(new ApplicationFinance(application, organisation));
-                        if (application.getCompetition().getFundingType() == FundingType.KTP) {
-                            KtpFinancialYears ktpFinancialYears = new KtpFinancialYears();
-                            ktpFinancialYears.setYears(newArrayList(
-                                    new KtpFinancialYear(0, ktpFinancialYears),
-                                    new KtpFinancialYear(1, ktpFinancialYears),
-                                    new KtpFinancialYear(2, ktpFinancialYears)
-                            ));
-                            applicationFinance.setKtpFinancialYears(ktpFinancialYears);
-                            ktpFinancialYearsRepository.save(ktpFinancialYears);
-                        } else if (TRUE.equals(application.getCompetition().getIncludeProjectGrowthTable())) {
-                            applicationFinance.setGrowthTable(new GrowthTable());
-                            growthTableRepository.save(applicationFinance.getGrowthTable());
-                        } else {
-                            applicationFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
-                            employeesAndTurnoverRepository.save(applicationFinance.getEmployeesAndTurnover());
-                        }
+                        initialiseFinancialYearData(applicationFinance);
+
                         initialize(applicationFinance);
                         return serviceSuccess(applicationFinanceMapper.mapToResource(applicationFinance));
                     })
@@ -164,7 +147,7 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     public ServiceResult<ApplicationFinanceResource> updateApplicationFinance(long applicationFinanceId, ApplicationFinanceResource applicationFinance) {
         return getOpenApplication(applicationFinance.getApplication()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                    updateFinanceDetails(dbFinance, applicationFinance);
+                    updateFinancialYearData(dbFinance, applicationFinance);
                     if (applicationFinance.getWorkPostcode() != null) {
                         dbFinance.setWorkPostcode(applicationFinance.getWorkPostcode());
                     }

@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
-import org.innovateuk.ifs.finance.repository.*;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
@@ -21,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -30,12 +29,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFinance, ProjectFinanceResource> implements ProjectFinanceService {
-
-    @Autowired
-    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
-
-    @Autowired
-    private GrowthTableRepository growthTableRepository;
 
     @Autowired
     private ProjectFinanceHandler projectFinanceHandler;
@@ -48,9 +41,6 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private KtpFinancialYearsRepository ktpFinancialYearsRepository;
 
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId) {
@@ -65,25 +55,9 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     public ServiceResult<Void> createProjectFinance(long projectId, long organisationId) {
         return find(project(projectId), organisation(organisationId)).andOnSuccessReturnVoid((project, organisation) -> {
             ProjectFinance projectFinance = projectFinanceRepository.save(new ProjectFinance(project, organisation));
-            //TODO Abstract this.
-            if (projectFinance.getCompetition().getFundingType() == FundingType.KTP) {
-                KtpFinancialYears ktpFinancialYears = new KtpFinancialYears();
-                ktpFinancialYears.setYears(newArrayList(
-                        new KtpFinancialYear(0, ktpFinancialYears),
-                        new KtpFinancialYear(1, ktpFinancialYears),
-                        new KtpFinancialYear(2, ktpFinancialYears)
-                ));
-                projectFinance.setKtpFinancialYears(ktpFinancialYears);
-                ktpFinancialYearsRepository.save(ktpFinancialYears);
-            } else if (TRUE.equals(projectFinance.getCompetition().getIncludeProjectGrowthTable())) {
-                projectFinance.setGrowthTable(new GrowthTable());
-                growthTableRepository.save(projectFinance.getGrowthTable());
-            } else {
-                projectFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
-                employeesAndTurnoverRepository.save(projectFinance.getEmployeesAndTurnover());
-            }
-            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
+            initialiseFinancialYearData(projectFinance);
 
+            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
             for (FinanceRowType costType : projectFinance.getCompetition().getFinanceRowTypes()) {
                 organisationFinanceHandler.initialiseCostType(projectFinance, costType);
             }
@@ -94,7 +68,7 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     public ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
         long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
-            updateFinanceDetails(dbFinance, projectFinanceResource);
+            updateFinancialYearData(dbFinance, projectFinanceResource);
             return serviceSuccess();
         });
     }

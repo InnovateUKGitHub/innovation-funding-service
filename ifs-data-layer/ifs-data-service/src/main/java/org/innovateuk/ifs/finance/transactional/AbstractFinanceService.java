@@ -3,17 +3,49 @@ package org.innovateuk.ifs.finance.transactional;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
+import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
+import org.innovateuk.ifs.finance.repository.KtpFinancialYearsRepository;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
 import org.innovateuk.ifs.finance.resource.KtpYearsResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 
 public abstract class AbstractFinanceService<D extends Finance, F extends BaseFinanceResource> extends BaseTransactionalService {
+    @Autowired
+    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
 
-    protected void updateFinanceDetails(D dbFinance, F financeResource) {
+    @Autowired
+    private GrowthTableRepository growthTableRepository;
+
+    @Autowired
+    private KtpFinancialYearsRepository ktpFinancialYearsRepository;
+
+    protected void initialiseFinancialYearData(D finance) {
+        if (finance.getCompetition().getFundingType() == FundingType.KTP) {
+            KtpFinancialYears ktpFinancialYears = new KtpFinancialYears();
+            ktpFinancialYears.setYears(newArrayList(
+                    new KtpFinancialYear(0, ktpFinancialYears),
+                    new KtpFinancialYear(1, ktpFinancialYears),
+                    new KtpFinancialYear(2, ktpFinancialYears)
+            ));
+            finance.setKtpFinancialYears(ktpFinancialYears);
+            ktpFinancialYearsRepository.save(ktpFinancialYears);
+        } else if (TRUE.equals(finance.getCompetition().getIncludeProjectGrowthTable())) {
+            finance.setGrowthTable(new GrowthTable());
+            growthTableRepository.save(finance.getGrowthTable());
+        } else {
+            finance.setEmployeesAndTurnover(new EmployeesAndTurnover());
+            employeesAndTurnoverRepository.save(finance.getEmployeesAndTurnover());
+        }
+    }
+
+    protected void updateFinancialYearData(D dbFinance, F financeResource) {
         if (financeResource.getOrganisationSize() != null) {
             dbFinance.setOrganisationSize(financeResource.getOrganisationSize());
         }
