@@ -15,6 +15,7 @@ import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -135,14 +136,14 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
 
-        assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
-        assertEquals(viewModel.getApplicationName(), "Name");
-        assertEquals(viewModel.getCompetitionId(), competition.getId().longValue());
-        assertEquals(viewModel.getMaximumFundingLevel().intValue(), 60);
-        assertEquals(viewModel.getYourOrganisationSectionId(), yourOrgSection.getId().longValue());
-        assertEquals(viewModel.getResearchCategoryQuestionId(), researchCategoryQuestion.getId());
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals("Name", viewModel.getApplicationName());
+        assertEquals(competition.getId().longValue(), viewModel.getCompetitionId());
+        assertEquals(60, viewModel.getMaximumFundingLevel().intValue());
+        assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
+        assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(viewModel.getFinancesUrl(), format("/application/%d/form/FINANCE", APPLICATION_ID));
+        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
     }
 
@@ -151,7 +152,7 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         long organisationId = 3L;
         long competitionId = 4L;
         CompetitionResource competition = newCompetitionResource().build();
-
+        OrganisationResource organisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID)
                 .withName("name")
@@ -160,14 +161,16 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
+        when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
+
         YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, organisationId, newUserResource().withRoleGlobal(Role.COMP_ADMIN).build());
 
-        assertEquals(viewModel.getApplicationId(), APPLICATION_ID);
-        assertEquals(viewModel.getCompetitionId(), competitionId);
-        assertEquals(viewModel.getApplicationName(),"name");
-
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals("name", viewModel.getApplicationName());
+        assertEquals(OrganisationTypeEnum.BUSINESS, viewModel.getOrganisationType());
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
-        assertEquals(viewModel.getFinancesUrl(), format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId));
+        assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
     }
 }
