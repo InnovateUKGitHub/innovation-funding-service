@@ -5,6 +5,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7148  Replace maximum funding level drop down menu with free type field in comp setup
 ...
+...            IFS-7812  KTP Finance Overview - Your Organisation Section
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -20,7 +22,7 @@ ${KTPapplicationTitle}  KTP Application
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  yes  1  true  single
+    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -42,9 +44,16 @@ Applicant applies to newly created KTP competition
     Then logged in user applies to competition               ${KTPcompetitionTitle}  1
 
 Applicant is able to complete and submit an application
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
     Given the user completes the application
-    Then the applicant submits the application
+
+Applicant invites a partner
+    [Documentation]  IFS-7812
+    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${KTPcompetitionTitle}  ${KTPapplicationTitle}  yes
+
+The applicant submits the application
+     [Documentation]  IFS-7812
+     Given the applicant submits the application
 
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -170,7 +179,7 @@ The user completes the application
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${KTPapplicationTitle}
-    the user marks the finances as complete                  ${KTPapplicationTitle}   Calculate  52,214  yes
+    the user marks the KTP finances as complete              ${KTPapplicationTitle}   Calculate  52,214
     the user accept the competition terms and conditions     Return to application overview
 
 The user completes the research category
