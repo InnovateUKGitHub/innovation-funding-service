@@ -192,6 +192,7 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
+    Run Keyword If  '${competition}' == '${ktpCompetitionName}'  the user fills in the Finances questions without growth table    false  true
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition details
@@ -306,6 +307,18 @@ the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
     the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
+    the user selects the radio button     applicationFinanceType  STANDARD
+    the user selects the radio button     includeYourOrganisationSection  ${organisation}
+    the user selects the radio button     includeJesForm  ${jes}
+    the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
+    the user clicks the button/link       jQuery = button:contains('Done')
+    the user clicks the button/link       link = Finances
+    the user clicks the button/link       link = Application
+    the user should see the element       jQuery = li:contains("Finances") .task-status-complete
+
+the user fills in the Finances questions without growth table
+    [Arguments]  ${jes}  ${organisation}
+    the user clicks the button/link       link = Finances
     the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}
