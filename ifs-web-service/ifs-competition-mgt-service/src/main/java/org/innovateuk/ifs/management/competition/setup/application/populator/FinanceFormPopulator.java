@@ -49,7 +49,7 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
                 .getByCompetitionId(competitionResource.getId()).getSuccess();
 
         competitionSetupForm.setApplicationFinanceType(competitionSetupFinanceResource.getApplicationFinanceType());
-        competitionSetupForm.setIncludeGrowthTable(competitionSetupFinanceResource.getIncludeGrowthTable());
+        competitionSetupForm.setIncludeGrowthTable(competitionResource.isKtp() ? Boolean.FALSE : competitionSetupFinanceResource.getIncludeGrowthTable());
         competitionSetupForm.setIncludeYourOrganisationSection(competitionSetupFinanceResource.getIncludeYourOrganisationSection());
         competitionSetupForm.setIncludeJesForm(competitionSetupFinanceResource.getIncludeJesForm());
 
