@@ -7,6 +7,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 
 public abstract class FinanceRowHandler<T extends FinanceRowItem> {
 
@@ -56,5 +59,9 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
 
     protected List<T> intialiseCosts(Finance finance) {
         return emptyList();
+    }
+
+    protected BigInteger bigIntegerOrNull(BigDecimal cost) {
+        return ofNullable(cost).map(BigDecimal::toBigInteger).orElse(null);
     }
 }

@@ -33,7 +33,7 @@ public class ConsumableHandler extends FinanceRowHandler<Consumable> {
 
     @Override
     public Consumable toResource(FinanceRow cost) {
-        return new Consumable(cost.getId(), cost.getItem(), cost.getCost().toBigInteger(), cost.getQuantity(), cost.getTarget().getId());
+        return new Consumable(cost.getId(), cost.getItem(), bigIntegerOrNull(cost.getCost()), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override

@@ -30,7 +30,7 @@ public class KnowledgeBaseCostHandler extends FinanceRowHandler<KnowledgeBaseCos
 
     @Override
     public KnowledgeBaseCost toResource(FinanceRow cost) {
-        return new KnowledgeBaseCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getCost().toBigInteger());
+        return new KnowledgeBaseCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), bigIntegerOrNull(cost.getCost()));
     }
 
     @Override

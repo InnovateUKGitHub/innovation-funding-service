@@ -57,7 +57,7 @@ public class EstateCost extends AbstractFinanceRowItem {
 
     @Override
     public BigDecimal getTotal() {
-        return new BigDecimal(cost);
+        return bigDecimalOrNull(cost);
     }
 
     @Override

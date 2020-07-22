@@ -83,7 +83,7 @@ public class AdditionalCompanyCost extends AbstractFinanceRowItem {
 
     @Override
     public BigDecimal getTotal() {
-        return ofNullable(cost).map(BigDecimal::new).orElse(null);
+        return bigDecimalOrNull(cost);
     }
 
     @Override

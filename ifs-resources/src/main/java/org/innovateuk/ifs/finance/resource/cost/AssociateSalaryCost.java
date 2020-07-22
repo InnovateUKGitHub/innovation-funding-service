@@ -3,8 +3,6 @@ package org.innovateuk.ifs.finance.resource.cost;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static java.util.Optional.ofNullable;
-
 
 /**
  * {@code AssociateSalaryCost} implements {@link FinanceRowItem}
@@ -70,7 +68,7 @@ public class AssociateSalaryCost extends AbstractFinanceRowItem {
 
     @Override
     public BigDecimal getTotal() {
-        return ofNullable(cost).map(BigDecimal::new).orElse(null);
+        return bigDecimalOrNull(cost);
     }
 
     @Override

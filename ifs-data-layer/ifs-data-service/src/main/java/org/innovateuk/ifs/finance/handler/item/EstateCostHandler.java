@@ -30,7 +30,7 @@ public class EstateCostHandler extends FinanceRowHandler<EstateCost> {
 
     @Override
     public EstateCost toResource(FinanceRow cost) {
-        return new EstateCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getCost().toBigInteger());
+        return new EstateCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), bigIntegerOrNull(cost.getCost()));
     }
 
     @Override

@@ -9,13 +9,11 @@ import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost.Additional
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.ADDITIONAL_COMPANY_COSTS;
 
 /**
@@ -37,7 +35,7 @@ public class AdditionalCompanyCostHandler extends FinanceRowHandler<AdditionalCo
 
     @Override
     public AdditionalCompanyCost toResource(FinanceRow cost) {
-        return new AdditionalCompanyCost(cost.getTarget().getId(), cost.getId(), AdditionalCompanyCostType.valueOf(cost.getName()), cost.getDescription(), ofNullable(cost.getCost()).map(BigDecimal::toBigInteger).orElse(null));
+        return new AdditionalCompanyCost(cost.getTarget().getId(), cost.getId(), AdditionalCompanyCostType.valueOf(cost.getName()), cost.getDescription(), bigIntegerOrNull(cost.getCost()));
     }
 
     @Override

@@ -30,7 +30,7 @@ public class AssociateSupportCostHandler extends FinanceRowHandler<AssociateSupp
 
     @Override
     public AssociateSupportCost toResource(FinanceRow cost) {
-        return new AssociateSupportCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getCost().toBigInteger());
+        return new AssociateSupportCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), bigIntegerOrNull(cost.getCost()));
     }
 
     @Override

@@ -30,8 +30,9 @@ public class AssociateDevelopmentCostHandler extends FinanceRowHandler<Associate
 
     @Override
     public AssociateDevelopmentCost toResource(FinanceRow cost) {
-        return new AssociateDevelopmentCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getQuantity(), cost.getCost().toBigInteger());
+        return new AssociateDevelopmentCost(cost.getTarget().getId(), cost.getId(), cost.getDescription(), cost.getQuantity(), bigIntegerOrNull(cost.getCost()));
     }
+
 
     @Override
     public Optional<FinanceRowType> getFinanceRowType() {
