@@ -70,11 +70,11 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(long applicationId, long organisationId) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if (finance == null) {
+        Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (!finance.isPresent()) {
             return createApplicationFinance(applicationId, organisationId);
         }
-        return serviceSuccess(applicationFinanceMapper.mapToResource(finance));
+        return serviceSuccess(applicationFinanceMapper.mapToResource(finance.get()));
     }
 
     @Override
@@ -106,8 +106,8 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> financeDetails(long applicationId, long organisationId) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if (finance == null) {
+        Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (!finance.isPresent()) {
             ServiceResult<ApplicationFinanceResource> result = createApplicationFinance(applicationId, organisationId);
             if (result.isFailure()) {
                 return result;
