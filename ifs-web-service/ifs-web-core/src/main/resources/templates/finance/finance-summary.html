@@ -5,7 +5,7 @@
     <th:block th:fragment="application-finances-summary(summary)">
         <th:block th:unless="${summary.readOnly}">
 
-            <th:block th:unless="${summary.allFinancesComplete}">
+            <th:block th:if="${summary.showFinancesIncompleteWarning()}">
                 <div th:if="${summary.collaborativeProject}" class="warning-alert">
                     <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not marked their finances as complete:</h2>
                     <ul class="govuk-list govuk-list--bullet">

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -55,25 +58,22 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     @Override
     @Transactional(readOnly = true)
     public boolean applicationReadyForSubmit(final long id) {
-        return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
+        return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccessReturn(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);
+            BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
+            List<ApplicationFinanceResource> applicationFinanceResource = applicationFinanceHandler.getApplicationTotals(id);
 
-            return sectionStatusService.sectionsCompleteForAllOrganisations(id)
-                    .andOnSuccessReturn(allSectionsComplete -> {
-                        Competition competition = application.getCompetition();
-                        BigDecimal researchParticipation =
-                                applicationFinanceHandler.getResearchParticipationPercentage(id);
+//            is there a better way to do this
+            BigDecimal totalFundingSought = applicationFinanceResource.stream()
+                    .map(ApplicationFinanceResource::getTotalFundingSought)
+                    .reduce(BigDecimal::add)
+                    .get();
 
-                        boolean readyForSubmit = false;
-
-                        if (allSectionsComplete
-                                && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
-                                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
-                            readyForSubmit = true;
-                        }
-
-                        return readyForSubmit;
-                    });
+            Competition competition = application.getCompetition();
+//tidy this
+            return progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+                    && totalFundingSought.compareTo(competition.getCompetitionApplicationConfig().getMaximumFundingSought()) <= 0
+                    && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
         }).getSuccess();
     }
 

@@ -31,7 +31,7 @@ public class AbstractYourFundingFormValidator {
             validateYourFundingPercentageForm((YourFundingPercentageForm) form, errors, financeSupplier);
         }
         if (form instanceof YourFundingAmountForm) {
-            validateYourFundingAmountForm((YourFundingAmountForm) form, errors);
+            validateYourFundingAmountForm((YourFundingAmountForm) form, errors, financeSupplier);
         }
 
         ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
@@ -89,11 +89,16 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors) {
+    private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier) {
         ValidationUtils.rejectIfEmpty(errors, "amount", "validation.finance.funding.sought.required");
-        if (form.getAmount() != null ) {
+        if (form.getAmount() != null) {
             if (form.getAmount().compareTo(BigDecimal.ONE) < 0) {
                 errors.rejectValue("amount", "validation.finance.funding.sought.min");
+            }
+            if (financeSupplier.get().getMaximumFundingAmount() != null) {
+                if (form.getAmount().compareTo(financeSupplier.get().getMaximumFundingAmount()) > 0) {
+                    errors.rejectValue("amount", "validation.finance.funding.sought.min");
+                }
             }
         }
     }
@@ -116,6 +121,10 @@ public class AbstractYourFundingFormValidator {
                         errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
                     }
                     if (finance.getMaximumFundingAmount() != null) {
+//                        get from resource
+//                        not just single applicants
+//                        actually make it work
+//                        remove other banner
                         if (finance.getTotalFundingSought().compareTo(finance.getMaximumFundingAmount()) > 0) {
                             errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.more.than.funding.amount", new String[]{String.valueOf(finance.getMaximumFundingAmount())}, "");
                         }
