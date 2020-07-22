@@ -1,15 +1,17 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.populator.OrganisationCreationSelectTypePopulator;
-import org.innovateuk.ifs.registration.service.RegistrationCookieService;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
+import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import static java.lang.String.valueOf;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,6 +44,8 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
     private CompetitionRestService competitionRestService;
     @Mock
     private CompetitionOrganisationConfigRestService competitionOrganisationConfigRestService;
+    @Mock
+    private InviteRestService inviteRestService;
 
     protected OrganisationCreationTypeController supplyControllerUnderTest() {
         return new OrganisationCreationTypeController();
@@ -56,12 +61,18 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
         competitionOrganisationConfigResource.setInternationalOrganisationsAllowed(true);
         competitionOrganisationConfigResource.setInternationalLeadOrganisationAllowed(true);
 
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationInviteResource applicationInviteResource = newApplicationInviteResource().withCompetitionId(1L).build();
+
         when(registrationCookieService.getCompetitionIdCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of(1L));
         when(registrationCookieService.getOrganisationTypeCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
         when(registrationCookieService.isLeadJourney(any(HttpServletRequest.class))).thenReturn(false);
         when(competitionRestService.getCompetitionOrganisationType(1L)).thenReturn(restSuccess(newOrganisationTypeResource().withId(1L, 3L).build(2)));
         when(organisationCreationSelectTypePopulator.populate(request, newCompetitionResource().build())).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4), false));
-        when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(competitionOrganisationConfigResource));
+        when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(restSuccess(competitionOrganisationConfigResource));
+        when(competitionRestService.getPublishedCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
+        when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.of("hash"));
+        when(inviteRestService.getInviteByHash("hash")).thenReturn(restSuccess(applicationInviteResource));
     }
 
     @Test

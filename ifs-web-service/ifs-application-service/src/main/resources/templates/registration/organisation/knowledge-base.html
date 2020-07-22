@@ -22,7 +22,6 @@
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a knowledge base organisation',subTitle=${subtitle},size='govuk-heading-xl'" />
-        
         <p class="govuk-body">Only a knowledge base organisation can lead this competition.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
