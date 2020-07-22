@@ -1,25 +1,18 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
-import org.innovateuk.ifs.finance.domain.GrowthTable;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
-import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.project.core.domain.Project;
-import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
-import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -55,6 +49,8 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private KtpFinancialYearsRepository ktpFinancialYearsRepository;
 
     @Override
     public ServiceResult<ProjectFinanceResource> financeChecksDetails(long projectId, long organisationId) {
@@ -69,7 +65,17 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     public ServiceResult<Void> createProjectFinance(long projectId, long organisationId) {
         return find(project(projectId), organisation(organisationId)).andOnSuccessReturnVoid((project, organisation) -> {
             ProjectFinance projectFinance = projectFinanceRepository.save(new ProjectFinance(project, organisation));
-            if (TRUE.equals(projectFinance.getCompetition().getIncludeProjectGrowthTable())) {
+            //TODO Abstract this.
+            if (projectFinance.getCompetition().getFundingType() == FundingType.KTP) {
+                KtpFinancialYears ktpFinancialYears = new KtpFinancialYears();
+                ktpFinancialYears.setYears(newArrayList(
+                        new KtpFinancialYear(0, ktpFinancialYears),
+                        new KtpFinancialYear(1, ktpFinancialYears),
+                        new KtpFinancialYear(2, ktpFinancialYears)
+                ));
+                projectFinance.setKtpFinancialYears(ktpFinancialYears);
+                ktpFinancialYearsRepository.save(ktpFinancialYears);
+            } else if (TRUE.equals(projectFinance.getCompetition().getIncludeProjectGrowthTable())) {
                 projectFinance.setGrowthTable(new GrowthTable());
                 growthTableRepository.save(projectFinance.getGrowthTable());
             } else {
