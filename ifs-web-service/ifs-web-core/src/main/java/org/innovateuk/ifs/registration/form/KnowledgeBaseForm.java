@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.registration.form;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class KnowledgeBaseForm {
 
-    @NotNull
+    @NotBlank(message = "{validation.standard.organisation.required}")
     private String knowledgeBase;
 
     public String getKnowledgeBase() {

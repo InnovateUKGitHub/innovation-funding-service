@@ -13,44 +13,47 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/international-organisation',currentApplication=${currentApplication},dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a knowledge base organisation',subTitle=${subtitle},size='govuk-heading-xl'" />
-
-        <div th:if="${#fields.hasErrors('${form.*}')}"
-             class="govuk-error-summary"
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
              role="alert"
-             aria-labelledby="error-summary-heading"
-             tabindex="-1">
-            <h2 class="govuk-error-summary__title"
-                id="error-summary-heading">
-                We were unable to save your changes.
-            </h2>
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
-
-        <p class="govuk-body">Only a knowledge base organisation can lead this application.</p>
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Select a knowledge base organisation',subTitle=${subtitle},size='govuk-heading-xl'" />
+        
+        <p class="govuk-body">Only a knowledge base organisation can lead this competition.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"
-              th:object="${form}">
-            <div class="govuk-form-group">
-                <label class="govuk-label" for="userId">
+              th:object="${form}"
+              novalidate="novalidate">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{knowledgeBase}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label  govuk-label--s" for="knowledgeBase">
                     Find your organisation
                 </label>
-                <p class="govuk-hint">Select your knowledge base organisation.</p>
-                <select id="userId"
-                        class="govuk-select"
-                        th:field="*{knowledgeBase}"
-                        data-auto-complete="">
-                    <option value="">Select Monitoring Officer</option>
-                    <option th:each="knowledgeBase : ${knowledgeBases}"
-                            th:value="${knowledgeBase}"
-                            th:text="${knowledgeBase}"></option>
-                </select>
+                <span class="govuk-hint">Select your knowledge base organisation.</span>
+                <th:block th:if="${#fields.hasErrors('*{knowledgeBase}')}">
+                    <span class="govuk-error-message"  th:each="err : ${#fields.errors('*{knowledgeBase}')}" th:text="${err}"></span>
+                </th:block>
+                <div class="govuk-input--width-30">
+                    <select class="govuk-select"
+                            id="knowledgeBase"
+                            th:field="*{knowledgeBase}"
+                            data-auto-complete=""
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.standard.organisation.required}">
+                        <option value="">Knowledge base organisation</option>
+                        <option th:each="knowledgeBase : ${knowledgeBases}"
+                                th:value="${knowledgeBase}"
+                                th:text="${knowledgeBase}"></option>
+                    </select>
+                </div>
             </div>
             <div class="govuk-form-group">
                 <button type="submit"
-                        class="govuk-button"
-                        data-auto-complete-submit="">Save and continue</button>
+                        class="govuk-button">Save and continue</button>
             </div>
         </form>
 

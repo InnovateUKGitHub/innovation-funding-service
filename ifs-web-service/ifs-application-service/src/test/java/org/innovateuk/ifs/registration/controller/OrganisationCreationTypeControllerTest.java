@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static java.lang.String.valueOf;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,7 +60,7 @@ public class OrganisationCreationTypeControllerTest extends BaseControllerMockMV
         when(registrationCookieService.getOrganisationTypeCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
         when(registrationCookieService.isLeadJourney(any(HttpServletRequest.class))).thenReturn(false);
         when(competitionRestService.getCompetitionOrganisationType(1L)).thenReturn(restSuccess(newOrganisationTypeResource().withId(1L, 3L).build(2)));
-        when(organisationCreationSelectTypePopulator.populate(request)).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4), false));
+        when(organisationCreationSelectTypePopulator.populate(request, newCompetitionResource().build())).thenReturn(new OrganisationCreationSelectTypeViewModel(newOrganisationTypeResource().build(4), false));
         when(competitionOrganisationConfigRestService.findByCompetitionId(1L)).thenReturn(RestResult.restSuccess(competitionOrganisationConfigResource));
     }
 
