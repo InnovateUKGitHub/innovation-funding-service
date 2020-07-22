@@ -2153,7 +2153,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-7">
-                    Associate salary costs
+                    Associate employment
                 </span>
                 <span class="finance-total" data-mirror="#section-total-associate-salary-costs"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2327,7 +2327,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Associate development costs
+                    Associate development
                 </span>
                 <span class="finance-total" data-mirror="#section-total-associate-development-costs"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2497,7 +2497,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Associate support costs
+                    Additional associate support
                 </span>
                 <span class="finance-total" data-mirror="#section-total-associate-support"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2547,7 +2547,7 @@
                     </p>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total associate support costs
+                    Total additional associate support costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-associate-support"
                           th:text="'£' + ${#numbers.formatInteger(form.totalAssociateSupportCosts, 0,'DEFAULT')}"></span>
@@ -2649,7 +2649,7 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">Total associate support costs</th>
+                <th class="govuk-table__header" scope="row">Total additional associate support costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-associate-support"
                     th:attr="data-calculation-rawvalue=${form.totalAssociateSupportCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalAssociateSupportCosts, 0, 'DEFAULT')}"/>
@@ -2722,7 +2722,7 @@
                     </p>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total estate costs
+                    Total estates costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-estate-costs"
                           th:text="'£' + ${#numbers.formatInteger(form.totalEstateCosts, 0,'DEFAULT')}"></span>
@@ -2799,13 +2799,10 @@
         <table class="govuk-table" id="estate-costs-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th id="estate-costs-description" class="govuk-table__header" scope="col">Description and
-                    justification
-                    of the cost
+                <th id="estate-costs-description" class="govuk-table__header" scope="col">Description
                 </th>
                 <th id="estate-costs-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                    Estimated
-                    cost (&pound;)
+                    Cost (&pound;)
                 </th>
             </tr>
             </thead>
@@ -2824,7 +2821,7 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">Total estate costs costs</th>
+                <th class="govuk-table__header" scope="row">Total estates costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-estate-costs"
                     th:attr="data-calculation-rawvalue=${form.totalEstateCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalEstateCosts, 0, 'DEFAULT')}"/>
@@ -3076,7 +3073,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Knowledge base supervisor
+                    Knowledge base superviser
                 </span>
                 <span class="finance-total" data-mirror="#section-total-knowledge-base"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -3254,7 +3251,7 @@
             <div class="govuk-accordion__section-header">
                 <h3 class="govuk-accordion__section-heading">
                     <span class="govuk-accordion__section-button" id="accordion-finances-heading-additional-company-costs">
-                        Additional company costs
+                        Additional company cost estimation
                     </span>
                     <span class="finance-total" data-mirror="#additional-company-costs-total"></span>
                 </h3>
@@ -3279,7 +3276,7 @@
                       label='Other costs')"/>
                 </dl>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total additional company costs
+                    Total additional company cost estimations
                     <span class="govuk-heading-s"
                           data-mirror="#additional-company-costs-total"
                           th:text="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"></span>
