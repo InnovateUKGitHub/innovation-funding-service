@@ -231,6 +231,14 @@
                 </div>
             </th:block>
 
+            <th:block th:if="${model.general.competition.isKtp()}">
+                <tr th:each="leadApplicantType : ${model.leadApplicantTypes}">
+                    <td>
+                        <input type="hidden" th:id="${'lead-applicant-type-' + leadApplicantType.id}" name="leadApplicantTypes" th:value="${leadApplicantType.id}" />
+                    </td>
+                </tr>
+            </th:block>
+
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'govuk-form-group--error'"
                  th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
