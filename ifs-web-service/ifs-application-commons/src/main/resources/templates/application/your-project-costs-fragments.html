@@ -2174,7 +2174,7 @@
                     <table class="govuk-table" id="associate-salary-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="associate-salary-description" scope="col">
+                            <th class="govuk-table__header govuk-!-width-three-quarters" id="associate-salary-description" scope="col">
                                 Associate</th>
                             <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
                                 Duration of employment (months)
@@ -2193,7 +2193,7 @@
                     </table>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total associate salary costs
+                    Total associate employment costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-associate-salary-costs"
                           th:text="'£' + ${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0,'DEFAULT')}"></span>
@@ -2216,20 +2216,10 @@
         th:attr="data-repeatable-row=${path}"
         th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.role">
-                <span class="govuk-visually-hidden">Associate</span>
-            </label>
-            <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
-            <input
-                class="govuk-input"
-                th:id="__${path}__.role"
-                th:field="*{__${path}__.role}"
-                maxlength="255"
-                readonly="readonly" />
+        <input type="hidden" th:field="*{__${path}__.role}" />
+        <td class="govuk-table__cell">
+            <span th:text="${row.role}"></span>
             <span th:if="${index != 0}" class="govuk-hint">(Optional)</span>
-
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.duration">
@@ -2302,7 +2292,7 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" colspan="2" scope="row">Total associate salary costs</th>
+                <th class="govuk-table__header" colspan="2" scope="row">Total associate employment costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-associate-salary-costs"
                     th:attr="data-calculation-rawvalue=${form.totalAssociateSalaryCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalAssociateSalaryCosts, 0, 'DEFAULT')}"/>
@@ -2348,7 +2338,7 @@
                     <table class="govuk-table" id="associate-development-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="associate-development-description" scope="col">
+                            <th class="govuk-table__header govuk-!-width-three-quarters" id="associate-development-description" scope="col">
                                 Associate</th>
                             <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
                                 Duration of employment (months)
@@ -2390,35 +2380,24 @@
         th:attr="data-repeatable-row=${path}"
         th:id="${path}">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
-        <td class="govuk-table__cell govuk-form-group">
-            <label th:for="__${path}__.role">
-                <span class="govuk-visually-hidden">Associate</span>
-            </label>
-            <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.role)"/>
-            <input
-                class="govuk-input"
-                th:id="__${path}__.role"
-                th:field="*{__${path}__.role}"
-                maxlength="255"
-                readonly="readonly" />
+        <input type="hidden" th:field="*{__${path}__.role}" />
+        <td class="govuk-table__cell">
+            <span th:text="${row.role}"></span>
             <span th:if="${index != 0}" class="govuk-hint">(Optional)</span>
-
         </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+        <td class="govuk-table__cell govuk-table__cell--numeric">
             <label th:for="__${path}__.duration">
                 <span class="govuk-visually-hidden">Duration of employment (months)</span>
             </label>
             <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.duration)"/>
             <input th:id="__${path}__.duration"
                    th:field="*{__${path}__.duration}"
-                   class="govuk-input"
-                   readonly="readonly"
+                   type="hidden"
                    data-calculation-operations="*"
                    data-calculation-format="integer"
-                   th:attr="data-calculation-fields=${'.associate-salary-' + index + ',1'},
-                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                   th:attr="data-calculation-fields=${'.associate-salary-' + index + ',1'}"/>
+            <span th:attr="data-mirror=|[id='__${path}__.duration']|" th:text="${row.duration}"></span>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
@@ -2518,12 +2497,10 @@
                     <table class="govuk-table" id="associate-support-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="associate-support-description" scope="col">Description and
-                                justification of the cost
+                            <th class="govuk-table__header" id="associate-support-description" scope="col">Description
                             </th>
                             <th id="associate-support-cost" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric">
-                                Estimated cost (&pound;)
+                                class="govuk-table__header govuk-table__header--numeric">Cost (&pound;)
                             </th>
                             <th class="govuk-table__header" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
@@ -2578,7 +2555,7 @@
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
-                <span class="govuk-visually-hidden">Description and justification of the cost</span>
+                <span class="govuk-visually-hidden">Description</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
@@ -2593,7 +2570,7 @@
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
-                <span class="govuk-visually-hidden">Estimated cost (&pound;)</span>
+                <span class="govuk-visually-hidden">Cost (&pound;)</span>
             </label>
             <th:block
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
@@ -2624,13 +2601,10 @@
         <table class="govuk-table" id="associate-support-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th id="associate-support-description" class="govuk-table__header" scope="col">Description and
-                    justification
-                    of the cost
+                <th id="associate-support-description" class="govuk-table__header" scope="col">Description
                 </th>
                 <th id="associate-support-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                    Estimated
-                    cost (&pound;)
+                    Cost (&pound;)
                 </th>
             </tr>
             </thead>
@@ -3073,7 +3047,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Knowledge base superviser
+                    Knowledge base supervisor
                 </span>
                 <span class="finance-total" data-mirror="#section-total-knowledge-base"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -3094,8 +3068,7 @@
                     <table class="govuk-table" id="knowledge-base-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="knowledge-base-description" scope="col">Description and
-                                Name
+                            <th class="govuk-table__header" id="knowledge-base-description" scope="col">Description
                             </th>
                             <th id="knowledge-base-cost" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric">
@@ -3200,13 +3173,9 @@
         <table class="govuk-table" id="knowledge-base-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th id="knowledge-base-description" class="govuk-table__header" scope="col">Description and
-                    justification
-                    of the cost
+                <th id="knowledge-base-description" class="govuk-table__header" scope="col">Description
                 </th>
-                <th id="knowledge-base-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                    Estimated
-                    cost (&pound;)
+                <th id="knowledge-base-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">Cost (&pound;)
                 </th>
             </tr>
             </thead>

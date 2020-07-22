@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.resource.cost.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -117,6 +118,11 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             if (rows.size() == 1) {
                 rows.put(generateUnsavedRowId(), new AssociateSalaryCostRowForm("Associate 2"));
             }
+            int index = 1;
+            for (Entry<String, AssociateSalaryCostRowForm> entry : rows.entrySet()) {
+                entry.getValue().setRole("Associate " + index);
+                index++;
+            }
             return rows;
         }
         return new HashMap<>();
@@ -133,6 +139,11 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             }
             if (rows.size() == 1) {
                 rows.put(generateUnsavedRowId(), new AssociateDevelopmentCostRowForm("Associate 2", getAssociateSalaryDuration(finance, 1)));
+            }
+            int index = 1;
+            for (Entry<String, AssociateDevelopmentCostRowForm> entry : rows.entrySet()) {
+                entry.getValue().setRole("Associate " + index);
+                index++;
             }
             return rows;
         }
