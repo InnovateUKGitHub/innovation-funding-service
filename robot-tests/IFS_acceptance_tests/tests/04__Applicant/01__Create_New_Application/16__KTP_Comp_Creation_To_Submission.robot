@@ -15,7 +15,16 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplicationTitle}   KTP Application
+${KTPapplicationTitle}      KTP Application
+${group_employees}          200
+
+@{turnover}                 100000  98000   96000
+@{preTaxProfit}             98000   96000   94000
+@{netCurrentAssets}         100000  100000  100000
+@{liabilities}              20000   15000   10000
+@{shareHolderFunds}         20000   15000   10000
+@{loans}                    35000   40000   45000
+@{employees}                2000    1500    1200
 
 *** Test Cases ***
 Comp Admin creates an KTP competition

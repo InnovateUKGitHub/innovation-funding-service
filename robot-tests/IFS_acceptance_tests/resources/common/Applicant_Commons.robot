@@ -4,15 +4,6 @@ Resource    ../../resources/defaultResources.robot
 *** Variables ***
 ${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 ${bannerMessageForLead}     Your application was reopened on
-${group_employees}          200
-
-@{turnover}                 100000  98000   96000
-@{preTaxProfit}             98000   96000   94000
-@{netCurrentAssets}         100000  100000  100000
-@{liabilities}              20000   15000   10000
-@{shareHolderFunds}         20000   15000   10000
-@{loans}                    35000   40000   45000
-@{employees}                2000    1500    1200
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
