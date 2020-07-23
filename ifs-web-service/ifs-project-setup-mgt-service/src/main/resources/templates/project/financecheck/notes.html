@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Notes - ${model.projectName}|,hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
     </head>
@@ -56,11 +56,9 @@
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
-                                               th:text="${attachment.name}"
+                                               th:text="|${attachment.name} (opens in a new window)|"
                                                class="govuk-link"
-                                               target="_blank"
-                                               aria-describedby="supporting-documentation-hint">file</a>
-                                            <span id="supporting-documentation-hint" class="govuk-body"> (opens in a new window)</span>
+                                               target="_blank">file</a>
                                         </li>
                                     </ul>
                                 </th:block>

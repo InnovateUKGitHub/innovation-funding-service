@@ -70,5 +70,5 @@ IFS=$'\n'
 for u in $(executeMySQLCommand "select uid,email from user where system_user = 0;")
 do
   addUserToShibboleth $u $'\t'
-done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
+done | ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
 

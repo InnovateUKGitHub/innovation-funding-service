@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Assessor overview - ${model.applicationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
@@ -76,10 +76,8 @@
                         <li class="govuk-form-group download">
                             <div class="govuk-heading-s govuk-!-margin-0" th:text="|${appendix.title}:|">View project management appendix:</div>
                             <a target="_blank"
-                               th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}"
-                               th:text="|${appendix.name}, ${appendix.size}|"
-                               th:attr="aria-describedby=|appendix-hint-${iter.count}|">Project-plan.pdf, 161.96 KB</a>
-                            <span th:id="|appendix-hint-${iter.count}|">(opens in a new window)</span>
+                               th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/file/{fileEntryId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId},fileEntryId=${appendix.fileEntryId})}"
+                               th:text="|${appendix.name}, ${appendix.size} (opens in a new window)|">Project-plan.pdf, 161.96 KB</a>
                         </li>
                     </ul>
                 </th:block>

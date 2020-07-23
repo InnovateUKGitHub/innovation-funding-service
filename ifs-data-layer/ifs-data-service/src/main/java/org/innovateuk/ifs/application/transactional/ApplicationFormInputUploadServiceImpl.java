@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -28,9 +29,10 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_ALREADY_UPLOADED;
@@ -60,8 +62,8 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
 
     @Override
     @Transactional
-    public ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile,
-                                                                                               Supplier<InputStream> inputStreamSupplier) {
+    public ServiceResult<FormInputResponseFileEntryResource> uploadResponse(FormInputResponseFileEntryResource formInputResponseFile,
+                                                                            Supplier<InputStream> inputStreamSupplier) {
 
         long applicationId = formInputResponseFile.getCompoundId().getApplicationId();
         long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
@@ -74,15 +76,15 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                     " processRoleId " + processRoleId +
                                     " formInputId " + formInputId);
 
-                            FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(
-                                    applicationId,
-                                    processRoleId,
-                                    formInputId);
+                            Optional<FormInputResponse> response = find(formInputRepository.findById(formInputId), notFoundError(FormInput.class, formInputId)).
+                                    andOnSuccess(formInput -> getAppropriateFormInputResponse(formInputResponseFile.getCompoundId(), formInput))
+                                    .getOptionalSuccessObject();
+
 
                             // Removing and replacing if file already exists here
-                            if (existingResponse != null && existingResponse.getFileEntries() != null && !existingResponse.getFileEntries().isEmpty()) {
-                                LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + openApplication +
-                                        " processRoleId " + processRoleId +
+                            if (response.isPresent() && response.get().getFileEntries().size() >= response.get().getFormInput().getWordCount()) {
+                                LOG.info("[FileLogging] FormInputResponse for upload exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
+                                        " for application id " + openApplication +
                                         " formInputId " + formInputId +
                                         " , so returning error...");
                                 return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
@@ -90,15 +92,15 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
 
                             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier)
                                     .andOnSuccess(successfulFile ->
-                                        createFormInputResponseFileUpload(
-                                                successfulFile,
-                                                existingResponse,
-                                                processRoleId,
-                                                applicationId,
-                                                formInputId,
-                                                formInputResponseFile
-                                        )
-                            );
+                                            createFormInputResponseFileUpload(
+                                                    successfulFile,
+                                                    response.orElse(null),
+                                                    processRoleId,
+                                                    applicationId,
+                                                    formInputId,
+                                                    formInputResponseFile
+                                            )
+                                    );
                         }));
     }
 
@@ -111,13 +113,17 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         FileEntry fileEntry = successfulFile.getValue();
 
         if (existingResponse != null) {
-            existingResponse.addFileEntry(fileEntry);
-            formInputResponseRepository.save(existingResponse);
-            FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(
-                    FileEntryResourceAssembler.valueOf(fileEntry),
-                    formInputResponseFile.getCompoundId()
-            );
-            return serviceSuccess(fileEntryResource);
+            return find(() -> findProcessRoleById(processRoleId)).andOnSuccessReturn(role -> {
+                existingResponse.addFileEntry(fileEntry);
+                existingResponse.setUpdateDate(ZonedDateTime.now());
+                existingResponse.setUpdatedBy(role);
+                formInputResponseRepository.save(existingResponse);
+                FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(
+                        FileEntryResourceAssembler.valueOf(fileEntry),
+                        formInputResponseFile.getCompoundId()
+                );
+                return fileEntryResource;
+            });
         }
 
         return find(() -> findProcessRoleById(processRoleId),
@@ -136,7 +142,8 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                             FileEntryResourceAssembler.valueOf(fileEntry),
                             formInputId,
                             applicationId,
-                            processRoleId
+                            processRoleId,
+                            fileEntry.getId()
                     );
                     return serviceSuccess(fileEntryResource);
                 });
@@ -144,82 +151,68 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateFormInputResponseFileUpload(FormInputResponseFileEntryResource formInputResponseFile,
-                                                                 Supplier<InputStream> inputStreamSupplier) {
-
-        ServiceResult<FormInputResponseFileAndContents> existingFileResult =
-                getFormInputResponseFileUpload(formInputResponseFile.getCompoundId());
-
-        return existingFileResult.andOnSuccess(existingFile -> {
-
-            FormInputResponseFileEntryResource existingFormInputResource = existingFile.getFormInputResponseFileEntry();
-
-            FileEntryResource existingFileResource = existingFormInputResource.getFileEntryResource();
-            FileEntryResource updatedFileDetails = formInputResponseFile.getFileEntryResource();
-            FileEntryResource updatedFileDetailsWithId = new FileEntryResource(
-                    existingFileResource.getId(),
-                    updatedFileDetails.getName(),
-                    updatedFileDetails.getMediaType(),
-                    updatedFileDetails.getFilesizeBytes()
-            );
-
-            return fileService.updateFile(updatedFileDetailsWithId, inputStreamSupplier).andOnSuccessReturnVoid();
-        });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
-        return findApplicationById(fileEntry.getApplicationId())
+    public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId id) {
+        return findApplicationById(id.getApplicationId())
                 .andOnSuccess(foundApplication -> verifyApplicationIsOpen(foundApplication)
-                    .andOnSuccess(openApplication -> deleteFormInputResponseFileUploadOnGetApplicationAndSuccess(fileEntry)));
+                        .andOnSuccess(openApplication -> deleteFormInputResponseFileUploadOnGetApplicationAndSuccess(id)));
     }
 
-    private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadOnGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
-        return find(formInputRepository.findById(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
-                formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput)
-                    .andOnSuccess(formInputResponseFileEntryResource -> {
-                        LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " +
-                                formInputResponseFileEntryResource.getFileEntryResource().getId() +
-                                " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() +
-                                " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() +
-                                " formInputId " + formInputResponseFileEntryResource.getCompoundId().getFormInputId() +
-                                " deleted successfully");
+    private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadOnGetApplicationAndSuccess(FormInputResponseFileEntryId id) {
+        return findFormInputById(id.getFormInputId()).andOnSuccess(
+                formInput -> getFormInputResponseFileEntryResource(id, formInput)
+                        .andOnSuccess(formInputResponseFileEntryResource -> {
+                            LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " +
+                                    formInputResponseFileEntryResource.getFileEntryResource().getId() +
+                                    " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() +
+                                    " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() +
+                                    " formInputId " + formInputResponseFileEntryResource.getCompoundId().getFormInputId() +
+                                    " deleted successfully");
 
-                        boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
-                        return fileService.deleteFileIgnoreNotFound(formInputResponseFileEntryResource.getFileEntryResource().getId()).
-                            andOnSuccess(deletedFile -> {
-                                if (questionHasMultipleStatuses) {
-                                    return getFormInputResponse(formInputResponseFileEntryResource.getCompoundId());
-                                } else {
-                                    return getFormInputResponseForQuestionAssignee(formInputResponseFileEntryResource.getCompoundId());
-                                }
-                            }).andOnSuccess(this::unlinkFileEntryFromFormInputResponse);
-                    })
+                            boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
+                            return fileService.deleteFileIgnoreNotFound(formInputResponseFileEntryResource.getFileEntryResource().getId()).
+                                    andOnSuccess(deletedFile -> {
+                                        if (questionHasMultipleStatuses) {
+                                            return getFormInputResponseLastUpdatedBy(formInputResponseFileEntryResource.getCompoundId());
+                                        } else {
+                                            return getOnlyFormInputResponse(formInputResponseFileEntryResource.getCompoundId());
+                                        }
+                                    }).andOnSuccess(resp -> unlinkFileEntryFromFormInputResponse(resp, id));
+                        })
         );
     }
 
     @Override
-    public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
-        return find(formInputRepository.findById(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).
-                andOnSuccess(formInput -> getAppropriateFormInputResponse(fileEntry, formInput).
-                    andOnSuccess(formInputResponse ->
-                        fileService.getFileByFileEntryId(formInputResponse.getFileEntries().get(0).getId()).
-                            andOnSuccessReturn(inputStreamSupplier -> {
-                                FormInputResponseFileEntryResource formInputResponseFileEntry =
-                                        formInputResponseFileEntryResource(formInputResponse.getFileEntries(), fileEntry);
-                                return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
-                            })
-                    ));
+    public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(FormInputResponseFileEntryId id) {
+        return find(formInputRepository.findById(id.getFormInputId()), notFoundError(FormInput.class, id.getFormInputId())).
+                andOnSuccess(formInput -> getAppropriateFormInputResponse(id, formInput).
+                        andOnSuccess(formInputResponse -> {
+                                    FileEntry fileEntry = getFileEntry(formInputResponse, id);
+                                    return fileService.getFileByFileEntryId(fileEntry.getId()).
+                                            andOnSuccessReturn(inputStreamSupplier -> {
+                                                FormInputResponseFileEntryResource formInputResponseFileEntry =
+                                                        formInputResponseFileEntryResource(fileEntry, id);
+                                                return new FormInputResponseFileAndContents(formInputResponseFileEntry, inputStreamSupplier);
+                                            });
+                                }
+                        ));
     }
 
-    private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
-        formInputResponse.setFileEntries(null);
+    private FileEntry getFileEntry(FormInputResponse response, FormInputResponseFileEntryId id) {
+        return response.getFileEntries().stream()
+                .filter(file -> file.getId().equals(id.getFileEntryId()))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException("Unknown file entry " + id.getFileEntryId(), emptyList()));
+    }
+
+    private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse, FormInputResponseFileEntryId id) {
+        formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId()));
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
         LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() +
                 " and application " + formInputResponse.getApplication());
-        formInputResponseRepository.delete(formInputResponse);
-        LOG.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");
+        if (formInputResponse.getFileEntries().isEmpty()) {
+            formInputResponseRepository.delete(formInputResponse);
+            LOG.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");
+        }
         return serviceSuccess(unlinkedResponse);
     }
 
@@ -228,34 +221,31 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
         return question.hasMultipleStatuses();
     }
 
-    private ServiceResult<FormInputResponseFileEntryResource> getFormInputResponseFileEntryResource(FormInputResponseFileEntryId fileEntry,
+    private ServiceResult<FormInputResponseFileEntryResource> getFormInputResponseFileEntryResource(FormInputResponseFileEntryId id,
                                                                                                     FormInput formInput) {
-        return getAppropriateFormInputResponse(fileEntry, formInput)
+        return getAppropriateFormInputResponse(id, formInput)
                 .andOnSuccess(formInputResponse -> serviceSuccess(
-                        formInputResponseFileEntryResource(formInputResponse.getFileEntries(), fileEntry))
+                        formInputResponseFileEntryResource(getFileEntry(formInputResponse, id), id))
                 );
     }
 
-    private ServiceResult<FormInputResponse> getAppropriateFormInputResponse(FormInputResponseFileEntryId fileEntry, FormInput formInput){
+    private ServiceResult<FormInputResponse> getAppropriateFormInputResponse(FormInputResponseFileEntryId fileEntry, FormInput formInput) {
         boolean hasMultipleStatuses = questionHasMultipleStatuses(formInput);
 
         if (hasMultipleStatuses) {
-            return getFormInputResponse(fileEntry);
+            return getFormInputResponseLastUpdatedBy(fileEntry);
         } else {
-            return getFormInputResponseForQuestionAssignee(fileEntry);
+            return getOnlyFormInputResponse(fileEntry);
         }
     }
 
-    private FormInputResponseFileEntryResource formInputResponseFileEntryResource(List<FileEntry> fileEntry,
+    private FormInputResponseFileEntryResource formInputResponseFileEntryResource(FileEntry fileEntry,
                                                                                   FormInputResponseFileEntryId fileEntryId) {
-        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(fileEntry.get(0));
-        return new FormInputResponseFileEntryResource(fileEntryResource,
-                fileEntryId.getFormInputId(),
-                fileEntryId.getApplicationId(),
-                fileEntryId.getProcessRoleId());
+        FileEntryResource fileEntryResource = FileEntryResourceAssembler.valueOf(fileEntry);
+        return new FormInputResponseFileEntryResource(fileEntryResource, fileEntryId);
     }
 
-    private ServiceResult<FormInputResponse> getFormInputResponse(FormInputResponseFileEntryId fileEntry) {
+    private ServiceResult<FormInputResponse> getFormInputResponseLastUpdatedBy(FormInputResponseFileEntryId fileEntry) {
         Error formInputResponseNotFoundError = notFoundError(
                 FormInputResponse.class,
                 fileEntry.getApplicationId(),
@@ -273,21 +263,19 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
      *
      * @param fileEntry - in this case the FormInputResponseFileEntryId will contain the id of person to whom the question is assigned.
      */
-    private ServiceResult<FormInputResponse> getFormInputResponseForQuestionAssignee(FormInputResponseFileEntryId fileEntry) {
-        Error formInputResponseNotFoundError = notFoundError(
-                FormInputResponse.class,
-                fileEntry.getApplicationId(),
-                fileEntry.getProcessRoleId(),
-                fileEntry.getFormInputId()
-        );
-        List<FormInputResponse> formInputResponses = formInputResponseRepository.findByApplicationIdAndFormInputId(
+    private ServiceResult<FormInputResponse> getOnlyFormInputResponse(FormInputResponseFileEntryId fileEntry) {
+        Optional<FormInputResponse> formInputResponses = formInputResponseRepository.findOneByApplicationIdAndFormInputId(
                 fileEntry.getApplicationId(),
                 fileEntry.getFormInputId()
         );
-        if (formInputResponses != null && !formInputResponses.isEmpty()) {
-            return serviceSuccess(formInputResponses.get(0));
-        }
-        return serviceFailure(formInputResponseNotFoundError);
+        return formInputResponses
+                .map(ServiceResult::serviceSuccess)
+                .orElseGet(() -> serviceFailure(notFoundError(
+                        FormInputResponse.class,
+                        fileEntry.getApplicationId(),
+                        fileEntry.getProcessRoleId(),
+                        fileEntry.getFormInputId()
+                )));
     }
 
     private ServiceResult<Application> findApplicationById(Long applicationId) {

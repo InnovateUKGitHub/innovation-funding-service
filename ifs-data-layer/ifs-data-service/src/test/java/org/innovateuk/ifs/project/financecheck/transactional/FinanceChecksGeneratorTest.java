@@ -169,7 +169,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
 
-        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
         verify(viabilityWorkflowHandlerMock, never()).viabilityNotApplicable(Mockito.any(), Mockito.any());
@@ -192,7 +192,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
 
-        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
         verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);
@@ -216,7 +216,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
 
         competition.setCompetitionTypeName("Horizon 2020");
 
-        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
+        ServiceResult<ProjectFinance> result = service.createFinanceChecksFigures(newProject, organisation);
         assertTrue(result.isSuccess());
 
         verify(viabilityWorkflowHandlerMock).viabilityNotApplicable(partnerOrganisation, null);

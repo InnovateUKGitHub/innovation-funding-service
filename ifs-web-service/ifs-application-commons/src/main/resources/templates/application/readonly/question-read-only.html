@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="empty (model)">
     Empty
@@ -12,26 +12,24 @@
         </label>
         <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
 
-        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateDocumentFilename != null}">
-            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateDocumentTitle}|">
+        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
+            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
                 Uploaded project plan and methodology
             </h1>
             <p class="uploaded-file govuk-body">
-               <a class="govuk-link"
-                   th:href="${model.templateDocumentUrl}"
-                   th:text="${model.templateDocumentFilename}"
-                   target="_blank"
-                   aria-describedby="template-document-hint">file</a><span id="template-document-hint"> (opens in a new window)</span>.
+                <a class="govuk-link"
+                   th:href="${model.templateFile.url}"
+                   th:text="|${model.templateFile.filename} (opens in a new window)|"
+                   target="_blank">file</a>.
             </p>
         </div>
 
-        <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
-            <p class="uploaded-file govuk-body">
+        <div class="govuk-!-margin-top-6" th:unless="${model.appendices.isEmpty()}">
+            <p class="uploaded-file govuk-body" th:each="appendix : ${model.appendices}">
                 <a class="govuk-link"
-                   th:href="${model.appendixUrl}"
-                   th:text="${model.appendixFilename}"
-                   target="_blank"
-                   aria-describedby="appendix-hint">file</a><span id="appendix-hint">(opens in a new window)</span>.
+                   th:href="${appendix.url}"
+                   th:text="|${appendix.filename} (opens in a new window)|"
+                   target="_blank">file</a>.
             </p>
         </div>
 

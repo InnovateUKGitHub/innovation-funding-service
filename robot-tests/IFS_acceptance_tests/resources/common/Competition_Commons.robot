@@ -20,7 +20,8 @@ The competition admin creates competition
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
-    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}
+    ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
+    ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
     the user fills in the CS Assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
     ...  ELSE  the user fills in the CS Documents in other projects
@@ -173,29 +174,42 @@ the user marks the procurement application as done
     the assessed questions are marked as complete(procurement)    ${growthTable}
 
 the user marks the Application as done
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                               link = Application
     the user marks the Application details section as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
-    ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}
+    ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
+
+the user marks the KTP application details as done
+    [Arguments]  ${comp_type}
+    the user clicks the button/link                                link = Application
+    the user marks the Application details section as complete     ${comp_type}
+    the user marks the KTP Assessed questions as complete
 
 The user removes the Project details questions and marks the Application section as done
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                      link = Application
     the user marks each question as complete             Application details
     the user removes some of the Project details questions
-    the user marks the Assessed questions as complete    ${growthTable}  ${comp_type}
+    the user marks the Assessed questions as complete    ${growthTable}  ${comp_type}  ${competition}
 
 the user marks the Assessed questions as complete
-    [Arguments]  ${growthTable}  ${comp_type}
+    [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
-    Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
+    Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
+
+the user marks the KTP Assessed questions as complete
+    the assessment questions are marked complete for other programme type competitions
+    the user fills in the Finances questions without growth table                          false  true
+    the user clicks the button/link                                                        jQuery = button:contains("Done")
+    the user clicks the button/link                                                        link = Competition details
+    the user should see the element                                                        jQuery = div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
@@ -225,9 +239,20 @@ the user opts no finances for EOI comp
     the user clicks the button/link    jQuery = button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
+    [Arguments]  ${competition}
+    Run Keyword If  '${competition}' in ["ATI Competition", "Procurement AT Comp"]     the assessment questions are marked complete for procurement and ati comp
+    ...  ELSE  the assessment questions are marked complete for other programme type competitions
+     the user should see the element                  jQuery = button:contains("Add question")
+
+the assessment questions are marked complete for procurement and ati comp
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement_ati}
+     \    the user marks each question as complete    ${ELEMENT}
+     the user marks the question as complete with other options     Technical approach  3
+     the user marks the question as complete with other options     Project team  2
+
+the assessment questions are marked complete for other programme type competitions
     :FOR   ${ELEMENT}   IN    @{programme_questions}
      \    the user marks each question as complete    ${ELEMENT}
-     the user should see the element           jQuery = button:contains("Add question")
 
 the assessed questions are marked complete except finances(sector type)
     :FOR   ${ELEMENT}   IN    @{sector_questions}
@@ -241,25 +266,32 @@ the assessed questions are marked complete(EOI type)
 
 the user marks the Application details section as complete
     [Arguments]  ${compType}
-    the user marks each question as complete  Application details
-    the user marks each question as complete  Project summary
-    Run Keyword If    '${compType}'!= '${compType_EOI}'    the user marks each question as complete  Public description
-    the user marks each question as complete  Scope
+    the user marks each question as complete                Application details
+    the user marks each question as complete                Project summary
+    the user marks each question as complete                Equality, diversity and inclusion
+    Run Keyword If    '${compType}'!= '${compType_EOI}'     the user marks each question as complete  Public description
+    the user marks each question as complete                Scope
 
 the user marks each question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link  jQuery = h4 a:contains("${question_link}")
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the radio button     numberOfUploads  3
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes2
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user selects the checkbox         question.allowedAppendixResponseFileTypes1
+    Run Keyword If  '${question_link}' in ["Technical approach", "Innovation"]   the user enters text to a text field    css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
     the user clicks the button/link  jQuery = button:contains('Done')
     the user should see the element  jQuery = li:contains("${question_link}") .task-status-complete
 
 the assessed questions are marked as complete(procurement)
     [Arguments]   ${growthTable}
-    :FOR   ${ELEMENT}   IN    @{programme_questions}
-     \    the user marks each procurement question as complete    ${ELEMENT}
-     the user should see the element           jQuery = button:contains("Add question")
-     the user fills in the Finances questions  ${growthTable}  false  true
-     the user clicks the button/link           jQuery = button:contains("Done")
-     the user clicks the button/link           link = Competition details
+    :FOR   ${ELEMENT}   IN    @{programme_questions_procurement_ati}
+     \    the user marks each procurement question as complete      ${ELEMENT}
+     the user marks the question as complete with other options     Technical approach  3
+     the user marks the question as complete with other options     Project team  2
+     the user should see the element                                jQuery = button:contains("Add question")
+     the user fills in the Finances questions                       ${growthTable}  false  true
+     the user clicks the button/link                                jQuery = button:contains("Done")
+     the user clicks the button/link                                link = Competition details
 
 the user marks each procurement question as complete
     [Arguments]  ${question_link}
@@ -271,10 +303,35 @@ the user marks each procurement question as complete
     the user clicks the button/link        jQuery = button:contains('Done')
     the user should see the element        jQuery = li:contains("${question_link}") .task-status-complete
 
+the user marks the question as complete with other options
+    [Arguments]  ${question_link}  ${numberOfUploads}
+    the user should not see the element     jQuery = li:contains("${question_link}") .task-status-complete
+    the user clicks the button/link         jQuery = a:contains("${question_link}")
+    the user selects the radio button       typeOfQuestion   MULTIPLE_CHOICE
+    Run Keyword If  '${question_link}' in ["Technical approach", "Approach and innovation"]     comp admin enters three answer options           option1  option2  option3
+    Run Keyword If  '${question_link}' in ["Project team", "Project management"]                comp admin enters more than 9 answer options
+    Run Keyword If  '${question_link}' == 'Risks'                                               comp admin enters two answer options             Yes  No
+    the user selects the radio button       numberOfUploads  ${numberOfUploads}
+    the user selects the checkbox           question.allowedAppendixResponseFileTypes2
+    the user clicks the button/link         jQuery = button:contains('Done')
+    the user should see the element         jQuery = li:contains("${question_link}") .task-status-complete
+
 the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
     the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
+    the user selects the radio button     applicationFinanceType  STANDARD
+    the user selects the radio button     includeYourOrganisationSection  ${organisation}
+    the user selects the radio button     includeJesForm  ${jes}
+    the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
+    the user clicks the button/link       jQuery = button:contains('Done')
+    the user clicks the button/link       link = Finances
+    the user clicks the button/link       link = Application
+    the user should see the element       jQuery = li:contains("Finances") .task-status-complete
+
+the user fills in the Finances questions without growth table
+    [Arguments]  ${jes}  ${organisation}
+    the user clicks the button/link       link = Finances
     the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}
@@ -383,11 +440,11 @@ the user is able to configure the new question
     [Arguments]  ${questionTitle}
     the user enters text to a text field  id = question.title  Tell us how your project is innovative.
     the user enters text to a text field  id = question.shortTitle  ${questionTitle}
-    the user enters text to a text field  id = question.subTitle  Adding value on existing projects is important to InnovateUK.
+    the user enters text to a text field  jQuery = label:contains("Question subtitle") + div .editor  Adding value on existing projects is important to InnovateUK.
     the user enters text to a text field  id = question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
     the user enters text to a text field  css = label[for = "question.guidance"] + * .editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id = question.maxWords  500
-    the user selects the radio button     question.appendix  1
+    the user selects the radio button     numberOfUploads  1
     click element                         css = label[for="question.allowedAppendixResponseFileTypes1"]
     the user clicks the button/link       css = label[for="question.allowedAppendixResponseFileTypes2"]
     the user enters text to a text field  css = label[for="question.appendixGuidance"] + * .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
@@ -414,9 +471,9 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery = dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery = dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery = dt:contains("Max word count") + dd:contains("500")
-    the user should see the element  jQuery = dt:contains("Appendix") + dd:contains("Yes")
-    the user should see the element  jQuery = dt:contains("Accepted appendix file types") + dd:contains("PDF")
-    the user should see the element  jQuery = dt:contains("Accepted appendix file types") + dd:contains("spreadsheet")
+    the user should see the element  jQuery = dt:contains("Appendix uploads") + dd:contains("1")
+    the user should see the element  jQuery = dt:contains("Accepted appendix file types")
+    the user should see the element  jQuery = dt:contains("Accepted appendix file types")
     the user should see the element  jQuery = dt:contains("Appendix guidance") + dd:contains("You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.")
     the user should see the element  jQuery = dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery = dt:contains("Out of") + dd:contains("10")
@@ -489,3 +546,35 @@ the user selects the organisational eligibility to no
     the user clicks the button/link         jQuery = button:contains("Save and continue")
     the user clicks the button/link         link = Competition details
     the user should see the element         jQuery = li:contains("Organisational eligibility") .task-status-complete
+
+the user should see the correct inputs in the Milestones form
+    the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery = button:contains("Edit")
+
+comp admin enters two answer options
+    [Arguments]  ${answer1}  ${answer2}
+    the user enters text to a text field     id = question.choices[0].text  ${answer1}
+    the user enters text to a text field     id = question.choices[1].text  ${answer2}
+
+comp admin enters three answer options
+    [Arguments]  ${answer1}  ${answer2}  ${answer3}
+    the user enters text to a text field     id = question.choices[0].text  ${answer1}
+    the user enters text to a text field     id = question.choices[1].text  ${answer2}
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+    the user enters text to a text field     id = question.choices[2].text  ${answer3}
+    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+    the user should see the element          id = question.choices[3].text
+    the user clicks the button/link          id = remove-multiple-choice-row-3
+    the user should not see the element      id = question.choices[3].text
+
+comp admin enters more than 9 answer options
+    the user enters text to a text field     id = question.choices[0].text  Answer1
+    ${i} =  Set Variable   1
+    :FOR   ${ELEMENT}   IN    @{multiple_answer_choice}
+         \    the user enters text to a text field     id = question.choices[${i}].text  ${ELEMENT}
+         \    the user clicks the button/link          jQuery = button:contains("+ Add another answer")
+         \    ${i} =   Evaluate   ${i} + 1
+    the user clicks the button/link          id = remove-multiple-choice-row-10
+    the user should not see the element      id = question.choices[10].text

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block
         th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
@@ -71,7 +71,7 @@
                             <span class="govuk-hint">More <a
                                 href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                                 class="govuk-link"
-                                target="_blank">guidance on research categories</a></span>
+                                target="_blank">guidance on research categories (opens in a new window)</a></span>
 
                             <th:block th:if="${#fields.hasErrors('researchCategory')}">
                             <span class="govuk-error-message" th:each="err : ${#fields.errors('researchCategory')}"

@@ -36,6 +36,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.repository.SectionRepository;
@@ -80,6 +81,7 @@ import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
@@ -133,6 +135,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
     protected QuestionSetupService questionSetupService;
+    protected QuestionSetupCompetitionService questionSetupCompetitionService;
     protected QuestionSetupTemplateService questionSetupTemplateService;
     protected PublicContentService publicContentService;
     protected CompetitionSetupFinanceService competitionSetupFinanceService;
@@ -202,6 +205,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectUserRepository projectUserRepository;
     protected BankDetailsService bankDetailsService;
     protected SpendProfileService spendProfileService;
+    protected ProjectFinanceService projectFinanceService;
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
     protected ProfileService profileService;
@@ -295,6 +299,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
         questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
+        questionSetupCompetitionService = serviceLocator.getBean(QuestionSetupCompetitionService.class);
         questionSetupTemplateService = serviceLocator.getBean(QuestionSetupTemplateService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
@@ -335,6 +340,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
         competitionOrganisationConfigRepository = serviceLocator.getBean((CompetitionOrganisationConfigRepository.class));
         competitionAssessmentConfigService = serviceLocator.getBean(CompetitionAssessmentConfigService.class);
+        projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
     }
 
     protected UserResource compAdmin() {

@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.MultipleChoiceOption;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -18,6 +20,8 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
@@ -35,8 +39,7 @@ import static org.innovateuk.ifs.question.resource.QuestionSetupType.PROJECT_SUM
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormInputResponseServiceImpl> {
@@ -58,6 +61,9 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
 
     @Mock
     private FormInputRepository formInputRepositoryMock;
+    
+    @Captor
+    private ArgumentCaptor<FormInputResponse> formInputResponseArgumentCaptor;
 
     @Test
     public void findResponsesByFormInputIdAndQuestionSetupType() throws Exception {
@@ -108,18 +114,55 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
         final long applicationId = 5921L;
         final long userId = 9523L;
         final String value = "<html>This is my html saving</html>";
-        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, value);
+        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, value, null);
 
         when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId)).thenReturn(newProcessRole().build());
         when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(newUser().withId(userId).withFirstName("Test").withLastName("User").build()));
-        when(formInputRepositoryMock.findById(formInputId)).thenReturn(Optional.of(newFormInput().withId(formInputId).withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build()));
+        when(formInputRepositoryMock.findById(formInputId)).thenReturn(Optional.of(newFormInput().withId(formInputId).withType(FormInputType.TEXTAREA).withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build()));
         when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(newApplication().with(application -> application.setFormInputResponses(new ArrayList<FormInputResponse>()))
                 .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build()));
 
         service.saveQuestionResponse(formInputResponseCommand);
 
         verify(applicationRepositoryMock, times(1)).save(any(Application.class));
-        verify(formInputResponseRepositoryMock, times(1)).save(any(FormInputResponse.class));
+        verify(formInputResponseRepositoryMock, times(1)).save(formInputResponseArgumentCaptor.capture());
+
+        List<FormInputResponse> formInputResponses = formInputResponseArgumentCaptor.getAllValues();
+        assertEquals(1, formInputResponses.size());
+        assertEquals(value, formInputResponses.get(0).getValue());
+        assertNull(formInputResponses.get(0).getMultipleChoiceOption());
+    }
+
+    @Test
+    public void saveQuestionResponseForMultipleChoiceOptions() {
+        final long formInputId = 1234L;
+        final long applicationId = 5921L;
+        final long userId = 9523L;
+        final long multipleChoiceOptionId = 1L;
+        final String multipleChoiceOptionText = "Yes";
+        final FormInput formInput = newFormInput().withId(formInputId).withType(FormInputType.MULTIPLE_CHOICE)
+                .withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build();
+
+        MultipleChoiceOption multipleChoiceOption = new MultipleChoiceOption(multipleChoiceOptionText, formInput);
+        multipleChoiceOption.setId(multipleChoiceOptionId);
+
+        final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, multipleChoiceOptionText, multipleChoiceOptionId);
+
+        when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId)).thenReturn(newProcessRole().build());
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(newUser().withId(userId).withFirstName("Test").withLastName("User").build()));
+        when(formInputRepositoryMock.findById(formInputId)).thenReturn(Optional.of(formInput));
+        when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(newApplication().with(application -> application.setFormInputResponses(new ArrayList<FormInputResponse>()))
+                .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build()));
+
+        service.saveQuestionResponse(formInputResponseCommand);
+
+        verify(applicationRepositoryMock, times(1)).save(any(Application.class));
+        verify(formInputResponseRepositoryMock, times(1)).save(formInputResponseArgumentCaptor.capture());
+
+        List<FormInputResponse> formInputResponses = formInputResponseArgumentCaptor.getAllValues();
+        assertEquals(1, formInputResponses.size());
+        assertEquals(multipleChoiceOptionText, formInputResponses.get(0).getValue());
+        assertEquals(multipleChoiceOption, formInputResponses.get(0).getMultipleChoiceOption());
     }
 
     @Test

@@ -305,6 +305,14 @@ hr,
   }
 }
 
+.vertical-line {
+  display: inline-block;
+  border-left: 2px solid govuk-colour("mid-grey");
+  height: 1em;
+  padding: 2px;
+  vertical-align: bottom;
+}
+
 .govuk-input--width-25 {
   max-width:50ex
 }

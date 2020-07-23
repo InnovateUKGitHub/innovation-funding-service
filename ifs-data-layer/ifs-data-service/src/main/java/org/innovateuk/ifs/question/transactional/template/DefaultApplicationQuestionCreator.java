@@ -114,6 +114,7 @@ public class DefaultApplicationQuestionCreator {
         input.setPriority(1);
         input.setScope(FormInputScope.APPLICATION);
         input.setActive(false);
+        input.setWordCount(0);
         input.setGuidanceAnswer(null);
         input.setGuidanceTitle("What should I include in the appendix?");
         input.setDescription("Appendix");

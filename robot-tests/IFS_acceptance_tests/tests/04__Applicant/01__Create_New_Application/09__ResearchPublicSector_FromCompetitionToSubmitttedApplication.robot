@@ -8,6 +8,9 @@ Documentation     IFS-1012 As a comp exec I am able to set Research and Public s
 ...               IFS-2832 As a Portfolio manager I am able to remove the Project details questions
 ...
 ...               IFS-4046 Person to organisation acceptance test updates
+...
+...               IFS-7718 EDI question - application form
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -27,7 +30,7 @@ ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research can lead
-    [Documentation]  IFS-1012 IFS-182 IFS-2832
+    [Documentation]  IFS-1012 IFS-182 IFS-2832 IFS-7700
     [Tags]  CompAdmin  HappyPath
     # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
@@ -44,20 +47,21 @@ The Applicant is able to apply to the competition once is Open and see the corre
     And the user should not see the element              jQuery = li:contains("Public description")
     And the user should not see the element              jQuery = li:contains("Project summary")
 
-Applicant Applies to Research leading Competition
-    [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920
+The Applicant completing the application details
+    [Documentation]  IFS-1012  IFS-2879  IFS-4046  IFS-5920  IFS-7718
     [Tags]  Applicant
-    When the user clicks the button/link                  link = Application details
-    Then the user fills in the Application details        ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
-    the applicant completes Application Team
-    the user selects Research category                    Feasibility studies
-    the lead applicant marks every question as complete   Scope
-    the lead applicant marks every question as complete   1. How innovative is your project?
-    And The user clicks the button/link                   link = Your project finances
-    When the user marks the finances as complete          ${researchLeadApp}   Calculate  52,214  yes
+    When the user clicks the button/link                        link = Application details
+    Then the user fills in the Application details              ${researchLeadApp}  ${tomorrowday}  ${month}  ${nextyear}
+    And the applicant completes Application Team
+    And the applicant marks EDI question as complete
+    And the user selects Research category                      Feasibility studies
+    And the lead applicant marks every question as complete     Scope
+    And the lead applicant marks every question as complete     1. ${customQuestion}
+    And The user clicks the button/link                         link = Your project finances
+    When the user marks the finances as complete                ${researchLeadApp}   Calculate  52,214  yes
     And the user accept the competition terms and conditions    Return to application overview
     Then user is not able to submit his application as he exceeds research participation
-    And the user clicks the button/link                   link = Application overview
+    And the user clicks the button/link                         link = Application overview
     And collaborating is required to submit the application if Research participation is not 100pc   ${compResearch}  ${researchLeadApp}  ${collaborator2_credentials["email"]}  yes
 
 Applicant Applies to Public content leading Competition
@@ -96,9 +100,9 @@ The competition admin creates a competition for
     the user fills in the CS Funding Information
     the user fills in the CS Project eligibility            ${orgType}  1  true  collaborative     # 1 means 30%
     the user selects the organisational eligibility to no   false
-    the user fills in the CS Milestones                     project-setup-completion-stage   ${month}   ${nextyear}
+    the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
-    the user removes the Project details questions and marks the Application section as done  yes  Generic
+    the user removes the Project details questions and marks the Application section as done  yes  Generic  ${competition}
     the user fills in the CS Assessors
     the user fills in the CS Documents in other projects
     the user clicks the button/link                         link = Public content
@@ -110,14 +114,15 @@ The competition admin creates a competition for
     the user should see the element                         jQuery = h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user removes some of the Project details questions
-    [Documentation]  IFS-2832
-    the user clicks the button/link             jQuery = li:contains("Project summary") button:contains("Remove")
-    the user should not see the element         jQuery = li:contains("Project summary")
-    the user marks each question as complete    Public description
-    the user marks each question as complete    Scope
-    the user clicks the button/link             link = Public description
-    the user clicks the button/link             css = button[name = "deleteQuestion"]
-    the user should not see the element         jQuery = li:contains("Public description")
+    [Documentation]  IFS-2832  IFS-7718
+    the user clicks the button/link              jQuery = li:contains("Project summary") button:contains("Remove")
+    the user should not see the element          jQuery = li:contains("Project summary")
+    the user marks each question as complete     Public description
+    the user marks each question as complete     Equality, diversity and inclusion
+    the user marks each question as complete     Scope
+    the user clicks the button/link              link = Public description
+    the user clicks the button/link              css = button[name = "deleteQuestion"]
+    the user should not see the element          jQuery = li:contains("Public description")
 
 user is not able to submit his application as he exceeds research participation
     the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
@@ -146,9 +151,7 @@ the lead is able to submit the application
     the user clicks the button/link  link = ${application}
     the applicant completes application team
     the user clicks the button/link  link = Review and submit
-    the user should see the element  jQuery = .message-alert:contains("You will not be able to make changes")
-    the user clicks the button/link  id = submit-application-button-modal
-    the user clicks the button/link  css = button[type="submit"][data-submitted-text]
+    the user clicks the button/link  id = submit-application-button
     the user clicks the button/link  link = Give us feedback
 
 the competition is now in Project Setup

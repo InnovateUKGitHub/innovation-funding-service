@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
         <th:block th:insert="fragments/layout :: head"
@@ -52,21 +52,32 @@
             </div>
         </th:block>
 
-        <h3 class="govuk-heading-s">
-            <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
-            <th:block th:text="${model.questionSubtitle}">Project team</th:block>
-        </h3>
-
-        <p class="govuk-hint" th:if="${model.questionDescription != null}" th:text="${model.questionDescription}"></p>
-
-        <details class="govuk-details" role="group">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
-            </summary>
-            <div class="govuk-details__text wysiwyg-styles"
-                 ifs:utext="${model.questionGuidance}">Guidance
+        <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'clear-floats'">
+            <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'govuk-grid-row govuk-!-margin-top-6'">
+                <div th:classappend="${model.readOnly and model.multipleChoiceOptionsActive} ? 'govuk-grid-column-one-half'">
+                    <h3 class="govuk-heading-s">
+                        <th:block th:if="${model.shouldDisplayQuestionNumber()}" th:text="|${model.questionNumber}. |">1</th:block>
+                        <th:block th:text="${model.questionSubtitle}">Project team</th:block>
+                    </h3>
+                </div>
+                <div class="govuk-grid-column-one-half alignleft" th:if="${model.readOnly and model.multipleChoiceOptionsActive}">
+                    <p class="govuk-body" th:text="${model.selectedMultipleChoiceOption?.text ?: 'Question not answered.'}">Answer</p>
+                </div>
             </div>
-        </details>
+        </div>
+
+        <th:block th:unless="${model.readOnly}">
+            <div class="govuk-hint wysiwyg-styles" th:if="${model.questionDescription != null}" ifs:utext="${model.questionDescription}"></div>
+
+            <details th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details" role="group">
+                <summary th:unless="${#strings.isEmpty(model.questionGuidanceTitle)}" class="govuk-details__summary">
+                    <span class="govuk-details__summary-text" th:text="${model.questionGuidanceTitle}">What should I include in the project public description?</span>
+                </summary>
+                <div th:unless="${#strings.isEmpty(model.questionGuidance)}" class="govuk-details__text wysiwyg-styles"
+                     ifs:utext="${model.questionGuidance}">Guidance
+                </div>
+            </details>
+        </th:block>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
               data-autosave="autosaveFormPost" enctype="multipart/form-data"
@@ -74,6 +85,8 @@
 
             <th:block th:unless="${model.readOnly}">
                 <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
+                <input type="hidden" th:field="${model.textAreaActive}" />
+                <input type="hidden" th:field="${model.multipleChoiceOptionsActive}" />
             </th:block>
 
             <div class="govuk-form-group" th:if="${model.textAreaActive}"
@@ -104,6 +117,45 @@
                 </div>
             </div>
 
+            <th:block th:if="${model.multipleChoiceOptionsActive}">
+                <div class="govuk-form-group" th:unless="${model.readOnly}"
+                     th:classappend="${#fields.hasErrors('multipleChoiceOptionId')} ? 'govuk-form-group--error'">
+                    <th:block th:if="${#fields.hasErrors('multipleChoiceOptionId')}">
+                        <span class="govuk-error-message"  th:each="err : ${#fields.errors('multipleChoiceOptionId')}" th:text="${err}"></span>
+                    </th:block>
+                    <div class="govuk-radios" th:classappend="${#lists.size(model.multipleChoiceOptions) <= 2} ? govuk-radios--inline" th:if="${#lists.size(model.multipleChoiceOptions) <= 9}">
+                        <div class="govuk-radios__item" th:each="multipleChoiceOption : ${model.multipleChoiceOptions}">
+                            <input type="radio" name="innovationAreaChoice" required="required"
+                                   class="govuk-radios__input"
+                                   th:id="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                                   th:field="*{multipleChoiceOptionId}"
+                                   th:value="${multipleChoiceOption.id}"
+                                   th:checked="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"
+                                   th:readonly="${model.readOnly}"
+                                   th:errorclass="govuk-input--error"
+                                   th:attr="data-required-errormessage=#{validation.multiple.choice.required}">
+                            <label th:for="${'multipleChoiceOption-'+multipleChoiceOption.id}"
+                                   class="govuk-label govuk-radios__label" th:text="${multipleChoiceOption.text}" />
+                        </div>
+                    </div>
+                    <th:block th:if="${#lists.size(model.multipleChoiceOptions) > 9 and #lists.size(model.multipleChoiceOptions) <= 15}">
+                        <label class="govuk-label govuk-visually-hidden" for="multipleChoiceOptionId">Please select an answer.</label>
+                        <select class="govuk-select"
+                                id="multipleChoiceOptionId"
+                                th:field="*{multipleChoiceOptionId}"
+                                th:attr="data-required-errormessage=#{validation.multiple.choice.required}"
+                                th:errorclass="govuk-input--error"
+                                data-auto-complete="">
+                            <option value="">Please select</option>
+                            <option th:each="multipleChoiceOption : ${model.multipleChoiceOptions}"
+                                    th:value="${multipleChoiceOption.id}"
+                                    th:text="${multipleChoiceOption.text}"
+                                    th:selected="${model.selectedMultipleChoiceOption?.id == multipleChoiceOption.id}"></option>
+                        </select>
+                    </th:block>
+                </div>
+            </th:block>
+
             <div class="govuk-form-group" th:if="${model.templateDocumentActive}">
                 <div class="govuk-form-group download">
                     <h3 class="govuk-heading-s" th:text="|Download the ${model.templateDocumentTitle} template|">Download</h3>
@@ -116,7 +168,7 @@
                 <div class="upload-section govuk-!-margin-top-6">
                     <h3 class="govuk-heading-s govuk-!-margin-0" th:text="|Upload your completed ${model.templateDocumentTitle}|">Upload your completed spreadsheet</h3>
                     <p class="govuk-body">Your upload must be no larger than 10MB</p>
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group" th:with="removeValue = ${model.templateDocumentResponseFileEntryId}">
                         <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
                                 @{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentFormInputId})},
                                 ${model.templateDocumentResponseFilename},
@@ -148,14 +200,43 @@
                         </div>
                     </details>
                     <div class="govuk-form-group">
-                        <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
-                                @{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixFormInputId})},
-                                ${model.appendixFilename},
-                                appendix,
-                                appendix,
-                                true,
-                                removeAppendix,
-                                uploadAppendix)"/>
+                        <div class="ajax-upload"
+                             data-js-upload-button-name="uploadAppendix"
+                             data-js-upload-file-input="appendix"
+                             th:attr="data-js-number-of-files=${model.maximumAppendices}"
+                             data-js-upload-one-at-a-time="">
+                            <p th:if="${model.appendices.isEmpty()}" class="govuk-body no-file-uploaded">No file currently
+                                uploaded.</p>
+                            <ul class="govuk-list file-list">
+                                <li th:each="appendix : ${model.appendices}"
+                                    class="success">
+                                    <div class="file-row">
+                                        <a th:href="@{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/file/{fileEntryId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.appendixFormInputId}, fileEntryId=${appendix.fileEntryId})}"
+                                           th:text="|${appendix.filename} (opens in a new window)|"
+                                           target="_blank"
+                                           class="govuk-link"
+                                           aria-describedby="file-hint">File</a>
+                                        <button th:unless=${model.readOnly} name="removeAppendix" th:value="${appendix.fileEntryId}"
+                                                class="button-clear remove-file" aria-label="Remove uploaded document">Remove
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div th:unless=${model.readOnly}
+                                 th:class="${#fields.hasErrors('appendix')} ? 'govuk-form-group--error' : ''">
+                                <th:block th:if="${#fields.hasErrors('appendix')}">
+                            <span class="govuk-error-message" th:each="err : ${#fields.errors('appendix')}"
+                                  th:text="${err}"/>
+                                </th:block>
+                                <th:block th:if="${model.maximumAppendices > model.appendices.size()}">
+                                    <input type="file" id="appendix" class="inputfile" name="appendix">
+                                    <label for="appendix" class="govuk-!-margin-top-6">Upload</label>
+                                    <button name="uploadAppendix" class="govuk-button govuk-button--secondary" type="submit"
+                                            data-for-file-upload="appendix">Save
+                                    </button>
+                                </th:block>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.applicant.resource.dashboard.DashboardPreviousRowResou
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class ApplicationDashboardServiceIntegrationTest extends BaseAuthenticati
             .withApplicationId(4)
             .withCompetitionTitle("Connected digital additive manufacturing")
             .withCollaborationLevelSingle(true)
+            .withCompetitionCompletionStage(CompetitionCompletionStage.PROJECT_SETUP)
             .build();
 
     @Test

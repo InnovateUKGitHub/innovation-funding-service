@@ -17,8 +17,8 @@ public class FormInputResponseFileEntryResource {
         // for JSON marshalling
     }
 
-    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId) {
-        this(fileEntryResource, new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId));
+    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId, Long fileEntryId) {
+        this(fileEntryResource, new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId, fileEntryId));
     }
 
     public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, FormInputResponseFileEntryId compoundId) {

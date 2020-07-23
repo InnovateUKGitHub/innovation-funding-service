@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
     <th:block th:fragment="key-statistics(keyStatistics)">
         <h2 class="govuk-heading-l">Key statistics</h2>
 
-        <ul class="govuk-list govuk-grid-row">
+        <ul th:unless="${keyStatistics.displayAssessorStats}" class="govuk-list govuk-grid-row">
             <li class="govuk-grid-column-one-third">
                 <div class="highlight-panel highlight-panel-padded">
                     <span class="govuk-heading-l govuk-!-margin-bottom-0" th:text="${keyStatistics.statOne}">1</span>

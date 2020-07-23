@@ -30,7 +30,6 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
-import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -80,6 +79,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return markQuestionComplete(markAsComplete, APPLICATION_DETAILS);
     }
 
+    public ApplicationDataBuilder markEdiComplete(boolean markAsComplete) {
+        return markQuestionComplete(markAsComplete, EQUALITY_DIVERSITY_INCLUSION);
+    }
+
     public ApplicationDataBuilder markApplicationTeamComplete(boolean markAsComplete) {
         return markQuestionComplete(markAsComplete, APPLICATION_TEAM);
     }
@@ -104,10 +107,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         .getSuccess();
             }
         });
-    }
-
-    public ApplicationDataBuilder withQuestionResponse(String questionName, String value, String answeredBy) {
-        return withQuestionResponses(builder -> builder.forQuestion(questionName).withAnswer(value, answeredBy));
     }
 
     public ApplicationDataBuilder withStartDate(LocalDate startDate) {
@@ -258,23 +257,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     @Override
     protected ApplicationData createInitial() {
         return new ApplicationData();
-    }
-
-    public ApplicationDataBuilder withQuestionResponses(
-            UnaryOperator<QuestionResponseDataBuilder>... responseBuilders) {
-
-        return withQuestionResponses(asList(responseBuilders));
-    }
-
-    public ApplicationDataBuilder withQuestionResponses(
-            List<UnaryOperator<QuestionResponseDataBuilder>> responseBuilders) {
-
-        return with(data -> {
-            QuestionResponseDataBuilder baseBuilder =
-                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
-
-            responseBuilders.forEach(builder -> builder.apply(baseBuilder).build());
-        });
     }
 
     public ApplicationDataBuilder withExistingApplication(ApplicationData applicationData) {

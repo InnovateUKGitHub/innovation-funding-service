@@ -2,22 +2,20 @@ package org.innovateuk.ifs.application.readonly.populator;
 
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
+import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionFileViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.util.HttpServletUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
@@ -29,7 +27,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public GenericQuestionReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         Collection<FormInputResource> formInputs = data.getQuestionIdToApplicationFormInputs().get(question.getId());
-        Optional<FormInputResource> textInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA))
+        Optional<FormInputResource> answerInput = formInputs.stream().filter(formInput -> formInput.getType().equals(TEXTAREA)
+                || formInput.getType().equals(MULTIPLE_CHOICE))
                 .findAny();
 
         Optional<FormInputResource> appendix = formInputs.stream().filter(formInput -> formInput.getType().equals(FILEUPLOAD))
@@ -38,7 +37,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResource> templateDocument = formInputs.stream().filter(formInput -> formInput.getType().equals(TEMPLATE_DOCUMENT))
                 .findAny();
 
-        Optional<FormInputResponseResource> textResponse = textInput
+        Optional<FormInputResponseResource> textResponse = answerInput
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
         Optional<FormInputResponseResource> appendixResponse = appendix
@@ -65,26 +64,32 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
-                textResponse.map(FormInputResponseResource::getValue).orElse(null),
-                appendixResponse.map(FormInputResponseResource::getFilename).orElse(null),
-                appendixResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data, settings)).orElse(null),
-                appendixResponse.map(FormInputResponseResource::getFormInput).orElse(null),
-                templateDocumentResponse.map(FormInputResponseResource::getFilename).orElse(null),
-                templateDocumentResponse.map(response -> urlForFormInputDownload(response.getFormInput(), question, data, settings)).orElse(null),
+                answerInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
+                        ? textResponse.map(FormInputResponseResource::getMultipleChoiceOptionText).orElse(null)
+                        : textResponse.map(FormInputResponseResource::getValue).orElse(null)).orElse(null),
+                appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
+                templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
-                templateDocumentResponse.map(FormInputResponseResource::getFormInput).orElse(null),
                 feedback.map(AssessorFormInputResponseResource::getValue).orElse(null),
                 score.map(AssessorFormInputResponseResource::getValue).orElse(null)
             );
     }
 
-    private String urlForFormInputDownload(long formInputId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
-        if (data.getApplicantProcessRole().isPresent()) {
-            return String.format("/application/%d/form/question/%d/forminput/%d/download", data.getApplication().getId(), question.getId(), formInputId);
+    private List<GenericQuestionFileViewModel> files(FormInputResponseResource response, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+        return response.getFileEntries().stream()
+                .map(file -> new GenericQuestionFileViewModel(file.getId(),
+                        file.getName(),
+                        urlForFormInputDownload(response.getFormInput(), file.getId(), question, data, settings)
+                )).collect(Collectors.toList());
+    }
+
+    private String urlForFormInputDownload(long formInputId, long fileEntryId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+        if (data.getApplicantProcessRole().isPresent() || data.getUser().hasRole(Role.MONITORING_OFFICER)) {
+            return String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", data.getApplication().getId(), question.getId(), formInputId, fileEntryId);
         } else if (data.getUser().hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
-            return String.format("/assessment/%d/application/%d/formInput/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId);
+            return String.format("/assessment/%d/application/%d/formInput/%d/file/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId, fileEntryId);
         } else {
-            return String.format("/management/competition/%d/application/%d/forminput/%d/download", data.getCompetition().getId(), data.getApplication().getId(), formInputId);
+            return String.format("/management/competition/%d/application/%d/forminput/%d/file/%d/download", data.getCompetition().getId(), data.getApplication().getId(), formInputId, fileEntryId);
         }
     }
 
@@ -96,6 +101,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
     @Override
     public Set<QuestionSetupType> questionTypes() {
-        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY);
+        return asSet(ASSESSED_QUESTION, SCOPE, PUBLIC_DESCRIPTION, PROJECT_SUMMARY, EQUALITY_DIVERSITY_INCLUSION);
     }
 }
