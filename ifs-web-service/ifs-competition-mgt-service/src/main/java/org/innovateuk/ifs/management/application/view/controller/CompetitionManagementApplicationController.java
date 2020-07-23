@@ -20,7 +20,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplic
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +46,6 @@ public class CompetitionManagementApplicationController {
 
     @Autowired
     private ProcessRoleService processRoleService;
-    @Autowired
-    private UserRestService userRestService;
     @Autowired
     private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
