@@ -17,6 +17,7 @@ delete from document_config_file_type where document_config_id in (select id fro
 
 delete from competition_organisation_config where id in (select competition_organisation_config_id from competition where id in (1,2,3,4,5,6,7,8,9));
 delete from competition_assessment_config where id in (select competition_assessment_config_id from competition where id in (1,2,3,4,5,6,7,8,9));
+delete from competition_application_config where id in (select competition_assessment_config_id from competition where id in (1,2,3,4,5,6,7,8,9));
 
 delete from document_config where competition_id in (1,2,3,4,5,6,7,8,9);
 
