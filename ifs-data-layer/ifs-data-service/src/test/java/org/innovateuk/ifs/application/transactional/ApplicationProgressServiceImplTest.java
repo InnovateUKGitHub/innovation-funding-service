@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -50,6 +51,7 @@ public class ApplicationProgressServiceImplTest {
 
     private static final Competition COMPETITION = newCompetition()
             .withMaxResearchRatio(30)
+            .withCompetitionApplicationConfig(new CompetitionApplicationConfig())
             .build();
     private static final Application APPLICATION = newApplication()
             .withCompetition(COMPETITION)
@@ -87,16 +89,6 @@ public class ApplicationProgressServiceImplTest {
     public void applicationNotReadyToSubmitProgressNotComplete() {
         when(questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(APPLICATION.getId())).thenReturn(2L);
         when(sectionStatusService.sectionsCompleteForAllOrganisations(APPLICATION.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
-        when(applicationFinanceHandler.getResearchParticipationPercentage(APPLICATION.getId())).thenReturn(new BigDecimal("29"));
-
-        boolean result = service.applicationReadyForSubmit(APPLICATION.getId());
-        assertFalse(result);
-    }
-
-    @Test
-    public void applicationNotReadyToSubmitChildSectionsNotComplete() {
-        when(questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(APPLICATION.getId())).thenReturn(3L);
-        when(sectionStatusService.sectionsCompleteForAllOrganisations(APPLICATION.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
         when(applicationFinanceHandler.getResearchParticipationPercentage(APPLICATION.getId())).thenReturn(new BigDecimal("29"));
 
         boolean result = service.applicationReadyForSubmit(APPLICATION.getId());

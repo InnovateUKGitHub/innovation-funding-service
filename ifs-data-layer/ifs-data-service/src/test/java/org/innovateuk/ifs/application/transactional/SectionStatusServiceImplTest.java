@@ -144,6 +144,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
         when(applicationRepositoryMock.findById(applicationId)).thenReturn(Optional.of(application));
         when(questionStatusServiceMock.findCompletedQuestionsByApplicationId(applicationId)).thenReturn(serviceSuccess(questionStatusResources));
         when(financeServiceMock.collaborativeFundingCriteriaMet(application.getId())).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.fundingSoughtValid(application.getId())).thenReturn(serviceSuccess(true));
 
         Set<Long> result = sectionStatusService.getCompletedSections(applicationId, organisationId).getSuccess();
 
