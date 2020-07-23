@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.competition.resource.CompetitionCompletionStage.RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
@@ -44,6 +46,9 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
+
+    @Autowired
+    private ApplicationFinanceService applicationFinanceService;
 
     @Override
     @Transactional
@@ -72,17 +77,25 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
             Competition competition = application.getCompetition();
 
-            return isCollaborativeValid(application, applicationFinanceResources)
-                    && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+//            If EOI or competition with no Finances
+            if (RELEASE_FEEDBACK.equals(competition.getCompletionStage())) {
+                return isApplicationPercentageComplete(progressPercentage, researchParticipation, competition);
+            }
+
+            return isCollaborativeFundingCriteriaMet(application)
                     && isFundingSoughtValid(competition, totalFundingSought)
-                    && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
+                    && isApplicationPercentageComplete(progressPercentage, researchParticipation, competition);
         }).getSuccess();
     }
 
-    private boolean isCollaborativeValid(Application application, List<ApplicationFinanceResource> applicationFinanceResources) {
+    private boolean isApplicationPercentageComplete(BigDecimal progressPercentage, BigDecimal researchParticipation, Competition competition) {
+        return progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
+    }
+
+    private boolean isCollaborativeFundingCriteriaMet(Application application) {
         if (application.isCollaborativeProject()) {
-//            should do the check as we check all percentage complete sothis just check that rthere is two
-            return applicationFinanceResources.size() > 1;
+            return applicationFinanceService.collaborativeFundingCriteriaMet(application.getId()).getSuccess();
         }
         return true;
     }
