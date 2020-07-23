@@ -221,14 +221,17 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     public ServiceResult<Boolean> fundingSoughtValid(long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
-                BigDecimal maximumFundingSought = application.getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+            BigDecimal maximumFundingSought = application.getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+            if (maximumFundingSought != null) {
                 return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
-                  BigDecimal applicationTotalFundingSought = financeTotals.stream()
-                          .map(ApplicationFinanceResource::getTotalFundingSought)
-                          .reduce(BigDecimal::add)
-                          .orElse(BigDecimal.ZERO);
+                    BigDecimal applicationTotalFundingSought = financeTotals.stream()
+                            .map(ApplicationFinanceResource::getTotalFundingSought)
+                            .reduce(BigDecimal::add)
+                            .orElse(BigDecimal.ZERO);
                     return applicationTotalFundingSought.compareTo(maximumFundingSought) <= 0;
                 });
+            }
+            return serviceSuccess(true);
         });
     }
 
