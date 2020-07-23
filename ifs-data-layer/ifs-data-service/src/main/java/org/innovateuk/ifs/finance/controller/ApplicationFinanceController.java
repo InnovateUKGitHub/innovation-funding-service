@@ -92,11 +92,6 @@ public class ApplicationFinanceController {
         return financeService.financeTotals(applicationId).toGetResponse();
     }
 
-    @GetMapping("/has-valid-funding-sought/{applicationId}")
-    public RestResult<Boolean> fundingSoughtValid(@PathVariable("applicationId") final long applicationId) {
-        return financeService.fundingSoughtValid(applicationId).toGetResponse();
-    }
-
     @PostMapping(value = "/finance-document", produces = "application/json")
     public RestResult<FileEntryResource> addFinanceDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
