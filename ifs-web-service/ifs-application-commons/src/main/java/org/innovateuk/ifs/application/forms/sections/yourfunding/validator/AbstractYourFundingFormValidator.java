@@ -92,7 +92,7 @@ public class AbstractYourFundingFormValidator {
             }
             if (financeSupplier.get().getMaximumFundingAmount() != null) {
                 if (form.getAmount().compareTo(financeSupplier.get().getMaximumFundingAmount()) > 0) {
-                    errors.rejectValue("amount", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(financeSupplier.get().getMaximumFundingLevel())}, "");
+                    errors.rejectValue("amount", "validation.finance.grant.claim.percentage.more.than.funding.amount", new String[]{String.valueOf(financeSupplier.get().getMaximumFundingLevel())}, "");
                 }
             }
         }
