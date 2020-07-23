@@ -138,13 +138,13 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     }
 
     public boolean showFundingSoughtWarning() {
-        if (competitionMaximumFundingSought == null) {
-            return false;
-        }
         return !isFundingSoughtValid();
     }
 
     private boolean isFundingSoughtValid() {
+        if (competitionMaximumFundingSought == null) {
+            return false;
+        }
         return rows.stream()
                 .map(row -> row.getFundingSought())
                 .reduce(BigDecimal::add).get().compareTo(competitionMaximumFundingSought) <= 0;

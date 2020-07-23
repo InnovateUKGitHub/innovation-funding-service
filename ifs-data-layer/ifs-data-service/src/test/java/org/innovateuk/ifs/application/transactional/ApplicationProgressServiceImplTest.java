@@ -35,9 +35,6 @@ public class ApplicationProgressServiceImplTest {
     private OrganisationRepository organisationRepository;
 
     @Mock
-    private SectionStatusService sectionStatusService;
-
-    @Mock
     private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Mock
@@ -68,7 +65,6 @@ public class ApplicationProgressServiceImplTest {
     @Test
     public void getApplicationReadyToSubmit() {
         when(questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(APPLICATION.getId())).thenReturn(3L);
-        when(sectionStatusService.sectionsCompleteForAllOrganisations(APPLICATION.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(applicationFinanceHandler.getResearchParticipationPercentage(APPLICATION.getId())).thenReturn(new BigDecimal("29"));
 
         boolean result = service.applicationReadyForSubmit(APPLICATION.getId());
@@ -78,7 +74,6 @@ public class ApplicationProgressServiceImplTest {
     @Test
     public void applicationNotReadyToSubmitResearchParticipationTooHigh() {
         when(questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(APPLICATION.getId())).thenReturn(3L);
-        when(sectionStatusService.sectionsCompleteForAllOrganisations(APPLICATION.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(applicationFinanceHandler.getResearchParticipationPercentage(APPLICATION.getId())).thenReturn(new BigDecimal("31"));
 
         boolean result = service.applicationReadyForSubmit(APPLICATION.getId());
@@ -88,7 +83,6 @@ public class ApplicationProgressServiceImplTest {
     @Test
     public void applicationNotReadyToSubmitProgressNotComplete() {
         when(questionStatusRepository.countByApplicationIdAndMarkedAsCompleteTrue(APPLICATION.getId())).thenReturn(2L);
-        when(sectionStatusService.sectionsCompleteForAllOrganisations(APPLICATION.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(applicationFinanceHandler.getResearchParticipationPercentage(APPLICATION.getId())).thenReturn(new BigDecimal("29"));
 
         boolean result = service.applicationReadyForSubmit(APPLICATION.getId());
