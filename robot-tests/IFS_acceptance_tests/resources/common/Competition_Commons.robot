@@ -118,18 +118,19 @@ the user fills in the CS Funding Information
 
 the user fills in the CS Project eligibility
     [Arguments]  ${organisationType}  ${researchParticipation}  ${researchCategory}  ${collaborative}
-    the user clicks the button/link    link = Project eligibility
-    the user clicks the button twice   css = label[for="single-or-collaborative-${collaborative}"]
-    the user selects the radio button  researchCategoriesApplicable    ${researchCategory}
+    the user clicks the button/link       link = Project eligibility
+    the user clicks the button twice      css = label[for="single-or-collaborative-${collaborative}"]
+    the user selects the radio button     researchCategoriesApplicable    ${researchCategory}
     Run Keyword If  '${researchCategory}' == 'false'  the user selects the option from the drop-down menu  10%  fundingLevelPercentage
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="research-categories-33"]
-    the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
-    the user selects Research Participation if required  ${researchParticipation}
-    the user selects the radio button   resubmission  yes
+    Run Keyword If  '${organisationType}' == '${KTP_TYPE_ID}'  the user selects Research Participation if required   ${researchParticipation}
+    ...   ELSE   the user clicks the button twice   css = label[for="lead-applicant-type-${organisationType}"]
+    #the user selects Research Participation if required  ${researchParticipation}
+    the user selects the radio button     resubmission  yes
     Run Keyword If  '${researchCategory}' == 'true'   the user clicks the button twice  css = label[for="comp-overrideFundingRules-no"]
-    the user clicks the button/link    jQuery = button:contains("Done")
-    the user clicks the button/link    link = Competition details
-    the user should see the element    jQuery = div:contains("Project eligibility") ~ .task-status-complete
+    the user clicks the button/link       jQuery = button:contains("Done")
+    the user clicks the button/link       link = Competition details
+    the user should see the element       jQuery = div:contains("Project eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
 
 the user selects Research Participation if required
