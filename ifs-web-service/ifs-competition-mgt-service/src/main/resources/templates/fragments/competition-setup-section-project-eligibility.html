@@ -232,11 +232,9 @@
             </th:block>
 
             <th:block th:if="${model.general.competition.isKtp()}">
-                <tr th:each="leadApplicantType : ${model.leadApplicantTypes}">
-                    <td>
-                        <input type="hidden" th:id="${'lead-applicant-type-' + leadApplicantType.id}" name="leadApplicantTypes" th:value="${leadApplicantType.id}" />
-                    </td>
-                </tr>
+                <div th:each="leadApplicantType : ${model.leadApplicantTypes}">
+                    <input type="hidden" th:id="${'lead-applicant-type-' + leadApplicantType.id}" name="leadApplicantTypes" th:value="${leadApplicantType.id}" />
+                </div>
             </th:block>
 
             <div class="govuk-form-group"
