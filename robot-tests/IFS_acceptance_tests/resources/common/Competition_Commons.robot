@@ -20,6 +20,7 @@ The competition admin creates competition
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
+    ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
     the user fills in the CS Assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
@@ -179,6 +180,12 @@ the user marks the Application as done
     Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
     ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
 
+the user marks the KTP application details as done
+    [Arguments]  ${comp_type}
+    the user clicks the button/link                                link = Application
+    the user marks the Application details section as complete     ${comp_type}
+    the user marks the KTP Assessed questions as complete
+
 The user removes the Project details questions and marks the Application section as done
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                      link = Application
@@ -192,11 +199,17 @@ the user marks the Assessed questions as complete
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)  ${competition}
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
     Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
-    Run Keyword If  '${competition}' == '${ktpCompetitionName}'  the user fills in the Finances questions without growth table    false  true
     ...    ELSE   the user fills in the Finances questions  ${growthTable}  false  true
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
+
+the user marks the KTP Assessed questions as complete
+    the assessment questions are marked complete for other programme type competitions
+    the user fills in the Finances questions without growth table                          false  true
+    the user clicks the button/link                                                        jQuery = button:contains("Done")
+    the user clicks the button/link                                                        link = Competition details
+    the user should see the element                                                        jQuery = div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
