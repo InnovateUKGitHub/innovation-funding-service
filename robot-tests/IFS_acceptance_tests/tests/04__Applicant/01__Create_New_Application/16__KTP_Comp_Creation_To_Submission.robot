@@ -21,16 +21,16 @@ ${KTPapplicationTitle}  KTP Application
 *** Test Cases ***
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single-or-collaborative
+    Given the user logs-in in new browser              &{Comp_admin1_credentials}
+    Then the competition admin creates competition     ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user clicks the button/link      link = ${KTPcompetitionTitle}
-    Given the user clicks the button/link         link = View and update competition details
-    When the user clicks the button/link          link = Initial details
-    Then the user should see the element          jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
-    [Teardown]  the user clicks the button/link   link = Competition details
+    [Setup]  the user clicks the button/link        link = ${KTPcompetitionTitle}
+    Given the user clicks the button/link           link = View and update competition details
+    When the user clicks the button/link            link = Initial details
+    Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
+    [Teardown]  the user clicks the button/link     link = Competition details
 
 Comp Admin is able to see KTP T&C's have been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -39,15 +39,15 @@ Comp Admin is able to see KTP T&C's have been selected
 
 Applicant applies to newly created KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given get competition id and set open date to yesterday  ${KTPcompetitionTitle}
-    When log in as a different user                          &{lead_applicant_credentials}
-    Then logged in user applies to competition               ${KTPcompetitionTitle}  1
+    Given get competition id and set open date to yesterday     ${KTPcompetitionTitle}
+    When log in as a different user                             &{lead_applicant_credentials}
+    Then logged in user applies to competition                  ${KTPcompetitionTitle}  1
 
-Applicant is able to complete and submit an application
+Applicant is able to complete the application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
     Given the user completes the application
 
-Applicant invites a partner
+Applicant invites a partner and partner completes his details
     [Documentation]  IFS-7812
     Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${KTPcompetitionTitle}  ${KTPapplicationTitle}  yes
 
@@ -63,75 +63,99 @@ Moving KTP Competition to Project Setup
     And moving competition to Project Setup            ${competitionId}
     [Teardown]  Requesting IDs of this Project
 
-The user is able to complete Project details section
+The user is able to complete the Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user logs-in in new browser     &{lead_applicant_credentials}
-    Given the user navigates to the page         ${server}/project-setup/project/${ProjectID}
+    [Setup]  Log in as a different user                           &{lead_applicant_credentials}
+    Given the user navigates to the page                          ${server}/project-setup/project/${ProjectID}
     When the user is able to complete project details section
-    Then the user should see the element         css = ul li.complete:nth-child(1)
+    Then the user should see the element                          jQuery = .progress-list li:nth-child(1):contains("Completed")
 
 The user is able to complete Project team section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user clicks the button/link       link = Project team
-    Given the user completes the project team section
-    Then the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
+    Given the user clicks the button/link                link = Project team
+    When the user completes the project team section
+    Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("To be completed")
 
 The user is able to complete the Documents section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user clicks the button/link     link = Documents
+    Given the user clicks the button/link                link = Documents
     When the user uploads the exploitation plan
     And the user uploads the Test document type
-    And the user clicks the button/link       link = Set up your project
-    Then the user should see the element      jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
+    And the user uploads the Collaboration agreement
+    And the user clicks the button/link                  link = Set up your project
+    Then the user should see the element                 jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
 
 The user is able to complete the Bank details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user enters bank details
-    When the user clicks the button/link      link = Set up your project
-    Then the user should see the element      jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
+    When the user clicks the button/link     link = Set up your project
+    Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
+
+The partner is able to complete Project team Section
+    [Documentation]  IFS-7812
+    [Setup]  log in as a different user             &{collaborator1_credentials}
+    Given the user clicks the button/link           link = ${KTPapplicationTitle}
+    And the user clicks the button/link             link = Project team
+    When The user selects their finance contact     financeContact1
+    And the user clicks the button/link             link = Set up your project
+    Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
+
+The Partner is able to complete the Bank details section
+    [Documentation]  IFS-7812
+    Given the user enters bank details
+    When the user clicks the button/link     link = Set up your project
+    Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
 
 Internal user is able to approve documents
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    [Setup]  log in as a different user                  &{Comp_admin1_credentials}
     Given Internal user is able to approve documents
-    When the user navigates to the page        ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element       css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Internal user is able to assign an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
-    Given Search for MO                            Orvill  Orville Gibbs
-    When The internal user assign project to MO    ${ApplicationID}  ${KTPapplicationTitle}
-    And the user navigates to the page             ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
+    [Setup]  the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
+    Given Search for MO                             Orvill  Orville Gibbs
+    When The internal user assign project to MO     ${ApplicationID}  ${KTPapplicationTitle}
+    And the user navigates to the page              ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(4)
 
 Finance user approves bank details
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user                      &{internal_finance_credentials}
-    Given the project finance user approves bank details     ${ProjectID}
-    When the user navigates to the page                      ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element                     css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
+    [Setup]  log in as a different user                         &{internal_finance_credentials}
+    When the project finance user approves bank details for     ${EMPIRE_LTD_NAME}  ${ProjectID}
+    And the project finance user approves bank details for      ${organisationLudlowName}  ${ProjectID}
+    Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
+    And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
 
 Internal user is able to approve Finance checks and generate spend profile
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user navigates to the page        ${server}/project-setup-management/project/${ProjectID}/finance-check
-    Given the user approves Eligibility and Viability
-    When the user navigates to the page            ${server}/project-setup-management/competition/${competitionId}/status/all
-    Then the user should see the element           css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
-    And the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
+    [Setup]  the user navigates to the page     ${server}/project-setup-management/project/${ProjectID}/finance-check
+    Given the user approves Eligibility         ${ProjectID}
+    And the user approves Viability             ${ProjectID}
+    And the user approves Spend Profile
+    When the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
+    And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
 
-User is able to submit the spend profile
+The partner is able to submit the spend profile
+    [Documentation]  IFS-7812
+    [Setup]  log in as a different user  &{collaborator1_credentials}
+    Given The partner submits the spend profile     ${ProjectID}  ${organisationLudlowId}
+
+The lead is able to submit the spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user      &{lead_applicant_credentials}
-    Given the user navigates to the page     ${server}/project-setup/project/${ProjectID}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
+    [Setup]  log in as a different user         &{lead_applicant_credentials}
+    Given the user navigates to the page        ${server}/project-setup/project/${ProjectID}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
     When the user submits the spend profile
-    Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+    Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
 Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given proj finance approves the spend profiles  ${ProjectID}
-    Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             NO  ${ProjectID}
+    Given proj finance approves the spend profiles     ${ProjectID}
+    Then the user should see the element               css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And internal user generates the GOL                NO  ${ProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -147,30 +171,42 @@ Internal user is able to approve the GOL and the project is now Live
     Then the user should see project is live with review its progress link
 
 *** Keywords ***
-The user approves Eligibility and Viability
-    the user clicks the button/link      jQuery = table.table-progress a.viability-0
-    the user selects the checkbox        costs-reviewed
-    the user selects the checkbox        project-viable
-    Set Focus To Element                 link = Contact us
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link      css = #confirm-button
-    the user clicks the button/link      jQuery = .modal-confirm-viability .govuk-button:contains("Confirm viability")
-    the user clicks the button/link      link = Return to finance checks
-    the user clicks the button/link      jQuery = table.table-progress a.eligibility-0
+the user approves Eligibility
+    [Arguments]  ${project}
+    Requesting Organisation IDs
+    the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${leadOrgId}/eligibility
     the user approves project costs
-    the user clicks the button/link      link = Return to finance checks
-    the user should see the element      jQuery = table.table-progress a.eligibility-0:contains("Approved")
-    the user clicks the button/link      link = Generate spend profile
-    the user clicks the button/link      css = #generate-spend-profile-modal-button
-    the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
+    the user navigates to the page      ${server}/project-setup-management/project/${project}/finance-check/organisation/${partnerOrgId}/eligibility
+    the user approves project costs
+
+the user approves viability
+    [Arguments]  ${project}
+    project finance approves Viability for     ${leadOrgId}  ${project}
+    project finance approves Viability for     ${partnerOrgId}  ${project}
+
+the user approves spend profile
+     the user clicks the button/link      link = Return to finance checks
+     the user clicks the button/link      link = Generate spend profile
+     the user clicks the button/link      css = #generate-spend-profile-modal-button
+     the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
+
+Requesting Organisation IDs
+    ${leadOrgId} =    get organisation id by name     ${EMPIRE_LTD_NAME}
+    Set suite variable      ${leadOrgId}
+    ${partnerOrgId} =  get organisation id by name    ${organisationLudlowName}
+    Set suite variable      ${partnerOrgId}
 
 Internal user is able to approve documents
-    the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/document/all
-    the user clicks the button/link        link = Exploitation plan
+    the user navigates to the page               ${server}/project-setup-management/project/${ProjectID}/document/all
+    the user clicks the button/link              link = Exploitation plan
     internal user approve uploaded documents
-    the user clicks the button/link        link = Return to documents
-    the user clicks the button/link        link = Test document type
+    the user clicks the button/link              link = Return to documents
+    the user clicks the button/link              link = Test document type
     internal user approve uploaded documents
+    the user clicks the button/link              link = Return to documents
+    the user clicks the button/link              link = Collaboration agreement
+    internal user approve uploaded documents
+    the user clicks the button/link              link = Return to documents
 
 The user completes the application
     the user clicks the button/link                          link = Application details
