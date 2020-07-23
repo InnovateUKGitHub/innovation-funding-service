@@ -102,8 +102,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 return false;
             }
         }
-
-        return financeService.collaborativeFundingCriteriaMet(application.getId()).getSuccess();
+        
+        return financeService.fundingSoughtValid(application.getId()).getSuccess()
+                && financeService.collaborativeFundingCriteriaMet(application.getId()).getSuccess();
     }
 
     @Override

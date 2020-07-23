@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
+import org.innovateuk.ifs.competition.repository.CompetitionApplicationConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -66,6 +68,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
 
     @Autowired
     private GrowthTableRepository growthTableRepository;
+
+    @Autowired
+    private CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
 
     @Override
     @Transactional
@@ -210,6 +215,20 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             } else {
                 return serviceSuccess(true);
             }
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> fundingSoughtValid(long applicationId) {
+        return getApplication(applicationId).andOnSuccess(application -> {
+                BigDecimal maximumFundingSought = application.getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+                return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
+                  BigDecimal applicationTotalFundingSought = financeTotals.stream()
+                          .map(ApplicationFinanceResource::getTotalFundingSought)
+                          .reduce(BigDecimal::add)
+                          .orElse(BigDecimal.ZERO);
+                    return applicationTotalFundingSought.compareTo(maximumFundingSought) <= 0;
+                });
         });
     }
 
