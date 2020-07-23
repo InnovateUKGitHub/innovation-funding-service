@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -161,6 +162,27 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void postEditKtpCompetitionFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
+                .thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicationFinanceType", String.valueOf(STANDARD))
+                .param("fundingRules", String.valueOf("Funding rules for this competition")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
+
+        verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
+    }
+
+    @Test
     public void postEditCompetitionFinanceWithErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -170,7 +192,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("financesRequired", String.valueOf(true)))
+                .param("financesRequired", String.valueOf(true))
+                .param("growthTableRequired", String.valueOf(true)))
                 .andExpect(status().isOk())
                 .andExpect(model().errorCount(5))
                 .andExpect(model().attributeExists("competitionSetupForm"))
@@ -178,6 +201,35 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                         "NotNull"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeGrowthTable",
                         "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",
+                        "FieldRequiredIf"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "fundingRules",
+                        "FieldRequiredIf"));
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(CompetitionSetupForm.class),
+                eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
+    }
+
+    @Test
+    public void postEditKtpCompetitionFinanceWithErrors() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+
+        when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(competition));
+
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("financesRequired", String.valueOf(true))
+                .param("growthTableRequired", String.valueOf(false)))
+                .andExpect(status().isOk())
+                .andExpect(model().errorCount(4))
+                .andExpect(model().attributeExists("competitionSetupForm"))
+                .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "applicationFinanceType",
+                        "NotNull"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeYourOrganisationSection",
                         "FieldRequiredIf"))
                 .andExpect(model().attributeHasFieldErrorCode("competitionSetupForm", "includeJesForm",

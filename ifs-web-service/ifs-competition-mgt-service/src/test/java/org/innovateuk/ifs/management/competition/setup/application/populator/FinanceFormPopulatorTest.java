@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.application.populator;
 
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
@@ -66,6 +67,7 @@ public class FinanceFormPopulatorTest {
                 .build();
 
         CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
                 .build();
 
         assertTrue(competition.isFinanceType());
@@ -85,6 +87,7 @@ public class FinanceFormPopulatorTest {
         assertTrue(result instanceof FinanceForm);
         FinanceForm form = (FinanceForm) result;
         assertEquals(STANDARD, form.getApplicationFinanceType());
+        assertTrue(form.isGrowthTableRequired());
         assertTrue(form.getIncludeGrowthTable());
         assertTrue(form.getIncludeYourOrganisationSection());
         assertTrue(form.getIncludeJesForm());
@@ -94,6 +97,7 @@ public class FinanceFormPopulatorTest {
     @Test
     public void populateForm_noFinances() {
         CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.GRANT)
                 .withNonFinanceType(true)
                 .build();
 
@@ -115,6 +119,39 @@ public class FinanceFormPopulatorTest {
         FinanceForm form = (FinanceForm) result;
         assertEquals(NO_FINANCES, form.getApplicationFinanceType());
         assertFalse(form.getIncludeGrowthTable());
+        assertFalse(form.isGrowthTableRequired());
+        assertFalse(form.getIncludeYourOrganisationSection());
+        assertFalse(form.getIncludeJesForm());
+
+        assertNull(form.getFundingRules());
+    }
+
+    @Test
+    public void populateForm_Ktp() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withNonFinanceType(true)
+                .build();
+
+        CompetitionSetupFinanceResource competitionSetupFinanceResource = newCompetitionSetupFinanceResource()
+                .withIncludeGrowthTable(false)
+                .withIncludeYourOrganisationSection(false)
+                .withIncludeJesForm(false)
+                .withApplicationFinanceType(NO_FINANCES)
+                .build();
+
+        assertTrue(competition.isNonFinanceType());
+
+        when(competitionSetupFinanceRestService.getByCompetitionId(competition.getId()))
+                .thenReturn(restSuccess(competitionSetupFinanceResource));
+
+        CompetitionSetupForm result = populator.populateForm(competition, Optional.empty());
+
+        assertTrue(result instanceof FinanceForm);
+        FinanceForm form = (FinanceForm) result;
+        assertEquals(NO_FINANCES, form.getApplicationFinanceType());
+        assertFalse(form.getIncludeGrowthTable());
+        assertFalse(form.isGrowthTableRequired());
         assertFalse(form.getIncludeYourOrganisationSection());
         assertFalse(form.getIncludeJesForm());
 

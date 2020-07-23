@@ -50,6 +50,8 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
+${ktpCompetitionName}     KTP Competition
+
 
 ${ukLeadInternationalCompetition}                        UK based Lead International Competition
 ${internationalLeadInternationalCompetition}             International Lead International Competition

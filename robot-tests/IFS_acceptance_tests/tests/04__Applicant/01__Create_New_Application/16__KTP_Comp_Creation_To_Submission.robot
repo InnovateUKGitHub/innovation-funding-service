@@ -15,18 +15,17 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPcompetitionTitle}  KTP Competition
-${KTPapplicationTitle}  KTP Application
+${KTPapplicationTitle}   KTP Application
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user logs-in in new browser              &{Comp_admin1_credentials}
-    Then the competition admin creates competition     ${business_type_id}  ${KTPcompetitionTitle}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single-or-collaborative
+    Then the competition admin creates competition     ${business_type_id}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user clicks the button/link        link = ${KTPcompetitionTitle}
+    [Setup]  the user clicks the button/link        link = ${ktpCompetitionName}
     Given the user clicks the button/link           link = View and update competition details
     When the user clicks the button/link            link = Initial details
     Then the user should see the element            jQuery = dt:contains("Funding type") ~ dd:contains("Knowledge Transfer Partnership (KTP)")
@@ -39,13 +38,13 @@ Comp Admin is able to see KTP T&C's have been selected
 
 Applicant applies to newly created KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given get competition id and set open date to yesterday     ${KTPcompetitionTitle}
+    Given get competition id and set open date to yesterday     ${ktpCompetitionName}
     When log in as a different user                             &{lead_applicant_credentials}
-    Then logged in user applies to competition                  ${KTPcompetitionTitle}  1
+    Then logged in user applies to competition                  ${ktpCompetitionName}  1
 
 Applicant is able to complete the application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
-    Given the user completes the application
+    Given the user completes the KTP application
 
 Applicant invites a partner and partner completes his details
     [Documentation]  IFS-7812
@@ -208,7 +207,7 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-The user completes the application
+The user completes the KTP application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
