@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
@@ -61,21 +62,29 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccessReturn(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);
             BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
-            List<ApplicationFinanceResource> applicationFinanceResource = applicationFinanceHandler.getApplicationTotals(id);
+            List<ApplicationFinanceResource> applicationFinanceResources = applicationFinanceHandler.getApplicationTotals(id);
 
 //            is there a better way to do this
-            BigDecimal totalFundingSought = applicationFinanceResource.stream()
+            BigDecimal totalFundingSought = applicationFinanceResources.stream()
                     .map(ApplicationFinanceResource::getTotalFundingSought)
                     .reduce(BigDecimal::add)
                     .orElse(BigDecimal.ZERO);
 
             Competition competition = application.getCompetition();
 
-//tidy this
-            return progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+            return isCollaborativeValid(application, applicationFinanceResources)
+                    && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
                     && isFundingSoughtValid(competition, totalFundingSought)
                     && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
         }).getSuccess();
+    }
+
+    private boolean isCollaborativeValid(Application application, List<ApplicationFinanceResource> applicationFinanceResources) {
+        if (application.isCollaborativeProject()) {
+//            should do the check as we check all percentage complete sothis just check that rthere is two
+            return applicationFinanceResources.size() > 1;
+        }
+        return true;
     }
 
     private boolean isFundingSoughtValid(Competition competition, BigDecimal totalFundingSought) {

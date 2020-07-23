@@ -121,10 +121,7 @@ public class AbstractYourFundingFormValidator {
                         errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.max", new String[]{String.valueOf(finance.getMaximumFundingLevel())}, "");
                     }
                     if (finance.getMaximumFundingAmount() != null) {
-//                        get from resource
-//                        not just single applicants
-//                        actually make it work
-//                        remove other banner
+//                        luke says finance was wrong
                         if (finance.getTotalFundingSought().compareTo(finance.getMaximumFundingAmount()) > 0) {
                             errors.rejectValue("grantClaimPercentage", "validation.finance.grant.claim.percentage.more.than.funding.amount", new String[]{String.valueOf(finance.getMaximumFundingAmount())}, "");
                         }
