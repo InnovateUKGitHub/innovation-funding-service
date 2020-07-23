@@ -86,7 +86,7 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     public boolean isAllFinancesComplete() {
         return rows.stream()
                 .filter(negate(FinanceSummaryTableRow::isPendingOrganisation))
-                .allMatch(FinanceSummaryTableRow::isComplete);
+                .allMatch(FinanceSummaryTableRow::isComplete) && isFundingSoughtValid();
     }
 
     public List<FinanceSummaryTableRow> getIncompleteOrganisations() {
@@ -141,9 +141,13 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
         if (competitionMaximumFundingSought == null) {
             return false;
         }
+        return !isFundingSoughtValid();
+    }
+
+    private boolean isFundingSoughtValid() {
         return rows.stream()
                 .map(row -> row.getFundingSought())
-                .reduce(BigDecimal::add).get().compareTo(competitionMaximumFundingSought) > 0;
+                .reduce(BigDecimal::add).get().compareTo(competitionMaximumFundingSought) <= 0;
     }
 
     public boolean showFinancesIncompleteWarning() {

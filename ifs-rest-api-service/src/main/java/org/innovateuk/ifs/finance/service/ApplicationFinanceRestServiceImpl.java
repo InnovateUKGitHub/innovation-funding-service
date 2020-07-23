@@ -70,6 +70,11 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     }
 
     @Override
+    public RestResult<Boolean> hasValidFundingSought(long applicationId) {
+        return getWithRestResult(applicationFinanceRestURL + "/has-valid-funding-sought/" + applicationId, Boolean.class);
+    }
+
+    @Override
     public RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file) {
         String url = applicationFinanceRestURL + "/finance-document" +
                 "?applicationFinanceId=" + applicationFinanceId +
