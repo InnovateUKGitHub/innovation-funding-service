@@ -188,7 +188,6 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-1">
                 <h2 class="govuk-fieldset__heading">Financial overview</h2>
             </legend>
-            <span th:unless="${readOnly}" class="govuk-hint">Enter your organisation's audited figures for the last 3 financial years.</span><br>
             <input type="hidden"
                    th:each="year, iter : ${form.years}"
                    th:field="*{years[__${iter.index}__].year}" />
