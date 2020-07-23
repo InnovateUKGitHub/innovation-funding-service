@@ -143,7 +143,7 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
 
     private boolean isFundingSoughtValid() {
         if (competitionMaximumFundingSought == null) {
-            return false;
+            return true;
         }
         return rows.stream()
                 .map(row -> row.getFundingSought())
