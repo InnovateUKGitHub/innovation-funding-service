@@ -35,6 +35,8 @@ Resource        ../../../resources/common/PS_Common.robot
 *** Variables ***
 ${loan_comp_PS}              Project setup loan comp
 ${loan_comp_PS_Id}           ${competition_ids["${loan_comp_PS}"]}
+${loan_comp_application}     Loan Competition
+${loan_comp_appl_id}         ${competition_ids["${loan_comp_application}"]}
 ${loan_PS_application1}      Loan Project 1
 ${loan_PS_application2}      Loan Project 2
 ${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
@@ -53,6 +55,12 @@ Loan application shows correct T&C's
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
     Then the user should see the element    jQuery = li:contains("Award terms and conditions") .task-status-complete
+
+Max funding sought validation
+    [Documentation]  IFS-7866
+    Given the user sets max available funding
+    When the user enters a value over the max funding
+    Then the user should see a field and summary error  Your funding sought exceeds £60,000.00. You must lower your funding level percentage or your project costs.
 
 Loan application Your funding
     [Documentation]  IFS-6207
@@ -145,14 +153,13 @@ Applicant checks successful and unsuccessful project status
 Custom suite setup
     the user logs-in in new browser       &{lead_applicant_credentials}
     the user clicks the button/link       link = Loan Application
+    Connect to database  @{database}
 
 Custom suite teardown
     The user closes the browser
+    Disconnect from database
 
 the user enters empty funding amount
-    the user clicks the button/link                link = Your project finances
-    the user clicks the button/link                link = Your funding
-    the user clicks the button/link                jQuery = button:contains("Edit your funding")
     the user enters text to a text field           id = amount  ${EMPTY}
     the user clicks the button/link                id = mark-all-as-complete
     the user should see a field and summary error  Enter the amount of funding sought.
@@ -295,3 +302,14 @@ the user should see the finished finance checks
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
     the user clicks the button/link   link = finances.
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
+
+the user sets max available funding
+    ${id} =  User gets competition config id for max funding  ${loan_comp_appl_id}
+    User sets a max funding level for a competition           ${id}  60000
+
+the user enters a value over the max funding
+    the user clicks the button/link                link = Your project finances
+    the user clicks the button/link                link = Your funding
+    the user clicks the button/link                jQuery = button:contains("Edit your funding")
+    the user enters text to a text field           id = amount  65000
+    the user clicks the button/link                id = mark-all-as-complete
