@@ -14,12 +14,13 @@ Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
 ${KTPapplicationTitle}   KTP Application
+${ktpOrganisationName}   ktpOrganisation
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
-    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -36,9 +37,9 @@ Comp Admin is able to see KTP T&C's have been selected
 
 Applicant applies to newly created KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given get competition id and set open date to yesterday  ${ktpCompetitionName}
-    When log in as a different user                          &{lead_applicant_credentials}
-    Then logged in user applies to competition               ${ktpCompetitionName}  1
+    Given get competition id and set open date to yesterday       ${ktpCompetitionName}
+    When log in as a different user                               &{lead_applicant_credentials}
+    Then logged in user applies to competition KTP                ${ktpCompetitionName}  5
 
 Applicant is able to complete and submit an application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -112,10 +113,11 @@ Internal user is able to approve Finance checks and generate spend profile
 
 User is able to submit the spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user      &{lead_applicant_credentials}
-    Given the user navigates to the page     ${server}/project-setup/project/${ProjectID}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
+    [Setup]  Requesting KTP Organisation ID
+    Given log in as a different user            &{lead_applicant_credentials}
+    And the user navigates to the page          ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
     When the user submits the spend profile
-    Then the user should see the element     jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+    Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
 Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -194,3 +196,16 @@ Requesting IDs of this Project
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+logged in user applies to competition KTP
+    [Arguments]  ${competition}  ${OrganisationType}
+    the user select the competition and starts application                     ${competition}
+    the user clicks the button/link                                            link = Apply with a different organisation
+    the user selects the radio button                                          organisationTypeId  ${OrganisationType}
+    the user clicks the button/link                                            jQuery = button:contains("Save and continue")
+    the user enters organisation details manually on companies house link      ${ktpOrganisationName}
+    the user clicks the button/link                                            jQuery = button:contains("Save and continue")
+
+Requesting KTP Organisation ID
+    ${ktpOrganisationID} =  get organisation id by name     ${ktpOrganisationName}
+    Set suite variable      ${ktpOrganisationID}

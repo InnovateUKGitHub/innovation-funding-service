@@ -429,6 +429,12 @@ logged in user applies to competition public
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
 
+the user enters organisation details manually on companies house link
+    [Arguments]  ${organisationName}
+    the user clicks the button/link          jQuery = span:contains("Enter details manually")
+    The user enters text to a text field     name = organisationName    ${organisationName}
+    the user clicks the button/link          jQuery = button:contains("Continue")
+
 the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
