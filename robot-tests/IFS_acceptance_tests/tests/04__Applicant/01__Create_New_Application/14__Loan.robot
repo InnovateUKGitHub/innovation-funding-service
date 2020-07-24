@@ -58,7 +58,7 @@ Loan application shows correct T&C's
 
 Max funding sought validation
     [Documentation]  IFS-7866
-    Given the user sets max available funding
+    Given the user sets max available funding           60000
     When the user enters a value over the max funding
     Then the user should see a field and summary error  Your funding sought exceeds £60,000.00. You must lower your funding level percentage or your project costs.
 
@@ -302,10 +302,6 @@ the user should see the finished finance checks
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
     the user clicks the button/link   link = finances.
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
-
-the user sets max available funding
-    ${id} =  User gets competition config id for max funding  ${loan_comp_appl_id}
-    User sets a max funding level for a competition           ${id}  60000
 
 the user enters a value over the max funding
     the user clicks the button/link                link = Your project finances

@@ -266,7 +266,7 @@ the lead invites already registered user
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team
-    the user sets max available funding
+    the user sets max available funding            50000
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
@@ -276,17 +276,6 @@ the user does not see state aid information
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
-
-the user sets max available funding
-    ${id} =  User gets competition config id for max funding  ${competitionId}
-    User sets a max funding level for a competition           ${id}  50000
-
-the user enters a value over the max funding
-    the user clicks the button/link                link = Your project finances
-    the user clicks the button/link                link = Your funding
-    the user clicks the button/link                jQuery = button:contains("Edit your funding")
-    the user enters text to a text field           id = amount  65000
-    the user clicks the button/link                id = mark-all-as-complete
 
 update project costs
     the user clicks the button/link       link = View finances
