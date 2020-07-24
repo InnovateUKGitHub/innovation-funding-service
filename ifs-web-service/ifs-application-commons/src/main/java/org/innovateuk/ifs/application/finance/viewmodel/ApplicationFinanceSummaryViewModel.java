@@ -151,7 +151,7 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     }
 
     public boolean showFinancesIncompleteWarning() {
-        return isUsersFinancesIncomplete() && !showFundingSoughtWarning();
+        return !isAllFinancesComplete() && !showFundingSoughtWarning();
     }
 
     private boolean atLeastTwoCompleteOrganisationFinances() {
