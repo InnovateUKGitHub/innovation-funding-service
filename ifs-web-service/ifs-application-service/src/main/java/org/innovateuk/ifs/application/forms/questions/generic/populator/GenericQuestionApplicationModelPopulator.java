@@ -81,7 +81,8 @@ public class GenericQuestionApplicationModelPopulator {
         viewModelBuilder.withTemplateDocumentFormInputId(input.getFormInput().getId())
                 .withTemplateDocumentTitle(input.getFormInput().getDescription())
                 .withTemplateDocumentFilename(input.getFormInput().getFile().getName())
-                .withTemplateDocumentResponseFilename(firstFilenameResponseOrNull(input));
+                .withTemplateDocumentResponseFilename(firstFile(input).map(FileEntryResource::getName).orElse(null))
+                .withTemplateDocumentResponseFileEntryId(firstFile(input).map(FileEntryResource::getId).orElse(null));
     }
 
     private void buildAppendixViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
@@ -118,11 +119,9 @@ public class GenericQuestionApplicationModelPopulator {
 
     }
 
-    private String firstFilenameResponseOrNull(ApplicantFormInputResource input) {
+    private Optional<FileEntryResource> firstFile(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .flatMap(resp -> resp.getFileEntries().stream().findFirst())
-                .map(FileEntryResource::getName)
-                .orElse(null);
+                .flatMap(resp -> resp.getFileEntries().stream().findFirst());
     }
 
     private MultipleChoiceOptionResource multipleChoiceOptionResponseOrNull(ApplicantFormInputResource input) {

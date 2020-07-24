@@ -20,6 +20,7 @@ The competition admin creates competition
     the user selects the organisational eligibility to no   false
     the user fills in the CS Milestones                     ${completionStage}   ${month}   ${nextyear}
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user marks the procurement application as done      ${projectGrowth}  ${compType}
+    ...  ELSE IF  '${fundingType}' == 'KTP'  the user marks the KTP application details as done     ${compType}
     ...  ELSE  the user marks the application as done       ${projectGrowth}  ${compType}  ${competition}
     the user fills in the CS Assessors
     Run Keyword If  '${fundingType}' == 'PROCUREMENT'  the user select no documents
@@ -179,6 +180,12 @@ the user marks the Application as done
     Run Keyword If  '${comp_type}' == 'Generic' or '${comp_type}' == '${compType_APC}'  the user fills in the CS Application section with custom questions  ${growthTable}  ${comp_type}
     ...    ELSE  the user marks the Assessed questions as complete             ${growthTable}  ${comp_type}  ${competition}
 
+the user marks the KTP application details as done
+    [Arguments]  ${comp_type}
+    the user clicks the button/link                                link = Application
+    the user marks the Application details section as complete     ${comp_type}
+    the user marks the KTP Assessed questions as complete
+
 The user removes the Project details questions and marks the Application section as done
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
     the user clicks the button/link                      link = Application
@@ -196,6 +203,13 @@ the user marks the Assessed questions as complete
     the user clicks the button/link  jQuery = button:contains("Done")
     the user clicks the button/link  link = Competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
+
+the user marks the KTP Assessed questions as complete
+    the assessment questions are marked complete for other programme type competitions
+    the user fills in the Finances questions without growth table                          false  true
+    the user clicks the button/link                                                        jQuery = button:contains("Done")
+    the user clicks the button/link                                                        link = Competition details
+    the user should see the element                                                        jQuery = div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
@@ -306,6 +320,18 @@ the user fills in the Finances questions
     [Arguments]  ${growthTable}  ${jes}  ${organisation}
     the user clicks the button/link       link = Finances
     the user clicks the button twice      css = label[for = "include-growth-table-${growthTable}"]
+    the user selects the radio button     applicationFinanceType  STANDARD
+    the user selects the radio button     includeYourOrganisationSection  ${organisation}
+    the user selects the radio button     includeJesForm  ${jes}
+    the user enters text to a text field  css = .editor  Those are the rules that apply to Finances
+    the user clicks the button/link       jQuery = button:contains('Done')
+    the user clicks the button/link       link = Finances
+    the user clicks the button/link       link = Application
+    the user should see the element       jQuery = li:contains("Finances") .task-status-complete
+
+the user fills in the Finances questions without growth table
+    [Arguments]  ${jes}  ${organisation}
+    the user clicks the button/link       link = Finances
     the user selects the radio button     applicationFinanceType  STANDARD
     the user selects the radio button     includeYourOrganisationSection  ${organisation}
     the user selects the radio button     includeJesForm  ${jes}

@@ -4,8 +4,11 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.registration.form.OrganisationSelectionForm;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
@@ -25,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.KNOWLEDGE_BASE;
 
 @RequestMapping("/organisation/select")
 @SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
@@ -53,6 +58,9 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private InviteRestService inviteRestService;
 
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
@@ -101,13 +109,31 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
     private Supplier<String> validateEligibility(HttpServletRequest request, HttpServletResponse response, UserResource user, OrganisationSelectionForm form) {
         return () -> {
             if (registrationCookieService.isLeadJourney(request)) {
-                CompetitionResource competition = competitionRestService.getCompetitionById(registrationCookieService.getCompetitionIdCookieValue(request).get()).getSuccess();
-                OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
-                if (!competition.getLeadApplicantTypes().contains(organisation.getOrganisationType())) {
+                if (!validateLeadApplicant(request, form))
                     return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
-                }
+            }
+
+            if (registrationCookieService.isCollaboratorJourney(request)) {
+                if (!validateCollaborator(request, form))
+                    return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
             }
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());
         };
+    }
+
+    private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
+        Optional<String> applicationInviteHash = registrationCookieService.getInviteHashCookieValue(request);
+            ApplicationInviteResource invite = inviteRestService.getInviteByHash(applicationInviteHash.get()).getSuccess();
+            CompetitionResource competition = competitionRestService.getCompetitionById(invite.getCompetitionId()).getSuccess();
+            OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+
+        return competition.getLeadApplicantTypes().contains(KNOWLEDGE_BASE.getId()) && OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
+    }
+
+    private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(registrationCookieService.getCompetitionIdCookieValue(request).get()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+
+        return competition.getLeadApplicantTypes().contains(organisation.getOrganisationType());
     }
 }

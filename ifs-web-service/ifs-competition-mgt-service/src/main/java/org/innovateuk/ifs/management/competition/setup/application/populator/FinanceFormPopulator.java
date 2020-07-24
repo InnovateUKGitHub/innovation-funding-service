@@ -49,7 +49,7 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
                 .getByCompetitionId(competitionResource.getId()).getSuccess();
 
         competitionSetupForm.setApplicationFinanceType(competitionSetupFinanceResource.getApplicationFinanceType());
-        competitionSetupForm.setIncludeGrowthTable(competitionSetupFinanceResource.getIncludeGrowthTable());
+        competitionSetupForm.setIncludeGrowthTable(competitionResource.isKtp() ? Boolean.FALSE : competitionSetupFinanceResource.getIncludeGrowthTable());
         competitionSetupForm.setIncludeYourOrganisationSection(competitionSetupFinanceResource.getIncludeYourOrganisationSection());
         competitionSetupForm.setIncludeJesForm(competitionSetupFinanceResource.getIncludeJesForm());
 
@@ -57,7 +57,10 @@ public class FinanceFormPopulator implements CompetitionSetupSubsectionFormPopul
             competitionSetupForm.setFundingRules(getFundingRulesWithoutHeading(competitionResource.getId()));
         }
 
-        competitionSetupForm.setFinancesRequired(!competitionResource.isNonFinanceType());
+        boolean financesRequired = !competitionResource.isNonFinanceType();
+
+        competitionSetupForm.setGrowthTableRequired(competitionResource.isKtp() ? false : financesRequired);
+        competitionSetupForm.setFinancesRequired(financesRequired);
 
         return competitionSetupForm;
     }
