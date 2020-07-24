@@ -57,7 +57,7 @@ Applicant is able to complete the application
 
 Applicant invites a partner and partner completes his details
     [Documentation]  IFS-7812
-    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${KTPcompetitionTitle}  ${KTPapplicationTitle}  yes
+    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${ktpCompetitionName}  ${KTPapplicationTitle}  yes
 
 The applicant submits the application
      [Documentation]  IFS-7812
