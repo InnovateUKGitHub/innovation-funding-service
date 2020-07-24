@@ -579,6 +579,6 @@ the user can submit the application
     the user clicks the button/link         id = submit-application-button
 
 the user sets max available funding
-    [Arguments]  ${amount}
-    ${id} =  User gets competition config id for max funding  ${competitionId}
+    [Arguments]  ${amount}  ${compId}
+    ${id} =  User gets competition config id for max funding  ${compId}
     User sets a max funding level for a competition           ${id}  ${amount}

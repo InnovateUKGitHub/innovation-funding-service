@@ -58,7 +58,7 @@ Loan application shows correct T&C's
 
 Max funding sought validation
     [Documentation]  IFS-7866
-    Given the user sets max available funding           60000
+    Given the user sets max available funding           60000  ${loan_comp_appl_id}
     When the user enters a value over the max funding
     Then the user should see a field and summary error  Your funding sought exceeds £60,000.00. You must lower your funding level percentage or your project costs.
 

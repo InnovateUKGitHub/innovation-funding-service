@@ -266,7 +266,7 @@ the lead invites already registered user
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team
-    the user sets max available funding            50000
+    the user sets max available funding            50000   ${competitionId}
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
