@@ -33,7 +33,7 @@
             </div>
 
             <div th:if="${summary.showFundingSoughtWarning()}" class="warning-alert">
-                <p class="govuk-body">Your total funding sought exceeds £<span th:text="${summary.competitionMaximumFundingSought}">1000</span>. You
+                <p class="govuk-body">Your total funding sought exceeds <span th:text="${'&pound;'+#numbers.formatInteger(summary.competitionMaximumFundingSought,1,'DEFAULT')}">1000</span>. You
                     must change your funding level percentage or total project costs.
                 </p>
             </div>
