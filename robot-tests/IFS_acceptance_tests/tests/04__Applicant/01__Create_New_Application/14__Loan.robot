@@ -47,7 +47,6 @@ ${loan_PS_Url}                             ${loan_PS}/details
 ${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
 ${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
 ${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
-
 *** Test Cases ***
 Loan application shows correct T&C's
     [Documentation]    IFS-6205
@@ -60,7 +59,7 @@ Max funding sought validation
     [Documentation]  IFS-7866
     Given the user sets max available funding              60000  ${loan_comp_appl_id}
     When the user enters a value over the max funding
-    Then the user should see a field and summary error     Your funding sought exceeds £60,000.00. You must lower your funding level percentage or your project costs.
+    Then the user should see a field and summary error     Your funding sought exceeds £60,000. You must lower your funding level percentage or your project costs.
 
 Loan application Your funding
     [Documentation]  IFS-6207
