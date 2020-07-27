@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/knowledge-base")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationKnowledgeBaseController.class)
+@SecuredBySpring(value = "Controller", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to select knowledge base organisations.", securedType = OrganisationCreationKnowledgeBaseController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationKnowledgeBaseController extends AbstractOrganisationCreationController {
 
