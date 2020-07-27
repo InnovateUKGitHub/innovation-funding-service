@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -56,9 +55,6 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     @Autowired
     private CompetitionRestService competitionRestService;
-
-    @Autowired
-    private InviteRestService inviteRestService;
 
     @GetMapping
     public String viewPreviousOrganisations(HttpServletRequest request,
