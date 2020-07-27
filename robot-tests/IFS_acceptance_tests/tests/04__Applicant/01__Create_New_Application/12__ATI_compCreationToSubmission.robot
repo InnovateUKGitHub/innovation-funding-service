@@ -22,12 +22,13 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ATIcompetitionTitle}            ATI Competition
-${ATIapplicationTitle}            ATI application
-${project_team_question}          8. Project team
-${technicalApproach_question}     5. Technical approach
-${answerToSelect}                 answer2
-
+${ATIcompetitionTitle}                     ATI Competition
+${ATIapplicationTitle}                     ATI application
+${project_team_question}                   8. Project team
+${technicalApproach_question}              5. Technical approach
+${answerToSelect}                          answer2
+${fundingSoughtValidationMessage}          Your total funding sought exceed
+${fundingSoughtFieldAndSummaryMessage}     Your funding sought exceeds £50,000.00. You must lower your funding level percentage or your project costs.
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
@@ -73,13 +74,13 @@ Finance overview incomplete when over max funding
     [Documentation]  IFS-7866
     Given the user should see the element     jQuery = li:contains("Finances overview") .task-status-incomplete
     When the user clicks the button/link      link = Finances overview
-    Then the user should see the element      jQuery = p:contains("Your total funding sought exceed")
+    Then the user should see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
 
 Your funding validation when over max funding
     [Documentation]  IFS-7866
     Given update project costs
     When the user edits your funding
-    Then the user should see a field and summary error   Your funding sought exceeds £50,000.00. You must lower your funding level percentage or your project costs.
+    Then the user should see a field and summary error   ${fundingSoughtFieldAndSummaryMessage}
 
 Update your funding to be valid
     [Documentation]  IFS-7866
@@ -295,6 +296,6 @@ the user edits your funding
 
 the user should see the finances overview as complete
     the user clicks the button/link          link = Back to finances overview
-    the user should not see the element      jQuery = p:contains("Your total funding sought exceed")
+    the user should not see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
     the user clicks the button/link          link = Application overview
     Then the user should see the element     jQuery = li:contains("Finances overview") .task-status-complete

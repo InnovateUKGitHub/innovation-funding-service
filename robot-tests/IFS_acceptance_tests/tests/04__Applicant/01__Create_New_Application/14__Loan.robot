@@ -33,20 +33,21 @@ Resource        ../../../resources/common/Applicant_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${loan_comp_PS}              Project setup loan comp
-${loan_comp_PS_Id}           ${competition_ids["${loan_comp_PS}"]}
-${loan_comp_application}     Loan Competition
-${loan_comp_appl_id}         ${competition_ids["${loan_comp_application}"]}
-${loan_PS_application1}      Loan Project 1
-${loan_PS_application2}      Loan Project 2
-${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
-${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
-${loan_PS_project_Id2}       ${project_ids["${loan_PS_application2}"]}
-${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
-${loan_PS_Url}               ${loan_PS}/details
-${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
-${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
-${spend_profile}             ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
+${loan_comp_PS}                            Project setup loan comp
+${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
+${loan_comp_application}                   Loan Competition
+${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
+${loan_PS_application1}                    Loan Project 1
+${loan_PS_application2}                    Loan Project 2
+${loan_PS_application_Id}                  ${application_ids["${loan_PS_application1}"]}
+${loan_PS_project_Id}                      ${project_ids["${loan_PS_application1}"]}
+${loan_PS_project_Id2}                     ${project_ids["${loan_PS_application2}"]}
+${loan_PS}                                 ${server}/project-setup/project/${loan_PS_project_Id}
+${loan_PS_Url}                             ${loan_PS}/details
+${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
+${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
+${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
+${fundingSoughtFieldAndSummaryMessage}     Your funding sought exceeds £60,000.00. You must lower your funding level percentage or your project costs.
 
 *** Test Cases ***
 Loan application shows correct T&C's
@@ -58,9 +59,9 @@ Loan application shows correct T&C's
 
 Max funding sought validation
     [Documentation]  IFS-7866
-    Given the user sets max available funding           60000  ${loan_comp_appl_id}
+    Given the user sets max available funding              60000  ${loan_comp_appl_id}
     When the user enters a value over the max funding
-    Then the user should see a field and summary error  Your funding sought exceeds £60,000.00. You must lower your funding level percentage or your project costs.
+    Then the user should see a field and summary error     ${fundingSoughtFieldAndSummaryMessage}
 
 Loan application Your funding
     [Documentation]  IFS-6207
