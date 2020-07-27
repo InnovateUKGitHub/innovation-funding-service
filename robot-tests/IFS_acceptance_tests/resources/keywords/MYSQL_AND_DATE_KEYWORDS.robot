@@ -264,3 +264,14 @@ User sets organisation to uk based
     ${organisationID} =     get organisation id by name     ${organisation_name}
     execute sql string  UPDATE `organisation` SET `international`=0 WHERE `id`='${organisationID}';
 
+User gets competition config id for max funding
+    [Arguments]     ${comp_id}
+    ${result} =  query  SELECT `competition_application_config_id` FROM `${database_name}`.`competition` WHERE `id`="${comp_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
+
+User sets a max funding level for a competition
+    [Arguments]     ${id}  ${max_funding}
+    execute sql string  UPDATE `${database_name}`.`competition_application_config` SET `maximum_funding_sought`='${max_funding}' WHERE `id`='${id}';
+

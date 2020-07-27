@@ -12,9 +12,13 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourF
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.YourFundingFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -59,6 +63,12 @@ public class YourFundingController {
 
     @Autowired
     private YourFundingFormValidator yourFundingFormValidator;
+
+    @Autowired
+    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
 
     @GetMapping
     @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
@@ -153,6 +163,7 @@ public class YourFundingController {
                                                                        Function<FormType, ServiceResult<Void>> saveFunction) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, organisationId, user);
+
         yourFundingFormValidator.validate(form, bindingResult, user, applicationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFunction.apply(form));
