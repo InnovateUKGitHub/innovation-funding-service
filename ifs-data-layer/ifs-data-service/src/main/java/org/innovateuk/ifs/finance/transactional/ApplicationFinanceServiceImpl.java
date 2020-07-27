@@ -203,6 +203,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     public ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Competition competition = application.getCompetition();
+            if (competition.isNonFinanceType()) {
+                return serviceSuccess(true);
+            }
             if (competition.getCollaborationLevel() == COLLABORATIVE) {
                 return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
                     long numberSeekingFunding = financeTotals
