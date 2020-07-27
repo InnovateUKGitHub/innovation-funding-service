@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.form;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -23,6 +24,7 @@ public class YourOrganisationKtpFinancialYearForm {
 
     private BigDecimal loans;
 
+    @Min(value = 0, message = "{validation.ktp.financial.years.employees}")
     private Long employees;
 
     public YourOrganisationKtpFinancialYearForm() {}
