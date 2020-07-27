@@ -31,7 +31,6 @@ ${project_team_question}          8. Project team
 ${technicalApproach_question}     5. Technical approach
 ${answerToSelect}                 answer2
 ${partnerEmail}                   test1@test.com
-${applicationSummaryUrl}
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
