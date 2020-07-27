@@ -36,7 +36,7 @@ public class YourFundingFormValidator extends AbstractYourFundingFormValidator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
-    public void validate(AbstractYourFundingForm form, Errors errors, UserResource user, long applicationId, BigDecimal maximumFundingSought) {
+    public void validate(AbstractYourFundingForm form, Errors errors, UserResource user, long applicationId) {
 
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionApplicationConfigResource competitionApplicationConfigResource

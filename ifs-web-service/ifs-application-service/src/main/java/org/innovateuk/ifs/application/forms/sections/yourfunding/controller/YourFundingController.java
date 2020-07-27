@@ -164,11 +164,7 @@ public class YourFundingController {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourFunding(model, applicationId, sectionId, organisationId, user);
 
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionApplicationConfigResource competitionApplicationConfigResource
-                = competitionApplicationConfigRestService.findOneByCompetitionId(applicationResource.getCompetition()).getSuccess();
-
-        yourFundingFormValidator.validate(form, bindingResult, user, applicationId, competitionApplicationConfigResource.getMaximumFundingSought());
+        yourFundingFormValidator.validate(form, bindingResult, user, applicationId);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saveFunction.apply(form));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {

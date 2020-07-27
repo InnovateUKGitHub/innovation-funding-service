@@ -68,12 +68,6 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     @Mock
     private YourFundingFormValidator yourFundingFormValidator;
 
-    @Mock
-    private ApplicationRestService applicationRestService;
-
-    @Mock
-    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
-
     @Test
     public void viewYourFunding() throws Exception {
         YourFundingViewModel viewModel = mockUnlockedViewModel();
@@ -146,9 +140,6 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
         when(sectionStatusRestService.markAsComplete(SECTION_ID, APPLICATION_ID, PROCESS_ROLE_ID)).thenReturn(restSuccess(noErrors()));
-        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
-        when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfigResource));
-
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
@@ -167,19 +158,11 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
         long competitionId = 1l;
 
-        ApplicationResource applicationResource = newApplicationResource()
-                .withCompetition(competitionId)
-                .build();
-        CompetitionApplicationConfigResource competitionApplicationConfigResource = newCompetitionApplicationConfigResource().build();
-
-        when(applicationRestService.getApplicationById(anyLong())).thenReturn(restSuccess(applicationResource));
-        when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfigResource));
-
         YourFundingViewModel viewModel = mockUnlockedViewModel();
         doAnswer((invocationOnMock) -> {
             ((BindingResult) invocationOnMock.getArguments()[1]).rejectValue("requestingFunding", "something");
             return Void.class;
-        }).when(yourFundingFormValidator).validate(any(), any(), eq(getLoggedInUser()), eq(APPLICATION_ID), any());
+        }).when(yourFundingFormValidator).validate(any(), any(), eq(getLoggedInUser()), eq(APPLICATION_ID));
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)

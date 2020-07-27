@@ -83,7 +83,7 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         UserResource user = newUserResource().build();
         long applicationId = 2L;
 
-        service.validate(form, bindingResult, user, applicationId, competitionApplicationConfigResource.getMaximumFundingSought());
+        service.validate(form, bindingResult, user, applicationId);
 
         assertFalse(bindingResult.hasFieldErrors("requestingFunding"));
         assertTrue(bindingResult.hasFieldErrors("grantClaimPercentage"));
@@ -123,11 +123,11 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfigResource));
 
         when(baseFinanceResource.getTotal()).thenReturn(new BigDecimal("99.9"));
-        service.validate(form, bindingResult, user, applicationId, competitionApplicationConfigResource.getMaximumFundingSought());
+        service.validate(form, bindingResult, user, applicationId);
         assertFalse(bindingResult.hasErrors());
 
         when(baseFinanceResource.getTotal()).thenReturn(new BigDecimal("50"));
-        service.validate(form, bindingResult, user, applicationId, competitionApplicationConfigResource.getMaximumFundingSought());
+        service.validate(form, bindingResult, user, applicationId);
         assertTrue(bindingResult.hasErrors());
         assertTrue(bindingResult.hasFieldErrors("amount"));
     }
