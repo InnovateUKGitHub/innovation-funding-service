@@ -22,12 +22,13 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ATIcompetitionTitle}            ATI Competition
-${ATIapplicationTitle}            ATI application
-${project_team_question}          8. Project team
-${technicalApproach_question}     5. Technical approach
-${answerToSelect}                 answer2
-
+${ATIcompetitionTitle}                     ATI Competition
+${ATIapplicationTitle}                     ATI application
+${project_team_question}                   8. Project team
+${technicalApproach_question}              5. Technical approach
+${answerToSelect}                          answer2
+${fundingSoughtValidationMessage}          Your total funding sought exceed
+${fundingSoughtFieldAndSummaryMessage}     Your funding sought exceeds £50,000.00. You must lower your funding level percentage or your project costs.
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
@@ -68,6 +69,24 @@ The lead should see the answer selected by partner and mark it as complete
      When the user clicks the button/link                link = ${project_team_question}
      Then the user should not see the element            link = testing.pdf (opens in a new window)
      And the user can mark the question as complete
+
+Finance overview incomplete when over max funding
+    [Documentation]  IFS-7866
+    Given the user should see the element     jQuery = li:contains("Finances overview") .task-status-incomplete
+    When the user clicks the button/link      link = Finances overview
+    Then the user should see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
+
+Your funding validation when over max funding
+    [Documentation]  IFS-7866
+    Given update project costs
+    When the user edits your funding
+    Then the user should see a field and summary error     ${fundingSoughtFieldAndSummaryMessage}
+
+Update your funding to be valid
+    [Documentation]  IFS-7866
+    Given the user enters text to a text field                     css = [name^="grantClaimPercentage"]  20
+    When The user clicks the button/link                           id = mark-all-as-complete
+    Then the user should see the finances overview as complete
 
 The lead can now submit the application
      [Documentation]  IFS-3421  IFS-5920  IFS-7703
@@ -248,6 +267,7 @@ the lead invites already registered user
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team
+    the user sets max available funding            50000   ${competitionId}
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
@@ -257,3 +277,25 @@ the user does not see state aid information
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+update project costs
+    the user clicks the button/link       link = View finances
+    the user clicks the button/link       link = Your project costs
+    the user clicks the button/link       id = edit
+    the user clicks the button/link       jQuery = button:contains("Other costs")
+    the user enters text to a text field  css = textarea.govuk-textarea[name$=description]  some other costs
+    the user enters text to a text field  css = input.govuk-input[name$=estimate]  60000
+    the user clicks the button/link       jQuery = button:contains("Other costs")
+    the user selects the checkbox         stateAidAgreed
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user edits your funding
+    the user clicks the button/link      link = Your funding
+    the user clicks the button/link      jQuery = button:contains("Edit your funding")
+    the user clicks the button/link      id = mark-all-as-complete
+
+the user should see the finances overview as complete
+    the user clicks the button/link          link = Back to finances overview
+    the user should not see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
+    the user clicks the button/link          link = Application overview
+    Then the user should see the element     jQuery = li:contains("Finances overview") .task-status-complete
