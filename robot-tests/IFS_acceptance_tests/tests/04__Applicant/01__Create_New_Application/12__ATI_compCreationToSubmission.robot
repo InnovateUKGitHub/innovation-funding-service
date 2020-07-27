@@ -28,7 +28,6 @@ ${project_team_question}                   8. Project team
 ${technicalApproach_question}              5. Technical approach
 ${answerToSelect}                          answer2
 ${fundingSoughtValidationMessage}          Your total funding sought exceed
-${fundingSoughtFieldAndSummaryMessage}     Your funding sought exceeds £50,000.00. You must lower your funding level percentage or your project costs.
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
@@ -80,7 +79,7 @@ Your funding validation when over max funding
     [Documentation]  IFS-7866
     Given update project costs
     When the user edits your funding
-    Then the user should see a field and summary error     ${fundingSoughtFieldAndSummaryMessage}
+    Then the user should see a field and summary error     Your funding sought exceeds £50,000.00. You must lower your funding level percentage or your project costs.
 
 Update your funding to be valid
     [Documentation]  IFS-7866
