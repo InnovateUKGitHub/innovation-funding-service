@@ -145,7 +145,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
         doAnswer((invocationOnMock) -> {
             ((BindingResult) invocationOnMock.getArguments()[1]).rejectValue("requestingFunding", "something");
             return Void.class;
-        }).when(yourFundingFormValidator).validate(any(), any(), eq(getLoggedInUser()), eq(APPLICATION_ID));
+        }).when(yourFundingFormValidator).validate(any(), any(), eq(getLoggedInUser()), eq(APPLICATION_ID), any());
 
         mockMvc.perform(post(APPLICATION_BASE_URL + "{applicationId}/form/your-funding/organisation/{organisationId}/section/{sectionId}",
                 APPLICATION_ID, ORGANISATION_ID, SECTION_ID)
