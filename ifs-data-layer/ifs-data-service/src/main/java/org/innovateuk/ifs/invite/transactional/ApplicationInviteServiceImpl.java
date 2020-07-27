@@ -239,15 +239,15 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     private void deleteOrganisationFinanceData(Organisation organisation, Application application) {
         if (organisation != null) {
-            ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-            if (finance != null) {
-                if (finance.getGrowthTable() != null) {
-                    growthTableRepository.delete(finance.getGrowthTable());
+            Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            if (finance.isPresent()) {
+                if (finance.get().getGrowthTable() != null) {
+                    growthTableRepository.delete(finance.get().getGrowthTable());
                 }
-                if (finance.getEmployeesAndTurnover() != null) {
-                    employeesAndTurnoverRepository.delete(finance.getEmployeesAndTurnover());
+                if (finance.get().getEmployeesAndTurnover() != null) {
+                    employeesAndTurnoverRepository.delete(finance.get().getEmployeesAndTurnover());
                 }
-                applicationFinanceRepository.delete(finance);
+                applicationFinanceRepository.delete(finance.get());
             }
         }
         applicationProgressService.updateApplicationProgress(application.getId());
