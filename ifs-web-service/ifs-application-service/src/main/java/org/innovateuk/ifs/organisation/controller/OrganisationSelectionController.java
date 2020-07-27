@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.populator.OrganisationSelectionViewModelPopulator;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
@@ -122,10 +120,8 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
     }
 
     private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
-        Optional<String> applicationInviteHash = registrationCookieService.getInviteHashCookieValue(request);
-            ApplicationInviteResource invite = inviteRestService.getInviteByHash(applicationInviteHash.get()).getSuccess();
-            CompetitionResource competition = competitionRestService.getCompetitionById(invite.getCompetitionId()).getSuccess();
-            OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
 
         return competition.getLeadApplicantTypes().contains(KNOWLEDGE_BASE.getId()) && OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
     }

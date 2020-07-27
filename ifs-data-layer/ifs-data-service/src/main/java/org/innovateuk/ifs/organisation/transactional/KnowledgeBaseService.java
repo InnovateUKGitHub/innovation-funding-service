@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 /**
- *
+ * Represents operations surrounding the use of Knowledge Base organisations in the system
  */
 public interface KnowledgeBaseService {
 
