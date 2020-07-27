@@ -5,6 +5,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7148  Replace maximum funding level drop down menu with free type field in comp setup
 ...
+...            IFS-7869  KTP Comp setup: Project eligibility
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -13,12 +15,13 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplicationTitle}   KTP Application
-${ktpOrganisationName}   ktpOrganisation
+${KTPapplicationTitle}             KTP Application
+${ktpOrganisationName}             ktpOrganisation
+&{ktpLeadApplicantCredentials}     email=${lead_ktp_email}  password=${short_password}
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869
     Given the user logs-in in new browser               &{Comp_admin1_credentials}
     Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
@@ -34,16 +37,19 @@ Comp Admin is able to see KTP T&C's have been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user clicks the button/link     link = Terms and conditions
     Then the user should see the element      link = Knowledge Transfer Partnership (KTP)
+    [Teardown]  Logout as user
 
 Applicant applies to newly created KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given get competition id and set open date to yesterday       ${ktpCompetitionName}
-    When log in as a different user                               &{lead_applicant_credentials}
-    Then logged in user applies to competition KTP                ${ktpCompetitionName}  5
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7869
+    Given get competition id and set open date to yesterday                    ${ktpCompetitionName}
+    Then the user applies to competition and enters organisation type link     ${competitionId}   5   ${ktpOrganisationName}
+    [Teardown]  the user creates an account and verifies email                 Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 Applicant is able to complete and submit an application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user completes the KTP application
+    Given Logging in and Error Checking             &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link             jQuery = a:contains("Untitled application (start here)")
+    When the user completes the KTP application
     Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
@@ -56,7 +62,7 @@ Moving KTP Competition to Project Setup
 
 The user is able to complete Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user logs-in in new browser     &{lead_applicant_credentials}
+    [Setup]  the user logs-in in new browser     &{ktpLeadApplicantCredentials}
     Given the user navigates to the page         ${server}/project-setup/project/${ProjectID}
     When the user is able to complete project details section
     Then the user should see the element         css = ul li.complete:nth-child(1)
@@ -114,7 +120,7 @@ Internal user is able to approve Finance checks and generate spend profile
 User is able to submit the spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  Requesting KTP Organisation ID
-    Given log in as a different user            &{lead_applicant_credentials}
+    Given log in as a different user            &{ktpLeadApplicantCredentials}
     And the user navigates to the page          ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
     When the user submits the spend profile
     Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
@@ -127,14 +133,14 @@ Internal user is able to approve Spend profile and generates the GOL
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given log in as a different user         &{lead_applicant_credentials}
+    Given log in as a different user         &{ktpLeadApplicantCredentials}
     When Applicant uploads the GOL           ${ProjectID}
     Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the internal user approve the GOL                                    ${ProjectID}
-    When log in as a different user                                            &{lead_applicant_credentials}
+    When log in as a different user                                            &{ktpLeadApplicantCredentials}
     And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
     Then the user should see project is live with review its progress link
 
@@ -196,15 +202,6 @@ Requesting IDs of this Project
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
-
-logged in user applies to competition KTP
-    [Arguments]  ${competition}  ${OrganisationType}
-    the user select the competition and starts application                     ${competition}
-    the user clicks the button/link                                            link = Apply with a different organisation
-    the user selects the radio button                                          organisationTypeId  ${OrganisationType}
-    the user clicks the button/link                                            jQuery = button:contains("Save and continue")
-    the user enters organisation details manually on companies house link      ${ktpOrganisationName}
-    the user clicks the button/link                                            jQuery = button:contains("Save and continue")
 
 Requesting KTP Organisation ID
     ${ktpOrganisationID} =  get organisation id by name     ${ktpOrganisationName}
