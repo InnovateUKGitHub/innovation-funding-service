@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
+import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
@@ -49,6 +50,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Autowired
     private ApplicationValidationUtil validationUtil;
+
+    @Autowired
+    private ApplicationValidatorService applicationValidatorService;
 
     @Override
     public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final long applicationId) {
@@ -102,9 +106,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 return false;
             }
         }
-
-        return financeService.fundingSoughtValid(application.getId()).getSuccess()
-                && financeService.collaborativeFundingCriteriaMet(application.getId()).getSuccess();
+        return applicationValidatorService.isFinanceOverviewComplete(application);
     }
 
     @Override

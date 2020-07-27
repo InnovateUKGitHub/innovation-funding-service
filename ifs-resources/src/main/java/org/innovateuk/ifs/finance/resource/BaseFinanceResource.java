@@ -26,7 +26,6 @@ public abstract class BaseFinanceResource {
     protected OrganisationSize organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
     private FinancialYearAccountsResource financialYearAccounts;
-    private BigDecimal maximumFundingAmount;
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -89,14 +88,6 @@ public abstract class BaseFinanceResource {
 
     public void setMaximumFundingLevel(int maximumFundingLevel) {
         this.maximumFundingLevel = maximumFundingLevel;
-    }
-
-    public BigDecimal getMaximumFundingAmount() {
-        return maximumFundingAmount;
-    }
-
-    public void setMaximumFundingAmount(BigDecimal maximumFundingAmount) {
-        this.maximumFundingAmount = maximumFundingAmount;
     }
 
     @JsonProperty("organisationSizeValue")

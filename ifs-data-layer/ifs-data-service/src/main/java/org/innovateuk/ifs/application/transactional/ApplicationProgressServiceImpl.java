@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.checkerframework.checker.units.qual.A;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
@@ -50,6 +52,9 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     @Autowired
     private ApplicationFinanceService applicationFinanceService;
 
+    @Autowired
+    private ApplicationValidatorService applicationValidatorService;
+
     @Override
     @Transactional
     public ServiceResult<BigDecimal> updateApplicationProgress(final long applicationId) {
@@ -62,51 +67,17 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     }
 
     @Override
+    public ServiceResult<BigDecimal> getApplicationProgress(long applicationId) {
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturn(application -> calculateApplicationProgress(application));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean applicationReadyForSubmit(final long id) {
-        return find(applicationRepository.findById(id), notFoundError(Application.class, id)).andOnSuccessReturn(application -> {
-            BigDecimal progressPercentage = calculateApplicationProgress(application);
-            BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
-            List<ApplicationFinanceResource> applicationFinanceResources = applicationFinanceHandler.getApplicationTotals(id);
-
-//            is there a better way to do this
-            BigDecimal totalFundingSought = applicationFinanceResources.stream()
-                    .map(ApplicationFinanceResource::getTotalFundingSought)
-                    .reduce(BigDecimal::add)
-                    .orElse(BigDecimal.ZERO);
-
-            Competition competition = application.getCompetition();
-
-//            If EOI or competition with no Finances
-            if (RELEASE_FEEDBACK.equals(competition.getCompletionStage())) {
-                return isApplicationPercentageComplete(progressPercentage, researchParticipation, competition);
-            }
-
-            return isCollaborativeFundingCriteriaMet(application)
-                    && isFundingSoughtValid(competition, totalFundingSought)
-                    && isApplicationPercentageComplete(progressPercentage, researchParticipation, competition);
-        }).getSuccess();
+        return find(applicationRepository.findById(id), notFoundError(Application.class, id))
+                .andOnSuccessReturn(application -> applicationValidatorService.isApplicationComplete(application)).getSuccess();
     }
-
-    private boolean isApplicationPercentageComplete(BigDecimal progressPercentage, BigDecimal researchParticipation, Competition competition) {
-        return progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
-                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0;
-    }
-
-    private boolean isCollaborativeFundingCriteriaMet(Application application) {
-        if (application.isCollaborativeProject()) {
-            return applicationFinanceService.collaborativeFundingCriteriaMet(application.getId()).getSuccess();
-        }
-        return true;
-    }
-
-    private boolean isFundingSoughtValid(Competition competition, BigDecimal totalFundingSought) {
-        if (competition.getCompetitionApplicationConfig().getMaximumFundingSought() != null) {
-            return totalFundingSought.compareTo(competition.getCompetitionApplicationConfig().getMaximumFundingSought()) <= 0;
-        }
-        return true;
-    }
-
 
     private BigDecimal calculateApplicationProgress(Application application) {
         long competitionId = application.getCompetition().getId();
