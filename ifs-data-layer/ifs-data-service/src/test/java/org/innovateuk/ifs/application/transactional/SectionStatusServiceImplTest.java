@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
+import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.transactional.ApplicationFinanceService;
 import org.innovateuk.ifs.form.domain.Question;
@@ -41,6 +42,9 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private ApplicationFinanceService financeServiceMock;
+
+    @Mock
+    private ApplicationValidatorService applicationValidatorService;
 
     @Test
     public void getCompletedSectionsMap() {
@@ -145,6 +149,7 @@ public class SectionStatusServiceImplTest extends BaseUnitTestMocksTest {
         when(questionStatusServiceMock.findCompletedQuestionsByApplicationId(applicationId)).thenReturn(serviceSuccess(questionStatusResources));
         when(financeServiceMock.collaborativeFundingCriteriaMet(application.getId())).thenReturn(serviceSuccess(true));
         when(financeServiceMock.fundingSoughtValid(application.getId())).thenReturn(serviceSuccess(true));
+        when(applicationValidatorService.isFinanceOverviewComplete(application)).thenReturn(true);
 
         Set<Long> result = sectionStatusService.getCompletedSections(applicationId, organisationId).getSuccess();
 
