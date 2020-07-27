@@ -3091,7 +3091,8 @@
                                 name="add_cost"
                                 th:value="${financeRowType}"
                                 class="button-clear"
-                                data-repeatable-rowcontainer="#knowledge-base-table tbody">Add another cost
+                                data-repeatable-rowcontainer="#knowledge-base-table tbody"
+                                data-repeatable-row-maximum="2">Add another cost
                         </button>
                     </p>
                 </div>
@@ -3299,7 +3300,7 @@
                             required="required">
                         </textarea>
                     </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group top">
                         <label th:for="__${fieldName}__.cost">
                             <span class="govuk-visually-hidden">Cost (&pound;)</span>
                         </label>

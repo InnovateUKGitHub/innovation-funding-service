@@ -10,7 +10,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<AssociateDevelopmentCost> {
@@ -19,6 +18,8 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     private Integer duration;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
@@ -66,7 +67,7 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
 
     @Override
     public boolean isBlank() {
-        return isNullOrEmpty(role) && cost == null && duration == null;
+        return !"Associate 1".equals(role) && cost == null;
     }
 
     @Override

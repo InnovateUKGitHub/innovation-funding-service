@@ -70,10 +70,10 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                     messages.addAll(saveVat(form.getVatForm(), finance).get());
                     break;
                 case ASSOCIATE_SALARY_COSTS:
-                    messages.addAll(saveRows(form.getAssociateSalaryCostRows(), finance).get());
+                    messages.addAll(saveRowsAndDeleteBlank(form.getAssociateSalaryCostRows(), finance).get());
                     break;
                 case ASSOCIATE_DEVELOPMENT_COSTS:
-                    messages.addAll(saveRows(form.getAssociateDevelopmentCostRows(), finance).get());
+                    messages.addAll(saveRowsAndDeleteBlank(form.getAssociateDevelopmentCostRows(), finance).get());
                     break;
                 case ASSOCIATE_SUPPORT:
                     messages.addAll(saveRows(form.getAssociateSupportCostRows(), finance).get());
@@ -134,10 +134,10 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             futures.add(saveVat(form.getVatForm(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ASSOCIATE_SALARY_COSTS)) {
-            futures.add(saveRows(form.getAssociateSalaryCostRows(), finance));
+            futures.add(saveRowsAndDeleteBlank(form.getAssociateSalaryCostRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS)) {
-            futures.add(saveRows(form.getAssociateDevelopmentCostRows(), finance));
+            futures.add(saveRowsAndDeleteBlank(form.getAssociateDevelopmentCostRows(), finance));
         }
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ASSOCIATE_SUPPORT)) {
             futures.add(saveRows(form.getAssociateSupportCostRows(), finance));
@@ -265,7 +265,20 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
 
             return messages;
         });
+    }
 
+    private <R extends AbstractCostRowForm>  CompletableFuture<ValidationMessages> saveRowsAndDeleteBlank(Map<String, R> costs, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+            messages.addAll(saveRows(costs, finance).get());
+
+            costs.forEach((id, row) -> {
+                if (row.isBlank()) {
+                    removeFinanceRow(id);
+                }
+            });
+            return messages;
+        });
     }
 
     public void removeRowFromForm(YourProjectCostsForm form, String id) {

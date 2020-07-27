@@ -5,12 +5,10 @@ import org.innovateuk.ifs.finance.resource.cost.AssociateSalaryCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSalaryCost> {
@@ -19,11 +17,12 @@ public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSal
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     private Integer duration;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigInteger cost;
 
     public AssociateSalaryCostRowForm() {}
@@ -65,7 +64,7 @@ public class AssociateSalaryCostRowForm extends AbstractCostRowForm<AssociateSal
 
     @Override
     public boolean isBlank() {
-        return isNullOrEmpty(role) && cost == null;
+        return !"Associate 1".equals(role) && cost == null && duration == null;
     }
 
     @Override
