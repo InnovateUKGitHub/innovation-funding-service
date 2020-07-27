@@ -5,9 +5,14 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
 import org.innovateuk.ifs.finance.handler.item.TravelCostHandler;
@@ -61,7 +66,8 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -100,6 +106,15 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private ApplicationProgressService applicationProgressService;
+
+    @Mock
+    private ApplicationFinanceHandler applicationFinanceHandler;
+
+    @Mock
+    private ApplicationFinanceService applicationFinanceService;
 
     @Test
     public void validateFormInputResponse() {
@@ -351,6 +366,98 @@ public class ApplicationValidatorServiceImplTest extends BaseServiceUnitTest<App
         verify(projectFinanceRowService, only()).getCostHandler(grantClaim);
     }
 
+    @Test
+    public void isApplicationComplete() {
+        long applicationId = 1l;
+        long competitionId = 2l;
+
+        CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withMaxResearchRatio(100)
+                .withCompetitionApplicationConfig(competitionApplicationConfig)
+                .withCollaborationLevel(CollaborationLevel.SINGLE).build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .withId(applicationId)
+                .build();
+
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource()
+                .withIndustrialCosts()
+                .withGrantClaimAmount(new BigDecimal(999))
+                .build(1);
+
+        when(applicationProgressService.getApplicationProgress(applicationId)).thenReturn(serviceSuccess(BigDecimal.valueOf(100)));
+        when(applicationFinanceHandler.getApplicationTotals(applicationId)).thenReturn(applicationFinanceResources);
+        when(applicationFinanceHandler.getResearchParticipationPercentage(applicationId)).thenReturn(new BigDecimal("29"));
+
+        boolean result = service.isApplicationComplete(application);
+        assertTrue(result);
+    }
+
+    @Test
+    public void applicationNotReadyComplete_ResearchParticipationTooHigh() {
+        long applicationId = 1l;
+        long competitionId = 2l;
+
+        CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withMaxResearchRatio(50)
+                .withCompetitionApplicationConfig(competitionApplicationConfig)
+                .withCollaborationLevel(CollaborationLevel.SINGLE).build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .withId(applicationId)
+                .build();
+
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource()
+                .withIndustrialCosts()
+                .withGrantClaimAmount(new BigDecimal(999))
+                .build(1);
+
+        when(applicationProgressService.getApplicationProgress(applicationId)).thenReturn(serviceSuccess(BigDecimal.valueOf(100)));
+        when(applicationFinanceHandler.getApplicationTotals(applicationId)).thenReturn(applicationFinanceResources);
+        when(applicationFinanceHandler.getResearchParticipationPercentage(applicationId)).thenReturn(new BigDecimal("60"));
+
+        boolean result = service.isApplicationComplete(application);
+        assertFalse(result);
+    }
+
+    @Test
+    public void applicationNotReadyComplete_ProgressNotComplete() {
+        long applicationId = 1l;
+        long competitionId = 2l;
+
+        CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withMaxResearchRatio(100)
+                .withCompetitionApplicationConfig(competitionApplicationConfig)
+                .withCollaborationLevel(CollaborationLevel.SINGLE).build();
+
+        Application application = newApplication()
+                .withCompetition(competition)
+                .withId(applicationId)
+                .build();
+
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource()
+                .withIndustrialCosts()
+                .withGrantClaimAmount(new BigDecimal(999))
+                .build(1);
+
+        when(applicationProgressService.getApplicationProgress(applicationId)).thenReturn(serviceSuccess(BigDecimal.valueOf(7)));
+        when(applicationFinanceHandler.getApplicationTotals(applicationId)).thenReturn(applicationFinanceResources);
+        when(applicationFinanceHandler.getResearchParticipationPercentage(applicationId)).thenReturn(new BigDecimal("29"));
+
+        boolean result = service.isApplicationComplete(application);
+        assertFalse(result);
+    }
 
     @Override
     protected ApplicationValidatorServiceImpl supplyServiceUnderTest() {
