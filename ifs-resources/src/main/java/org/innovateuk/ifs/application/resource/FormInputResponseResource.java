@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
@@ -22,11 +21,6 @@ public class FormInputResponseResource {
     private Integer formInputMaxWordCount;
     private Long application;
     private List<FileEntryResource> fileEntries = new ArrayList<>();
-
-    @ZeroDowntime(description = "remove", reference = "IFS-7311")
-    private Long fileEntry;
-    private String filename;
-    private Long filesizeBytes;
     private Long multipleChoiceOptionId;
     private String multipleChoiceOptionText;
 
@@ -163,30 +157,6 @@ public class FormInputResponseResource {
 
     public void setFileEntries(List<FileEntryResource> fileEntries) {
         this.fileEntries = fileEntries;
-    }
-
-    public Long getFileEntry() {
-        return fileEntry;
-    }
-
-    public void setFileEntry(Long fileEntry) {
-        this.fileEntry = fileEntry;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Long getFilesizeBytes() {
-        return filesizeBytes;
-    }
-
-    public void setFilesizeBytes(Long filesizeBytes) {
-        this.filesizeBytes = filesizeBytes;
     }
 
     public Long getMultipleChoiceOptionId() {

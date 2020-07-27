@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head th:with="pageTitle=${model.general.currentSectionIsHome() ? 'Competition details' : #messages.msg('ifs.competition.setup.' + model.general.currentSectionFragment)}">
     <th:block th:if="${competitionSetupForm != null}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />

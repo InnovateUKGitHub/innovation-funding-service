@@ -11,6 +11,9 @@ Documentation     IFS-2396  ATI Competition type template
 ...
 ...               IFS-7718  EDI question - application form
 ...
+...               IFS-7547  Lead applicant can reopen a submitted application
+...
+...               IFS-7550  Lead applicant can edit and resubmit opened application
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -19,11 +22,12 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ATIcompetitionTitle}     ATI Competition
-${ATIapplicationTitle}     ATI application
-${questionLink}            8. Project team
-${answerToSelect}          answer2
-
+${ATIcompetitionTitle}                     ATI Competition
+${ATIapplicationTitle}                     ATI application
+${project_team_question}                   8. Project team
+${technicalApproach_question}              5. Technical approach
+${answerToSelect}                          answer2
+${fundingSoughtValidationMessage}          Your total funding sought exceed
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
@@ -48,38 +52,104 @@ The lead invites a collaborator
 
 Assign an application question to partner organisation
      [Documentation]  IFS-7703
-     Given the user clicks the button/link     link = ${questionLink}
-     And the user clicks the button/link       id = edit
-     When the user clicks the button/link      link = Assign to someone else.
-     Then the user selects the radio button    assignee  assignee2
-     And the user clicks the button/link       jQuery = button:contains("Save and return to project team")
+     Given lead assigns a question to partner organisation     ${project_team_question}
 
 The partner answers the question and assigns the question back to lead for review
      [Documentation]  IFS-7703
      [Setup]  log in as a different user            &{collaborator1_credentials}
      Given the user clicks the button/link          link = ${ATIapplicationTitle}
-     When the user clicks the button/link           link = ${questionLink}
+     When the user clicks the button/link           link = ${project_team_question}
      Then the partner selects new answer choice
 
 The lead should see the answer selected by partner and mark it as complete
      [Documentation]  IFS-7703
-     [Setup]  log in as a different user          &{lead_applicant_credentials}
-     Given the user clicks the button/link        link = ${ATIapplicationTitle}
-     When the user clicks the button/link         link = ${questionLink}
-     Then the user should not see the element     link = testing.pdf (opens in a new window)
-     And the user clicks the button/link          id = application-question-complete
+     [Setup]  log in as a different user                 &{lead_applicant_credentials}
+     Given the user clicks the button/link               link = ${ATIapplicationTitle}
+     When the user clicks the button/link                link = ${project_team_question}
+     Then the user should not see the element            link = testing.pdf (opens in a new window)
+     And the user can mark the question as complete
+
+Finance overview incomplete when over max funding
+    [Documentation]  IFS-7866
+    Given the user should see the element     jQuery = li:contains("Finances overview") .task-status-incomplete
+    When the user clicks the button/link      link = Finances overview
+    Then the user should see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
+
+Your funding validation when over max funding
+    [Documentation]  IFS-7866
+    Given update project costs
+    When the user edits your funding
+    Then the user should see a field and summary error     Your funding sought exceeds £50,000. You must lower your funding level percentage or your project costs.
+
+Update your funding to be valid
+    [Documentation]  IFS-7866
+    Given the user enters text to a text field                     css = [name^="grantClaimPercentage"]  20
+    When The user clicks the button/link                           id = mark-all-as-complete
+    Then the user should see the finances overview as complete
 
 The lead can now submit the application
      [Documentation]  IFS-3421  IFS-5920  IFS-7703
-     When the user clicks the button/link          link = Back to application overview
-     Then the applicant submits the application
+     Given the applicant submits the application
+
+Comp admin can see the ATI application submitted
+    [Documentation]  IFS-7550
+    [Setup]  log in as a different user      &{Comp_admin1_credentials}
+    When the user navigates to the page      ${server}/management/competition/${competitionId}/applications/submitted
+    Then the user should see the element     jQuery = td:contains("${ATIapplicationTitle}")
+
+Collaborator cannot reopen the application
+    [Documentation]  IFS-7547
+    Given log in as a different user             &{collaborator1_credentials}
+    When the user should see the element         link = ${ATIapplicationTitle}
+    Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
+
+Lead can reopen application and gets an email notification including collaborators
+    [Documentation]  IFS-7547  IFS-7550  IFS-7549
+    [Setup]  log in as a different user      &{lead_applicant_credentials}
+    When the user clicks the button/link     link = Dashboard
+    Then the user can reopen application     ${ATIapplicationTitle}
+    And the user reads his email             ${collaborator1_credentials["email"]}     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email             ${lead_applicant_credentials["email"]}      An Innovation Funding Service funding application has been reopened   You reopened this application
+
+Lead can make changes to the application and assign a question to collaborator
+    [Documentation]  IFS-7547  IFS-7550
+    When the user uploads an appendix                       ${project_team_question}  ${5mb_pdf}
+    And lead assigns a question to partner organisation     ${technicalApproach_question}
+    Then the user should not see the element                id = edit
+
+Comp Admin should not see the ATI application in submitted applications
+    [Documentation]  IFS-7550
+    [Setup]  log in as a different user          &{Comp_admin1_credentials}
+    When the user navigates to the page          ${server}/management/competition/${competitionId}/applications/submitted
+    Then the user should not see the element     jQuery = td:contains("${ATIapplicationTitle}")
+
+Collaborator can see the application is reopenend and complete the assigned question
+    [Documentation]  IFS-7550
+    [Setup]  log in as a different user                  &{collaborator1_credentials}
+    When the user clicks the button/link                 link = ${ATIapplicationTitle}
+    Then the user can complete the assigned question     ${technicalApproach_question}
+    And the user should see the element                  jQuery = p:contains("This application was reopened by the lead applicant")
+
+Lead can review the question and submit the application
+    [Documentation]  IFS-7550
+    [Setup]  log in as a different user                  &{lead_applicant_credentials}
+    Given the user clicks the button/link                link = ${ATIapplicationTitle}
+    When the user clicks the button/link                 link = ${technicalApproach_question}
+    Then the user can mark the question as complete
+    And the user can submit the application
+
+Lead does not see reopen when the comp is closed
+    [Documentation]  IFS-7547
+    Given Log in as a different user             &{Comp_admin1_credentials}
+    When moving competition to Closed            ${competitionId}
+    And log in as a different user               &{lead_applicant_credentials}
+    Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
 
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
-    When Log in as a different user                    &{internal_finance_credentials}
-    Then moving competition to Closed                  ${competitionId}
-    And making the application a successful project    ${competitionId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup            ${competitionId}
+    Given Log in as a different user                     &{internal_finance_credentials}
+    Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup              ${competitionId}
 
 Internal user add new partner orgnisation
     [Documentation]  IFS-6725
@@ -121,6 +191,13 @@ Custom Suite Setup
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
+
+the user can complete the assigned question
+    [Arguments]  ${question_link}
+    the user clicks the button/link          link = ${question_link}
+    the user clicks the button/link          jQuery = label:contains("option1")
+    the user clicks the button/link          jQuery = button:contains("Assign to lead for review")
+    the user clicks the button/link          link = Back to application overview
 
 the user completes the application
     the user clicks the button/link                                                         link=Application details
@@ -189,6 +266,7 @@ the lead invites already registered user
     Log in as a different user                     &{lead_applicant_credentials}
     the user clicks the button/link                link = ${ATIapplicationTitle}
     the applicant completes Application Team
+    the user sets max available funding            50000   ${competitionId}
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation
@@ -198,3 +276,25 @@ the user does not see state aid information
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+update project costs
+    the user clicks the button/link       link = View finances
+    the user clicks the button/link       link = Your project costs
+    the user clicks the button/link       id = edit
+    the user clicks the button/link       jQuery = button:contains("Other costs")
+    the user enters text to a text field  css = textarea.govuk-textarea[name$=description]  some other costs
+    the user enters text to a text field  css = input.govuk-input[name$=estimate]  60000
+    the user clicks the button/link       jQuery = button:contains("Other costs")
+    the user selects the checkbox         stateAidAgreed
+    the user clicks the button/link       jQuery = button:contains("Mark as complete")
+
+the user edits your funding
+    the user clicks the button/link      link = Your funding
+    the user clicks the button/link      jQuery = button:contains("Edit your funding")
+    the user clicks the button/link      id = mark-all-as-complete
+
+the user should see the finances overview as complete
+    the user clicks the button/link          link = Back to finances overview
+    the user should not see the element      jQuery = p:contains("${fundingSoughtValidationMessage}")
+    the user clicks the button/link          link = Application overview
+    Then the user should see the element     jQuery = li:contains("Finances overview") .task-status-complete

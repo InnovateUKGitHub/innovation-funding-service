@@ -30,8 +30,7 @@ Review and submit button
     ...    INFUND-214
     [Tags]
     When the user clicks the button/link             link = Review and submit
-    Then the user should see the element             jQuery = .message-alert:contains("You will not be able to make changes to your application or resubmit after this point.")
-    And the user should see the element              jQuery = h1:contains("Application summary")
+    Then the user should see the element              jQuery = h1:contains("Application summary")
 
 List with the sections
     [Tags]

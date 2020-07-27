@@ -151,9 +151,7 @@ the lead is able to submit the application
     the user clicks the button/link  link = ${application}
     the applicant completes application team
     the user clicks the button/link  link = Review and submit
-    the user should see the element  jQuery = .message-alert:contains("You will not be able to make changes")
-    the user clicks the button/link  id = submit-application-button-modal
-    the user clicks the button/link  css = button[type="submit"][data-submitted-text]
+    the user clicks the button/link  id = submit-application-button
     the user clicks the button/link  link = Give us feedback
 
 the competition is now in Project Setup
