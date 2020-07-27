@@ -596,3 +596,8 @@ the user creates an account and verifies email
     the user enters the details and clicks the create account     ${firstName}  ${lastName}  ${lead_email}  ${short_password}
     the user reads his email and clicks the link                  ${lead_email}   Please verify your email address   Once verified you can sign into your account
     the user clicks the button/link                               link = Sign in
+
+the user sets max available funding
+    [Arguments]  ${amount}  ${compId}
+    ${id} =  User gets competition config id for max funding  ${compId}
+    User sets a max funding level for a competition           ${id}  ${amount}

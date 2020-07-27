@@ -84,7 +84,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
     }
 
     private String urlForFormInputDownload(long formInputId, long fileEntryId, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
-        if (data.getApplicantProcessRole().isPresent()) {
+        if (data.getApplicantProcessRole().isPresent() || data.getUser().hasRole(Role.MONITORING_OFFICER)) {
             return String.format("/application/%d/form/question/%d/forminput/%d/file/%d/download", data.getApplication().getId(), question.getId(), formInputId, fileEntryId);
         } else if (data.getUser().hasRole(Role.ASSESSOR) && settings.isIncludeAssessment()) {
             return String.format("/assessment/%d/application/%d/formInput/%d/file/%d/download", settings.getAssessmentId(), data.getApplication().getId(), formInputId, fileEntryId);
