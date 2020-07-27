@@ -4,15 +4,6 @@ Resource    ../../resources/defaultResources.robot
 *** Variables ***
 ${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 ${bannerMessageForLead}     Your application was reopened on
-${group_employees}          200
-
-@{turnover}                 100000  98000   96000
-@{preTaxProfit}             98000   96000   94000
-@{netCurrentAssets}         100000  100000  100000
-@{liabilities}              20000   15000   10000
-@{shareHolderFunds}         20000   15000   10000
-@{loans}                    35000   40000   45000
-@{employees}                2000    1500    1200
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -98,16 +89,6 @@ the user marks the finances as complete
     the user should see all finance subsections complete
     the user clicks the button/link  link = Back to application overview
     the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
-
-the user marks the KTP finances as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
-    the user fills in the project costs                      ${overheadsCost}  ${totalCosts}
-    the user enters the project location
-    the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section                     ${Application}
-    the user should see all finance subsections complete
-    the user clicks the button/link                          link = Back to application overview
-    the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills the procurement project costs
     [Arguments]  ${overheadsCost}  ${totalCosts}
@@ -313,56 +294,6 @@ the user fills in the organisation information
     the user clicks the button/link         link = Your organisation
     the user should see the element         jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
-
-the user fills in the KTP organisation information
-    [Arguments]  ${Application}  ${org_size}
-    the user navigates to Your-finances page     ${Application}
-    the user clicks the button/link              link = Your organisation
-    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery = button:contains("Edit")
-    Run Keyword If    '${status}' == 'PASS'      the user clicks the button/link  jQuery = button:contains("Edit")
-    the user selects the radio button            organisationSize  ${org_size}
-    the user enters text to a text field         name = financialYearEndMonthValue  04
-    the user enters text to a text field         name = financialYearEndYearValue   2020
-    the user fills financial overview section
-    the user clicks the button/link              jQuery = button:contains("Mark as complete")
-
-the user fills financial overview section
-    ${i} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{turnover}
-             \    the user enters text to a text field     id = years[${i}].turnover  ${ELEMENT}
-             \    ${i} =   Evaluate   ${i} + 1
-
-    ${j} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{preTaxProfit}
-             \    the user enters text to a text field     id = years[${j}].preTaxProfit  ${ELEMENT}
-             \    ${j} =   Evaluate   ${j} + 1
-
-    ${k} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{netCurrentAssets}
-             \    the user enters text to a text field     id = years[${k}].currentAssets  ${ELEMENT}
-             \    ${k} =   Evaluate   ${k} + 1
-
-    ${l} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{liabilities}
-             \    the user enters text to a text field     id = years[${l}].liabilities  ${ELEMENT}
-             \    ${l} =   Evaluate   ${l} + 1
-
-    ${m} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{shareHolderFunds}
-             \    the user enters text to a text field     id = years[${m}].shareholderValue  ${ELEMENT}
-             \    ${m} =   Evaluate   ${m} + 1
-
-    ${n} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{loans}
-             \    the user enters text to a text field     id = years[${n}].loans  ${ELEMENT}
-             \    ${n} =   Evaluate   ${n} + 1
-
-    ${a} =  Set Variable   0
-        :FOR   ${ELEMENT}   IN    @{employees}
-             \    the user enters text to a text field     id = years[${a}].employees  ${ELEMENT}
-             \    ${a} =   Evaluate   ${a} + 1
-
-    the user enters text to a text field     id = groupEmployees  ${group_employees}
 
 the user checks Your Funding section
     [Arguments]  ${Application}
