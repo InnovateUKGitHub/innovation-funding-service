@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.concurrent.ExecutionException;
 
 @Component
@@ -38,6 +39,13 @@ public class ApplicationDetailsViewModelPopulator {
 
         boolean complete = isComplete(application, organisation, questionId);
         boolean open = application.isOpen() && competition.isOpen() && role.getRole().isLeadApplicant();
+
+        if (competition.isKtp()) {
+            LocalDate ktpProjectStartDate = application.getStartDate() == null
+                    ? competition.getEndDate().plusMonths(12).toLocalDate()
+                    : application.getStartDate();
+            application.setStartDate(ktpProjectStartDate);
+        }
 
         return new ApplicationDetailsViewModel(application, competition, open, complete);
     }
