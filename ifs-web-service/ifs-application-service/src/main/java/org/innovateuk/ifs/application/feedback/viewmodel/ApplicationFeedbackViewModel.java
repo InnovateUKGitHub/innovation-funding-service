@@ -36,6 +36,7 @@ public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
     private final long applicationTermsQuestionId;
     private final boolean projectWithdrawn;
     private final boolean collaborativeProject;
+    private final boolean ktpCompetition;
 
     public ApplicationFeedbackViewModel(ApplicationResource application,
                                         CompetitionResource competition,
@@ -69,6 +70,7 @@ public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
         this.applicationTermsQuestionId = applicationTermsQuestionId;
         this.projectWithdrawn = projectWithdrawn;
         this.collaborativeProject = collaborativeProject;
+        this.ktpCompetition = competition.isKtp();
     }
 
     @Override
@@ -152,4 +154,7 @@ public class ApplicationFeedbackViewModel implements BaseAnalyticsViewModel {
         return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
 
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
 }

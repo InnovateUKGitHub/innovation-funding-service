@@ -38,11 +38,13 @@
 
                     <div class="govuk-grid-column-one-half">
                         <h3 class="govuk-heading-s">Project timescales</h3>
-                        <p class="govuk-body">Project start date: <br />
-                            <th:block
-                                th:if="${model.application.startDate}"
-                                th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}" />
-                        </p>
+                        <th:block th:unless="${model.ktpCompetition}">
+                            <p class="govuk-body">Project start date: <br />
+                                <th:block
+                                    th:if="${model.application.startDate}"
+                                    th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}" />
+                            </p>
+                        </th:block>
                         <p class="govuk-body">Duration: <br /><th:block th:text="${model.application.durationInMonths}" /> months</p>
 
                         <h3 class="govuk-heading-s govuk-!-margin-top-6">Total project cost</h3>
