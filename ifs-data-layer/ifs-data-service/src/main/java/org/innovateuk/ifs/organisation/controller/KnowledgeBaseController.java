@@ -30,7 +30,7 @@ public class KnowledgeBaseController {
     }
 
     @DeleteMapping("/{id}")
-    public RestResult<Void> getAllByUserId(@PathVariable long id) {
+    public RestResult<Void> deleteKnowledgeBase(@PathVariable long id) {
         return knowledgeBaseService.deleteKnowledgeBase(id).toDeleteResponse();
     }
 }

@@ -71,7 +71,7 @@ public class ExternalOrganisationSearchController {
         return RestResult.restFailure(new Error("Search for organisation failed", HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/get-organisation/enum/}")
+    @GetMapping("/get-organisation/enum/")
     public RestResult<OrganisationSearchResult> knowledgeBase(@PathVariable("organisationType") final OrganisationTypeEnum organisationType, @PathVariable("organisationSearchId") final String organisationSearchId) {
         switch (organisationType){
             case BUSINESS:
