@@ -80,12 +80,12 @@ Your funding validation when over max funding
     [Documentation]  IFS-7866
     Given update project costs
     When the user edits your funding
-    Then the user should see a field and summary error   ${fundingSoughtFieldAndSummaryMessage}
+    Then the user should see a field and summary error     ${fundingSoughtFieldAndSummaryMessage}
 
 Update your funding to be valid
     [Documentation]  IFS-7866
-    Given the user enters text to a text field   css = [name^="grantClaimPercentage"]  20
-    When The user clicks the button/link         id = mark-all-as-complete
+    Given the user enters text to a text field                     css = [name^="grantClaimPercentage"]  20
+    When The user clicks the button/link                           id = mark-all-as-complete
     Then the user should see the finances overview as complete
 
 The lead can now submit the application
