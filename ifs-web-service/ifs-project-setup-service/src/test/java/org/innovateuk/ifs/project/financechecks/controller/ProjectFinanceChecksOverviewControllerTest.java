@@ -54,7 +54,7 @@ public class ProjectFinanceChecksOverviewControllerTest extends BaseControllerMo
 
     @Test
     public void viewOverview() throws Exception {
-        CompetitionResource competition = newCompetitionResource().withFundingType(GRANT).withFinanceRowTypes(singleton(FinanceRowType.FINANCE)).build();
+        CompetitionResource competition = newCompetitionResource().withFundingType(GRANT).withFinanceRowTypes(singletonList(FinanceRowType.FINANCE)).build();
         ApplicationResource application = newApplicationResource().withId(123L).withCompetition(competition.getId()).build();
         ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).withCompetition(competition.getId()).build();
         OrganisationResource industrialOrganisation = newOrganisationResource()

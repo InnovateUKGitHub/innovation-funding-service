@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -92,7 +93,7 @@ public class IndustrialCostFinanceHandlerTest {
         Competition competition = newCompetition()
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
-                .withFinanceRowTypes(EnumSet.allOf(FinanceRowType.class))
+                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
                 .build();
 
         Application application = newApplication().withCompetition(competition).build();

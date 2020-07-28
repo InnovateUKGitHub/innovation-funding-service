@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -192,7 +191,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
-                .withFinanceRowTypes(singleton(FINANCE))
+                .withFinanceRowTypes(singletonList(FINANCE))
                 .build();
 
         List<Competition> competitions = singletonList(competitionTemplate);
@@ -240,7 +239,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
-                .withFinanceRowTypes(singleton(FINANCE))
+                .withFinanceRowTypes(singletonList(FINANCE))
                 .build();
 
         List<Competition> competitions = singletonList(competitionTemplate);
@@ -290,7 +289,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
-                .withFinanceRowTypes(singleton(FINANCE))
+                .withFinanceRowTypes(singletonList(FINANCE))
                 .build();
 
         List<Competition> competitions = singletonList(competitionTemplate);

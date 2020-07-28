@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.util.List;
-import java.util.Set;
 
 public class FinanceChecksProjectCostsViewModel extends YourProjectCostsViewModel {
 
