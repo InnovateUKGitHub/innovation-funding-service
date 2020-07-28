@@ -5,9 +5,10 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 
 @Embeddable
-public class CompetitionFinanceTypeId {
+public class CompetitionFinanceTypeId implements Serializable {
 
     private Long competitionId;
 
