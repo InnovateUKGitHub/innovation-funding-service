@@ -12,6 +12,7 @@ import org.innovateuk.ifs.management.competition.setup.core.viewmodel.Competitio
 import org.innovateuk.ifs.management.competition.setup.core.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.management.competition.setup.projecteligibility.viewmodel.ProjectEligibilityViewModel;
 import org.innovateuk.ifs.finance.resource.FundingLevel;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.stereotype.Service;
@@ -50,10 +51,14 @@ public class ProjectEligibilityModelPopulator implements CompetitionSetupSection
             CompetitionResource competitionResource
     ) {
         List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccess();
-        List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(
-                organisationTypes,
-                OrganisationTypeResource::getVisibleInSetup
-        );
+
+        List<OrganisationTypeResource> leadApplicantTypes;
+        if (competitionResource.isKtp()) {
+            leadApplicantTypes = simpleFilter(organisationTypes,
+                    organisationType -> OrganisationTypeEnum.getFromId(organisationType.getId()).equals(OrganisationTypeEnum.KNOWLEDGE_BASE));
+        } else {
+            leadApplicantTypes = simpleFilter(organisationTypes, OrganisationTypeResource::getVisibleInSetup);
+        }
 
         String leadApplicantTypesText = leadApplicantTypes.stream()
                 .filter(organisationTypeResource ->

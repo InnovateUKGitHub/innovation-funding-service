@@ -19,6 +19,7 @@ import java.util.function.BiPredicate;
 @FieldRequiredIf(required = "overrideFundingRules", argument = "researchCategoriesApplicable", predicate = true, message = "{validation.eligibilityform.overrideFundingRules.required}")
 @FieldRequiredIf(required = "fundingLevelPercentage", argument = "researchCategoriesApplicable", predicate = false, message = "{validation.eligibilityform.fundingLevel.required}")
 @FieldRequiredIf(required = "fundingLevelPercentageOverride", argument = "overrideFundingRules", predicate = true, message = "{validation.eligibilityform.fundingLevel.required}")
+@FieldRequiredIf(required = "leadApplicantTypes", argument = "ktpCompetition", predicate = false, message = "{validation.eligibilityform.leadApplicantTypes.required}")
 @FieldComparison(
         firstField = "fundingLevelPercentageOverride",
         secondField = "overrideFundingRules",
@@ -45,7 +46,6 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
     @NotBlank(message = "{validation.eligibilityform.singleorcollaborative.required}")
     private String singleOrCollaborative;
 
-    @NotEmpty(message = "{validation.eligibilityform.leadApplicantTypes.required}")
     private List<Long> leadApplicantTypes;
 
     private Boolean overrideFundingRules;
@@ -59,6 +59,8 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
 
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
     private String resubmission;
+
+    private boolean ktpCompetition;
 
     public String getMultipleStream() {
         return multipleStream;
@@ -153,6 +155,14 @@ public class ProjectEligibilityForm extends CompetitionSetupForm {
 
     public void setResearchParticipationAmountId(int researchParticipationAmountId) {
         this.researchParticipationAmountId = researchParticipationAmountId;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public void setKtpCompetition(boolean ktpCompetition) {
+        this.ktpCompetition = ktpCompetition;
     }
 
     public boolean includesResearchCategory(Long id) {
