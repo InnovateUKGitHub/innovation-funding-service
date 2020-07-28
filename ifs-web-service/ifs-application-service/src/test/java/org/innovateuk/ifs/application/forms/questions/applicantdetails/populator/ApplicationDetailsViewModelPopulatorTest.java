@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import static java.util.Collections.singleton;
@@ -25,12 +26,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.KTP;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -90,4 +93,89 @@ public class ApplicationDetailsViewModelPopulatorTest extends BaseUnitTest {
         assertThat(viewModel.isProcurementCompetition(), equalTo(true));
     }
 
+    @Test
+    public void populateKtpCompetitionWithNullStartDate() {
+        long questionId = 1L;
+
+        LocalDate ktpStartDate = ZonedDateTime.now().plusMonths(12).toLocalDate();
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder
+                .newCompetitionResource()
+                .withCompetitionStatus(CLOSED)
+                .withFundingType(KTP)
+                .withEndDate(ZonedDateTime.now())
+                .withMinProjectDuration(1)
+                .withMaxProjectDuration(30)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionResource.getId())
+                .withStartDate(null)
+                .withInnovationArea(newInnovationAreaResource().build())
+                .build();
+
+        UserResource user = newUserResource().build();
+
+        ProcessRoleResource leadRole = newProcessRoleResource()
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        OrganisationResource organisation = newOrganisationResource().build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
+        when(questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId())).thenReturn(completedFuture(singleton(questionId)));
+
+        ApplicationDetailsViewModel viewModel = populator.populate(application, questionId, user);
+
+        assertThat(viewModel.isReadonly(), equalTo(true));
+        assertThat(viewModel.isComplete(), equalTo(true));
+        assertNotNull(viewModel.getApplication());
+        assertNotNull(viewModel.getApplication().getStartDate());
+        assertThat(viewModel.getApplication().getStartDate(), equalTo(ktpStartDate));
+    }
+
+    @Test
+    public void populateKtpCompetitionWithStoredStartDate() {
+        long questionId = 1L;
+
+        LocalDate ktpStartDate = ZonedDateTime.now().plusMonths(12).toLocalDate();
+
+        CompetitionResource competitionResource = CompetitionResourceBuilder
+                .newCompetitionResource()
+                .withCompetitionStatus(CLOSED)
+                .withFundingType(KTP)
+                .withEndDate(ZonedDateTime.now())
+                .withMinProjectDuration(1)
+                .withMaxProjectDuration(30)
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competitionResource.getId())
+                .withStartDate(ktpStartDate)
+                .withInnovationArea(newInnovationAreaResource().build())
+                .build();
+
+        UserResource user = newUserResource().build();
+
+        ProcessRoleResource leadRole = newProcessRoleResource()
+                .withRole(LEADAPPLICANT)
+                .build();
+
+        OrganisationResource organisation = newOrganisationResource().build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(organisationRestService.getByUserAndApplicationId(user.getId(), application.getId())).thenReturn(restSuccess(organisation));
+        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(leadRole));
+        when(questionStatusRestService.getMarkedAsComplete(application.getId(), organisation.getId())).thenReturn(completedFuture(singleton(questionId)));
+
+        ApplicationDetailsViewModel viewModel = populator.populate(application, questionId, user);
+
+        assertThat(viewModel.isReadonly(), equalTo(true));
+        assertThat(viewModel.isComplete(), equalTo(true));
+        assertNotNull(viewModel.getApplication());
+        assertNotNull(viewModel.getApplication().getStartDate());
+        assertThat(viewModel.getApplication().getStartDate(), equalTo(ktpStartDate));
+    }
 }
