@@ -118,19 +118,11 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
             label=${label},
             id=${id},
             value=${#bools.isTrue(readOnly) ? #numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT') : value},
-            readOnly=${readOnly},
-            disabled=${disabled},
-            required=${required},
-            requiredMessage=${requiredMessage},
-            hint=${hint},
             type='number',
             pattern=${min >= 0} ? '[0-9]' : null,
             preventInputRegex=${min >= 0} ? '[^0-9]' : null,
             min=${min ?: -2147483647},
-            max=${max ?: 2147483647},
-            placeholder=${placeholder},
-            classappend=${classappend},
-            table=${table}
+            max=${max ?: 2147483647}
           )" />
 
 </html>
