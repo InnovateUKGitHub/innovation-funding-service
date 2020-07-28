@@ -5,7 +5,11 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7148  Replace maximum funding level drop down menu with free type field in comp setup
 ...
+<<<<<<< HEAD
 ...            IFS-7812  KTP Finance Overview - Your Organisation Section
+=======
+...            IFS-7869  KTP Comp setup: Project eligibility
+>>>>>>> development
 ...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -15,22 +19,24 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplicationTitle}      KTP Application
-${group_employees}          200
+${KTPapplicationTitle}             KTP Application
+${group_employees}                 200
+${ktpOrganisationName}             ktpOrganisation
+&{ktpLeadApplicantCredentials}     email=${lead_ktp_email}  password=${short_password}
 
-@{turnover}                 100000  98000   96000
-@{preTaxProfit}             98000   96000   94000
-@{netCurrentAssets}         100000  100000  100000
-@{liabilities}              20000   15000   10000
-@{shareHolderFunds}         20000   15000   10000
-@{loans}                    35000   40000   45000
-@{employees}                2000    1500    1200
+@{turnover}                        100000  98000   96000
+@{preTaxProfit}                    98000   96000   94000
+@{netCurrentAssets}                100000  100000  100000
+@{liabilities}                     20000   15000   10000
+@{shareHolderFunds}                20000   15000   10000
+@{loans}                           35000   40000   45000
+@{employees}                       2000    1500    1200
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given the user logs-in in new browser              &{Comp_admin1_credentials}
-    Then the competition admin creates competition     ${business_type_id}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  true  single-or-collaborative
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148 IFS-7869
+    Given the user logs-in in new browser               &{Comp_admin1_credentials}
+    Then the competition admin creates competition      ${KTP_TYPE_ID}  ${ktpCompetitionName}  KTP  ${compType_Programme}  2  KTP  PROJECT_SETUP  no  1  false  single-or-collaborative
 
 Comp Admin is able to see KTP funding type has been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -44,20 +50,23 @@ Comp Admin is able to see KTP T&C's have been selected
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user clicks the button/link     link = Terms and conditions
     Then the user should see the element      link = Knowledge Transfer Partnership (KTP)
+    [Teardown]  Logout as user
 
 Applicant applies to newly created KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given get competition id and set open date to yesterday     ${ktpCompetitionName}
-    When log in as a different user                             &{lead_applicant_credentials}
-    Then logged in user applies to competition                  ${ktpCompetitionName}  1
+    Given get competition id and set open date to yesterday                    ${ktpCompetitionName}
+    Then the user applies to competition and enters organisation type link     ${competitionId}   5   ${ktpOrganisationName}
+    And the user creates an account and verifies email                         Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 Applicant is able to complete the application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
-    Given the user completes the KTP application
+    Given Logging in and Error Checking             &{ktpLeadApplicantCredentials}
+    When the user clicks the button/link            jQuery = a:contains("Untitled application (start here)")
+    Then the user completes the KTP application
 
 Applicant invites a partner and partner completes his details
     [Documentation]  IFS-7812
-    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${ktpCompetitionName}  ${KTPapplicationTitle}  yes
+    Given the lead invites already registered user     &{ktpLeadApplicantCredentials}  ${collaborator1_credentials["email"]}  ${ktpCompetitionName}  ${KTPapplicationTitle}  yes
 
 The applicant submits the application
      [Documentation]  IFS-7812
@@ -73,7 +82,7 @@ Moving KTP Competition to Project Setup
 
 The user is able to complete the Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  Log in as a different user                           &{lead_applicant_credentials}
+    [Setup]  the user logs-in in new browser                      &{ktpLeadApplicantCredentials}
     Given the user navigates to the page                          ${server}/project-setup/project/${ProjectID}
     When the user is able to complete project details section
     Then the user should see the element                          jQuery = .progress-list li:nth-child(1):contains("Completed")
@@ -132,7 +141,7 @@ Internal user is able to assign an MO
 Finance user approves bank details
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  log in as a different user                         &{internal_finance_credentials}
-    When the project finance user approves bank details for     ${EMPIRE_LTD_NAME}  ${ProjectID}
+    When the project finance user approves bank details for     ${ktpOrganisationName}  ${ProjectID}
     And the project finance user approves bank details for      ${organisationLudlowName}  ${ProjectID}
     Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
     And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
@@ -149,13 +158,13 @@ Internal user is able to approve Finance checks and generate spend profile
 
 The partner is able to submit the spend profile
     [Documentation]  IFS-7812
-    [Setup]  log in as a different user  &{collaborator1_credentials}
+    [Setup]  log in as a different user             &{collaborator1_credentials}
     Given The partner submits the spend profile     ${ProjectID}  ${organisationLudlowId}
 
 The lead is able to submit the spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user         &{lead_applicant_credentials}
-    Given the user navigates to the page        ${server}/project-setup/project/${ProjectID}/partner-organisation/${EMPIRE_LTD_ID}/spend-profile/review
+    [Setup]  Requesting KTP Organisation ID
+    Given log in as a different user            &{ktpLeadApplicantCredentials}
     When the user submits the spend profile
     Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
@@ -167,14 +176,14 @@ Internal user is able to approve Spend profile and generates the GOL
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given log in as a different user         &{lead_applicant_credentials}
+    Given log in as a different user         &{ktpLeadApplicantCredentials}
     When Applicant uploads the GOL           ${ProjectID}
     Then the user should see the element     jQUery = .progress-list li:nth-child(8):contains("Awaiting review")
 
 Internal user is able to approve the GOL and the project is now Live
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the internal user approve the GOL                                    ${ProjectID}
-    When log in as a different user                                            &{lead_applicant_credentials}
+    When log in as a different user                                            &{ktpLeadApplicantCredentials}
     And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
     Then the user should see project is live with review its progress link
 
@@ -259,7 +268,7 @@ the user approves spend profile
      the user should see the element      jQuery = .success-alert p:contains("The finance checks have been approved and profiles generated.")
 
 Requesting Organisation IDs
-    ${leadOrgId} =    get organisation id by name     ${EMPIRE_LTD_NAME}
+    ${leadOrgId} =    get organisation id by name     ${ktpOrganisationName}
     Set suite variable      ${leadOrgId}
     ${partnerOrgId} =  get organisation id by name    ${organisationLudlowName}
     Set suite variable      ${partnerOrgId}
@@ -308,3 +317,7 @@ Requesting IDs of this Project
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+Requesting KTP Organisation ID
+    ${ktpOrganisationID} =  get organisation id by name     ${ktpOrganisationName}
+    Set suite variable      ${ktpOrganisationID}

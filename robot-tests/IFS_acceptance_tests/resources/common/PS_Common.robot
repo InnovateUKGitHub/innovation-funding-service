@@ -767,3 +767,9 @@ enter the country in the autocomplete field
 the user should see project is live with review its progress link
     the user should see the element     jQuery = p:contains("${reviewProgressMessage}")
     the user should see the element     link = ${reviewProgressLink}
+
+Internal user assigns MO to application
+    [Arguments]  ${applicationID}  ${applicationTitle}  ${MO_name}  ${MO_fullname}
+    the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all
+    Search for MO                                     ${MO_name}  ${MO_fullname}
+    The internal user assign project to MO            ${applicationID}  ${applicationTitle}

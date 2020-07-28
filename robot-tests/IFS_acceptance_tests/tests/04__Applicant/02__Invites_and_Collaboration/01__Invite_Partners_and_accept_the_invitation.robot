@@ -245,7 +245,7 @@ The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
     Then the user creates an account and signs in
 
 New Lead Applicant invites new user as collaborator on his application
