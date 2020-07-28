@@ -577,6 +577,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void consortiumCanCheckFundingSoughtIsValid() {
+        assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, leadOnApplication1));
+        assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user2));
+        assertFalse(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user3));
+    }
+
+    @Test
     public void projectPartnerCanViewApplicationsLinkedToTheirProjects() {
 
         UserResource user = newUserResource().withRoleGlobal(PROJECT_MANAGER).build();

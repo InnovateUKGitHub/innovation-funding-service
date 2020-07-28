@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -79,7 +80,7 @@ public class FinanceChecksGenerator {
 
     private ServiceResult<ProjectFinance> copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
         ApplicationFinance applicationFinanceForOrganisation =
-                applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
+                applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId()).get();
 
         EmployeesAndTurnover employeesAndTurnover = applicationFinanceForOrganisation.getEmployeesAndTurnover();
         if (employeesAndTurnover != null) {
@@ -153,8 +154,8 @@ public class FinanceChecksGenerator {
         Organisation organisation = financeCheck.getOrganisation();
         Application application = financeCheck.getProject().getApplication();
         if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-            List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.getId());
+            Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.get().getId());
             financeCheck.getCostGroup().getCosts().forEach(
                     c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
             );

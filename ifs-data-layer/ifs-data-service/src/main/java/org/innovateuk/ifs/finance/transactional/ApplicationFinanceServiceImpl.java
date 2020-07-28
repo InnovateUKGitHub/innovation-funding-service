@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionApplicationConfig;
+import org.innovateuk.ifs.competition.repository.CompetitionApplicationConfigRepository;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -67,14 +69,17 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Autowired
     private GrowthTableRepository growthTableRepository;
 
+    @Autowired
+    private CompetitionApplicationConfigRepository competitionApplicationConfigRepository;
+
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(long applicationId, long organisationId) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if (finance == null) {
+        Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (!finance.isPresent()) {
             return createApplicationFinance(applicationId, organisationId);
         }
-        return serviceSuccess(applicationFinanceMapper.mapToResource(finance));
+        return serviceSuccess(applicationFinanceMapper.mapToResource(finance.get()));
     }
 
     @Override
@@ -106,8 +111,8 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     @Override
     @Transactional
     public ServiceResult<ApplicationFinanceResource> financeDetails(long applicationId, long organisationId) {
-        ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-        if (finance == null) {
+        Optional<ApplicationFinance> finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        if (!finance.isPresent()) {
             ServiceResult<ApplicationFinanceResource> result = createApplicationFinance(applicationId, organisationId);
             if (result.isFailure()) {
                 return result;
@@ -198,6 +203,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
     public ServiceResult<Boolean> collaborativeFundingCriteriaMet(long applicationId) {
         return getApplication(applicationId).andOnSuccess(application -> {
             Competition competition = application.getCompetition();
+            if (competition.isNonFinanceType()) {
+                return serviceSuccess(true);
+            }
             if (competition.getCollaborationLevel() == COLLABORATIVE) {
                 return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
                     long numberSeekingFunding = financeTotals
@@ -210,6 +218,23 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
             } else {
                 return serviceSuccess(true);
             }
+        });
+    }
+
+    @Override
+    public ServiceResult<Boolean> fundingSoughtValid(long applicationId) {
+        return getApplication(applicationId).andOnSuccess(application -> {
+            BigDecimal maximumFundingSought = application.getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+            if (maximumFundingSought != null) {
+                return getFinanceTotals(applicationId).andOnSuccessReturn(financeTotals -> {
+                    BigDecimal applicationTotalFundingSought = financeTotals.stream()
+                            .map(ApplicationFinanceResource::getTotalFundingSought)
+                            .reduce(BigDecimal::add)
+                            .orElse(BigDecimal.ZERO);
+                    return applicationTotalFundingSought.compareTo(maximumFundingSought) <= 0;
+                });
+            }
+            return serviceSuccess(true);
         });
     }
 
