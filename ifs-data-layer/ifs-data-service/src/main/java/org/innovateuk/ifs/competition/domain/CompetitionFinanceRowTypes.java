@@ -18,7 +18,7 @@ public class CompetitionFinanceRowTypes {
     private int priority;
 
     CompetitionFinanceRowTypes() {}
-    
+
     public CompetitionFinanceRowTypes(Competition competition, FinanceRowType financeRowType, int priority) {
         this.competitionFinanceTypeId = new CompetitionFinanceTypeId(competition.getId(), financeRowType);
         this.competition = competition;
