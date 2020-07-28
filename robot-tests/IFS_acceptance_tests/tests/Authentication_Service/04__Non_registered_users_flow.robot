@@ -23,7 +23,7 @@ Non registered users non companies house route
     [Tags]  HappyPath
     Given the user navigates to the page                            ${frontDoor}
     When the user starts a new application and create an account
-    And the user clicks the Not on companies house link
+    And the user clicks the Not on companies house link             org2
     Then the user clicks the button/link                            jQuery = .govuk-button:contains("Save and continue")
     And The user should see the element                             jQuery = h1:contains("Your details")
 
