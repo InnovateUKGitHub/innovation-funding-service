@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 public class CompetitionFinanceType {
 
-    @Embedded
+    @EmbeddedId
     private CompetitionFinanceTypeId competitionFinanceTypeId;
 
 //    @MapsId("competitionId")
