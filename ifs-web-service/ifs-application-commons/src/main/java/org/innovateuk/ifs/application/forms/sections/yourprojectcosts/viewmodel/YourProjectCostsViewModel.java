@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
-import java.util.Set;
+import java.util.List;
 
 public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     private final Long applicationId;
@@ -34,7 +34,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     private final boolean ktpCompetition;
 
-    private final Set<FinanceRowType> financeRowTypes;
+    private final List<FinanceRowType> financeRowTypes;
 
     private final boolean overheadAlwaysTwenty;
 
@@ -53,7 +53,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
                                      String financesUrl,
                                      boolean procurementCompetition,
                                      boolean ktpCompetition,
-                                     Set<FinanceRowType> financeRowTypes,
+                                     List<FinanceRowType> financeRowTypes,
                                      boolean overheadAlwaysTwenty,
                                      boolean showCovidGuidance) {
         this.internal = false;
@@ -75,7 +75,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         this.showCovidGuidance = showCovidGuidance;
     }
 
-    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, Set<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
+    public YourProjectCostsViewModel(boolean open, boolean internal, boolean procurementCompetition, boolean ktpCompetition, List<FinanceRowType> financeRowTypes, boolean overheadAlwaysTwenty, String competitionName, long applicationId) {
         this.open = open;
         this.internal = internal;
         this.procurementCompetition = procurementCompetition;
@@ -146,7 +146,7 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
         return includeVat;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
+    public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
     }
 
