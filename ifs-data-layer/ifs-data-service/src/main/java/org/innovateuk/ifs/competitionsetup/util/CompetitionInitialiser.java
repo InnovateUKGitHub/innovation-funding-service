@@ -7,10 +7,10 @@ import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.internal.ProjectSetupStage.*;
-import static org.mapstruct.ap.internal.util.Collections.newArrayList;
 
 public final class CompetitionInitialiser {
 
