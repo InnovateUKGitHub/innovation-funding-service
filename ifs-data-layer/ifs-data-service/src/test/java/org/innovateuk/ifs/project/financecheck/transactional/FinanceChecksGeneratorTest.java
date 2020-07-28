@@ -234,7 +234,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         List<Question> financeQuestions = newQuestion().build(2);
 
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(),
-                organisation.getId())).thenReturn(applicationFinance);
+                organisation.getId())).thenReturn(Optional.of(applicationFinance));
 
         when(projectFinanceRepositoryMock.save(createNewProjectFinanceExpectations(newProjectFinance))).thenReturn(newProjectFinance);
 

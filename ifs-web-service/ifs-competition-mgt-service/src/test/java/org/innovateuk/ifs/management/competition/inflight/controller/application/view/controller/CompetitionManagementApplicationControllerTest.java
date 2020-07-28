@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.management.competition.inflight.controller.application.view.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -22,7 +20,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligi
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -60,15 +57,9 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @Mock
     private ProcessRoleService processRoleService;
     @Mock
-    private UserRestService userRestService;
-    @Mock
-    private ApplicationPrintPopulator applicationPrintPopulator;
-    @Mock
     private ApplicationRestService applicationRestService;
     @Mock
     private FormInputResponseRestService formInputResponseRestService;
-    @Mock
-    private ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Mock

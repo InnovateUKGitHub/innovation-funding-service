@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -151,6 +152,11 @@ public abstract class Finance {
                 .map(GrantClaimMaximum::getMaximum)
                 .orElse(0);
     }
+
+    public BigDecimal getMaximumFundingAmount() {
+        return getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+    }
+
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
         return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum);
     }

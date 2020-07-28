@@ -593,3 +593,8 @@ the lead invites already registered user
     Log in as a different user                               &{lead_applicant_credentials}
     the user clicks the button/link                          link = ${application_title}
     the applicant completes Application Team
+
+the user sets max available funding
+    [Arguments]  ${amount}  ${compId}
+    ${id} =  User gets competition config id for max funding  ${compId}
+    User sets a max funding level for a competition           ${id}  ${amount}
