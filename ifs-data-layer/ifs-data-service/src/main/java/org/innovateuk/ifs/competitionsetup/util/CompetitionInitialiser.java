@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.util;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionFinanceType;
+import org.innovateuk.ifs.competition.domain.CompetitionFinanceRowTypes;
 import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 
@@ -62,71 +62,71 @@ public final class CompetitionInitialiser {
     }
 
     private static void addKtpFinanceTypes(Competition competition) {
-        competition.getCompetitionFinanceTypes().addAll(
+        competition.getCompetitionFinanceRowTypes().addAll(
                 newArrayList(
-                        new CompetitionFinanceType(competition, ASSOCIATE_SALARY_COSTS, 1),
-                        new CompetitionFinanceType(competition, ASSOCIATE_SALARY_COSTS, 2),
-                        new CompetitionFinanceType(competition, ASSOCIATE_DEVELOPMENT_COSTS, 3),
-                        new CompetitionFinanceType(competition, KNOWLEDGE_BASE, 4),
-                        new CompetitionFinanceType(competition, ADDITIONAL_COMPANY_COSTS, 5),
-                        new CompetitionFinanceType(competition, CONSUMABLES, 6),
-                        new CompetitionFinanceType(competition, TRAVEL, 7),
-                        new CompetitionFinanceType(competition, OTHER_COSTS, 8),
-                        new CompetitionFinanceType(competition, ASSOCIATE_SUPPORT, 9),
-                        new CompetitionFinanceType(competition, ESTATE_COSTS, 10),
-                        new CompetitionFinanceType(competition, SUBCONTRACTING_COSTS, 11),
-                        new CompetitionFinanceType(competition, FINANCE, 12),
-                        new CompetitionFinanceType(competition, OTHER_FUNDING, 13),
-                        new CompetitionFinanceType(competition, YOUR_FINANCE, 14)
+                        new CompetitionFinanceRowTypes(competition, ASSOCIATE_SALARY_COSTS, 1),
+                        new CompetitionFinanceRowTypes(competition, ASSOCIATE_SALARY_COSTS, 2),
+                        new CompetitionFinanceRowTypes(competition, ASSOCIATE_DEVELOPMENT_COSTS, 3),
+                        new CompetitionFinanceRowTypes(competition, KNOWLEDGE_BASE, 4),
+                        new CompetitionFinanceRowTypes(competition, ADDITIONAL_COMPANY_COSTS, 5),
+                        new CompetitionFinanceRowTypes(competition, CONSUMABLES, 6),
+                        new CompetitionFinanceRowTypes(competition, TRAVEL, 7),
+                        new CompetitionFinanceRowTypes(competition, OTHER_COSTS, 8),
+                        new CompetitionFinanceRowTypes(competition, ASSOCIATE_SUPPORT, 9),
+                        new CompetitionFinanceRowTypes(competition, ESTATE_COSTS, 10),
+                        new CompetitionFinanceRowTypes(competition, SUBCONTRACTING_COSTS, 11),
+                        new CompetitionFinanceRowTypes(competition, FINANCE, 12),
+                        new CompetitionFinanceRowTypes(competition, OTHER_FUNDING, 13),
+                        new CompetitionFinanceRowTypes(competition, YOUR_FINANCE, 14)
                 ));
     }
 
     private static void addLoanFinanceTypes(Competition competition) {
-        competition.getCompetitionFinanceTypes().addAll(
+        competition.getCompetitionFinanceRowTypes().addAll(
                 newArrayList(
-                        new CompetitionFinanceType(competition, LABOUR, 1),
-                        new CompetitionFinanceType(competition, OVERHEADS, 2),
-                        new CompetitionFinanceType(competition, MATERIALS, 3),
-                        new CompetitionFinanceType(competition, CAPITAL_USAGE, 4),
-                        new CompetitionFinanceType(competition, SUBCONTRACTING_COSTS, 5),
-                        new CompetitionFinanceType(competition, TRAVEL, 6),
-                        new CompetitionFinanceType(competition, OTHER_COSTS, 7),
-                        new CompetitionFinanceType(competition, GRANT_CLAIM_AMOUNT, 8),
-                        new CompetitionFinanceType(competition, OTHER_FUNDING, 9),
-                        new CompetitionFinanceType(competition, YOUR_FINANCE, 10)
+                        new CompetitionFinanceRowTypes(competition, LABOUR, 1),
+                        new CompetitionFinanceRowTypes(competition, OVERHEADS, 2),
+                        new CompetitionFinanceRowTypes(competition, MATERIALS, 3),
+                        new CompetitionFinanceRowTypes(competition, CAPITAL_USAGE, 4),
+                        new CompetitionFinanceRowTypes(competition, SUBCONTRACTING_COSTS, 5),
+                        new CompetitionFinanceRowTypes(competition, TRAVEL, 6),
+                        new CompetitionFinanceRowTypes(competition, OTHER_COSTS, 7),
+                        new CompetitionFinanceRowTypes(competition, GRANT_CLAIM_AMOUNT, 8),
+                        new CompetitionFinanceRowTypes(competition, OTHER_FUNDING, 9),
+                        new CompetitionFinanceRowTypes(competition, YOUR_FINANCE, 10)
                 ));
     }
 
     private static void addProcurementFinanceTypes(Competition competition) {
-        competition.getCompetitionFinanceTypes().addAll(
+        competition.getCompetitionFinanceRowTypes().addAll(
                 newArrayList(
-                        new CompetitionFinanceType(competition, LABOUR, 1),
-                        new CompetitionFinanceType(competition, PROCUREMENT_OVERHEADS, 2),
-                        new CompetitionFinanceType(competition, MATERIALS, 3),
-                        new CompetitionFinanceType(competition, CAPITAL_USAGE, 4),
-                        new CompetitionFinanceType(competition, SUBCONTRACTING_COSTS, 5),
-                        new CompetitionFinanceType(competition, TRAVEL, 6),
-                        new CompetitionFinanceType(competition, OTHER_COSTS, 7),
-                        new CompetitionFinanceType(competition, FINANCE, 8),
-                        new CompetitionFinanceType(competition, OTHER_FUNDING, 9),
-                        new CompetitionFinanceType(competition, YOUR_FINANCE, 10),
-                        new CompetitionFinanceType(competition, VAT, 11)
+                        new CompetitionFinanceRowTypes(competition, LABOUR, 1),
+                        new CompetitionFinanceRowTypes(competition, PROCUREMENT_OVERHEADS, 2),
+                        new CompetitionFinanceRowTypes(competition, MATERIALS, 3),
+                        new CompetitionFinanceRowTypes(competition, CAPITAL_USAGE, 4),
+                        new CompetitionFinanceRowTypes(competition, SUBCONTRACTING_COSTS, 5),
+                        new CompetitionFinanceRowTypes(competition, TRAVEL, 6),
+                        new CompetitionFinanceRowTypes(competition, OTHER_COSTS, 7),
+                        new CompetitionFinanceRowTypes(competition, FINANCE, 8),
+                        new CompetitionFinanceRowTypes(competition, OTHER_FUNDING, 9),
+                        new CompetitionFinanceRowTypes(competition, YOUR_FINANCE, 10),
+                        new CompetitionFinanceRowTypes(competition, VAT, 11)
                 ));
     }
 
     private static void addDefaultFinanceTypes(Competition competition) {
-        competition.getCompetitionFinanceTypes().addAll(
+        competition.getCompetitionFinanceRowTypes().addAll(
                 newArrayList(
-                        new CompetitionFinanceType(competition, LABOUR, 1),
-                        new CompetitionFinanceType(competition, OVERHEADS, 2),
-                        new CompetitionFinanceType(competition, MATERIALS, 3),
-                        new CompetitionFinanceType(competition, CAPITAL_USAGE, 4),
-                        new CompetitionFinanceType(competition, SUBCONTRACTING_COSTS, 5),
-                        new CompetitionFinanceType(competition, TRAVEL, 6),
-                        new CompetitionFinanceType(competition, OTHER_COSTS, 7),
-                        new CompetitionFinanceType(competition, FINANCE, 8),
-                        new CompetitionFinanceType(competition, OTHER_FUNDING, 9),
-                        new CompetitionFinanceType(competition, YOUR_FINANCE, 10)
+                        new CompetitionFinanceRowTypes(competition, LABOUR, 1),
+                        new CompetitionFinanceRowTypes(competition, OVERHEADS, 2),
+                        new CompetitionFinanceRowTypes(competition, MATERIALS, 3),
+                        new CompetitionFinanceRowTypes(competition, CAPITAL_USAGE, 4),
+                        new CompetitionFinanceRowTypes(competition, SUBCONTRACTING_COSTS, 5),
+                        new CompetitionFinanceRowTypes(competition, TRAVEL, 6),
+                        new CompetitionFinanceRowTypes(competition, OTHER_COSTS, 7),
+                        new CompetitionFinanceRowTypes(competition, FINANCE, 8),
+                        new CompetitionFinanceRowTypes(competition, OTHER_FUNDING, 9),
+                        new CompetitionFinanceRowTypes(competition, YOUR_FINANCE, 10)
                 ));
     }
 

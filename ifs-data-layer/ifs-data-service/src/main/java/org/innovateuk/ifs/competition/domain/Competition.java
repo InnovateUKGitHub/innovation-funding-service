@@ -175,7 +175,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("priority")
-    private List<CompetitionFinanceType> competitionFinanceTypes = new ArrayList<>();
+    private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectStages> projectStages = new ArrayList<>();
@@ -261,7 +261,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public List<FinanceRowType> getFinanceRowTypes() {
-        return competitionFinanceTypes.stream().map(type -> type.getCompetitionFinanceTypeId().getFinanceRowType()).collect(toList());
+        return competitionFinanceRowTypes.stream().map(type -> type.getCompetitionFinanceTypeId().getFinanceRowType()).collect(toList());
     }
 
     public List<ProjectStages> getProjectStages() {
@@ -968,8 +968,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 .orElse(true)) ;
     }
 
-    public List<CompetitionFinanceType> getCompetitionFinanceTypes() {
-        return competitionFinanceTypes;
+    public List<CompetitionFinanceRowTypes> getCompetitionFinanceRowTypes() {
+        return competitionFinanceRowTypes;
     }
 
     public void setHasAssessmentStage(boolean hasAssessmentStage) {

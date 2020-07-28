@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import javax.persistence.*;
 
 @Entity
-public class CompetitionFinanceType {
+public class CompetitionFinanceRowTypes {
 
     @EmbeddedId
     private CompetitionFinanceTypeId competitionFinanceTypeId;
@@ -17,7 +17,7 @@ public class CompetitionFinanceType {
 
     private int priority;
 
-    public CompetitionFinanceType(Competition competition, FinanceRowType financeRowType, int priority) {
+    public CompetitionFinanceRowTypes(Competition competition, FinanceRowType financeRowType, int priority) {
         this.competitionFinanceTypeId = new CompetitionFinanceTypeId(competition.getId(), financeRowType);
         this.competition = competition;
         this.priority = priority;
