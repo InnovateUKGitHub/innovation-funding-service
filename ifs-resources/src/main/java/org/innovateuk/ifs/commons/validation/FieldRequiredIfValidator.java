@@ -94,7 +94,7 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
         }
 
         if (requiredFieldValue instanceof LocalDate) {
-            return ((LocalDate) requiredFieldValue) == null;
+            return ((LocalDate) requiredFieldValue) == LocalDate.MIN;
         }
 
         throw new IllegalArgumentException("The required field that must have a non blank value [" + requiredFieldName
