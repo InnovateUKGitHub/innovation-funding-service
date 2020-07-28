@@ -82,14 +82,20 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                     .getOptionalSuccessObject();
 
 
-                            // Removing and replacing if file already exists here
                             if (response.isPresent()) {
                                 FormInput formInput = response.get().getFormInput();
 
-                                if (formInput.getType() == FormInputType.TEMPLATE_DOCUMENT ||
-                                    response.get().getFileEntries().size() >= formInput.getWordCount()) {
-                                    LOG.info("[FileLogging] FormInputResponse for upload exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
-                                            " for application id " + openApplication +
+                                if (formInput.getType() == FormInputType.TEMPLATE_DOCUMENT) {
+                                    LOG.info("[FileLogging] FormInputResponse for template upload " +
+                                            " for application id " + openApplication.getId() +
+                                            " formInputId " + formInputId +
+                                            " , so returning error...");
+                                    return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                                }
+                                if (formInput.getType() == FormInputType.FILEUPLOAD
+                                    && response.get().getFileEntries().size() >= formInput.getWordCount()) {
+                                    LOG.info("[FileLogging] FormInputResponse for appendix exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
+                                            " for application id " + openApplication.getId() +
                                             " formInputId " + formInputId +
                                             " , so returning error...");
                                     return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
