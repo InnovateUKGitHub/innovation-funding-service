@@ -170,7 +170,7 @@
                     <p class="govuk-body">Your upload must be no larger than 10MB</p>
                     <div class="govuk-form-group" th:with="removeValue = ${model.templateDocumentResponseFileEntryId}">
                         <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
-                                @{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentFormInputId})},
+                                @{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/file/{fileEntryId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentFormInputId}, fileEntryId=${model.templateDocumentResponseFileEntryId})},
                                 ${model.templateDocumentResponseFilename},
                                 templateDocument,
                                 templateDocument,

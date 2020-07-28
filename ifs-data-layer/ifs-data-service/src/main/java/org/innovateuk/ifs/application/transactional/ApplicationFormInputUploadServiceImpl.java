@@ -18,6 +18,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -81,13 +82,24 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                     .getOptionalSuccessObject();
 
 
-                            // Removing and replacing if file already exists here
-                            if (response.isPresent() && response.get().getFileEntries().size() >= response.get().getFormInput().getWordCount()) {
-                                LOG.info("[FileLogging] FormInputResponse for upload exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
-                                        " for application id " + openApplication +
-                                        " formInputId " + formInputId +
-                                        " , so returning error...");
-                                return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                            if (response.isPresent()) {
+                                FormInput formInput = response.get().getFormInput();
+
+                                if (formInput.getType() == FormInputType.TEMPLATE_DOCUMENT) {
+                                    LOG.info("[FileLogging] FormInputResponse for template upload " +
+                                            " for application id " + openApplication.getId() +
+                                            " formInputId " + formInputId +
+                                            " , so returning error...");
+                                    return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                                }
+                                if (formInput.getType() == FormInputType.FILEUPLOAD
+                                    && response.get().getFileEntries().size() >= formInput.getWordCount()) {
+                                    LOG.info("[FileLogging] FormInputResponse for appendix exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
+                                            " for application id " + openApplication.getId() +
+                                            " formInputId " + formInputId +
+                                            " , so returning error...");
+                                    return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                                }
                             }
 
                             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier)
