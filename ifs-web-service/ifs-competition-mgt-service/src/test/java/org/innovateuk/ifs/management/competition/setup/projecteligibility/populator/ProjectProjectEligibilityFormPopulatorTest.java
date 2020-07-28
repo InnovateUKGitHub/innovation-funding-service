@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -104,7 +105,7 @@ public class ProjectProjectEligibilityFormPopulatorTest {
                 .withMultiStream(true)
                 .withStreamName("streamname")
                 .withCollaborationLevel(CollaborationLevel.COLLABORATIVE)
-                .withLeadApplicantType(null)
+                .withLeadApplicantType(Collections.emptyList())
                 .withCompetitionType(OrganisationTypeEnum.BUSINESS.getId())
                 .withGrantClaimMaximums(CollectionFunctions.asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId()))
                 .withFundingType(FundingType.KTP)
@@ -128,7 +129,7 @@ public class ProjectProjectEligibilityFormPopulatorTest {
         assertTrue(form.getResearchCategoriesApplicable());
         assertEquals("collaborative", form.getSingleOrCollaborative());
         assertTrue(form.isKtpCompetition());
-        assertNull(form.getLeadApplicantTypes());
+        assertEquals(0, form.getLeadApplicantTypes().size());
         assertEquals(2, form.getResearchParticipationAmountId());
         assertEquals(gcms.get(0).getMaximum(), form.getFundingLevelPercentage());
     }
