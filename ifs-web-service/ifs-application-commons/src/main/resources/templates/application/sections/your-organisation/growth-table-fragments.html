@@ -275,9 +275,12 @@
                            max="9999999999999999999"
                            data-field-errormessage="This field can only accept whole numbers."
                            th:attr="min=${min}">
+
+
                 </th:block>
                 <th:block th:if="${readOnly}"
-                          th:text="*{__${path}__.__${field}__}">
+                          th:with="value=*{__${path}__.__${field}__}"
+                          th:text="${#numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT')}">
                 </th:block>
             </td>
         </tr>

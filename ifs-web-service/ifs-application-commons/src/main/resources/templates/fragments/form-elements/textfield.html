@@ -102,7 +102,7 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
           textfield(
             label=${label},
             id=${id},
-            value=${value},
+            value=${#bools.isTrue(readOnly) ? #numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT') : value},
             readOnly=${readOnly},
             disabled=${disabled},
             required=${required},
