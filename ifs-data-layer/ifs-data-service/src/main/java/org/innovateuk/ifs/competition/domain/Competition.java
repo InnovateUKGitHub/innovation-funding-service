@@ -173,7 +173,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Column(name = "funding_type")
     private FundingType fundingType;
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("priority")
     private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
@@ -261,7 +261,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public List<FinanceRowType> getFinanceRowTypes() {
-        return competitionFinanceRowTypes.stream().map(type -> type.getCompetitionFinanceTypeId().getFinanceRowType()).collect(toList());
+        return competitionFinanceRowTypes.stream().map(CompetitionFinanceRowTypes::getFinanceRowType).collect(toList());
     }
 
     public List<ProjectStages> getProjectStages() {
