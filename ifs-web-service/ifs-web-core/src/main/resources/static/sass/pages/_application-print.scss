@@ -92,6 +92,12 @@
     font-size:12pt;
   }
 
+  .govuk-table-head {
+    .govuk-\!-width-one-third {
+      width: 33.33% !important;
+    }
+  }
+
   .print-doc {
     section {
       margin: 0;
