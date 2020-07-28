@@ -310,7 +310,6 @@ External project finance creates account
 
 the user completes covid application
     the user clicks the button/link                          jQuery = a:contains("Start new application")
-
     the user clicks the button/link                          jQuery = button:contains("Save and continue")
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}

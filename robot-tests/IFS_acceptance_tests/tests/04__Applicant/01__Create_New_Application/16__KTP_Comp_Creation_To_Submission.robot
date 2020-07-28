@@ -43,7 +43,7 @@ Applicant applies to newly created KTP competition
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7869
     Given get competition id and set open date to yesterday                    ${ktpCompetitionName}
     Then the user applies to competition and enters organisation type link     ${competitionId}   5   ${ktpOrganisationName}
-    [Teardown]  the user creates an account and verifies email                 Indi  Gardiner  ${lead_ktp_email}  ${short_password}
+    And the user creates an account and verifies email                         Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 Applicant is able to complete and submit an application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
