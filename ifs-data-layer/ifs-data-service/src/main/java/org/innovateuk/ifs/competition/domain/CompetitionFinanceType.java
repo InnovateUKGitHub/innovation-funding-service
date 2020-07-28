@@ -12,7 +12,7 @@ public class CompetitionFinanceType {
 
 //    @MapsId("competitionId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="competitionId", referencedColumnName="id")
+    @JoinColumn(name="competitionId", referencedColumnName="id", insertable = false, updatable = false)
     private Competition competition;
 
     private int priority;
