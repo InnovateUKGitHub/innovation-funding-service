@@ -17,7 +17,7 @@ public class CompetitionFinanceTypeId implements Serializable {
     private FinanceRowType financeRowType;
 
     CompetitionFinanceTypeId() {}
-    
+
     public CompetitionFinanceTypeId(Long competitionId, FinanceRowType financeRowType) {
         this.competitionId = competitionId;
         this.financeRowType = financeRowType;
