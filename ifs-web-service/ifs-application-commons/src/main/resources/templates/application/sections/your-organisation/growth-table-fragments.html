@@ -19,7 +19,8 @@
                             id='turnover',
                             value=${readOnly ? ('£' + (form.turnover != null ? #numbers.formatInteger(form.turnover, 0, 'DEFAULT') : '0')) : form.turnover},
                             required=true,
-                            readOnly=${readOnly}
+                            readOnly=${readOnly},
+                            min=0
                             )" />
 
         <th:block th:insert="fragments/form-elements/textfield ::
@@ -30,6 +31,7 @@
                             value=${form.headCount},
                             required=true,
                             readOnly=${readOnly},
+                            min=0
                             )" />
         <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
     </th:block>
@@ -70,8 +72,8 @@
                     <table class="govuk-table govuk-!-margin-bottom-6">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="col">Section</th>
-                            <th scope="col" class="govuk-table__header govuk-table__header--numeric" id="last-year">
+                            <th class="govuk-table__header govuk-!-width-one-half" scope="col">Section</th>
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric govuk-!-width-one-half" id="last-year">
                                 Last financial year (&pound;)
                             </th>
                         </tr>
@@ -124,6 +126,7 @@
                     value=${form.headCountAtLastFinancialYear},
                     required=true,
                     readOnly=${readOnly},
+                    min=0
                 )" />
 
         <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
@@ -131,30 +134,21 @@
 
     <th:block th:fragment="growth-table-row(label, id, value, readOnly)">
 
-        <tr class="govuk-table__row govuk-form-group"
+        <tr class="govuk-table__row"
             th:classappend="${#fields.hasErrors(id)} ? 'error'">
 
-            <td class="govuk-table__cell">
-                <label th:for="${id}">
-                    <span th:text="${label}">Growth table row</span>
-                    <th:block th:if="${#fields.hasErrors(id)}">
-                        <span class="govuk-error-message" th:each="err : ${#fields.errors(id)}" th:text="${err}"></span>
-                    </th:block>
-                </label>
-            </td>
-
-            <td class="govuk-table__cell govuk-table__cell--numeric">
-                <input class="govuk-input govuk-input--width-10"
-                       th:id="${id}"
-                       th:name="${id}"
-                       th:value="${value}"
-                       th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
-                       th:disabled="${readOnly}"
-                       type="number"
-                       pattern='[0-9]'
-                       data-prevent-input-regex='[^0-9]'
-                       required="required" />
-            </td>
+            <td class="govuk-table__cell" th:text="${label}"></td>
+            <th:block th:insert="fragments/form-elements/table ::
+                        textfield-integer(
+                            label=${label},
+                            id=${id},
+                            value=${value},
+                            readOnly=${readOnly},
+                            required=true,
+                            table=true,
+                            min=0
+                            )"
+            />
         </tr>
     </th:block>
 
@@ -245,7 +239,8 @@
                             id='groupEmployees',
                             value=${form.groupEmployees},
                             readOnly=${readOnly},
-                            placeholder='0'
+                            placeholder='0',
+                            min=0
                             )" />
 
         <th:block th:insert="this::state-aid-warning(${readOnly}, ${showStateAidAgreement})"/>
@@ -256,33 +251,21 @@
             <td class="govuk-table__cell">
                 <strong th:text="${rowName}">Turnover</strong>
             </td>
-            <td th:each="year, iter: ${form.years}"
-                th:with="path=${'years[__${iter.index}__]'}"
-                class="govuk-table__cell"
-                th:classappend="${readOnly} ? 'govuk-table__cell--numeric' : 'govuk-form-group'">
-                <th:block th:unless="${readOnly}">
-                    <label th:for="__${path}__.__${field}__">
-                        <span class="govuk-visually-hidden" th:text="|${year.yearText} ${rowName}|"></span>
-                    </label>
-                    <th:block
-                        th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.__${field}__)"/>
-                    <input type="number"
-                           th:id="__${path}__.__${field}__"
-                           th:field="*{__${path}__.__${field}__}"
-                           th:errorclass="govuk-input--error"
-                           class="govuk-input"
-                           placeholder="0"
-                           max="9999999999999999999"
-                           data-field-errormessage="This field can only accept whole numbers."
-                           th:attr="min=${min}">
-
-
-                </th:block>
-                <th:block th:if="${readOnly}"
-                          th:with="value=*{__${path}__.__${field}__}"
-                          th:text="${#numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT')}">
-                </th:block>
-            </td>
+            <th:block
+                th:each="year, iter: ${form.years}"
+                th:with="path=${'years[__${iter.index}__]'}">
+                <th:block th:insert="fragments/form-elements/table ::
+                            textfield-integer(
+                                label=|${year.yearText} ${rowName}|,
+                                id=__${path}__.__${field}__,
+                                value=*{__${path}__.__${field}__},
+                                readOnly=${readOnly},
+                                placeholder='0',
+                                table=true,
+                                min=${min}
+                                )"
+                          />
+            </th:block>
         </tr>
 
     </th:block>
