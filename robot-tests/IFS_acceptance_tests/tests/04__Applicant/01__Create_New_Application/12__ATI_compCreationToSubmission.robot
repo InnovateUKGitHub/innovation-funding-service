@@ -14,6 +14,9 @@ Documentation     IFS-2396  ATI Competition type template
 ...               IFS-7547  Lead applicant can reopen a submitted application
 ...
 ...               IFS-7550  Lead applicant can edit and resubmit opened application
+...
+...               IFS-7647 MO visibility of submitted applications
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -22,12 +25,13 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${ATIcompetitionTitle}                     ATI Competition
-${ATIapplicationTitle}                     ATI application
-${project_team_question}                   8. Project team
-${technicalApproach_question}              5. Technical approach
-${answerToSelect}                          answer2
-${fundingSoughtValidationMessage}          Your total funding sought exceed
+${ATIcompetitionTitle}                ATI Competition
+${ATIapplicationTitle}                ATI application
+${project_team_question}              8. Project team
+${technicalApproach_question}         5. Technical approach
+${answerToSelect}                     answer2
+${partnerEmail}                       test1@test.com
+${fundingSoughtValidationMessage}     Your total funding sought exceed
 *** Test Cases ***
 Comp Admin creates an ATI competition
     [Documentation]  IFS-2396
@@ -145,23 +149,31 @@ Lead does not see reopen when the comp is closed
     And log in as a different user               &{lead_applicant_credentials}
     Then the user should not see the element     jQuery = li:contains("${ATIapplicationTitle}") a:contains("Reopen")
 
-Moving ATI Competition to Project Setup
+Internal user marks ATI application to successful
     [Documentation]  IFS-2332
     Given Log in as a different user                     &{internal_finance_credentials}
     Then making the application a successful project     ${competitionId}  ${ATIapplicationTitle}
-    And moving competition to Project Setup              ${competitionId}
 
-Internal user add new partner orgnisation
+MO can see application summary page for the ATI application in project setup before releasing the feedback
+    [Documentation]  IFS-7647
+    [Setup]  Requesting Application ID of this application
+    Given Internal user assigns MO to application              ${atiApplicationID}  ${ATIapplicationTitle}  Orvill  Orville Gibbs
+    When Log in as a different user                            &{monitoring_officer_one_credentials}
+    And the user navigates to the page                         ${server}/application/${atiApplicationID}/summary
+    And the user should see the element                        jQuery = h1:contains("Application overview")
+
+Internal user add new partner orgnisation after moving competition to project setup
     [Documentation]  IFS-6725
     [Setup]  Requesting Project ID of this Project
-    ${applicationId} =  get application id by name  ${ATIapplicationTitle}
-    Given the user navigates to the page                       ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
-    When the user adds a new partner organisation              Testing Admin Organisation  Name Surname  test1@test.nom
-    Then a new organisation is able to accept project invite   Name  Surname  test1@test.nom  innovate  INNOVATE LTD  ${applicationId}  ${ATIapplicationTitle}
+    Given Log in as a different user                             &{internal_finance_credentials}
+    And moving competition to Project Setup                      ${competitionId}
+    When the user navigates to the page                          ${server}/project-setup-management/competition/${competitionId}/project/${ProjectID}/team/partner
+    And the user adds a new partner organisation                 Testing Admin Organisation  Name Surname  ${partnerEmail}
+    Then a new organisation is able to accept project invite     Name  Surname  ${partnerEmail}  innovate  INNOVATE LTD  ${atiApplicationID}  ${ATIapplicationTitle}
 
 New partner orgination checks for funding level guidance
     [Documentation]  IFS-6725
-    Given log in as a different user                                test1@test.nom    ${short_password}
+    Given log in as a different user                                ${partnerEmail}   ${short_password}
     When the user clicks the button/link                            link = ${ATIapplicationTitle}
     And The new partner can complete Your organisation
     Then the user checks for funding level guidance at PS level
@@ -191,6 +203,10 @@ Custom Suite Setup
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
+
+Requesting Application ID of this application
+    ${atiApplicationID} =  get application id by name  ${ATIapplicationTitle}
+    Set suite variable    ${atiApplicationID}
 
 the user can complete the assigned question
     [Arguments]  ${question_link}
