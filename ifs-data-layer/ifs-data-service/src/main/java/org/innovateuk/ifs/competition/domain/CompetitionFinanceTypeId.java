@@ -10,11 +10,14 @@ import java.io.Serializable;
 @Embeddable
 public class CompetitionFinanceTypeId implements Serializable {
 
+    private static final long serialVersionUID = -8644984031279927011L;
     private Long competitionId;
 
     @Enumerated(EnumType.STRING)
     private FinanceRowType financeRowType;
 
+    CompetitionFinanceTypeId() {}
+    
     public CompetitionFinanceTypeId(Long competitionId, FinanceRowType financeRowType) {
         this.competitionId = competitionId;
         this.financeRowType = financeRowType;
