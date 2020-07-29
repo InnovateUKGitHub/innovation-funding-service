@@ -326,14 +326,15 @@ the user selects research area
 
 the user fills in the funding information
     [Arguments]  ${Application}
-    the user navigates to Your-finances page   ${Application}
-    the user clicks the button/link            link = Your funding
-    the user selects the radio button          requestingFunding   true
-    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
-    the user selects the radio button          otherFunding   false
-    the user clicks the button/link            jQuery = button:contains("Mark as complete")
-    the user clicks the button/link            link = Your funding
-    the user should see the element            jQuery = button:contains("Edit")
+    the user navigates to Your-finances page                        ${Application}
+    the user clicks the button/link                                 link = Your funding
+    the user selects the radio button                               requestingFunding   true
+    Run Keyword if   '${Application}' == 'KTP Application'          the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...  ELSE         the user enters text to a text field          css = [name^="grantClaimPercentage"]  42.34
+    the user selects the radio button                               otherFunding   false
+    the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                                 link = Your funding
+    the user should see the element                                 jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
@@ -586,7 +587,7 @@ the user can submit the application
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
-    [Arguments]   ${lead_cred}  ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
+    [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
     the user fills in the inviting steps                     ${partner_email}
     Logout as user
     the user reads his email and clicks the link             ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
@@ -597,7 +598,8 @@ the lead invites already registered user
     Run Keyword If  '${is_KTP}' == 'no'  the user marks the finances as complete        ${application_title}   Calculate  52,214  yes
     ...  ELSE  the user marks the KTP finances as complete   ${application_title}   Calculate  52,214
     the user accept the competition terms and conditions     Return to application overview
-    Log in as a different user                               ${lead_cred}
+    Run Keyword If  '${is_KTP}' == 'yes'  Log in as a different user     &{ktpLeadApplicantCredentials}
+    ...  ELSE  Log in as a different user     &{lead_applicant_credentials}
     the user clicks the button/link                          link = ${application_title}
     the applicant completes Application Team
 

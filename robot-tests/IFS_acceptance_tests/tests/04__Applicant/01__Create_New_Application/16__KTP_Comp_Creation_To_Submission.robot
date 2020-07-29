@@ -5,12 +5,10 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7148  Replace maximum funding level drop down menu with free type field in comp setup
 ...
-<<<<<<< HEAD
 ...            IFS-7812  KTP Finance Overview - Your Organisation Section
-=======
-...            IFS-7869  KTP Comp setup: Project eligibility
->>>>>>> development
 ...
+...            IFS-7869  KTP Comp setup: Project eligibility
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -19,10 +17,10 @@ Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplicationTitle}             KTP Application
-${group_employees}                 200
-${ktpOrganisationName}             ktpOrganisation
 &{ktpLeadApplicantCredentials}     email=${lead_ktp_email}  password=${short_password}
+${KTPapplicationTitle}             KTP Application
+${ktpOrganisationName}             KTP Organisation
+${group_employees}                 200
 
 @{turnover}                        100000  98000   96000
 @{preTaxProfit}                    98000   96000   94000
@@ -66,7 +64,7 @@ Applicant is able to complete the application
 
 Applicant invites a partner and partner completes his details
     [Documentation]  IFS-7812
-    Given the lead invites already registered user     &{ktpLeadApplicantCredentials}  ${collaborator1_credentials["email"]}  ${ktpCompetitionName}  ${KTPapplicationTitle}  yes
+    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${ktpCompetitionName}  ${KTPapplicationTitle}  yes
 
 The applicant submits the application
      [Documentation]  IFS-7812
@@ -165,6 +163,7 @@ The lead is able to submit the spend profile
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  Requesting KTP Organisation ID
     Given log in as a different user            &{ktpLeadApplicantCredentials}
+    And the user navigates to the page          ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
     When the user submits the spend profile
     Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
@@ -286,14 +285,14 @@ Internal user is able to approve documents
     the user clicks the button/link              link = Return to documents
 
 The user completes the KTP application
-    the user clicks the button/link                          link = Application details
-    the user fills in the Application details                ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                                                 link = Application details
+    the user fills in the Application details                                       ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                 ${KTPapplicationTitle}
-    the user marks the KTP finances as complete              ${KTPapplicationTitle}   Calculate  52,214
-    the user accept the competition terms and conditions     Return to application overview
+    the user navigates to Your-finances page                                        ${KTPapplicationTitle}
+    the user marks the KTP finances as complete                                     ${KTPapplicationTitle}   Calculate  52,214
+    the user accept the competition terms and conditions                            Return to application overview
 
 The user completes the research category
     [Arguments]  ${res_category}
