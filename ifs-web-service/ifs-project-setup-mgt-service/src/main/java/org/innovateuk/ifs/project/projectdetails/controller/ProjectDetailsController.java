@@ -113,7 +113,8 @@ public class ProjectDetailsController {
                 organisations,
                 financeReviewer.map(SimpleUserResource::getName).orElse(null),
                 financeReviewer.map(SimpleUserResource::getEmail).orElse(null),
-                isSpendProfileGenerated));
+                isSpendProfileGenerated,
+                competitionResource.isKtp()));
 
         return "project/detail";
     }
@@ -171,12 +172,12 @@ public class ProjectDetailsController {
     private String doViewEditProjectDuration(long projectId, Model model, ProjectDurationForm form) {
 
         ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess();
 
-        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project));
+        model.addAttribute("model", ProjectDetailsViewModel.editDurationViewModel(project, competitionResource.isKtp()));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
-
     }
 
     @PreAuthorize("hasAuthority('project_finance')")
