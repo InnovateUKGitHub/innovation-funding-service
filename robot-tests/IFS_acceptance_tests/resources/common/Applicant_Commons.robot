@@ -590,17 +590,18 @@ the lead invites already registered user
     [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
     the user fills in the inviting steps                     ${partner_email}
     Logout as user
-    the user reads his email and clicks the link             ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                          link = Continue
-    logging in and error checking                            &{collaborator1_credentials}
-    the user clicks the button/link                          css = .govuk-button[type="submit"]    #Save and continue
-    the user clicks the button/link                          link = Your project finances
-    Run Keyword If  '${is_KTP}' == 'no'  the user marks the finances as complete        ${application_title}   Calculate  52,214  yes
-    ...  ELSE  the user marks the KTP finances as complete   ${application_title}   Calculate  52,214
-    the user accept the competition terms and conditions     Return to application overview
-    Run Keyword If  '${is_KTP}' == 'yes'  Log in as a different user     &{ktpLeadApplicantCredentials}
-    ...  ELSE  Log in as a different user     &{lead_applicant_credentials}
-    the user clicks the button/link                          link = ${application_title}
+    the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                        link = Continue
+    logging in and error checking                          &{collaborator1_credentials}
+    the user clicks the button/link                        css = .govuk-button[type="submit"]    #Save and continue
+    the user clicks the button/link                        link = Your project finances
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP finances as complete              ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
+    ...                                             AND    Log in as a different user                               &{ktpLeadApplicantCredentials}
+    ...  ELSE                              Run keywords    the user marks the finances as complete                  ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
+    ...                                             AND    Log in as a different user                               &{lead_applicant_credentials}
+    the user clicks the button/link                        link = ${application_title}
     the applicant completes Application Team
 
 the user apply with a different organisation
