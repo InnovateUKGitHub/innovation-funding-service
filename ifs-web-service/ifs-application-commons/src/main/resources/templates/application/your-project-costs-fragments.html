@@ -907,7 +907,7 @@
                 <th:block th:unless="${model.internal}">
                     <div class="govuk-body"><p>You can claim the costs of materials used on your project
                         providing:</p>
-                        <ul class="list-bullet">
+                        <ul class="govuk-list govuk-list--bullet">
                             <li>they are not already purchased or included in the overheads</li>
                             <li>they are purchased from third parties</li>
                             <li>they won’t have a residual/resale value at the end of your project. If they do you
@@ -2176,10 +2176,10 @@
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header govuk-!-width-three-quarters" id="associate-salary-description" scope="col">
                                 Associate</th>
-                            <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                            <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-10-percent">
                                 Duration of employment (months)
                             </th>
-                            <th id="associate-salary-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                            <th id="associate-salary-cost" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
                                 Associate employment cost (&pound;)
                             </th>
                         </tr>
@@ -2340,10 +2340,10 @@
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header govuk-!-width-three-quarters" id="associate-development-description" scope="col">
                                 Associate</th>
-                            <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                            <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-10-percent">
                                 Duration of employment (months)
                             </th>
-                            <th id="associate-development-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                            <th id="associate-development-cost" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
                                 Associate development cost (&pound;)
                             </th>
                         </tr>
@@ -2497,12 +2497,12 @@
                     <table class="govuk-table" id="associate-support-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="associate-support-description" scope="col">Description
+                            <th class="govuk-table__header table-header-width-55-percent" id="associate-support-description" scope="col">Description
                             </th>
-                            <th id="associate-support-cost" scope="col"
+                            <th id="associate-support-cost table-header-width-35-percent" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric">Cost (&pound;)
                             </th>
-                            <th class="govuk-table__header" scope="col"><span
+                            <th class="govuk-table__header table-header-width-10-percent alignright" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -2669,12 +2669,12 @@
                     <table class="govuk-table" id="estate-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="estate-costs-description" scope="col">Description</th>
+                            <th class="govuk-table__header table-header-width-55-percent" id="estate-costs-description" scope="col">Description</th>
                             <th id="estate-costs-cost" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric">
+                                class="govuk-table__header govuk-table__header--numeric table-header-width-35-percent">
                                 Cost (&pound;)
                             </th>
-                            <th class="govuk-table__header" scope="col"><span
+                            <th class="govuk-table__header table-header-width-10-percent alignright" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -2841,7 +2841,7 @@
                     project</p>
                 <p class="govuk-body">You can claim the costs of consumables used on your project
                     providing:</p>
-                <ul class="list-bullet">
+                <ul class="govuk-list govuk-list--bullet">
                     <li>they are not already purchased or included in the overheads</li>
                     <li>they are purchased from third parties</li>
                     <li>they won’t have a residual/resale value at the end of your project. If they do you
@@ -2866,7 +2866,7 @@
                             <th id="consumables-total" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric width-150">Total
                             </th>
-                            <th class="govuk-table__header" scope="col">
+                            <th class="govuk-table__header alignright" scope="col">
                                 <span class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -3068,13 +3068,13 @@
                     <table class="govuk-table" id="knowledge-base-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" id="knowledge-base-description" scope="col">Description
+                            <th class="govuk-table__header table-header-width-55-percent" id="knowledge-base-description" scope="col">Description
                             </th>
                             <th id="knowledge-base-cost" scope="col"
-                                class="govuk-table__header govuk-table__header--numeric">
+                                class="govuk-table__header govuk-table__header--numeric table-header-width-35-percent">
                                 Cost (&pound;)
                             </th>
-                            <th class="govuk-table__header" scope="col"><span
+                            <th class="govuk-table__header alignright table-header-width-10-percent" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -3231,13 +3231,13 @@
                     th:remove="${model.isReadOnly(financeRowType)} ? none : tag">
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.associateSalary',
-                      label='Associate salary')"/>
+                      label='Associate salary ''top up'''"/>
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.managementSupervision',
                       label='Management supervision')"/>
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.otherStaff',
-                      label='Other staff')"/>
+                      label='Other staff (incl. training)')"/>
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.capitalEquipment',
                       label='Captial equipment')"/>
