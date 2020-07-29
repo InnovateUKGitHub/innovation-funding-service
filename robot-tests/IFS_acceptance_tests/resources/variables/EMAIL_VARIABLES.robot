@@ -27,3 +27,4 @@ ${lead_intl_email_one}          daniel.tan@example.com
 ${partner_international_email}  tim.simpson@test.com
 ${lead_intl_email_two}          roselin.messy1@empire.fr
 ${zero_funding_partner_email}   json.smith@gmail.com
+${lead_ktp_email}               Indi.Gardiner@test.com

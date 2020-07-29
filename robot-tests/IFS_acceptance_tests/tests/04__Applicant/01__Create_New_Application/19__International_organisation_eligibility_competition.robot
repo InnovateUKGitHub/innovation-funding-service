@@ -209,11 +209,11 @@ Registered users applying for an international competition see only UK based org
 Registered UK based user applies for International Competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
-    Given the user clicks the button/link                                  link = Apply with a different organisation
+    Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business
-    And the user clicks enter details manually on companies house link
+    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
     Then the user verifies their organisation details
-    And the user clicks the button/link                                    name = save-organisation
+    And the user clicks the button/link                                            name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
@@ -1214,11 +1214,6 @@ the user completes project team and can see international organisation addresses
     the user should not see the element     link = Edit
     the user should see the element         jQuery = h2:contains("${leadApplicantOrganisationName}")
     the user should see the element         jQuery = td:contains("${addressLine1}")
-
-the user clicks enter details manually on companies house link
-    the user clicks the button/link       jQuery = span:contains("Enter details manually")
-    The user enters text to a text field  name = organisationName    ${ukLeadOrganisationName}
-    the user clicks the button/link       jQuery = button:contains("Continue")
 
 lead applicant assigns technical approach section to partner applicant
     log in as a different user            &{ukLeadOrganisationCredentials}
