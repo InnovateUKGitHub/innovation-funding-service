@@ -4,16 +4,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
-import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
+import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.form.domain.Section;
@@ -31,8 +29,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
-import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseFinanceTypes;
-import static org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser.initialiseProjectSetupColumns;
 
 /**
  * Service that can create Competition template copies
@@ -66,6 +62,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
+
+    @Autowired
+    private CompetitionInitialiser competitionInitialiser;
+
 
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
@@ -101,8 +101,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         setDefaultProjectDocuments(competition);
 
-        initialiseFinanceTypes(competition);
-        initialiseProjectSetupColumns(competition);
+        competitionInitialiser.initialiseFinanceTypes(competition);
+        competitionInitialiser.initialiseProjectSetupColumns(competition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
     }

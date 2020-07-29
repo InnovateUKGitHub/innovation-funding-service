@@ -173,7 +173,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Column(name = "funding_type")
     private FundingType fundingType;
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "competitionFinanceRowTypesId.competition")
     @OrderBy("priority")
     private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
