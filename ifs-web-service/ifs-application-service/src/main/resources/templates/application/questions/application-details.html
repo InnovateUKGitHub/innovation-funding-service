@@ -69,7 +69,10 @@
                             <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='startDate',readonly=${false})" />
                         </th:block>
                         <th:block th:if="${model.ktpCompetition}">
-                            <input type="hidden" th:name="startDate" th:id="application_details-startdate" />
+                            <input type="hidden" th:field="*{startDate.dayOfMonth}" />
+                            <input type="hidden" th:field="*{startDate.monthValue}" />
+                            <input type="hidden" th:field="*{startDate.year}" />
+                            <input type="hidden" th:field="*{startDate}" />
                         </th:block>
                     </fieldset>
                 </div>
