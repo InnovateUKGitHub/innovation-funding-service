@@ -438,14 +438,14 @@ the user populates the project growth table
 the user should view the project growth table
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
-    the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1) span    Annual turnover
-    the user should see the element                css = td input[value="65000"]
-    the user should see the text in the element    css = tr:nth-child(2) td:nth-child(1) span    Annual profits
-    the user should see the element                css = td input[value="2000"]
-    the user should see the text in the element    css = tr:nth-child(3) td:nth-child(1) span    Annual export
-    the user should see the element                css = td input[value="3000"]
-    the user should see the text in the element    css = tr:nth-child(4) td:nth-child(1) span    Research and development spend
-    the user should see the element                css = td input[value="15000"]
+    the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1)    Annual turnover
+    the user should see the element                jQuery = td:contains("65,000")
+    the user should see the text in the element    css = tr:nth-child(2) td:nth-child(1)    Annual profits
+    the user should see the element                jQuery = td:contains("2,000")
+    the user should see the text in the element    css = tr:nth-child(3) td:nth-child(1)    Annual export
+    the user should see the element                jQuery = td:contains("3,000")
+    the user should see the text in the element    css = tr:nth-child(4) td:nth-child(1)    Research and development spend
+    the user should see the element                jQuery = td:contains("15,000")
 
 the user can edit the project growth table
     the user clicks the button/link         jQuery = button.button-clear:contains('Edit')
