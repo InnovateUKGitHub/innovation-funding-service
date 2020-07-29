@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.CompanyPrimaryFocus;
 import org.innovateuk.ifs.application.resource.CompetitionReferralSource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.util.DateUtil;
 
