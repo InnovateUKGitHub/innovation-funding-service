@@ -127,9 +127,12 @@ public class ProjectDetailsController {
                                 UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
-        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        LocalDate defaultStartDate = competitionResource.isKtp()
+                ? competitionResource.getEndDate().plusMonths(12).toLocalDate()
+                : projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
-        return doViewProjectStartDate(model, projectResource, form);
+        return doViewProjectStartDate(model, projectResource, form, competitionResource);
     }
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
@@ -142,7 +145,9 @@ public class ProjectDetailsController {
                                   Model model,
                                   UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
+        ProjectResource projectResource = projectService.getById(projectId);
+        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectResource, form, competitionResource);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
@@ -152,8 +157,9 @@ public class ProjectDetailsController {
         });
     }
 
-    private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+    private String doViewProjectStartDate(Model model, ProjectResource projectResource,
+                                          ProjectDetailsStartDateForm form, CompetitionResource competitionResource) {
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource, competitionResource));
         model.addAttribute(FORM_ATTR_NAME, form);
         return "project/details-start-date";
     }

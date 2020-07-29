@@ -28,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -251,9 +252,18 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Test
     public void viewStartDate() throws Exception {
+        Long competitionId = 1L;
         ApplicationResource applicationResource = newApplicationResource().build();
 
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withName("Comp 1")
+                .withFundingType(FundingType.GRANT)
+                .withLocationPerPartner(true)
+                .build();
+
         ProjectResource project = newProjectResource().
+                withCompetition(competition.getId()).
                 withApplication(applicationResource).
                 with(name("My Project")).
                 withDuration(4L).
@@ -271,6 +281,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()))
                 .andExpect(status().isOk())
@@ -284,19 +295,85 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
+        assertFalse(viewModel.isKtpCompetition());
 
         ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(FORM_ATTR_NAME);
         assertEquals(project.getTargetStartDate().withDayOfMonth(1), form.getProjectStartDate());
     }
 
     @Test
-    public void updateStartDate() throws Exception {
+    public void viewStartDateForKtpCompetition() throws Exception {
+        Long competitionId = 1L;
+        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        LocalDate targetStartDate = competitionEndDate.plusMonths(12).toLocalDate();
+
         ApplicationResource applicationResource = newApplicationResource().build();
-        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
-        ProjectResource project = newProjectResource().withApplication(applicationResource).withCompetition(competitionResource.getId()).build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withName("Comp 1")
+                .withFundingType(FundingType.KTP)
+                .withEndDate(competitionEndDate)
+                .withLocationPerPartner(true)
+                .build();
+
+        ProjectResource project = newProjectResource().
+                withCompetition(competition.getId()).
+                withApplication(applicationResource).
+                with(name("My Project")).
+                withDuration(4L).
+                withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
+                withDuration(4L).
+                build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRole(PARTNER).
+                build(1);
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details-start-date"))
+                .andReturn();
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+        ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
+
+        assertEquals(project.getId(), viewModel.getProjectId());
+        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
+        assertEquals(project.getName(), viewModel.getProjectName());
+        assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
+        assertTrue(viewModel.isKtpCompetition());
+
+        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(FORM_ATTR_NAME);
+        assertEquals(targetStartDate, form.getProjectStartDate());
+    }
+
+    @Test
+    public void updateStartDate() throws Exception {
+        Long competitionId = 1L;
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withFundingType(FundingType.GRANT)
+                .build();
+
+        ProjectResource project = newProjectResource()
+                .withApplication(applicationResource)
+                .withCompetition(competitionResource.getId()).build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectDetailsService.updateProjectStartDate(project.getId(), LocalDate.of(2017, 6, 3))).thenReturn(serviceSuccess());
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()).
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
@@ -346,11 +423,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getCompetitionName(), viewModel.getCompetitionName());
         assertNull(viewModel.getLeadOrganisation());
         assertFalse(viewModel.isLocationPerPartnerRequired());
+        assertFalse(viewModel.isKtpCompetition());
 
         ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");
         assertEquals(new ProjectDurationForm(), form);
-
-        assertFalse(viewModel.isKtpCompetition());
 
         verify(projectService).getById(projectId);
         verify(competitionRestService).getCompetitionById(competitionId);
@@ -393,11 +469,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getCompetitionName(), viewModel.getCompetitionName());
         assertNull(viewModel.getLeadOrganisation());
         assertFalse(viewModel.isLocationPerPartnerRequired());
+        assertTrue(viewModel.isKtpCompetition());
 
         ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");
         assertEquals(new ProjectDurationForm(), form);
-
-        assertTrue(viewModel.isKtpCompetition());
 
         verify(projectService).getById(projectId);
         verify(competitionRestService).getCompetitionById(competitionId);
