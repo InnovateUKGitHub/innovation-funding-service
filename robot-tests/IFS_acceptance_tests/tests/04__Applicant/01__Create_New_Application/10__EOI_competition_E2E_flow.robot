@@ -174,13 +174,13 @@ the assessor submits the assessment
 
 logged in user applies to competition
     [Arguments]  ${competition}  ${applicationType}
-    the user select the competition and starts application   ${competition}
-    the user selects the radio button    organisationTypeId  ${applicationType}
-    the user clicks the button/link      jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link
-    the user clicks the button/link      jQuery = button:contains("Save and continue")
-    the user selects the checkbox        agree
-    the user clicks the button/link      css = .govuk-button[type="submit"]    #Continue
+    the user select the competition and starts application     ${competition}
+    the user selects the radio button                          organisationTypeId  ${applicationType}
+    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+    the user clicks the Not on companies house link            org2
+    the user clicks the button/link                            jQuery = button:contains("Save and continue")
+    the user selects the checkbox                              agree
+    the user clicks the button/link                            css = .govuk-button[type="submit"]    #Continue
 
 the applicant checks for competition terms and conditions
     the user should see the element       jQuery = h2:contains("Terms and conditions") ~ p:contains("You are agreeing to these by submitting your application.")
