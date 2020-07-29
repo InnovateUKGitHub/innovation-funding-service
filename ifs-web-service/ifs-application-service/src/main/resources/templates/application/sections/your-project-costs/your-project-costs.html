@@ -55,20 +55,10 @@
                 to one member of your team.</p>
 
             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
-                <th:block th:insert="application/your-project-costs-fragments :: labour"/>
-                <th:block th:insert="application/your-project-costs-fragments :: associate_salary_costs"/>
-                <th:block th:insert="application/your-project-costs-fragments :: associate_development_costs"/>
-                <th:block th:insert="application/your-project-costs-fragments :: overheads"/>
-                <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads"/>
-                <th:block th:insert="application/your-project-costs-fragments :: materials"/>
-                <th:block th:insert="application/your-project-costs-fragments :: capital_usage"/>
-                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs"/>
-                <th:block th:insert="application/your-project-costs-fragments :: travel"/>
-                <th:block th:insert="application/your-project-costs-fragments :: consumables"/>
-                <th:block th:insert="application/your-project-costs-fragments :: knowledge_base"/>
-                <th:block th:insert="application/your-project-costs-fragments :: estate_costs"/>
-                <th:block th:insert="application/your-project-costs-fragments :: associate_support"/>
-                <th:block th:insert="application/your-project-costs-fragments :: other_costs"/>
+
+                <th:block th:each="type : ${model.financeRowTypes}">
+                    <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
+                </th:block>
             </div>
 
             <div class="govuk-grid-row total-cost">

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
@@ -210,6 +211,10 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return financeRowTypes;
     }
 
+    @JsonIgnore
+    public List<FinanceRowType> getCostFinanceRowTypes() {
+        return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(Collectors.toList());
+    }
     public void setFinanceRowTypes(List<FinanceRowType> financeRowTypes) {
         this.financeRowTypes = financeRowTypes;
     }
