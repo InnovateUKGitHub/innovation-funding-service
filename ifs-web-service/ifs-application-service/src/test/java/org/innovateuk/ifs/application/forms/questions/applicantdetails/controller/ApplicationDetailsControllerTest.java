@@ -90,6 +90,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT);
         applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS);
         applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE);
+        applicationDetailsForm.setKtpCompetition(false);
 
         ApplicationResource application = newApplicationResource().build();
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(application));
@@ -107,6 +108,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                         .param("competitionReferralSource", valueOf(applicationDetailsForm.getCompetitionReferralSource()))
                         .param("companyAge", valueOf(applicationDetailsForm.getCompanyAge()))
                         .param("companyPrimaryFocus", valueOf(applicationDetailsForm.getCompanyPrimaryFocus()))
+                        .param("ktpCompetition", valueOf(applicationDetailsForm.isKtpCompetition()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%d", applicationId)))
@@ -125,6 +127,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
         applicationDetailsForm.setCompetitionReferralSource(BUSINESS_CONTACT);
         applicationDetailsForm.setCompanyAge(ESTABLISHED_1_TO_5_YEARS);
         applicationDetailsForm.setCompanyPrimaryFocus(AEROSPACE_AND_DEFENCE);
+        applicationDetailsForm.setKtpCompetition(false);
 
         CompetitionResource competition = newCompetitionResource()
                 .withInnovationAreas(singleton(1L))
@@ -149,6 +152,7 @@ public class ApplicationDetailsControllerTest extends BaseControllerMockMVCTest<
                         .param("startDate.dayOfMonth",  valueOf(applicationDetailsForm.getStartDate().getDayOfMonth()))
                         .param("durationInMonths", valueOf(applicationDetailsForm.getDurationInMonths()))
                         .param("resubmission", valueOf(applicationDetailsForm.getResubmission()))
+                        .param("ktpCompetition", valueOf(applicationDetailsForm.isKtpCompetition()))
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%d/form/question/%d/application-details", applicationId, questionId)))
