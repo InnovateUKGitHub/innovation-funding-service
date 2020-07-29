@@ -197,7 +197,7 @@
                 </button>
 
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
-                    <th:block th:each="type : ${model.financeRowTypes}">
+                    <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
                         <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
                     </th:block>
                 </div>

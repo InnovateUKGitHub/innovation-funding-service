@@ -8,14 +8,12 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CovidType;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.STANDARD_WITH_VAT;
 
@@ -67,7 +65,7 @@ public class YourProjectCostsViewModelPopulator {
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
                 FundingType.PROCUREMENT == competition.getFundingType(),
                 FundingType.KTP == competition.getFundingType(),
-                competition.getCostFinanceRowTypes(),
+                competition.getFinanceRowTypes(),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()));
     }

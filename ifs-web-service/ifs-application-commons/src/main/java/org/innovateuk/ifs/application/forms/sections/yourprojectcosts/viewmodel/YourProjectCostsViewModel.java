@@ -4,6 +4,7 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
     private final Long applicationId;
@@ -173,5 +174,9 @@ public class YourProjectCostsViewModel implements BaseAnalyticsViewModel {
 
     public boolean isReadOnly(FinanceRowType type) {
         return isReadOnly();
+    }
+
+    public List<FinanceRowType> getOrderedAccordionFinanceRowTypes() {
+        return financeRowTypes.stream().filter(FinanceRowType::isAppearsInProjectCostsAccordion).collect(Collectors.toList());
     }
 }

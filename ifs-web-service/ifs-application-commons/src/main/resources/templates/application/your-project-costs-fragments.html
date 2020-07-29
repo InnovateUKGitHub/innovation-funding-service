@@ -3231,7 +3231,7 @@
                     th:remove="${model.isReadOnly(financeRowType)} ? none : tag">
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.associateSalary',
-                      label='Associate salary ''top up'''"/>
+                      label=${'Associate salary ''top up'''})"/>
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.managementSupervision',
                       label='Management supervision')"/>

@@ -211,10 +211,6 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         return financeRowTypes;
     }
 
-    @JsonIgnore
-    public List<FinanceRowType> getCostFinanceRowTypes() {
-        return financeRowTypes.stream().filter(FinanceRowType::isCost).collect(Collectors.toList());
-    }
     public void setFinanceRowTypes(List<FinanceRowType> financeRowTypes) {
         this.financeRowTypes = financeRowTypes;
     }

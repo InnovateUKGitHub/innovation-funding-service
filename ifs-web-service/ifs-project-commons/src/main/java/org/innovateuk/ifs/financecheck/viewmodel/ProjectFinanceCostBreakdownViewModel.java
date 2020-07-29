@@ -25,7 +25,7 @@ public class ProjectFinanceCostBreakdownViewModel {
         this.finances = finances;
         this.organisationResources = organisationResources;
         this.total = finances.stream().map(ProjectFinanceResource::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.financeRowTypes = competition.getCostFinanceRowTypes();
+        this.financeRowTypes = competition.getFinanceRowTypes();
     }
 
     public List<ProjectFinanceResource> getFinances() {
