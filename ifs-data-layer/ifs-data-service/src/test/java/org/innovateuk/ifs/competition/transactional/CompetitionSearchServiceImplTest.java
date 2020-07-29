@@ -140,6 +140,20 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Test
+    public void findProjectSetupCompetitions_NoApplications() {
+        int page = 0;
+        int size = 20;
+        List<Competition> expectedCompetitions = newCompetition().build(1);
+
+        when(competitionRepositoryMock.findProjectSetup(any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(null);
+
+        CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
+
+        assertCompetitionSearchResultsEqualToCompetitions(expectedCompetitions, response.getContent());
+    }
+
+    @Test
     public void findProjectSetupCompetitionsWhenLoggedInAsStakeholder() {
         int page = 0;
         int size = 20;
