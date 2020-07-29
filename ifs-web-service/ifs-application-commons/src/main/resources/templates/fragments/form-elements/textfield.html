@@ -117,7 +117,7 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
           textfield(
             label=${label},
             id=${id},
-            value=${#bools.isTrue(readOnly) ? (value != null ? #numbers.formatInteger(value, 0,'DEFAULT') : 0) : value},
+            value=${#bools.isTrue(readOnly) ? (value != null ? #numbers.formatInteger(value, 0,'DEFAULT') : '') : value},
             type='number',
             pattern=${min >= 0} ? '[0-9]' : null,
             preventInputRegex=${min >= 0} ? '[^0-9]' : null,
