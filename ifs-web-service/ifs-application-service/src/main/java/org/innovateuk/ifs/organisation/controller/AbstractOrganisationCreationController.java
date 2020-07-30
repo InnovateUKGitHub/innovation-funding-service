@@ -168,7 +168,7 @@ public abstract class AbstractOrganisationCreationController {
                 model.addAttribute("subtitle", "Create new application");
             }
         } else {
-            model.addAttribute("subtitle", "Create your account");
+            model.addAttribute("subtitle", "Create an account");
         }
     }
 
