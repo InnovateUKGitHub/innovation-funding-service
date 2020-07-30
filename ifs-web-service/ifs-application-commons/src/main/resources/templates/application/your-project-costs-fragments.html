@@ -3012,7 +3012,7 @@
             </tr>
             </thead>
             <tbody class="govuk-table__body">
-            <th:block th:each="entry : *{materialRows}" th:with="cost=${entry.value}">
+            <th:block th:each="entry : *{consumableCostRows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
                     <td class="govuk-table__cell" th:text="${cost.item}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"
