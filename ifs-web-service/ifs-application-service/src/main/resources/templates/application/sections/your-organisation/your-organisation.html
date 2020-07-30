@@ -40,7 +40,7 @@
             <input type="hidden" id="cacheTest" value=""/>
 
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                    with-growth-table(
+                                    __${formFragment}__(
                                            form=${form},
                                            organisationSizeOptions=${model.organisationSizeOptions},
                                            isH2020=${commonFinancesModel.h2020},

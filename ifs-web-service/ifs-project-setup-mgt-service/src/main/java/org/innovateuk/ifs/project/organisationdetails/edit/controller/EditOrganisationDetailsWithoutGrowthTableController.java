@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormSaver;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/without-growth-table")
-public class EditOrganisationDetailsControllerWithoutGrowthTable extends AbstractEditOrganisationDetailsController<YourOrganisationWithoutGrowthTableForm> {
+public class EditOrganisationDetailsWithoutGrowthTableController extends AbstractEditOrganisationDetailsController<YourOrganisationWithoutGrowthTableForm> {
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
@@ -24,14 +25,17 @@ public class EditOrganisationDetailsControllerWithoutGrowthTable extends Abstrac
     @Autowired
     private ProjectRestService projectRestService;
 
+    @Autowired
+    private YourOrganisationWithoutGrowthTableFormSaver saver;
+
     @Override
     protected String redirectToOrganisationDetails(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         return "redirect:" + String.format("/competition/%d/project/%d/organisation/%d/details/without-growth-table", project.getCompetition(), projectId, organisationId);
     }
     @Override
-    protected String view() {
-        return "project/organisationdetails/edit-organisation-size-without-growth-table";
+    protected String formFragment() {
+        return "without-growth-table";
     }
 
     @Override
@@ -42,12 +46,6 @@ public class EditOrganisationDetailsControllerWithoutGrowthTable extends Abstrac
 
     @Override
     protected ServiceResult<Void> update(long projectId, long organisationId, YourOrganisationWithoutGrowthTableForm form) {
-
-        OrganisationFinancesWithoutGrowthTableResource finances = new OrganisationFinancesWithoutGrowthTableResource(
-                form.getOrganisationSize(),
-                form.getTurnover(),
-                form.getHeadCount());
-
-        return projectYourOrganisationRestService.updateOrganisationFinancesWithoutGrowthTable(projectId, organisationId, finances);
+        return saver.save(projectId, organisationId, form, projectYourOrganisationRestService);
     }
 }
