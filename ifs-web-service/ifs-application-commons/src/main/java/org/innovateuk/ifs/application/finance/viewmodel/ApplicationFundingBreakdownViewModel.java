@@ -6,6 +6,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * View model for finance/finance-summary :: finance-breakdown-table.
  */
@@ -65,6 +67,7 @@ public class ApplicationFundingBreakdownViewModel implements BaseAnalyticsViewMo
     public BigDecimal getTypeTotal(FinanceRowType type) {
         return rows.stream()
                 .map(row -> row.getCost(type))
+                .map(cost -> ofNullable(cost).orElse(BigDecimal.ZERO))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

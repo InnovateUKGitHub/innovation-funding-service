@@ -28,8 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.lang.String.format;
@@ -127,11 +129,11 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
-                finance.map(af -> af.getFinanceOrganisationDetails()
-                        .entrySet()
-                        .stream()
-                        .collect(toMap(Entry::getKey, e -> e.getValue().getTotal())))
-                        .orElse(Collections.emptyMap()),
+                competition.getFinanceRowTypes().stream()
+                    .filter(FinanceRowType::isCost)
+                        .collect(toMap(Function.identity(),
+                                type -> finance.map(f -> f.getFinanceOrganisationDetails().get(type).getTotal()).orElse(BigDecimal.ZERO)
+                        )),
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO)
         );
     }

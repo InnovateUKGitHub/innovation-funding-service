@@ -20,7 +20,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     CAPITAL_USAGE("capital_usage", "Capital usage", INCLUDE_IN_SPEND_PROFILE, COST,APPEARS_IN_PROJECT_COSTS_ACCORDION),
     SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     TRAVEL("travel", "Travel and subsistence", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
-    OTHER_COSTS("other_costs", "Other costs", INCLUDE_IN_SPEND_PROFILE, COST. APPEARS_IN_PROJECT_COSTS_ACCORDION),
+    OTHER_COSTS("other_costs", "Other costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
     YOUR_FINANCE("your_finance"), // Only used for TSB Reference in Je-S finances.
     FINANCE("finance", "Finance"), // Grant claim percentage
     OTHER_FUNDING("other_funding", "Other Funding"),
