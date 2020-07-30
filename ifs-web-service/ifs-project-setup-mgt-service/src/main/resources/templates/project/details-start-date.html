@@ -58,7 +58,9 @@
                 </fieldset>
             </div>
 
-            <p class="govuk-body">We can change the target start date up until the spend profile is generated.</p>
+            <th:block th:unless="${model.ktpCompetition}">
+                <p class="govuk-body">We can change the target start date up until the spend profile is generated.</p>
+            </th:block>
 
             <h2 class="govuk-heading-m">Project duration</h2>
             <p class="govuk-body">
