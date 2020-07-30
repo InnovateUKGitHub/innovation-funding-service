@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormSaver;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/project/{projectId}/organisation/{organisationId}/edit/with-growth-table")
-public class EditOrganisationDetailsControllerWithGrowthTable extends AbstractEditOrganisationDetailsController<YourOrganisationWithGrowthTableForm> {
+public class EditOrganisationDetailsWithGrowthTableController extends AbstractEditOrganisationDetailsController<YourOrganisationWithGrowthTableForm> {
 
     @Autowired
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
@@ -24,6 +25,9 @@ public class EditOrganisationDetailsControllerWithGrowthTable extends AbstractEd
     @Autowired
     private ProjectRestService projectRestService;
 
+    @Autowired
+    private YourOrganisationWithGrowthTableFormSaver saver;
+
     @Override
     protected String redirectToOrganisationDetails(long projectId, long organisationId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
@@ -31,8 +35,8 @@ public class EditOrganisationDetailsControllerWithGrowthTable extends AbstractEd
     }
 
     @Override
-    protected String view() {
-        return "project/organisationdetails/edit-organisation-size-with-growth-table";
+    protected String formFragment() {
+        return "with-growth-table";
     }
 
     @Override
@@ -43,15 +47,6 @@ public class EditOrganisationDetailsControllerWithGrowthTable extends AbstractEd
 
     @Override
     protected ServiceResult<Void> update(long projectId, long organisationId, YourOrganisationWithGrowthTableForm form) {
-        OrganisationFinancesWithGrowthTableResource finances = new OrganisationFinancesWithGrowthTableResource(
-                form.getOrganisationSize(),
-                form.getFinancialYearEnd(),
-                form.getHeadCountAtLastFinancialYear(),
-                form.getAnnualTurnoverAtLastFinancialYear(),
-                form.getAnnualProfitsAtLastFinancialYear(),
-                form.getAnnualExportAtLastFinancialYear(),
-                form.getResearchAndDevelopmentSpendAtLastFinancialYear());
-
-        return projectYourOrganisationRestService.updateOrganisationFinancesWithGrowthTable(projectId, organisationId, finances);
+        return saver.save(projectId, organisationId, form, projectYourOrganisationRestService);
     }
 }
