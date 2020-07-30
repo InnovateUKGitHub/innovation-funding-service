@@ -26,8 +26,8 @@ public class OrganisationDetailsWithoutGrowthTableController extends AbstractOrg
     private YourOrganisationWithoutGrowthTableFormPopulator withoutGrowthTableFormPopulator;
 
     @Override
-    protected String getView() {
-        return "project/organisationdetails/organisation-details-without-growth-table";
+    protected String formFragment() {
+        return "without-growth-table";
     }
 
     @Override
