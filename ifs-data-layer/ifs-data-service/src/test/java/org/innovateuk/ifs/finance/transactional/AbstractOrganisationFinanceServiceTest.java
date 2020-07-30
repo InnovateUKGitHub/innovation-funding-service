@@ -24,6 +24,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.EmployeesAndTurnoverResourceBuilder.newEmployeesAndTurnoverResource;
 import static org.innovateuk.ifs.finance.builder.GrowthTableResourceBuilder.newGrowthTableResource;
+import static org.innovateuk.ifs.finance.builder.KtpYearResourceBuilder.newKtpYearResource;
+import static org.innovateuk.ifs.finance.builder.OrganisationFinancesKtpYearsResourceBuilder.newOrganisationFinancesKtpYearsResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthTableResourceBuilder.newOrganisationFinancesWithGrowthTableResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithoutGrowthTableResourceBuilder.newOrganisationFinancesWithoutGrowthTableResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -35,17 +37,17 @@ import static org.mockito.Mockito.when;
 public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<AbstractOrganisationFinanceService> {
 
     @Mock
-    BaseFinanceResource finance;
+    private BaseFinanceResource finance;
     @Mock
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
     @Mock
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
     @Mock
-    GrantClaimMaximumService grantClaimMaximumService;
+    private GrantClaimMaximumService grantClaimMaximumService;
     @Mock
-    AuthenticationHelper authenticationHelper;
+    private AuthenticationHelper authenticationHelper;
     @Mock
-    GrantClaim grantClaim;
+    private GrantClaim grantClaim;
 
     private static final long organisationId = 1L;
     private static final long targetId = 2L;
@@ -175,5 +177,36 @@ public class AbstractOrganisationFinanceServiceTest extends BaseServiceUnitTest<
             growthTableResource.getResearchAndDevelopment());
         assertEquals(organisationFinancesWithGrowthTableResource.getHeadCountAtLastFinancialYear(),
             growthTableResource.getEmployees());
+    }
+
+    @Test
+    public void updateOrganisationKtpFinancialYears() {
+        OrganisationFinancesKtpYearsResource organisationFinancesKtpYearsResource =  newOrganisationFinancesKtpYearsResource()
+                .withOrganisationSize(OrganisationSize.SMALL)
+                .withFinancialYearEnd(YearMonth.now().minusMonths(1))
+                .withGroupEmployees(2L)
+                .withKtpYears(newKtpYearResource()
+                        .withYear(0,1,2)
+                        .withTurnover(BigDecimal.valueOf(1))
+                        .withPreTaxProfit(BigDecimal.valueOf(2))
+                        .withCurrentAssets(BigDecimal.valueOf(3))
+                        .withLiabilities(BigDecimal.valueOf(4))
+                        .withShareholderValue(BigDecimal.valueOf(5))
+                        .withLoans(BigDecimal.valueOf(6))
+                        .withEmployees(7L)
+                        .build(3))
+                .build();
+        KtpYearsResource yearsResource = new KtpYearsResource();
+        when(finance.getFinancialYearAccounts()).thenReturn(yearsResource);
+        when(grantClaimMaximumService.isMaximumFundingLevelOverridden(competitionId)).thenReturn(serviceSuccess(false));
+        when(finance.getGrantClaim()).thenReturn(grantClaim);
+
+        assertEquals(serviceSuccess(), service.updateOrganisationKtpYears(targetId, organisationId,
+                organisationFinancesKtpYearsResource));
+
+        assertEquals(organisationFinancesKtpYearsResource.getYears(), yearsResource.getYears());
+        assertEquals(organisationFinancesKtpYearsResource.getFinancialYearEnd(), YearMonth.from(yearsResource.getFinancialYearEnd()));
+        assertEquals(organisationFinancesKtpYearsResource.getGroupEmployees(), yearsResource.getGroupEmployees());
+        verify(grantClaim).reset();
     }
 }
