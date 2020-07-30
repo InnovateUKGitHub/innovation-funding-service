@@ -18,6 +18,15 @@ IFS.core.financeRowForm = (function () {
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
         IFS.core.financeRowForm.persistUnsavedRow(name, newFieldId)
       })
+      jQuery('body').on('click', 'form button', function (e) {
+        var button = jQuery(this)
+        if (button.closest('form').attr('data-save-status') !== 'done') {
+          e.preventDefault()
+          setTimeout(function () {
+            button.click()
+          }, 500)
+        }
+      })
     },
     getUrl: function (el) {
       return jQuery(el).closest('form').data('row-operation-url')

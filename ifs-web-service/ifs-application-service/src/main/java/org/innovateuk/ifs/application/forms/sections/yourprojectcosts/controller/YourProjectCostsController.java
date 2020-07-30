@@ -96,7 +96,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        UserResource user,
                                        @PathVariable long applicationId,
                                        @PathVariable long sectionId,
-                                       @ModelAttribute("form") YourProjectCostsForm form) {
+                                       @ModelAttribute("form") YourProjectCostsForm form,
+                                       BindingResult bindingResult) {
         saver.save(form, applicationId, user);
         return redirectToYourFinances(applicationId);
     }

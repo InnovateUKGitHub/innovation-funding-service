@@ -579,7 +579,7 @@
 *********************************/-->
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
-<th:block th:fragment="procurement-overheads"
+<th:block th:fragment="procurement_overheads"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS}">
     <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
@@ -2226,7 +2226,7 @@
                 <span class="govuk-visually-hidden">Duration of employment (months)</span>
             </label>
             <th:block
-                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.cost)"/>
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.duration)"/>
             <input th:id="__${path}__.duration"
                    th:field="*{__${path}__.duration}"
                    th:errorclass="govuk-input--error"
@@ -2238,7 +2238,8 @@
                    max="9999999999999999999"
                    step="1"
                    th:attr="required=${index == 0 ? 'required' : null},
-                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)},
+                            data-anychange-errormessage=${index == 0} ? ${null} : #{validation.field.must.not.be.blank}"/>
         </td>
         <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
             <label th:for="__${path}__.cost">
@@ -2256,7 +2257,9 @@
                    max="9999999999999999999"
                    step="1"
                    th:attr="required=${index == 0 ? 'required' : null},
-                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)},
+                            data-anychange-errormessage=${index == 0} ? ${null} : #{validation.field.must.not.be.blank}"/>
+
         </td>
     </tr>
 </th:block>
@@ -2415,7 +2418,8 @@
                    max="9999999999999999999"
                    step="1"
                    th:attr="required=${index == 0 ? 'required' : null},
-                            data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                            data-max-errormessage=#{validation.field.max.number.of.digits(20)},
+                            data-anychange-errormessage=${index == 0} ? ${null} : #{validation.field.must.not.be.blank}"/>
         </td>
     </tr>
 </th:block>
