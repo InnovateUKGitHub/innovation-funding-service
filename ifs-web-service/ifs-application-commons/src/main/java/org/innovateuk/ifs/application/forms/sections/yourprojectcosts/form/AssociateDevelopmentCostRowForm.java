@@ -18,8 +18,6 @@ public class AssociateDevelopmentCostRowForm extends AbstractCostRowForm<Associa
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String role;
 
-    @NotNull(message = NOT_BLANK_MESSAGE)
-    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     private Integer duration;
 
     @NotNull(message = NOT_BLANK_MESSAGE)

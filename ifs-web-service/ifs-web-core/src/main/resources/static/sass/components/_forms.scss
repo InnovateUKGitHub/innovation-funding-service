@@ -87,6 +87,7 @@ tr {
 
     &.govuk-table__cell--numeric {
       vertical-align: middle;
+
       &.top {
         vertical-align: top;
       }
@@ -100,6 +101,13 @@ tr {
       border-left:none;
       padding: 10px 20px 10px 0;
       border-bottom: 1px solid $govuk-border-colour;
+
+      &:not(tr) {
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
     }
   }
 }
