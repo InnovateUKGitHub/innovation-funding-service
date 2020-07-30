@@ -144,8 +144,8 @@
             <table class="govuk-table govuk-!-margin-bottom-2">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
-                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'govuk-!-width-two-thirds' : 'govuk-!-width-one-third'"></th>
+                    <th scope="col" class="govuk-table__header table-header-width-33-percent">Organisation details</th>
+                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'table-header-width-66-percent' : 'table-header-width-33-percent'"></th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -164,9 +164,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full name</th>
-                <th th:if="${model.internal}" scope="col" class="govuk-table__header govuk-!-width-one-third">Phone number</th>
-                <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                <th scope="col" class="govuk-table__header table-header-width-33-percent">Full name</th>
+                <th th:if="${model.internal}" scope="col" class="govuk-table__header table-header-width-33-percent">Phone number</th>
+                <th scope="col" class="govuk-table__header table-header-width-33-percent">Email</th>
             </tr>
             </thead>
             <tbody class="govuk-table__body">
