@@ -24,16 +24,21 @@ Available parameters:
     * readOnly - whether this field is displayed as a definition list or not
     * required - whether this field is required - defaults to false
     * requiredMessage - a custom message to display if this textfield is required and is not filled in
+    * placeholder - placeholder value for the field
+    * classappend - additional class to add to input
+    * table - is this text field being used within a table cell.
 */-->
 <th:block th:fragment="textfield(id, value)">
 
     <div class="govuk-form-group"
+         th:remove="${table} ? tag : none"
          th:id="${id + '-form-group'}"
          th:classappend="${#fields.hasErrors(id)} ? 'govuk-form-group--error'">
 
         <th:block th:unless="${readOnly}">
 
             <label class="govuk-label govuk-label--s"
+                   th:classappend="${table} ? 'govuk-visually-hidden'"
                    th:if="${label}"
                    th:for="${id}"
                    th:text="${label}">
@@ -51,6 +56,7 @@ Available parameters:
             </th:block>
 
             <input class="govuk-input govuk-input--width-10"
+                   th:classappend="${classappend}"
                    th:type="${type ?: 'text'}"
                    th:id="${id}"
                    th:name="${id}"
@@ -61,19 +67,30 @@ Available parameters:
                         min=${min ?: null},
                         max=${max ?: null},
                         required=${#bools.isTrue(required) ? 'required' : null},
-                        data-required-errormessage=${requiredMessage ?: null}
+                        data-required-errormessage=${requiredMessage ?: null},
+                        placeholder=${placeholder ?: null}
                    " />
 
         </th:block>
 
-        <th:block th:if="${readOnly}"
-                  th:insert="fragments/form-elements/definition-list ::
+        <th:block th:if="${readOnly}">
+
+            <th:block th:unless="${#bools.isTrue(table)}"
+                      th:insert="fragments/form-elements/definition-list ::
             definition-list(
                 label=${label},
                 value=${value},
             )" />
 
+            <th:block th:if="${#bools.isTrue(table)}" th:text="${value}" />
+
+        </th:block>
     </div>
+</th:block>
+
+
+
+</div>
 
 </th:block>
 
@@ -100,17 +117,12 @@ Other mandatory and optional values can be seen on the "textfield" fragment.
           textfield(
             label=${label},
             id=${id},
-            value=${value},
-            readOnly=${readOnly},
-            disabled=${disabled},
-            required=${required},
-            requiredMessage=${requiredMessage},
-            hint=${hint},
+            value=${#bools.isTrue(readOnly) ? (value != null ? #numbers.formatInteger(value, 0,'DEFAULT') : '') : value},
             type='number',
-            pattern='[0-9]',
-            preventInputRegex='[^0-9]',
-            min=${min ?: 0},
-            max=${max ?: 2147483647},
+            pattern=${min >= 0} ? '[0-9]' : null,
+            preventInputRegex=${min >= 0} ? '[^0-9]' : null,
+            min=${min ?: -2147483647},
+            max=${max ?: 2147483647}
           )" />
 
 </html>

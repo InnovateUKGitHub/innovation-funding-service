@@ -55,14 +55,16 @@ Available parameters:
                            type="number"
                            pattern='[0-9]'
                            data-prevent-input-regex='[^0-9]'
+                           th:unless="${#bools.isTrue(readOnly)}"
                            th:id="${id} + 'MonthValue'"
                            th:name="${id} + 'MonthValue'"
                            th:value="${monthValue}"
                            th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
                            th:attrappend="
-                                required=${#bools.isTrue(required) ?: null},
-                                disabled=${#bools.isTrue(readOnly) ? 'disabled' : null}
+                                required=${#bools.isTrue(required) ?: null}
                            " />
+
+                    <strong class="govuk-body govuk-!-font-weight-bold" th:if="${#bools.isTrue(readOnly)}" th:text="${monthValue}"></strong>
                 </div>
 
                 <div class="year">
@@ -76,14 +78,15 @@ Available parameters:
                            type="number"
                            pattern='[0-9]'
                            data-prevent-input-regex='[^0-9]'
+                           th:unless="${#bools.isTrue(readOnly)}"
                            th:id="${id} + 'YearValue'"
                            th:name="${id} + 'YearValue'"
                            th:value="${yearValue}"
                            th:classappend="${#fields.hasErrors(id)} ? 'govuk-input--error'"
                            th:attrappend="
-                                required=${#bools.isTrue(required) ?: null},
-                                disabled=${#bools.isTrue(readOnly) ? 'disabled' : null}
+                                required=${#bools.isTrue(required) ?: null}
                            " />
+                    <strong class="govuk-body govuk-!-font-weight-bold" th:if="${#bools.isTrue(readOnly)}" th:text="${yearValue}"></strong>
                 </div>
 
                 <!--/* The hidden field below is used as a dummy value that is essentially ignored by the YearMonthPropertyEditor in order to allow

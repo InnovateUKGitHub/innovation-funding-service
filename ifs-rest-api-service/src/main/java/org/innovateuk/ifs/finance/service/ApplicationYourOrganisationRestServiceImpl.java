@@ -1,29 +1,24 @@
-package org.innovateuk.ifs.application.forms.sections.yourorganisation.service;
+package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.springframework.stereotype.Service;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+
+
 
 /**
  * A rest service to support the Your organisation pages.
  */
 @Service
-public class YourOrganisationRestService extends BaseRestService {
-
+public class ApplicationYourOrganisationRestServiceImpl extends BaseRestService implements ApplicationYourOrganisationRestService {
     private String baseUrl = "/application/%d/organisation/%d/finance";
 
-    private CompetitionRestService competitionRestService;
-
-    YourOrganisationRestService(CompetitionRestService competitionRestService) {
-        this.competitionRestService = competitionRestService;
-    }
-
+    @Override
     public ServiceResult<OrganisationFinancesWithGrowthTableResource> getOrganisationFinancesWithGrowthTable(
             long applicationId,
             long organisationId) {
@@ -33,6 +28,7 @@ public class YourOrganisationRestService extends BaseRestService {
                 toServiceResult();
     }
 
+    @Override
     public ServiceResult<OrganisationFinancesWithoutGrowthTableResource> getOrganisationFinancesWithoutGrowthTable(
             long applicationId,
             long organisationId) {
@@ -42,6 +38,17 @@ public class YourOrganisationRestService extends BaseRestService {
                 toServiceResult();
     }
 
+    @Override
+    public ServiceResult<OrganisationFinancesKtpYearsResource> getOrganisationKtpYears(
+            long applicationId,
+            long organisationId) {
+
+        return getWithRestResult(format(baseUrl + "/ktp-financial-years", applicationId, organisationId),
+                OrganisationFinancesKtpYearsResource.class).
+                toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateOrganisationFinancesWithGrowthTable(
             long applicationId,
             long organisationId,
@@ -52,6 +59,7 @@ public class YourOrganisationRestService extends BaseRestService {
                 toServiceResult();
     }
 
+    @Override
     public ServiceResult<Void> updateOrganisationFinancesWithoutGrowthTable(
             long applicationId,
             long organisationId,
@@ -61,14 +69,20 @@ public class YourOrganisationRestService extends BaseRestService {
                 toServiceResult();
     }
 
-    public ServiceResult<Boolean> isIncludingGrowthTable(long competitionId) {
-        return competitionRestService.getCompetitionById(competitionId).
-                andOnSuccessReturn(competition -> TRUE.equals(competition.getIncludeProjectGrowthTable())).
+    @Override
+    public ServiceResult<Void> updateOrganisationFinancesKtpYears(
+            long applicationId,
+            long organisationId,
+            OrganisationFinancesKtpYearsResource finances) {
+
+        return postWithRestResult(format(baseUrl + "/ktp-financial-years", applicationId, organisationId), finances, Void.class).
                 toServiceResult();
     }
 
+    @Override
     public ServiceResult<Boolean> isShowStateAidAgreement(long applicationId, long organisationId) {
         String url = format(baseUrl + "/show-state-aid", applicationId, organisationId);
         return getWithRestResult(url, Boolean.class).toServiceResult();
     }
+
 }

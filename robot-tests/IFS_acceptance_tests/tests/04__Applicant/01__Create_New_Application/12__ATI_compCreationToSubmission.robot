@@ -52,7 +52,8 @@ Single applicant cannot submit his application to a collaborative comp
 
 The lead invites a collaborator
     [Documentation]  IFS-3421  IFS-5920
-    Given the lead invites already registered user
+    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${ATIcompetitionTitle}  ${ATIapplicationTitle}  no
+    And the user sets max available funding            50000   ${competitionId}
 
 Assign an application question to partner organisation
      [Documentation]  IFS-7703
@@ -268,21 +269,6 @@ the application cannot be submited
     the user clicks the button/link                   link = Review and submit
     the user should see that the element is disabled  jQuery = button:contains("Submit application")
     the user clicks the button/link                   link = Application overview
-
-the lead invites already registered user
-    the user fills in the inviting steps           ${collaborator1_credentials["email"]}
-    Logout as user
-    the user reads his email and clicks the link   ${collaborator1_credentials["email"]}   Invitation to collaborate in ${ATIcompetitionTitle}    You will be joining as part of the organisation    2
-    the user clicks the button/link                link = Continue
-    logging in and error checking                  &{collaborator1_credentials}
-    the user clicks the button/link                css = .govuk-button[type="submit"]    #Save and continue
-    the user clicks the button/link                link = Your project finances
-    the user marks the finances as complete        ${ATIapplicationTitle}   Calculate  52,214  yes
-    the user accept the competition terms and conditions     Return to application overview
-    Log in as a different user                     &{lead_applicant_credentials}
-    the user clicks the button/link                link = ${ATIapplicationTitle}
-    the applicant completes Application Team
-    the user sets max available funding            50000   ${competitionId}
 
 the user does not see state aid information
     the user clicks the button/link      link = Your organisation

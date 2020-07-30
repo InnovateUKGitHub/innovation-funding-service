@@ -32,15 +32,16 @@
               method="POST">
 
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                        without-growth-table(
+                                        __${formFragment}__(
                                                form=${form},
                                                organisationSizeOptions=${model.organisationSizeOptions},
                                                isH2020=${model.h2020},
                                                isInternalUser=${false},
-                                               isProcurementCompetition=${model.procurementCompetition},
+                                               isProcurementCompetition=${model.isProcurementCompetition()},
                                                readOnly=${model.readOnly},
                                                showOrganisationSizeAlert=${model.showOrganisationSizeAlert},
                                                showStateAidAgreement=${model.showStateAidAgreement},
+                                               showHints=${true}
                                         )" />
 
             <div class="form-footer">
@@ -49,7 +50,8 @@
                             type="submit" name="mark-as-complete"
                             class="button-clear" value="true">Mark as complete
                     </button>
-                    <button id="mark_as_incomplete" th:if="${model.readOnly}"
+                    <button id="mark_as_incomplete"
+                            th:if="${model.readOnly}"
                             type="submit" name="mark-as-incomplete" class="button-clear" value="true"
                             th:text="${'Edit your organisation'}">Edit
                     </button>
