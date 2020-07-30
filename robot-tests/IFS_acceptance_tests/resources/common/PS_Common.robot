@@ -281,6 +281,13 @@ The user uploads the Test document type
     the user clicks the button/link     id = submitDocumentButtonConfirm
     the user clicks the button/link     link = Return to documents
 
+the user uploads the Collaboration agreement
+    the user clicks the button/link     link = Collaboration agreement
+    the user uploads the file           css = .inputfile  ${valid_pdf}
+    the user clicks the button/link     id = submit-document-button
+    the user clicks the button/link     id = submitDocumentButtonConfirm
+    the user clicks the button/link     link = Return to documents
+
 The user is able to complete the Documents section
     [Documentation]  IFS-5700
     Given the user clicks the button/link     link = Documents
@@ -499,6 +506,12 @@ The user submits the spend profile
     the user clicks the button/link    link = Review and submit project spend profile
     the user clicks the button/link    link = Submit project spend profile
     the user clicks the button/link    id = submit-send-all-spend-profiles
+
+The partner submits the spend profile
+    [Arguments]  ${ProjectID}  ${organistaionID}
+    the user navigates to the page      ${server}/project-setup/project/${ProjectID}/partner-organisation/${organistaionID}/spend-profile
+    the user clicks the button/link     link = Submit to lead partner
+    the user clicks the button/link     jQuery = button.govuk-button:contains("Submit")
 
 project finance approves Viability for
     [Arguments]  ${partner}  ${project}

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,16 @@ public class ProjectYourOrganisationRestServiceImpl extends BaseRestService impl
     }
 
     @Override
+    public ServiceResult<OrganisationFinancesKtpYearsResource> getOrganisationKtpYears(
+            long projectId,
+            long organisationId) {
+
+        return getWithRestResult(format(baseUrl + "/ktp-financial-years", projectId, organisationId),
+                OrganisationFinancesKtpYearsResource.class).
+                toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateOrganisationFinancesWithGrowthTable(
             long projectId,
             long organisationId,
@@ -54,6 +65,16 @@ public class ProjectYourOrganisationRestServiceImpl extends BaseRestService impl
             OrganisationFinancesWithoutGrowthTableResource finances) {
 
         return postWithRestResult(format(baseUrl + "/without-growth-table", projectId, organisationId), finances, Void.class).
+                toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateOrganisationFinancesKtpYears(
+            long projectId,
+            long organisationId,
+            OrganisationFinancesKtpYearsResource finances) {
+
+        return postWithRestResult(format(baseUrl + "/ktp-financial-years", projectId, organisationId), finances, Void.class).
                 toServiceResult();
     }
 

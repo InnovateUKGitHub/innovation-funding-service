@@ -36,7 +36,7 @@
               method="POST">
 
             <th:block th:insert="application/sections/your-organisation/growth-table-fragments ::
-                                    with-growth-table(
+                                    __${formFragment}__(
                                            form=${form},
                                            organisationSizeOptions=${model.organisationSizeOptions},
                                            isH2020=${model.h2020},
@@ -52,12 +52,12 @@
                         id="save-and-return"
                         name="save-and-return"
                         data-js-modal="modal-edit-organisation-size"
-                        th:href="@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}"
+                        th:href="@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/{urlPart} (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId}, urlPart=${formFragment})}"
                         th:text="|Save and return to ${model.organisationName}|">Save and return to organisation</button>
                 <th:block th:insert="fragments/modals :: modal-edit-organisation-size (${model})" />
             </div>
             <div>
-                <a th:href="@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/with-growth-table (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId})}"
+                <a th:href="@{/competition/{competitionId}/project/{projectId}/organisation/{organisationId}/details/{urlPart} (competitionId=${model.project.getCompetition()}, projectId=${model.project.getId()}, organisationId=${model.organisationId}, urlPart=${formFragment})}"
                    th:text="|Cancel and return to ${model.organisationName}|"
                    id="cancel-return-organisation-details"
                    class="button-clear">Cancel and return to organisation details
