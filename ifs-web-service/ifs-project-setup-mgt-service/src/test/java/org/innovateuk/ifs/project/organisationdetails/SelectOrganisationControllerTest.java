@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.project.organisationdetails;
 
-import java.util.Arrays;
-import java.util.List;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.organisationdetails.select.controller.SelectOrganisationController;
 import org.innovateuk.ifs.project.organisationdetails.select.viewmodel.SelectOrganisationViewModel;
@@ -18,10 +17,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -34,16 +36,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SelectOrganisationControllerTest extends BaseControllerMockMVCTest<SelectOrganisationController> {
 
     @Mock
-    ProjectService projectService;
+    private ProjectService projectService;
 
     @Mock
-    PartnerOrganisationRestService partnerOrganisationRestService;
+    private PartnerOrganisationRestService partnerOrganisationRestService;
 
     @Mock
-    YourOrganisationRestService yourOrganisationRestService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
-    PendingPartnerProgressRestService pendingPartnerProgressRestService;
+    private PendingPartnerProgressRestService pendingPartnerProgressRestService;
 
     private long competitionId = 1L;
     private long projectId = 2L;
@@ -98,7 +100,7 @@ public class SelectOrganisationControllerTest extends BaseControllerMockMVCTest<
         when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(new RestResult(restSuccess(partners)));
         when(pendingPartnerProgressRestService.getPendingPartnerProgress(anyLong(), anyLong()))
             .thenReturn(restFailure(GENERAL_NOT_FOUND));
-        when(yourOrganisationRestService.isIncludingGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).withIncludeProjectGrowthTable(true).build()));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/organisation/select"))
             .andExpect(status().is3xxRedirection())
@@ -117,7 +119,7 @@ public class SelectOrganisationControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void postSelectOrganisationWithoutGrowthTable() throws Exception {
-        when(yourOrganisationRestService.isIncludingGrowthTable(competitionId)).thenReturn(serviceSuccess(false));
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).withIncludeProjectGrowthTable(false).build()));
 
         MvcResult result = mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/organisation/select")
             .param("organisationId", String.valueOf(organisationId)))

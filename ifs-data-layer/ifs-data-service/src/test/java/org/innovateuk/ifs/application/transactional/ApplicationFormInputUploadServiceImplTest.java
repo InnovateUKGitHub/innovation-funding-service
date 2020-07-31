@@ -221,6 +221,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         verify(formInputResponseRepositoryMock, times(1)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
     }
+
     @Test
     public void createFormInputResponseFileUploadButMaximumFilesAlready() {
 
@@ -260,6 +261,48 @@ public class ApplicationFormInputUploadServiceImplTest {
 
         verify(formInputResponseRepositoryMock, times(1)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
     }
+
+    @Test
+    public void createFormInputResponseFileUploadTemplate() {
+
+        FileEntryResource fileEntryResource = newFileEntryResource().with(id(987L)).build();
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, 999L);
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        File fileFound = mock(File.class);
+
+        Question question = QuestionBuilder.newQuestion().build();
+        question.setMultipleStatuses(true);
+        FormInput formInputLocal = newFormInput().withType(FormInputType.TEMPLATE_DOCUMENT).build();
+        formInputLocal.setId(123L);
+        formInputLocal.setQuestion(question);
+        question.setFormInputs(newArrayList(formInputLocal));
+
+
+        FileEntry alreadyExistingFileEntry = newFileEntry().with(id(987L)).build();
+        FormInputResponse existingFormInputResponseWithLinkedFileEntry = newFormInputResponse().withFileEntries(newArrayList(alreadyExistingFileEntry, alreadyExistingFileEntry, alreadyExistingFileEntry)).withFormInputs(formInputLocal).build();
+
+        when(fileServiceMock.deleteFileIgnoreNotFound(alreadyExistingFileEntry.getId())).thenReturn(serviceSuccess(alreadyExistingFileEntry));
+
+        when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(fileFound, alreadyExistingFileEntry)));
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
+        when(formInputResponseRepositoryMock.save(existingFormInputResponseWithLinkedFileEntry)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
+        when(processRoleRepositoryMock.findById(789L)).thenReturn(Optional.of(newProcessRole().build()));
+        when(formInputRepositoryMock.findById(123L)).thenReturn(Optional.of(formInputLocal));
+        when(applicationRepositoryMock.findById(456L)).thenReturn(Optional.of(openApplication));
+
+        when(fileServiceMock.getFileByFileEntryId(987L)).thenReturn(serviceSuccess(inputStreamSupplier));
+
+        ServiceResult<FormInputResponseFileEntryResource> result =
+                service.uploadResponse(fileEntry, inputStreamSupplier);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(FILES_ALREADY_UPLOADED));
+
+        verify(formInputResponseRepositoryMock, times(1)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
+    }
+
     @Test
     public void createFormInputResponseFileUploadButFileServiceCallFails() {
         FileEntryResource fileEntryResource = newFileEntryResource().build();
