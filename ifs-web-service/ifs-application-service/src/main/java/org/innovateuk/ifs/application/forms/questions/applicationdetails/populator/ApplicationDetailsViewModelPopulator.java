@@ -40,13 +40,6 @@ public class ApplicationDetailsViewModelPopulator {
         boolean complete = isComplete(application, organisation, questionId);
         boolean open = application.isOpen() && competition.isOpen() && role.getRole().isLeadApplicant();
 
-        if (competition.isKtp()) {
-            LocalDate ktpProjectStartDate = application.getStartDate() == null
-                    ? competition.getEndDate().plusMonths(12).toLocalDate()
-                    : application.getStartDate();
-            application.setStartDate(ktpProjectStartDate);
-        }
-
         return new ApplicationDetailsViewModel(application, competition, open, complete);
     }
 

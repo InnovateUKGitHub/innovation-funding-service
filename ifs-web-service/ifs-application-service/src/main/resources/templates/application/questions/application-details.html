@@ -68,12 +68,6 @@
                             <span class="govuk-hint">When do you wish to start your project? For example: <span data-example-date="">31 12 2020</span></span>
                             <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='startDate',readonly=${false})" />
                         </th:block>
-                        <th:block th:if="${model.ktpCompetition}">
-                            <input type="hidden" id="startDate" th:field="*{startDate.dayOfMonth}" />
-                            <input type="hidden" id="application_details-startdate_month" th:field="*{startDate.monthValue}" />
-                            <input type="hidden" id="application_details-startdate_year" th:field="*{startDate.year}" />
-                            <input type="hidden" name="startDate" id="application_details-startdate" value="startDate"  />
-                        </th:block>
                     </fieldset>
                 </div>
 
