@@ -36,12 +36,12 @@
                     <a th:if="${model.userLeadPartner and !model.isProjectLive()}" th:href="@{/project/{id}/details/start-date(id=${model.project.id})}" class="govuk-link">Target start date</a>
                     <th:block th:unless="${model.userLeadPartner and !model.isProjectLive()}">Target start date</th:block>
                 </td>
-                <th:block th:unless="${model.ktpCompetition}">
-                    <td class="govuk-table__cell" id="start-date">
+                <td class="govuk-table__cell" id="start-date">
+                    <th:block th:unless="${model.ktpCompetition}">
                         <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
                         <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
-                    </td>
-                </th:block>
+                    </th:block>
+                </td>
                 <td class="govuk-table__cell alignright"></td>
             </tr>
             <tr class="govuk-table__row">

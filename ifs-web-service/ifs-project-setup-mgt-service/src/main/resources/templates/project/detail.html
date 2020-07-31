@@ -50,12 +50,12 @@
                         <a th:if="${model.modifyStartDate()}" th:href="@{/competition/{competitionId}/project/{id}/details/start-date(competitionId=${model.project.getCompetition()},id=${model.project.getId()})}" class="govuk-link">Target start date</a>
                         <th:block th:unless="${model.modifyStartDate()}">Target start date</th:block>
                     </td>
-                    <th:block th:unless="${model.ktpCompetition}">
-                        <td class="govuk-table__cell" id="start-date">
+                    <td class="govuk-table__cell" id="start-date">
+                        <th:block th:unless="${model.ktpCompetition}">
                             <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
                             <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
-                        </td>
-                    </th:block>
+                        </th:block>
+                    </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
