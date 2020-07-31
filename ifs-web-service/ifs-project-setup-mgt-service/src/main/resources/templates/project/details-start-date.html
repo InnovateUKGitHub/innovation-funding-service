@@ -35,7 +35,7 @@
                       th:with="pageTitle='Target start date',subTitle=${model.projectName},size='govuk-heading-xl'"/>
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('projectStartDate')} ? 'govuk-form-group--error'">
+                 th:classappend="|${model.ktpCompetition ? 'govuk-!-margin-bottom-1' : ''} ${#fields.hasErrors('projectStartDate') ? 'govuk-form-group--error' : ''}|">
                 <fieldset class="govuk-fieldset">
                     <th:block th:unless="${model.ktpCompetition}">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -48,12 +48,6 @@
                         </th:block>
                         <th:block
                             th:insert="question-type/form-elements :: form-dateinput (id='projectStartDate-date', field='projectStartDate', dayReadonly=true)"/>
-                    </th:block>
-                    <th:block th:if="${model.ktpCompetition}">
-                        <input type="hidden" id="projectStartDate" th:field="*{projectStartDate.dayOfMonth}" />
-                        <input type="hidden" id="projectStartDate-date_month" th:field="*{projectStartDate.monthValue}" />
-                        <input type="hidden" id="projectStartDate-date_year" th:field="*{projectStartDate.year}" />
-                        <input type="hidden" name="projectStartDate" id="projectStartDate-date" value="projectStartDate"  />
                     </th:block>
                 </fieldset>
             </div>

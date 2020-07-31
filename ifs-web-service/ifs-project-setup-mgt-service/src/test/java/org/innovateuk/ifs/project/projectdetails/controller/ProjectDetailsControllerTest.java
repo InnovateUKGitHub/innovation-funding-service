@@ -302,61 +302,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void viewStartDateForKtpCompetition() throws Exception {
-        Long competitionId = 1L;
-        ZonedDateTime competitionEndDate = ZonedDateTime.now();
-        LocalDate targetStartDate = competitionEndDate.plusMonths(12).toLocalDate();
-
-        ApplicationResource applicationResource = newApplicationResource().build();
-
-        CompetitionResource competition = newCompetitionResource()
-                .withId(competitionId)
-                .withName("Comp 1")
-                .withFundingType(FundingType.KTP)
-                .withEndDate(competitionEndDate)
-                .withLocationPerPartner(true)
-                .build();
-
-        ProjectResource project = newProjectResource().
-                withCompetition(competition.getId()).
-                withApplication(applicationResource).
-                with(name("My Project")).
-                withDuration(4L).
-                withTargetStartDate(LocalDate.now().withDayOfMonth(5)).
-                withDuration(4L).
-                build();
-
-        OrganisationResource leadOrganisation = newOrganisationResource().build();
-        List<ProjectUserResource> projectUsers = newProjectUserResource().
-                withUser(loggedInUser.getId()).
-                withOrganisation(leadOrganisation.getId()).
-                withRole(PARTNER).
-                build(1);
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
-        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/details-start-date"))
-                .andReturn();
-
-        Map<String, Object> model = result.getModelAndView().getModel();
-        ProjectDetailsStartDateViewModel viewModel = (ProjectDetailsStartDateViewModel) model.get("model");
-
-        assertEquals(project.getId(), viewModel.getProjectId());
-        assertEquals(project.getApplication(), (long) viewModel.getApplicationId());
-        assertEquals(project.getName(), viewModel.getProjectName());
-        assertEquals(project.getDurationInMonths(), Long.valueOf(viewModel.getProjectDurationInMonths()));
-        assertTrue(viewModel.isKtpCompetition());
-
-        ProjectDetailsStartDateForm form = (ProjectDetailsStartDateForm) model.get(FORM_ATTR_NAME);
-        assertEquals(targetStartDate, form.getProjectStartDate());
-    }
-
-    @Test
     public void updateStartDate() throws Exception {
         Long competitionId = 1L;
 
@@ -384,6 +329,37 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + project.getCompetition() + "/project/" + project.getId() + "/details"))
                 .andReturn();
+    }
+
+    @Test
+    public void updateStartDateForKtpCompetition() throws Exception {
+        Long competitionId = 1L;
+        ZonedDateTime competitionEndDate = ZonedDateTime.now();
+        LocalDate projectStartDate = competitionEndDate.plusMonths(12).toLocalDate().withDayOfMonth(1);
+
+        ApplicationResource applicationResource = newApplicationResource().build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(competitionId)
+                .withEndDate(competitionEndDate)
+                .withFundingType(FundingType.KTP)
+                .build();
+
+        ProjectResource project = newProjectResource()
+                .withApplication(applicationResource)
+                .withCompetition(competitionResource.getId()).build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectDetailsService.updateProjectStartDate(project.getId(), projectStartDate)).thenReturn(serviceSuccess());
+        when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competitionResource));
+
+        mockMvc.perform(post("/competition/{competitionId}/project/{projectId}/details/start-date", project.getCompetition(), project.getId()).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("projectStartDate", "projectStartDate"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/" + project.getCompetition() + "/project/" + project.getId() + "/details"))
+                .andReturn();
+
+        verify(projectDetailsService).updateProjectStartDate(project.getId(), projectStartDate);
     }
 
     @Test

@@ -128,9 +128,7 @@ public class ProjectDetailsController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-        LocalDate defaultStartDate = competitionResource.isKtp()
-                ? competitionResource.getEndDate().plusMonths(12).toLocalDate()
-                : projectResource.getTargetStartDate().withDayOfMonth(1);
+        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
         form.setProjectStartDate(defaultStartDate);
         return doViewProjectStartDate(model, projectResource, form, competitionResource);
     }
@@ -147,6 +145,12 @@ public class ProjectDetailsController {
 
         ProjectResource projectResource = projectService.getById(projectId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
+
+        if (competitionResource.isKtp()) {
+            LocalDate defaultKtpStartDate = competitionResource.getEndDate().plusMonths(12).toLocalDate();
+            form.setProjectStartDate(defaultKtpStartDate.withDayOfMonth(1));
+        }
+
         Supplier<String> failureView = () -> doViewProjectStartDate(model, projectResource, form, competitionResource);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
