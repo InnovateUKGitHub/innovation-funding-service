@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,7 @@ public class GenericQuestionApplicationModelPopulator {
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
         ofNullable(formInputs.get(FormInputType.TEXTAREA)).ifPresent(input -> buildTextAreaViewModel(viewModelBuilder, input));
+        ofNullable(formInputs.get(FormInputType.MULTIPLE_CHOICE)).ifPresent(input -> buildMultipleChoiceOptionsViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.FILEUPLOAD)).ifPresent(input -> buildAppendixViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.TEMPLATE_DOCUMENT)).ifPresent(input -> buildTemplateDocumentViewModel(viewModelBuilder, input));
 
@@ -79,7 +81,8 @@ public class GenericQuestionApplicationModelPopulator {
         viewModelBuilder.withTemplateDocumentFormInputId(input.getFormInput().getId())
                 .withTemplateDocumentTitle(input.getFormInput().getDescription())
                 .withTemplateDocumentFilename(input.getFormInput().getFile().getName())
-                .withTemplateDocumentResponseFilename(firstFilenameResponseOrNull(input));
+                .withTemplateDocumentResponseFilename(firstFile(input).map(FileEntryResource::getName).orElse(null))
+                .withTemplateDocumentResponseFileEntryId(firstFile(input).map(FileEntryResource::getId).orElse(null));
     }
 
     private void buildAppendixViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
@@ -98,6 +101,14 @@ public class GenericQuestionApplicationModelPopulator {
                 .withWordsLeft(firstResponse(input).map(FormInputResponseResource::getWordCountLeft).orElse(input.getFormInput().getWordCount()));
     }
 
+    private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
+        viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
+                .withSelectedMultipleChoiceOption(multipleChoiceOptionResponseOrNull(input))
+                .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
+                .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
+                .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
+    }
+
     private List<GenericQuestionAppendix> appendices(ApplicantFormInputResource input) {
         return firstResponse(input)
                 .map(resp -> resp.getFileEntries()
@@ -108,10 +119,15 @@ public class GenericQuestionApplicationModelPopulator {
 
     }
 
-    private String firstFilenameResponseOrNull(ApplicantFormInputResource input) {
+    private Optional<FileEntryResource> firstFile(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .flatMap(resp -> resp.getFileEntries().stream().findFirst())
-                .map(FileEntryResource::getName)
+                .flatMap(resp -> resp.getFileEntries().stream().findFirst());
+    }
+
+    private MultipleChoiceOptionResource multipleChoiceOptionResponseOrNull(ApplicantFormInputResource input) {
+        return firstResponse(input)
+                .map(formInputResponse -> new MultipleChoiceOptionResource(formInputResponse.getMultipleChoiceOptionId(),
+                        formInputResponse.getMultipleChoiceOptionText()))
                 .orElse(null);
     }
 

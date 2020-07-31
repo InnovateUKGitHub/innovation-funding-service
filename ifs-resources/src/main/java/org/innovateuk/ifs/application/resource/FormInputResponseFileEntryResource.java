@@ -4,8 +4,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 
-import java.util.Optional;
-
 /**
  * Represents a File upload against a particular FormInputResponse
  */
@@ -19,7 +17,7 @@ public class FormInputResponseFileEntryResource {
         // for JSON marshalling
     }
 
-    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId, Optional<Long> fileEntryId) {
+    public FormInputResponseFileEntryResource(FileEntryResource fileEntryResource, long formInputId, long applicationId, long processRoleId, Long fileEntryId) {
         this(fileEntryResource, new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId, fileEntryId));
     }
 

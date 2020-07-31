@@ -8,12 +8,14 @@ public class EmployeesAndTurnover extends FinancialYearAccounts {
 
     private BigDecimal turnover;
 
+    private Long employees;
+
     public EmployeesAndTurnover() {
         super();
     }
 
     public EmployeesAndTurnover(EmployeesAndTurnover employeesAndTurnover) {
-        super(employeesAndTurnover);
+        this.employees = employeesAndTurnover.getEmployees();
         this.turnover = employeesAndTurnover.getTurnover();
     }
 
@@ -23,5 +25,13 @@ public class EmployeesAndTurnover extends FinancialYearAccounts {
 
     public void setTurnover(BigDecimal turnover) {
         this.turnover = turnover;
+    }
+
+    public Long getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Long employees) {
+        this.employees = employees;
     }
 }

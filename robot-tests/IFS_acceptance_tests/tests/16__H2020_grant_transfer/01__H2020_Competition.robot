@@ -339,18 +339,19 @@ The user fills in public content supporting information section
     the user should see the element         jQuery = div:contains("Supporting information") ~ .task-status-complete
 
 The user completes the application proccess details
-    the user clicks the button/link         link = Application details
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user clicks the button/link         link = Public description
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user clicks the button/link         link = Finances
-    the user selects the radio button       applicationFinanceType  STANDARD
-    the user clicks the button twice        css = label[for = "include-growth-table-no"]
-    the user selects the radio button       includeJesForm  false
-    the user selects the radio button       includeYourOrganisationSection  false
-    the user enters text to a text field    css = .editor  Those are the rules that apply to Finances
-    the user clicks the button/link         jQuery = button:contains("Done")
-    the user clicks the button/link         jQuery = button:contains("Done")
+    the user clicks the button/link              link = Application details
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user marks each question as complete     Equality, diversity and inclusion
+    the user clicks the button/link              link = Public description
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link              link = Finances
+    the user selects the radio button            applicationFinanceType  STANDARD
+    the user clicks the button twice             css = label[for = "include-growth-table-no"]
+    the user selects the radio button            includeJesForm  false
+    the user selects the radio button            includeYourOrganisationSection  false
+    the user enters text to a text field         css = .editor  Those are the rules that apply to Finances
+    the user clicks the button/link              jQuery = button:contains("Done")
+    the user clicks the button/link              jQuery = button:contains("Done")
 
 The user completes grant transfer setup
     the user clicks the button/link         jQuery = a:contains("Complete")
@@ -381,6 +382,7 @@ The user fills in the Competition Setup Project eligibility section
 The user is able to complete Horizon 2020 Grant transfer application
     the user is able to complete Application details section  Project name  ${month}  ${nextyear}  ${lastYear}
     the applicant completes Application Team
+    the applicant marks EDI question as complete
     the user is able to complete Public description section
     the user is able to complete Horizon 2020 grant agreement section
     the user is able to complete finance details section
@@ -471,8 +473,7 @@ The user is able to validate conversion spredsheet links works
 The user is able to submit the application
     the user clicks the button/link           link = Review and submit
     the user should see the element           jQuery = h1:contains("Application summary")
-    the user clicks the button/link           id = submit-application-button-modal
-    the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
+    the user clicks the button/link           id = submit-application-button
 
 The user is able to verify validation on each page
     validate errors on Application details page

@@ -6,12 +6,16 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.competition.setup.application.form.*;
+import org.innovateuk.ifs.management.competition.setup.application.validator.CompetitionSetupApplicationQuestionValidator;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.management.competition.setup.core.service.CompetitionSetupQuestionService;
@@ -23,16 +27,12 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.service.QuestionSetupCompetitionRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -42,8 +42,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
@@ -94,8 +92,7 @@ public class CompetitionSetupApplicationController {
     private FormInputRestService formInputRestService;
 
     @Autowired
-    @Qualifier("mvcValidator")
-    private Validator validator;
+    private CompetitionSetupApplicationQuestionValidator competitionSetupApplicationQuestionValidator;
 
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable long competitionId) {
@@ -261,13 +258,8 @@ public class CompetitionSetupApplicationController {
                                          @PathVariable long questionId,
                                          UserResource loggedInUser,
                                          Model model) {
-        validateAssessmentGuidanceRows(competitionSetupForm, bindingResult);
+        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult, questionId);
 
-        validateRadioButtons(competitionSetupForm, bindingResult);
-
-        validateAppendix(competitionSetupForm, bindingResult);
-
-        validateFileUploaded(competitionSetupForm, bindingResult, questionId);
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
@@ -332,7 +324,7 @@ public class CompetitionSetupApplicationController {
                                                @PathVariable long competitionId,
                                                UserResource loggedInUser,
                                                Model model) {
-        validateScopeGuidanceRows(competitionSetupForm, bindingResult);
+        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult);
 
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
@@ -418,55 +410,6 @@ public class CompetitionSetupApplicationController {
                         successView
                 );
 
-    }
-
-    private void validateAssessmentGuidanceRows(QuestionForm applicationQuestionForm, BindingResult bindingResult) {
-        if (Boolean.TRUE.equals(applicationQuestionForm.getQuestion().getWrittenFeedback())) {
-            ValidationUtils.invokeValidator(validator, applicationQuestionForm, bindingResult, GuidanceRowForm.GuidanceRowViewGroup.class);
-        }
-    }
-
-    private void validateScopeGuidanceRows(ProjectForm applicationProjectForm, BindingResult bindingResult) {
-        if (Boolean.TRUE.equals(applicationProjectForm.getQuestion().getWrittenFeedback())) {
-            ValidationUtils.invokeValidator(validator, applicationProjectForm, bindingResult, GuidanceRowResource.GuidanceRowGroup.class);
-        }
-    }
-
-    private void validateAppendix(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if (competitionSetupForm.getNumberOfUploads() != null) {
-            if (competitionSetupForm.getNumberOfUploads() > 0
-                && isNullOrEmpty(competitionSetupForm.getQuestion().getAppendixGuidance())) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.appendixGuidance", "This field cannot be left blank."));
-            }
-            if (competitionSetupForm.getNumberOfUploads() > 0
-                && competitionSetupForm.getQuestion().getAllowedAppendixResponseFileTypes().size() == 0) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.allowedAppendixResponseFileTypes", "This field cannot be left blank."));
-            }
-        }
-    }
-
-    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if (competitionSetupForm.getNumberOfUploads() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
-        }
-        if (competitionSetupForm.getQuestion().getTemplateDocument() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.templateDocument", "This field cannot be left blank."));
-        }
-        if (competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.writtenFeedback", "This field cannot be left blank."));
-        }
-        if (competitionSetupForm.getQuestion().getScored() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.scored", "This field cannot be left blank."));
-        }
-    }
-
-    private void validateFileUploaded(QuestionForm questionForm, BindingResult bindingResult, long questionId) {
-        if (TRUE.equals(questionForm.getQuestion().getTemplateDocument())) {
-            CompetitionSetupQuestionResource question = questionSetupCompetitionRestService.getByQuestionId(questionId).getSuccess();
-            if (question.getTemplateFilename() == null) {
-                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "templateDocumentFile", "You must upload a file."));
-            }
-        }
     }
 
     private String getFinancePage(Model model, CompetitionResource competitionResource, UserResource loggedInUser, boolean isEditable, CompetitionSetupForm form) {

@@ -14,6 +14,9 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
+...
+...               IFS-7718 EDI question - application form
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -59,10 +62,10 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     Then the user clicks the button/link     link = Competition details
 
 Comp admin completes ths competition setup
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-7700
     [Tags]  HappyPath
     Given the user should see the element        jQuery = h1:contains("Competition details")
-    Then the user marks the Application as done  no  Programme
+    Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
     And the user fills in the CS Assessors
     When the user clicks the button/link         link = Public content
     Then the user fills in the Public content and publishes  NoGrowthTable
@@ -127,7 +130,7 @@ Once the project growth table is selected
     And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
     And the user selects the organisational eligibility to no   false
     And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
-    Then the user marks the Application as done                 yes  Sector
+    Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects
     When the user clicks the button/link                        link = Public content
@@ -311,6 +314,15 @@ Application details read only view shows correct details with innovation area
     And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
     [Teardown]  the user clicks the button/link  link = Back to application overview
 
+EDI question read only view shows correct details
+    [Documentation]  IFS-7718
+    [Tags]
+    Given the user clicks the button/link             link = Equality, diversity and inclusion
+    When the user clicks the button/link              jQuery = label:contains("Yes")
+    And the user clicks the button/link               id = application-question-complete
+    Then the user should see EDI question details
+    [Teardown]  the user clicks the button/link       link = Back to application overview
+
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
     [Tags]
@@ -426,14 +438,14 @@ the user populates the project growth table
 the user should view the project growth table
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
-    the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1) span    Annual turnover
-    the user should see the element                css = td input[value="65000"]
-    the user should see the text in the element    css = tr:nth-child(2) td:nth-child(1) span    Annual profits
-    the user should see the element                css = td input[value="2000"]
-    the user should see the text in the element    css = tr:nth-child(3) td:nth-child(1) span    Annual export
-    the user should see the element                css = td input[value="3000"]
-    the user should see the text in the element    css = tr:nth-child(4) td:nth-child(1) span    Research and development spend
-    the user should see the element                css = td input[value="15000"]
+    the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1)    Annual turnover
+    the user should see the element                jQuery = td:contains("65,000")
+    the user should see the text in the element    css = tr:nth-child(2) td:nth-child(1)    Annual profits
+    the user should see the element                jQuery = td:contains("2,000")
+    the user should see the text in the element    css = tr:nth-child(3) td:nth-child(1)    Annual export
+    the user should see the element                jQuery = td:contains("3,000")
+    the user should see the text in the element    css = tr:nth-child(4) td:nth-child(1)    Research and development spend
+    the user should see the element                jQuery = td:contains("15,000")
 
 the user can edit the project growth table
     the user clicks the button/link         jQuery = button.button-clear:contains('Edit')
@@ -548,3 +560,12 @@ the user accept the temporary framework terms and conditions
     the user clicks the button/link         jQuery = button:contains("Agree and continue")
     the user should see the element         jQuery = .form-footer:contains("Terms and conditions accepted")
     the user clicks the button/link         link = Return to application overview
+
+the user should see EDI question details
+    the user should see the element    jQuery = h1:contains("Equality, diversity and inclusion")
+    the user should see the element    jQuery = p:contains("This question is marked as complete.")
+    the user should see the element    jQuery = h3:contains("Have you completed the EDI survey?")
+    the user should see the element    jQuery = p:contains("Yes")
+    the user should see the element    jQuery = button:contains("Edit")
+
+

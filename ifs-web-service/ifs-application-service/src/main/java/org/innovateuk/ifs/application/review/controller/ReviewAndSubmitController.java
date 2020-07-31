@@ -209,14 +209,9 @@ public class ReviewAndSubmitController {
     }
 
     private boolean canReopenApplication(ApplicationResource application, UserResource user) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (competition.getCovidType() != null) {
-            return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
-                    && application.canBeReopened()
-                    && userService.isLeadApplicant(user.getId(), application);
-        }
-
-        return false;
+        return CompetitionStatus.OPEN.equals(application.getCompetitionStatus())
+                && application.canBeReopened()
+                && userService.isLeadApplicant(user.getId(), application);
     }
 
     @SecuredBySpring(value = "APPLICANT_REOPEN", description = "Applicants can reopen their applications")

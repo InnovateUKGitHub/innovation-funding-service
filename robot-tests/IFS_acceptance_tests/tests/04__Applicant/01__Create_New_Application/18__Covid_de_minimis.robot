@@ -64,10 +64,8 @@ Applicant can add funding sought
 
 Submit application
     [Documentation]  IFS-7440
-    Given the user clicks the button/link      id = application-overview-submit-cta
-    And the user should not see the element    jQuery = .message-alert:contains("You will not be able to make changes")
-    When the user clicks the button/link       id = submit-application-button
-    Then the user should see the element       link = Reopen application
+    When the user can submit the application
+    Then the user should see the element         link = Reopen application
 
 Non lead cannot reopen competition
     [Documentation]  IFS-7440
@@ -83,19 +81,15 @@ Non lead does not see reopen on submitted page
 
 Lead can reopen application
     [Documentation]  IFS-7440
-    [Setup]  log in as a different user   &{lead_applicant_credentials}
-    Given the user clicks the button/link  link = Dashboard
-    When the user clicks the button/link   jQuery = li:contains("${COVIDdeminimusapplicationTitle1}") a:contains("Reopen")
-    And the user clicks the button/link    css = input[type="submit"]
-    Then the user should see the element   jQuery = .message-alert:contains("Now your application is complete")
-    And the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
-    And the user reads his email           steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+    [Setup]  log in as a different user     &{lead_applicant_credentials}
+    Given the user clicks the button/link   link = Dashboard
+    When the user can reopen application    ${COVIDdeminimusapplicationTitle1}
+    Then the user reads his email           collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
+    And the user reads his email            steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
-Lead can make changes and resubmit
+Lead can resubmit the application
     [Documentation]  IFS-7440
-    Given the user clicks the button/link     id = application-overview-submit-cta
-    When the user should not see the element  jQuery = .message-alert:contains("You will not be able to make changes")
-    Then the user clicks the button/link      id = submit-application-button
+    Given the user can submit the application
 
 Internal user can invite to assesment
     [Documentation]  IFS-7441
@@ -281,6 +275,7 @@ the user completes the covid deminimus application
     the user clicks the button/link                          link = Application details
     the user fills in the Application details                ${COVIDdeminimusapplicationTitle1}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant adds contributor to Application Team
+    the applicant marks EDI question as complete
     the user selects research category                       Feasibility studies
     the lead applicant fills all the questions and marks as complete(programme)
     the user accept the competition terms and conditions     Return to application overview

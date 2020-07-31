@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.application.name)} ? #{ifs.application.no_title} : ${model.application.name}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Application summary - ${applicationName}|" />
@@ -57,19 +57,8 @@
         </div>
         <div th:if="${model.competition.isOpen() and model.application.isOpen()}" class="govuk-!-margin-top-9">
             <th:block th:if="${model.userIsLeadApplicant}">
-                <div th:if="${model.displaySubmitWarning}" class="message-alert">
-                    <p class="govuk-body">You will not be able to make changes to your application or resubmit after this point.</p>
-                </div>
 
-                <form th:if="${model.displaySubmitWarning}" id="submit-application-form-modal" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
-                    <button id="submit-application-button-modal"
-                            th:disabled="${!model.applicationReadyForSubmit}"
-                            class="govuk-button"
-                            name="submit-application"
-                            data-js-modal="modal-confirm-submit-application">Submit application</button>
-                </form>
-
-                <form th:unless="${model.displaySubmitWarning}" id="submit-application-form" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{/application/{id}/confirm-submit(id=${applicationId})}" novalidate="novalidate" method="post">
+                 <form id="submit-application-form" class="govuk-!-margin-top-6" th:object="${form}" th:action="@{/application/{id}/confirm-submit(id=${applicationId})}" novalidate="novalidate" method="post">
                     <button id="submit-application-button"
                             th:disabled="${!model.applicationReadyForSubmit}"
                             class="govuk-button"
