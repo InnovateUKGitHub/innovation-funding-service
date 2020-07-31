@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.management.competition.inflight.controller.application.view.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -22,7 +20,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ReinstateIneligi
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -36,7 +33,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
@@ -61,15 +57,9 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @Mock
     private ProcessRoleService processRoleService;
     @Mock
-    private UserRestService userRestService;
-    @Mock
-    private ApplicationPrintPopulator applicationPrintPopulator;
-    @Mock
     private ApplicationRestService applicationRestService;
     @Mock
     private FormInputResponseRestService formInputResponseRestService;
-    @Mock
-    private ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
     @Mock
@@ -224,7 +214,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 ByteArrayResource bar = new ByteArrayResource("File contents".getBytes());
                 when(formInputResponseRestService.getFile(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(restSuccess(bar));
                 FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).withName("file1").withMediaType("text/csv").build();
-                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, of(fileEntryId));
+                FormInputResponseFileEntryResource formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, fileEntryId);
                 when(formInputResponseRestService.getFileDetails(formInputId, applicationId, processRoleId, fileEntryId)).thenReturn(RestResult.restSuccess(formInputResponseFileEntryResource));
 
                 mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId + "/forminput/" + formInputId + "/file/" + fileEntryId + "/download"))

@@ -183,8 +183,7 @@ the user fills in procurement Application details
     the user selects the value from the drop-down menu   BANKS_AND_INSURANCE   id = companyPrimaryFocus
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    the user clicks the button/link       id = application-question-complete
-    the user clicks the button/link       link = Back to application overview
+    the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user marks the procurement finances as complete
@@ -211,9 +210,9 @@ the applicant submits the procurement application
     the user clicks the button/link                             link = Review and submit
     the user should not see the element                         jQuery = .task-status-incomplete
     the user clicks the button/link                             jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                             jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page           track
     the user should see the element                             link = Print application
+    the user should see the element                             link = Reopen application
     the user navigates to the page without the usual headers    ${SERVER}/application/${application_id}/print?noprint    #This URL its only for testing purposes
     the user should see the element                             jQuery = .govuk-button:contains("Print your application")
     the user navigates to the page                              ${server}

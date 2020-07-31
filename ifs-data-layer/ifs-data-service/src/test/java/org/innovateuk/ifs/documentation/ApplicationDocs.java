@@ -9,8 +9,8 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
+import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE_OR_COLLABORATIVE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -41,7 +41,9 @@ public class ApplicationDocs {
             fieldWithPath("collaborativeProject").description("Flag indicating if the project is collaborative").optional(),
             fieldWithPath("competitionReferralSource").description("Enum indicating how the applicant was referred to the competition").optional(),
             fieldWithPath("companyAge").description("Enum indicating age of company applying").optional(),
-            fieldWithPath("companyPrimaryFocus").description("Enum indicating the sector of business of the company applying").optional()
+            fieldWithPath("companyPrimaryFocus").description("Enum indicating the sector of business of the company applying").optional(),
+            fieldWithPath("event").description("Event indicating the current status of the application").optional(),
+            fieldWithPath("lastStateChangeDate").description("Date when the application state was last modified").optional()
     };
 
     public static final FieldDescriptor[] previousApplicationResourceFields = {
@@ -56,7 +58,7 @@ public class ApplicationDocs {
             .withId(1L)
             .withName("application name")
             .withStartDate(LocalDate.now())
-            .withSubmittedDate(ZonedDateTime.now())
+            .withSubmittedDate(now())
             .withDurationInMonths(1L)
             .withApplicationState(ApplicationState.OPENED)
             .withCompetition(1L)

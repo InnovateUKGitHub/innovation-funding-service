@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
         <th:block th:insert="fragments/layout :: head"
@@ -170,7 +170,7 @@
                     <p class="govuk-body">Your upload must be no larger than 10MB</p>
                     <div class="govuk-form-group" th:with="removeValue = ${model.templateDocumentResponseFileEntryId}">
                         <th:block th:insert="question-type/types :: fileupload-fragment(${model.readOnly ? 'readonly' : 'edit'},
-                                @{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentFormInputId})},
+                                @{/application/{applicationId}/form/question/{questionId}/forminput/{formInputId}/file/{fileEntryId}/download(applicationId=${model.applicationId}, questionId=${model.questionId}, formInputId=${model.templateDocumentFormInputId}, fileEntryId=${model.templateDocumentResponseFileEntryId})},
                                 ${model.templateDocumentResponseFilename},
                                 templateDocument,
                                 templateDocument,

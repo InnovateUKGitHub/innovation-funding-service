@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Applications'" />
@@ -138,13 +138,14 @@
                                         <th:block th:if="${inProgressView.hasAssessmentStage}">
                                             <span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
                                         </th:block>
-                                        <span class="status-msg msg-progress">Application submitted</span>
+                                        <span class="status-msg msg-progress">
+                                            Application submitted
+                                            <th:block th:if="${inProgressView.showReopenLink}">
+                                                <br/>
+                                                <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link govuk-body reopen-application-link">Reopen</a>
+                                            </th:block>
+                                        </span>
                                     </th:block>
-                                </th:block>
-                            </div>
-                            <div class="action alignright">
-                                <th:block th:if="${inProgressView.showReopenLink}">
-                                    <a th:href="@{/application/{applicationId}/confirm-reopen(applicationId=${inProgressView.applicationNumber})}" class="govuk-link govuk-body govuk-!-margin-right-3">Reopen</a>
                                 </th:block>
                             </div>
                         </li>

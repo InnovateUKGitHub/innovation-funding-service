@@ -18,6 +18,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -81,13 +82,24 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                                     .getOptionalSuccessObject();
 
 
-                            // Removing and replacing if file already exists here
-                            if (response.isPresent() && response.get().getFileEntries().size() >= response.get().getFormInput().getWordCount()) {
-                                LOG.info("[FileLogging] FormInputResponse for upload exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
-                                        " for application id " + openApplication +
-                                        " formInputId " + formInputId +
-                                        " , so returning error...");
-                                return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                            if (response.isPresent()) {
+                                FormInput formInput = response.get().getFormInput();
+
+                                if (formInput.getType() == FormInputType.TEMPLATE_DOCUMENT) {
+                                    LOG.info("[FileLogging] FormInputResponse for template upload " +
+                                            " for application id " + openApplication.getId() +
+                                            " formInputId " + formInputId +
+                                            " , so returning error...");
+                                    return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                                }
+                                if (formInput.getType() == FormInputType.FILEUPLOAD
+                                    && response.get().getFileEntries().size() >= formInput.getWordCount()) {
+                                    LOG.info("[FileLogging] FormInputResponse for appendix exceeds configured maximum of " + response.get().getFormInput().getWordCount() +
+                                            " for application id " + openApplication.getId() +
+                                            " formInputId " + formInputId +
+                                            " , so returning error...");
+                                    return serviceFailure(new Error(FILES_ALREADY_UPLOADED));
+                                }
                             }
 
                             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier)
@@ -143,7 +155,7 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
                             formInputId,
                             applicationId,
                             processRoleId,
-                            Optional.of(fileEntry.getId())
+                            fileEntry.getId()
                     );
                     return serviceSuccess(fileEntryResource);
                 });
@@ -198,22 +210,14 @@ public class ApplicationFormInputUploadServiceImpl extends BaseTransactionalServ
     }
 
     private FileEntry getFileEntry(FormInputResponse response, FormInputResponseFileEntryId id) {
-        if (id.getFileEntryId().isPresent()) {
-            return response.getFileEntries().stream()
-                    .filter(file -> file.getId().equals(id.getFileEntryId().get()))
-                    .findFirst()
-                    .orElseThrow(() -> new ObjectNotFoundException("Unknown file entry " + id.getFileEntryId().get(), emptyList()));
-        } else {
-            return response.getFileEntries().get(0);
-        }
+        return response.getFileEntries().stream()
+                .filter(file -> file.getId().equals(id.getFileEntryId()))
+                .findFirst()
+                .orElseThrow(() -> new ObjectNotFoundException("Unknown file entry " + id.getFileEntryId(), emptyList()));
     }
 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse, FormInputResponseFileEntryId id) {
-        if (id.getFileEntryId().isPresent()) {
-            formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId().get()));
-        } else {
-            formInputResponse.getFileEntries().clear();
-        }
+        formInputResponse.getFileEntries().removeIf(file -> file.getId().equals(id.getFileEntryId()));
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
         LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() +
                 " and application " + formInputResponse.getApplication());
