@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.LabourCost;
+
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -282,5 +285,35 @@ public class YourProjectCostsForm {
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
 
+    }
+
+    public void recalculateTotals() {
+        getLabour().getRows().forEach((id, row) -> {
+            LabourCost cost = row.toCost(null);
+            row.setTotal(cost.getTotal(getLabour().getWorkingDaysPerYear()));
+            row.setRate(cost.getRate(getLabour().getWorkingDaysPerYear()));
+        });
+        getOverhead().setTotal(getOverhead().getTotal());
+        recalculateTotal(getMaterialRows());
+        recalculateTotal(getCapitalUsageRows());
+        recalculateTotal(getSubcontractingRows());
+        recalculateTotal(getTravelRows());
+        recalculateTotal(getOtherRows());
+
+        recalculateTotal(getProcurementOverheadRows());
+
+        recalculateTotal(getAssociateSalaryCostRows());
+        recalculateTotal(getAssociateDevelopmentCostRows());
+        recalculateTotal(getConsumableCostRows());
+        recalculateTotal(getKnowledgeBaseCostRows());
+        recalculateTotal(getEstateCostRows());
+        recalculateTotal(getAssociateSupportCostRows());
+    }
+
+    private void recalculateTotal(Map<String, ? extends AbstractCostRowForm> rows) {
+        rows.forEach((id, row) -> {
+            FinanceRowItem cost = row.toCost(null);
+            row.setTotal(cost.getTotal());
+        });
     }
 }
