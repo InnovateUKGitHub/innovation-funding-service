@@ -22,16 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.math.BigInteger;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.newFieldError;
-import static org.innovateuk.ifs.util.CollectionFunctions.negate;
 
 @Component
 public class YourProjectCostsFormValidator {
@@ -84,7 +81,8 @@ public class YourProjectCostsFormValidator {
                 validateRowsIfNotBlank(form.getAssociateSalaryCostRows(), "associateSalaryCostRows[%s].", validationHandler);
                 break;
             case ASSOCIATE_DEVELOPMENT_COSTS:
-                validateAssociateDevelopmentCosts(form.getAssociateDevelopmentCostRows(), form.getAssociateSalaryCostRows(), validationHandler);
+                validateRowsIfNotBlank(form.getAssociateDevelopmentCostRows(), "associateDevelopmentCostRows[%s].", validationHandler);
+                validateSameNumberOfNonBlankAssociateRows(form.getAssociateDevelopmentCostRows(), form.getAssociateSalaryCostRows(), validationHandler);
                 break;
             case CONSUMABLES:
                 validateRows(form.getConsumableCostRows(), "consumables[%s].", validationHandler);
@@ -115,14 +113,18 @@ public class YourProjectCostsFormValidator {
         }
     }
 
-    private void validateAssociateDevelopmentCosts(Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows, Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows, ValidationHandler validationHandler) {
-        long nonBlankDevRows = associateDevelopmentCostRows.values().stream().filter(negate(AssociateDevelopmentCostRowForm::isBlank)).count();
-        long nonBlankSalRows = associateSalaryCostRows.values().stream().filter(negate(AssociateSalaryCostRowForm::isBlank)).count();
-        if (nonBlankDevRows != nonBlankSalRows) {
-            validationHandler.addAnyErrors(new ValidationMessages(fieldError("associateDevelopmentCostRows", null, "validation.finance.equal.size.associate.rows")));
-        } else {
-            validateRowsIfNotBlank(associateDevelopmentCostRows, "associateDevelopmentCostRows[%s].", validationHandler);
+    /*
+    This is a bit ugly but its validating that if there is a missmatch in the number of blank rows between assocaite dev and associate salary that we validate the form of the missmatching blank row
+     */
+    private void validateSameNumberOfNonBlankAssociateRows(Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows, Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows, ValidationHandler validationHandler) {
+        List<Map.Entry<String, AssociateDevelopmentCostRowForm>> blankDevRows = associateDevelopmentCostRows.entrySet().stream().filter(entry -> entry.getValue().isBlank()).collect(Collectors.toList());
+        List<Map.Entry<String, AssociateSalaryCostRowForm>> blankSalRows = associateSalaryCostRows.entrySet().stream().filter(entry -> entry.getValue().isBlank()).collect(Collectors.toList());
+        if (blankDevRows.size() == 1 && blankSalRows.size() == 0) {
+            validateForm(blankDevRows.get(0).getValue(), validationHandler,"associateDevelopmentCostRows[%s].", blankDevRows.get(0).getKey());
+        } else if (blankDevRows.size() == 0 && blankSalRows.size() == 1) {
+            validateForm(blankSalRows.get(0).getValue(), validationHandler,"associateSalaryCostRows[%s].", blankSalRows.get(0).getKey());
         }
+        // both having 1 blank row, or both having 0 blank rows is valid.
     }
 
     public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {

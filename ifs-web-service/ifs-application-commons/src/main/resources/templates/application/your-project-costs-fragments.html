@@ -114,7 +114,7 @@
                                 class="govuk-table__header govuk-table__header--numeric width-150">Total
                                 costs
                             </th>
-                            <th scope="col" class="govuk-table__header width-80">
+                            <th scope="col" class="govuk-table__header width-80 alignright">
                                 <span class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -648,7 +648,7 @@
                                 <th id="procurement-overheads-total" scope="col"
                                     class="govuk-table__header govuk-table__header--numeric width-150">Total claimed
                                 </th>
-                                <th class="govuk-table__header" scope="col">
+                                <th class="govuk-table__header alignright" scope="col">
                                     <span class="govuk-visually-hidden">Actions</span>
                                 </th>
                             </tr>
@@ -869,7 +869,7 @@
                             <th id="materials-total" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric width-150">Total
                             </th>
-                            <th class="govuk-table__header" scope="col">
+                            <th class="govuk-table__header alignright" scope="col">
                                 <span class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -1679,7 +1679,7 @@
                                 scope="col">
                                 Total
                             </th>
-                            <th class="govuk-table__header" scope="col"><span
+                            <th class="govuk-table__header alignright" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -1793,7 +1793,7 @@
                    data-calculation-operations="*"
                    th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"/>
         </td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell alignright">
             <button type="submit"
                     th:name="remove_cost"
                     th:value="${id}"
@@ -1894,7 +1894,7 @@
                                 class="govuk-table__header govuk-table__header--numeric">
                                 Estimated cost (&pound;)
                             </th>
-                            <th class="govuk-table__header" scope="col"><span
+                            <th class="govuk-table__header alignright" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
                             </th>
                         </tr>
@@ -1979,7 +1979,7 @@
                    required="required"
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell alignright">
             <button type="submit"
                     th:name="remove_cost"
                     th:value="${id}"
@@ -2221,7 +2221,8 @@
             <span th:text="${row.role}"></span>
             <span th:if="${index != 0}" class="govuk-hint">(Optional)</span>
         </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.duration')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.duration">
                 <span class="govuk-visually-hidden">Duration of employment (months)</span>
             </label>
@@ -2241,7 +2242,8 @@
                             data-max-errormessage=#{validation.field.max.number.of.digits(20)},
                             data-anychange-errormessage=${index == 0} ? ${null} : #{validation.field.must.not.be.blank}"/>
         </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.cost')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.cost">
                 <span class="govuk-visually-hidden">Associate employment cost (&pound;)</span>
             </label>
@@ -2402,7 +2404,8 @@
                    th:attr="data-calculation-fields=${'.associate-salary-' + index + ',1'}"/>
             <span th:attr="data-mirror=|[id='__${path}__.duration']|" th:text="${row.duration}"></span>
         </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
+            th:classappend="${#fields.hasErrors('__${path}__.cost')} ? 'govuk-form-group--error'">
             <label th:for="__${path}__.cost">
                 <span class="govuk-visually-hidden">Associate development cost (&pound;)</span>
             </label>
@@ -2590,7 +2593,7 @@
                    required="required"
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell alignright">
             <button type="submit"
                     th:name="remove_cost"
                     th:value="${id}"
@@ -2762,7 +2765,7 @@
                    required="required"
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell alignright">
             <button type="submit"
                     th:name="remove_cost"
                     th:value="${id}"
@@ -3163,7 +3166,7 @@
                    required="required"
                    th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
         </td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell alignright">
             <button type="submit"
                     th:name="remove_cost"
                     th:value="${id}"
@@ -3244,7 +3247,7 @@
                       label='Other staff (incl. training)')"/>
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.capitalEquipment',
-                      label='Captial equipment')"/>
+                      label='Capital equipment')"/>
                     <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.otherCosts',
                       label='Other costs')"/>
