@@ -170,7 +170,7 @@ The user completes the application
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                 ${KTPapplicationTitle}
-    the user marks the finances as complete                  ${KTPapplicationTitle}   Calculate  52,214  yes
+    the user marks the ktp finances as complete
     the user accept the competition terms and conditions     Return to application overview
 
 The user completes the research category
@@ -195,3 +195,24 @@ Requesting IDs of this Project
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the user marks the ktp finances as complete
+    the user clicks the button/link  link = Your project costs
+    the user fills in Associate employment
+    the user fills in Associate development
+    the user clicks the button/link  css = label[for="stateAidAgreed"]
+    the user clicks the button/link  jQuery = button:contains("Mark as complete")
+    the user enters the project location
+    the user fills the organisation details with Project growth table   ${KTPapplicationTitle}  ${SMALL_ORGANISATION_SIZE}
+    the user checks Your Funding section        ${KTPapplicationTitle}
+        the user clicks the button/link  link = Back to application overview
+        the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
+
+the user fills in Associate employment
+    the user clicks the button/link         jQuery = button:contains("Associate employment")
+    the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  123
+    the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
+
+the user fills in Associate development
+    the user clicks the button/link         jQuery = button:contains("Associate development")
+    the user enters text to a text field    jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
