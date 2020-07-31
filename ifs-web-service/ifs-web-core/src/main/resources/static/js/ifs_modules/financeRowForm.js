@@ -20,7 +20,7 @@ IFS.core.financeRowForm = (function () {
       })
       jQuery('body').on('click', 'form button', function (e) {
         var button = jQuery(this)
-        if (button.closest('form').attr('data-save-status') !== 'done') {
+        if (button.closest('form').attr('data-save-status') === 'progress') {
           e.preventDefault()
           setTimeout(function () {
             button.click()

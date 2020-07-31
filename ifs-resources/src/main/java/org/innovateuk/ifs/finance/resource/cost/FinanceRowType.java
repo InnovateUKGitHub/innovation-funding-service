@@ -29,8 +29,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
 
     /* Procurement */
-    VAT("vat", "", COST),
-    PROCUREMENT_OVERHEADS("procurement_overheads", "Procurement overheads", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
+    VAT("vat", "Total VAT", COST),
+    PROCUREMENT_OVERHEADS("procurement_overheads", "Overheads", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
 
     /* KTP */
     ASSOCIATE_SALARY_COSTS("associate_salary_costs", "Associate salary costs", INCLUDE_IN_SPEND_PROFILE, COST, APPEARS_IN_PROJECT_COSTS_ACCORDION),
