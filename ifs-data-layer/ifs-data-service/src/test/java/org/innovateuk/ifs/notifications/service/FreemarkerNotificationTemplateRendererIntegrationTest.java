@@ -215,8 +215,10 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     public void testSendProjectLiveEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "applicationId", 1234L,
-                "competitionName", "Competition 1"
+                "applicationId", "1234",
+                "projectName", "Project 1",
+                "projectStartDate", "12 June 2020",
+                "projectSetupUrl", "https://ifs.local-dev/project-setup/project/1234"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("project_live_subject.txt", templateArguments);
@@ -234,6 +236,26 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_subject.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("invite_internal_user_text_html.html", templateArguments);
+    }
+
+    @Test
+    public void testReopenApplicationEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "name", "User 2",
+                "leadApplicant", "User 1",
+                "date", "12 June 2020",
+                "applicationNumber", "1234",
+                "applicationName", "Application 1",
+                "link", "https://ifs.local-dev/application/1234"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_lead_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_lead_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_lead_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_partner_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_partner_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("reopen_application_partner_text_plain.txt", templateArguments);
     }
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {

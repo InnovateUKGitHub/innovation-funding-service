@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -7,6 +8,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.project.monitoring.service.MonitoringOfficerRestService;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.projectteam.viewmodel.ProjectTeamViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -24,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -49,6 +51,9 @@ public class ProjectTeamViewModelPopulator {
     @Autowired
     private ProjectPartnerInviteRestService projectPartnerInviteRestService;
 
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationRestService;
+
     public ProjectTeamViewModel populate(long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -70,7 +75,8 @@ public class ProjectTeamViewModelPopulator {
         boolean isLead = leadOrganisation.equals(loggedInUserOrg);
 
         List<ProjectTeamOrganisationViewModel> partnerOrgModels = projectOrganisations.stream()
-                .map(org -> mapToProjectOrganisationViewModel(projectUsers,
+                .map(org -> mapToProjectOrganisationViewModel(projectId,
+                        projectUsers,
                         invitedUsers,
                         org,
                         loggedInUser,
@@ -83,6 +89,8 @@ public class ProjectTeamViewModelPopulator {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
 
+        boolean isReadOnly = statusAccessor.isGrantOfferLetterGenerated() || project.getProjectState().isComplete() || isMonitoringOfficer;
+
         return new ProjectTeamViewModel(
                 project,
                 partnerOrgModels,
@@ -92,7 +100,7 @@ public class ProjectTeamViewModelPopulator {
                 loggedInUser.getId(),
                 statusAccessor.isGrantOfferLetterGenerated(),
                 false,
-                isMonitoringOfficer,
+                isReadOnly,
                 false,
                 false);
     }
@@ -102,12 +110,17 @@ public class ProjectTeamViewModelPopulator {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
-    private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, UserResource loggedInUser, boolean isLead, boolean loggedInUsersOrganisation) {
+    private ProjectTeamOrganisationViewModel mapToProjectOrganisationViewModel(long projectId, List<ProjectUserResource> totalUsers, List<ProjectUserInviteResource> totalInvites, OrganisationResource organisation, UserResource loggedInUser, boolean isLead, boolean loggedInUsersOrganisation) {
         List<ProjectUserResource> usersForOrganisation = simpleFilter(totalUsers,
                 user -> user.getOrganisation().equals(organisation.getId()));
         List<ProjectUserInviteResource> invitesForOrganisation = simpleFilter(totalInvites,
                 invite -> invite.getOrganisation().equals(organisation.getId()));
-        return new ProjectTeamOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation, loggedInUser, loggedInUsersOrganisation), organisation.getName(), organisation.getId(), isLead, loggedInUsersOrganisation, null);
+
+        AddressResource address = null;
+        if (organisation.isInternational()) {
+            address = partnerOrganisationRestService.getPartnerOrganisation(projectId, organisation.getId()).getSuccess().getInternationalAddress();
+        }
+        return new ProjectTeamOrganisationViewModel(mapUsersToViewModelRows(usersForOrganisation, invitesForOrganisation, loggedInUser, loggedInUsersOrganisation), organisation.getName(), organisation.getId(), isLead, loggedInUsersOrganisation, null, address);
     }
 
     private ProjectTeamOrganisationViewModel getLoggedInUserOrgModel(List<ProjectTeamOrganisationViewModel> partnerOrgModels,

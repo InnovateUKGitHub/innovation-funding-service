@@ -56,6 +56,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
     private static final long formInputId = 123L;
     private static final long applicationId = 456L;
     private static final long processRoleId = 789L;
+    private static final long fileEntryId = 111L;
 
     @Test
     public void applicantCanUploadFilesInResponsesForOwnApplication() {
@@ -68,7 +69,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
                 newProcessRole().withUser(user).withRole(LEADAPPLICANT).withApplication(application).build();
 
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);
         Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
         when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
@@ -84,7 +85,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
         UserResource user = newUserResource().build();
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);
 
         Set<Role> expectedRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
@@ -100,7 +101,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
         UserResource user = newUserResource().build();
         FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId, fileEntryId);
 
         assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
     }
@@ -130,9 +131,28 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
         when(stakeholderRepository.existsByCompetitionIdAndUserId(competition.getId(), stakeholderUserResource.getId())).thenReturn(true);
 
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
-        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L));
+        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L, fileEntryId));
 
         assertTrue(fileUploadRules.stakeholdersCanDownloadFilesInResponse(fileEntry, stakeholderUserResource));
+    }
+
+    @Test
+    public void externalFinanceCanDownloadFilesInResponse() {
+        Application application = newApplication().withApplicationState(ApplicationState.OPENED).build();
+
+        Competition competition = newCompetition().build();
+        application.setCompetition(competition);
+        UserResource externalFinanceUserResource = newUserResource()
+                .withRoleGlobal(EXTERNAL_FINANCE)
+                .build();
+
+        when(applicationRepository.findById(application.getId())).thenReturn(Optional.of(application));
+        when(externalFinanceRepository.existsByCompetitionIdAndUserId(competition.getId(), externalFinanceUserResource.getId())).thenReturn(true);
+
+        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
+        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, application.getId(), 2L, fileEntryId));
+
+        assertTrue(fileUploadRules.externalFinanceCanDownloadFilesInResponse(fileEntry, externalFinanceUserResource));
     }
 
     @Test
@@ -143,7 +163,7 @@ public class FormInputResponseFileUploadRulesTest extends BasePermissionRulesTes
 
         long applicationId = 3L;
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
-        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, applicationId, 2L));
+        fileEntry.setCompoundId(new FormInputResponseFileEntryId(1L, applicationId, 2L, fileEntryId));
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.hasRole(MONITORING_OFFICER)) {

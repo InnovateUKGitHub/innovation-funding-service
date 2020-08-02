@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Your project location - ${applicationName}|" />
@@ -39,7 +39,20 @@
             <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
             <input type="hidden" id="cacheTest" value=""/>
 
-            <div class="govuk-!-margin-top-6">
+            <div th:if="${model.international}" class="govuk-!-margin-top-6">
+
+                <th:block th:insert="fragments/form-elements/textfield ::
+                    textfield(
+                        label='Town or city',
+                        id='town',
+                        hint=${model.readOnly ? null : 'Please enter the town or city where most of the project work will take place.'},
+                        value=${form.town},
+                        readOnly=${model.readOnly},
+                        required=true,
+                        requiredMessage=#{APPLICATION_PROJECT_LOCATION_TOWN_REQUIRED}
+                        )" />
+            </div>
+            <div th:if="${!model.international}" class="govuk-!-margin-top-6">
 
                 <p class="govuk-body" th:if="${!model.readOnly}"
                    th:text="${model.isH2020()? 'Provide us with the postcode of the primary project location.' : 'Where will most of the project work take place?'}"> </p>
@@ -72,7 +85,7 @@
                 </a>
                 <button type="submit" th:unless="${model.readOnly}"
                         class="govuk-!-margin-top-6 govuk-button">
-                    Save and return to finances
+                    Save and return to project finances
                 </button>
             </div>
         </form>

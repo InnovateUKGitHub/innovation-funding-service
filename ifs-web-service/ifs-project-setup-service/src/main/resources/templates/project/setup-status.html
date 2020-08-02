@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml"
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org"
       th:with="pageTitle=${model.monitoringOfficer ? 'Monitor project' : 'Set up your project'}">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle + ' - ' + model.projectName}" />
@@ -37,18 +37,26 @@
                     <li th:if="${model.showApplicationFeedbackLink}"><a th:href="${'/application/' + model.applicationId + '/feedback'}"
                            class="govuk-link">
                         view application feedback</a></li>
-                    <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
+                    <li>
+                        <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
                            class="govuk-link">
-                        view the award terms and conditions</a></li>
+                            <th:block th:if="${model.investorPartnershipCompetition}">
+                                view the Investor Partnerships terms and conditions
+                            </th:block>
+                            <th:block th:unless="${model.investorPartnershipCompetition}">
+                                view the award terms and conditions
+                            </th:block>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
 
         <th:block th:if="${model.projectState.live}">
             <div class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">The project is live, you can review progress at <a href="https://grants.innovateuk.org" class="govuk-link">_connect</a></p>
+                <p th:if="${model.projectManager || model.projectFinanceContact}" class="govuk-body">The project is now live and you can <a th:href="${model.ifsPostAward} ? ${model.liveProjectsLandingPageUrl} : 'https://grants.innovateuk.org'" class="govuk-link">review its progress</a>.</p>
+                <p th:if="${!model.projectManager && !model.projectFinanceContact}" class="govuk-body">The project is now live.</p>
             </div>
-
             <p class="govuk-body">The following steps have been completed by all partners. The project can now start.</p>
         </th:block>
 

@@ -140,8 +140,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(panelAssessor.getId(), applicationResource1.getId(), PANEL_ASSESSOR)).thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(interviewAssessor.getId(), applicationResource1.getId(), PANEL_ASSESSOR)).thenReturn(true);
 
-        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList
-                (innovationLead));
+        when(innovationLeadRepository.findInnovationsLeads(competition.getId())).thenReturn(singletonList(innovationLead));
         when(stakeholderRepository.findStakeholders(competition.getId())).thenReturn(singletonList(stakeholder));
         when(projectMonitoringOfficerRepository.existsByProjectApplicationIdAndUserId(application1.getId(), monitoringOfficerOnProjectForApplication1.getId()))
                 .thenReturn(true);
@@ -575,6 +574,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, leadOnApplication1));
         assertTrue(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user2));
         assertFalse(rules.consortiumCanCheckCollaborativeFundingCriteriaIsMet(applicationResource1, user3));
+    }
+
+    @Test
+    public void consortiumCanCheckFundingSoughtIsValid() {
+        assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, leadOnApplication1));
+        assertTrue(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user2));
+        assertFalse(rules.consortiumCanCheckFundingSoughtIsValid(applicationResource1, user3));
     }
 
     @Test

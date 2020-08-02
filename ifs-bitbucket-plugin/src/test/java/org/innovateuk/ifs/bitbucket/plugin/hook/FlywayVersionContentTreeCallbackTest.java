@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.bitbucket.plugin.hook.FlywayVersionContentTreeC
 public class FlywayVersionContentTreeCallbackTest {
     @Test
     public void testSortAndFilter() {
-        final List<Pair<String, List<Integer>>> unsorted = new ArrayList<Pair<String, List<Integer>>>();
+        final List<Pair<String, List<Integer>>> unsorted = new ArrayList<>();
         unsorted.add(of("V1_2_3__Patch.sql", asList(1, 2, 3)));
         unsorted.add(of("V1__Patch.sql", asList(1)));
         unsorted.add(of("NotAPatch.java", asList()));

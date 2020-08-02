@@ -63,7 +63,8 @@ Navigation using previous button
 Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     Given the user clicks the button/link       link = Back to your assessment overview
-    And Application detail section should not be scorable
+    When Application detail section should not be scorable
+    And EDI question section should not be scorable
     Then Project summary section should not be scorable
     And Public description section should not be scorable
     And Scope section should not be scorable
@@ -80,14 +81,14 @@ Assessor should see terms and conditions question
 
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
-    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB
+    Given The user clicks the button/link  link = intelligent-water-system-technical-approach.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
-    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB
+    And The user clicks the button/link  link = intelligent-water-system-innovation.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
-    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB
+    And the user clicks the button/link  link = intelligent-water-system-project-team.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
     When the user clicks the button/link         jQuery = a:contains("6. Innovation")
-    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB
+    And the user clicks the button/link    link = intelligent-water-system-innovation.pdf, 8 KB (opens in a new window)
     And the user closes the last opened tab
 
 Scope: Validations
@@ -105,7 +106,7 @@ Scope: Status in the overview is updated
     And The user enters text to a text field                 css = .editor    Testing feedback field when "Yes" is selected.
     And Wait for autosave
     Then the user clicks the button with resubmission        jquery = button:contains("Save and return to assessment overview")
-    And the user should see the element                      jQuery = li:nth-child(4) span:contains("In scope") ~ .task-status-complete
+    And the user should see the element                      jQuery = li:nth-child(5) span:contains("In scope") ~ .task-status-complete
 
 Scope: Autosave
     [Documentation]    INFUND-1483  INFUND-3780
@@ -164,9 +165,10 @@ Economic Benefit: Guidance
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
     Given the user should see finance overview
-    When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user sets the finance option to detailed     ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user reloads the page
     Then the users should see detailed finance overview
+    And the users should see detailed finance overview of an academic partner
 
 Status of the application should be In Progress
     [Documentation]    INFUND-6358
@@ -236,6 +238,15 @@ The academic finances are correct
     The user should see the element       jQuery = .table-overview td:contains("100.00%")
     The user should see the element       jQuery = .table-overview td:contains("990")
 
+the users should see detailed finance overview of an academic partner
+    The user should see the element     jQuery = button:contains("Directly incurred") span:contains("£132")
+    The user should see the element     jQuery = button:contains("Directly allocated") span:contains("£330")
+    The user should see the element     jQuery = button:contains("Indirect costs") span:contains("£154")
+    The user should see the element     jQuery = button:contains("Exceptions") span:contains("£374")
+    the user should see the element     jQuery = p:contains("Total project costs") span:contains("£990")
+    The user should see the element     jQuery = h2:contains("Innovate UK funding")
+    The user should see the element     jQuery = h2:contains("Financial resources")
+
 Custom suite setup
     The user logs-in in new browser  &{assessor_credentials}
     Connect To Database   @{database}
@@ -254,7 +265,7 @@ the user fills in rejection details
     The user enters text to a text field                   id = rejectComment    Have conflicts with the area of expertise.
 
 the uesr should see assessment overview details
-    the user should see the element     jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
+    the user should see the element      jQuery = dt:contains("Application number")~ dd:contains("${IN_ASSESSMENT_APPLICATION_5_NUMBER}")
     the user should see the element      jQuery = dt:contains("Competition") ~ dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     the user should see the element      jQuery = h2:contains("Project details")
     the user should see the element      jQuery = h2:contains("Application questions")
@@ -268,6 +279,7 @@ the user navigate to previous pages
     the user clicks previous and goes to the page   Scope
     the user clicks previous and goes to the page   Public description
     the user clicks previous and goes to the page   Project summary
+    the user clicks previous and goes to the page   Equality, diversity and inclusion
     the user clicks previous and goes to the page   Application details
     the user should not see the element             jQuery = span:contains("Previous")
 
@@ -279,6 +291,12 @@ Application detail section should not be scorable
 
 Project summary section should not be scorable
     the user should see the element        jQuery = p:contains("This is the applicant response for project summary.")
+    the user should not see the element    jQuery = label:contains("Question score")
+    the user clicks the button/link        jQuery = span:contains("Next")
+
+EDI question section should not be scorable
+    the user should see the element        jQuery = h2:contains("Have you completed the EDI survey?")
+    the user should see the element        jQuery = p:contains("Yes")
     the user should not see the element    jQuery = label:contains("Question score")
     the user clicks the button/link        jQuery = span:contains("Next")
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <!-- =================== Comp setup section - Overview (1) ============================== -->
 
@@ -86,6 +86,16 @@
                                         <a th:href="@{/competition/setup/{competitionId}/section/project-document/landing-page(competitionId=${competition.id})}" class="govuk-link">Documents</a>
                                     </th:block>
                                     <th:block th:unless="${model.general.initialComplete}">Documents</th:block>
+                                </h3>
+                            </div>
+                        </li>
+                        <li th:if="${model.general.ifsAdmin && model.general.competition.fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).GRANT}">
+                            <div class="task">
+                                <h3 class="govuk-heading-s">
+                                    <th:block th:if="${model.general.initialComplete}">
+                                        <a th:href="@{/competition/setup/{competitionId}/post-award-service(competitionId=${competition.id})}" class="govuk-link">Post award service</a>
+                                    </th:block>
+                                    <th:block th:unless="${model.general.initialComplete}">Post award service</th:block>
                                 </h3>
                             </div>
                         </li>

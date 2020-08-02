@@ -2,15 +2,11 @@ package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
-import org.innovateuk.ifs.finance.domain.EmployeesAndTurnover;
-import org.innovateuk.ifs.finance.domain.GrowthTable;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationTypeFinanceHandler;
 import org.innovateuk.ifs.finance.handler.ProjectFinanceHandler;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.EmployeesAndTurnoverRepository;
-import org.innovateuk.ifs.finance.repository.GrowthTableRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -23,8 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static java.lang.Boolean.TRUE;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,12 +29,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFinance, ProjectFinanceResource> implements ProjectFinanceService {
-
-    @Autowired
-    private EmployeesAndTurnoverRepository employeesAndTurnoverRepository;
-
-    @Autowired
-    private GrowthTableRepository growthTableRepository;
 
     @Autowired
     private ProjectFinanceHandler projectFinanceHandler;
@@ -67,15 +55,9 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     public ServiceResult<Void> createProjectFinance(long projectId, long organisationId) {
         return find(project(projectId), organisation(organisationId)).andOnSuccessReturnVoid((project, organisation) -> {
             ProjectFinance projectFinance = projectFinanceRepository.save(new ProjectFinance(project, organisation));
-            if (TRUE.equals(projectFinance.getCompetition().getIncludeProjectGrowthTable())) {
-                projectFinance.setGrowthTable(new GrowthTable());
-                growthTableRepository.save(projectFinance.getGrowthTable());
-            } else {
-                projectFinance.setEmployeesAndTurnover(new EmployeesAndTurnover());
-                employeesAndTurnoverRepository.save(projectFinance.getEmployeesAndTurnover());
-            }
-            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
+            initialiseFinancialYearData(projectFinance);
 
+            OrganisationTypeFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getCompetition().getId(), projectFinance.getOrganisation().getOrganisationType().getId());
             for (FinanceRowType costType : projectFinance.getCompetition().getFinanceRowTypes()) {
                 organisationFinanceHandler.initialiseCostType(projectFinance, costType);
             }
@@ -86,7 +68,7 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     public ServiceResult<Void> updateProjectFinance(ProjectFinanceResource projectFinanceResource) {
         long projectFinanceId = projectFinanceResource.getId();
         return find(projectFinanceRepository.findById(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId)).andOnSuccess(dbFinance -> {
-            updateFinanceDetails(dbFinance, projectFinanceResource);
+            updateFinancialYearData(dbFinance, projectFinanceResource);
             return serviceSuccess();
         });
     }
@@ -133,4 +115,5 @@ public class ProjectFinanceServiceImpl extends AbstractFinanceService<ProjectFin
     private ServiceResult<Project> getProjectById(long projectId) {
         return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId));
     }
+
 }

@@ -2,7 +2,8 @@
 Resource    ../../resources/defaultResources.robot
 
 *** Variables ***
-${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
+${bannerMessageForLead}     Your application was reopened on
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -48,10 +49,11 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
-    ${applicationId} =  get application id by name  ${applicationTitle}
-    the user navigates to the page   ${server}/application/${applicationId}
-    the user clicks the button/link  link = Application details
-    the user fills in the Application details  ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    ${applicationId} =  get application id by name     ${applicationTitle}
+    the user navigates to the page                     ${server}/application/${applicationId}
+    the applicant marks EDI question as complete
+    the user clicks the button/link                    link = Application details
+    the user fills in the Application details          ${applicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
@@ -60,23 +62,21 @@ the user moves Application details in Edit mode
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery = h1:contains("Application details")
-    the user enters text to a text field  css = [id="name"]  ${appTitle}
+    the user enters text to a text field  id = name  ${appTitle}
     the user enters text to a text field  id = startDate  ${tomorrowday}
     the user enters text to a text field  css = #application_details-startdate_month  ${month}
     the user enters text to a text field  css = #application_details-startdate_year  ${nextyear}
     the user enters text to a text field  css = [id="durationInMonths"]  24
     the user clicks the button twice      css = label[for="resubmission-no"]
     the user should not see the element   link = Choose your innovation area
-    The user clicks the button/link       id = application-question-complete
-    the user clicks the button/link       link = Back to application overview
+    the user can mark the question as complete
     the user should see the element       jQuery = li:contains("Application details") > .task-status-complete
 
 the user selects research category from funding
     [Arguments]  ${res_category}
     the user clicks the button/link   link = research category
     the user clicks the button twice  jQuery = label:contains("${res_category}")
-    the user clicks the button/link   id = application-question-complete
-    the user clicks the button/link   link = Back to application overview
+    the user can mark the question as complete
     the user should see the element   jQuery = li:contains("Research category") > .task-status-complete
 
 the user marks the finances as complete
@@ -326,14 +326,15 @@ the user selects research area
 
 the user fills in the funding information
     [Arguments]  ${Application}
-    the user navigates to Your-finances page   ${Application}
-    the user clicks the button/link            link = Your funding
-    the user selects the radio button          requestingFunding   true
-    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
-    the user selects the radio button          otherFunding   false
-    the user clicks the button/link            jQuery = button:contains("Mark as complete")
-    the user clicks the button/link            link = Your funding
-    the user should see the element            jQuery = button:contains("Edit")
+    the user navigates to Your-finances page                        ${Application}
+    the user clicks the button/link                                 link = Your funding
+    the user selects the radio button                               requestingFunding   true
+    Run Keyword if    "${Application}" == "KTP Application"         the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...         ELSE                                                the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
+    the user selects the radio button                               otherFunding   false
+    the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                                 link = Your funding
+    the user should see the element                                 jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
@@ -368,12 +369,12 @@ Newly invited collaborator can create account and sign in
     [Arguments]    ${email}  ${competition_name}
     the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery = a:contains("Yes, accept invitation")
-    the user should see the element    jquery = h1:contains("Choose organisation type")
+    the user should see the element    jquery = h1:contains("Choose your organisation type")
     the user completes the new account creation  ${email}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user completes the new account creation
     [Arguments]    ${email}  ${organisationType}
-    the user selects the radio button           organisationType    radio-${organisationType}
+    the user selects the radio button           organisationTypeId    radio-${organisationType}
     the user clicks the button/link             jQuery = .govuk-button:contains("Save and continue")
     the user should see the element             jQuery = h1:contains("Enter organisation details")
     the user selects his organisation in Companies House  innovate  INNOVATE LTD
@@ -404,7 +405,7 @@ the user select the competition and starts application
     [Arguments]  ${competition}
     the user navigates to the page                            ${frontDoor}
     the user clicks the button/link in the paginated list     link = ${competition}
-    the user clicks the button/link                           jQuery = a:contains("Start new application")
+    the user clicks the button/link                           link = Start new application
 
 the user search for organisation name on Companies house
     [Arguments]  ${org}  ${orgName}
@@ -429,11 +430,16 @@ logged in user applies to competition public
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
 
+the user enters organisation details manually on companies house link
+    [Arguments]  ${organisationName}
+    the user clicks the button/link          jQuery = span:contains("Enter details manually")
+    The user enters text to a text field     name = organisationName    ${organisationName}
+    the user clicks the button/link          jQuery = button:contains("Continue")
+
 the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
     the user clicks the button/link                    jQuery = .govuk-button:contains("Submit application")
-    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  track
 
 the user applies to competition and enters organisation type
@@ -442,14 +448,14 @@ the user applies to competition and enters organisation type
     the user fills in the address info   2
 
 the user applies to competition and enters organisation type link
-    [Arguments]  ${compId}  ${organisationType}
-    the user navigates to the page      ${server}/competition/${compId}/overview
-    the user clicks the button/link     link = Start new application
-    The user clicks the button/link     link = Continue and create an account
-    the user selects the radio button   organisationTypeId  ${organisationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    [Arguments]  ${compId}  ${organisationType}  ${organisationName}
+    the user navigates to the page                      ${server}/competition/${compId}/overview
+    the user clicks the button/link                     link = Start new application
+    The user clicks the button/link                     link = Continue and create an account
+    the user selects the radio button                   organisationTypeId  ${organisationType}
+    the user clicks the button/link                     jQuery = button:contains("Save and continue")
+    the user clicks the Not on companies house link     ${organisationName}
+    the user clicks the button/link                     jQuery = button:contains("Save and continue")
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -465,8 +471,9 @@ the applicant completes Application Team
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
 
 the user clicks the Not on companies house link
-    the user clicks the button/link       jQuery = summary:contains("Enter details manually")
-    The user enters text to a text field  name = organisationName    org2
+    [Arguments]  ${organisationName}
+    the user clicks the button/link       jQuery = span:contains("Enter details manually")
+    The user enters text to a text field  name = organisationName   ${organisationName}
     the user clicks the button/link       jQuery = button:contains("Continue")
 
 the user fills in the address info
@@ -518,3 +525,98 @@ the user adds a partner organisation
     the user enters text to a text field          id = organisationName    ${orgName}
     the user enters text to a text field          id = name   ${name}
     the user enters text to a text field          id = email  ${email}
+
+team member accepts the invite to join organisation
+    [Arguments]  ${email}  ${compName}  ${fName}  ${lName}
+    the user reads his email and clicks the link       ${email}    Invitation to contribute in ${compName}    You will be joining as part of the organisation    2
+    the user should see the element                    jQuery = h1:contains("Invitation to contribute")
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user should see the element                    jQuery = h1:contains("Confirm your organisation")
+    the user should see the element                    link = email the lead applicant
+    the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
+    the invited user fills the create account form     ${fName}  ${lName}
+    the user reads his email and clicks the link       ${email}    Please verify your email address    Once verified you can sign into your account
+    the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
+
+partner organisation accepts the invite to collaborate
+    [Arguments]  ${email}  ${compName}  ${businessTypeId}
+    the user reads his email and clicks the link  ${email}  Invitation to collaborate in ${compName}  You are invited by  2
+    The user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
+    The user should see the element               jQuery = h1:contains("Choose your organisation type")
+    The user completes the new account creation   ${email}  ${businessTypeId}
+    The user clicks the button/link               jQuery = .progress-list a:contains("Untitled application (start here)")
+    The user should not see an error in the page
+
+the applicant marks EDI question as complete
+    the user clicks the button/link     link = Equality, diversity and inclusion
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css = button[name=edit]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css = button[name=edit]  # the Edit link
+    the user clicks the button/link     jQuery = label:contains("Yes")
+    the user can mark the question as complete
+    the user should see the element     jQuery = li:contains("Equality, diversity and inclusion") > .task-status-complete
+
+the user uploads an appendix
+    [Arguments]  ${question_link}  ${appendix_file}
+    the user clicks the button/link                link = ${question_link}
+    the user clicks the button/link                id = edit
+    the user uploads the file                      css = .inputfile  ${appendix_file}
+    the user can mark the question as complete
+
+the user can reopen application
+    [Arguments]  ${application}
+    the user clicks the button/link     jQuery = li:contains("${application}") a:contains("Reopen")
+    the user clicks the button/link     css = input[type="submit"]
+    the user should see the element     jQuery = p:contains("${bannerMessageForLead}")
+    the user should see the element     link = review and submit
+
+lead assigns a question to partner organisation
+     [Arguments]  ${questionLink}
+     the user clicks the button/link       link = ${questionLink}
+     the user clicks the button/link       id = edit
+     the user clicks the button/link       link = Assign to someone else.
+     the user selects the radio button     assignee  assignee2
+     the user clicks the button/link       css = button[type="submit"]
+
+the user can mark the question as complete
+    the user clicks the button/link     id = application-question-complete
+    the user clicks the button/link     link = Back to application overview
+
+the user can submit the application
+    the user clicks the button/link         id = application-overview-submit-cta
+    the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
+    the user clicks the button/link         id = submit-application-button
+
+the lead invites already registered user
+    [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
+    the user fills in the inviting steps                     ${partner_email}
+    Logout as user
+    the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                        link = Continue
+    logging in and error checking                          &{collaborator1_credentials}
+    the user clicks the button/link                        css = .govuk-button[type="submit"]    #Save and continue
+    the user clicks the button/link                        link = Your project finances
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP finances as complete              ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
+    ...                                             AND    Log in as a different user                               &{ktpLeadApplicantCredentials}
+    ...  ELSE                              Run keywords    the user marks the finances as complete                  ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
+    ...                                             AND    Log in as a different user                               &{lead_applicant_credentials}
+    the user clicks the button/link                        link = ${application_title}
+    the applicant completes Application Team
+
+the user apply with a different organisation
+    [Arguments]  ${OrganisationType}
+    the user clicks the button/link       link = Apply with a different organisation
+    the user selects the radio button     organisationTypeId  ${OrganisationType}
+    the user clicks the button/link       jQuery = button:contains("Save and continue")
+
+the user creates an account and verifies email
+    [Arguments]   ${firstName}  ${lastName}  ${lead_email}  ${short_password}
+    the user enters the details and clicks the create account     ${firstName}  ${lastName}  ${lead_email}  ${short_password}
+    the user reads his email and clicks the link                  ${lead_email}   Please verify your email address   Once verified you can sign into your account
+    the user clicks the button/link                               link = Sign in
+
+the user sets max available funding
+    [Arguments]  ${amount}  ${compId}
+    ${id} =  User gets competition config id for max funding  ${compId}
+    User sets a max funding level for a competition           ${id}  ${amount}

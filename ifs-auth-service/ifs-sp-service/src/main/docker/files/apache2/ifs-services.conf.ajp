@@ -208,6 +208,22 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
+  <Location ~ "/project-setup/project/\d+/grants/invite/.*">
+    AuthType shibboleth
+    ShibRequireSession Off
+    ShibRequestSetting isPassive On
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
+  <Location ~ "/project-setup/project/\d+/grants/invite/accept-authenticated">
+    AuthType shibboleth
+    ShibRequireSession On
+    ShibRequestSetting isPassive Off
+    ShibRequestSetting applicationId default
+    require shibboleth
+  </Location>
+
   <Location /project-setup/registration/accept-invite-user-exist-confirm>
     AuthType shibboleth
     ShibRequireSession On
@@ -258,7 +274,6 @@ ShibCompatValidUser On
   ProxyPass /Logout !
 
   ProxyPass  /assessment/ ajp://assessment-svc:8009/assessment/ timeout=30 connectiontimeout=30 retry=2
-  ProxyPass  /competition/583/overview https://www.apply-for-innovation-funding.service.gov.uk/covid19/overview.html timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /survey/ ajp://survey-svc:8009/survey/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /management/ ajp://competition-mgt-svc:8009/management/ timeout=30 connectiontimeout=30 retry=2
   ProxyPass  /project-setup-management/ ajp://project-setup-mgt-svc:8009/project-setup-management/ timeout=30 connectiontimeout=30 retry=2

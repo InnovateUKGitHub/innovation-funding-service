@@ -192,6 +192,12 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionApplicationConfigId", referencedColumnName = "id")
+    private CompetitionApplicationConfig competitionApplicationConfig;
+
+    private boolean useDocusignForGrantOfferLetter;
+
     private boolean hasAssessmentStage = true;
 
     @Enumerated(EnumType.STRING)
@@ -231,6 +237,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
+            } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
+                return PREVIOUS;
             } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
             } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {
@@ -956,9 +964,28 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionOrganisationConfig = competitionOrganisationConfig;
     }
 
-    public boolean isHasAssessmentStage() {
-        return hasAssessmentStage && !isH2020();
+    public CompetitionApplicationConfig getCompetitionApplicationConfig() {
+        return competitionApplicationConfig;
     }
+
+    public void setCompetitionApplicationConfig(CompetitionApplicationConfig competitionApplicationConfig) {
+        this.competitionApplicationConfig = competitionApplicationConfig;
+    }
+
+    public boolean isUseDocusignForGrantOfferLetter() {
+        return useDocusignForGrantOfferLetter;
+    }
+
+    public void setUseDocusignForGrantOfferLetter(boolean useDocusignForGrantOfferLetter) {
+        this.useDocusignForGrantOfferLetter = useDocusignForGrantOfferLetter;
+    }
+
+    public boolean isHasAssessmentStage() {
+        return hasAssessmentStage && !isH2020() && (ofNullable(completionStage)
+                .map(stage -> !stage.equals(CompetitionCompletionStage.COMPETITION_CLOSE))
+                .orElse(true)) ;
+    }
+
 
     public void setHasAssessmentStage(boolean hasAssessmentStage) {
         this.hasAssessmentStage = hasAssessmentStage;

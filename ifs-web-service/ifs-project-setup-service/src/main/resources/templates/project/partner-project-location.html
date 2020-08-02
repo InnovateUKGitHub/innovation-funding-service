@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project location - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
@@ -16,11 +16,12 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title"  id="error-summary-title">We are unable to save your project location</h2>
+            <h2 class="govuk-error-summary__title"  id="error-summary-title">There is a problem</h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li th:each="err : ${#fields.errors('${form.*}')}">
-                        <a href="#postcode" th:text="${err}" class="govuk-link">The error message</a>
+                        <a th:if="${model.international}" href="#town" th:text="${err}" class="govuk-link">The error message</a>
+                        <a th:if="${!model.international}" href="#postcode" th:text="${err}" class="govuk-link">The error message</a>
                     </li>
                 </ul>
             </div>
@@ -29,10 +30,26 @@
         <p class="govuk-body">We will assign a Monitoring Officer who will visit your project location.</p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
-            <h2 class="govuk-heading-m">Project location</h2>
-
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'" >
-                <label class="govuk-label" for="postcode">
+            <div th:if="${model.international}" class="govuk-form-group" th:classappend="${#fields.hasErrors('town')} ? 'govuk-form-group--error'" >
+                <label class="govuk-label govuk-label--s" for="town">
+                    Town or city
+                </label>
+                <span class="govuk-hint">Please enter the town or city where most of the project work will take place.</span>
+                <th:block th:if="${#fields.hasErrors('town')}">
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('town')}" th:text="${err}" />
+                </th:block>
+                <input name="town"
+                       id="town"
+                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
+                       type="text"
+                       class="govuk-input govuk-input--width-10"
+                       required="required"
+                       th:value="${form.getTown() != null ? form.getTown() : NULL}"
+                       th:errorclass="govuk-input--error"
+                       th:field="*{town}" />
+            </div>
+            <div th:if="${!model.international}" class="govuk-form-group" th:classappend="${#fields.hasErrors('postcode')} ? 'govuk-form-group--error'" >
+                <label class="govuk-label govuk-label--s" for="postcode">
                     Postcode
                 </label>
                 <span class="govuk-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>

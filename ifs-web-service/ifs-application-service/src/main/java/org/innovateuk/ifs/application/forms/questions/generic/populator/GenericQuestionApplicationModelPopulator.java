@@ -3,23 +3,29 @@ package org.innovateuk.ifs.application.forms.questions.generic.populator;
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
+import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionAppendix;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel;
 import org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel.GenericQuestionApplicationViewModelBuilder;
 import org.innovateuk.ifs.application.populator.AssignButtonsPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.questions.generic.viewmodel.GenericQuestionApplicationViewModel.GenericQuestionApplicationViewModelBuilder.aGenericQuestionApplicationViewModel;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
@@ -41,6 +47,7 @@ public class GenericQuestionApplicationModelPopulator {
         GenericQuestionApplicationViewModelBuilder viewModelBuilder = aGenericQuestionApplicationViewModel();
 
         ofNullable(formInputs.get(FormInputType.TEXTAREA)).ifPresent(input -> buildTextAreaViewModel(viewModelBuilder, input));
+        ofNullable(formInputs.get(FormInputType.MULTIPLE_CHOICE)).ifPresent(input -> buildMultipleChoiceOptionsViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.FILEUPLOAD)).ifPresent(input -> buildAppendixViewModel(viewModelBuilder, input));
         ofNullable(formInputs.get(FormInputType.TEMPLATE_DOCUMENT)).ifPresent(input -> buildTemplateDocumentViewModel(viewModelBuilder, input));
 
@@ -74,14 +81,16 @@ public class GenericQuestionApplicationModelPopulator {
         viewModelBuilder.withTemplateDocumentFormInputId(input.getFormInput().getId())
                 .withTemplateDocumentTitle(input.getFormInput().getDescription())
                 .withTemplateDocumentFilename(input.getFormInput().getFile().getName())
-                .withTemplateDocumentResponseFilename(filenameResponseOrNull(input));
+                .withTemplateDocumentResponseFilename(firstFile(input).map(FileEntryResource::getName).orElse(null))
+                .withTemplateDocumentResponseFileEntryId(firstFile(input).map(FileEntryResource::getId).orElse(null));
     }
 
     private void buildAppendixViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
         viewModelBuilder.withAppendixFormInputId(input.getFormInput().getId())
                 .withAppendixGuidance(input.getFormInput().getGuidanceAnswer())
-                .withAppendixFilename(filenameResponseOrNull(input))
-                .withAppendixAllowedFileTypes(input.getFormInput().getAllowedFileTypes());
+                .withAppendices(appendices(input))
+                .withAppendixAllowedFileTypes(input.getFormInput().getAllowedFileTypes())
+                .withMaximumAppendices(input.getFormInput().getWordCount());
     }
 
     private void buildTextAreaViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
@@ -92,9 +101,33 @@ public class GenericQuestionApplicationModelPopulator {
                 .withWordsLeft(firstResponse(input).map(FormInputResponseResource::getWordCountLeft).orElse(input.getFormInput().getWordCount()));
     }
 
-    private String filenameResponseOrNull(ApplicantFormInputResource input) {
+    private void buildMultipleChoiceOptionsViewModel(GenericQuestionApplicationViewModelBuilder viewModelBuilder, ApplicantFormInputResource input) {
+        viewModelBuilder.withMultipleChoiceFormInputId(input.getFormInput().getId())
+                .withSelectedMultipleChoiceOption(multipleChoiceOptionResponseOrNull(input))
+                .withQuestionGuidanceTitle(input.getFormInput().getGuidanceTitle())
+                .withQuestionGuidance(input.getFormInput().getGuidanceAnswer())
+                .withMultipleChoiceOptions(input.getFormInput().getMultipleChoiceOptions());
+    }
+
+    private List<GenericQuestionAppendix> appendices(ApplicantFormInputResource input) {
         return firstResponse(input)
-                .map(FormInputResponseResource::getFilename)
+                .map(resp -> resp.getFileEntries()
+                        .stream()
+                        .map(file -> new GenericQuestionAppendix(file.getId(), file.getName()))
+                        .collect(toList()))
+                .orElse(emptyList());
+
+    }
+
+    private Optional<FileEntryResource> firstFile(ApplicantFormInputResource input) {
+        return firstResponse(input)
+                .flatMap(resp -> resp.getFileEntries().stream().findFirst());
+    }
+
+    private MultipleChoiceOptionResource multipleChoiceOptionResponseOrNull(ApplicantFormInputResource input) {
+        return firstResponse(input)
+                .map(formInputResponse -> new MultipleChoiceOptionResource(formInputResponse.getMultipleChoiceOptionId(),
+                        formInputResponse.getMultipleChoiceOptionText()))
                 .orElse(null);
     }
 
@@ -104,5 +137,4 @@ public class GenericQuestionApplicationModelPopulator {
                 .findAny() //Generic questions only have one respsonse.
                 .map(ApplicantFormInputResponseResource::getResponse);
     }
-
 }

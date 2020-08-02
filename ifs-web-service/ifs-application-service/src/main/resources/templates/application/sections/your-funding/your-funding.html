@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block
         th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
@@ -94,7 +94,7 @@
                     </a>
                     <button type="submit" th:unless="${model.readOnly}"
                             class="govuk-!-margin-top-6 govuk-button">
-                        Save and return to finances
+                        Save and return to project finances
                     </button>
                 </div>
             </form>

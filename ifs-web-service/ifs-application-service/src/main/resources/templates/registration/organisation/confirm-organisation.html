@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application - Confirm your organisation '" />
 </head>
@@ -10,19 +10,45 @@
 
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/find-organisation/',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/find-organisation',currentApplication=${currentApplication},dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle=${subtitle},size='govuk-heading-xl'" />
 
-        <div class="message-alert govuk-!-margin-bottom-6">
-            <p class="govuk-body">Your organisation must be UK based to receive funding from Innovate UK.</p>
-        </div>
-
         <p th:if="${isLeadApplicant}" class="govuk-body govuk-!-margin-top-6">This organisation will lead the application.</p>
         <p th:unless="${isLeadApplicant}" class="govuk-body govuk-!-margin-top-6">This is the organisation that you will join the <th:block th:text="${isApplicantJourney ? 'application' :  'project'}">application</th:block> with.</p>
 
-        <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
+        <dl class="govuk-list readonly-data">
+            <dt>Organisation type</dt>
+            <dd th:text="${organisationType.name}">Business</dd>
+
+            <th:block th:if="${includeInternationalQuestion}">
+                <dt>Is your organisation based in the UK?</dt>
+                <dd>Yes</dd>
+            </th:block>
+
+            <dt>Organisation name</dt>
+            <dd th:text="${organisationForm.organisationName}">name</dd>
+
+            <th:block th:unless="${organisationForm.research}">
+                <th:block th:if="${selectedOrganisation?.organisationSearchId}">
+                    <dt>Registration number</dt>
+                    <dd th:text="${selectedOrganisation?.organisationSearchId}"></dd>
+                </th:block>
+            </th:block>
+
+            <th:block th:if="${selectedOrganisation?.organisationAddress != null}">
+                <dt>Address</dt>
+                <dd>
+                    <div th:text="${selectedOrganisation?.organisationAddress?.addressLine1}"></div>
+                    <div th:text="${selectedOrganisation?.organisationAddress?.addressLine2}"></div>
+                    <div th:text="${selectedOrganisation?.organisationAddress?.addressLine3}"></div>
+                    <div th:text="${selectedOrganisation?.organisationAddress?.town}"></div>
+                    <div th:text="${selectedOrganisation?.organisationAddress?.county}"></div>
+                    <div th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
+                </dd>
+            </th:block>
+        </dl>
 
         <form method="post" th:action="@{/organisation/create/save-organisation}">
             <button name="save-organisation" class="govuk-button govuk-!-margin-top-6">Save and continue</button>

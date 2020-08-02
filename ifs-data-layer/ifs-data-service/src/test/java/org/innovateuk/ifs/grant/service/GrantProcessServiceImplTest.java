@@ -154,6 +154,34 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
         }));
     }
 
+    @Test
+    public void getByApplicationIdNotPresent() {
+        // given
+        long applicationId = 7L;
+        when(grantProcessRepository.findOneByApplicationId(applicationId)).thenReturn(null);
+
+        // when
+        Optional<GrantProcess> result = service.findByApplicationId(applicationId);
+
+        // then
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void getByApplicationIdPresent() {
+        // given
+        long applicationId = 7L;
+        GrantProcess grantProcess = new GrantProcess(applicationId);
+        when(grantProcessRepository.findOneByApplicationId(applicationId)).thenReturn(grantProcess);
+
+        // when
+        Optional<GrantProcess> result = service.findByApplicationId(applicationId);
+
+        // then
+        assertTrue(result.isPresent());
+        assertEquals(grantProcess, result.get());
+    }
+
     private GrantProcessConfiguration createGrantProcessConfiguration(Competition competition, boolean sendToAcc) {
         GrantProcessConfiguration grantProcessConfiguration = new GrantProcessConfiguration();
         grantProcessConfiguration.setCompetition(competition);

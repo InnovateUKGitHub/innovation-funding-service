@@ -52,7 +52,6 @@
     }
 
     float: left;
-    padding-right: 19px;
     vertical-align: top;
     flex: 1 0 auto;
 
@@ -105,8 +104,8 @@
     margin: 0;
   }
 
-  .action {
-    margin-right: 30px;
+  .reopen-application-link {
+    font-size: 16px;
   }
 
   .status-msg {
@@ -138,6 +137,7 @@
       color: $govuk-text-colour;
       font-weight: bold;
       float: right;
+      text-align: right;
     }
 
     &.msg-positive {
@@ -271,17 +271,34 @@
   /*-------- SETTING WIDTHS OF TASK AND STATUS -------------*/
 
   .task{
-    width: 78%;
+    width: 75%;
   }
 
-  .status,
-  .status-and-action {
+  .status {
     @include media-down(mobile) {
       flex: 1 0 auto;
     }
 
-    width: 19%;
+    width: 25%;
   }
+
+  .status-and-action {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+
+    p {
+      &.msg-progress {
+        width: auto;
+        padding: 0;
+      }
+    }
+
+    .action {
+      align-self: flex-end;
+    }
+  }
+
 
   .status-msg{
     width: 100%;
@@ -294,7 +311,7 @@
     }
 
     .status{
-      width: 39%;
+      width: 42%;
     }
 
     .status-msg{

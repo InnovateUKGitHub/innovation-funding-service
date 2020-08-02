@@ -164,6 +164,12 @@ get next year
     ${year} =    get time    year    NOW + 370d
     [Return]    ${year}
 
+get next year in two digits
+    ${year} =    get time
+    ${yearintwodigits} =    Add time To Date   ${year}  370d     result_format=%y
+    # This format is like 21 instead of 2021
+    [Return]    ${yearintwodigits}
+
 get user id from user email
     [Arguments]  ${name}
     ${id}  get table id by email  user  ${name}
@@ -229,17 +235,43 @@ Set predefined date variables
     Run Keyword If  '${status}' == 'FAIL'  Set global date variables
 
 Set global date variables
-    ${month} =          get tomorrow month
+    ${month} =      get tomorrow month
     set global variable  ${month}
-    ${nextMonth} =  get next month
+    ${nextMonth} =      get next month
     set global variable  ${nextMonth}
     ${nextyear} =       get next year
     Set global variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
+    ${tomorrowday} =        get tomorrow day
     Set global variable  ${tomorrowday}
     ${monthWord} =      get month as word
     set global variable  ${monthWord}
+    ${nextyearintwodigits}=     get next year in two digits
+    set global variable  ${nextyearintwodigits}
+    ${tomorrowMonthWord} =      get tomorrow month as word
+    set global variable  ${tomorrowMonthWord}
 
 Delete user from terms and conditions database
     [Arguments]    ${user_id}
     execute sql string  DELETE FROM `${database_name}`.`user_terms_and_conditions` WHERE `user_id`='${user_id}';
+
+User sets organisation to international
+    [Arguments]     ${organisation_name}
+    ${organisationID} =     get organisation id by name     ${organisation_name}
+    execute sql string  UPDATE `organisation` SET `international`=1 WHERE `id`='${organisationID}';
+
+User sets organisation to uk based
+    [Arguments]     ${organisation_name}
+    ${organisationID} =     get organisation id by name     ${organisation_name}
+    execute sql string  UPDATE `organisation` SET `international`=0 WHERE `id`='${organisationID}';
+
+User gets competition config id for max funding
+    [Arguments]     ${comp_id}
+    ${result} =  query  SELECT `competition_application_config_id` FROM `${database_name}`.`competition` WHERE `id`="${comp_id}";
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
+
+User sets a max funding level for a competition
+    [Arguments]     ${id}  ${max_funding}
+    execute sql string  UPDATE `${database_name}`.`competition_application_config` SET `maximum_funding_sought`='${max_funding}' WHERE `id`='${id}';
+

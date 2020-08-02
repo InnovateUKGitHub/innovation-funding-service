@@ -4,9 +4,11 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.repository.ApplicationOrganisationAddressRepository;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -30,7 +32,9 @@ import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -55,10 +59,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationOrganisationAddressBuilder.newApplicationOrganisationAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
@@ -77,15 +84,14 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
+import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
@@ -128,12 +134,18 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Mock
     private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
+    @Mock
+    private OrganisationAddressRepository organisationAddressRepository;
+
+    @Mock
+    private ApplicationOrganisationAddressRepository applicationOrganisationAddressRepository;
+
     private FormInput formInput;
     private FormInputType formInputType;
     private Question question;
     private FileEntryResource fileEntryResource;
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
-    private FileEntry existingFileEntry;
+    private List<FileEntry> existingFileEntry;
     private FormInputResponse existingFormInputResponse;
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
@@ -166,12 +178,12 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         question.setFormInputs(singletonList(formInput));
 
         fileEntryResource = newFileEntryResource().with(id(999L)).build();
-        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, 111L);
 
-        existingFileEntry = newFileEntry().with(id(999L)).build();
-        existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        existingFileEntry = singletonList(newFileEntry().with(id(999L)).build());
+        existingFormInputResponse = newFormInputResponse().withFileEntries(existingFileEntry).build();
         existingFormInputResponses = singletonList(existingFormInputResponse);
-        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntries(null).build();
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
@@ -604,5 +616,52 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         verify(applicationRepositoryMock, only()).findById(application.getId());
         verify(competitionMapperMock, only()).mapToResource(competition);
+    }
+
+    @Test
+    public void linkAddressesToOrganisation_FirstApplicationAddress() {
+        Organisation organisation = newOrganisation()
+                .withInternational(true)
+                .build();
+        Application application = newApplication().build();
+        OrganisationAddress organisationAddress = newOrganisationAddress()
+                .withApplicationAddresses(emptyList())
+                .build();
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId())).thenReturn(Optional.of(organisationAddress));
+
+        ServiceResult<Void> result = service.linkAddressesToOrganisation(organisation.getId(), application.getId());
+
+        assertTrue(result.isSuccess());
+
+        ApplicationOrganisationAddress applicationOrganisationAddress = new ApplicationOrganisationAddress(organisationAddress, application);
+        verify(applicationOrganisationAddressRepository).save(applicationOrganisationAddress);
+    }
+
+    @Test
+    public void linkAddressesToOrganisation_AlreadyLinkedToApplication() {
+        Organisation organisation = newOrganisation()
+                .withInternational(true)
+                .build();
+        Application application = newApplication().build();
+        OrganisationAddress organisationAddress = newOrganisationAddress()
+                .withApplicationAddresses(newApplicationOrganisationAddress().build(1))
+                .withAddress(newAddress().build())
+                .build();
+        when(applicationRepositoryMock.findById(application.getId())).thenReturn(Optional.of(application));
+        when(organisationRepositoryMock.findById(organisation.getId())).thenReturn(Optional.of(organisation));
+        when(organisationAddressRepository.findFirstByOrganisationIdAndAddressTypeIdOrderByModifiedOnDesc(organisation.getId(), INTERNATIONAL.getId())).thenReturn(Optional.of(organisationAddress));
+        when(organisationAddressRepository.save(any())).thenAnswer((invocation) -> invocation.getArgument(0));
+
+        ServiceResult<Void> result = service.linkAddressesToOrganisation(organisation.getId(), application.getId());
+
+        assertTrue(result.isSuccess());
+
+        verify(applicationOrganisationAddressRepository).save(createLambdaMatcher(applicationOrganisationAddress -> {
+            //Assert these are new objects to be copied into new row.
+            assertNotSame(applicationOrganisationAddress.getOrganisationAddress(), organisationAddress);
+            assertNotSame(applicationOrganisationAddress.getOrganisationAddress().getAddress(), organisationAddress.getAddress());
+        }));
     }
 }

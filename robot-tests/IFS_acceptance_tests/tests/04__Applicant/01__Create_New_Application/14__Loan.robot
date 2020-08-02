@@ -33,19 +33,20 @@ Resource        ../../../resources/common/Applicant_Commons.robot
 Resource        ../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${loan_comp_PS}              Project setup loan comp
-${loan_comp_PS_Id}           ${competition_ids["${loan_comp_PS}"]}
-${loan_PS_application1}      Loan Project 1
-${loan_PS_application2}      Loan Project 2
-${loan_PS_application_Id}    ${application_ids["${loan_PS_application1}"]}
-${loan_PS_project_Id}        ${project_ids["${loan_PS_application1}"]}
-${loan_PS_project_Id2}       ${project_ids["${loan_PS_application2}"]}
-${loan_PS}                   ${server}/project-setup/project/${loan_PS_project_Id}
-${loan_PS_Url}               ${loan_PS}/details
-${loan_finance_checks}       ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
-${eligibility_changes}       ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
-${spend_profile}             ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
-
+${loan_comp_PS}                            Project setup loan comp
+${loan_comp_PS_Id}                         ${competition_ids["${loan_comp_PS}"]}
+${loan_comp_application}                   Loan Competition
+${loan_comp_appl_id}                       ${competition_ids["${loan_comp_application}"]}
+${loan_PS_application1}                    Loan Project 1
+${loan_PS_application2}                    Loan Project 2
+${loan_PS_application_Id}                  ${application_ids["${loan_PS_application1}"]}
+${loan_PS_project_Id}                      ${project_ids["${loan_PS_application1}"]}
+${loan_PS_project_Id2}                     ${project_ids["${loan_PS_application2}"]}
+${loan_PS}                                 ${server}/project-setup/project/${loan_PS_project_Id}
+${loan_PS_Url}                             ${loan_PS}/details
+${loan_finance_checks}                     ${server}/project-setup-management/project/${loan_PS_project_Id}/finance-check
+${eligibility_changes}                     ${loan_finance_checks}/organisation/${EMPIRE_LTD_ID}/eligibility/changes
+${spend_profile}                           ${server}/project-setup-management/project/${loan_PS_project_Id}/spend-profile/approval
 *** Test Cases ***
 Loan application shows correct T&C's
     [Documentation]    IFS-6205
@@ -53,6 +54,12 @@ Loan application shows correct T&C's
     And the user should see the element     jQuery = h1:contains("Loans terms and conditions")
     When the user clicks the button/link    link = Back to application overview
     Then the user should see the element    jQuery = li:contains("Award terms and conditions") .task-status-complete
+
+Max funding sought validation
+    [Documentation]  IFS-7866
+    Given the user sets max available funding              60000  ${loan_comp_appl_id}
+    When the user enters a value over the max funding
+    Then the user should see a field and summary error     Your funding sought exceeds £60,000. You must lower your funding level percentage or your project costs.
 
 Loan application Your funding
     [Documentation]  IFS-6207
@@ -96,13 +103,13 @@ Funding sought validations
     [Documentation]  IFS-6293
     Given the user selects to change funding sought
     When the user enters text to a text field           id = partners[${EMPIRE_LTD_ID}].funding  ${EMPTY}
-    And the user clicks the button/link                 jQuery = button:contains("Save and return to finances")
+    And the user clicks the button/link                 jQuery = button:contains("Save and return to project finances")
     Then the user should see a field and summary error  Enter the amount of funding sought.
 
 Found sought changes
     [Documentation]  IFS-6293  IFS-6298
     Given the user enters text to a text field   id = partners[${EMPIRE_LTD_ID}].funding  6000
-    When the user clicks the button/link         jQuery = button:contains("Save and return to finances")
+    When the user clicks the button/link         jQuery = button:contains("Save and return to project finances")
     Then the user should see the element         jQuery = h3:contains("Finances summary") ~ div td:contains("£200,903") ~ td:contains("4.21%") ~ td:contains("6,000") ~ td:contains("2,468") ~ td:contains("192,435")
     And the internal user should see the funding changes
     And the external user should see the funding changes
@@ -145,14 +152,13 @@ Applicant checks successful and unsuccessful project status
 Custom suite setup
     the user logs-in in new browser       &{lead_applicant_credentials}
     the user clicks the button/link       link = Loan Application
+    Connect to database  @{database}
 
 Custom suite teardown
     The user closes the browser
+    Disconnect from database
 
 the user enters empty funding amount
-    the user clicks the button/link                link = Your project finances
-    the user clicks the button/link                link = Your funding
-    the user clicks the button/link                jQuery = button:contains("Edit your funding")
     the user enters text to a text field           id = amount  ${EMPTY}
     the user clicks the button/link                id = mark-all-as-complete
     the user should see a field and summary error  Enter the amount of funding sought.
@@ -160,8 +166,8 @@ the user enters empty funding amount
 the user submits the loan application
     the user clicks the button/link           link = Application overview
     the user clicks the button/link           link = Review and submit
-    the user clicks the button/link           id = submit-application-button-modal
-    the user clicks the button/link           jQuery = button:contains("Yes, I want to submit my application")
+    the user clicks the button/link           id = submit-application-button
+    the user should see the element           link = Reopen application
 
 the user completes the project details
     log in as a different user            &{lead_applicant_credentials}
@@ -295,3 +301,10 @@ the user should see the finished finance checks
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
     the user clicks the button/link   link = finances.
     the user should see the element   jQuery = .message-alert p:contains("We have finished checking your finances.")
+
+the user enters a value over the max funding
+    the user clicks the button/link                link = Your project finances
+    the user clicks the button/link                link = Your funding
+    the user clicks the button/link                jQuery = button:contains("Edit your funding")
+    the user enters text to a text field           id = amount  65000
+    the user clicks the button/link                id = mark-all-as-complete

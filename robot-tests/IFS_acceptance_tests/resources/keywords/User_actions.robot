@@ -119,9 +119,9 @@ the user should see that the element is disabled
 
 The user fills the empty question fields
     The user enters text to a text field    id=question.title    Test title
-    The user enters text to a text field    id=question.subTitle    Subtitle test
+    The user enters text to a text field    jQuery = label:contains("Question subtitle") + div .editor    Subtitle test
     The user enters text to a text field    id=question.guidanceTitle    Test guidance title
-    The user enters text to a text field    css=.editor    Guidance text test
+    The user enters text to a text field    jQuery = label:contains("Question guidance") + div .editor    Guidance text test
     The user enters text to a text field    id=question.maxWords    150
 
 The user fills the empty assessment fields
@@ -174,7 +174,6 @@ the internal user navigates to the project setup competition
     \  run keyword if  '${status}'=='FAIL'  the user clicks the button/link  jQuery=button:contains("Next")
     \  ${i} =  Set Variable  ${i + 1}
     the user clicks the button/link       link=${comp_name}
-
 
 
 

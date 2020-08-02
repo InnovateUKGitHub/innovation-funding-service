@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -67,21 +68,22 @@ public class FinanceChecksGenerator {
     @Autowired
     private GrowthTableRepository growthTableRepository;
 
+    @Autowired
+    private KtpFinancialYearsRepository ktpFinancialYearsRepository;
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
         return serviceSuccess();
     }
 
-    public ServiceResult<Void> createFinanceChecksFigures(Project newProject, Organisation organisation) {
-        copyFinanceChecksFromApplicationFinances(newProject, organisation);
-        return serviceSuccess();
+    public ServiceResult<ProjectFinance> createFinanceChecksFigures(Project newProject, Organisation organisation) {
+        return copyFinanceChecksFromApplicationFinances(newProject, organisation);
     }
 
-    private void copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
-
+    private ServiceResult<ProjectFinance> copyFinanceChecksFromApplicationFinances(Project newProject, Organisation organisation) {
         ApplicationFinance applicationFinanceForOrganisation =
-                applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId());
+                applicationFinanceRepository.findByApplicationIdAndOrganisationId(newProject.getApplication().getId(), organisation.getId()).get();
 
         EmployeesAndTurnover employeesAndTurnover = applicationFinanceForOrganisation.getEmployeesAndTurnover();
         if (employeesAndTurnover != null) {
@@ -91,7 +93,11 @@ public class FinanceChecksGenerator {
         if (growthTable != null) {
             growthTable = growthTableRepository.save(new GrowthTable(growthTable));
         }
-        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover);
+        KtpFinancialYears ktpFinancialYears = applicationFinanceForOrganisation.getKtpFinancialYears();
+        if (ktpFinancialYears != null) {
+            ktpFinancialYears = ktpFinancialYearsRepository.save(new KtpFinancialYears(ktpFinancialYears));
+        }
+        ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject, growthTable, employeesAndTurnover, ktpFinancialYears);
 
         CompetitionResource competition = competitionService.getCompetitionById(applicationFinanceForOrganisation.getApplication().getCompetition().getId()).getSuccess();
 
@@ -129,6 +135,7 @@ public class FinanceChecksGenerator {
                 financeRowMetaValueRepository.save(metaValue);
             });
         });
+        return serviceSuccess(projectFinance);
     }
 
     private FinanceCheck createMvpFinanceCheckEmptyCosts(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
@@ -154,8 +161,8 @@ public class FinanceChecksGenerator {
         Organisation organisation = financeCheck.getOrganisation();
         Application application = financeCheck.getProject().getApplication();
         if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
-            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-            List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.getId());
+            Optional<ApplicationFinance> applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.get().getId());
             financeCheck.getCostGroup().getCosts().forEach(
                     c -> c.setValue(AcademicCostCategoryGenerator.findCost(c.getCostCategory(), financeRows))
             );

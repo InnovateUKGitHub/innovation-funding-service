@@ -9,16 +9,16 @@ import org.innovateuk.ifs.grants.domain.GrantsInvite;
 import org.innovateuk.ifs.grants.domain.GrantsMonitoringOfficerInvite;
 import org.innovateuk.ifs.grants.domain.GrantsProjectManagerInvite;
 import org.innovateuk.ifs.grants.repository.GrantsFinanceContactInviteRepository;
+import org.innovateuk.ifs.grants.repository.GrantsInviteRepository;
 import org.innovateuk.ifs.grants.repository.GrantsMonitoringOfficerInviteRepository;
 import org.innovateuk.ifs.grants.repository.GrantsProjectManagerInviteRepository;
 import org.innovateuk.ifs.grants.transactional.GrantsInviteService;
 import org.innovateuk.ifs.grants.transactional.GrantsInviteServiceImpl;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -33,9 +33,7 @@ import java.util.Optional;
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
-import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
+import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.project.core.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -75,13 +73,17 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
     @Mock
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    @Mock
+    private OrganisationRepository organisationRepository;
+
+    @Mock
+    private GrantsInviteRepository grantsInviteRepository;
+
     private long projectId = 1L;
 
     private Organisation organisation;
     private Application application;
     private Project project;
-    private ApplicationInvite applicationInvite;
-    private InviteOrganisation inviteOrganisation;
     private GrantsInvite grantsInvite;
 
 
@@ -96,30 +98,25 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
                         .withLeadOrganisation(true)
                         .build()))
                 .build();
-        applicationInvite = newApplicationInvite().withApplication(application).build();
-        inviteOrganisation = newInviteOrganisation()
-                .withOrganisation(organisation)
-                .withOrganisationName(organisation.getName())
-                .withInvites(singletonList(applicationInvite))
-                .build();
-        grantsInvite = new GrantsInvite("Mr.Fly", "test@email.com", "hask3456jk", inviteOrganisation, project, CREATED);
+        grantsInvite = new GrantsInvite("Mr.Fly", "test@email.com", "hask3456jk", organisation, project, CREATED);
     }
 
     @Test
     public void sendInviteGrantsProjectManager() {
-        GrantsInviteResource invite = new GrantsInviteResource(grantsInvite.getInviteOrganisation().getOrganisationName(),
+        GrantsInviteResource invite = new GrantsInviteResource(organisation.getId(),
                 grantsInvite.getName(),
                 grantsInvite.getEmail(),
                 GRANTS_PROJECT_MANAGER);
         GrantsProjectManagerInvite grantsProjectManagerInvite = new GrantsProjectManagerInvite(grantsInvite.getName(),
                 grantsInvite.getEmail(),
                 grantsInvite.getHash(),
-                grantsInvite.getInviteOrganisation(),
+                grantsInvite.getOrganisation(),
                 grantsInvite.getProject(),
                 grantsInvite.getStatus());
 
+        when(grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())).thenReturn(false);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(inviteOrganisationRepository.save(inviteOrganisation)).thenReturn(inviteOrganisation);
+        when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(grantsProjectManagerInviteRepository.save(grantsProjectManagerInvite)).thenReturn(grantsProjectManagerInvite);
         when(notificationService.sendNotificationWithFlush(any(), any())).thenReturn(serviceSuccess());
         when(loggedInUserSupplier.get()).thenReturn(newUser().build());
@@ -131,19 +128,20 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
 
     @Test
     public void sendInviteGrantsProjectFinanceContact() {
-        GrantsInviteResource invite = new GrantsInviteResource(grantsInvite.getInviteOrganisation().getOrganisationName(),
+        GrantsInviteResource invite = new GrantsInviteResource(organisation.getId(),
                 grantsInvite.getName(),
                 grantsInvite.getEmail(),
-                GRANTS_PROJECT_MANAGER);
+                GRANTS_PROJECT_FINANCE_CONTACT);
         GrantsFinanceContactInvite grantsFinanceContactInvite = new GrantsFinanceContactInvite(grantsInvite.getName(),
                 grantsInvite.getEmail(),
                 grantsInvite.getHash(),
-                grantsInvite.getInviteOrganisation(),
+                grantsInvite.getOrganisation(),
                 grantsInvite.getProject(),
                 grantsInvite.getStatus());
 
+        when(grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())).thenReturn(false);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(inviteOrganisationRepository.save(inviteOrganisation)).thenReturn(inviteOrganisation);
+        when(organisationRepository.findById(organisation.getId())).thenReturn(Optional.of(organisation));
         when(grantsFinanceContactInviteRepository.save(grantsFinanceContactInvite)).thenReturn(grantsFinanceContactInvite);
         when(notificationService.sendNotificationWithFlush(any(), any())).thenReturn(serviceSuccess());
         when(loggedInUserSupplier.get()).thenReturn(newUser().build());
@@ -155,18 +153,18 @@ public class GrantsInviteServiceImplTest extends BaseServiceUnitTest<GrantsInvit
 
     @Test
     public void sendInviteGrantsProjectMonitoringOfficer() {
-        GrantsInviteResource invite = new GrantsInviteResource(grantsInvite.getInviteOrganisation().getOrganisationName(),
+        GrantsInviteResource invite = new GrantsInviteResource(null,
                 grantsInvite.getName(),
                 grantsInvite.getEmail(),
-                GRANTS_PROJECT_MANAGER);
+                GRANTS_MONITORING_OFFICER);
         GrantsMonitoringOfficerInvite grantsMonitoringOfficerInvite = new GrantsMonitoringOfficerInvite(grantsInvite.getName(),
                 grantsInvite.getEmail(),
                 grantsInvite.getHash(),
                 grantsInvite.getProject(),
                 grantsInvite.getStatus());
 
+        when(grantsInviteRepository.existsByProjectIdAndEmail(projectId, invite.getEmail())).thenReturn(false);
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-        when(inviteOrganisationRepository.save(inviteOrganisation)).thenReturn(inviteOrganisation);
         when(grantsMonitoringOfficerInviteRepository.save(grantsMonitoringOfficerInvite)).thenReturn(grantsMonitoringOfficerInvite);
         when(notificationService.sendNotificationWithFlush(any(), any())).thenReturn(serviceSuccess());
         when(loggedInUserSupplier.get()).thenReturn(newUser().build());

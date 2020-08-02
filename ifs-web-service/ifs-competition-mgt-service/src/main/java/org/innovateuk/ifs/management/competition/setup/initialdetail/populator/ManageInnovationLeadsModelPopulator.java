@@ -1,45 +1,30 @@
 package org.innovateuk.ifs.management.competition.setup.initialdetail.populator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupInnovationLeadRestService;
 import org.innovateuk.ifs.management.competition.setup.initialdetail.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserRestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
-
 @Service
 public class ManageInnovationLeadsModelPopulator {
 
-    private CompetitionRestService competitionRestService;
-    private UserRestService userRestService;
-
-    public ManageInnovationLeadsModelPopulator(CompetitionRestService competitionRestService,
-                                               UserRestService userRestService) {
-        this.competitionRestService = competitionRestService;
-        this.userRestService = userRestService;
-    }
+    @Autowired
+    private CompetitionSetupInnovationLeadRestService competitionSetupInnovationLeadRestService;
 
     public ManageInnovationLeadsViewModel populateModel(CompetitionResource competition) {
-
-        List<UserResource> availableInnovationLeads = userRestService.findByUserRole(INNOVATION_LEAD).getSuccess();
-        List<UserResource> innovationLeadsAssignedToCompetition = competitionRestService.findInnovationLeads(competition.getId()).getSuccess();
-        availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
-
-        UserResource leadTechnologistAssignedToCompetition = userRestService.retrieveUserById(competition.getLeadTechnologist()).getSuccess();
-        availableInnovationLeads.remove(leadTechnologistAssignedToCompetition);
-        innovationLeadsAssignedToCompetition.remove(leadTechnologistAssignedToCompetition);
+        List<UserResource> availableInnovationLeadsNotAssignedToCompetition = competitionSetupInnovationLeadRestService.findAvailableInnovationLeadsNotAssignedToCompetition(competition.getId()).getSuccess();
+        List<UserResource> innovationLeadsAssignedToCompetition = competitionSetupInnovationLeadRestService.findInnovationLeadsAssignedToCompetition(competition.getId()).getSuccess();
 
         return new ManageInnovationLeadsViewModel(competition.getId(), competition.getName(),
                 competition.getLeadTechnologistName(), competition.getExecutiveName(), competition.getInnovationSectorName(),
-                competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
-                sortByName(availableInnovationLeads));
-
+                competition.getInnovationAreaNames(), sortByName(availableInnovationLeadsNotAssignedToCompetition),
+                sortByName(innovationLeadsAssignedToCompetition));
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {

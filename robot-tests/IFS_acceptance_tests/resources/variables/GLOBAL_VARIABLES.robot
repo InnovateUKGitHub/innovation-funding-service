@@ -50,6 +50,16 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
+${ktpCompetitionName}     KTP Competition
+
+
+${ukLeadInternationalCompetition}                        UK based Lead International Competition
+${internationalLeadInternationalCompetition}             International Lead International Competition
+${openCompetitionPerformance_name}                       Performance testing competition
+${openCompetitionPerformance}                            ${competition_ids['${openCompetitionPerformance_name}']}
+${projectEligibilityLink}                                Project eligibility
+${organisationalEligibilityTitle}                        Organisational eligibility
+
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 
@@ -70,8 +80,9 @@ ${OPEN_COMPETITION_APPLICATION_6_NUMBER}  ${application_ids['${OPEN_COMPETITION_
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
 
-${createApplicationOpenCompetition}             Home and industrial efficiency programme
-${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetition}                  Home and industrial efficiency programme
+${createApplicationOpenCompetitionId}                ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenInternationalCompetition}     International Competition
 ${createApplicationOpenCompetitionApplication1Name}  Networking home IOT devices
 ${createApplicationOpenCompetitionApplication1Number}  ${application_ids['${createApplicationOpenCompetitionApplication1Name}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
@@ -137,6 +148,7 @@ ${NON_IFS_COMPETITION}          ${competition_ids['${NON_IFS_COMPETITION_NAME}']
 ${DASHBOARD_SELECTION_PAGE_TITLE}  Dashboard
 
 ${APPLICANT_DASHBOARD_URL}    ${SERVER}/applicant/dashboard
+${APPLICANT_ADDITIONAL_FUNDING_QUERIES_URL}   ${SERVER}/covid-19/questionnaire
 ${APPLICANT_DASHBOARD_TITLE}  Applications
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
@@ -175,6 +187,7 @@ ${LARGE_ORGANISATION_SIZE}     LARGE
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
+${gol_pdf}        GOL_template.pdf
 ${5mb_pdf}        testing_5MB.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
@@ -243,23 +256,26 @@ ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}  ${getSimpleMile
 ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables
-${EMPIRE_LTD_NAME}         Empire Ltd
-${EMPIRE_LTD_ID}            ${organisation_ids["${EMPIRE_LTD_NAME}"]}
-${organisationLudlowName}   Ludlow
-${organisationLudlowId}     ${organisation_ids["${organisationLudlowName}"]}
-${organisationEggsName}     EGGS
-${organisationEggsId}       ${organisation_ids["${organisationEggsName}"]}
-${organisationRedName}      Red Planet
-${organisationRedId}        ${organisation_ids["${organisationRedName}"]}
-${organisationSmithName}    SmithZone
-${organisationSmithId}      ${organisation_ids["${organisationSmithName}"]}
-
+${EMPIRE_LTD_NAME}                    Empire Ltd
+${EMPIRE_LTD_ID}                      ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}             Ludlow
+${organisationLudlowId}               ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}               EGGS
+${organisationEggsId}                 ${organisation_ids["${organisationEggsName}"]}
+${organisationRedName}                Red Planet
+${organisationRedId}                  ${organisation_ids["${organisationRedName}"]}
+${organisationSmithName}              SmithZone
+${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
+${organisationWardName}               Ward Ltd
+${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
+${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1
 ${ACADEMIC_TYPE_ID}       2
 ${RTO_TYPE_ID}            3
 ${PUBLIC_SECTOR_TYPE_ID}  4
+${KTP_TYPE_ID}            5
 
 # Competition template type
 ${compType_Programme}  Programme
@@ -271,12 +287,20 @@ ${compType_ATI}        Aerospace Technology Institute
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
-@{milestones}             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
-@{programme_questions}    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
-@{sector_questions}       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
-@{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
-@{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{project_details}        Project summary  Public description  Scope
+@{milestones}                             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
+@{programme_questions}                    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
+@{programme_questions_procurement_ati}    Business opportunity  Potential market  Project exploitation  Economic benefit  Innovation  Risks  Funding  Adding value
+@{other_questions_procurement_ati}        Technical approach  Project team
+@{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
+@{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
+@{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
+@{project_details}                        Project summary  Public description  Scope
+
+#SBRI Type 1 competition milestones
+@{sbriType1Milestones}     Open date  Briefing event  Submission date
+
+#answer choices in application questions while creating a competition
+@{multiple_answer_choice}     answer2  answer3  answer4  answer5  answer6  answer7  answer8  answer9  answer10
 
 #Project Setup
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy

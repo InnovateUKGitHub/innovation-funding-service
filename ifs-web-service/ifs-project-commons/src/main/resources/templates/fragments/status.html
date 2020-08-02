@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="status-table(model)">
     <th:block th:if="${#lists.isEmpty(model.rows) && param.applicationSearchString == null}">
@@ -51,6 +51,10 @@
                             <th:block th:text="${'Lead: '+row.projectLeadOrganisationName}" />
                             <a th:unless="${model.externalFinanceUser}" th:href="@{~/project-setup-management/competition/{competitionId}/project/{projectId}/activity-log(competitionId=${row.competitionId},projectId=${row.projectId})}"
                             class="govuk-link">View activity log</a>
+                        </small>
+                        <small th:if="${model.isProjectFinanceUser() && row.grantOfferLetterComplete && row.sentToIfsPa}">
+                            <p><a th:href="@{~/project-setup-management/project/{projectId}/grants/invite(projectId=${row.projectId})}"
+                                  class="govuk-link">Manage invitations to external users</a></p>
                         </small>
                     </th>
 

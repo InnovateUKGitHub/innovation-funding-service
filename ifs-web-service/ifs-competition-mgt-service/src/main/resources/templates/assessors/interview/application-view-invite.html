@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to interview panel'" />
 </head>
@@ -24,7 +24,7 @@
                         <th class="govuk-table__header width-80" scope="col">Project title</th>
                         <th class="govuk-table__header width-80" scope="col">Lead organisation</th>
                         <th class="govuk-table__header width-80" scope="col">Date assigned</th>
-                        <th class="govuk-table__header width-80" scope="col">Additional feedback</th>
+                        <th class="govuk-table__header width-150" scope="col">Additional feedback</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
@@ -40,12 +40,10 @@
                         <td class="govuk-table__cell" th:text="${#temporals.format(model.dateAssigned, 'dd/MM/yyyy')}">01/09/2017</td>
                         <td class="govuk-table__cell">
                             <div th:if="${model.hasAttachment()}" class="upload-section">
-                                <a th:text="${model.feedbackFilename}"
+                                <a th:text="|${model.feedbackFilename} (opens in a new window)|"
                                    th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send/view-feedback/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}"
                                    target="_blank"
-                                   class="govuk-link"
-                                   aria-describedby="attachment-hint">Uploaded-file.pdf</a>
-                                <p class="govuk-hint"><span id="attachment-hint">(opens in a new window)</span>.</p>
+                                   class="govuk-link">Uploaded-file.pdf</a>.
                             </div>
                             <th:block th:unless="${model.hasAttachment()}">No feedback uploaded</th:block>
                         </td>

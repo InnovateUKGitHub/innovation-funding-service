@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Join project'" />
+</head>
+<body class="govuk-template__body create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Join project',size='govuk-heading-l'" />
+        <p class="govuk-body">You have been invited to join this project:<br />
+            <strong th:text="|${model.applicationId}: ${model.projectName}|"></strong>
+        </p>
+        <p class="govuk-body">You will be joining as a <strong th:text="${model.role.displayName.toLowerCase()}">project manager</strong>.</p>
+
+        <th:block th:if="${model.userExists}">
+            <p class="govuk-body">We have found an account registered to your email address.</p>
+            <a class="govuk-button" th:href="@{/project/{projectId}/grants/invite/accept-authenticated(projectId=${model.projectId})}" th:text="${model.userLoggedIn} ? 'Join project' : 'Sign in to your account'">Sign in to your account</a>
+        </th:block>
+        <th:block th:unless="${model.userExists}">
+            <p class="govuk-body">You need to create a new account to continue.</p>
+            <a class="govuk-button" th:href="@{/project/{projectId}/grants/invite/register(projectId=${model.projectId})}">Create an account</a>
+        </th:block>
+    </main>
+</div>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

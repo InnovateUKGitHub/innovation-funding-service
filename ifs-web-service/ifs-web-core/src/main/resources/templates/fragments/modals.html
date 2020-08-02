@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <!-- Close button -->
-<th:block th:fragment="close-button" xmlns:th="http://www.w3.org/1999/xhtml">
+<th:block th:fragment="close-button" xmlns:th="http://www.thymeleaf.org">
     <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
 </th:block>
 
@@ -403,7 +403,7 @@
         <p class="govuk-body">The Project Manager will be told by email.</p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
-            <button class="govuk-button" id="modal-send-gol" type="submit">Publish to project team</button>
+            <button class="govuk-button" id="modal-send-gol" type="submit">Send grant offer letter</button>
             <button type="button" class="js-close button-clear">Cancel</button>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Generate Spend Profile'" />
 </head>
@@ -17,7 +17,7 @@
             <h2 class="govuk-tabs__title">
                 Project setup
             </h2>
-            <th:block th:insert="project/fragments/fragments :: project-dashboard-navigation (selectedTab=${'spend-profile'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs}, isExternalFinanceUser=false)" />
+            <th:block th:insert="project/fragments/fragments :: project-dashboard-navigation (selectedTab=${'spend-profile'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs}, isExternalFinanceUser=false, isIfsAdmin=false)" />
             <section class="govuk-tabs__panel">
                 <th:block th:if="${model.pendingSpendProfiles.size() > 0}">
                     <div>

@@ -117,25 +117,25 @@ Funding information client-side validations
     And the user enters text to a text field           id = activityCode    4242
     Then The user should not see the error text in the page   Please enter a budget.
 
-Eligibility server-side validations
+Project eligibility server-side validations
     [Documentation]    INFUND-2986
     [Tags]
     [Setup]    The user navigates to the Validation competition
-    Given The user clicks the button/link  link = Eligibility
+    Given The user clicks the button/link  link = Project eligibility
     When the user clicks the button/link   jQuery = button:contains("Done")
     Then The user should see a field and summary error   Please select a research categories applicable option.
     And The user should see a field and summary error    Please select a collaboration level
     And The user should see a field and summary error    Please select a lead applicant type
     And The user should see a field and summary error    Please select a resubmission option
 
-Eligibility funding level validation
+Project eligibility funding level validation
     [Documentation]  IFS-3622  IFS-7148
     Given the user clicks the button twice              css = label[for="comp-overrideFundingRules-yes"]
     When the user clicks the button/link                jQuery = button:contains("Done")
     Then the user is able to see all validations
     [Teardown]  the user clicks the button/link         jQuery = button:contains("Done")
 
-Eligibility client-side validations
+Project eligibility client-side validations
     [Documentation]    INFUND-2986 INFUND-2988 INFUND-3888
     [Tags]
     [Setup]  the user selects the radio button           researchCategoriesApplicable   true
@@ -160,18 +160,18 @@ Milestones: Server side validations, submission time is default
     Given the user clicks the button/link             link = Milestones
     When the user clicks the button/link              jQuery = button:contains("Done")
     Then the user should see a field error            Select a completion stage.
-    And the user selects the radio button             selectedCompletionStage  project-setup-completion-stage
+    And the user selects the radio button             selectedCompletionStage  PROJECT_SETUP
     And the user clicks the button/link               jQuery = button:contains("Done")
     When the user fills the milestones with invalid data
     And the user clicks the button/link               jQuery = button:contains(Done)
     Then Validation summary should be visible
     Then the user should see the text in the element  jQuery = tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
-    [Teardown]  the user clicks the button/link       link = Competition setup
+    [Teardown]  the user clicks the button/link       link = Competition details
 
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]
-    Given the user fills in the CS Milestones   project-setup-completion-stage   ${month}   ${nextyear}
+    Given the user fills in the CS Milestones   PROJECT_SETUP   ${month}   ${nextyear}
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632
@@ -179,7 +179,7 @@ Milestones: Autosave
     When the user clicks the button/link              link = Milestones
     ${status}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery = a:contains("Next")
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  jQuery = a:contains("Next")
-    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  project-setup-completion-stage
+    Run Keyword If  '${status}' == 'FAIL'  the user selects the radio button  selectedCompletionStage  PROJECT_SETUP
     Run Keyword If  '${status}' == 'FAIL'  the user clicks the button/link  jQuery = button:contains("Done")
     Then the user should see the correct inputs in the Milestones form
 
@@ -232,7 +232,7 @@ Assessor: Client-side validation
     Given the user selects the radio button       assessorCount   5
     When The user enters text to a text field    id = assessorPay  120
     Then The user should not see the element     jQuery = .govuk-error-message:contains("Please select an assessment panel option.")
-    And the user clicks the button/link          link = Competition setup
+    And the user clicks the button/link          link = Competition details
 
 Documents in project setup: The competition admin is required to enter a title and guidance message
     [Documentation]
@@ -278,9 +278,9 @@ the validation error above the question should be visible
 
 the user fills the empty question fields
     The user enters text to a text field    id = question.title    Test title
-    The user enters text to a text field    id = question.subTitle    Subtitle test
+    The user enters text to a text field    jQuery = label:contains("Question subtitle") + div .editor   Subtitle test
     The user enters text to a text field    id = question.guidanceTitle    Test guidance title
-    The user enters text to a text field    css = .editor    Guidance text test
+    The user enters text to a text field    jQuery = label:contains("Question guidance") + div .editor    Guidance text test
     The user enters text to a text field    id = question.maxWords    150
 
 the validation error above the question should not be visible
@@ -366,7 +366,7 @@ the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id = activityCode
     Should Be Equal As Strings    ${input_value}    4242
 
-the user should see the correct details in the eligibility form
+the user should see the correct details in the project eligibility form
     the user sees that the radio button is selected     singleOrCollaborative    single
     Checkbox Should Be Selected   research-categories-33
     Checkbox Should Be Selected   research-categories-34
@@ -381,20 +381,14 @@ The user should not see the error text in the page
     Set Focus To Element    jQuery=button:contains("Done")
     Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
-the user should see the correct inputs in the Milestones form
-    the user should see the element  jQuery = tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
-    the user should see the element  jQuery = button:contains("Edit")
-
 the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id = question.title
     Should Be Equal    ${input_value}    Test title
-    ${input_value} =    Get Value    id = question.subTitle
+    ${input_value} =    Get Value    jQuery = label:contains("Question subtitle") + div .editor
     Should Be Equal    ${input_value}    Subtitle test
     ${input_value} =    Get Value    id = question.guidanceTitle
     Should Be Equal    ${input_value}    Test guidance title
-    ${input_value} =    Get Value    css = .editor
+    ${input_value} =    Get Value    jQuery = label:contains("Question guidance") + div .editor
     Should Be Equal    ${input_value}    Guidance text test
     ${input_value} =    Get Value    id = question.maxWords
     Should Be Equal    ${input_value}    150

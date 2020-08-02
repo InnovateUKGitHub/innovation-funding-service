@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.application.readonly.populator;
 
 import com.google.common.collect.Multimap;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamOrganisationReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamReadOnlyViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationTeamUserReadOnlyViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -44,8 +49,11 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    @Autowired
+    private ApplicationOrganisationAddressRestService applicationOrganisationAddressRestService;
+
     @Override
-    public ApplicationTeamReadOnlyViewModel populate(QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+    public ApplicationTeamReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
         List<ProcessRoleResource> processRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess()
                 .stream()
@@ -63,7 +71,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .collect(toMap(InviteOrganisationResource::getOrganisation, Function.identity()));
 
         List<ApplicationTeamOrganisationReadOnlyViewModel> organisationViewModels = organisations.stream()
-                .map(organisation -> toOrganisationTeamViewModel(organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId()), internalUser))
+                .map(organisation -> toOrganisationTeamViewModel(data.getApplication(), organisation, organisationToProcessRole.get(organisation.getId()), organisationToInvite.get(organisation.getId()), internalUser))
                 .collect(toList());
 
         organisationViewModels.addAll(inviteOrganisationResources.stream()
@@ -81,7 +89,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 || data.getUser().hasAnyRoles(SUPPORT, IFS_ADMINISTRATOR));
     }
 
-    private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
+    private ApplicationTeamOrganisationReadOnlyViewModel toOrganisationTeamViewModel(ApplicationResource application, OrganisationResource organisation, Collection<ProcessRoleResource> processRoles, InviteOrganisationResource organisationInvite, boolean internalUser) {
         List<ApplicationTeamUserReadOnlyViewModel> userRows = processRoles.stream()
                 .map(pr -> ApplicationTeamUserReadOnlyViewModel.fromProcessRole(pr, internalUser ? getPhoneNumber(pr.getUserEmail()) : null))
                 .collect(toList());
@@ -95,10 +103,16 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                     .collect(toList()));
         }
 
+        AddressResource address = null;
+        if (organisation.isInternational()) {
+            address = applicationOrganisationAddressRestService.getAddress(application.getId(), organisation.getId(), OrganisationAddressType.INTERNATIONAL).getSuccess();
+        }
+
         return new ApplicationTeamOrganisationReadOnlyViewModel(organisation.getName(),
                 organisation.getOrganisationTypeName(),
                 userRows,
-                true);
+                true,
+                address);
     }
 
     private String getPhoneNumber(String userEmail) {
@@ -110,7 +124,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .map(ApplicationTeamUserReadOnlyViewModel::fromInvite)
                 .collect(toList());
 
-        return new ApplicationTeamOrganisationReadOnlyViewModel(organisationInvite.getOrganisationName(), null, inviteRows, false);
+        return new ApplicationTeamOrganisationReadOnlyViewModel(organisationInvite.getOrganisationName(), null, inviteRows, false, null);
     }
 
     @Override

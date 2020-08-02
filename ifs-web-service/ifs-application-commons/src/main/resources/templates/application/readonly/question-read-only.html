@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment="empty (model)">
     Empty
@@ -12,26 +12,24 @@
         </label>
         <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${model.answer}" >Answer</p>
 
-        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateDocumentFilename != null}">
-            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateDocumentTitle}|">
+        <div class="govuk-inset-text govuk-!-margin-bottom-6" th:if="${model.templateFile != null}">
+            <h1 class="govuk-heading-s" th:text="|Uploaded ${model.templateFile.filename}|">
                 Uploaded project plan and methodology
             </h1>
             <p class="uploaded-file govuk-body">
-               <a class="govuk-link"
-                   th:href="${model.templateDocumentUrl}"
-                   th:text="${model.templateDocumentFilename}"
-                   target="_blank"
-                   aria-describedby="template-document-hint">file</a><span id="template-document-hint"> (opens in a new window)</span>.
+                <a class="govuk-link"
+                   th:href="${model.templateFile.url}"
+                   th:text="|${model.templateFile.filename} (opens in a new window)|"
+                   target="_blank">file</a>.
             </p>
         </div>
 
-        <div class="govuk-!-margin-top-6" th:if="${model.appendixFilename != null}">
-            <p class="uploaded-file govuk-body">
+        <div class="govuk-!-margin-top-6" th:unless="${model.appendices.isEmpty()}">
+            <p class="uploaded-file govuk-body" th:each="appendix : ${model.appendices}">
                 <a class="govuk-link"
-                   th:href="${model.appendixUrl}"
-                   th:text="${model.appendixFilename}"
-                   target="_blank"
-                   aria-describedby="appendix-hint">file</a><span id="appendix-hint">(opens in a new window)</span>.
+                   th:href="${appendix.url}"
+                   th:text="|${appendix.filename} (opens in a new window)|"
+                   target="_blank">file</a>.
             </p>
         </div>
 
@@ -143,10 +141,26 @@
         </h2>
 
         <th:block th:if="${organisation.type != null}">
-            <h3 class="govuk-heading-s govuk-!-margin-top-2">Organisation type</h3>
-            <p class="govuk-body" th:text="${organisation.type}">Research and technology organisations
-                (RTOs)</p>
+            <table class="govuk-table govuk-!-margin-bottom-2">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Organisation details</th>
+                    <th scope="col" class="govuk-table__header" th:classappend="${model.internal} ? 'govuk-!-width-two-thirds' : 'govuk-!-width-one-third'"></th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Type</td>
+                    <td class="govuk-table__cell"th:text="${organisation.type}">Research and technology organisations</td>
+                </tr>
+                <tr class="govuk-table__row" th:if="${organisation.address != null}" >
+                    <td class="govuk-table__cell">Address</td>
+                    <td class="govuk-table__cell" ifs:utext="${organisation.address.getAsInternationalTwoLine()}">1 my lane, france, 1234</td>
+                </tr>
+                </tbody>
+            </table>
         </th:block>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Team members</h3>
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -244,8 +258,8 @@
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
     <p class="govuk-body">
         <a class="govuk-link"
-           th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.questionId})}">
-            View award terms and conditions</a>
+           th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.questionId})}"
+           th:text="${model.termsAndConditionsTerminology}"></a>
     </p>
 </th:block>
 

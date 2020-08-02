@@ -14,6 +14,9 @@ Documentation     INFUND-6390 As an Applicant I will be invited to add project c
 ...               IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
 ...
 ...               IFS-3938 As an applicant the requirement prerequesites for Your funding are clear
+...
+...               IFS-7718 EDI question - application form
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        Applicant  CompAdmin
@@ -35,16 +38,17 @@ ${ineligibleMessage}         Your organisation type does not match our eligibili
 Comp Admin starts a new Competition
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
-    [Setup]  the user logs-in in new browser       &{Comp_admin1_credentials}
+    [Setup]  the user logs-in in new browser                    &{Comp_admin1_credentials}
     # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
     # Then continue with the applying to this Competition, in order to see the new Fields applied
-    Given the user navigates to the page           ${CA_UpcomingComp}
-    When the user clicks the button/link           jQuery = .govuk-button:contains("Create competition")
-    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
-    And the user selects the Terms and Conditions
+    Given the user navigates to the page                        ${CA_UpcomingComp}
+    When the user clicks the button/link                        jQuery = .govuk-button:contains("Create competition")
+    Then the user fills in the CS Initial details               ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
+    And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones        project-setup-completion-stage   ${month}   ${nextyear}
+    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user selects the organisational eligibility to no   false
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
     And the user fills in the CS Documents in other projects
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -55,13 +59,13 @@ Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     And the user clicks the button/link      jQuery = a:contains("Next")
     Then the user should see the element     jQuery = button:contains("Edit")
     And the user should see the dates in full format
-    Then the user clicks the button/link     link = Competition setup
+    Then the user clicks the button/link     link = Competition details
 
 Comp admin completes ths competition setup
-    [Documentation]    INFUND-6393
+    [Documentation]    INFUND-6393  IFS-7700
     [Tags]  HappyPath
-    Given the user should see the element        jQuery = h1:contains("Competition setup")
-    Then the user marks the Application as done  no  Programme
+    Given the user should see the element        jQuery = h1:contains("Competition details")
+    Then the user marks the Application as done  no  Programme  ${compWithoutGrowth}
     And the user fills in the CS Assessors
     When the user clicks the button/link         link = Public content
     Then the user fills in the Public content and publishes  NoGrowthTable
@@ -116,26 +120,27 @@ Turnover and Staff count fields
 Once the project growth table is selected
     [Documentation]    INFUND-6393 IFS-40
     [Tags]  HappyPath
-    [Setup]    log in as a different user                &{Comp_admin1_credentials}
-    Given the user navigates to the page                 ${CA_UpcomingComp}
-    When the user clicks the button/link                 jQuery = .govuk-button:contains("Create competition")
+    [Setup]    log in as a different user                       &{Comp_admin1_credentials}
+    Given the user navigates to the page                        ${CA_UpcomingComp}
+    When the user clicks the button/link                        jQuery = .govuk-button:contains("Create competition")
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
-    Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
-    And the user selects the Terms and Conditions
+    Then the user fills in the Open-All Initial details         ${compWithGrowth}  ${month}  ${nextyear}
+    And the user selects temporary framework terms and conditions
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
-    And the user fills in the CS Milestones              project-setup-completion-stage   ${month}   ${nextyear}
-    Then the user marks the Application as done          yes  Sector
+    And the user fills in the CS Project eligibility            ${BUSINESS_TYPE_ID}  1  true  collaborative     # 1 means 30%
+    And the user selects the organisational eligibility to no   false
+    And the user fills in the CS Milestones                     PROJECT_SETUP   ${month}   ${nextyear}
+    Then the user marks the Application as done                 yes  Sector  ${compWithGrowth}
     And the user fills in the CS Assessors
     And the user fills in the CS Documents in other projects
-    When the user clicks the button/link                 link = Public content
-    Then the user fills in the Public content and publishes  GrowthTable
-    And the user clicks the button/link                  link = Return to setup overview
-    And the user should see the element                  jQuery = div:contains("Public content") ~ .task-status-complete
-    When the user clicks the button/link                 jQuery = a:contains("Complete")
-    Then the user clicks the button/link                 css = button[type="submit"]
-    And the user navigates to the page                   ${CA_UpcomingComp}
-    Then the user should see the element                 jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
+    When the user clicks the button/link                        link = Public content
+    Then the user fills in the Public content and publishes     GrowthTable
+    And the user clicks the button/link                         link = Return to setup overview
+    And the user should see the element                         jQuery = div:contains("Public content") ~ .task-status-complete
+    When the user clicks the button/link                        jQuery = a:contains("Complete")
+    Then the user clicks the button/link                        css = button[type="submit"]
+    And the user navigates to the page                          ${CA_UpcomingComp}
+    Then the user should see the element                        jQuery = h2:contains("Ready to open") ~ ul a:contains("${compWithGrowth}")
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
@@ -150,7 +155,7 @@ As next step the Applicant cannot see the turnover field
 
 User can save null values and reenter the organisation page
     [Documentation]    IFS-5612
-    Given The user clicks the button/link  jQuery = button:contains("Save and return to finances")
+    Given The user clicks the button/link  jQuery = button:contains("Save and return to project finances")
     When the user clicks the button/link   link = Your organisation
     Then the user should see the element   jQuery = h1:contains("Your organisation")
 
@@ -255,7 +260,7 @@ Mark Organisation as complete when yes
     And the user enters text to a text field     css = #financialYearEndYearValue    2016
     And the user populates the project growth table
     When the user enters text to a text field    css = #headCountAtLastFinancialYear  4
-    And the user clicks the button/link          jQuery = button:contains("Save and return to finances")
+    And the user clicks the button/link          jQuery = button:contains("Save and return to project finances")
     And the user clicks the button/link          link = Your organisation
     Then the user should see the element         jQuery = #researchAndDevelopmentSpendAtLastFinancialYear[value = "15000"]
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
@@ -309,6 +314,15 @@ Application details read only view shows correct details with innovation area
     And The user should see the element  jQuery = dt:contains("Innovation area") + dd:contains("Biosciences")
     [Teardown]  the user clicks the button/link  link = Back to application overview
 
+EDI question read only view shows correct details
+    [Documentation]  IFS-7718
+    [Tags]
+    Given the user clicks the button/link             link = Equality, diversity and inclusion
+    When the user clicks the button/link              jQuery = label:contains("Yes")
+    And the user clicks the button/link               id = application-question-complete
+    Then the user should see EDI question details
+    [Teardown]  the user clicks the button/link       link = Back to application overview
+
 Newly created collaborator can view and edit project Growth table
     [Documentation]    INFUND-8426
     [Tags]
@@ -354,7 +368,7 @@ Non-lead can mark terms and conditions as complete
     [Documentation]  IFS-5920
     [Setup]  the user clicks the button/link      link = Your project finances
     Given the user clicks the button/link         link = Back to application overview
-    When the user accept the competition terms and conditions     Return to application overview
+    When the user accept the temporary framework terms and conditions
     Then the user should see the element          jQuery = li:contains("Award terms and conditions") > .task-status-complete
 
 RTOs are not allowed to apply on Competition where only Businesses are allowed to lead
@@ -375,7 +389,7 @@ The lead applicant checks for terms and conditions partners status
     [Documentation]  IFS-5920
     [Tags]
     [Setup]  the user navigate to competition
-    Given the user accept the competition terms and conditions    Return to application overview
+    Given the user accept the temporary framework terms and conditions
     And the user clicks the button/link             link = Award terms and conditions
     When the user clicks the button/link            link = View partners' acceptance
     Then the user should see the element            jQuery = td:contains("Ludlow") ~ td:contains("Accepted")
@@ -424,14 +438,14 @@ the user populates the project growth table
 the user should view the project growth table
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css = table.govuk-table tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
-    the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1) span    Annual turnover
-    the user should see the element                css = td input[value="65000"]
-    the user should see the text in the element    css = tr:nth-child(2) td:nth-child(1) span    Annual profits
-    the user should see the element                css = td input[value="2000"]
-    the user should see the text in the element    css = tr:nth-child(3) td:nth-child(1) span    Annual export
-    the user should see the element                css = td input[value="3000"]
-    the user should see the text in the element    css = tr:nth-child(4) td:nth-child(1) span    Research and development spend
-    the user should see the element                css = td input[value="15000"]
+    the user should see the text in the element    css = tr:nth-child(1) td:nth-child(1)    Annual turnover
+    the user should see the element                jQuery = td:contains("65,000")
+    the user should see the text in the element    css = tr:nth-child(2) td:nth-child(1)    Annual profits
+    the user should see the element                jQuery = td:contains("2,000")
+    the user should see the text in the element    css = tr:nth-child(3) td:nth-child(1)    Annual export
+    the user should see the element                jQuery = td:contains("3,000")
+    the user should see the text in the element    css = tr:nth-child(4) td:nth-child(1)    Research and development spend
+    the user should see the element                jQuery = td:contains("15,000")
 
 the user can edit the project growth table
     the user clicks the button/link         jQuery = button.button-clear:contains('Edit')
@@ -481,7 +495,7 @@ Newly invited collaborator can create account and sign in
     logout as user
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery = a:contains("Yes, accept invitation")
-    the user should see the element               jquery = h1:contains("Choose organisation type")
+    the user should see the element               jquery = h1:contains("Choose your organisation type")
     the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details
@@ -499,7 +513,7 @@ the user fills in the Open-All Initial details
     the user selects the value from the drop-down menu   21  id = executiveUserId
     the user clicks the button twice                     css = label[for="stateAid2"]
     the user clicks the button/link                      jQuery = button:contains("Done")
-    the user clicks the button/link                      link = Competition setup
+    the user clicks the button/link                      link = Competition details
     the user should see the element                      jQuery = div:contains("Initial details") ~ .task-status-complete
 
 the logged in user should not be able to apply in a competition he has not right to
@@ -530,3 +544,28 @@ the user navigate to competition
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the user selects temporary framework terms and conditions
+    the user clicks the button/link         link = Terms and conditions
+    the user selects the radio button       termsAndConditionsId  30
+    the user clicks the button/link         jQuery = button:contains("Done")
+    the user should see the element         link = New projects temporary framework
+    the user clicks the button/link         link = Competition details
+    the user should see the element         jQuery = li:contains("Terms and conditions") .task-status-complete
+
+the user accept the temporary framework terms and conditions
+    the user clicks the button/link         link = Award terms and conditions
+    the user should see the element         jQuery = h1:contains("New projects temporary framework terms and conditions")
+    the user selects the checkbox           agreed
+    the user clicks the button/link         jQuery = button:contains("Agree and continue")
+    the user should see the element         jQuery = .form-footer:contains("Terms and conditions accepted")
+    the user clicks the button/link         link = Return to application overview
+
+the user should see EDI question details
+    the user should see the element    jQuery = h1:contains("Equality, diversity and inclusion")
+    the user should see the element    jQuery = p:contains("This question is marked as complete.")
+    the user should see the element    jQuery = h3:contains("Have you completed the EDI survey?")
+    the user should see the element    jQuery = p:contains("Yes")
+    the user should see the element    jQuery = button:contains("Edit")
+
+

@@ -23,14 +23,14 @@ IFS Admin able to view further Organisation details by selecting an organisation
     Given the user navigates to View partner details page                      ${GrowthTableCompetitionLink}
     When the user selects an organisation                                      ${SmithZoneRadioBttnValue}
     Then the user should see further organisation details                      Business  SmithZone  89082442
-    And the user should see Organisation size details with a growth table      Micro or small  1  2020  100000  200000  300000  400000  60
+    And the user should see Organisation size details with a growth table      Micro or small  1  2020  100,000  200,000  300,000  400,000  60
 
 User is able to cancel edit organisation size
     [Documentation]  IFS-6923
     [Setup]  the user clicks the button/link    jQuery = a:contains("Edit organisation")
     Given the user enters text to a text field  id = financialYearEndYearValue   1993
     when the user clicks the button/link        jQUery = a:contains("Cancel and return to")
-    Then the user should see the element        jQuery = input[id$="financialYearEndYearValue"][value = "2020"]
+    Then the user should see the element        jQuery = strong:contains("2020")
 
 Edit organisation size page with growth table validations
      [Documentation]  IFS-6923
@@ -43,8 +43,8 @@ IFS Admin is able to edit organisation size with a growth table
     [Documentation]  IFS-6923
     Given the user clicks the button/link                                                      jQuery = a:contains("Edit organisation")
     When the user updates organisation size details with a growth table                        LARGE  12  2019  600000  500000  400000  300000  200
-    Then the user should see Organisation size details with a growth table                     Large  12  2019  600000  500000  400000  300000  200
-    And organisation size details are still the same in application with a growth table        ${GrowthTableApplicationLink}  SmithZone  Micro or small  1  2020  100000  200000  300000  400000  60
+    Then the user should see Organisation size details with a growth table                     Large  12  2019  600,000  500,000  400,000  300,000  200
+    And organisation size details are still the same in application with a growth table        ${GrowthTableApplicationLink}  SmithZone  Micro or small  1  2020  100,000  200,000  300,000  400,000  60
 
 Finance checks can't be approved if the updated funding level exceeds the permitted level for the organisation's size
     [Documentation]  IFS-6923
@@ -57,14 +57,14 @@ IFS Admin able to view further Organisation details without a growth table
     [Documentation]  IFS-6697
     Given the user navigates to View partner details page   ${NoGrowthTableCompetitionLink}
     Then the user should see further organisation details   Business  Ward Ltd  55522234
-    And the user should see organisation size details       Micro or small  £700,000  50
+    And the user should see organisation size details       Micro or small  700,000  50
 
 IFS Admin able to edit further Organisation details without a growth table
     [Documentation]  IFS-6923
     Given the user clicks the button/link                                    jQuery = a:contains("Edit organisation")
     When the user updates organisation size details without a growth table   LARGE  9000000  300
-    Then the user should see organisation size details                       Large  £9,000,000  300
-    And organisation size details are still the same in application          ${NoGrowthTableApplicationLink}  Ward  Micro or small  £700,000  50
+    Then the user should see organisation size details                       Large  9,000,000  300
+    And organisation size details are still the same in application          ${NoGrowthTableApplicationLink}  Ward  Micro or small  700,000  50
 
 Finance user is able to view further Organisation details by selecting an organisation
     [Documentation]  IFS-6697
@@ -72,33 +72,33 @@ Finance user is able to view further Organisation details by selecting an organi
     Given the user navigates to View partner details page                      ${GrowthTableCompetitionLink}
     When the user selects an organisation                                      ${SmithZoneRadioBttnValue}
     Then the user should see further organisation details                      Business  SmithZone  89082442
-    And the user should see Organisation size details with a growth table      Large  12  2019  600000  500000  400000  300000  200
+    And the user should see Organisation size details with a growth table      Large  12  2019  600,000  500,000  400,000  300,000  200
 
 Finance user is able to edit organisation size with a growth table
     Given the user clicks the button/link                                                      jQuery = a:contains("Edit organisation")
     When the user updates organisation size details with a growth table                        SMALL  7  2018  400000  300000  200000  100000  20
-    Then the user should see Organisation size details with a growth table                     Micro or small  7  2018  400000  300000  200000  100000  20
-    And organisation size details are still the same in application with a growth table        ${GrowthTableApplicationLink}  SmithZone  Micro or small  1  2020  100000  200000  300000  400000  60
+    Then the user should see Organisation size details with a growth table                     Micro or small  7  2018  400,000  300,000  200,000  100,000  20
+    And organisation size details are still the same in application with a growth table        ${GrowthTableApplicationLink}  SmithZone  Micro or small  1  2020  100,000  200,000  300,000  400,000  60
 
 Finance user is able to view further Organisation details without a growth table
     [Documentation]  IFS-6697
     Given the user navigates to View partner details page   ${NoGrowthTableCompetitionLink}
     Then the user should see further organisation details   Business  Ward Ltd  55522234
-    And the user should see organisation size details       Large  £9,000,000  300
+    And the user should see organisation size details       Large  9,000,000  300
 
 Finance user is able to edit further Organisation details without a growth table
     [Documentation]  IFS-6923
     Given the user clicks the button/link                                    jQuery = a:contains("Edit organisation")
     When the user updates organisation size details without a growth table   SMALL  800000  200
-    Then the user should see organisation size details                       Micro or small  £800,000  200
-    And organisation size details are still the same in application          ${NoGrowthTableApplicationLink}  Ward  Micro or small  £700,000  50
+    Then the user should see organisation size details                       Micro or small  800,000  200
+    And organisation size details are still the same in application          ${NoGrowthTableApplicationLink}  Ward  Micro or small  700,000  50
 
 Support user is able to view further Organisation details by selecting an organisation and isnt able to edit
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                          &{support_user_credentials}
     Given the user navigates to View partner details page        ${NoGrowthTableCompetitionLink}
     When the user should see further organisation details        Business  Ward Ltd  55522234
-    And the user should see organisation size details            Micro or small  £800,000  200
+    And the user should see organisation size details            Micro or small  800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
 
 Comp Admin user is able to view further Organisation details by selecting an organisation and isnt able to edit
@@ -106,7 +106,7 @@ Comp Admin user is able to view further Organisation details by selecting an org
     [Setup]  log in as a different user                          &{Comp_admin1_credentials}
     Given the user navigates to View partner details page        ${NoGrowthTableCompetitionLink}
     When the user should see further organisation details        Business  Ward Ltd  55522234
-    And the user should see organisation size details            Micro or small  £800,000  200
+    And the user should see organisation size details            Micro or small  800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
 
 Innovation Lead user is able to view further Organisation details by selecting an organisation and isnt able to edit
@@ -114,15 +114,15 @@ Innovation Lead user is able to view further Organisation details by selecting a
     [Setup]  log in as a different user                          &{innovation_lead_one}
     Given the user navigates to view partner details page        ${NoGrowthTableCompetitionLink}
     When the user should see further organisation details        Business  Ward Ltd  55522234
-    And the user should see organisation size details            Micro or small  £800,000  200
+    And the user should see organisation size details            Micro or small  800,000  200
     Then the user should not see the element                     jQuery = a:contains("Edit organisation")
 
 Stakeholder user is able to view further Organisation details by selecting an organisation and isnt able to edit
     [Documentation]  IFS-6697  IFS-6923
     [Setup]  log in as a different user                                              &{stakeholder_user}
     Given the user navigates to the page                                             ${server}/project-setup-management/competition/${PS_Competition_Id}/project/${Grade_Crossing_Project_Id}/organisation/${Vitruvius_Id}/details/with-growth-table
-    When the user should see further organisation details                            Business  Vitruvius Stonework Limited  60674010
-    And the user should see Organisation size details with a growth table            Micro or small  1  2020  100000  200000  300000  400000  60
+    When the user should see further organisation details                            Business  Vitruvius Stonework Limited  60674015
+    And the user should see Organisation size details with a growth table            Micro or small  1  2020  100,000  200,000  300,000  400,000  60
     Then the user should not see the element                                         jQuery = a:contains("Edit organisation")
 
 If any of the finance sections are completed the user is no longer able to edit project size
@@ -162,13 +162,13 @@ The user should see Organisation size details with a growth table
     [Arguments]  ${OrgSize}  ${Month}  ${Year}  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
     the user should see the element    jQuery = h2:contains("Organisation size")
     the user should see the element    jQuery = dt:contains(Size) + dd:contains("${OrgSize}")
-    the user should see the element    jQuery = input[id$="financialYearEndMonthValue"][value = "${Month}"]
-    the user should see the element    jQuery = input[id$="financialYearEndYearValue"][value = "${Year}"]
-    the user should see the element    jQuery = input[id$="annualTurnoverAtLastFinancialYear"][value = "${AnnualTurnover}"]
-    the user should see the element    jQuery = input[id$="annualProfitsAtLastFinancialYear"][value = "${AnnualProfits}"]
-    the user should see the element    jQuery = input[id$="annualExportAtLastFinancialYear"][value = "${AnnualExport}"]
-    the user should see the element    jQuery = input[id$="researchAndDevelopmentSpendAtLastFinancialYear"][value = "${ReasearchDevelopmentSpend}"]
-    the user should see the element    jQuery = dt:contains(Full time employees) + dd:contains(${Employees})
+    the user should see the element    jQuery = strong:contains("${Month}")
+    the user should see the element    jQuery = strong:contains("${Year}")
+    the user should see the element    jQuery = td:contains("${AnnualTurnover}")
+    the user should see the element    jQuery = td:contains("${AnnualProfits}")
+    the user should see the element    jQuery = td:contains("${AnnualExport}")
+    the user should see the element    jQuery = td:contains("${ReasearchDevelopmentSpend}")
+    the user should see the element    jQuery = dt:contains("Full time employees") + dd:contains("${Employees}")
 
 The user updates organisation size details with a growth table
     [Arguments]  ${Size}  ${Month}  ${Year}  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
@@ -181,10 +181,6 @@ The user updates organisation size details with a growth table
     the user enters text to a text field  id = researchAndDevelopmentSpendAtLastFinancialYear  ${ReasearchDevelopmentSpend}
     the user enters text to a text field  id = headCountAtLastFinancialYear   ${Employees}
     the user saves and returns to organisation details page
-
-The user saves and returns to organisation details page
-    the user clicks the button/link     jQuery = button:contains("Save and return to")
-    the user clicks the button/link     jQuery = button:contains("Update organisation size")
 
 Organisation size details are still the same in application with a growth table
     [Arguments]  ${link}  ${OrgName}  ${OrgSize}  ${Month}  ${Year}  ${AnnualTurnover}  ${AnnualProfits}  ${AnnualExport}  ${ReasearchDevelopmentSpend}  ${Employees}
@@ -238,6 +234,11 @@ The user completes elegibility selection
     the user selects the checkbox    project-eligible
     the user selects the option from the drop-down menu   Green  id = rag-rating
 
+The user is no longer able to edit organisation size
+    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
+    the user selects an organisation                 ${SmithZoneRadioBttnValue}
+    the user should not see the element              jQuery = a:contains("Edit organisation")
+
 The user updates organisation size details without a growth table
     [Arguments]  ${Size}  ${Turnover}  ${Employees}
     the user selects the radio button     organisationSize  ${Size}
@@ -245,8 +246,7 @@ The user updates organisation size details without a growth table
     the user enters text to a text field  id = headCount   ${Employees}
     the user saves and returns to organisation details page
 
-The user is no longer able to edit organisation size
-    the user navigates to view partner details page  ${GrowthTableCompetitionLink}
-    the user selects an organisation                 ${SmithZoneRadioBttnValue}
-    the user should not see the element              jQuery = a:contains("Edit organisation")
+The user saves and returns to organisation details page
+    the user clicks the button/link     jQuery = button:contains("Save and return to")
+    the user clicks the button/link     jQuery = button:contains("Update organisation size")
 

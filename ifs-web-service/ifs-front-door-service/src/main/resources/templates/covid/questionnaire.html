@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Support for Innovate UK award recipients'" />
 </head>
@@ -28,11 +28,12 @@
                 <ul class="govuk-list govuk-list--bullet">
                     <li>Timing extensions</li>
                     <li>Monthly grant payments</li>
-                    <li>Continuity Grants</li>
                     <li>Innovation Continuity Loans</li>
+                    <li>Innovation and Growth Adviser support</li>
                 </ul>
-                <p class="govuk-body">The following questions are designed to help you navigate through the funding support available to find the best fit option for you. Once you have identified this, we will direct you to the appropriate application form. All support is subject to status and our assessment of your application.</p>
-                <p class="govuk-body">If you are looking for funding for a new project, support is also available for innovators pursuing new projects, information on which can be found <a target="_blank" href="/competition/search">here (opens in a new window)</a>.</p>
+                <p class="govuk-body">Applications for Continuity Grants are now closed.</p>
+                <p class="govuk-body">The following questions are designed to help you find out whether any of the funding support options currently available work for you. Once you have identified this, we will direct you to the appropriate application form. All support is subject to status and our assessment of your application.</p>
+                <p class="govuk-body">If you are looking for funding for a new project, support is also available for innovators pursuing new projects in certain areas, information on which can be found <a target="_blank" href="/competition/search">here (opens in a new window)</a>. If there’s nothing applicable to you at the moment, please keep checking this page as further opportunities will be added in future.</p>
                 <a th:href="@{/covid-19/questionnaire/business}" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2" data-module="govuk-button">
                     Start now
                     <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" focusable="false">
@@ -84,6 +85,10 @@
         <th:block th:unless="${decision == null}">
             <th:block th:if="${decision == 'default'}">
                 <div class="highlight-panel highlight-panel-padded">
+                    <h3 class="govuk-heading-s">Innovate UK EEN Innovation and Growth Adviser support</h3>
+                    <p class="govuk-body"><a target="_blank" href=" https://www.enterprise-europe.co.uk/contact-us#no-back">Visit the Innovate UK EEN (opens in a new window)</a> if you are an SME seeking the support of an experienced Innovation and Growth Adviser to help you address short term challenges and focus on future growth.</p>
+                </div>
+                <div class="highlight-panel highlight-panel-padded govuk-!-margin-top-4">
                     <h3 class="govuk-heading-s">Business support</h3>
                     <p class="govuk-body"><a target="_blank" href="https://www.businesssupport.gov.uk/coronavirus/">Visit GOV.UK (opens in a new window)</a> for Coronavirus business support.</p>
                 </div>
@@ -128,16 +133,8 @@
                     <p class="govuk-body"><a target="_blank" href="https://earlymetrics.fra1.qualtrics.com/jfe/form/SV_8Ag4hfhZTndA2Et">Apply for an innovation continuity loan (opens in a new window)</a></p>
                 </div>
             </th:block>
-            <th:block th:if="${decision == 'continuity-grant'}">
-                <div class="highlight-panel highlight-panel-padded">
-                    <h3 class="govuk-heading-s">Continuity grant application</h3>
-                    <p class="govuk-body">We may be able to offer you a continuity grant of up to £250,000 to support your project and reasonable business costs not covered by your grant. We will need you to provide confirmation of your eligibility. We will also take publicly available financial information into account to assess the continued financial viability of your business.</p>
-                    <p class="govuk-body"><a target="_blank" href="https://apply-for-innovation-funding.service.gov.uk/competition/596/overview">Apply for a continuity grant (opens in a new window)</a></p>
-                </div>
-            </th:block>
-
-
         </th:block>
+
         <table class="govuk-table govuk-!-margin-top-3" th:unless="${previousAnswers == null or previousAnswers.isEmpty()}">
             <caption class="govuk-table__caption">
                 <h2 class="govuk-heading-m">Previous answers</h2>

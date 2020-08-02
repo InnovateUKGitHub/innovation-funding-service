@@ -8,13 +8,13 @@ cd $(cd -P -- "$(dirname -- "$0")" && pwd -P)
 # Check what to search for in the docker image names.
 TAG_TO_SEARCH_FOR=$1
 # Get all innovateuk docker container images which have the TAG_TO_SEARCH_FOR as part of their name.
-containers=$(docker images | awk '{print $1":"$2}' | grep $TAG_TO_SEARCH_FOR)
+containers=$(docker images | awk '{print $1":"$2}' | grep -E "$TAG_TO_SEARCH_FOR")
 
 # Loop through all containers and scan them.
 echo "------------------------------------------"
 echo "--We will scan the following containers:--"
 echo "------------------------------------------"
-for container in $containers; do 
+for container in $containers; do
   created_date=`docker inspect -f '{{ .Created }}' $container`
   printf "|%-150s| %s\n" $container "`date -d $created_date`"
 done

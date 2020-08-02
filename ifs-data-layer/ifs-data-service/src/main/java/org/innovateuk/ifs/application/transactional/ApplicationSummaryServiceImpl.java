@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.resource.PreviousApplicationResource;
 import org.innovateuk.ifs.application.resource.comparators.*;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.fundingdecision.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -103,9 +102,6 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     @Autowired
     private ApplicationSummaryPageMapper applicationSummaryPageMapper;
 
-    @Autowired
-    private OrganisationAddressMapper organisationAddressMapper;
-
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
             long competitionId,
@@ -192,15 +188,11 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
 
-        return serviceSuccess(applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+        return serviceSuccess(applicationRepository.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId,
                 filterStr,
                 sendFilter.orElse(null),
-                fundingFilter.orElse(null))
-                .stream()
-                .filter(Application::applicationFundingDecisionIsChangeable)
-                .map(Application::getId)
-                .collect(toList()));
+                fundingFilter.orElse(null)));
     }
 
     @Override

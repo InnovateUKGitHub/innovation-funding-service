@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Finance checks edit duration - ${model.project.name}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
@@ -58,7 +58,7 @@
                  th:field="*{durationInMonths}" />
           <span class="govuk-body">months</span>
         </div>
-        <button type="submit" class="govuk-button">Save and return to finances</button>
+        <button type="submit" class="govuk-button">Save and return to project finances</button>
       </form>
 
       <th:block th:insert="fragments/layout :: main-content-end" />

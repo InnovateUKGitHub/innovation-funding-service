@@ -20,7 +20,6 @@ import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplic
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +36,6 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
@@ -49,8 +46,6 @@ public class CompetitionManagementApplicationController {
 
     @Autowired
     private ProcessRoleService processRoleService;
-    @Autowired
-    private UserRestService userRestService;
     @Autowired
     private ApplicationPrintPopulator applicationPrintPopulator;
     @Autowired
@@ -134,22 +129,20 @@ public class CompetitionManagementApplicationController {
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead', 'stakeholder', 'external_finance')")
-    @GetMapping("/{applicationId}/forminput/{formInputId}/download")
+    @GetMapping("/{applicationId}/forminput/{formInputId}/file/{fileEntryId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
+            @PathVariable("fileEntryId") final Long fileEntryId,
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
-        if (hasProcessRole(user)) {
-            processRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
-        } else {
-            long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
-            processRole = processRoleService.getById(processRoleId).get();
-        }
 
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
+        long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
+        processRole = processRoleService.getById(processRoleId).get();
+
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId(), fileEntryId).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
@@ -170,9 +163,5 @@ public class CompetitionManagementApplicationController {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
-    }
-
-    private boolean hasProcessRole(UserResource user) {
-        return !(isInternal(user) || user.hasRole(STAKEHOLDER));
     }
 }
