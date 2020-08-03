@@ -8,6 +8,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-7812  KTP Finance Overview - Your Organisation Section
 ...
 ...            IFS-7869  KTP Comp setup: Project eligibility
+...
+...            IFS-7805  KTP Application: Users cannot see project start date
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -58,7 +60,7 @@ Applicant applies to newly created KTP competition
     And the user creates an account and verifies email                         Indi  Gardiner  ${lead_ktp_email}  ${short_password}
 
 Applicant is able to complete the application
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7805
     Given Logging in and Error Checking             &{ktpLeadApplicantCredentials}
     When the user clicks the button/link            jQuery = a:contains("Untitled application (start here)")
     Then the user completes the KTP application
@@ -79,12 +81,25 @@ Moving KTP Competition to Project Setup
     And moving competition to Project Setup            ${competitionId}
     [Teardown]  Requesting IDs of this Project
 
+the project finance user cannot see the project start date
+    [Documentation]  IFS-7805
+    Given the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link         link = ${ApplicationID}
+    Then the user should not see the element     jQuery = dt:contains("When do you wish to start your project?")
+    And the user should see the element          jQuery = dt:contains("Duration in months")
+
 The user is able to complete the Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  the user logs-in in new browser                      &{ktpLeadApplicantCredentials}
+    [Setup]  log in as a different user                           &{ktpLeadApplicantCredentials}
     Given the user navigates to the page                          ${server}/project-setup/project/${ProjectID}
     When the user is able to complete project details section
     Then the user should see the element                          jQuery = .progress-list li:nth-child(1):contains("Completed")
+
+The user cannot see the project start date
+    [Documentation]  IFS-7805
+    When the user clicks the button/link            link = Project details
+    Then the user sees the text in the element      id = start-date    ${empty}
+    [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
 The user is able to complete Project team section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -129,6 +144,12 @@ Internal user is able to approve documents
     When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
+Internal user cannot see the project start date
+    [Documentation]  IFS-7805
+    When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    Then the user sees the text in the element      id = start-date    ${empty}
+    [Teardown]  the user clicks the button/link     link = Back to project setup
+
 Internal user is able to assign an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
@@ -155,18 +176,20 @@ Internal user is able to approve Finance checks and generate spend profile
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
 
-The partner is able to submit the spend profile
-    [Documentation]  IFS-7812
+The partner is able to submit the spend profile and should not see the project start date
+    [Documentation]  IFS-7812  IFS-7805
     [Setup]  log in as a different user             &{collaborator1_credentials}
     Given The partner submits the spend profile     ${ProjectID}  ${organisationLudlowId}
+    And the user should not see the element         jQuery = dt:contains("Project start date")
 
-The lead is able to submit the spend profile
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+The lead is able to submit the spend profile and should not see the project start date
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7805
     [Setup]  Requesting KTP Organisation ID
     Given log in as a different user            &{ktpLeadApplicantCredentials}
-    And the user navigates to the page          ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
-    When the user submits the spend profile
-    Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+    When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
+    And the user should not see the element     jQuery = dt:contains("Project start date")
+    Then the user submits the spend profile
+    And the user should see the element         jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
 Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -293,13 +316,23 @@ Internal user is able to approve documents
 
 The user completes the KTP application
     the user clicks the button/link                                                 link = Application details
-    the user fills in the Application details                                       ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                        ${KTPapplicationTitle}
     the user marks the KTP finances as complete                                     ${KTPapplicationTitle}   Calculate  52,214
     the user accept the competition terms and conditions                            Return to application overview
+
+the user fills in the KTP Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element                jQuery = h1:contains("Application details")
+    the user should not see the element            id = startDate
+    the user enters text to a text field           id = name  ${appTitle}
+    the user enters text to a text field           id = durationInMonths  24
+    the user clicks the button twice               css = label[for="resubmission-no"]
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Application details") > .task-status-complete
 
 The user completes the research category
     [Arguments]  ${res_category}
