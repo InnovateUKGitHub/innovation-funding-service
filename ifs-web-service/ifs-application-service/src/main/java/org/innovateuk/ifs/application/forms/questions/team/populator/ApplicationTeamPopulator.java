@@ -98,7 +98,8 @@ public class ApplicationTeamPopulator {
                 leadApplicant,
                 competition.getCollaborationLevel() == CollaborationLevel.SINGLE,
                 application.isOpen() && competition.isOpen(),
-                questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete));
+                questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
+                competition.isKtp());
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {

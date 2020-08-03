@@ -259,6 +259,26 @@
                        id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>
+
+                <th:block th:if="${model.ktpCompetition}">
+                    <div>
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Knowledge Transfer Adviser</h3>
+                        <p class="govuk-body">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
+                        <p class="govuk-body">The lead applicant cannot mark the page as complete until a Knowledge Transfer Adviser has accepted their invitation.</p>
+                        <div class="govuk-form-group">
+                            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${ktaForm}" novalidate="novalidate" method="post">
+                                <label class="govuk-label govuk-label--s" for="kta-email">Email</label>
+                                <input type="text" id="kta-email"
+                                       th:field="*{email}"
+                                       class="govuk-input"
+                                       th:errorclass="govuk-input--error" />
+                                <button class="gov-uk-button" type="submit" name="invite-kta">Invite to application</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </th:block>
+
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                       method="post">
                     <div th:if="${model.open}" class="form-footer govuk-!-margin-top-8">

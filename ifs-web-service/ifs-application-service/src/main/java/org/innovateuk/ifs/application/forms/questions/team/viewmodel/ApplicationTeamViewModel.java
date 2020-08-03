@@ -16,6 +16,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean collaborationLevelSingle;
     private final boolean open;
     private final boolean complete;
+    private final boolean ktpCompetition;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -26,7 +27,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean leadApplicant,
                                     boolean collaborationLevelSingle,
                                     boolean open,
-                                    boolean complete) {
+                                    boolean complete,
+                                    boolean ktpCompetition) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.applicationName = applicationName;
@@ -37,6 +39,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.collaborationLevelSingle = collaborationLevelSingle;
         this.open = open;
         this.complete = complete;
+        this.ktpCompetition = ktpCompetition;
     }
 
     @Override
@@ -97,5 +100,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return organisations.stream()
                 .flatMap(org -> org.getRows().stream())
                 .anyMatch(ApplicationTeamRowViewModel::isInvite);
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 }

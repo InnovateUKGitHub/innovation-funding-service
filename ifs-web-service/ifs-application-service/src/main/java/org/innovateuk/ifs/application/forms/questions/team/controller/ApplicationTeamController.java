@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 
+import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationKtaForm;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -51,6 +52,7 @@ public class ApplicationTeamController {
 
     @GetMapping
     public String viewTeam(@ModelAttribute(value = "form", binding = false) ApplicationTeamForm form,
+                           @ModelAttribute(value = "ktaForm", binding = false) ApplicationKtaForm ktaForm,
                            BindingResult bindingResult,
                            Model model,
                            @PathVariable long applicationId,
@@ -62,17 +64,31 @@ public class ApplicationTeamController {
 
     @GetMapping(params = "show-errors")
     public String showErrors(@ModelAttribute(value = "form") ApplicationTeamForm form,
+                             @ModelAttribute(value = "ktaForm") ApplicationKtaForm ktaForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return markAsComplete(form, bindingResult, validationHandler, model, applicationId, questionId, user);
+        return markAsComplete(form, ktaForm, bindingResult, validationHandler, model, applicationId, questionId, user);
+    }
+
+    @PostMapping(params = "invite-kta")
+    public String addKta(@ModelAttribute(value = "ktaForm") ApplicationKtaForm ktaForm,
+                         BindingResult bindingResult,
+                         ValidationHandler validationHandler,
+                         Model model,
+                         @PathVariable long applicationId,
+                         @PathVariable long questionId,
+                         UserResource user) {
+        int x = 2;
+        return redirectToApplicationTeam(applicationId, questionId);
     }
 
     @PostMapping(params = "complete")
     public String markAsComplete(@ModelAttribute(value = "form") ApplicationTeamForm form,
+                                 @ModelAttribute(value = "ktaForm") ApplicationKtaForm ktaForm,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
@@ -85,7 +101,7 @@ public class ApplicationTeamController {
                 defaultConverters()));
         return validationHandler.failNowOrSucceedWith(() -> {
                     questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
-                    return viewTeam(form, bindingResult, model, applicationId, questionId, user);
+                    return viewTeam(form, ktaForm, bindingResult, model, applicationId, questionId, user);
                 },
                 () -> redirectToApplicationTeam(applicationId, questionId));
     }
