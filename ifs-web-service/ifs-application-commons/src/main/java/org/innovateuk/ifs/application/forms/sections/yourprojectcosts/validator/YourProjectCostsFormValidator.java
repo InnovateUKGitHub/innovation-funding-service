@@ -85,13 +85,13 @@ public class YourProjectCostsFormValidator {
                 validateSameNumberOfNonBlankAssociateRows(form.getAssociateDevelopmentCostRows(), form.getAssociateSalaryCostRows(), validationHandler);
                 break;
             case CONSUMABLES:
-                validateRows(form.getConsumableCostRows(), "consumables[%s].", validationHandler);
+                validateRows(form.getConsumableCostRows(), "consumableCostRows[%s].", validationHandler);
                 break;
             case ASSOCIATE_SUPPORT:
-                validateRows(form.getAssociateSupportCostRows(), "associateSupport[%s].", validationHandler);
+                validateRows(form.getAssociateSupportCostRows(), "associateSupportCostRows[%s].", validationHandler);
                 break;
             case KNOWLEDGE_BASE:
-                validateRows(form.getKnowledgeBaseCostRows(), "knowledgeBaseCosts[%s].", validationHandler);
+                validateRows(form.getKnowledgeBaseCostRows(), "knowledgeBaseCostRows[%s].", validationHandler);
                 break;
             case ESTATE_COSTS:
                 validateEstateCosts(form.getEstateCostRows(), validationHandler);
