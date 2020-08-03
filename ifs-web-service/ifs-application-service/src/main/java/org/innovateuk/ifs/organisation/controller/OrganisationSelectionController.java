@@ -108,18 +108,26 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
             }
 
             if (registrationCookieService.isCollaboratorJourney(request)) {
-                if (!validateCollaborator(request, form))
-                    return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+                if (knowledge_base_competition(request)) {
+                    if (!validateCollaborator(form))
+                        return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
+                }
             }
+
             return organisationJourneyEnd.completeProcess(request, response, user, form.getSelectedOrganisationId());
         };
     }
 
-    private boolean validateCollaborator(HttpServletRequest request, OrganisationSelectionForm form) {
-        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+    private boolean validateCollaborator(OrganisationSelectionForm form) {
         OrganisationResource organisation = organisationRestService.getOrganisationById(form.getSelectedOrganisationId()).getSuccess();
 
-        return competition.getLeadApplicantTypes().contains(KNOWLEDGE_BASE.getId()) && OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
+        return OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
+    }
+
+    private boolean knowledge_base_competition(HttpServletRequest request) {
+        CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+
+        return competition.getLeadApplicantTypes().contains(KNOWLEDGE_BASE.getId());
     }
 
     private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {
