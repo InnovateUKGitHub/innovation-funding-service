@@ -194,7 +194,7 @@ The stakeholder can be added as a collaborator to an application
     Given new user apply for competition and create account
     When the user verifies their account                        ${uk_based_applicant_new}
     And A new organisation logs in and sees the project         ${uk_based_applicant_new}
-    And the user clicks the button/link                         link = Untitled application (start here)
+    And the user clicks the button/link                         link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     Then the user clicks the button/link                        link = Application team
     And the user adds a stakeholder as partner organisation     Blake Consultants  Blake Wood  ${previousStakeholderEmail}
 
