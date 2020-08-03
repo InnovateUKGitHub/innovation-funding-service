@@ -761,7 +761,7 @@ non-registered user selects business options
     [Arguments]  ${isBusinessInternational}
     the user clicks the button/link              link = Continue and create an account
     the user should see the element              jQuery = span:contains("${organisationBasedInUkTitle}")
-    the user should not see the element          jQuery = span:contains("Create an account")
+    the user should see the element              jQuery = span:contains("Create an account")
     user selects where is organisation based     ${isBusinessInternational}
 
 the user provides international organisation details
