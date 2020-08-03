@@ -9,13 +9,13 @@ UPDATE project p inner join application a on a.id = p.application_id INNER JOIN 
 SET @additional_funding_id = (SELECT id FROM competition WHERE covid_type = 'ADDITIONAL_FUNDING');
 UPDATE competition SET has_assessment_stage=false WHERE id = @additional_funding_id;
 DELETE FROM competition_finance_row_types WHERE competition_id = @additional_funding_id and finance_row_type='FINANCE';
-INSERT INTO competition_finance_row_types(competition_id, finance_row_type) VALUES (@additional_funding_id, 'GRANT_CLAIM_AMOUNT');
+INSERT INTO competition_finance_row_types(competition_id, finance_row_type, priority) VALUES (@additional_funding_id, 'GRANT_CLAIM_AMOUNT', 7);
 
 
 -- DE_MINIMIS_ROUND_2
 SET @de_minimis_round_2 = (SELECT id FROM competition WHERE covid_type = 'DE_MINIMIS_ROUND_2');
 DELETE FROM competition_finance_row_types WHERE competition_id = @de_minimis_round_2 and finance_row_type='FINANCE';
-INSERT INTO competition_finance_row_types(competition_id, finance_row_type) VALUES (@de_minimis_round_2, 'GRANT_CLAIM_AMOUNT');
+INSERT INTO competition_finance_row_types(competition_id, finance_row_type, priority) VALUES (@de_minimis_round_2, 'GRANT_CLAIM_AMOUNT', 7);
 
 
 -- TODO
