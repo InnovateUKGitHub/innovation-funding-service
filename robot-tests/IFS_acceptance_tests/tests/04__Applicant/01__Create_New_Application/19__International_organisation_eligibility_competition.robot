@@ -689,10 +689,6 @@ the user sign in and apply for international comp
     the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
     Logging in and Error Checking                               ${user}  ${password}
 
-#the user selects organisation type as business
-#    the user selects the radio button     organisationTypeId  radio-1
-#    the user clicks the button/link       name = select-company-type
-
 organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
     logout as user
