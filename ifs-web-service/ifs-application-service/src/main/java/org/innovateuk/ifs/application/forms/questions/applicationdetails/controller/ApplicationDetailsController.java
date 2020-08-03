@@ -18,6 +18,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -174,7 +175,7 @@ public class ApplicationDetailsController {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         LocalDate projectStartDate = competition.isKtp()
-                ? competition.getEndDate().plusMonths(12).toLocalDate()
+                ? TimeZoneUtil.toUkTimeZone(competition.getEndDate()).plusMonths(12).toLocalDate()
                 : convertMinLocalDateToNull(form.getStartDate());
 
         application.setName(form.getName());

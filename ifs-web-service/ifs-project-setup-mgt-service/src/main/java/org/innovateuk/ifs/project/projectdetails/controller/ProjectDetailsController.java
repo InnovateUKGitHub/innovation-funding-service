@@ -23,6 +23,7 @@ import org.innovateuk.ifs.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.user.resource.SimpleUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -147,7 +148,7 @@ public class ProjectDetailsController {
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
 
         if (competitionResource.isKtp()) {
-            LocalDate defaultKtpStartDate = competitionResource.getEndDate().plusMonths(12).toLocalDate();
+            LocalDate defaultKtpStartDate = TimeZoneUtil.toUkTimeZone(competitionResource.getEndDate()).plusMonths(12).toLocalDate();
             form.setProjectStartDate(defaultKtpStartDate.withDayOfMonth(1));
         }
 
