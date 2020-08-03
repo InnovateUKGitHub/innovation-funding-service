@@ -56,6 +56,11 @@ public class ProjectFinanceController {
         return financeCheckService.resetEligibility(projectId).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/finance-checks/reset")
+    public RestResult<Void> resetFinanceChecks(@PathVariable("projectId") final Long projectId) {
+        return financeCheckService.resetFinanceChecks(projectId).toPostResponse();
+    }
+
     @GetMapping("/{projectId}/partner-organisation/{organisationId}/eligibility")
     public RestResult<EligibilityResource> getEligibility(@PathVariable("projectId") final Long projectId,
                                                           @PathVariable("organisationId") final Long organisationId) {
