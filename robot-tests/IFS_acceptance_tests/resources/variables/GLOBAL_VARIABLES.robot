@@ -315,3 +315,13 @@ ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}
+
+#OrganisationTypes and Info text
+${businessOrganisationName}              Business
+${researchOrganisationName}              Research
+${rtoOrganisationName}                   Research and technology organisation (RTO)
+${nonProfitOrganisationName}             Public sector, charity or non Je-S registered research organisation
+${bussinessOrgInfoText}                  A person or organisation that provides goods or services in exchange for something of value, usually money.
+${nonJe-s/Public/CharityOrgInfoText}     A not-for-profit organisation focusing on innovation.
+${researchOrgInfoText}                   Higher education and organisations registered with Je-S.
+${rtoOrgInfoText}                        Organisations which solely promote and conduct collaborative research and innovation.
