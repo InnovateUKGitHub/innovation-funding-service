@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
@@ -58,6 +59,11 @@ public class ApplicationInviteController {
     @PostMapping("/save-invites")
     public RestResult<Void> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return applicationInviteService.saveInvites(inviteResources).toPostCreateResponse();
+    }
+
+    @PostMapping("/save-kta-invites")
+    public RestResult<Void> saveKtaInvite(@RequestBody List<ApplicationKtaInviteResource> inviteResources) {
+        return applicationInviteService.saveKtaInvites(inviteResources).toPostCreateResponse();
     }
 
     @PostMapping("/resend-invite")

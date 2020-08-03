@@ -19,6 +19,7 @@ import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -149,6 +150,12 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             applicationInviteRepository.saveAll(invites);
             return applicationInviteNotificationService.inviteCollaborators(invites);
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResources) {
+        return null;
     }
 
     @Override

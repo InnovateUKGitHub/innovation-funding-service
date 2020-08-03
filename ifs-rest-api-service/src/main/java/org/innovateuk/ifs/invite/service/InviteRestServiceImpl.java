@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,12 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     @Override
     public RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
         String url = inviteRestUrl + "/save-invites";
+        return postWithRestResult(url, inviteResources, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResources) {
+        String url = inviteRestUrl + "/save-kta-invites";
         return postWithRestResult(url, inviteResources, Void.class);
     }
 

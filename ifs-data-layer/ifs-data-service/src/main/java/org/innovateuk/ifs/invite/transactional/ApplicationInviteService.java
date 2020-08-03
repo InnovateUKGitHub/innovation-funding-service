@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -33,6 +35,9 @@ public interface ApplicationInviteService {
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
     ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
 
+    @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
+    ServiceResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResources);
+
     @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
     ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource);
 
@@ -56,4 +61,5 @@ public interface ApplicationInviteService {
 
     @PreAuthorize("hasPermission(#applicationInviteId, 'org.innovateuk.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
     ServiceResult<Void> removeApplicationInvite(long applicationInviteId);
+
 }
