@@ -88,26 +88,26 @@ the project finance user cannot see the project start date
     Then the user should not see the element     jQuery = dt:contains("When do you wish to start your project?")
     And the user should see the element          jQuery = dt:contains("Duration in months")
 
-The user is able to complete the Project details section
+The lead is able to complete the Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  log in as a different user                           &{ktpLeadApplicantCredentials}
     Given the user navigates to the page                          ${server}/project-setup/project/${ProjectID}
     When the user is able to complete project details section
     Then the user should see the element                          jQuery = .progress-list li:nth-child(1):contains("Completed")
 
-The user cannot see the project start date
+The lead cannot see the project start date
     [Documentation]  IFS-7805
     When the user clicks the button/link            link = Project details
     Then the user sees the text in the element      id = start-date    ${empty}
     [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
 
-The user is able to complete Project team section
+The lead is able to complete Project team section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user clicks the button/link                link = Project team
     When the user completes the project team section
     Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("To be completed")
 
-The user is able to complete the Documents section
+The lead is able to complete the Documents section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user clicks the button/link                link = Documents
     When the user uploads the exploitation plan
@@ -116,7 +116,7 @@ The user is able to complete the Documents section
     And the user clicks the button/link                  link = Set up your project
     Then the user should see the element                 jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
 
-The user is able to complete the Bank details section
+The lead is able to complete the Bank details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user enters bank details
     When the user clicks the button/link     link = Set up your project
