@@ -169,7 +169,7 @@ Non registered UK based users confirm their organisation details and create an a
     [Documentation]    IFS-7199
     [Tags]  HappyPath
     Given the user provides uk based organisation details             Nomensa  ${ukBasedOrganisationName}
-    And the user verifies their organisation details
+    And the user verifies uk based organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
     Then the user should not see an error in the page
@@ -212,7 +212,7 @@ Registered UK based user applies for International Competition
     Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business                            radio-1
     And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-    Then the user verifies their organisation details
+    Then the user verifies uk based organisation details
     And the user clicks the button/link                                            name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
@@ -680,6 +680,11 @@ international user sees these page elements
 
 the user verifies their organisation details
     the user should see the element         jQuery = p:contains("This organisation will lead the application.")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
+    the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
+
+the user verifies uk based organisation details
+    the user should see the element         jQuery = p:contains("${chooseYourOragnisationTypeInfoText}")
     the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
     the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
 
