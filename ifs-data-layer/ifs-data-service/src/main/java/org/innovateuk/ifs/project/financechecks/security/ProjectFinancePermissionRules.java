@@ -50,6 +50,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "RESET_VIABILITY",
+            description = "Project Finance Users can reset Viability")
+    public boolean projectFinanceUserCanResetViability(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+    }
+
+    @PermissionRule(
             value = "VIEW_ELIGIBILITY",
             description = "Project Finance Users can view Eligibility")
     public boolean projectFinanceUserCanViewEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
@@ -82,6 +89,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Competition Finance Users can save Eligibility")
     public boolean competitionFinanceUserCanSaveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return userIsExternalFinanceOnCompetitionForProject(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectActive(projectOrganisationCompositeId.getProjectId());
+    }
+
+    @PermissionRule(
+            value = "RESET_ELIGIBILITY",
+            description = "Project Finance Users can reset Eligibility")
+    public boolean projectFinanceUserCanResetEligibility(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
