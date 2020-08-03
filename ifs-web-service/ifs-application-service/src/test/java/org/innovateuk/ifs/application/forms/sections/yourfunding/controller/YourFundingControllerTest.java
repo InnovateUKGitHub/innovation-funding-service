@@ -8,7 +8,11 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourF
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.YourFundingFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
+import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -20,10 +24,12 @@ import org.springframework.validation.BindingResult;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.commons.error.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionApplicationConfigResourceBuilder.newCompetitionApplicationConfigResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -122,6 +128,14 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Test
     public void complete() throws Exception {
+
+        long competitionId = 1l;
+
+        ApplicationResource applicationResource = newApplicationResource()
+                .withCompetition(competitionId)
+                .build();
+        CompetitionApplicationConfigResource competitionApplicationConfigResource = newCompetitionApplicationConfigResource().build();
+
         when(saver.save(eq(APPLICATION_ID), eq(ORGANISATION_ID), any(YourFundingPercentageForm.class))).thenReturn(serviceSuccess());
         when(userRestService.findProcessRole(APPLICATION_ID, getLoggedInUser().getId()))
                 .thenReturn(restSuccess(newProcessRoleResource().withId(PROCESS_ROLE_ID).build()));
@@ -141,6 +155,9 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
 
     @Test
     public void complete_error() throws Exception {
+
+        long competitionId = 1l;
+
         YourFundingViewModel viewModel = mockUnlockedViewModel();
         doAnswer((invocationOnMock) -> {
             ((BindingResult) invocationOnMock.getArguments()[1]).rejectValue("requestingFunding", "something");

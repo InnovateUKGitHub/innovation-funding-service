@@ -90,6 +90,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setCompetitionType(competitionType.get());
         setDefaultAssessorPayAndCountAndAverageAssessorScore(competition);
         setDefaultOrganisationConfig(competition);
+        setDefaultApplicationConfig(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
@@ -131,6 +132,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             CompetitionOrganisationConfig competitionOrganisationConfig = new CompetitionOrganisationConfig();
             competitionOrganisationConfig.setCompetition(competition);
             competition.setCompetitionOrganisationConfig(competitionOrganisationConfig);
+        }
+    }
+
+    private void setDefaultApplicationConfig(Competition competition) {
+        if (competition.getCompetitionApplicationConfig() == null) {
+            CompetitionApplicationConfig competitionApplicationConfig = new CompetitionApplicationConfig();
+            competitionApplicationConfig.setCompetition(competition);
+            competition.setCompetitionApplicationConfig(competitionApplicationConfig);
         }
     }
 

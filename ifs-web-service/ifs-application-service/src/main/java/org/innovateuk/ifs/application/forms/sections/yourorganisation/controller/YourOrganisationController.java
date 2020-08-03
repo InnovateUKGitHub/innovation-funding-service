@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.forms.sections.yourorganisation.controller;
 
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.service.YourOrganisationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,16 +21,8 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form/your-organisation/competition/{competitionId}/organisation/{organisationId}/section/{sectionId}")
 public class YourOrganisationController {
 
-    private YourOrganisationRestService yourOrganisationRestService;
-
     @Autowired
-    YourOrganisationController(YourOrganisationRestService yourOrganisationRestService) {
-        this.yourOrganisationRestService = yourOrganisationRestService;
-    }
-
-    // for ByteBuddy
-    YourOrganisationController() {
-    }
+    private CompetitionRestService competitionRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
@@ -39,18 +33,23 @@ public class YourOrganisationController {
             @PathVariable("organisationId") long organisationId,
             @PathVariable("sectionId") long sectionId) {
 
-        boolean includeGrowthTable = yourOrganisationRestService.isIncludingGrowthTable(competitionId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
 
-        return redirectToViewPage(applicationId, competitionId, organisationId, sectionId, includeGrowthTable);
-    }
+        String urlPart;
+        if (competition.getFundingType() == FundingType.KTP) {
+            urlPart = "ktp-financial-years";
+        } else if (competition.getIncludeProjectGrowthTable()) {
+            urlPart = "with-growth-table";
+        } else {
+            urlPart = "without-growth-table";
+        }
 
-    private String redirectToViewPage(long applicationId, long competitionId, long organisationId, long sectionId, boolean includeGrowthTable) {
         return "redirect:" + APPLICATION_BASE_URL +
                 String.format("%d/form/your-organisation/competition/%d/organisation/%d/section/%d/%s",
                         applicationId,
                         competitionId,
                         organisationId,
                         sectionId,
-                        includeGrowthTable ? "with-growth-table" : "without-growth-table");
+                        urlPart);
     }
 }

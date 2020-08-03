@@ -163,6 +163,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("competitionOrganisationConfig", competitionOrganisationConfig);
     }
 
+    public CompetitionBuilder withCompetitionApplicationConfig(CompetitionApplicationConfig... competitionApplicationConfig) {
+        return withArraySetFieldByReflection("competitionApplicationConfig", competitionApplicationConfig);
+    }
+
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
         return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }

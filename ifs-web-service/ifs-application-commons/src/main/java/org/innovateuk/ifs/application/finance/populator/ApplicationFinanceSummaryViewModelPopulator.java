@@ -7,7 +7,9 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -62,6 +64,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     @Autowired
     private InviteService inviteService;
 
+    @Autowired
+    private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
+
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -91,11 +96,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
             }
         }
 
-        return new ApplicationFinanceSummaryViewModel(applicationId, competition.getName(), rows, !open,
+        CompetitionApplicationConfigResource competitionApplicationConfigResource
+                = competitionApplicationConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
+
+        return new ApplicationFinanceSummaryViewModel(applicationId, competition, rows, !open,
                 application.isCollaborativeProject(),
-                competition.getCollaborationLevel(),
-                competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE),
-                currentApplicantRole.map(ProcessRoleResource::getOrganisationId).orElse(null));
+                currentApplicantRole.map(ProcessRoleResource::getOrganisationId).orElse(null),
+                competitionApplicationConfigResource.getMaximumFundingSought());
     }
 
     private Optional<ProcessRoleResource> getCurrentUsersRole(List<ProcessRoleResource> processRoles, UserResource user) {

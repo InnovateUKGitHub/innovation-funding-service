@@ -190,6 +190,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionApplicationConfigId", referencedColumnName = "id")
+    private CompetitionApplicationConfig competitionApplicationConfig;
+
     private boolean useDocusignForGrantOfferLetter;
 
     private boolean hasAssessmentStage = true;
@@ -952,6 +956,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionOrganisationConfig(CompetitionOrganisationConfig competitionOrganisationConfig) {
         this.competitionOrganisationConfig = competitionOrganisationConfig;
+    }
+
+    public CompetitionApplicationConfig getCompetitionApplicationConfig() {
+        return competitionApplicationConfig;
+    }
+
+    public void setCompetitionApplicationConfig(CompetitionApplicationConfig competitionApplicationConfig) {
+        this.competitionApplicationConfig = competitionApplicationConfig;
     }
 
     public boolean isUseDocusignForGrantOfferLetter() {

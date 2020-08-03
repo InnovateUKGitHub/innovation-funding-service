@@ -23,8 +23,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.PROCUREMENT;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 public class CompetitionResource implements ApplicationConfiguration, ProjectConfiguration {
@@ -179,6 +178,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     @JsonIgnore
     public boolean isProcurement() {
         return PROCUREMENT.equals(fundingType);
+    }
+
+    @JsonIgnore
+    public boolean isKtp() {
+        return KTP.equals(fundingType);
     }
 
     @JsonIgnore

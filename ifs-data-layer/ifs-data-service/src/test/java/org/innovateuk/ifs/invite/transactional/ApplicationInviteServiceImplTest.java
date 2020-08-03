@@ -544,7 +544,7 @@ public class ApplicationInviteServiceImplTest {
                 application.getId(),
                 organisation.getId()
         ))
-                .thenReturn(applicationFinance);
+                .thenReturn(Optional.of(applicationFinance));
         when(applicationProgressServiceMock.updateApplicationProgress(application.getId()))
                 .thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 

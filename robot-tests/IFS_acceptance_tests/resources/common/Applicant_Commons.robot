@@ -326,14 +326,15 @@ the user selects research area
 
 the user fills in the funding information
     [Arguments]  ${Application}
-    the user navigates to Your-finances page   ${Application}
-    the user clicks the button/link            link = Your funding
-    the user selects the radio button          requestingFunding   true
-    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
-    the user selects the radio button          otherFunding   false
-    the user clicks the button/link            jQuery = button:contains("Mark as complete")
-    the user clicks the button/link            link = Your funding
-    the user should see the element            jQuery = button:contains("Edit")
+    the user navigates to Your-finances page                        ${Application}
+    the user clicks the button/link                                 link = Your funding
+    the user selects the radio button                               requestingFunding   true
+    Run Keyword if    "${Application}" == "KTP Application"         the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...         ELSE                                                the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
+    the user selects the radio button                               otherFunding   false
+    the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
+    the user clicks the button/link                                 link = Your funding
+    the user should see the element                                 jQuery = button:contains("Edit")
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
@@ -429,6 +430,12 @@ logged in user applies to competition public
     the user clicks the button/link     jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    Innovate  INNOVATE LTD
 
+the user enters organisation details manually on companies house link
+    [Arguments]  ${organisationName}
+    the user clicks the button/link          jQuery = span:contains("Enter details manually")
+    The user enters text to a text field     name = organisationName    ${organisationName}
+    the user clicks the button/link          jQuery = button:contains("Continue")
+
 the applicant submits the application
     the user clicks the button/link                    link = Review and submit
     the user should not see the element                jQuery = .task-status-incomplete
@@ -441,14 +448,14 @@ the user applies to competition and enters organisation type
     the user fills in the address info   2
 
 the user applies to competition and enters organisation type link
-    [Arguments]  ${compId}  ${organisationType}
-    the user navigates to the page      ${server}/competition/${compId}/overview
-    the user clicks the button/link     link = Start new application
-    The user clicks the button/link     link = Continue and create an account
-    the user selects the radio button   organisationTypeId  ${organisationType}
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
-    the user clicks the Not on companies house link
-    the user clicks the button/link     jQuery = button:contains("Save and continue")
+    [Arguments]  ${compId}  ${organisationType}  ${organisationName}
+    the user navigates to the page                      ${server}/competition/${compId}/overview
+    the user clicks the button/link                     link = Start new application
+    The user clicks the button/link                     link = Continue and create an account
+    the user selects the radio button                   organisationTypeId  ${organisationType}
+    the user clicks the button/link                     jQuery = button:contains("Save and continue")
+    the user clicks the Not on companies house link     ${organisationName}
+    the user clicks the button/link                     jQuery = button:contains("Save and continue")
 
 the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
@@ -464,8 +471,9 @@ the applicant completes Application Team
     the user should see the element  jQuery = li:contains("Application team") > .task-status-complete
 
 the user clicks the Not on companies house link
+    [Arguments]  ${organisationName}
     the user clicks the button/link       jQuery = span:contains("Enter details manually")
-    The user enters text to a text field  name = organisationName    org2
+    The user enters text to a text field  name = organisationName   ${organisationName}
     the user clicks the button/link       jQuery = button:contains("Continue")
 
 the user fills in the address info
@@ -577,3 +585,38 @@ the user can submit the application
     the user clicks the button/link         id = application-overview-submit-cta
     the user should not see the element     jQuery = .message-alert:contains("You will not be able to make changes")
     the user clicks the button/link         id = submit-application-button
+
+the lead invites already registered user
+    [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
+    the user fills in the inviting steps                     ${partner_email}
+    Logout as user
+    the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                        link = Continue
+    logging in and error checking                          &{collaborator1_credentials}
+    the user clicks the button/link                        css = .govuk-button[type="submit"]    #Save and continue
+    the user clicks the button/link                        link = Your project finances
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP finances as complete              ${application_title}   Calculate  52,214
+    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
+    ...                                             AND    Log in as a different user                               &{ktpLeadApplicantCredentials}
+    ...  ELSE                              Run keywords    the user marks the finances as complete                  ${application_title}   Calculate  52,214  yes
+    ...                                             AND    the user accept the competition terms and conditions     Return to application overview
+    ...                                             AND    Log in as a different user                               &{lead_applicant_credentials}
+    the user clicks the button/link                        link = ${application_title}
+    the applicant completes Application Team
+
+the user apply with a different organisation
+    [Arguments]  ${OrganisationType}
+    the user clicks the button/link       link = Apply with a different organisation
+    the user selects the radio button     organisationTypeId  ${OrganisationType}
+    the user clicks the button/link       jQuery = button:contains("Save and continue")
+
+the user creates an account and verifies email
+    [Arguments]   ${firstName}  ${lastName}  ${lead_email}  ${short_password}
+    the user enters the details and clicks the create account     ${firstName}  ${lastName}  ${lead_email}  ${short_password}
+    the user reads his email and clicks the link                  ${lead_email}   Please verify your email address   Once verified you can sign into your account
+    the user clicks the button/link                               link = Sign in
+
+the user sets max available funding
+    [Arguments]  ${amount}  ${compId}
+    ${id} =  User gets competition config id for max funding  ${compId}
+    User sets a max funding level for a competition           ${id}  ${amount}

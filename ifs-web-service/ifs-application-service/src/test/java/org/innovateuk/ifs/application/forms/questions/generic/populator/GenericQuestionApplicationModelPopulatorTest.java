@@ -121,6 +121,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
                                 .withApplicantResponses(newApplicantFormInputResponseResource()
                                         .withResponse(newFormInputResponseResource()
                                                 .withFileEntries(newFileEntryResource()
+                                                        .withId(999L)
                                                         .withName("templateresponse.pdf")
                                                         .build(1))
                                                 .withUpdateDate(now.minusDays(2))
@@ -163,6 +164,7 @@ public class GenericQuestionApplicationModelPopulatorTest {
         assertEquals("Template", viewModel.getTemplateDocumentTitle());
         assertEquals("template.odt", viewModel.getTemplateDocumentFilename());
         assertEquals("templateresponse.pdf", viewModel.getTemplateDocumentResponseFilename());
+        assertEquals((Long) 999L, viewModel.getTemplateDocumentResponseFileEntryId());
 
         assertEquals(toUkTimeZone(now), viewModel.getLastUpdated());
         assertEquals("Bob", viewModel.getLastUpdatedByName());
