@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.registration.form.InternalUserRegistrationForm;
-import org.innovateuk.ifs.management.registration.populator.InternalUserRegistrationModelPopulator;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 
 /**
  * Controller to manage internal user registration.
@@ -33,9 +33,6 @@ import static java.lang.String.format;
 public class InternalUserRegistrationController {
 
     private static final String FORM_ATTR_NAME = "form";
-
-    @Autowired
-    private InternalUserRegistrationModelPopulator internalUserRegistrationModelPopulator;
 
     @Autowired
     private InviteUserRestService inviteUserRestService;
@@ -107,7 +104,7 @@ public class InternalUserRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            model.addAttribute("model", internalUserRegistrationModelPopulator.populateModel(inviteHash));
+            model.addAttribute("model", aRegistrationViewModel().withExternalUser(false).withInvitee(true).build());
             return "registration/register";
         }
     }

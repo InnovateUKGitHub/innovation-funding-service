@@ -114,7 +114,7 @@ public class ProjectRegistrationController {
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),
-                registrationForm.getTitle(),
+                null,
                 registrationForm.getPhoneNumber(),
                 organisationId,
                 registrationForm.getAllowMarketingEmails());

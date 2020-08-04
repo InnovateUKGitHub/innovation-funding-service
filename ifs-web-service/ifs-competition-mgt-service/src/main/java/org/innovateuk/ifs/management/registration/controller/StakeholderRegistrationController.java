@@ -6,10 +6,9 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestSer
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
-import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.registration.form.StakeholderRegistrationForm;
-import org.innovateuk.ifs.management.registration.populator.StakeholderRegistrationModelPopulator;
 import org.innovateuk.ifs.management.registration.service.StakeholderService;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,29 +37,23 @@ public class StakeholderRegistrationController {
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private StakeholderRegistrationModelPopulator stakeholderRegistrationModelPopulator;
-
-    @Autowired
     private CompetitionSetupStakeholderRestService competitionSetupStakeholderRestService;
 
     @Autowired
     private StakeholderService stakeholderService;
 
-    @Autowired
-    private InviteUserRestService inviteUserRestService;
-
-
     @GetMapping("/{inviteHash}/register")
-    public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") StakeholderRegistrationForm stakeholderRegistrationForm) {
+    public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") RegistrationForm form) {
         StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).getSuccess();
-        model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(stakeholderInviteResource.getEmail()));
-        return "stakeholders/create-account";
+        form.setEmail(stakeholderInviteResource.getEmail());
+        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(true).withInvitee(true).build());
+        return "registration/register";
     }
 
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) StakeholderRegistrationForm stakeholderRegistrationForm,
+                                    @Valid @ModelAttribute(FORM_ATTR_NAME) RegistrationForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
@@ -71,7 +64,7 @@ public class StakeholderRegistrationController {
             return failureView.get();
         } else {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ServiceResult<Void> result = stakeholderService.createStakeholder(inviteHash, stakeholderRegistrationForm);
+                ServiceResult<Void> result = stakeholderService.createStakeholder(inviteHash, form);
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {
                         bindingResult.rejectValue(error.getFieldName(), "stakeholders." + error.getErrorKey());
@@ -109,9 +102,8 @@ public class StakeholderRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).getSuccess();
-            model.addAttribute("model", stakeholderRegistrationModelPopulator.populateModel(stakeholderInviteResource.getEmail()));
-            return "stakeholders/create-account";
+            model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(true).withInvitee(true).build());
+            return "registration/register";
         }
     }
 

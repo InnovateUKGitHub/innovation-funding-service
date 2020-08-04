@@ -6,11 +6,12 @@ import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestS
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
-import org.innovateuk.ifs.management.registration.form.MonitoringOfficerRegistrationForm;
-import org.innovateuk.ifs.management.registration.populator.MonitoringOfficerRegistrationModelPopulator;
 import org.innovateuk.ifs.management.registration.service.MonitoringOfficerService;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,26 +38,18 @@ public class MonitoringOfficerRegistrationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    private MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator;
+    @Autowired
     private MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService;
+    @Autowired
     private MonitoringOfficerService monitoringOfficerService;
+    @Autowired
     private NavigationUtils navigationUtils;
-
-    public MonitoringOfficerRegistrationController(MonitoringOfficerRegistrationModelPopulator monitoringOfficerRegistrationModelPopulator,
-                                                   MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService,
-                                                   MonitoringOfficerService monitoringOfficerService,
-                                                   NavigationUtils navigationUtils) {
-        this.monitoringOfficerRegistrationModelPopulator = monitoringOfficerRegistrationModelPopulator;
-        this.competitionSetupMonitoringOfficerRestService = competitionSetupMonitoringOfficerRestService;
-        this.monitoringOfficerService = monitoringOfficerService;
-        this.navigationUtils = navigationUtils;
-    }
 
     @GetMapping("/{inviteHash}/register")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
                              Model model,
                              HttpServletRequest request,
-                             @ModelAttribute("form") MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm,
+                             @ModelAttribute("form") RegistrationForm form,
                              UserResource loggedInUser) {
 
         if (loggedInUser != null) {
@@ -66,8 +59,9 @@ public class MonitoringOfficerRegistrationController {
         }
 
         MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.openMonitoringOfficerInvite(inviteHash).getSuccess();
-        model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
-        return "monitoring-officer/create-account";
+        form.setEmail(monitoringOfficerInviteResource.getEmail());
+        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(true).withInvitee(true).build());
+        return "registration/register";
     }
 
 
@@ -78,7 +72,7 @@ public class MonitoringOfficerRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm,
+                                    @Valid @ModelAttribute(FORM_ATTR_NAME) RegistrationForm monitoringOfficerRegistrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
@@ -127,9 +121,8 @@ public class MonitoringOfficerRegistrationController {
         if (loggedInUser != null) {
             return "registration/error";
         } else {
-            MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.getMonitoringOfficerInvite(inviteHash).getSuccess();
-            model.addAttribute("model", monitoringOfficerRegistrationModelPopulator.populateModel(monitoringOfficerInviteResource.getEmail()));
-            return "monitoring-officer/create-account";
+            model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(true).withInvitee(true).build());
+            return "registration/register";
         }
     }
 }

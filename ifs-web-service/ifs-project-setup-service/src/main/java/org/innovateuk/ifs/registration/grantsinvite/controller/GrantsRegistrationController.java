@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -22,6 +21,7 @@ import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 
 @Controller
 @SecuredBySpring(value = "Controller",
@@ -55,10 +55,14 @@ public class GrantsRegistrationController {
             if (errors.hasErrors()) {
                 return AcceptGrantsInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
             }
-            model.addAttribute("model", new RegistrationViewModel(true,
-                    invite.getGrantsInviteRole().getDisplayName(),
-                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
-                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
+            model.addAttribute("model",
+                    aRegistrationViewModel()
+                    .withInvitee(true)
+                    .withRole(invite.getGrantsInviteRole().getDisplayName())
+                    .withProject(String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()))
+                    .withPhoneGuidance(invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null)
+                    .build());
+
 
             model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
@@ -76,11 +80,12 @@ public class GrantsRegistrationController {
         String hash = cookieUtil.getCookieValue(request, AcceptGrantsInviteController.INVITE_HASH);
         return grantsInviteRestService.getInviteByHash(projectId, hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
-            model.addAttribute("model", new RegistrationViewModel(true,
-                    invite.getGrantsInviteRole().getDisplayName(),
-                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
-                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
-
+            model.addAttribute("model",  aRegistrationViewModel()
+                    .withInvitee(true)
+                    .withRole(invite.getGrantsInviteRole().getDisplayName())
+                    .withProject(String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()))
+                    .withPhoneGuidance(invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null)
+                    .build());
             if (bindingResult.hasErrors()) {
                 model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
                 return restSuccess(REGISTRATION_REGISTER_VIEW);

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.registration.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.MonitoringOfficerRegistrationRestService;
 import org.innovateuk.ifs.management.registration.form.MonitoringOfficerRegistrationForm;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,12 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     private MonitoringOfficerRegistrationRestService competitionSetupMonitoringOfficerRestService;
 
     @Override
-    public ServiceResult<Void> activateAndUpdateMonitoringOfficer(String inviteHash, MonitoringOfficerRegistrationForm monitoringOfficerRegistrationForm) {
+    public ServiceResult<Void> activateAndUpdateMonitoringOfficer(String inviteHash, RegistrationForm form) {
         MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource = new MonitoringOfficerRegistrationResource(
-                monitoringOfficerRegistrationForm.getFirstName(),
-                monitoringOfficerRegistrationForm.getLastName(),
-                monitoringOfficerRegistrationForm.getPhoneNumber(),
-                monitoringOfficerRegistrationForm.getPassword()
+                form.getFirstName(),
+                form.getLastName(),
+                form.getPhoneNumber(),
+                form.getPassword()
         );
         return competitionSetupMonitoringOfficerRestService.createMonitoringOfficer(inviteHash, monitoringOfficerRegistrationResource).toServiceResult();
     }

@@ -20,7 +20,6 @@ import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -48,6 +47,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ORGANISATION_ALREADY_EXISTS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
 
 @Controller
@@ -272,7 +272,7 @@ public class RegistrationController {
                 throw new InviteAlreadyAcceptedException();
             }
         }
-        model.addAttribute("model", new RegistrationViewModel(false));
+        model.addAttribute("model", aRegistrationViewModel().withInvitee(false).withExternalUser(true).build());
         return false;
     }
 
@@ -335,7 +335,7 @@ public class RegistrationController {
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),
-                registrationForm.getTitle(),
+                null,
                 registrationForm.getPhoneNumber(),
                 organisationId,
                 competitionId,

@@ -66,6 +66,9 @@
                                 data-required-errormessage=#{validation.standard.lastname.required},
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
             </div>
+
+            <th:block th:if="${model.addressRequired}" th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
+
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="phoneNumber">
                     Phone number
@@ -124,48 +127,50 @@
 
             <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
-                        <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
-                    </legend>
-                    <p class="govuk-body">
-                        <a href="/info/terms-and-conditions"
-                           class="govuk-link"
-                           target="_blank">Read our terms and conditions (opens in a new window)</a>.
-                    </p>
-                    <div class="govuk-checkboxes">
-                        <span class="govuk-error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+            <th:block th:if="${model.externalUser}">
+                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'govuk-form-group--error'">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
+                            <h2 class="govuk-fieldset__heading">Terms and conditions</h2>
+                        </legend>
+                        <p class="govuk-body">
+                            <a href="/info/terms-and-conditions"
+                               class="govuk-link"
+                               target="_blank">Read our terms and conditions (opens in a new window)</a>.
+                        </p>
                         <div class="govuk-checkboxes">
-                            <div class="govuk-checkboxes__item">
-                                <input id="termsAndConditions"
-                                       class="govuk-checkboxes__input"
-                                       value="1"
-                                       type="checkbox"
-                                       th:field="*{termsAndConditions}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
-                                <label for="termsAndConditions"
-                                       class="govuk-label govuk-checkboxes__label">I agree to the terms and conditions.</label>
+                            <span class="govuk-error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
+                            <div class="govuk-checkboxes">
+                                <div class="govuk-checkboxes__item">
+                                    <input id="termsAndConditions"
+                                           class="govuk-checkboxes__input"
+                                           value="1"
+                                           type="checkbox"
+                                           th:field="*{termsAndConditions}"
+                                           required="required"
+                                           th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
+                                    <label for="termsAndConditions"
+                                           class="govuk-label govuk-checkboxes__label">I agree to the terms and conditions.</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <div class="govuk-form-group">
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        <input id="allowMarketing"
-                               class="govuk-checkboxes__input"
-                               type="checkbox"
-                               th:field="*{allowMarketingEmails}" />
-                        <label for="allowMarketing"
-                               class="govuk-label govuk-checkboxes__label">Email me competition updates, events, deadlines and announcements.</label>
-                    </div>
+                    </fieldset>
                 </div>
 
-            </div>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="allowMarketing"
+                                   class="govuk-checkboxes__input"
+                                   type="checkbox"
+                                   th:field="*{allowMarketingEmails}" />
+                            <label for="allowMarketing"
+                                   class="govuk-label govuk-checkboxes__label">Email me competition updates, events, deadlines and announcements.</label>
+                        </div>
+                    </div>
+
+                </div>
+            </th:block>
 
             <button class="govuk-button" name="create-account" type="submit">Create account</button>
         </form>
