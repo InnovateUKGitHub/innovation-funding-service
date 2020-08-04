@@ -12,18 +12,19 @@ public class GrowthTable extends FinancialYearAccounts {
     private BigDecimal annualProfits;
     private BigDecimal annualExport;
     private BigDecimal researchAndDevelopment;
+    private Long employees;
 
     public GrowthTable() {
         super();
     }
 
     public GrowthTable(GrowthTable growthTable) {
-        super(growthTable);
         this.financialYearEnd = growthTable.getFinancialYearEnd();
         this.annualTurnover = growthTable.getAnnualTurnover();
         this.annualProfits = growthTable.getAnnualProfits();
         this.annualExport = growthTable.getAnnualExport();
         this.researchAndDevelopment = growthTable.getResearchAndDevelopment();
+        this.employees = growthTable.getEmployees();
     }
 
     public LocalDate getFinancialYearEnd() {
@@ -64,5 +65,13 @@ public class GrowthTable extends FinancialYearAccounts {
 
     public void setResearchAndDevelopment(BigDecimal researchAndDevelopment) {
         this.researchAndDevelopment = researchAndDevelopment;
+    }
+
+    public Long getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Long employees) {
+        this.employees = employees;
     }
 }

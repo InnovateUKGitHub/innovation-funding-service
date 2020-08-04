@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableForm;
-import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithGrowthTableResource;
+import org.innovateuk.ifs.finance.resource.KtpYearResource;
+import org.innovateuk.ifs.finance.resource.OrganisationFinancesKtpYearsResource;
 import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.project.finance.service.ProjectYourOrganisationRestService;
@@ -16,8 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
@@ -26,7 +28,8 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.finance.builder.OrganisationFinancesWithGrowthTableResourceBuilder.newOrganisationFinancesWithGrowthTableResource;
+import static org.innovateuk.ifs.finance.builder.KtpYearResourceBuilder.newKtpYearResource;
+import static org.innovateuk.ifs.finance.builder.OrganisationFinancesKtpYearsResourceBuilder.newOrganisationFinancesKtpYearsResource;
 import static org.innovateuk.ifs.finance.resource.OrganisationSize.LARGE;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -41,8 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseControllerMockMVCTest<EditOrganisationDetailsControllerWithGrowthTable> {
-
+public class EditOrganisationDetailsKtpFinancialYearsControllerTest extends BaseControllerMockMVCTest<EditOrganisationDetailsKtpFinancialYearsController> {
 
     @Mock
     private ProjectRestService projectRestService;
@@ -54,22 +56,25 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
     private ProjectYourOrganisationRestService projectYourOrganisationRestService;
 
     @Mock
-    private YourOrganisationWithGrowthTableFormPopulator viewModelPopulator;
+    private YourOrganisationKtpFinancialYearsFormPopulator formPopulator;
 
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Spy
+    private YourOrganisationKtpFinancialYearsFormSaver saver;
+
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
-    private OrganisationFinancesWithGrowthTableResource organisationFinancesWithGrowthTableResource;
+    private OrganisationFinancesKtpYearsResource organisationFinancesResource;
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
     private static CompetitionResource competitionResource;
-    private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-with-growth-table";
+    private static final String VIEW_WITH_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size";
 
     @Override
-    protected EditOrganisationDetailsControllerWithGrowthTable supplyControllerUnderTest() {
-        return new EditOrganisationDetailsControllerWithGrowthTable();
+    protected EditOrganisationDetailsKtpFinancialYearsController supplyControllerUnderTest() {
+        return new EditOrganisationDetailsKtpFinancialYearsController();
     }
 
     @Before
@@ -81,14 +86,20 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
                 .withId(organisationId)
                 .withName("SmithZone Ltd")
                 .build();
-        organisationFinancesWithGrowthTableResource = newOrganisationFinancesWithGrowthTableResource()
+        organisationFinancesResource = newOrganisationFinancesKtpYearsResource()
                 .withOrganisationSize(OrganisationSize.SMALL)
                 .withFinancialYearEnd(YearMonth.now().minusMonths(1))
-                .withHeadCount(1L)
-                .withTurnover(BigDecimal.valueOf(2))
-                .withAnnualProfits(BigDecimal.valueOf(3))
-                .withAnnualExport(BigDecimal.valueOf(4))
-                .withResearchAndDevelopment(BigDecimal.valueOf(5))
+                .withGroupEmployees(2L)
+                .withKtpYears(newKtpYearResource()
+                        .withYear(0,1,2)
+                        .withTurnover(BigDecimal.valueOf(1))
+                        .withPreTaxProfit(BigDecimal.valueOf(2))
+                        .withCurrentAssets(BigDecimal.valueOf(3))
+                        .withLiabilities(BigDecimal.valueOf(4))
+                        .withShareholderValue(BigDecimal.valueOf(5))
+                        .withLoans(BigDecimal.valueOf(6))
+                        .withEmployees(7L)
+                        .build(3))
                 .build();
         competitionResource = newCompetitionResource()
                 .build();
@@ -96,11 +107,11 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
 
     @Test
     public void viewPage() throws Exception {
-        YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
+        YourOrganisationKtpFinancialYearsForm form = new YourOrganisationKtpFinancialYearsForm();
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(projectResource));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
-        when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
-        when(viewModelPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
+        when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
+        when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(viewPageUrl()))
@@ -111,7 +122,7 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
 
     @Test
     public void saveWithGrowthTable_success() throws Exception {
-        returnSuccessForUpdateGrowthTable();
+        returnSuccessForUpdate();
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(projectResource));
 
 
@@ -120,17 +131,17 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
                 .andExpect(view().name(organisationDetailsPageUrl()))
                 .andReturn();
 
-        assertEquals(organisationFinancesWithGrowthTableResource.getOrganisationSize(), LARGE);
+        assertEquals(organisationFinancesResource.getOrganisationSize(), LARGE);
     }
 
     @Test
     public void saveWithGrowthTable_failure() throws Exception {
-        organisationFinancesWithGrowthTableResource.setOrganisationSize(null);
-        YourOrganisationWithGrowthTableForm yourOrganisationWithGrowthTableForm = new YourOrganisationWithGrowthTableForm();
+        organisationFinancesResource.setOrganisationSize(null);
+        YourOrganisationKtpFinancialYearsForm form = new YourOrganisationKtpFinancialYearsForm();
         when(projectRestService.getProjectById(projectId)).thenReturn(restSuccess(projectResource));
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisationResource));
-        when(projectYourOrganisationRestService.getOrganisationFinancesWithGrowthTable(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesWithGrowthTableResource));
-        when(viewModelPopulator.populate(organisationFinancesWithGrowthTableResource)).thenReturn(yourOrganisationWithGrowthTableForm);
+        when(projectYourOrganisationRestService.getOrganisationKtpYears(projectId, organisationId)).thenReturn(serviceSuccess(organisationFinancesResource));
+        when(formPopulator.populate(organisationFinancesResource)).thenReturn(form);
         when(competitionRestService.getCompetitionById(projectResource.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         mockMvc.perform(get(viewPageUrl()))
@@ -140,38 +151,51 @@ public class EditOrganisationDetailsControllerWithGrowthTableTest extends BaseCo
     }
 
     private RequestBuilder postAllFormParameters() {
-        organisationFinancesWithGrowthTableResource.setOrganisationSize(LARGE);
-        return post(viewPageUrl())
-                .param("organisationSize", organisationFinancesWithGrowthTableResource.getOrganisationSize().toString())
+        organisationFinancesResource.setOrganisationSize(LARGE);
+        MockHttpServletRequestBuilder builder = post(viewPageUrl())
+                .param("organisationSize", organisationFinancesResource.getOrganisationSize().toString())
                 .param("financialYearEnd", "financialYearEnd")
                 .param("financialYearEndMonthValue",
-                        String.valueOf(organisationFinancesWithGrowthTableResource.getFinancialYearEnd().getMonth().getValue()))
+                        String.valueOf(organisationFinancesResource.getFinancialYearEnd().getMonth().getValue()))
                 .param("financialYearEndYearValue",
-                        String.valueOf(organisationFinancesWithGrowthTableResource.getFinancialYearEnd().getYear()))
-                .param("headCountAtLastFinancialYear",
-                        organisationFinancesWithGrowthTableResource.getHeadCountAtLastFinancialYear().toString())
-                .param("annualTurnoverAtLastFinancialYear",
-                        organisationFinancesWithGrowthTableResource.getAnnualTurnoverAtLastFinancialYear().toString())
-                .param("annualProfitsAtLastFinancialYear",
-                        organisationFinancesWithGrowthTableResource.getAnnualProfitsAtLastFinancialYear().toString())
-                .param("annualExportAtLastFinancialYear",
-                        organisationFinancesWithGrowthTableResource.getAnnualExportAtLastFinancialYear().toString())
-                .param("researchAndDevelopmentSpendAtLastFinancialYear",
-                        organisationFinancesWithGrowthTableResource.getResearchAndDevelopmentSpendAtLastFinancialYear().toString());
+                        String.valueOf(organisationFinancesResource.getFinancialYearEnd().getYear()))
+                .param("groupEmployees",
+                        organisationFinancesResource.getGroupEmployees().toString());
+        int i = 0;
+        for (KtpYearResource year : organisationFinancesResource.getYears()) {
+            builder.param("years[" + i + "].year",
+                    year.getYear().toString());
+            builder.param("years[" + i + "].turnover",
+                    year.getTurnover().toString());
+            builder.param("years[" + i + "].preTaxProfit",
+                    year.getPreTaxProfit().toString());
+            builder.param("years[" + i + "].currentAssets",
+                    year.getCurrentAssets().toString());
+            builder.param("years[" + i + "].liabilities",
+                    year.getLiabilities().toString());
+            builder.param("years[" + i + "].shareholderValue",
+                    year.getShareholderValue().toString());
+            builder.param("years[" + i + "].loans",
+                    year.getLoans().toString());
+            builder.param("years[" + i + "].employees",
+                    year.getEmployees().toString());
+            i++;
+        }
+        return builder;
     }
 
     private String viewPageUrl() {
-        return format("/project/%d/organisation/%d/edit/with-growth-table",
+        return format("/project/%d/organisation/%d/edit/ktp-financial-years",
                 projectId, organisationId);
     }
 
     private String organisationDetailsPageUrl() {
-        return format("redirect:/competition/%d/project/%d/organisation/%d/details/with-growth-table",
+        return format("redirect:/competition/%d/project/%d/organisation/%d/details/ktp-financial-years",
                 projectResource.getCompetition(), projectId, organisationId);
     }
 
-    private void returnSuccessForUpdateGrowthTable() {
-        when(projectYourOrganisationRestService.updateOrganisationFinancesWithGrowthTable(eq(projectId), eq(organisationId),
+    private void returnSuccessForUpdate() {
+        when(projectYourOrganisationRestService.updateOrganisationFinancesKtpYears(eq(projectId), eq(organisationId),
                 any())).thenReturn(serviceSuccess());
     }
 }
