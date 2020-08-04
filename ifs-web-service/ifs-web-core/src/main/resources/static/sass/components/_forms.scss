@@ -77,13 +77,14 @@ input {
   }
 }
 
-td,
-tr {
+td {
   &.govuk-form-group {
-    float:none;
-    width:auto;
-    padding-left:0;
-    vertical-align: bottom;
+    width: auto;
+    padding-left: 0;
+
+    input {
+      vertical-align: top;
+    }
 
     &.govuk-table__cell--numeric {
 
@@ -92,22 +93,21 @@ tr {
       }
     }
 
-    input {
-      vertical-align: top;
-    }
-
     &.govuk-form-group--error {
       border-left:none;
       padding: 10px 20px 10px 0;
       border-bottom: 1px solid $govuk-border-colour;
 
-      &:not(tr) {
-
-        &:last-child {
-          padding-right: 0;
-        }
+      &:last-child {
+        padding-right: 0;
       }
     }
+  }
+}
+
+tr {
+  &.govuk-form-group {
+    vertical-align: bottom;
   }
 }
 
@@ -116,6 +116,10 @@ tr {
     &.govuk-form-group{
       padding: 10px 20px 10px 0;
       border-bottom: 1px solid $govuk-border-colour;
+
+      &:last-child {
+        padding-right: 0;
+      }
     }
   }
 }
@@ -228,6 +232,10 @@ tr {
       .govuk-form-group--error {
         vertical-align: bottom;
         padding: 10px 20px 10px 0;
+
+        &:last-child {
+          padding-right: 0;
+        }
       }
     }
   }

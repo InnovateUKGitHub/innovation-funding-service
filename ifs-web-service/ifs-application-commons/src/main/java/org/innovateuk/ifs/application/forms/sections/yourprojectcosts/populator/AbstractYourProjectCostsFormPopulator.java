@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
@@ -45,7 +46,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setConsumableCostRows(toRows(finance, FinanceRowType.CONSUMABLES,
                 ConsumablesRowForm.class, Consumable.class));
         form.setKnowledgeBaseCostRows(toRows(finance, FinanceRowType.KNOWLEDGE_BASE,
-                KnowledgeBaseCostRowForm.class, KnowledgeBaseCost.class));
+                KnowledgeBaseCostRowForm.class, KnowledgeBaseCost.class,
+                numberOfRows(finance, FinanceRowType.KNOWLEDGE_BASE) < 2));
         form.setAssociateSupportCostRows(toRows(finance, FinanceRowType.ASSOCIATE_SUPPORT,
                 AssociateSupportCostRowForm.class, AssociateSupportCost.class));
         form.setEstateCostRows(toRows(finance, FinanceRowType.ESTATE_COSTS,
@@ -53,6 +55,10 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
 
         return form;
+    }
+
+    private int numberOfRows(BaseFinanceResource finance, FinanceRowType type) {
+        return ofNullable(finance.getFinanceOrganisationDetails().get(type)).map(category -> category.getCosts().size()).orElse(0);
     }
 
     private LabourForm labour(BaseFinanceResource finance) {
@@ -159,7 +165,12 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return null;
 
     }
+
     private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz) {
+        return toRows(finance, financeRowType, formClazz, costClazz, true);
+    }
+
+    private <C extends AbstractFinanceRowItem, F extends AbstractCostRowForm<C>> Map<String, F> toRows(BaseFinanceResource finance, FinanceRowType financeRowType, Class<F> formClazz, Class<C> costClazz, boolean addEmptyRowOverride) {
         DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(financeRowType);
 
         if (costCategory != null) {
@@ -176,7 +187,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                         }
                     })
                     .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            if (shouldAddEmptyRow()) {
+            if (shouldAddEmptyRow() && addEmptyRowOverride) {
                 try {
                     rows.put(generateUnsavedRowId(), formClazz.newInstance());
                 } catch (IllegalAccessException |

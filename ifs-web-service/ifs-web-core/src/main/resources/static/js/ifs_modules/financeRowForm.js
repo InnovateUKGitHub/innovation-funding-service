@@ -77,7 +77,7 @@ IFS.core.financeRowForm = (function () {
         var maximum = addRowButton.data('repeatable-row-maximum')
         if (maximum && target.length) {
           var size = target.find('[data-repeatable-row]').length
-          addRowButton.toggle(size !== maximum)
+          addRowButton.toggleClass('govuk-visually-hidden', size >= maximum)
         }
       }
     },
