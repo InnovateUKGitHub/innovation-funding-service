@@ -434,4 +434,4 @@ the user should only see KB partner organisations
 the user slectes non profitable organisation type
     the user selects the radio button                           organisationTypeId   4
     the user clicks the button/link                             jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    university   ${existingAcademicPartnerOrgName}
+    the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}
