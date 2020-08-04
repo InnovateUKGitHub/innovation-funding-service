@@ -194,12 +194,6 @@ The partner is able to complete Project team Section
     And the user clicks the button/link             link = Set up your project
     Then the user should see the element            jQuery = .progress-list li:nth-child(2):contains("Completed")
 
-The Partner is able to complete the Bank details section
-    [Documentation]  IFS-7812
-    Given the user enters bank details
-    When the user clicks the button/link     link = Set up your project
-    Then the user should see the element     jQuery = .progress-list li:nth-child(5):contains("Awaiting review")
-
 Internal user is able to approve documents
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  log in as a different user                  &{Comp_admin1_credentials}
@@ -219,7 +213,6 @@ Finance user approves bank details
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  log in as a different user                         &{internal_finance_credentials}
     When the project finance user approves bank details for     ${ktpOrgName}  ${ProjectID}
-    And the project finance user approves bank details for      ${newPartnerOrgName}  ${ProjectID}
     Then the user navigates to the page                         ${server}/project-setup-management/competition/${competitionId}/status/all
     And the user should see the element                         css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(5)
 
