@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.admin.controller;
 
 import org.innovateuk.ifs.management.admin.form.InviteUserForm;
+import org.innovateuk.ifs.management.admin.form.InviteUserView;
 import org.innovateuk.ifs.management.admin.form.validation.Primary;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.groups.Default;
 import java.util.function.Supplier;
@@ -39,17 +37,18 @@ public class InviteUserController {
     @Autowired
     private InviteUserService inviteUserService;
 
-    @GetMapping("/invite-user")
-    public String inviteNewUser(Model model) {
-        return viewInviteNewUser(model);
+    @GetMapping("/invite-user/{view}")
+    public String inviteNewUser(@PathVariable String view, Model model) {
+        return viewInviteNewUser(view, model);
     }
 
-    private static String viewInviteNewUser(Model model) {
+    private static String viewInviteNewUser(String view, Model model) {
         InviteUserForm form = new InviteUserForm();
+        form.setView(InviteUserView.getByName(view));
+
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "admin/invite-new-user";
-
     }
 
     @PostMapping("/invite-user")
