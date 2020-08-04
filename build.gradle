@@ -246,7 +246,7 @@ publishing {
                 "$dist.name"(MavenPublication) {
                     groupId "org.innovateuk.ifs."+dist.type
                     if (project.hasProperty('ifs.version')) {
-                        version = version + project.findProperty('ifs.version')
+                        version = project.findProperty('ifs.version')
                     }
                     artifactId = dist.name
 
