@@ -22,7 +22,7 @@
 
         <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="firstName">
+                <label class="govuk-label govuk-label--s" for="firstName">
                     First name
                 </label>
                 <th:block th:if="${#fields.hasErrors('firstName')}">
@@ -43,7 +43,7 @@
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="lastName">
+                <label class="govuk-label govuk-label--s" for="lastName">
                     Last name
                 </label>
                 <th:block th:if="${#fields.hasErrors('lastName')}">
@@ -64,7 +64,7 @@
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{emailAddress}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="emailAddress">
+                <label class="govuk-label govuk-label--s" for="emailAddress">
                     Email address
                 </label>
                 <th:block th:if="${#fields.hasErrors('emailAddress')}">
@@ -81,7 +81,7 @@
                                         data-required-errormessage=#{validation.invite.email.required}" />
             </div>
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{role}')} ? 'govuk-form-group--error'">
-                <label class="govuk-label" for="role">
+                <label class="govuk-label govuk-label--s" for="role">
                     Role
                 </label>
                 <th:block th:if="${#fields.hasErrors('role')}">
