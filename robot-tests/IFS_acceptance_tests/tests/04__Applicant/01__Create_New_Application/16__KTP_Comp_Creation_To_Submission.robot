@@ -29,9 +29,6 @@ ${ktpApplicationTitle}                KTP Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         A Knowledge Base
 ${secondKTPOrgName}                   D Knowledge Base
-${existingPartnerOrgName}             SmithZone
-${existingAcademicPartnerOrgName}     UNIVERSITY OF LIVERPOOL
-${newPartnerOrgName}                  INNOVATE LTD
 ${group_employees_header}             Number of full time employees in your corporate group (if applicable)
 ${group_employees}                    200
 @{turnover}                           100000  98000   96000
@@ -67,7 +64,7 @@ Existing lead applicant can not apply to KTP compettition if organisation type i
     Given Log in as a different user                                &{ktpExistingLeadCredentials}
     When the user select the competition and starts application     ${ktpCompetitionName}
     And the user clicks the button/link                             id=save-organisation-button
-    Then the user should see the element                            jQuery = h1:contains("You are not eligible to start an application")
+    Then the user should see the element                            jQuery = h1:contains("${invalidOrganisationValidationMessage}")
 
 Existing lead applicant can apply to KTP competition with knowledge base organisation
     [Documentation]  IFS-7841
@@ -81,7 +78,7 @@ Existing/new partner can only see business Or non profit organisation types
     Given the user clicks the button/link                      link = Application overview
     And the lead invites already registered user               ${existing_partner_ktp_email}  ${ktpCompetitionName}
     When logging in and error checking                         &{ktpExistingPartnerCredentials}
-    And the user clicks the button/link                        link =Join with a different organisation
+    And the user clicks the button/link                        link = Join with a different organisation
     Then the user should only see KB partner organisations
 
 Existing/new partner can apply to KTP competition with business organisation
@@ -90,7 +87,7 @@ Existing/new partner can apply to KTP competition with business organisation
     When the user clicks the button/link      id = save-organisation-button
     And the user clicks the button/link       link = Application team
     Then the user should see the element      jQuery = h2:contains("${secondKTPOrgName}")
-    And the user should see the element       jQuery = h2:contains("${existingPartnerOrgName}")
+    And the user should see the element       jQuery = h2:contains("${organisationSmithName}")
 
 Existing/new partner can not apply to KTP competition with academic/research organisations
     [Documentation]  IFS-7812  IFS-7841
@@ -99,7 +96,7 @@ Existing/new partner can not apply to KTP competition with academic/research org
     And the lead invites already registered user       ${existing_academic_email}   ${ktpCompetitionName}
     When logging in and error checking                 &{ktpExistingAcademicCredentials}
     And the user clicks the button/link                id=save-organisation-button
-    Then the user should see the element               jQuery = h1:contains("You are not eligible to start an application")
+    Then the user should see the element               jQuery = h1:contains("${invalidOrganisationValidationMessage}")
 
 Existing/new partner can apply to KTP competition with non profit organisations
     [Documentation]  IFS-7841
@@ -107,7 +104,7 @@ Existing/new partner can apply to KTP competition with non profit organisations
     And the user clicks the button/link                        link = Join with a different organisation
     When the user slectes non profitable organisation type
     And the user clicks the button/link                        link = Application team
-    Then the user should see the element                       jQuery = h2:contains("UNIVERSITY OF LIVERPOOL")
+    Then the user should see the element                       jQuery = h2:contains("${existingAcademicPartnerOrgName}")
 
 New lead applicant starts KTP competition
     [Documentation]  IFS-7841
@@ -120,7 +117,7 @@ Select a knowledge base organisation validations and fields
     Given The user clicks the button/link                                     link = Continue and create an account
     When the user clicks the button/link                                      jQuery = button:contains("Save and continue")
     Then the user should see a field and summary error                        Please select an organisation.
-    And the user should see select an knowledge based organisation fields
+    And the user should see knowledge based organisation fields
 
 New Lead applicant selects a knowledge based organisation
     [Documentation]  IFS-7812  IFS-7814
@@ -409,7 +406,7 @@ Requesting KTP Organisation ID
     ${ktpOrganisationID} =  get organisation id by name     ${ktpOrgName}
     Set suite variable      ${ktpOrganisationID}
 
-the user should see select an knowledge based organisation fields
+the user should see knowledge based organisation fields
     the user should see the element     jQuery = p:contains("Only a knowledge base organisation can lead this application.")
     the user should see the element     jQuery = h1:contains("Select a knowledge base organisation")
     the user should see the element     jQuery = span:contains("Select your knowledge base organisation.")

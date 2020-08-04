@@ -58,7 +58,9 @@ The lead invites a collaborator and sets the max available funding to 50000
 
 lead completes the application team and assigns an application question to partner organisation
      [Documentation]  IFS-7703
-     Given lead applicant completes the application team      &{lead_applicant_credentials}   ${ATIapplicationTitle}
+     [Setup]  Log in as a different user                      ${lead_applicant}  ${short_password}
+     Given the user clicks the button/link                    link = ${ATIapplicationTitle}
+     When the applicant completes Application Team
      Then lead assigns a question to partner organisation     ${project_team_question}
 
 The partner answers the question and assigns the question back to lead for review

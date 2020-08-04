@@ -375,14 +375,14 @@ RTOs are not allowed to apply on Competition where only Businesses are allowed t
     [Documentation]  IFS-1015
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}  3
-    When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
+    When the user should see the element           jQuery = h1:contains("${invalidOrganisationValidationMessage}")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]  HappyPath
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}  1
-    When the user should see the element           jQuery = h1:contains("You are not eligible to start an application")
+    When the user should see the element           jQuery = h1:contains("${invalidOrganisationValidationMessage}")
     Then the user should see the element           jQuery = p:contains("${ineligibleMessage}")
 
 The lead applicant checks for terms and conditions partners status

@@ -169,7 +169,7 @@ Non registered UK based users confirm their organisation details and create an a
     [Documentation]    IFS-7199
     [Tags]  HappyPath
     Given the user provides uk based organisation details             Nomensa  ${ukBasedOrganisationName}
-    And the user verifies their organisation details
+    And the user verifies uk based organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
     Then the user should not see an error in the page
@@ -212,7 +212,7 @@ Registered UK based user applies for International Competition
     Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business                            radio-1
     And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-    Then the user verifies their organisation details
+    Then the user verifies uk based organisation details
     And the user clicks the button/link                                            name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
@@ -683,15 +683,16 @@ the user verifies their organisation details
     the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
     the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
 
+the user verifies uk based organisation details
+    the user should see the element         jQuery = p:contains("${chooseYourOragnisationTypeInfoText}")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
+    the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
+
 the user sign in and apply for international comp
     [Arguments]  ${user}  ${password}   ${competitionName}
     the user select the competition and starts application      ${competitionName}
     the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
     Logging in and Error Checking                               ${user}  ${password}
-
-#the user selects organisation type as business
-#    the user selects the radio button     organisationTypeId  radio-1
-#    the user clicks the button/link       name = select-company-type
 
 organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
@@ -765,7 +766,7 @@ non-registered user selects business options
     [Arguments]  ${isBusinessInternational}
     the user clicks the button/link              link = Continue and create an account
     the user should see the element              jQuery = span:contains("${organisationBasedInUkTitle}")
-    the user should not see the element          jQuery = span:contains("Create an account")
+    the user should see the element              jQuery = span:contains("Create an account")
     user selects where is organisation based     ${isBusinessInternational}
 
 the user provides international organisation details
