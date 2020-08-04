@@ -4,7 +4,7 @@
 <th:block th:fragment="print(model)">
     <th:block th:each="section, sectionIter : ${model.sections}">
         <section th:classappend="${section.finances ? 'landscape' : 'portrait'}">
-            <h2 th:text="${section.name}"
+            <h2 th:unless="${section.finances}" th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
             <div class="question" th:each="question, questionIter : ${section.questions}">
                 <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
