@@ -51,9 +51,9 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "RESET_VIABILITY",
-            description = "Project Finance Users can reset Viability")
-    public boolean projectFinanceUserCanResetViability(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+            description = "System Maintenance can reset Viability")
+    public boolean systemMaintenanceUserCanResetViability(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isSystemMaintenanceUser(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
@@ -93,16 +93,16 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "RESET_ELIGIBILITY",
-            description = "Project Finance Users can reset Eligibility")
-    public boolean projectFinanceUserCanResetEligibility(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+            description = "System Maintenance can reset Eligibility")
+    public boolean systemMaintenanceUserCanResetEligibility(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isSystemMaintenanceUser(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "RESET_FINANCE_CHECKS",
-            description = "Project Finance Users can reset both Viability and Eligibility Checks")
-    public boolean projectFinanceUserCanResetFinanceChecks(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
+            description = "System Maintenance can reset both Viability and Eligibility Checks")
+    public boolean systemMaintenanceUserCanResetFinanceChecks(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isSystemMaintenanceUser(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
