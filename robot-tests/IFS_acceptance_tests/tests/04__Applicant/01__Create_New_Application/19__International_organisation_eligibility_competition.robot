@@ -781,13 +781,6 @@ the user provides international organisation details
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
 
-#the user provides uk based organisation details
-#    [Arguments]  ${org_search_name}  ${org}
-#    the user selects organisation type as business     radio-1
-#    the user enters text to a text field               name = organisationSearchName  ${org_search_name}
-#    the user clicks the button/link                    name = search-organisation
-#    the user clicks the button/link                    link = ${org}
-
 the user gets an error message on not filling mandatory fields
     [Arguments]  ${button_id}
     the user clicks the button/link     id = ${button_id}
