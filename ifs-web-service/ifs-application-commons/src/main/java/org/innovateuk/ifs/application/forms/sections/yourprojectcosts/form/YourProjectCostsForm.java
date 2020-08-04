@@ -31,7 +31,6 @@ public class YourProjectCostsForm {
 
     private VatForm vatForm;
 
-
     private Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows = new LinkedHashMap<>();
 
     private Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows = new LinkedHashMap<>();
@@ -44,7 +43,7 @@ public class YourProjectCostsForm {
 
     private Map<String, EstateCostRowForm> estateCostRows = new LinkedHashMap<>();
 
-    private AdditionalCompanyCostForm additionalCompanyCostForm;
+    private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
 
     private Boolean eligibleAgreement;
 
