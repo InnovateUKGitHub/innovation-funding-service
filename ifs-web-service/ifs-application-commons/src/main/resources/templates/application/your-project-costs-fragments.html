@@ -3099,7 +3099,8 @@
                                 th:value="${financeRowType}"
                                 class="button-clear"
                                 data-repeatable-rowcontainer="#knowledge-base-table tbody"
-                                data-repeatable-row-maximum="2">Add another cost
+                                data-repeatable-row-maximum="2"
+                                th:classappend="*{knowledgeBaseCostRows.size() > 1} ? 'js-hidden'">Add another cost
                         </button>
                     </p>
                 </div>
@@ -3234,24 +3235,21 @@
                 </h3>
             </div>
             <div id="accordion-finances-content-additional-company-costs" class="govuk-accordion__section-content">
-                <dl class="govuk-list"
-                    th:remove="${model.isReadOnly(financeRowType)} ? none : tag">
-                    <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
-                      fieldName='additionalCompanyCostForm.associateSalary',
-                      label=${'Associate salary ''top up'''})"/>
-                    <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
-                      fieldName='additionalCompanyCostForm.managementSupervision',
-                      label='Management supervision')"/>
-                    <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
-                      fieldName='additionalCompanyCostForm.otherStaff',
-                      label='Other staff (incl. training)')"/>
-                    <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
-                      fieldName='additionalCompanyCostForm.capitalEquipment',
-                      label='Capital equipment')"/>
-                    <th:block th:insert="application/your-project-costs-fragments :: additional_cost_field (
-                      fieldName='additionalCompanyCostForm.otherCosts',
-                      label='Other costs')"/>
-                </dl>
+
+                <th:block th:unless="${model.isReadOnly(financeRowType)}" th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
+
+                <table th:if="${model.isReadOnly(financeRowType)}" class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">Additional company cost estimation</th>
+                        <th class="govuk-table__header" scope="col">Description</th>
+                        <th class="govuk-table__header" scope="col">Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <th:block th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
+                    </tbody>
+                </table>
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total additional company cost estimations
                     <span class="govuk-heading-s"
@@ -3269,15 +3267,33 @@
     </div>
 </th:block>
 
+<th:block th:fragment="additional_cost_rows">
+    <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
+                      fieldName='additionalCompanyCostForm.associateSalary',
+                      label=${'Associate salary ''top up'''})"/>
+    <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
+                      fieldName='additionalCompanyCostForm.managementSupervision',
+                      label='Management supervision')"/>
+    <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
+                      fieldName='additionalCompanyCostForm.otherStaff',
+                      label='Other staff (incl. training)')"/>
+    <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
+                      fieldName='additionalCompanyCostForm.capitalEquipment',
+                      label='Capital equipment')"/>
+    <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
+                      fieldName='additionalCompanyCostForm.otherCosts',
+                      label='Other costs')"/>
+</th:block>
 <!--/*@thymesVar id="fieldName" type="java.lang.String"*/-->
 <!--/*@thymesVar id="label" type="java.lang.String"*/-->
 <th:block th:fragment="additional_cost_field (fieldName, label)">
     <th:block th:if="${model.isReadOnly(financeRowType)}"
               th:with="value = *{__${fieldName}__.cost}">
-        <dt th:text="${label}">Name</dt>
-        <dd th:text="'£' + ${#numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT')}"></dd>
-        <dt th:text="${label}">Name</dt>
-        <dd th:text="*{__${fieldName}__.description}"></dd>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell" th:text="${label}"></td>
+            <td class="govuk-table__cell" th:text="*{__${fieldName}__.description}"></td>
+            <td class="govuk-table__cell govuk-table__cell--numeric" th:text="'£' + ${#numbers.formatInteger(value == null ? 0 : value, 0,'DEFAULT')}"></td>
+        </tr>
     </th:block>
     <th:block th:unless="${model.isReadOnly(financeRowType)}">
         <h2 class="govuk-heading-s" th:text="${label}"></h2>

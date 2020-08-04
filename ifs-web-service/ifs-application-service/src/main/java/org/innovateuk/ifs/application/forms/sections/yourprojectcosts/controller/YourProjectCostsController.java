@@ -238,8 +238,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private void orderAssociateCosts(YourProjectCostsForm form) {
         form.setAssociateSalaryCostRows(
                 form.getAssociateSalaryCostRows().entrySet().stream()
-                .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
+                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
+                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
         );
         form.setAssociateDevelopmentCostRows(
                 form.getAssociateDevelopmentCostRows().entrySet().stream()
