@@ -29,9 +29,6 @@ ${ktpApplicationTitle}                KTP Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         A Knowledge Base
 ${secondKTPOrgName}                   D Knowledge Base
-#${existingPartnerOrgName}             SmithZone
-#${existingAcademicPartnerOrgName}     UNIVERSITY OF LIVERPOOL
-#${newPartnerOrgName}                  INNOVATE LTD
 ${group_employees_header}             Number of full time employees in your corporate group (if applicable)
 ${group_employees}                    200
 @{turnover}                           100000  98000   96000
