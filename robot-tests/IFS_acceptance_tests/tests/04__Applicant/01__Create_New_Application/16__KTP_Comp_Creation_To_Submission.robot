@@ -135,12 +135,6 @@ New lead applicant creates an account and completes the KTP application
     And the user clicks the button/link                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application
 
-#Applicant is able to complete the application
-#    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7805
-#    Given Logging in and Error Checking             &{ktpLeadApplicantCredentials}
-#    When the user clicks the button/link            jQuery = a:contains("Untitled application (start here)")
-#    Then the user completes the KTP application
-
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
     Given the lead invites a non-registered user         ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
