@@ -29,9 +29,11 @@
                             <dd th:text="${model.competitionName}"></dd>
                             <dt>Application name</dt>
                             <dd th:text="${model.applicationName}"></dd>
-                            <dt>When do you wish to start your project?</dt>
-                            <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
-                            <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
+                            <th:block th:unless="${model.ktpCompetition}">
+                                <dt>When do you wish to start your project?</dt>
+                                <dd th:if="${model.startDate}" th:text="${#temporals.format(model.startDate, 'd MMMM yyyy')}"></dd>
+                                <dd th:unless="${model.startDate}"><span class="invisible">Not specified</span></dd>
+                            </th:block>
                             <dt>Duration in months</dt>
                             <dd>
                                 <th:block th:text="${model.duration}"/>
