@@ -19,6 +19,10 @@ public class ApplicationTeamForm {
     @Size(max = 254, message = "{validation.applicationteam.email.required}")
     private String email;
 
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.applicationteam.email.format}")
+    @Size(max = 254, message = "{validation.applicationteam.email.required}")
+    private String ktaEmail;
+
     public String getName() {
         return name;
     }
@@ -33,5 +37,13 @@ public class ApplicationTeamForm {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getKtaEmail() {
+        return ktaEmail;
+    }
+
+    public void setKtaEmail(String ktaEmail) {
+        this.ktaEmail = ktaEmail;
     }
 }

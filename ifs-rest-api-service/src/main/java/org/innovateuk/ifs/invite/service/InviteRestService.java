@@ -25,4 +25,7 @@ public interface InviteRestService {
     RestResult<ApplicationInviteResource> getInviteByHash(String hash);
     RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
     RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
+    RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId);
+    RestResult<Void> removeKtaInvite(long inviteId);
+    RestResult<Void> resendKtaInvite(ApplicationKtaInviteResource invite);
 }

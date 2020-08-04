@@ -62,4 +62,12 @@ public interface ApplicationInviteService {
     @PreAuthorize("hasPermission(#applicationInviteId, 'org.innovateuk.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
     ServiceResult<Void> removeApplicationInvite(long applicationInviteId);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId);
+
+    @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
+    ServiceResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource);
+
+    @PreAuthorize("hasPermission(#ktaInviteResourceId, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'DELETE')")
+    ServiceResult<Void> removeKtaApplicationInvite(long ktaInviteResourceId);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationKtaInviteResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 
@@ -121,6 +122,24 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
         String url = inviteRestUrl + "/get-invites-by-application-id/"+ applicationId;
         return getWithRestResult(url, inviteOrganisationResourceListType());
+    }
+
+    @Override
+    public RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId) {
+        String url = inviteRestUrl + "/get-kta-invites-by-application-id/"+ applicationId;
+        return getWithRestResult(url, applicationKtaInviteResourceListType());
+    }
+
+    @Override
+    public RestResult<Void> removeKtaInvite(long inviteId) {
+        String url = inviteRestUrl + String.format("/remove-kta-invite/%s", inviteId);
+        return deleteWithRestResult(url);
+    }
+
+    @Override
+    public RestResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource) {
+        String url = inviteRestUrl + "/resend-kta-invite";
+        return postWithRestResult(url, inviteResource, Void.class);
     }
 
 }

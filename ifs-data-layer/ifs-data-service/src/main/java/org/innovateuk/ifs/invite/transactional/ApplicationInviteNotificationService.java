@@ -2,9 +2,12 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl.Notifications;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -55,6 +58,9 @@ class ApplicationInviteNotificationService {
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
 
+    @Autowired
+    private ApplicationKtaInviteRepository applicationKtaInviteRepository;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -99,9 +105,45 @@ class ApplicationInviteNotificationService {
         }
     }
 
+    private ServiceResult<Void> processKtaInvite(String baseUrl, ApplicationKtaInvite invite, boolean isResend) {
+        Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
+        validator.validate(invite, errors);
+
+        if (errors.hasErrors()) {
+            return serviceFailure(internalServerErrorError());
+        } else {
+            if (invite.getId() == null) {
+                applicationKtaInviteRepository.save(invite);
+            }
+            if(!isResend) {
+                invite.setHash(generateInviteHash());
+            }
+            applicationKtaInviteRepository.save(invite);
+            return inviteKtaToApplication(baseUrl, invite).
+                    andOnSuccessReturnVoid(() -> handleInviteSuccess(invite, isResend));
+        }
+    }
+
     @Transactional
     public ServiceResult<Void> resendCollaboratorInvite(ApplicationInvite invite) {
         return processCollaboratorInvite(webBaseUrl, invite, true);
+    }
+
+    @Transactional
+    public ServiceResult<Void> resendKtaInvite(ApplicationKtaInvite invite) {
+        return processKtaInvite(webBaseUrl, invite, true);
+    }
+
+    @Transactional
+    public ServiceResult<Void> inviteKtas(List<ApplicationKtaInvite> invites) {
+        for (ApplicationKtaInvite invite : invites) {
+            ServiceResult<Void> inviteResult = processKtaInvite(webBaseUrl, invite, false);
+
+            if (inviteResult.isFailure()) {
+                return inviteResult;
+            }
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
@@ -117,8 +159,8 @@ class ApplicationInviteNotificationService {
         notificationArguments.put("sentByName", loggedInUser.getName());
         notificationArguments.put("applicationId", invite.getTarget().getId());
         notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
-        notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite));
-        notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
+        notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite.getTarget()));
+        notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite.getHash()));
         if (invite.getInviteOrganisation().getOrganisation() != null) {
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisation().getName());
         } else {
@@ -141,6 +183,38 @@ class ApplicationInviteNotificationService {
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
+    private ServiceResult<Void> inviteKtaToApplication(String baseUrl, ApplicationKtaInvite invite) {
+
+        User loggedInUser = loggedInUserSupplier.get();
+        NotificationSource from = systemNotificationSource;
+        NotificationTarget to = new UserNotificationTarget(invite.getName(), invite.getEmail());
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        if (StringUtils.isNotEmpty(invite.getTarget().getName())) {
+            notificationArguments.put("applicationName", invite.getTarget().getName());
+        }
+        notificationArguments.put("sentByName", loggedInUser.getName());
+        notificationArguments.put("applicationId", invite.getTarget().getId());
+        notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
+        notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite.getTarget()));
+        notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite.getHash()));
+        ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
+        Organisation organisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
+        notificationArguments.put("leadOrganisation", organisation.getName());
+        notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
+
+        if (invite.getTarget().getLeadApplicant().getTitle() != null) {
+            notificationArguments.put("leadApplicantTitle", invite.getTarget().getLeadApplicant().getTitle());
+        } else {
+            notificationArguments.put("leadApplicantTitle", "");
+        }
+
+        notificationArguments.put("participationAction", "knowledge transfer advise");
+
+        Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_KTA, notificationArguments);
+        return notificationService.sendNotificationWithFlush(notification, EMAIL);
+    }
+
     private String getParticipationAction(ApplicationInvite invite) {
         boolean leadOrganisation =
                 invite.getInviteOrganisation().getOrganisation() != null &&
@@ -148,12 +222,12 @@ class ApplicationInviteNotificationService {
         return leadOrganisation ? "contribute" : "collaborate";
     }
 
-    private String getInviteUrl(String baseUrl, ApplicationInvite invite) {
-        return format("%s/accept-invite/%s", baseUrl, invite.getHash());
+    private String getInviteUrl(String baseUrl, String hash) {
+        return format("%s/accept-invite/%s", baseUrl, hash);
     }
 
-    private String getCompetitionDetailsUrl(String baseUrl, ApplicationInvite invite) {
-        return baseUrl + "/competition/" + invite.getTarget().getCompetition().getId() + "/overview";
+    private String getCompetitionDetailsUrl(String baseUrl, Application inviteTarget) {
+        return baseUrl + "/competition/" + inviteTarget.getCompetition().getId() + "/overview";
     }
 
     private void handleInviteSuccess(ApplicationInvite invite, boolean isResend) {
@@ -163,5 +237,14 @@ class ApplicationInviteNotificationService {
             invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
         }
         applicationInviteRepository.save(invite);
+    }
+
+    private void handleInviteSuccess(ApplicationKtaInvite invite, boolean isResend) {
+        if (isResend) {
+            invite.resend(loggedInUserSupplier.get(), ZonedDateTime.now());
+        } else {
+            invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+        }
+        applicationKtaInviteRepository.save(invite);
     }
 }

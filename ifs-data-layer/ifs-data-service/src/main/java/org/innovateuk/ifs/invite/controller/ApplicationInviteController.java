@@ -56,6 +56,11 @@ public class ApplicationInviteController {
         return applicationInviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 
+    @GetMapping("/get-kta-invites-by-application-id/{applicationId}")
+    public RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
+        return applicationInviteService.getKtaInvitesByApplication(applicationId).toGetResponse();
+    }
+
     @PostMapping("/save-invites")
     public RestResult<Void> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return applicationInviteService.saveInvites(inviteResources).toPostCreateResponse();
@@ -69,6 +74,11 @@ public class ApplicationInviteController {
     @PostMapping("/resend-invite")
     public RestResult<Void> resendInvite(@RequestBody ApplicationInviteResource inviteResource) {
         return applicationInviteService.resendInvite(inviteResource).toPostCreateResponse();
+    }
+
+    @PostMapping("/resend-kta-invite")
+    public RestResult<Void> resendKtaInvite(@RequestBody ApplicationKtaInviteResource inviteResource) {
+        return applicationInviteService.resendKtaInvite(inviteResource).toPostCreateResponse();
     }
 
     @PutMapping("/accept-invite/{hash}/{userId}")
@@ -94,6 +104,11 @@ public class ApplicationInviteController {
     @DeleteMapping("/remove-invite/{inviteId}")
     public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") long applicationInviteResourceId) {
         return applicationInviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
+    }
+
+    @DeleteMapping("/remove-kta-invite/{inviteId}")
+    public RestResult<Void> removeKtaInvite(@PathVariable("inviteId") long ktaInviteResourceId) {
+        return applicationInviteService.removeKtaApplicationInvite(ktaInviteResourceId).toDeleteResponse();
     }
 
     @GetMapping("/check-existing-user/{inviteHash}")

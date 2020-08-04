@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean open;
     private final boolean complete;
     private final boolean ktpCompetition;
+    private final ApplicationKtaInviteResource ktaInvite;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -28,7 +30,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean collaborationLevelSingle,
                                     boolean open,
                                     boolean complete,
-                                    boolean ktpCompetition) {
+                                    boolean ktpCompetition,
+                                    ApplicationKtaInviteResource ktaInvite
+                                    ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.applicationName = applicationName;
@@ -40,6 +44,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.open = open;
         this.complete = complete;
         this.ktpCompetition = ktpCompetition;
+        this.ktaInvite = ktaInvite;
     }
 
     @Override
@@ -82,6 +87,10 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     public boolean isCollaborationLevelSingle() {
         return collaborationLevelSingle;
+    }
+
+    public ApplicationKtaInviteResource getKtaInvite() {
+        return ktaInvite;
     }
 
     public ApplicationTeamViewModel openAddTeamMemberForm(long organisationId) {

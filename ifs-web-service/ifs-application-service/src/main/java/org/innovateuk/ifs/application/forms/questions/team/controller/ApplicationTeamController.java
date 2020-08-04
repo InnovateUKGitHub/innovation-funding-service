@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 
-import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationKtaForm;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -53,7 +52,6 @@ public class ApplicationTeamController {
 
     @GetMapping
     public String viewTeam(@ModelAttribute(value = "form", binding = false) ApplicationTeamForm form,
-                           @ModelAttribute(value = "ktaForm", binding = false) ApplicationKtaForm ktaForm,
                            BindingResult bindingResult,
                            Model model,
                            @PathVariable long applicationId,
@@ -65,32 +63,46 @@ public class ApplicationTeamController {
 
     @GetMapping(params = "show-errors")
     public String showErrors(@ModelAttribute(value = "form") ApplicationTeamForm form,
-                             @ModelAttribute(value = "ktaForm") ApplicationKtaForm ktaForm,
                                          BindingResult bindingResult,
                                          ValidationHandler validationHandler,
                                          Model model,
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return markAsComplete(form, ktaForm, bindingResult, validationHandler, model, applicationId, questionId, user);
+        return markAsComplete(form, bindingResult, validationHandler, model, applicationId, questionId, user);
     }
 
     @PostMapping(params = "invite-kta")
-    public String addKta(@ModelAttribute(value = "ktaForm") ApplicationKtaForm ktaForm,
+    public String addKta(@ModelAttribute(value = "form") ApplicationTeamForm form,
                          BindingResult bindingResult,
                          ValidationHandler validationHandler,
                          Model model,
                          @PathVariable long applicationId,
                          @PathVariable long questionId,
                          UserResource user) {
-        return inviteKta(ktaForm, validationHandler, applicationId, questionId, model, user,
+        return inviteKta(form, validationHandler, applicationId, questionId, model, user,
                 invite -> inviteRestService.saveKtaInvites(singletonList(invite))
         );
     }
 
+    @PostMapping(params = "resend-kta")
+    public String resendKta(@PathVariable long applicationId,
+                         @PathVariable long questionId,
+                            @RequestParam("resend-kta") final long inviteId) {
+        resendKtaInvite(inviteId, applicationId);
+        return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    @PostMapping(params = "remove-kta")
+    public String removeKta(@PathVariable long applicationId,
+                            @PathVariable long questionId,
+                            @RequestParam("remove-kta") final long inviteId) {
+        inviteRestService.removeKtaInvite(inviteId).getSuccess();
+        return redirectToApplicationTeam(applicationId, questionId);
+    }
+
     @PostMapping(params = "complete")
     public String markAsComplete(@ModelAttribute(value = "form") ApplicationTeamForm form,
-                                 @ModelAttribute(value = "ktaForm") ApplicationKtaForm ktaForm,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
@@ -103,7 +115,7 @@ public class ApplicationTeamController {
                 defaultConverters()));
         return validationHandler.failNowOrSucceedWith(() -> {
                     questionStatusRestService.markAsInComplete(questionId, applicationId, processRoleId(user.getId(), applicationId)).getSuccess();
-                    return viewTeam(form, ktaForm, bindingResult, model, applicationId, questionId, user);
+                    return viewTeam(form, bindingResult, model, applicationId, questionId, user);
                 },
                 () -> redirectToApplicationTeam(applicationId, questionId));
     }
@@ -157,6 +169,14 @@ public class ApplicationTeamController {
                 .filter(applicationInvite -> applicationInvite.getId().equals(inviteId))
                 .findFirst()
                 .ifPresent(invite -> inviteRestService.resendInvite(invite));
+    }
+
+    private void resendKtaInvite(long inviteId, long applicationId){
+        List<ApplicationKtaInviteResource> inviteOrganisationResources = inviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
+        inviteOrganisationResources.stream()
+                .filter(invite -> invite.getId().equals(inviteId))
+                .findFirst()
+                .ifPresent(invite -> inviteRestService.resendKtaInvite(invite));
     }
 
     @PostMapping(params = "add-team-member")
@@ -236,7 +256,7 @@ public class ApplicationTeamController {
         });
     }
 
-    private String inviteKta(ApplicationKtaForm form,
+    private String inviteKta(ApplicationTeamForm form,
                                         ValidationHandler validationHandler,
                                         long applicationId,
                                         long questionId,
@@ -252,7 +272,7 @@ public class ApplicationTeamController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ApplicationKtaInviteResource invite = new ApplicationKtaInviteResource(
-                    form.getEmail(),
+                    form.getKtaEmail(),
                     applicationId
             );
             validationHandler.addAnyErrors(inviteAction.apply(invite),
