@@ -13,17 +13,15 @@ import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
-import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.registration.resource.*;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.cache.UserUpdate;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -45,7 +44,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * A service around Registration and general user-creation operations
@@ -97,40 +95,61 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
-    public ServiceResult<UserResource> createUser(UserRegistrationResource userRegistrationResource) {
-        final UserResource userResource = userRegistrationResource.toUserResource();
+    public ServiceResult<UserResource> createUser(UserCreationResource user) {
+        ServiceResult<UserResource> userResult = serviceSuccess(user.toUserResource());
+        if (!shouldBePending(user)) {
+            //Pending users don't provide passwords until they accept their invite.
+            userResult = userResult.andOnSuccess(u -> validateUser(user.getPassword(), u));
+        }
+        ServiceResult<User> result = userResult.andOnSuccessReturn(userResource -> assembleUserFromResource(userResource, user))
+                .andOnSuccess(savedUser -> createUserWithUid(savedUser, getPasswordOrPlaceholder(user), user.getAddress()));
 
-        return validateUser(userResource).
-                andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword(), userRegistrationResource.getAddress());
-                });
+        if (shouldSendVerificationEmail(user)) {
+            result = result
+                    .andOnSuccess(savedUser -> sendUserVerificationEmail(ofNullable(user.getCompetitionId()), ofNullable(user.getOrganisationId()), savedUser));
+        }
+        if (shouldBePending(user)) {
+            result = result.andOnSuccess(this::saveUserAsPending);
+        } else {
+            result = result.andOnSuccess(this::markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole)
+                    .andOnSuccess(savedUser -> handleInvite(savedUser, user));
+        }
+        return result
+                .andOnSuccessReturn(userMapper::mapToResource);
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<UserResource> createUser(UserResource userResource) {
-        return createOrganisationUser(Optional.empty(), Optional.empty(), userResource);
+    private boolean shouldSendVerificationEmail(UserCreationResource user) {
+        return user.getRole() != ASSESSOR;
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<User> createPendingMonitoringOfficer(MonitoringOfficerCreateResource resource) {
-        User user = mapMonitoringOfficerCreateResourceToUser(resource);
-        user.setAllowMarketingEmails(false);
-        user.addRole(MONITORING_OFFICER);
-        String placeholderPassword = randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
-        return createUserWithUid(user, placeholderPassword)
-                .andOnSuccess(this::saveUserAsPending);
+    private ServiceResult<User> handleInvite(User created, UserCreationResource user) {
+        if (user.getInviteHash() != null) {
+            Optional<RoleInvite> roleInvite = internalUserInvite(user.getInviteHash());
+            roleInvite.ifPresent(this::updateInviteStatus);
+
+            Optional<StakeholderInvite> stakeholderInvite = getStakeholderInviteByHash(user.getInviteHash());
+            stakeholderInvite.ifPresent(this::updateStakeholderInviteStatus);
+            stakeholderInvite.ifPresent(invite -> associateUserWithCompetition(invite.getTarget(), created));
+
+            Optional<ExternalFinanceInvite> externalFinanceInvite = getCompetitionFinanceInviteByHash(user.getInviteHash());
+            externalFinanceInvite.ifPresent(this::updateCompetitionFinanceInviteStatus);
+            externalFinanceInvite.ifPresent(invite -> associateCompetitionFinanceUserWithCompetition(invite.getTarget(), created));
+
+            //TODO KTA INVITE
+        }
+        return serviceSuccess(created);
     }
 
-    private User mapMonitoringOfficerCreateResourceToUser(MonitoringOfficerCreateResource resource) {
-        User user = new User();
-        user.setFirstName(resource.getFirstName());
-        user.setLastName(resource.getLastName());
-        user.setPhoneNumber(resource.getPhoneNumber());
-        user.setEmail(resource.getEmailAddress());
-        return user;
+    private String getPasswordOrPlaceholder(UserCreationResource user) {
+         if (shouldBePending(user)) {
+             return randomAlphabetic(6) + randomAlphabetic(6).toUpperCase() + randomNumeric(6);
+         } else {
+             return user.getPassword();
+         }
+    }
+
+    private boolean shouldBePending(UserCreationResource user) {
+        return user.getRole() == MONITORING_OFFICER;
     }
 
     private ServiceResult<User> saveUserAsPending(User user) {
@@ -138,37 +157,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess(userRepository.save(user));
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<User> activatePendingUser(User user,
-                                                   String password,
-                                                   String hash) {
-        if(monitoringOfficerInviteRepository.existsByHash(hash)) {
-            return activateUser(user)
-                    .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
-                    .andOnSuccessReturn(() -> user);
-        }
-
-        return serviceFailure(GENERAL_NOT_FOUND);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<UserResource> createUserWithCompetitionContext(long competitionId, long organisationId, UserResource userResource) {
-        return createOrganisationUser(Optional.of(competitionId), Optional.of(organisationId), userResource);
-    }
-
-    private ServiceResult<UserResource> createOrganisationUser(Optional<Long> competitionId, Optional<Long> organisationId,  UserResource userResource) {
-        return validateUser(userResource).
-                andOnSuccessReturn(validUser -> assembleUserFromResource(validUser)).
-                andOnSuccess(newUser -> addApplicantRoleToUserIfNoRolesAssigned(userResource, newUser)).
-                andOnSuccess(newUserWithRole -> markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole(newUserWithRole)).
-                andOnSuccess(newUserWithRole -> createUserWithUid(newUserWithRole, userResource.getPassword(), null)).
-                andOnSuccess(createdUser -> sendUserVerificationEmail(competitionId, organisationId, createdUser));
-    }
-
-    private ServiceResult<UserResource> validateUser(UserResource userResource) {
-        return passwordPolicyValidator.validatePassword(userResource.getPassword(), userResource)
+    private ServiceResult<UserResource> validateUser(String password, UserResource userResource) {
+        return passwordPolicyValidator.validatePassword(password, userResource)
                 .handleSuccessOrFailure(
                         failure -> serviceFailure(
                                 simpleMap(
@@ -180,7 +170,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 );
     }
 
-    private User assembleUserFromResource(UserResource userResource) {
+    private User assembleUserFromResource(UserResource userResource, UserCreationResource userCreationResource) {
         User newUser = new User();
         newUser.setFirstName(userResource.getFirstName());
         newUser.setLastName(userResource.getLastName());
@@ -190,11 +180,19 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
         newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
-        return newUser;
-    }
+        Optional<RoleInvite> roleInvite = internalUserInvite(userCreationResource.getInviteHash());
+        roleInvite.ifPresent(invite -> {
+            newUser.setEmail(invite.getEmail());
+            newUser.setRoles(new HashSet<>(getInternalRoleResources(invite.getTarget()).getSuccess()));
+        });
 
-    private ServiceResult<User> addApplicantRoleToUserIfNoRolesAssigned(UserResource userResource, User user) {
-        return userResource.getRoles().isEmpty() ? addRoleToUser(user, APPLICANT) : serviceSuccess(user);
+        Optional<StakeholderInvite> stakeholderInvite = getStakeholderInviteByHash(userCreationResource.getInviteHash());
+        stakeholderInvite.ifPresent(invite -> newUser.setEmail(invite.getEmail()));
+
+        Optional<ExternalFinanceInvite> externalFinanceInvite = getCompetitionFinanceInviteByHash(userCreationResource.getInviteHash());
+        externalFinanceInvite.ifPresent(invite -> newUser.setEmail(invite.getEmail()));
+
+        return newUser;
     }
 
     private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole(User userWithRole) {
@@ -202,7 +200,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
     }
 
-    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
+    private ServiceResult<User> createUserWithUid(User user, String password, AddressResource addressResource) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
@@ -215,14 +213,70 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             user.setProfileId(savedProfile.getId());
             User savedUser = userRepository.save(user);
 
-            return userMapper.mapToResource(savedUser);
+            return savedUser;
         });
     }
 
-    private ServiceResult<UserResource> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, UserResource createdUser) {
+    private ServiceResult<User> sendUserVerificationEmail(Optional<Long> competitionId, Optional<Long> organisationId, User user) {
 
-        return registrationEmailService.sendUserVerificationEmail(createdUser, competitionId, organisationId).
-                andOnSuccessReturn(() -> createdUser);
+        return registrationEmailService.sendUserVerificationEmail(userMapper.mapToResource(user), competitionId, organisationId).
+                andOnSuccessReturn(() -> user);
+    }
+
+    private ServiceResult<User> agreeLatestSiteTermsAndConditionsForUser(User user) {
+        return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccessReturn(termsAndConditions -> {
+            if (user.getTermsAndConditionsIds() == null) {
+                user.setTermsAndConditionsIds(new LinkedHashSet<>());
+            }
+            user.getTermsAndConditionsIds().add(termsAndConditions.getId());
+            return user;
+        });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
+        return registrationEmailService.resendUserVerificationEmail(user);
+    }
+
+    private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
+        stakeholderRepository.save(new Stakeholder(competition, user));
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> associateCompetitionFinanceUserWithCompetition(Competition competition, User user) {
+        externalFinanceRepository.save(new ExternalFinance(competition, user));
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
+        roleInvite.open();
+        roleInviteRepository.save(roleInvite);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> updateStakeholderInviteStatus(StakeholderInvite stakeholderInvite) {
+        stakeholderInvite.open();
+        stakeholderInviteRepository.save(stakeholderInvite);
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> updateCompetitionFinanceInviteStatus(ExternalFinanceInvite externalFinanceInvite) {
+        externalFinanceInvite.open();
+        competitionFinanceInviteRepository.save(externalFinanceInvite);
+        return serviceSuccess();
+    }
+
+    private Optional<RoleInvite> internalUserInvite(String hash) {
+        return ofNullable(roleInviteRepository.getByHash(hash));
+    }
+
+    private Optional<StakeholderInvite> getStakeholderInviteByHash(String hash) {
+        return ofNullable(stakeholderInviteRepository.getByHash(hash));
+    }
+
+    private Optional<ExternalFinanceInvite> getCompetitionFinanceInviteByHash(String hash) {
+        return ofNullable(competitionFinanceInviteRepository.getByHash(hash));
     }
 
     @Override
@@ -261,6 +315,21 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
+    public ServiceResult<User> activatePendingUser(User user,
+                                                   String password,
+                                                   String hash) {
+        if(monitoringOfficerInviteRepository.existsByHash(hash)) {
+            return activateUser(user)
+                    .andOnSuccess(this::markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole)
+                    .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
+                    .andOnSuccessReturn(() -> user);
+        }
+
+        return serviceFailure(GENERAL_NOT_FOUND);
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
         return getUser(userId)
                 .andOnSuccess(this::activateUser)
@@ -283,197 +352,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return userSurveyService.sendAssessorDiversitySurvey(user);
     }
 
-    private ServiceResult<User> addRoleToUser(User user, Role role) {
-        if (!user.hasRole(role)) {
-            user.addRole(role);
-        }
-        return serviceSuccess(user);
-    }
-
-    private ServiceResult<User> agreeLatestSiteTermsAndConditionsForUser(User user) {
-        return termsAndConditionsService.getLatestSiteTermsAndConditions().andOnSuccessReturn(termsAndConditions -> {
-            if (user.getTermsAndConditionsIds() == null) {
-                user.setTermsAndConditionsIds(new LinkedHashSet<>());
-            }
-            user.getTermsAndConditionsIds().add(termsAndConditions.getId());
-            return user;
-        });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> resendUserVerificationEmail(final UserResource user) {
-        return registrationEmailService.resendUserVerificationEmail(user);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource internalUserRegistrationResource) {
-        return getByHash(inviteHash).andOnSuccess(roleInvite ->
-                getInternalRoleResources(roleInvite.getTarget()).andOnSuccess(roleResource -> {
-                    internalUserRegistrationResource.setEmail(roleInvite.getEmail());
-                    internalUserRegistrationResource.setRoles(roleResource);
-                    return createUser(internalUserRegistrationResource)
-                            .andOnSuccess(() -> updateInviteStatus(roleInvite))
-                            .andOnSuccessReturnVoid();
-                }));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> createStakeholder(String hash, StakeholderRegistrationResource stakeholderRegistrationResource) {
-        return getStakeholderInviteByHash(hash)
-                .andOnSuccess(stakeholderInvite -> createStakeholderUser(stakeholderRegistrationResource, stakeholderInvite)
-                        .andOnSuccess(user -> associateUserWithCompetition(stakeholderInvite.getTarget(), user))
-                        .andOnSuccess(() -> updateStakeholderInviteStatus(stakeholderInvite))
-                        .andOnSuccessReturnVoid());
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> createCompetitionFinanceUser(String hash, CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource) {
-        return getCompetitionFinanceInviteByHash(hash)
-                .andOnSuccess(invite -> createCompetitionFinance(competitionFinanceRegistrationResource, invite)
-                        .andOnSuccess(user -> associateCompetitionFinanceUserWithCompetition(invite.getTarget(), user))
-                        .andOnSuccess(() -> updateCompetitionFinanceInviteStatus(invite))
-                        .andOnSuccessReturnVoid());
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<User> createMonitoringOfficer(String hash, MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource) {
-        return getMonitoringOfficerInviteByHash(hash)
-                .andOnSuccess(invite -> createMonitoringOfficerUser(monitoringOfficerRegistrationResource, invite)
-                        .andOnSuccess(user ->  updateMonitoringOfficerInvite(invite)
-                                .andOnSuccessReturn(() -> user)
-                        )
-                );
-    }
-
-    private ServiceResult<Void> associateUserWithCompetition(Competition competition, User user) {
-        stakeholderRepository.save(new Stakeholder(competition, user));
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> associateCompetitionFinanceUserWithCompetition(Competition competition, User user) {
-        externalFinanceRepository.save(new ExternalFinance(competition, user));
-        return serviceSuccess();
-    }
-
-    private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
-        if (role == IFS_ADMINISTRATOR){
-            return getIFSAdminRoles(role); // IFS Admin has multiple roles
-        } else {
-            return serviceSuccess(singletonList(role));
-        }
-    }
-
-    private ServiceResult<Void> createUser(InternalUserRegistrationResource internalUserRegistrationResource) {
-        final UserResource userResource = internalUserRegistrationResource.toUserResource();
-
-        return validateUser(userResource).
-                andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword()).
-                            andOnSuccess(this::activateUser).andOnSuccessReturnVoid();
-                });
-    }
-
-    private ServiceResult<User> createStakeholderUser(StakeholderRegistrationResource stakeholderRegistrationResource, StakeholderInvite stakeholderInvite) {
-        final UserResource userResource = stakeholderRegistrationResource.toUserResource();
-        userResource.setEmail(stakeholderInvite.getEmail());
-        userResource.setRoles(singletonList(Role.STAKEHOLDER));
-        return validateUser(userResource).
-                andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword()).
-                            andOnSuccess(this::activateUser)
-                            .andOnSuccessReturn(() -> user);
-                });
-    }
-
-    private ServiceResult<User> createCompetitionFinance(CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource, ExternalFinanceInvite externalFinanceInvite) {
-        final UserResource userResource = competitionFinanceRegistrationResource.toUserResource();
-        userResource.setEmail(externalFinanceInvite.getEmail());
-        userResource.setRoles(singletonList(EXTERNAL_FINANCE));
-        return validateUser(userResource).
-                andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword()).
-                            andOnSuccess(this::activateUser)
-                            .andOnSuccessReturn(() -> user);
-                });
-    }
-
-    private ServiceResult<User> createMonitoringOfficerUser(MonitoringOfficerRegistrationResource monitoringOfficerRegistrationResource, MonitoringOfficerInvite monitoringOfficerInvite) {
-        final UserResource userResource = monitoringOfficerRegistrationResource.toUserResource();
-        userResource.setEmail(monitoringOfficerInvite.getEmail());
-        userResource.setRoles(singletonList(MONITORING_OFFICER));
-        return validateUser(userResource).
-                andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    return createUserWithUid(user, userResource.getPassword()).
-                            andOnSuccess(this::activateUser)
-                            .andOnSuccessReturn(() -> user);
-                });
-    }
-
-    private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
-        roleInvite.open();
-        roleInviteRepository.save(roleInvite);
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> updateStakeholderInviteStatus(StakeholderInvite stakeholderInvite) {
-        stakeholderInvite.open();
-        stakeholderInviteRepository.save(stakeholderInvite);
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> updateCompetitionFinanceInviteStatus(ExternalFinanceInvite externalFinanceInvite) {
-        externalFinanceInvite.open();
-        competitionFinanceInviteRepository.save(externalFinanceInvite);
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> updateMonitoringOfficerInvite(MonitoringOfficerInvite monitoringOfficerInvite) {
-        monitoringOfficerInviteRepository.save(monitoringOfficerInvite.open());
-        return serviceSuccess();
-    }
-
-    private ServiceResult<List<Role>> getIFSAdminRoles(Role roleType) {
-        return serviceSuccess( asList(roleType, Role.PROJECT_FINANCE) );
-    }
-
-    private ServiceResult<RoleInvite> getByHash(String hash) {
-        return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
-    }
-
-    private ServiceResult<StakeholderInvite> getStakeholderInviteByHash(String hash) {
-        return find(stakeholderInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
-    }
-
-    private ServiceResult<ExternalFinanceInvite> getCompetitionFinanceInviteByHash(String hash) {
-        return find(competitionFinanceInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
-    }
-
-    private ServiceResult<MonitoringOfficerInvite> getMonitoringOfficerInviteByHash(String hash) {
-        return find(monitoringOfficerInviteRepository.getByHash(hash), notFoundError(MonitoringOfficerInvite.class, hash));
-    }
-
-    private ServiceResult<User> createUserWithUid(User user, String password) {
-        ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
-
-        return uidFromIdpResult.andOnSuccess(uidFromIdp -> {
-            user.setUid(uidFromIdp);
-            Profile profile = new Profile();
-            Profile savedProfile = profileRepository.save(profile);
-            user.setProfileId(savedProfile.getId());
-            User createdUser = userRepository.save(user);
-            return serviceSuccess(createdUser);
-        });
-    }
-
     @Override
     @Transactional
     @UserUpdate
@@ -489,6 +367,14 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                         return userRepository.save(user);
                     })
                 ).andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
+        if (role == IFS_ADMINISTRATOR){
+            return serviceSuccess(newArrayList(IFS_ADMINISTRATOR, PROJECT_FINANCE));
+        } else {
+            return serviceSuccess(singletonList(role));
+        }
     }
 
     private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {

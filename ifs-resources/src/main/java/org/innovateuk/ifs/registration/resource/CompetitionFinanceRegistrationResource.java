@@ -37,7 +37,6 @@ public class CompetitionFinanceRegistrationResource {
         UserResource userResource = new UserResource();
         userResource.setFirstName(this.getFirstName());
         userResource.setLastName(this.getLastName());
-        userResource.setPassword(this.getPassword());
         return userResource;
     }
 

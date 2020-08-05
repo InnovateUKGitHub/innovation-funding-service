@@ -3,7 +3,7 @@ package org.innovateuk.ifs.registration.form;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import static org.innovateuk.ifs.commons.validation.PhoneNumberValidator.VALID_PHONE_NUMBER;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 
 /**
  * This object is used for the account registration form. When the form is submitted the data is
@@ -51,8 +52,8 @@ public class RegistrationForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @NotBlank(message = "{validation.standard.phonenumber.required}")
-    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}")
+    @NotBlank(message = "{validation.standard.phonenumber.required}", groups = ExternalUserRegistrationValidationGroup.class)
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}", groups = ExternalUserRegistrationValidationGroup.class)
     private String phoneNumber;
 
     @NotBlank(message = "{validation.account.termsandconditions.required}", groups = ExternalUserRegistrationValidationGroup.class)
@@ -129,14 +130,13 @@ public class RegistrationForm extends BaseBindingResultTarget {
         this.addressForm = addressForm;
     }
 
-    public UserResource constructUserResource() {
-        UserResource user = new UserResource();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPhoneNumber(phoneNumber);
-        user.setAllowMarketingEmails(allowMarketingEmails);
-        return user;
+    public UserCreationResourceBuilder constructUserCreationResource() {
+        return anUserCreationResource()
+                .withEmail(email)
+                .withPassword(password)
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withPhoneNumber(phoneNumber)
+                .withAllowMarketingEmails(allowMarketingEmails);
     }
 }

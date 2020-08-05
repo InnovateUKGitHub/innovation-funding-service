@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create your account - Your Details ',hasFormErrors=${#fields.hasErrors('${registrationForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create your account - Your Details ',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body class="govuk-template__body sign-in">
@@ -13,16 +13,16 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/confirm-organisation',currentApplication=${currentApplication}, dynamicBackLink=${true}" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">We were unable to create your account.</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(registrationForm)" />
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='govuk-heading-xl'" />
 
         <p class="govuk-body">To continue, you need to create an account with the Innovation Funding Service.</p>
 
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${registrationForm}" novalidate="novalidate">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="firstName">
                     First name
@@ -69,7 +69,7 @@
 
             <th:block th:if="${model.addressRequired}" th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
+            <div th:if="${model.externalUser}" class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="phoneNumber">
                     Phone number
                 </label>
@@ -92,7 +92,7 @@
                 <th:block th:if="${model.invitee}">
                         <span class="govuk-hint">You will need this to sign into your account.
                             <br/>
-                            <strong th:text="${registrationForm.email}"></strong>
+                            <strong th:text="${form.email}"></strong>
                         </span>
                     <input type="hidden" th:field="*{email}">
                 </th:block>

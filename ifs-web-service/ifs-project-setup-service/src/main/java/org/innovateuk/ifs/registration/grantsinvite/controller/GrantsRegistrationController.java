@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -64,14 +65,14 @@ public class GrantsRegistrationController {
                     .build());
 
 
-            model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
+            model.addAttribute("form", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
         ).getSuccess();
     }
 
     @PostMapping
-    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Valid @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      @PathVariable long projectId,
                                      HttpServletRequest request,
@@ -101,7 +102,10 @@ public class GrantsRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserResource()).toServiceResult()
+            ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserCreationResource()
+                    .withRole(Role.LIVE_PROJECTS_USER)
+                    .build())
+                .toServiceResult()
                     .andOnSuccess(newUser -> {
                         grantsInviteRestService.acceptInvite(projectId, invite.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);

@@ -5,8 +5,9 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,7 @@ import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.an
 public class ProjectRegistrationController {
 
     @Autowired
-    private UserService userService;
+    private UserRestService userRestService;
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
@@ -57,14 +58,14 @@ public class ProjectRegistrationController {
                         return populateModelWithErrorsAndReturnErrorView(errors, model);
                     }
                     model.addAttribute("model", anInvitedUserViewModel());
-                    model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
+                    model.addAttribute("form", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
         ).getSuccess();
     }
 
     @PostMapping(REGISTER_MAPPING)
-    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Valid @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletRequest request,
                                      Model model,
@@ -105,18 +106,15 @@ public class ProjectRegistrationController {
     }
 
     private boolean emailExists(String email) {
-        return userService.findUserByEmail(email).isPresent();
+        return userRestService.findUserByEmail(email).toOptionalIfNotFound().getSuccess().isPresent();
     }
 
     private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
-        return userService.createOrganisationUser(
-                registrationForm.getFirstName(),
-                registrationForm.getLastName(),
-                registrationForm.getPassword(),
-                registrationForm.getEmail(),
-                null,
-                registrationForm.getPhoneNumber(),
-                organisationId,
-                registrationForm.getAllowMarketingEmails());
+        return userRestService.createUser(
+                registrationForm.constructUserCreationResource()
+                .withRole(Role.APPLICANT)
+                .withOrganisationId(organisationId)
+                .build())
+                .toServiceResult();
     }
 }

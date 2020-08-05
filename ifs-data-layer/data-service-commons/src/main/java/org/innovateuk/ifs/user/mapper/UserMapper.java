@@ -21,7 +21,6 @@ public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {
     public abstract User mapToDomain(UserResource resource);
 
     @Mappings({
-            @Mapping(target = "password", ignore = true),
             @Mapping(source = "createdBy.name", target = "createdBy"),
             @Mapping(source = "modifiedBy.name", target = "modifiedBy")})
     @Override

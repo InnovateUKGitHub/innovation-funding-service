@@ -2,13 +2,10 @@ package org.innovateuk.ifs.registration.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import javax.validation.constraints.NotBlank;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 /**
  * DTO for registering a User.
@@ -30,15 +27,11 @@ public class InternalUserRegistrationResource {
     })
     private String lastName;
 
-    private String email;
-
     @NotBlank(message = "{validation.standard.password.required}")
     @Size.List({
             @Size(min = 8, message = "{validation.standard.password.length.min}"),
     })
     private String password;
-
-    private List<Role> roles;
 
     public String getPassword() {
         return password;
@@ -46,14 +39,6 @@ public class InternalUserRegistrationResource {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 
     public String getFirstName() {
@@ -72,24 +57,6 @@ public class InternalUserRegistrationResource {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UserResource toUserResource() {
-        UserResource userResource = new UserResource();
-        userResource.setFirstName(this.getFirstName());
-        userResource.setLastName(this.getLastName());
-        userResource.setPassword(this.getPassword());
-        userResource.setEmail(this.getEmail());
-        userResource.setRoles(this.getRoles());
-        return userResource;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,9 +68,7 @@ public class InternalUserRegistrationResource {
         return new EqualsBuilder()
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
-                .append(email, that.email)
                 .append(password, that.password)
-                .append(roles, that.roles)
                 .isEquals();
     }
 
@@ -112,9 +77,7 @@ public class InternalUserRegistrationResource {
         return new HashCodeBuilder(17, 37)
                 .append(firstName)
                 .append(lastName)
-                .append(email)
                 .append(password)
-                .append(roles)
                 .toHashCode();
     }
 }

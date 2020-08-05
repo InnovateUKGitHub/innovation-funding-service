@@ -580,39 +580,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void createMonitoringOfficer() {
-        String email = "test@test.test";
-        String hash = "hash";
-        String password = "password";
-        String uid = "uid";
-
-        MonitoringOfficerRegistrationResource registrationResource =
-                new MonitoringOfficerRegistrationResource("first", "last", "phone", password);
-
-        User userToCreate = newUser()
-                .withId((Long) null)
-                .withFirstName(registrationResource.getFirstName())
-                .withLastName(registrationResource.getLastName())
-                .withPhoneNumber(registrationResource.getPhoneNumber())
-                .withEmailAddress(email)
-                .withRoles(singleton(Role.MONITORING_OFFICER))
-                .withUid(uid)
-                .build();
-
-        MonitoringOfficerInvite invite = new MonitoringOfficerInvite("name", email, hash, InviteStatus.OPENED );
-
-        when(monitoringOfficerInviteRepositoryMock.getByHash(hash)).thenReturn(invite);
-        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
-        when(idpServiceMock.createUserRecordWithUid(email, password)).thenReturn(serviceSuccess(uid));
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
-        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
-        when(idpServiceMock.activateUser(uid)).thenReturn(serviceSuccess(uid));
-        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
-
-        service.createMonitoringOfficer(hash, registrationResource).getSuccess();
-    }
-
-    @Test
     public void createPendingMonitoringOfficer() {
         User user = newUser().withEmailAddress("test@test.test").build();
         MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
