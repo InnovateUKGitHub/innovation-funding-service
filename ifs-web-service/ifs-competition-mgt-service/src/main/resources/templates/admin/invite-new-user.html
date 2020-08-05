@@ -20,7 +20,8 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${form.isInternalUserView()} ? 'Invite a new internal user' : 'Invite a new external user',size='govuk-heading-l'" />
 
-        <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+        <form th:object="${form}" method="post" novalidate="novalidate"  th:action="@{/admin/invite-user}">
+            <input type="hidden" name="view" th:value="${form.view}" />
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{firstName}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="firstName">
                     First name
@@ -84,10 +85,10 @@
                 <label class="govuk-label govuk-label--s" for="role">
                     Role
                 </label>
-                <th:block th:if="${#fields.hasErrors('role')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
-                </th:block>
                 <th:block th:if="${form.isInternalUserView()}">
+                    <th:block th:if="${#fields.hasErrors('role')}">
+                        <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
+                    </th:block>
                     <select name="role"
                             class="govuk-select"
                             id="role"
@@ -97,10 +98,9 @@
                         <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                     </select>
                 </th:block>
-                <th:block th:if="${form.isExternalUserView()}">
-                    <label class="govuk-label" th:for="${role}"
-                           th:value="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR}"
-                           th:text="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR.displayName}">KTA</label>
+                <th:block th:if="${form.isKtaUserView()}">
+                    <input type="hidden" name="role" th:value="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR}" />
+                    <label class="govuk-label" for="role" th:text="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR.displayName}">KTA</label>
                 </th:block>
             </div>
             <div class="govuk-form-group govuk-!-margin-top-6">

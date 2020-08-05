@@ -4,8 +4,8 @@ import java.util.stream.Stream;
 
 public enum InviteUserView {
 
-    INTERNAL_USERS("internal"),
-    EXTERNAL_USERS("external");
+    INTERNAL_USER("internal"),
+    KTA_USER("kta");
 
     private final String name;
 

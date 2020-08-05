@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,6 +50,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.Role.ktaRoles;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -99,12 +101,16 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
         return validateInvite(invitedUser, role)
-                .andOnSuccess(() -> invitedUser.isKtaUser() ? validateKtaUserRole(role) : validateInternalUserRole(role))
+                .andOnSuccess(() -> isKtaRole(role) ? ServiceResult.serviceSuccess() : validateInternalUserRole(role))
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> saveInvite(invitedUser, role))
-                .andOnSuccess(invite -> invitedUser.isKtaUser() ? ServiceResult.serviceSuccess() : inviteInternalUser(invite));
+                .andOnSuccess(roleInvite -> isKtaRole(role) ? ServiceResult.serviceSuccess() : inviteInternalUser(roleInvite));
+    }
+
+    private boolean isKtaRole(Role role) {
+        return Role.ktaRoles().stream().anyMatch(ktaRole -> ktaRole == role);
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
@@ -120,12 +126,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         return Role.internalRoles().stream().anyMatch(internalRole -> internalRole == userRoleType)
                 ? serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
-    }
-
-    private ServiceResult<Void> validateKtaUserRole(Role userRoleType) {
-
-        return Role.ktaRoles().stream().anyMatch(ktaRole -> ktaRole == userRoleType)
-                ? serviceSuccess() : serviceFailure(NOT_A_KTA_USER_ROLE);
     }
 
     private ServiceResult<Void> validateEmail(String email) {
