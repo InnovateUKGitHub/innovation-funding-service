@@ -9,6 +9,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7869  KTP Comp setup: Project eligibility
 ...
+...            IFS-7805  KTP Application: Users cannot see project start date
+...
 ...            IFS-7841  KTP: Knowledge base organisation type
 ...
 
@@ -29,9 +31,6 @@ ${ktpApplicationTitle}                KTP Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         A Knowledge Base
 ${secondKTPOrgName}                   D Knowledge Base
-#${existingPartnerOrgName}             SmithZone
-#${existingAcademicPartnerOrgName}     UNIVERSITY OF LIVERPOOL
-#${newPartnerOrgName}                  INNOVATE LTD
 ${group_employees_header}             Number of full time employees in your corporate group (if applicable)
 ${group_employees}                    200
 @{turnover}                           100000  98000   96000
@@ -437,4 +436,4 @@ the user should only see KB partner organisations
 the user slectes non profitable organisation type
     the user selects the radio button                           organisationTypeId   4
     the user clicks the button/link                             jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    university   ${existingAcademicPartnerOrgName}
+    the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}
