@@ -92,7 +92,7 @@ public class TotalProjectSpendProfileController {
         if (!competition.getFundingType().equals(LOAN)) {
             summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, tableView.getMonthlyCostsPerOrganisationMap(), tableView.getMonths());
         }
-        return new TotalSpendProfileViewModel(projectResource, tableView, summary, competition.isKtp());
+        return new TotalSpendProfileViewModel(projectResource, tableView, summary);
     }
 
     private TotalProjectSpendProfileTableViewModel buildTableViewModel(final Long projectId) {

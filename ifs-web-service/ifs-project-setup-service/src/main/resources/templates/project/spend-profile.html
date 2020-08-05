@@ -69,12 +69,10 @@
         </th:block>
         <p class="govuk-body">We have reviewed and confirmed your project costs. You should now develop a spend profile together with your project partners. This is so we can plan the allocation of the grant funding to your project.</p>
         <dl class="standard-definition-list">
-            <th:block th:unless="${model.ktpCompetition}">
-                <dt>Project start date</dt>
-                <dd>
-                    <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
-                </dd>
-            </th:block>
+            <dt>Project start date</dt>
+            <dd>
+                <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
+            </dd>
             <dt>Duration</dt>
             <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
         </dl>

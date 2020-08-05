@@ -13,14 +13,11 @@ public class TotalSpendProfileViewModel {
     private final ProjectResource project;
     private final TotalProjectSpendProfileTableViewModel table;
     private final SpendProfileSummaryModel summary;
-    private final boolean ktpCompetition;
 
-    public TotalSpendProfileViewModel(ProjectResource project, TotalProjectSpendProfileTableViewModel table,
-                                      SpendProfileSummaryModel summary, boolean ktpCompetition) {
+    public TotalSpendProfileViewModel(ProjectResource project, TotalProjectSpendProfileTableViewModel table, SpendProfileSummaryModel summary) {
         this.project = project;
         this.table = table;
         this.summary = summary;
-        this.ktpCompetition = ktpCompetition;
     }
 
     public ProjectResource getProject() {
@@ -33,10 +30,6 @@ public class TotalSpendProfileViewModel {
 
     public boolean isIncludeFinancialYearTable() {
         return summary != null;
-    }
-
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
     }
 
     @Override

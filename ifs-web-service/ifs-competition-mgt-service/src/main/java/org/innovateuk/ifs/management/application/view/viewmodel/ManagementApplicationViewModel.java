@@ -29,7 +29,7 @@ public class ManagementApplicationViewModel {
     private final String previousApplicationTitle;
     private final Long projectId;
     private final boolean externalFinanceUser;
-    private final boolean ktpCompetition;
+
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
@@ -61,7 +61,6 @@ public class ManagementApplicationViewModel {
         this.innovationAreaName = application.getInnovationArea().getName();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
-        this.ktpCompetition = competition.isKtp();
     }
 
     public ApplicationResource getApplication() {
@@ -145,9 +144,5 @@ public class ManagementApplicationViewModel {
 
     public boolean isExternalFinanceUser() {
         return externalFinanceUser;
-    }
-
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
     }
 }

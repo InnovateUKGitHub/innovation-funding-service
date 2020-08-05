@@ -18,7 +18,6 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +28,6 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -172,14 +170,8 @@ public class ApplicationDetailsController {
 
     private ServiceResult<ValidationMessages> saveDetails(ApplicationDetailsForm form, long applicationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-
-        LocalDate projectStartDate = competition.isKtp()
-                ? TimeZoneUtil.toUkTimeZone(competition.getEndDate()).plusMonths(12).toLocalDate()
-                : convertMinLocalDateToNull(form.getStartDate());
-
         application.setName(form.getName());
-        application.setStartDate(projectStartDate);
+        application.setStartDate(convertMinLocalDateToNull(form.getStartDate()));
         application.setDurationInMonths(form.getDurationInMonths());
         application.setResubmission(form.getResubmission());
         application.setPreviousApplicationNumber(form.getResubmission() == TRUE ? form.getPreviousApplicationNumber() : null);
@@ -187,7 +179,6 @@ public class ApplicationDetailsController {
         application.setCompetitionReferralSource(form.getCompetitionReferralSource());
         application.setCompanyAge(form.getCompanyAge());
         application.setCompanyPrimaryFocus(form.getCompanyPrimaryFocus());
-
         return applicationRestService.saveApplication(application).toServiceResult();
     }
 

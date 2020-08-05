@@ -37,10 +37,8 @@
                     <th:block th:unless="${model.userLeadPartner and !model.isProjectLive()}">Target start date</th:block>
                 </td>
                 <td class="govuk-table__cell" id="start-date">
-                    <th:block th:unless="${model.ktpCompetition}">
-                        <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
-                        <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
-                    </th:block>
+                    <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
+                    <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
                 </td>
                 <td class="govuk-table__cell alignright"></td>
             </tr>

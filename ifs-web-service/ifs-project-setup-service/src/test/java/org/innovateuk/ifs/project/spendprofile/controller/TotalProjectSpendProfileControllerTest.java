@@ -88,47 +88,7 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationOneId)).thenReturn(tableOne);
         when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationTwoId)).thenReturn(tableTwo);
 
-        TotalSpendProfileViewModel expectedViewModel = buildTotalSpendProfileViewModel(organisations, projectResource, tableTwo, tableOne, competition);
-
-        mockMvc.perform(get("/project/{projectId}/spend-profile/total", projectResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("project/spend-profile-totals"));
-
-        assertTrue(expectedViewModel.isIncludeFinancialYearTable());
-    }
-
-    @Test
-    public void viewSpendProfileSuccessfulViewModelPopulationForKtpCompetition() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withFundingType(FundingType.KTP)
-                .build();
-
-        ProjectResource projectResource = newProjectResource()
-                .withName("projectName1")
-                .withTargetStartDate(LocalDate.of(2018, 3, 1))
-                .withDuration(3L)
-                .withCompetition(competition.getId())
-                .build();
-
-        Long organisationOneId = 1L;
-        Long organisationTwoId = 2L;
-        List<OrganisationResource> organisations = asList(
-                OrganisationResourceBuilder.newOrganisationResource().withName("Org2").withId(organisationTwoId).build(),
-                OrganisationResourceBuilder.newOrganisationResource().withName("Org1").withId(organisationOneId).build());
-
-        when(projectService.getLeadOrganisation(projectResource.getId())).thenReturn(organisations.get(0));
-        when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(organisations);
-        when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
-        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-
-        SpendProfileTableResource tableOne = buildSpendProfileTableResource(projectResource);
-        SpendProfileTableResource tableTwo = buildSpendProfileTableResource(projectResource);
-
-        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationOneId)).thenReturn(tableOne);
-        when(spendProfileService.getSpendProfileTable(projectResource.getId(), organisationTwoId)).thenReturn(tableTwo);
-
-        TotalSpendProfileViewModel expectedViewModel = buildTotalSpendProfileViewModel(organisations, projectResource, tableTwo, tableOne, competition);
+        TotalSpendProfileViewModel expectedViewModel = buildTotalSpendProfileViewModel(organisations, projectResource, tableTwo, tableOne);
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/total", projectResource.getId()))
                 .andExpect(status().isOk())
@@ -169,9 +129,7 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         return expectedTable;
     }
 
-    private TotalSpendProfileViewModel buildTotalSpendProfileViewModel(List<OrganisationResource> organisations, ProjectResource projectResource,
-                                                                       SpendProfileTableResource tableOne, SpendProfileTableResource tableTwo,
-                                                                       CompetitionResource competition) {
+    private TotalSpendProfileViewModel buildTotalSpendProfileViewModel(List<OrganisationResource> organisations, ProjectResource projectResource, SpendProfileTableResource tableOne, SpendProfileTableResource tableTwo) {
         List<SpendProfileSummaryYearModel> years = createSpendProfileSummaryYears();
         SpendProfileSummaryModel summary = new SpendProfileSummaryModel(years);
 
@@ -196,7 +154,7 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
                 totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName),
                 organisations.get(0));
 
-        return new TotalSpendProfileViewModel(projectResource, table, summary, competition.isKtp());
+        return new TotalSpendProfileViewModel(projectResource, table, summary);
     }
 
     private List<SpendProfileSummaryYearModel> createSpendProfileSummaryYears() {

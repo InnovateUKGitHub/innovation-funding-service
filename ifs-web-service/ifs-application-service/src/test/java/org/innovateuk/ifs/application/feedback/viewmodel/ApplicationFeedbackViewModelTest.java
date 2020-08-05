@@ -2,12 +2,10 @@ package org.innovateuk.ifs.application.feedback.viewmodel;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.util.TermsAndConditionsUtil;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class ApplicationFeedbackViewModelTest {
 
@@ -41,16 +39,4 @@ public class ApplicationFeedbackViewModelTest {
         assertThat(result).isEqualTo(TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER);
     }
 
-    @Test
-    public void testKtpCompetition() {
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
-                .withFundingType(FundingType.KTP).build();
-
-        ApplicationFeedbackViewModel viewModel = new ApplicationFeedbackViewModel(null, competitionResource,
-                null, null, null, null, false,
-                null, null, null, null, null, null, 1L,
-                false, false);
-
-        assertTrue(viewModel.isKtpCompetition());
-    }
 }

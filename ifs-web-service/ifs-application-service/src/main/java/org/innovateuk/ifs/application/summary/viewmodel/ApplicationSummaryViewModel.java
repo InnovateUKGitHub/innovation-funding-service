@@ -22,7 +22,6 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
     private final String innovationAreaName;
     private final String previousApplicationNumber;
     private final String previousApplicationTitle;
-    private final boolean ktpCompetition;
 
     public ApplicationSummaryViewModel(ApplicationReadOnlyViewModel applicationReadOnlyViewModel, ApplicationResource application, CompetitionResource competition, boolean projectWithdrawn) {
         this.applicationReadOnlyViewModel = applicationReadOnlyViewModel;
@@ -38,7 +37,6 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         this.innovationAreaName = application.getInnovationArea().getName();
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
-        this.ktpCompetition = competition.isKtp();
     }
 
     @Override
@@ -98,7 +96,4 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         return previousApplicationTitle;
     }
 
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
-    }
 }

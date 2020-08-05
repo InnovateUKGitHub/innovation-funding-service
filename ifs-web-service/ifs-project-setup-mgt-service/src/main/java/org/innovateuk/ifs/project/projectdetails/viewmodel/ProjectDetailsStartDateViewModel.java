@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 /**
@@ -12,15 +11,13 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
     private String projectName;
     private long projectDurationInMonths;
     private Long competitionId;
-    private boolean ktpCompetition;
 
-    public ProjectDetailsStartDateViewModel(ProjectResource project, CompetitionResource competition) {
+    public ProjectDetailsStartDateViewModel(ProjectResource project) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.projectDurationInMonths = project.getDurationInMonths();
         this.applicationId = project.getApplication();
         this.competitionId = project.getCompetition();
-        this.ktpCompetition = competition.isKtp();
     }
 
     public String getProjectName() {
@@ -41,9 +38,5 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
 
     public Long getCompetitionId() {
         return competitionId;
-    }
-
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
     }
 }
