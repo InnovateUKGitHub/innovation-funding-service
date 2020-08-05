@@ -192,6 +192,11 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_DATA_SERVICE_FILE_STORAGE_BASE
+                - name: IFS_SYSTEM_EXTERNAL_USER_EMAIL_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_EXTERNAL_USER_EMAIL_DOMAIN
                 - name: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAIN
                   valueFrom:
                     configMapKeyRef:

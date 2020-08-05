@@ -146,6 +146,11 @@
                     </table>
                 </div>
             </th:block>
+
+            <p class="govuk-body">
+                <a th:href="@{/admin/user/{userId}/external-role(userId=${model.user.id})}">Add a new external role profile</a>
+            </p>
+
             <dl class="govuk-list">
                 <dt>Status</dt>
                 <dd th:text="${model.user.statusDisplay}">Active</dd>
