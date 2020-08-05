@@ -23,6 +23,7 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
     private final CompetitionReferralSource competitionReferralSource;
     private final CompanyAge companyAge;
     private final CompanyPrimaryFocus companyPrimaryFocus;
+    private final boolean ktpCompetition;
 
     public ApplicationDetailsReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         super(data, question);
@@ -39,6 +40,7 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
         this.competitionReferralSource = data.getApplication().getCompetitionReferralSource();
         this.companyAge = data.getApplication().getCompanyAge();
         this.companyPrimaryFocus = data.getApplication().getCompanyPrimaryFocus();
+        this.ktpCompetition = data.getCompetition().isKtp();
     }
 
     public String getCompetitionName() {
@@ -98,4 +100,7 @@ public class ApplicationDetailsReadOnlyViewModel extends AbstractQuestionReadOnl
         return "application-details";
     }
 
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
 }

@@ -32,7 +32,7 @@ public class ProjectDetailsViewModel {
     private String financeReviewerName;
     private String financeReviewerEmail;
     private boolean spendProfileGenerated;
-
+    private boolean ktpCompetition;
 
     public ProjectDetailsViewModel(ProjectResource project,
                                    Long competitionId,
@@ -44,7 +44,8 @@ public class ProjectDetailsViewModel {
                                    List<OrganisationResource> organisations,
                                    String financeReviewerName,
                                    String financeReviewerEmail,
-                                   boolean spendProfileGenerated) {
+                                   boolean spendProfileGenerated,
+                                   boolean ktpCompetition) {
         this.project = project;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -56,9 +57,10 @@ public class ProjectDetailsViewModel {
         this.financeReviewerName = financeReviewerName;
         this.financeReviewerEmail = financeReviewerEmail;
         this.spendProfileGenerated = spendProfileGenerated;
+        this.ktpCompetition = ktpCompetition;
     }
 
-    public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project) {
+    public static ProjectDetailsViewModel editDurationViewModel(ProjectResource project, boolean ktpCompetition) {
         return new ProjectDetailsViewModel(project,
                 project.getCompetition(),
                 project.getCompetitionName(),
@@ -69,7 +71,8 @@ public class ProjectDetailsViewModel {
                 Collections.emptyList(),
                 null,
                 null,
-                project.isSpendProfileGenerated());
+                project.isSpendProfileGenerated(),
+                ktpCompetition);
     }
 
     public ProjectResource getProject() {
@@ -165,6 +168,10 @@ public class ProjectDetailsViewModel {
 
     public boolean modifyStartDate() {
         return userResource.hasRole(IFS_ADMINISTRATOR) && !project.isSpendProfileGenerated();
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     @Override
