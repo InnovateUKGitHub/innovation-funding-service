@@ -117,6 +117,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             Map<String, AssociateSalaryCostRowForm> rows = costCategory.getCosts().stream()
                     .map((cost) -> (AssociateSalaryCost) cost)
                     .map(AssociateSalaryCostRowForm::new)
+                    .limit(2)
                     .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
             if (rows.isEmpty()) {
                 rows.put(generateUnsavedRowId(), new AssociateSalaryCostRowForm("Associate 1"));
@@ -139,6 +140,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
             Map<String, AssociateDevelopmentCostRowForm> rows = costCategory.getCosts().stream()
                     .map((cost) -> (AssociateDevelopmentCost) cost)
                     .map(AssociateDevelopmentCostRowForm::new)
+                    .limit(2)
                     .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
             if (rows.isEmpty()) {
                 rows.put(generateUnsavedRowId(), new AssociateDevelopmentCostRowForm("Associate 1", getAssociateSalaryDuration(finance, 0)));

@@ -2674,7 +2674,7 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <div class="govuk-form-group table-overflow">
+                <div class="govuk-form-group table-overflow" id="estateCostRows">
                     <table class="govuk-table" id="estate-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
@@ -2682,6 +2682,8 @@
                             <th id="estate-costs-cost" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric table-header-width-35-percent">
                                 Cost (&pound;)
+                                <th:block
+                                    th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=estateCostRows)"/>
                             </th>
                             <th class="govuk-table__header table-header-width-10-percent alignright" scope="col"><span
                                 class="govuk-visually-hidden">Actions</span>
@@ -2732,7 +2734,8 @@
 <th:block th:fragment="estate_costs_row (id, row)">
     <tr class="form-group-row-validated" th:with="path=${'estateCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
+        th:id="${path}"
+        th:classappend="((${#fields.hasErrors('__${path}__.description')}) or (${#fields.hasErrors('__${path}__.cost')}) or (${#fields.hasErrors('estateCostRows')})) ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
@@ -2758,6 +2761,7 @@
             <input th:id="__${path}__.cost"
                    th:field="*{__${path}__.cost}"
                    th:errorclass="govuk-input--error"
+                   th:classappend="${#fields.hasErrors('estateCostRows')} ? 'govuk-input--error'"
                    type="number"
                    class="govuk-input estate-costs-totals"
                    placeholder="0"
@@ -2765,7 +2769,8 @@
                    max="9999999999999999999"
                    step="1"
                    required="required"
-                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)},
+                            data-anychange-errormessage=#{validation.finance.maximum.estate.costs}"/>
         </td>
         <td class="govuk-table__cell alignright">
             <button type="submit"

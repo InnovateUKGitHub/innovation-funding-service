@@ -943,6 +943,33 @@ IFS.core.formValidation = (function () {
         formGroupRowValidated.removeClass('govuk-form-group--error')
       }
 
+      // If the input is within a table cell check to see if there are validation messages within the column header. If there are: clear it and all the cells in the same column
+      var cell = field.closest('td')
+      if (cell.length) {
+        var table = field.closest('table')
+        var index = cell.closest('tr').find('td').index(cell)
+        var headerCell = table.find('th:eq(' + index + ')')
+        if (headerCell.find('.govuk-error-message').length) {
+          // Header cell has error so we're going to remove it and look for any other cell in the column with a input error that has no message.
+          headerCell.find('.govuk-error-message').remove()
+          table.find('td:nth-of-type(' + (index + 1) + ')').filter(function () {
+            var td = jQuery(this)
+            return !td.find('.govuk-error-message').length && td.find('.govuk-input--error')
+          }).each(function () {
+            var td = jQuery(this)
+            td.find('.govuk-input--error').removeClass('govuk-input--error')
+          })
+
+          table.find('tr').filter(function () {
+            var tr = jQuery(this)
+            return !tr.find('.govuk-input--error').length
+          }).each(function () {
+            var tr = jQuery(this)
+            tr.removeClass('govuk-form-group--error')
+          })
+        }
+      }
+
       // if it is a .form-group-multiple there can be multiple fields within the group, all having there own validation but reporting to one label
       // the template has to output server side error messages linked to the field
       // i.e. a table

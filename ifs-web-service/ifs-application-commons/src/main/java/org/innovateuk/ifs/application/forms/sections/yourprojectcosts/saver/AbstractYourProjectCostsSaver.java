@@ -331,12 +331,6 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
             case PROCUREMENT_OVERHEADS:
                 map = form.getProcurementOverheadRows();
                 break;
-            case ASSOCIATE_SALARY_COSTS:
-                map = form.getAssociateSalaryCostRows();
-                break;
-            case ASSOCIATE_DEVELOPMENT_COSTS:
-                map = form.getAssociateDevelopmentCostRows();
-                break;
             case ASSOCIATE_SUPPORT:
                 map = form.getAssociateSupportCostRows();
                 break;
@@ -378,12 +372,6 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
                 break;
             case PROCUREMENT_OVERHEADS:
                 clazz = ProcurementOverheadRowForm.class;
-                break;
-            case ASSOCIATE_SALARY_COSTS:
-                clazz = AssociateSalaryCostRowForm.class;
-                break;
-            case ASSOCIATE_DEVELOPMENT_COSTS:
-                clazz = AssociateDevelopmentCostRowForm.class;
                 break;
             case ASSOCIATE_SUPPORT:
                 clazz = AssociateSupportCostRowForm.class;
