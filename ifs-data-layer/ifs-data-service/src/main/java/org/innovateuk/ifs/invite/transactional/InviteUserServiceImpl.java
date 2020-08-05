@@ -99,12 +99,12 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
         return validateInvite(invitedUser, role)
-                .andOnSuccess(() -> validateInternalUserRole(role))
+                .andOnSuccess(() -> invitedUser.isKtaUser() ? validateKtaUserRole(role) : validateInternalUserRole(role))
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> saveInvite(invitedUser, role))
-                .andOnSuccess(this::inviteInternalUser);
+                .andOnSuccess(invite -> invitedUser.isKtaUser() ? ServiceResult.serviceSuccess() : inviteInternalUser(invite));
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
@@ -120,6 +120,12 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         return Role.internalRoles().stream().anyMatch(internalRole -> internalRole == userRoleType)
                 ? serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+    }
+
+    private ServiceResult<Void> validateKtaUserRole(Role userRoleType) {
+
+        return Role.ktaRoles().stream().anyMatch(ktaRole -> ktaRole == userRoleType)
+                ? serviceSuccess() : serviceFailure(NOT_A_KTA_USER_ROLE);
     }
 
     private ServiceResult<Void> validateEmail(String email) {

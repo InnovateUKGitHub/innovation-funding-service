@@ -379,7 +379,12 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * Docusign errors.
      */
-    COULD_NOT_SEND_FILE_TO_DOCUSIGN(INTERNAL_SERVER_ERROR);
+    COULD_NOT_SEND_FILE_TO_DOCUSIGN(INTERNAL_SERVER_ERROR),
+
+    /**
+     * KTA user errors
+     */
+    NOT_A_KTA_USER_ROLE(BAD_REQUEST);
 
     private ErrorTemplate errorTemplate;
 
