@@ -94,7 +94,7 @@ ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property
 
 apply plugin: 'maven-publish'
 
-def dists = [
+def osFileMap = [
         [name:'cache-config', type: 'config-maps'],
         [name:'data-service-config', type: 'config-maps'],
         [name:'db-config', type: 'config-maps'],
@@ -155,104 +155,18 @@ def dists = [
         [name:'survey-service', type: 'survey']
 ]
 
-task copyOSFiles(type: Copy)  {
-    into "build/distributions"
-
-    into("os-files/config-maps") {
-        from('os-files/config-maps')
-        include "*.yml"
-    }
-
-    into("os-files/db-anonymised-data") {
-        from('os-files/db-anonymised-data')
-        include "*.yml"
-    }
-
-    into("os-files/db-baseline") {
-        from('os-files/db-baseline')
-        include "*.yml"
-    }
-
-    into("os-files/db-reset") {
-        from('os-files/db-reset')
-        include "*.yml"
-    }
-
-    into("os-files/finance-data-service-sync") {
-        from('os-files/finance-data-service-sync')
-        include "*.yml"
-    }
-
-    into("os-files/ifs-services") {
-        from('os-files/ifs-services')
-        include "*.yml"
-    }
-
-    into("os-files/mail") {
-        from('os-files/mail')
-        include "*.yml"
-    }
-
-    into("os-files/mysql") {
-        from('os-files/mysql')
-        include "*.yml"
-    }
-
-    into("os-files/mysql-client") {
-        from('os-files/mysql-client')
-        include "*.yml"
-    }
-
-    into("os-files/redis") {
-        from('os-files/redis')
-        include "*.yml"
-    }
-
-    into("os-files/robot-tests") {
-        from('os-files/robot-tests')
-        include "*.yml"
-    }
-
-    into("os-files/routes") {
-        from('os-files/routes')
-        include "*.yml"
-    }
-
-    into("os-files/routes") {
-        from('os-files/routes')
-        include "*.yml"
-    }
-
-    into("os-files/shib") {
-        from('os-files/shib')
-        include "*.yml"
-    }
-
-    into("os-files/sil-stub") {
-        from('os-files/sil-stub')
-        include "*.yml"
-    }
-
-    into("os-files/survey") {
-        from('os-files/survey')
-        include "*.yml"
-    }
-}
-
 publishing {
     publications {
-        dists.each {
-            dist ->
-                "$dist.name"(MavenPublication) {
-                    groupId "org.innovateuk.ifs."+dist.type
+        osFileMap.each {
+            osFile ->
+                "$osFile.name"(MavenPublication) {
+                    groupId "org.innovateuk.ifs."+osFile.type
                     if (project.hasProperty('ifs.version')) {
                         version = project.findProperty('ifs.version')
                     }
-                    artifactId = dist.name
+                    artifactId = osFile.name
 
-                    artifact("build/distributions/os-files/${dist.type}/${dist.name}.yml") {
-                        builtBy copyOSFiles
-                    }
+                    artifact("os-files/${osFile.type}/${osFile.name}.yml")
 
                 }
         }
