@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ExternalRoleRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,9 @@ public class ExternalRoleController {
     @Autowired
     private UserRestService userRestService;
 
+    @Value("${ifs.external.role.enabled}")
+    private boolean externalRoleLinkEnabled;
+
     @GetMapping
     public String viewUser(@PathVariable long userId,
                            @ModelAttribute(name = "form") ExternalRoleForm form,
@@ -41,6 +45,7 @@ public class ExternalRoleController {
         model.addAttribute("userId", userId);
         model.addAttribute("userName", user.getName());
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("externalRoleLinkEnabled", externalRoleLinkEnabled);
         return "externalrole/external-role";
     }
 
