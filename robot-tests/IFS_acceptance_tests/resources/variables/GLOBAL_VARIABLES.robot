@@ -268,7 +268,7 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
-${existingAcademicPartnerOrgName}     WORTH IT LTD
+${existingAcademicPartnerOrgName}     UNIVERSITY OF LIVERPOOL
 ${newPartnerOrgName}                  INNOVATE LTD
 ${internationalOrganisationName}      International Competition Ltd.
 
