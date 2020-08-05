@@ -146,7 +146,7 @@ public class CompetitionSearchServiceImplTest extends BaseServiceUnitTest<Compet
         List<Competition> expectedCompetitions = newCompetition().build(1);
 
         when(competitionRepositoryMock.findProjectSetup(any())).thenReturn(new PageImpl<>(expectedCompetitions, PageRequest.of(page, size), 1L));
-        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(null);
+        when(applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(expectedCompetitions.get(0).getId())).thenReturn(Optional.empty());
 
         CompetitionSearchResult response = service.findProjectSetupCompetitions(page, size).getSuccess();
 
