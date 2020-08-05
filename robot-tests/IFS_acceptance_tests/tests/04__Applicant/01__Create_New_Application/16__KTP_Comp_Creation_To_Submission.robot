@@ -11,6 +11,7 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7841  KTP: Knowledge base organisation type
 ...
+...            IFS-7805  KTP Application: Users cannot see project start date
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -29,9 +30,6 @@ ${ktpApplicationTitle}                KTP Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         A Knowledge Base
 ${secondKTPOrgName}                   D Knowledge Base
-${existingPartnerOrgName}             SmithZone
-${existingAcademicPartnerOrgName}     UNIVERSITY OF LIVERPOOL
-${newPartnerOrgName}                  INNOVATE LTD
 ${group_employees_header}             Number of full time employees in your corporate group (if applicable)
 ${group_employees}                    200
 @{turnover}                           100000  98000   96000
@@ -67,7 +65,7 @@ Existing lead applicant can not apply to KTP compettition if organisation type i
     Given Log in as a different user                                &{ktpExistingLeadCredentials}
     When the user select the competition and starts application     ${ktpCompetitionName}
     And the user clicks the button/link                             id=save-organisation-button
-    Then the user should see the element                            jQuery = h1:contains("You are not eligible to start an application")
+    Then the user should see the element                            jQuery = h1:contains("${invalidOrganisationValidationMessage}")
 
 Existing lead applicant can apply to KTP competition with knowledge base organisation
     [Documentation]  IFS-7841
@@ -81,7 +79,7 @@ Existing/new partner can only see business Or non profit organisation types
     Given the user clicks the button/link                      link = Application overview
     And the lead invites already registered user               ${existing_partner_ktp_email}  ${ktpCompetitionName}
     When logging in and error checking                         &{ktpExistingPartnerCredentials}
-    And the user clicks the button/link                        link =Join with a different organisation
+    And the user clicks the button/link                        link = Join with a different organisation
     Then the user should only see KB partner organisations
 
 Existing/new partner can apply to KTP competition with business organisation
@@ -90,7 +88,7 @@ Existing/new partner can apply to KTP competition with business organisation
     When the user clicks the button/link      id = save-organisation-button
     And the user clicks the button/link       link = Application team
     Then the user should see the element      jQuery = h2:contains("${secondKTPOrgName}")
-    And the user should see the element       jQuery = h2:contains("${existingPartnerOrgName}")
+    And the user should see the element       jQuery = h2:contains("${organisationSmithName}")
 
 Existing/new partner can not apply to KTP competition with academic/research organisations
     [Documentation]  IFS-7812  IFS-7841
@@ -99,7 +97,7 @@ Existing/new partner can not apply to KTP competition with academic/research org
     And the lead invites already registered user       ${existing_academic_email}   ${ktpCompetitionName}
     When logging in and error checking                 &{ktpExistingAcademicCredentials}
     And the user clicks the button/link                id=save-organisation-button
-    Then the user should see the element               jQuery = h1:contains("You are not eligible to start an application")
+    Then the user should see the element               jQuery = h1:contains("${invalidOrganisationValidationMessage}")
 
 Existing/new partner can apply to KTP competition with non profit organisations
     [Documentation]  IFS-7841
@@ -107,7 +105,7 @@ Existing/new partner can apply to KTP competition with non profit organisations
     And the user clicks the button/link                        link = Join with a different organisation
     When the user slectes non profitable organisation type
     And the user clicks the button/link                        link = Application team
-    Then the user should see the element                       jQuery = h2:contains("UNIVERSITY OF LIVERPOOL")
+    Then the user should see the element                       jQuery = h2:contains("${existingAcademicPartnerOrgName}")
 
 New lead applicant starts KTP competition
     [Documentation]  IFS-7841
@@ -120,7 +118,7 @@ Select a knowledge base organisation validations and fields
     Given The user clicks the button/link                                     link = Continue and create an account
     When the user clicks the button/link                                      jQuery = button:contains("Save and continue")
     Then the user should see a field and summary error                        Please select an organisation.
-    And the user should see select an knowledge based organisation fields
+    And the user should see knowledge based organisation fields
 
 New Lead applicant selects a knowledge based organisation
     [Documentation]  IFS-7812  IFS-7814
@@ -133,8 +131,8 @@ New lead applicant creates an account and completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
     Given the user clicks the button/link                  jQuery = button:contains("Save and continue")
     And the user creates an account and verifies email     Indi  Gardiner  ${lead_ktp_email}  ${short_password}
-    And Logging in and Error Checking                      &{ktpLeadApplicantCredentials}
-    When the user clicks the button/link                   jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    When Logging in and Error Checking                     &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application
 
 New lead applicant invites a new partner organisation user and fills in project finances
@@ -160,20 +158,33 @@ Moving KTP Competition to Project Setup
     And moving competition to Project Setup            ${competitionId}
     [Teardown]  Requesting IDs of this Project
 
-The user is able to complete the Project details section
+the project finance user cannot see the project start date
+    [Documentation]  IFS-7805
+    Given the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
+    When the user clicks the button/link         link = ${ApplicationID}
+    Then the user should not see the element     jQuery = dt:contains("When do you wish to start your project?")
+    And the user should see the element          jQuery = dt:contains("Duration in months")
+
+The lead is able to complete the Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  log in as a different user                           &{ktpLeadApplicantCredentials}
     Given the user navigates to the page                          ${server}/project-setup/project/${ProjectID}
     When the user is able to complete project details section
     Then the user should see the element                          jQuery = .progress-list li:nth-child(1):contains("Completed")
 
-The user is able to complete Project team section
+The lead cannot see the project start date
+    [Documentation]  IFS-7805
+    When the user clicks the button/link            link = Project details
+    Then the user sees the text in the element      id = start-date    ${empty}
+    [Teardown]  the user clicks the button/link     id = return-to-set-up-your-project-button
+
+The lead is able to complete Project team section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user clicks the button/link                link = Project team
     When the user completes the project team section
     Then the user should see the element                 jQuery = .progress-list li:nth-child(2):contains("To be completed")
 
-The user is able to complete the Documents section
+The lead is able to complete the Documents section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user clicks the button/link                link = Documents
     When the user uploads the exploitation plan
@@ -182,7 +193,7 @@ The user is able to complete the Documents section
     And the user clicks the button/link                  link = Set up your project
     Then the user should see the element                 jQuery = .progress-list li:nth-child(3):contains("Awaiting review")
 
-The user is able to complete the Bank details section
+The lead is able to complete the Bank details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     Given the user enters bank details
     When the user clicks the button/link     link = Set up your project
@@ -210,6 +221,12 @@ Internal user is able to approve documents
     When the user navigates to the page                  ${server}/project-setup-management/competition/${competitionId}/status/all
     Then the user should see the element                 css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
+Internal user cannot see the project start date
+    [Documentation]  IFS-7805
+    When the user clicks the button/link            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    Then the user sees the text in the element      id = start-date    ${empty}
+    [Teardown]  the user clicks the button/link     link = Back to project setup
+
 Internal user is able to assign an MO
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
     [Setup]  the user navigates to the page         ${server}/project-setup-management/project/${ProjectID}/monitoring-officer
@@ -236,18 +253,20 @@ Internal user is able to approve Finance checks and generate spend profile
     Then the user should see the element        css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(6)
     And the user should see the element         css = #table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
 
-The partner is able to submit the spend profile
-    [Documentation]  IFS-7812
+The partner is able to submit the spend profile and should not see the project start date
+    [Documentation]  IFS-7812  IFS-7805
     [Setup]  log in as a different user             &{ktpNewPartnerCredentials}
     Given The partner submits the spend profile     ${ProjectID}  ${partnerOrgId}
+    And the user should not see the element         jQuery = dt:contains("Project start date")
 
-The lead is able to submit the spend profile
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+The lead is able to submit the spend profile and should not see the project start date
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7805
     [Setup]  Requesting KTP Organisation ID
     Given log in as a different user            &{ktpLeadApplicantCredentials}
-    And the user navigates to the page          ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
-    When the user submits the spend profile
-    Then the user should see the element        jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
+    When the user navigates to the page         ${server}/project-setup/project/${ProjectID}/partner-organisation/${ktpOrganisationID}/spend-profile/review
+    And the user should not see the element     jQuery = dt:contains("Project start date")
+    Then the user submits the spend profile
+    And the user should see the element         jQUery = .progress-list li:nth-child(7):contains("Awaiting review")
 
 Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -374,13 +393,23 @@ Internal user is able to approve documents
 
 The user completes the KTP application
     the user clicks the button/link                                                 link = Application details
-    the user fills in the Application details                                       ${ktpApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                        ${ktpApplicationTitle}
     the user marks the KTP finances as complete                                     ${ktpApplicationTitle}   Calculate  52,214
     the user accept the competition terms and conditions                            Return to application overview
+
+the user fills in the KTP Application details
+    [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user should see the element                jQuery = h1:contains("Application details")
+    the user should not see the element            id = startDate
+    the user enters text to a text field           id = name  ${appTitle}
+    the user enters text to a text field           id = durationInMonths  24
+    the user clicks the button twice               css = label[for="resubmission-no"]
+    the user can mark the question as complete
+    the user should see the element                jQuery = li:contains("Application details") > .task-status-complete
 
 The user completes the research category
     [Arguments]  ${res_category}
@@ -409,7 +438,7 @@ Requesting KTP Organisation ID
     ${ktpOrganisationID} =  get organisation id by name     ${ktpOrgName}
     Set suite variable      ${ktpOrganisationID}
 
-the user should see select an knowledge based organisation fields
+the user should see knowledge based organisation fields
     the user should see the element     jQuery = p:contains("Only a knowledge base organisation can lead this application.")
     the user should see the element     jQuery = h1:contains("Select a knowledge base organisation")
     the user should see the element     jQuery = span:contains("Select your knowledge base organisation.")
@@ -437,4 +466,4 @@ the user should only see KB partner organisations
 the user slectes non profitable organisation type
     the user selects the radio button                           organisationTypeId   4
     the user clicks the button/link                             jQuery = button:contains("Save and continue")
-    the user search for organisation name on Companies house    university   ${existingAcademicPartnerOrgName}
+    the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}

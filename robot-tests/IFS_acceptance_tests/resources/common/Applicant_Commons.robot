@@ -15,8 +15,7 @@ the user should see all the Your-Finances Sections
 the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    #the user clicks the button/link  jQuery = h3:contains("${Application}") a
-    the user clicks the button/link  jQuery = h3:contains("${Application}")
+    the user clicks the button/link  jQuery = h3:contains("${Application}") a
     the user clicks the button/link  link = Your project finances
 
 Applicant navigates to the finances of the Robot application
@@ -588,13 +587,11 @@ the user can submit the application
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
-    [Arguments]   ${partner_email}  ${competition_title}  #${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
+    [Arguments]   ${partner_email}  ${competition_title}
     the user fills in the inviting steps                 ${partner_email}
     Logout as user
     the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
     the user clicks the button/link                      link = Continue
-    #partner applicant completes the project finances     ${collaboratorEmail}  ${collaboratorPassword}  ${application_title}  ${is_KTP}
-    #lead applicant completes the application team       &{lead_applicant_credentials}
 
 partner applicant completes the project finances
     [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}

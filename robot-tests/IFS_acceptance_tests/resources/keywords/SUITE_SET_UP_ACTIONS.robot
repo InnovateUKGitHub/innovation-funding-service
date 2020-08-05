@@ -161,7 +161,6 @@ the user fills in the inviting steps
     the user clicks the button/link       link=Application team
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    page should contain element    jQuery=button:contains("Edit")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link    jQuery=button:contains("Edit")
-    #the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       link=Add a partner organisation
     the user enters text to a text field  id = organisationName  New Organisation's Name
     the user enters text to a text field  id = name  Partner's name

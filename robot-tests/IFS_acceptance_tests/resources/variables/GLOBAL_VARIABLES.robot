@@ -268,6 +268,8 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
+${existingAcademicPartnerOrgName}     WORTH IT LTD
+${newPartnerOrgName}                  INNOVATE LTD
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
@@ -325,3 +327,6 @@ ${bussinessOrgInfoText}                  A person or organisation that provides 
 ${nonJe-s/Public/CharityOrgInfoText}     A not-for-profit organisation focusing on innovation.
 ${researchOrgInfoText}                   Higher education and organisations registered with Je-S.
 ${rtoOrgInfoText}                        Organisations which solely promote and conduct collaborative research and innovation.
+
+#invalid organisation validation message
+${invalidOrganisationValidationMessage}     You are not eligible to start an application
