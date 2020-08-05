@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.registration.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
-import org.innovateuk.ifs.management.registration.form.StakeholderRegistrationForm;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.springframework.beans.factory.annotation.Autowired;

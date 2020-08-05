@@ -15,9 +15,7 @@ import org.springframework.security.core.parameters.P;
  */
 public interface RegistrationService {
 
-    @SecuredBySpring(value = "CREATE", securedType = User.class,
-            description = "A System Registration User can activate new monitoring officer users on behalf of non-logged in users with invite hash")
-    @PreAuthorize("hasAuthority('system_registrar')")
+    @PreAuthorize("hasPermission(#user, 'CREATE')")
     ServiceResult<UserResource> createUser(UserCreationResource user);
 
     @SecuredBySpring(value = "CREATE", securedType = User.class,

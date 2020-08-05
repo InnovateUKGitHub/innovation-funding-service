@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,7 +67,7 @@ public class ProjectRegistrationController {
     }
 
     @PostMapping(REGISTER_MAPPING)
-    public String registerFormSubmit(@Valid @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Valid @Validated(ExternalUserRegistrationValidationGroup.class) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletRequest request,
                                      Model model,

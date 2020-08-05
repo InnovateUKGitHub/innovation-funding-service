@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.registration.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.management.registration.form.StakeholderRegistrationForm;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 
 /**

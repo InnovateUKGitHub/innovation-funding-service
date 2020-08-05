@@ -36,7 +36,7 @@ Non-registered assessor: Accept invitation
 User can navigate back to Become an Assessor page
     [Documentation]    INFUND-4145
     Given the user clicks the button/link    jQuery = .govuk-button:contains("Create account")
-    And the user should see the element      jQuery = .govuk-heading-s:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
+    And the user should see the element      jQuery = .govuk-label:contains("Email") ~ span:contains("worth.email.test+thomas.fister@gmail.com")
     When the user clicks the button/link     jQuery = .govuk-back-link:contains("Back")
     Then the user should see the element     jQuery = h1:contains("Become an assessor for Innovate UK")
 

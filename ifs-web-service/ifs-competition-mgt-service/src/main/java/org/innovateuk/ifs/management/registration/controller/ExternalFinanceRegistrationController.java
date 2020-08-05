@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupExternalFinanceUse
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionFinanceInviteResource;
-import org.innovateuk.ifs.management.registration.form.CompetitionFinanceRegistrationForm;
 import org.innovateuk.ifs.management.registration.service.ExternalFinanceService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -51,7 +50,7 @@ public class ExternalFinanceRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) CompetitionFinanceRegistrationForm competitionFinanceRegistrationForm,
+                                    @Valid @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
@@ -62,7 +61,7 @@ public class ExternalFinanceRegistrationController {
             return failureView.get();
         } else {
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                ServiceResult<Void> result = externalFinanceService.createExternalFinanceUser(inviteHash, competitionFinanceRegistrationForm);
+                ServiceResult<Void> result = externalFinanceService.createExternalFinanceUser(inviteHash, registrationForm);
                 //  fix this
                 result.getErrors().forEach(error -> {
                     if (StringUtils.hasText(error.getFieldName())) {

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.registration.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
-import org.innovateuk.ifs.management.registration.form.InternalUserRegistrationForm;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class InternalUserServiceImpl implements InternalUserService {
     private UserRestService userRestService;
 
     @Override
-    public ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationForm registrationForm) {
+    public ServiceResult<Void> createInternalUser(String inviteHash, RegistrationForm registrationForm) {
         InternalUserRegistrationResource internalUserRegistrationResource = new InternalUserRegistrationResource();
         internalUserRegistrationResource.setPassword(registrationForm.getPassword());
         internalUserRegistrationResource.setFirstName(registrationForm.getFirstName());

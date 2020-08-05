@@ -3,9 +3,10 @@ package org.innovateuk.ifs.management.registration.controller;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
-import org.innovateuk.ifs.management.registration.form.InternalUserRegistrationForm;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,15 +48,17 @@ public class InternalUserRegistrationController {
     @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
-                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) InternalUserRegistrationForm form,
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) RegistrationForm form,
                               UserResource loggedInUser) {
+        RoleInviteResource invite = inviteUserRestService.getInvite(inviteHash).getSuccess();
+        form.setEmail(invite.getEmail());
         return doViewYourDetails(model, inviteHash, loggedInUser);
     }
 
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) InternalUserRegistrationForm registrationForm,
+                                    @Valid @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {

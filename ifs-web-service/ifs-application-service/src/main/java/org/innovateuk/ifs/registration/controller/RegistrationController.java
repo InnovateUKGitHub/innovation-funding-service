@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResour
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -36,6 +37,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -158,7 +160,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerFormSubmit(@Valid @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Valid @Validated(ExternalUserRegistrationValidationGroup.class) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
                                      UserResource user,

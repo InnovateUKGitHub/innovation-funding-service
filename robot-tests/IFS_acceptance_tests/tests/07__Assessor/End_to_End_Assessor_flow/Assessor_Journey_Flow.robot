@@ -163,7 +163,7 @@ Invited user accept the invitation and navigate to registration form
     the user selects the radio button       acceptInvitation  true
     the user clicks the button/link         jQuery = button:contains("Confirm")
     the user clicks the button/link         jQuery = .govuk-button:contains("Create account")
-    the user should see the element         jQuery = p strong:contains("${Assessor_e2e["email"]}")
+    the user should see the element         jQuery = strong:contains("${Assessor_e2e["email"]}")
 
 comp admin allocate application to an assessor
     the user clicks the button/link             jQuery = tr:nth-child(1) a:contains("View progress")
