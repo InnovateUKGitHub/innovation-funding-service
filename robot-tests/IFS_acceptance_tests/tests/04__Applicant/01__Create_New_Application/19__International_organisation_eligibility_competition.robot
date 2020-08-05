@@ -169,7 +169,7 @@ Non registered UK based users confirm their organisation details and create an a
     [Documentation]    IFS-7199
     [Tags]  HappyPath
     Given the user provides uk based organisation details             Nomensa  ${ukBasedOrganisationName}
-    And the user verifies their organisation details
+    And the user verifies uk based organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
     Then the user should not see an error in the page
@@ -212,7 +212,7 @@ Registered UK based user applies for International Competition
     Given the user clicks the button/link                                          link = Apply with a different organisation
     When the user selects organisation type as business                            radio-1
     And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
-    Then the user verifies their organisation details
+    Then the user verifies uk based organisation details
     And the user clicks the button/link                                            name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
@@ -683,6 +683,11 @@ the user verifies their organisation details
     the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
     the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
 
+the user verifies uk based organisation details
+    the user should see the element         jQuery = p:contains("${chooseYourOragnisationTypeInfoText}")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
+    the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
+
 the user sign in and apply for international comp
     [Arguments]  ${user}  ${password}   ${competitionName}
     the user select the competition and starts application      ${competitionName}
@@ -775,13 +780,6 @@ the user provides international organisation details
     input text                                                         id = country  ${international_org_country}
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
-
-#the user provides uk based organisation details
-#    [Arguments]  ${org_search_name}  ${org}
-#    the user selects organisation type as business     radio-1
-#    the user enters text to a text field               name = organisationSearchName  ${org_search_name}
-#    the user clicks the button/link                    name = search-organisation
-#    the user clicks the button/link                    link = ${org}
 
 the user gets an error message on not filling mandatory fields
     [Arguments]  ${button_id}
