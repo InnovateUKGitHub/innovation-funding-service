@@ -2174,9 +2174,9 @@
                     <table class="govuk-table" id="associate-salary-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header govuk-!-width-three-quarters" id="associate-salary-description" scope="col">
+                            <th class="govuk-table__header table-header-width-70-percent" id="associate-salary-description" scope="col">
                                 Associate</th>
-                            <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-10-percent">
+                            <th id="associate-salary-duration" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
                                 Duration of employment (months)
                             </th>
                             <th id="associate-salary-cost" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
@@ -2214,7 +2214,8 @@
 <th:block th:fragment="associate_salary_costs_row (index, id, row)">
     <tr class="form-group-row-validated" th:with="path=${'associateSalaryCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
+        th:id="${path}"
+        th:classappend="((${#fields.hasErrors('__${path}__.duration')}) or (${#fields.hasErrors('__${path}__.cost')})) ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <input type="hidden" th:field="*{__${path}__.role}" />
         <td class="govuk-table__cell">
@@ -2343,9 +2344,9 @@
                     <table class="govuk-table" id="associate-development-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header govuk-!-width-three-quarters" id="associate-development-description" scope="col">
+                            <th class="govuk-table__header table-header-width-70-percent" id="associate-development-description" scope="col">
                                 Associate</th>
-                            <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-10-percent">
+                            <th id="associate-development-duration" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
                                 Duration of employment (months)
                             </th>
                             <th id="associate-development-cost" scope="col" class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
@@ -2383,7 +2384,8 @@
 <th:block th:fragment="associate_development_costs_row (index, id, row)">
     <tr class="form-group-row-validated" th:with="path=${'associateDevelopmentCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
+        th:id="${path}"
+        th:classappend="${#fields.hasErrors('__${path}__.cost')} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <input type="hidden" th:field="*{__${path}__.role}" />
         <td class="govuk-table__cell">

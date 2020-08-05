@@ -10,6 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -77,6 +78,10 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
         }
 
         if (requiredFieldValue instanceof BigDecimal) {
+            return false;
+        }
+
+        if (requiredFieldValue instanceof BigInteger) {
             return false;
         }
 
