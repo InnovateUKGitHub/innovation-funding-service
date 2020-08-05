@@ -259,7 +259,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application expectedApplicationComp2WithMaxDate = saved.get(5);
 
         assertEquals(expectedApplicationComp2WithMaxDate, repository
-                .findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition2.getId()));
+                .findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition2.getId()).get());
     }
 
     private Application createApplicationByState(ApplicationState applicationState) {
