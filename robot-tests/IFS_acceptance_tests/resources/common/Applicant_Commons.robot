@@ -4,6 +4,7 @@ Resource    ../../resources/defaultResources.robot
 *** Variables ***
 ${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 ${bannerMessageForLead}     Your application was reopened on
+${yourFundingSubTitle}      Are you requesting funding?
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -328,9 +329,11 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page                        ${Application}
     the user clicks the button/link                                 link = Your funding
-    the user selects the radio button                               requestingFunding   true
-    Run Keyword if    "${Application}" == "KTP Application"         the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
-    ...         ELSE                                                the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
+    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP Application"    run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...         ELSE IF   "${Application}" != "KTP Application"     run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
     the user selects the radio button                               otherFunding   false
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
     the user clicks the button/link                                 link = Your funding

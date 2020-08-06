@@ -10,15 +10,19 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +52,12 @@ public class YourFundingViewModelPopulator {
     private ApplicantRestService applicantRestService;
 
     @Autowired
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
     private QuestionService questionService;
 
     @Autowired
@@ -55,7 +65,7 @@ public class YourFundingViewModelPopulator {
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
         if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
-            return populateManagement(applicationId, sectionId, organisationId);
+            return populateManagement(applicationId, sectionId, organisationId, user);
         }
         return populate(applicationId, sectionId, user);
     }
@@ -96,13 +106,18 @@ public class YourFundingViewModelPopulator {
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
                 format("/application/%d/form/FINANCE", applicationId),
-                overridingFundingRules);
+                overridingFundingRules,
+                section.getCompetition().getFundingType(),
+                section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum());
     }
 
-    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId) {
+    private ManagementYourFundingViewModel populateManagement(long applicationId, long sectionId, long organisationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+
         return new ManagementYourFundingViewModel(applicationId, application.getCompetitionName(), sectionId, organisationId, application.getCompetition(), application.getName(),
-                format("/application/%d/form/FINANCE/%d", applicationId, organisationId));
+                format("/application/%d/form/FINANCE/%d", applicationId, organisationId), competition.getFundingType(), organisation.getOrganisationTypeEnum());
 
     }
 
