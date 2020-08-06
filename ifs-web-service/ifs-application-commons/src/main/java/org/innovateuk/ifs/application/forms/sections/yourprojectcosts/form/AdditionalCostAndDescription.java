@@ -5,6 +5,8 @@ import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 
 import java.math.BigInteger;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 @FieldRequiredIf(required = "description", argument = "costIsNotNull", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "cost", argument = "descriptionIsNotNull", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class AdditionalCostAndDescription {
@@ -39,6 +41,6 @@ public class AdditionalCostAndDescription {
         return cost != null;
     }
     public boolean isDescriptionIsNotNull() {
-        return description != null;
+        return !isNullOrEmpty(description);
     }
 }
