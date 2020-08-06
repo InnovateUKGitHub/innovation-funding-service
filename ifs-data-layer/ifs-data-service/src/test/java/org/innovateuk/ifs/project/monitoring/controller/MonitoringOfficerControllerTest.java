@@ -96,7 +96,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         long userId = 11;
         when(projectMonitoringOfficerServiceMock.isMonitoringOfficer(userId)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/is-monitoring-officer/{userId}", userId))
+        mockMvc.perform(get("/monitoring-officer/is-monitoring-officer/{userId}", userId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).isMonitoringOfficer(userId);
