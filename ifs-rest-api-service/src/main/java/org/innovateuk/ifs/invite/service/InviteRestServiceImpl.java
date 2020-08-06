@@ -67,9 +67,9 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
-    public RestResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResources) {
-        String url = inviteRestUrl + "/save-kta-invites";
-        return postWithRestResult(url, inviteResources, Void.class);
+    public RestResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource) {
+        String url = inviteRestUrl + "/save-kta-invite";
+        return postWithRestResult(url, inviteResource, Void.class);
     }
 
     @Override

@@ -11,16 +11,14 @@ import javax.validation.constraints.Size;
  */
 public class ApplicationTeamForm {
 
-    @NotBlank(message = "{validation.standard.name.required}")
     private String name;
 
-    @NotBlank(message = "{validation.applicationteam.email.required}")
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.applicationteam.email.format}")
     @Size(max = 254, message = "{validation.applicationteam.email.required}")
     private String email;
 
-    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.applicationteam.email.format}")
-    @Size(max = 254, message = "{validation.applicationteam.email.required}")
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.kta.email.format}")
+    @Size(max = 254, message = "{validation.kta.email.too.large}")
     private String ktaEmail;
 
     public String getName() {

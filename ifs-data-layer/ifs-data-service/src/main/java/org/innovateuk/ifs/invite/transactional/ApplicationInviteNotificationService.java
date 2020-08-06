@@ -135,15 +135,8 @@ class ApplicationInviteNotificationService {
     }
 
     @Transactional
-    public ServiceResult<Void> inviteKtas(List<ApplicationKtaInvite> invites) {
-        for (ApplicationKtaInvite invite : invites) {
-            ServiceResult<Void> inviteResult = processKtaInvite(webBaseUrl, invite, false);
-
-            if (inviteResult.isFailure()) {
-                return inviteResult;
-            }
-        }
-        return serviceSuccess();
+    public ServiceResult<Void> inviteKta(ApplicationKtaInvite invite) {
+        return processKtaInvite(webBaseUrl, invite, false);
     }
 
     private ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {

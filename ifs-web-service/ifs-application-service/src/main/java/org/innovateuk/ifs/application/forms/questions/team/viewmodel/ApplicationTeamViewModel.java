@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
@@ -113,5 +118,13 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public Long getKtaInvitePendingDays() {
+        if (ktaInvite == null || InviteStatus.SENT != ktaInvite.getStatus()) {
+            return null;
+        }
+
+        return Duration.between(ktaInvite.getSentOn().toInstant(), Instant.now()).toDays();
     }
 }

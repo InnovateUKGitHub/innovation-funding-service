@@ -190,11 +190,11 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResources) {
-        return validateUniqueKtaApplication(inviteResources, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
-            List<ApplicationKtaInvite> invites = simpleMap(inviteResources, invite -> mapKtaInviteResourceToKtaInvite(invite));
-            applicationKtaInviteRepository.saveAll(invites);
-            return applicationInviteNotificationService.inviteKtas(invites);
+    public ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource) {
+        return validateUniqueKtaApplication(inviteResource, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
+            ApplicationKtaInvite invite = mapKtaInviteResourceToKtaInvite(inviteResource);
+            applicationKtaInviteRepository.save(invite);
+            return applicationInviteNotificationService.inviteKta(invite);
         });
     }
 
@@ -368,15 +368,13 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
     }
 
-    private ServiceResult<Void> validateUniqueKtaApplication(List<ApplicationKtaInviteResource> inviteResources, String errorField) {
+    private ServiceResult<Void> validateUniqueKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
         List<Error> failures = new ArrayList<>();
-        forEachWithIndex(inviteResources, (index, invite) -> {
-            List<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(invite.getApplication());
-            if (!existing.isEmpty()) {
-                failures.add(fieldError(format(errorField, index), invite.getEmail(), "kta.already.invited"));
-            }
-        });
-        return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
+        List<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
+        if (!existing.isEmpty()) {
+            return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
+        }
+        return serviceSuccess();
     }
 
     private Set<String> getUniqueEmailAddressesForApplication(long applicationId) {

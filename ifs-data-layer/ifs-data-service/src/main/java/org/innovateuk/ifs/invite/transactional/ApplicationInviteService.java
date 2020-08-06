@@ -35,8 +35,8 @@ public interface ApplicationInviteService {
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
     ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
 
-    @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
-    ServiceResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResources);
+    @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
+    ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
     ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource);

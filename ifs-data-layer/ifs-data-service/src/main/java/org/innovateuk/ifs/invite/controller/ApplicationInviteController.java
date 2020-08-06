@@ -66,9 +66,9 @@ public class ApplicationInviteController {
         return applicationInviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
-    @PostMapping("/save-kta-invites")
-    public RestResult<Void> saveKtaInvite(@RequestBody List<ApplicationKtaInviteResource> inviteResources) {
-        return applicationInviteService.saveKtaInvites(inviteResources).toPostCreateResponse();
+    @PostMapping("/save-kta-invite")
+    public RestResult<Void> saveKtaInvite(@RequestBody ApplicationKtaInviteResource inviteResource) {
+        return applicationInviteService.saveKtaInvite(inviteResource).toPostCreateResponse();
     }
 
     @PostMapping("/resend-invite")

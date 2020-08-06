@@ -13,7 +13,7 @@ public interface InviteRestService {
     RestResult<Void> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites);
     RestResult<Void> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites);
     RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
-    RestResult<Void> saveKtaInvites(List<ApplicationKtaInviteResource> inviteResource);
+    RestResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource);
     RestResult<Void> resendInvite(ApplicationInviteResource inviteResource);
     RestResult<Void> acceptInvite(String inviteHash, long userId);
     RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId);
