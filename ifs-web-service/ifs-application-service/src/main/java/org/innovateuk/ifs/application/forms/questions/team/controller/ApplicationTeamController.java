@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.util.Arrays;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -281,9 +283,11 @@ public class ApplicationTeamController {
                     form.getKtaEmail(),
                     applicationId
             );
+
             validationHandler.addAnyErrors(inviteAction.apply(invite),
-                    mappingErrorKeyToField("email.already.in.invite", "ktaEmail"),
-                    defaultConverters());
+                    mappingErrorKeyToField("kta.already.invited", "ktaEmail"),
+                    ArrayUtils.add(defaultConverters(),
+                            mappingErrorKeyToField("user.not.registered.kta", "ktaEmail")));
             return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToApplicationTeam(applicationId, questionId));
         });
     }

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.service.ApplicationOrganisationAddressRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -97,8 +98,13 @@ public class ApplicationTeamPopulator {
 
         List<ApplicationKtaInviteResource> ktaInvites = inviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
         ApplicationKtaInviteResource ktaInvite = null;
+        UserResource ktaUser = null;
         if (!ktaInvites.isEmpty()) {
             ktaInvite = ktaInvites.get(0);
+            RestResult<UserResource> ktaUserResult = userRestService.findUserByEmail(ktaInvite.getEmail());
+            if (ktaUserResult.isSuccess()) {
+                ktaUser = ktaUserResult.getSuccess();
+            }
         }
 
         return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),
@@ -107,7 +113,7 @@ public class ApplicationTeamPopulator {
                 application.isOpen() && competition.isOpen(),
                 questionStatuses.stream().anyMatch(QuestionStatusResource::getMarkedAsComplete),
                 competition.isKtp(),
-                ktaInvite);
+                ktaInvite, ktaUser);
     }
 
     private ApplicationTeamOrganisationViewModel toInviteOrganisationTeamViewModel(InviteOrganisationResource organisationInvite, boolean leadApplicant) {

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -24,6 +25,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean complete;
     private final boolean ktpCompetition;
     private final ApplicationKtaInviteResource ktaInvite;
+    private final UserResource ktaUser;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -36,7 +38,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean open,
                                     boolean complete,
                                     boolean ktpCompetition,
-                                    ApplicationKtaInviteResource ktaInvite
+                                    ApplicationKtaInviteResource ktaInvite,
+                                    UserResource ktaUser
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -50,6 +53,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.complete = complete;
         this.ktpCompetition = ktpCompetition;
         this.ktaInvite = ktaInvite;
+        this.ktaUser = ktaUser;
     }
 
     @Override
@@ -126,5 +130,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         }
 
         return Duration.between(ktaInvite.getSentOn().toInstant(), Instant.now()).toDays();
+    }
+
+    public UserResource getKtaUser() {
+        return ktaUser;
     }
 }

@@ -62,7 +62,8 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     enum Notifications {
         INVITE_COLLABORATOR,
-        INVITE_KTA
+        INVITE_KTA,
+        REMOVE_KTA
     }
 
     @Autowired
@@ -277,6 +278,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     private void removeKtaInvite(ApplicationKtaInvite applicationKtaInvite) {
         applicationKtaInviteRepository.delete(applicationKtaInvite);
+        applicationInviteNotificationService.removeKtaFromApplication(applicationKtaInvite);
     }
 
     private boolean isRemovingLastActiveCollaboratorUser(
