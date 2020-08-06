@@ -44,6 +44,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
@@ -160,7 +161,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerFormSubmit(@Valid @Validated(ExternalUserRegistrationValidationGroup.class) @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
                                      UserResource user,
@@ -275,7 +276,11 @@ public class RegistrationController {
                 throw new InviteAlreadyAcceptedException();
             }
         }
-        model.addAttribute("model", aRegistrationViewModel().withInvitee(false).withExternalUser(true).build());
+        model.addAttribute("model", aRegistrationViewModel()
+                .withInvitee(false)
+                .withTermsRequired(true)
+                .withPhoneRequired(true)
+                .build());
         return false;
     }
 

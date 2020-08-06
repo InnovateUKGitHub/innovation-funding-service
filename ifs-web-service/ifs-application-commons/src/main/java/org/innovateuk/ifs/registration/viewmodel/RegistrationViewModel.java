@@ -1,22 +1,25 @@
 package org.innovateuk.ifs.registration.viewmodel;
 
-import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
-
 public class RegistrationViewModel {
     private static final String DEFAULT_PHONE_GUIDANCE = "We may use this to contact you about the application.";
+    private static final String DEFAULT_BUTTON_TEXT = "Create account";
     private final boolean invitee;
     private final String role;
     private final String project;
     private final String phoneGuidance;
-    private final boolean externalUser;
+    private final String buttonText;
+    private final boolean phoneRequired;
+    private final boolean termsRequired;
     private final boolean addressRequired;
 
-    public RegistrationViewModel(boolean invitee, String role, String project, String phoneGuidance, boolean externalUser, boolean addressRequired) {
+    public RegistrationViewModel(boolean invitee, String role, String project, String phoneGuidance, String buttonText, boolean phoneRequired, boolean termsRequired, boolean addressRequired) {
         this.invitee = invitee;
         this.role = role;
         this.project = project;
         this.phoneGuidance = phoneGuidance == null ? DEFAULT_PHONE_GUIDANCE : phoneGuidance;
-        this.externalUser = externalUser;
+        this.buttonText = buttonText == null ? DEFAULT_BUTTON_TEXT : buttonText;
+        this.phoneRequired = phoneRequired;
+        this.termsRequired = termsRequired;
         this.addressRequired = addressRequired;
     }
 
@@ -36,8 +39,16 @@ public class RegistrationViewModel {
         return phoneGuidance;
     }
 
-    public boolean isExternalUser() {
-        return externalUser;
+    public String getButtonText() {
+        return buttonText;
+    }
+
+    public boolean isPhoneRequired() {
+        return phoneRequired;
+    }
+
+    public boolean isTermsRequired() {
+        return termsRequired;
     }
 
     public boolean isAddressRequired() {
@@ -45,14 +56,17 @@ public class RegistrationViewModel {
     }
 
     public static RegistrationViewModel anInvitedUserViewModel() {
-        return aRegistrationViewModel().withInvitee(true).withExternalUser(true).build();
+        return RegistrationViewModelBuilder.aRegistrationViewModel().withInvitee(true).withPhoneRequired(true).withTermsRequired(true).build();
     }
+
     public static final class RegistrationViewModelBuilder {
         private boolean invitee;
         private String role;
         private String project;
         private String phoneGuidance;
-        private boolean externalUser;
+        private String buttonText;
+        private boolean phoneRequired;
+        private boolean termsRequired;
         private boolean addressRequired;
 
         private RegistrationViewModelBuilder() {
@@ -82,8 +96,18 @@ public class RegistrationViewModel {
             return this;
         }
 
-        public RegistrationViewModelBuilder withExternalUser(boolean externalUser) {
-            this.externalUser = externalUser;
+        public RegistrationViewModelBuilder withButtonText(String buttonText) {
+            this.buttonText = buttonText;
+            return this;
+        }
+
+        public RegistrationViewModelBuilder withPhoneRequired(boolean phoneRequired) {
+            this.phoneRequired = phoneRequired;
+            return this;
+        }
+
+        public RegistrationViewModelBuilder withTermsRequired(boolean termsRequired) {
+            this.termsRequired = termsRequired;
             return this;
         }
 
@@ -93,7 +117,7 @@ public class RegistrationViewModel {
         }
 
         public RegistrationViewModel build() {
-            return new RegistrationViewModel(invitee, role, project, phoneGuidance, externalUser, addressRequired);
+            return new RegistrationViewModel(invitee, role, project, phoneGuidance, buttonText, phoneRequired, termsRequired, addressRequired);
         }
     }
 }

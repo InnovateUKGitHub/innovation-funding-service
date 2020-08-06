@@ -20,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -75,7 +75,7 @@ public class GrantsRegistrationController {
     }
 
     @PostMapping
-    public String registerFormSubmit(@Valid @Validated(ExternalUserRegistrationValidationGroup.class) @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      @PathVariable long projectId,
                                      HttpServletRequest request,

@@ -22,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -74,7 +74,7 @@ public class MonitoringOfficerRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) @Validated(ExternalUserRegistrationValidationGroup.class) RegistrationForm monitoringOfficerRegistrationForm,
+                                    @ModelAttribute(FORM_ATTR_NAME) @Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) RegistrationForm monitoringOfficerRegistrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {

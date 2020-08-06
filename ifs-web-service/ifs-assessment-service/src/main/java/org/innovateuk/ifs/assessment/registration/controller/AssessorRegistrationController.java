@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
+import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,15 +24,17 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 
 /**
  * Controller to manage Assessor Registration.
@@ -80,7 +82,7 @@ public class AssessorRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
+                                    @Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
@@ -152,7 +154,7 @@ public class AssessorRegistrationController {
     }
 
     private String doViewYourDetails(Model model, String inviteHash) {
-        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withAddressRequired(true).withExternalUser(true).withInvitee(true).build());
+        model.addAttribute("model", aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withExternalUser(true).withInvitee(true).build());
         return "registration/register";
     }
 

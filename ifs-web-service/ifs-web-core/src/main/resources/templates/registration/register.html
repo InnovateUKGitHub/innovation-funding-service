@@ -172,7 +172,7 @@
                 </div>
             </th:block>
 
-            <button class="govuk-button" name="create-account" type="submit">Create account</button>
+            <button class="govuk-button" name="create-account" type="submit" th:text="${model.buttonText}">Create account</button>
         </form>
 
         <th:block th:insert="fragments/layout :: main-content-end" />

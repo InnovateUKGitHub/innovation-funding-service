@@ -114,16 +114,27 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             result = result.andOnSuccess(this::markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole)
                     .andOnSuccess(savedUser -> handleInvite(savedUser, user));
         }
+        if (shouldImmediatelyActivate(user)) {
+            result = result.andOnSuccess(this::activateUser);
+        }
         return result
                 .andOnSuccessReturn(userMapper::mapToResource);
     }
 
+    private boolean shouldImmediatelyActivate(UserCreationResource user) {
+        return EnumSet.of(STAKEHOLDER, EXTERNAL_FINANCE,
+                INNOVATION_LEAD, PROJECT_FINANCE, IFS_ADMINISTRATOR, COMP_ADMIN, SUPPORT)
+                .contains(user.getRole());
+    }
+
     private boolean shouldSendVerificationEmail(UserCreationResource user) {
-        return user.getRole() != ASSESSOR;
+        return user.getRole() != ASSESSOR &&  !shouldImmediatelyActivate(user);
     }
 
     private ServiceResult<User> handleInvite(User created, UserCreationResource user) {
         if (user.getInviteHash() != null) {
+
+            //TODO try calling invite repo once. Let descriminator do the work.
             Optional<RoleInvite> roleInvite = internalUserInvite(user.getInviteHash());
             roleInvite.ifPresent(this::updateInviteStatus);
 
@@ -184,6 +195,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         roleInvite.ifPresent(invite -> {
             newUser.setEmail(invite.getEmail());
             newUser.setRoles(new HashSet<>(getInternalRoleResources(invite.getTarget()).getSuccess()));
+            userCreationResource.setRole(invite.getTarget());
         });
 
         Optional<StakeholderInvite> stakeholderInvite = getStakeholderInviteByHash(userCreationResource.getInviteHash());
