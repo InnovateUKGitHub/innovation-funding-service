@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionOrganisationConfigResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionOrganisationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -55,10 +57,15 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     @GetMapping
     public String selectOrganisationType(Model model,
                                          UserResource user,
-                                         HttpServletRequest request) {
-
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) {
+        CompetitionResource competition = competitionRestService.getPublishedCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+        if (registrationCookieService.isLeadJourney(request)
+         && competition.getFundingType() == FundingType.KTP) {
+            return handleKtpLeadOrganisationType(request, response);
+        }
         Optional<Long> competitionIdOpt = registrationCookieService.getCompetitionIdCookieValue(request);
-        model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request));
+        model.addAttribute("model", organisationCreationSelectTypePopulator.populate(request, competition));
         model.addAttribute(COMPETITION_ID, competitionIdOpt.orElse(null));
         Optional<OrganisationCreationForm> organisationCreationFormCookie = registrationCookieService.getOrganisationCreationCookieValue(request);
         addPageSubtitleToModel(request, user, model);
@@ -70,6 +77,14 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
         }
 
         return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
+    }
+
+    private String handleKtpLeadOrganisationType(HttpServletRequest request, HttpServletResponse response) {
+        OrganisationTypeForm organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request).orElse(new OrganisationTypeForm());
+        organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
+        registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
+        saveOrganisationTypeToCreationForm(response, organisationTypeForm);
+        return "redirect:" + BASE_URL + "/" + "knowledge-base";
     }
 
     @PostMapping
@@ -101,7 +116,8 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
             return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
         } else {
             organisationForm.setTriedToSave(true);
-            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate(request);
+            CompetitionResource competition = competitionRestService.getPublishedCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
+            OrganisationCreationSelectTypeViewModel selectOrgTypeViewModel = organisationCreationSelectTypePopulator.populate(request, competition);
             model.addAttribute("model", selectOrgTypeViewModel);
             return TEMPLATE_PATH + "/" + ORGANISATION_TYPE;
         }

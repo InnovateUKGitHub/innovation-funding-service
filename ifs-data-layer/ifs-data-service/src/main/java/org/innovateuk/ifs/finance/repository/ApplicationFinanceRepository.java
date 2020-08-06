@@ -5,6 +5,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -12,7 +13,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ApplicationFinanceRepository extends PagingAndSortingRepository<ApplicationFinance, Long> {
-    ApplicationFinance findByApplicationIdAndOrganisationId(@Param("applicationId") Long applicationId, @Param("organisationId") Long organisationId);
+    Optional<ApplicationFinance> findByApplicationIdAndOrganisationId(@Param("applicationId") Long applicationId, @Param("organisationId") Long organisationId);
     List<ApplicationFinance> findByApplicationId(@Param("applicationId") Long applicationId);
     boolean existsByApplicationIdAndOrganisationId(long applicationId, long organisation);
     void deleteByApplicationId(long applicationId);

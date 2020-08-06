@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Feedback overview - ${model.application.name}|" />
     </head>
@@ -38,11 +38,13 @@
 
                     <div class="govuk-grid-column-one-half">
                         <h3 class="govuk-heading-s">Project timescales</h3>
-                        <p class="govuk-body">Project start date: <br />
-                            <th:block
-                                th:if="${model.application.startDate}"
-                                th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}" />
-                        </p>
+                        <th:block th:unless="${model.ktpCompetition}">
+                            <p class="govuk-body">Project start date: <br />
+                                <th:block
+                                    th:if="${model.application.startDate}"
+                                    th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}" />
+                            </p>
+                        </th:block>
                         <p class="govuk-body">Duration: <br /><th:block th:text="${model.application.durationInMonths}" /> months</p>
 
                         <h3 class="govuk-heading-s govuk-!-margin-top-6">Total project cost</h3>
@@ -101,11 +103,10 @@
                                 <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
                                 <p class="govuk-body uploaded-file">
                                     <a th:href="@{/application/{applicationId}/feedback/download-response(applicationId=${model.application.id})}"
-                                       th:text="${model.interviewFeedbackViewModel.responseFilename}"
+                                       th:text="|${model.interviewFeedbackViewModel.responseFilename} (opens in a new window)|"
                                        target="_blank"
-                                       class="govuk-link"
-                                       aria-describedby="file-hint">File</a>
-                                    <span id="file-hint">(opens in a new window)</span>.</p>
+                                       class="govuk-link">File</a>.
+                                </p>
                             </div>
                         </th:block>
                     </th:block>
@@ -181,10 +182,8 @@
                         <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
                         <a target="_blank"
                            th:href="@{/application/{applicationId}/feedback/download-feedback(applicationId=${model.application.id})}"
-                           th:text="${model.interviewFeedbackViewModel.feedbackFilename}"
-                           class="govuk-link"
-                           aria-describedby="feedback-hint">panel-assessment-feedback.pdf, 6 KB </a>
-                        <span id="feedback-hint" class="govuk-body"> (opens in a new window).</span>
+                           th:text="|${model.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
+                           class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
                     </div>
                 </th:block>
 

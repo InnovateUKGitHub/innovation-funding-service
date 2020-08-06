@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Verification email sent'" />
 </head>
@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: phase-banner" />
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please verify your email address',subTitle='Create your account',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please verify your email address',subTitle='Create an account',size='govuk-heading-xl'" />
         <p class="govuk-body">Your verification email may take longer to arrive during busy times. Please wait for at least 24 hours before asking us to resend your email.</p>
         <p class="govuk-body">To keep your account and <th:block th:text="${isApplicantJourney ? 'application' :  'project'}">application</th:block> secure, click on the link in the email we have sent you to verify your email address.</p>
         <p class="govuk-body">You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.ukri.org" class="govuk-link">support@innovateuk.ukri.org</a></p>

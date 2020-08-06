@@ -88,6 +88,11 @@ public class AssessQuestionFeedbackViewModel implements BaseAnalyticsViewModel {
                 .orElse(null);
     }
 
+    public boolean isMultipleChoiceOptions(FormInputResponseResource response) {
+        return inputs.stream()
+                .anyMatch(input -> input.getId().equals(response.getFormInput()) && input.getType().equals(FormInputType.MULTIPLE_CHOICE));
+    }
+
     @Override
     public boolean equals(Object o) {
 

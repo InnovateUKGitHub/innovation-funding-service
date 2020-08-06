@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head"
               th:with="pageTitle=${'Application questions for ' + model.application.id + ' - ' + model.question.shortName}"/>
@@ -29,18 +29,23 @@
 
         <h3 class="govuk-heading-m govuk-!-margin-top-6">Your answer:</h3>
         <th:block th:each="item : ${model.responses}">
-            <th:block th:unless="${item.fileEntry}">
-                <div th:text="${item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
+            <th:block th:if="${item.fileEntries.isEmpty()}">
+                <div th:text="${model.isMultipleChoiceOptions(item) ? item.multipleChoiceOptionText : item.value}" data-md-to-html="" class="govuk-body wysiwyg-styles"></div>
             </th:block>
-            <th:block th:if="${item.fileEntry}">
+        </th:block>
+        <th:block th:each="item : ${model.responses}">
+            <th:block th:unless="${item.fileEntries.isEmpty()}">
                 <h3 th:if="${model.isAppendix(item)}"
                     class="govuk-heading-s govuk-!-margin-0">View appendix:</h3>
                 <h3 th:if="${model.isTemplateDocument(item)}"
                     class="govuk-heading-s govuk-!-margin-0"
                     th:text="|View ${model.templateDocumentTitle}|">View template:</h3>
-                <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput})}"
-                   th:text="|${item.filename} (${item.humanReadableFileSize})|"
-                   class="govuk-link">Project-plan.pdf (161.96 KB)</a>
+                <th:block th:each="file : ${item.fileEntries}">
+                    <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/file/{fileEntryId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput},fileEntryId=${file.id})}"
+                       th:text="|${file.name} (${file.humanReadableFileSize}) (opens in new window)|"
+                       target="_blank"
+                       class="govuk-link">Project-plan.pdf (161.96 KB)</a><br/>
+                </th:block>
             </th:block>
         </th:block>
 

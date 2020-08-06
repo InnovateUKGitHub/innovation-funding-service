@@ -95,6 +95,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 initialize(formInput.getAllowedFileTypes());
                 setupResource.setAppendix(formInput.getActive());
+                setupResource.setNumberOfUploads(formInput.getWordCount());
                 setupResource.setAllowedAppendixResponseFileTypes(formInput.getAllowedFileTypes());
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
@@ -290,17 +291,15 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
                 FormInputScope.APPLICATION,
                 FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
-            appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
 
-            if(competitionSetupQuestionResource.getAppendix()) {
+            if (competitionSetupQuestionResource.getAppendix()) {
+                appendixFormInput.setWordCount(competitionSetupQuestionResource.getNumberOfUploads());
+                appendixFormInput.setActive(true);
                 appendixFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedAppendixResponseFileTypes());
-                appendixFormInput.setWordCount(1);
-        if (competitionSetupQuestionResource.getAppendixGuidance() != null) {
-            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
-        }
-    }
-
-    else {
+                appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
+            } else {
+                appendixFormInput.setWordCount(0);
+                appendixFormInput.setActive(false);
                 appendixFormInput.setAllowedFileTypes(null);
                 appendixFormInput.setGuidanceAnswer(null);
             }
@@ -340,6 +339,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
             writtenFeedbackFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidanceTitle());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
+
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
             // Ensure form input and priority set against newly added rows

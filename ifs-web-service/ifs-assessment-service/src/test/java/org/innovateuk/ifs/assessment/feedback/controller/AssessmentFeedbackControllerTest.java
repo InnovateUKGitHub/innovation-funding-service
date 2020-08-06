@@ -20,6 +20,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -52,6 +53,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -70,6 +72,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
@@ -202,7 +205,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 true,
                 false,
-                null,
+                emptyList(),
                 null,
                 null,
                 null);
@@ -263,11 +266,17 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
         AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
 
-        FileDetailsViewModel expectedFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
-                "File 1",
-                1024L);
+        List<FileDetailsViewModel> expectedFileDetailsViewModel = newArrayList(new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
+                1L,
+                "Appendix1.pdf",
+                1024L),
+                new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
+                        2L,
+                        "Appendix2.pdf",
+                        1024L));
         FileDetailsViewModel expectedTemplateFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(2).getId(),
-                "File 2",
+                3L,
+                "template.pdf",
                 1024L);
         String templateTitle = "templateTitle";
         applicationFormInputs.stream()
@@ -362,6 +371,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 .build();
 
         CompetitionResource competitionResource = setupCompetitionResource();
+        competitionResource.setFundingType(FundingType.GRANT);
 
         AssessmentResource assessmentResource = setupAssessment(competitionResource.getId(), applicationResource.getId());
 
@@ -401,7 +411,80 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 20L,
                 3,
                 50,
-                "Application details"
+                "Application details",
+                false
+        );
+
+        mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("navigation", expectedNavigation))
+                .andExpect(view().name("assessment/application-details"));
+
+        InOrder inOrder = inOrder(questionService, formInputRestService, assessmentService, applicationService, sectionService);
+        inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
+        inOrder.verify(assessmentService).getById(assessmentResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
+        inOrder.verify(questionService).getNextQuestion(questionResource.getId());
+        inOrder.verify(sectionService).getById(nextQuestionResource.getSection());
+        inOrder.verifyNoMoreInteractions();
+
+        verifyZeroInteractions(formInputResponseService, assessorFormInputResponseRestService);
+    }
+
+    @Test
+    public void getQuestion_applicationDetailsQuestion_forKtpCompetition() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withName("Application name")
+                .withStartDate(twoHoursAgo.toLocalDate())
+                .withDurationInMonths(20L)
+                .build();
+
+        CompetitionResource competitionResource = setupCompetitionResource();
+        competitionResource.setFundingType(FundingType.KTP);
+
+        AssessmentResource assessmentResource = setupAssessment(competitionResource.getId(), applicationResource.getId());
+
+        SectionResource sectionResource = setupSection(SectionType.GENERAL);
+
+        QuestionResource questionResource = newQuestionResource()
+                .withShortName("Application details")
+                .withQuestionSetupType(QuestionSetupType.APPLICATION_DETAILS)
+                .build();
+
+        QuestionResource nextQuestionResource = newQuestionResource()
+                .withShortName("Next question")
+                .withSection(sectionResource.getId())
+                .build();
+
+        when(questionService.getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId()))
+                .thenReturn(questionResource);
+
+        when(organisationRestService.getOrganisationsByApplicationId(applicationResource.getId())).thenReturn(restSuccess(emptyList()));
+        when(userRestService.findProcessRole(applicationResource.getId())).thenReturn(restSuccess(
+                newProcessRoleResource().withRoleName(Role.LEADAPPLICANT.getName()).build(3)));
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+
+        setupQuestionNavigation(questionResource.getId(), empty(), of(nextQuestionResource));
+
+        AssessmentFeedbackNavigationViewModel expectedNavigation = new AssessmentFeedbackNavigationViewModel(assessmentResource.getId(),
+                empty(), of(nextQuestionResource));
+
+        setupInvites();
+
+        Form expectedForm = new Form();
+
+        AssessmentFeedbackApplicationDetailsViewModel expectedViewModel = new AssessmentFeedbackApplicationDetailsViewModel(
+                applicationResource.getId(),
+                "Application name",
+                twoHoursAgo.toLocalDate(),
+                20L,
+                3,
+                50,
+                "Application details",
+                true
         );
 
         mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
@@ -467,7 +550,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 false,
                 true,
-                null,
+                emptyList(),
                 null,
                 null,
                 researchCategoryResources);
@@ -537,7 +620,7 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                 assessmentFormInputs,
                 false,
                 true,
-                null,
+                emptyList(),
                 null,
                 null,
                 researchCategoryResources);
@@ -921,16 +1004,22 @@ public class AssessmentFeedbackControllerTest extends AbstractInviteMockMVCTest<
                     if (formInput.getType() == FILEUPLOAD) {
                         return newFormInputResponseResource()
                                 .withFormInputs(formInput.getId())
+                                .withFileEntries(newFileEntryResource()
+                                        .withId(1L, 2L)
+                                        .withName("Appendix1.pdf", "Appendix2.pdf")
+                                        .withFilesizeBytes(1024L)
+                                        .build(2))
                                 .withValue("Applicant response")
-                                .withFileName("File 1")
-                                .withFilesizeBytes(1024L)
                                 .build();
                     } else if (formInput.getType() == TEMPLATE_DOCUMENT) {
                         return newFormInputResponseResource()
                                 .withFormInputs(formInput.getId())
                                 .withValue("Applicant response")
-                                .withFileName("File 2")
-                                .withFilesizeBytes(1024L)
+                                .withFileEntries(newFileEntryResource()
+                                        .withId(3L)
+                                        .withName("template.pdf")
+                                        .withFilesizeBytes(1024L)
+                                        .build(1))
                                 .build();
                     } else {
                         return newFormInputResponseResource()

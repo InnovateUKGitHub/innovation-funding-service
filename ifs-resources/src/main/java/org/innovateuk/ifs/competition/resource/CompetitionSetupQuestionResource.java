@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,11 +25,14 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.*;
 @FieldRequiredIf(required = "assessmentGuidance", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedAppendixResponseFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedTemplateResponseFileTypes", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "templateTitle", argument = "templateDocument", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "guidance", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "guidanceTitle", argument="guidanceRequired", predicate=true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
+    public interface TextAreaValidationGroup { }
+    public interface MultipleChoiceValidationGroup { }
+
     private Long questionId;
 
     private QuestionSetupType type;
@@ -39,24 +44,26 @@ public class CompetitionSetupQuestionResource {
     private String title;
     private String subTitle;
 
-    @NotBlank
     private String guidanceTitle;
 
-    @NotBlank
     private String guidance;
 
     /* text area */
-    private Boolean textArea = true;
-    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
-    @NotNull(message = "{validation.field.must.not.be.blank}")
+    private Boolean textArea;
+
+    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}", groups = TextAreaValidationGroup.class)
+    @NotNull(message = "{validation.field.must.not.be.blank}", groups = TextAreaValidationGroup.class)
     private Integer maxWords;
 
     /* multiple choice */
-    private Boolean multipleChoice = false;
+    private Boolean multipleChoice;
+    @Valid
+    @Size(min = 2, max = 15, groups = MultipleChoiceValidationGroup.class)
     private List<MultipleChoiceOptionResource> choices = new ArrayList<>();
 
     /* appendix */
     private Boolean appendix;
+    private Integer numberOfUploads;
     private Set<FileTypeCategory> allowedAppendixResponseFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
 
@@ -140,6 +147,14 @@ public class CompetitionSetupQuestionResource {
 
     public void setAppendix(Boolean appendix) {
         this.appendix = appendix;
+    }
+
+    public Integer getNumberOfUploads() {
+        return numberOfUploads;
+    }
+
+    public void setNumberOfUploads(Integer numberOfUploads) {
+        this.numberOfUploads = numberOfUploads;
     }
 
     public String getAssessmentGuidance() {
@@ -326,6 +341,11 @@ public class CompetitionSetupQuestionResource {
         this.multipleChoice = multipleChoice;
     }
 
+    @JsonIgnore
+    public boolean isGuidanceRequired() {
+        return QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION != type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -345,6 +365,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance, that.guidance)
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
+                .append(numberOfUploads, that.numberOfUploads)
                 .append(allowedAppendixResponseFileTypes, that.allowedAppendixResponseFileTypes)
                 .append(appendixGuidance, that.appendixGuidance)
                 .append(templateDocument, that.templateDocument)
@@ -375,6 +396,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidance)
                 .append(maxWords)
                 .append(appendix)
+                .append(numberOfUploads)
                 .append(allowedAppendixResponseFileTypes)
                 .append(appendixGuidance)
                 .append(templateDocument)

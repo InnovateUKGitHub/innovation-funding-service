@@ -192,6 +192,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "competitionOrganisationConfigId", referencedColumnName = "id")
     private CompetitionOrganisationConfig competitionOrganisationConfig;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "competitionApplicationConfigId", referencedColumnName = "id")
+    private CompetitionApplicationConfig competitionApplicationConfig;
+
     private boolean useDocusignForGrantOfferLetter;
 
     private boolean hasAssessmentStage = true;
@@ -233,6 +237,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
+            } else if (CompetitionCompletionStage.COMPETITION_CLOSE.equals(getCompletionStage())) {
+                return PREVIOUS;
             } else if (!isMilestoneReached(ASSESSORS_NOTIFIED)) {
                 return CLOSED;
             } else if (!isMilestoneReached(MilestoneType.ASSESSMENT_CLOSED)) {
@@ -958,6 +964,14 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.competitionOrganisationConfig = competitionOrganisationConfig;
     }
 
+    public CompetitionApplicationConfig getCompetitionApplicationConfig() {
+        return competitionApplicationConfig;
+    }
+
+    public void setCompetitionApplicationConfig(CompetitionApplicationConfig competitionApplicationConfig) {
+        this.competitionApplicationConfig = competitionApplicationConfig;
+    }
+
     public boolean isUseDocusignForGrantOfferLetter() {
         return useDocusignForGrantOfferLetter;
     }
@@ -967,8 +981,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isHasAssessmentStage() {
-        return hasAssessmentStage && !isH2020();
+        return hasAssessmentStage && !isH2020() && (ofNullable(completionStage)
+                .map(stage -> !stage.equals(CompetitionCompletionStage.COMPETITION_CLOSE))
+                .orElse(true)) ;
     }
+
 
     public void setHasAssessmentStage(boolean hasAssessmentStage) {
         this.hasAssessmentStage = hasAssessmentStage;

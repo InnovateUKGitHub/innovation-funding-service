@@ -389,7 +389,7 @@ Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user uploads the file                  name = attachment   ${valid_pdf}
-    Then the user should see the element             link = ${valid_pdf}
+    Then the user should see the element             link = ${valid_pdf} (opens in a new window)
 
 Project finance can remove the file from note comments
     [Documentation]    INFUND-7756

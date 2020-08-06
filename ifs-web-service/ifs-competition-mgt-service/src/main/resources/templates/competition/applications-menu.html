@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Applications - ${model.competitionName}|" />
     </head>
@@ -17,27 +17,27 @@
 
                 <h2 class="govuk-heading-m">Key statistics</h2>
                 <ul class="govuk-list govuk-grid-row">
-                    <li class="govuk-grid-column-one-quarter">
+                    <li th:if="${model.displayAssessorStats}" class="govuk-grid-column-one-quarter">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.assessorsInvited}">10</span>
                             <small>Assessors invited</small>
                         </div>
                     </li>
 
-                    <li class="govuk-grid-column-one-quarter">
+                    <li th:classappend="${model.displayAssessorStats ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third'}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsInProgress}">6</span>
                             <small>Applications beyond 50%</small>
                         </div>
                     </li>
 
-                    <li class="govuk-grid-column-one-quarter">
+                    <li th:classappend="${model.displayAssessorStats ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third'}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.applicationsSubmitted}">4</span>
                             <small>Applications submitted</small>
                         </div>
                     </li>
-                    <li class="govuk-grid-column-one-quarter">
+                    <li th:classappend="${model.displayAssessorStats ? 'govuk-grid-column-one-quarter' : 'govuk-grid-column-one-third'}">
                         <div class="highlight-panel highlight-panel-padded">
                             <span class="govuk-heading-l govuk-!-margin-0" th:text="${model.ineligibleApplications}">0</span>
                             <small>Ineligible applications</small>

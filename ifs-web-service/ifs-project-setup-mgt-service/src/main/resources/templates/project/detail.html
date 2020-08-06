@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Project details - ${model.project.name}|" />
 </head>
@@ -51,8 +51,10 @@
                         <th:block th:unless="${model.modifyStartDate()}">Target start date</th:block>
                     </td>
                     <td class="govuk-table__cell" id="start-date">
-                        <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
-                        <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                        <th:block th:unless="${model.ktpCompetition}">
+                            <th:block th:if="${model.project.targetStartDate == null}">Not yet completed</th:block>
+                            <th:block th:unless="${model.project.targetStartDate == null}" th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></th:block>
+                        </th:block>
                     </td>
                 </tr>
                 <tr class="govuk-table__row">

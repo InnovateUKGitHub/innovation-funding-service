@@ -8,10 +8,14 @@ public enum OrganisationTypeEnum {
     BUSINESS(1),
     RESEARCH(2),
     RTO(3),
-    PUBLIC_SECTOR_OR_CHARITY(4);
-    
+    PUBLIC_SECTOR_OR_CHARITY(4),
+    KNOWLEDGE_BASE(5);
+
     private static final EnumSet<OrganisationTypeEnum> researchParticipationTypes =
             EnumSet.of(RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY);
+
+    private static final EnumSet<OrganisationTypeEnum> knowledgeBaseCollaboratorTypes =
+            EnumSet.of(BUSINESS, PUBLIC_SECTOR_OR_CHARITY);
 
     private final long id;
 
@@ -41,5 +45,13 @@ public enum OrganisationTypeEnum {
 
     public static boolean isResearchParticipationOrganisation(long organisationTypeId) {
         return  isResearchParticipationType( getFromId(organisationTypeId) );
+    }
+
+    public static boolean isKnowledgeBaseCollaborator(OrganisationTypeEnum organisationType) {
+        return knowledgeBaseCollaboratorTypes.contains(organisationType);
+    }
+
+    public static boolean isValidKnowledgeBaseCollaborator(long organisationTypeId) {
+        return  isKnowledgeBaseCollaborator( getFromId(organisationTypeId) );
     }
 }

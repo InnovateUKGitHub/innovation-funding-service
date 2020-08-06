@@ -34,7 +34,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
     private final List<FormInputResource> assessmentFormInputs;
     private final boolean scoreFormInputExists;
     private final boolean scopeFormInputExists;
-    private final FileDetailsViewModel appendixDetails;
+    private final List<FileDetailsViewModel> appendixDetails;
     private final FileDetailsViewModel templateDocumentDetails;
     private final String templateDocumentTitle;
     private final List<ResearchCategoryResource> researchCategories;
@@ -53,7 +53,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                         List<FormInputResource> assessmentFormInputs,
                                         boolean scoreFormInputExists,
                                         boolean scopeFormInputExists,
-                                        FileDetailsViewModel appendixDetails,
+                                        List<FileDetailsViewModel> appendixDetails,
                                         FileDetailsViewModel templateDocumentDetails,
                                         String templateDocumentTitle,
                                         List<ResearchCategoryResource> researchCategories) {
@@ -81,7 +81,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
                                        List<FormInputResource> assessmentFormInputs,
                                        boolean scoreFormInputExists,
                                        boolean scopeFormInputExists,
-                                       FileDetailsViewModel appendixDetails,
+                                       List<FileDetailsViewModel> appendixDetails,
                                        FileDetailsViewModel templateDocumentDetails,
                                        String templateDocumentTitle,
                                        List<ResearchCategoryResource> researchCategories) {
@@ -161,7 +161,7 @@ public class AssessmentFeedbackViewModel extends BaseAssessmentFeedbackViewModel
         return scopeFormInputExists;
     }
 
-    public FileDetailsViewModel getAppendixDetails() {
+    public List<FileDetailsViewModel> getAppendixDetails() {
         return appendixDetails;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/info")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = StaticContentController.class)
+@SecuredBySpring(value = "Controller", description = "Controller for static content.", securedType = StaticContentController.class)
 @PreAuthorize("permitAll")
 public class StaticContentController {
 
@@ -20,5 +20,10 @@ public class StaticContentController {
     @GetMapping("cookies")
     public String cookies() {
         return "content/cookies";
+    }
+
+    @GetMapping("accessibility")
+    public String accessibility() {
+        return "content/accessibility";
     }
 }

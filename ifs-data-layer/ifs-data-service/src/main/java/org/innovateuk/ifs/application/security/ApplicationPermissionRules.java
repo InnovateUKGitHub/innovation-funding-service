@@ -272,6 +272,12 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "CHECK_FUNDING_SOUGHT_VALID", description = "The consortium can check funding sought is valid")
+    public boolean consortiumCanCheckFundingSoughtIsValid(final ApplicationResource applicationResource,
+                                                                       final UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
+
     private boolean isCompetitionBeyondAssessment(final Competition competition) {
         return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }

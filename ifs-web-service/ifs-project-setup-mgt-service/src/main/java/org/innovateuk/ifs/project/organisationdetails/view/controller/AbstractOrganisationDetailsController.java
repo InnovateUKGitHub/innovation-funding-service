@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
 
 public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdaptor {
-
+    private static final String TEMPLATE = "project/organisationdetails/organisation-details";
     @Autowired
     private ProjectRestService projectRestService;
 
@@ -71,11 +71,12 @@ public abstract class AbstractOrganisationDetailsController<F> extends AsyncAdap
                     isAllEligibilityAndViabilityInReview(projectId)));
 
             model.addAttribute("form", getForm(projectId, organisationId));
+            model.addAttribute("formFragment", formFragment());
         }
-        return getView();
+        return TEMPLATE;
     }
 
-    protected abstract String getView();
+    protected abstract String formFragment();
     protected abstract F getForm(long projectId, long organisationId);
 
     private boolean isIncludeYourOrganisationSection(long competitionId, OrganisationResource organisation) {

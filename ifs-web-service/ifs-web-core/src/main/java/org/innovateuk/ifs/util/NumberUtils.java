@@ -56,4 +56,9 @@ public final class NumberUtils {
     public static String cleanNumberValue(String value) {
         return value.replace(" ", "").replaceAll("[^\\d.-]", "");
     }
+
+    public static String getBigDecimalFormatted(BigDecimal number) {
+        DecimalFormat df = new DecimalFormat("###,###");
+        return df.format(number);
+    }
 }

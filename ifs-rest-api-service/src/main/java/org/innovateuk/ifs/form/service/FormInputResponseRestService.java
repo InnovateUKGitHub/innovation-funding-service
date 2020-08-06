@@ -16,15 +16,15 @@ import java.util.List;
 public interface FormInputResponseRestService {
     RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(long applicationId);
 
-    RestResult<ValidationMessages> saveQuestionResponse(long userId, long applicationId, long formInputId, String value, boolean ignoreEmpty);
+    RestResult<ValidationMessages> saveQuestionResponse(long userId, long applicationId, long formInputId, String value, Long multipleChoiceOptionId, boolean ignoreEmpty);
 
     RestResult<FileEntryResource> createFileEntry(long formInputId, long applicationId, long processRoleId, String contentType, long contentLength, String originalFilename, byte[] file);
 
-    RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId);
+    RestResult<Void> removeFileEntry(long formInputId, long applicationId, long processRoleId, long fileEntryId);
 
-    RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId);
+    RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId, long fileEntryId);
 
-    RestResult<FormInputResponseFileEntryResource> getFileDetails(long formInputId, long applicationId, long processRoleId);
+    RestResult<FormInputResponseFileEntryResource> getFileDetails(long formInputId, long applicationId, long processRoleId, long fileEntryId);
 
     RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId);
 

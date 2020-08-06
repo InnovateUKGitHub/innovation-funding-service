@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.GrantClaimMaximumRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectYourFundingViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
@@ -14,7 +13,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,10 +47,11 @@ public class ProjectYourFundingViewModelPopulator {
         boolean fundingOverridden = grantClaimMaximumRestService.isMaximumFundingLevelOverridden(competition.getId()).getSuccess();
 
         return new ProjectYourFundingViewModel(project, organisationId, progress.isYourFundingComplete(),
-                organisation.getOrganisationTypeEnum().equals(OrganisationTypeEnum.BUSINESS),
                 projectFinance.getMaximumFundingLevel(),
                 locked,
                 competition.getId(),
-                fundingOverridden);
+                fundingOverridden,
+                competition.getFundingType(),
+                organisation.getOrganisationTypeEnum());
     }
 }

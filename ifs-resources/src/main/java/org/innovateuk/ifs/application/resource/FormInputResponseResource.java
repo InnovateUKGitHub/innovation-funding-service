@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.io.FileUtils;
+import org.innovateuk.ifs.form.resource.MultipleChoiceOptionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormInputResponseResource {
     private Long id;
@@ -17,9 +20,9 @@ public class FormInputResponseResource {
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
-    private Long fileEntry;
-    private String filename;
-    private Long filesizeBytes;
+    private List<FileEntryResource> fileEntries = new ArrayList<>();
+    private Long multipleChoiceOptionId;
+    private String multipleChoiceOptionText;
 
     public FormInputResponseResource() {
         // no-arg constructor
@@ -36,10 +39,16 @@ public class FormInputResponseResource {
         this.formInput = formInput;
         this.application = application.getId();
     }
-
-    public FormInputResponseResource(ZonedDateTime updateDate, Long fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
-        this.fileEntry = fileEntry;
+        this.updatedBy = updatedBy.getId();
+        this.formInput = formInput;
+        this.application = application.getId();
+    }
+
+    public FormInputResponseResource(ZonedDateTime updateDate, MultipleChoiceOptionResource multipleChoiceOption, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+        this.updateDate = updateDate;
+        this.multipleChoiceOptionId = multipleChoiceOption.getId();
         this.updatedBy = updatedBy.getId();
         this.formInput = formInput;
         this.application = application.getId();
@@ -142,32 +151,27 @@ public class FormInputResponseResource {
         this.updatedByUserName = updatedByUserName;
     }
 
-    public Long getFileEntry() {
-        return fileEntry;
+    public List<FileEntryResource> getFileEntries() {
+        return fileEntries;
     }
 
-    public void setFileEntry(Long fileEntry) {
-        this.fileEntry = fileEntry;
+    public void setFileEntries(List<FileEntryResource> fileEntries) {
+        this.fileEntries = fileEntries;
     }
 
-    public String getFilename() {
-        return filename;
+    public Long getMultipleChoiceOptionId() {
+        return multipleChoiceOptionId;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setMultipleChoiceOptionId(Long multipleChoiceOptionId) {
+        this.multipleChoiceOptionId = multipleChoiceOptionId;
     }
 
-    public Long getFilesizeBytes() {
-        return filesizeBytes;
+    public String getMultipleChoiceOptionText() {
+        return multipleChoiceOptionText;
     }
 
-    public void setFilesizeBytes(Long filesizeBytes) {
-        this.filesizeBytes = filesizeBytes;
-    }
-
-    @JsonIgnore
-    public String getHumanReadableFileSize() {
-        return FileUtils.byteCountToDisplaySize(filesizeBytes);
+    public void setMultipleChoiceOptionText(String multipleChoiceOptionText) {
+        this.multipleChoiceOptionText = multipleChoiceOptionText;
     }
 }

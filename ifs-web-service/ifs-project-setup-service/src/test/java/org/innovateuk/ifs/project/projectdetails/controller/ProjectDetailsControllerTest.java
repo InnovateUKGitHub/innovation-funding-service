@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.PostcodeAndTownResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder;
@@ -141,6 +142,67 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertTrue(model.isSpendProfileGenerated());
         assertFalse(model.isReadOnly());
         assertFalse(model.isGrantOfferLetterGenerated());
+        assertFalse(model.isKtpCompetition());
+    }
+
+    @Test
+    public void projectDetailsKtpCompetition() throws Exception {
+        Long projectId = 20L;
+
+        boolean partnerProjectLocationRequired = true;
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withLocationPerPartner(partnerProjectLocationRequired)
+                .build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRole(PARTNER).
+                build(1);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withIsLeadPartner(true)
+                        .withMonitoringOfficerStatus(ProjectActivityStates.NOT_STARTED)
+                        .withSpendProfileStatus(ProjectActivityStates.PENDING)
+                        .withGrantOfferStatus(ProjectActivityStates.NOT_REQUIRED).build()).
+                build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectRestService.getProjectUsersForProject(project.getId())).thenReturn(restSuccess(projectUsers));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
+
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(setupStatusViewModelPopulatorMock.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus)).thenReturn(true);
+
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andReturn();
+
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(project, model.getProject());
+        assertEquals(singletonList(leadOrganisation), model.getOrganisations());
+        assertTrue(model.isUserLeadPartner());
+        assertTrue(model.isSpendProfileGenerated());
+        assertFalse(model.isReadOnly());
+        assertFalse(model.isGrantOfferLetterGenerated());
+        assertTrue(model.isKtpCompetition());
     }
 
     @Test
@@ -184,7 +246,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
-        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
+        MvcResult result = mockMvc.perform(get("/project/{id}/details/readonly", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/details"))
                 .andReturn();
@@ -197,6 +259,65 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
         assertTrue(model.isGrantOfferLetterGenerated());
+        assertFalse(model.isKtpCompetition());
+    }
+
+    @Test
+    public void projectDetailsKtpCompetitionReadOnlyView() throws Exception {
+        Long projectId = 20L;
+
+        boolean partnerProjectLocationRequired = true;
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .withLocationPerPartner(partnerProjectLocationRequired)
+                .build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRole(PARTNER).
+                build(1);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withIsLeadPartner(true)
+                        .withMonitoringOfficerStatus(ProjectActivityStates.NOT_STARTED)
+                        .build()).
+                build();
+
+        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectRestService.getProjectUsersForProject(project.getId())).thenReturn(restSuccess(projectUsers));
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+        List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
+
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/details/readonly", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details"))
+                .andReturn();
+
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(project, model.getProject());
+        assertEquals(singletonList(leadOrganisation), model.getOrganisations());
+        assertTrue(model.isUserLeadPartner());
+        assertFalse(model.isSpendProfileGenerated());
+        assertTrue(model.isReadOnly());
+        assertTrue(model.isGrantOfferLetterGenerated());
+        assertTrue(model.isKtpCompetition());
     }
 
     @Test
@@ -214,6 +335,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .build();
 
         when(projectService.getById(project.getId())).thenReturn(project);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/details/start-date", projectId))
                 .andExpect(status().isOk())
@@ -227,6 +349,40 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         verify(projectService).getById(project.getId());
         verifyNoMoreInteractions(projectService);
+        assertFalse(model.isKtpCompetition());
+    }
+
+    @Test
+    public void viewStartDateKtpCompetition() throws Exception {
+        long projectId = 20L;
+        LocalDate targetStartDate = LocalDate.now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundingType(FundingType.KTP)
+                .build();
+        ProjectResource project = newProjectResource()
+                .withId(projectId)
+                .withCompetition(competitionResource.getId())
+                .withDuration(23L)
+                .withTargetStartDate(targetStartDate)
+                .build();
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(competitionResource));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/details/start-date", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/details-start-date"))
+                .andReturn();
+
+        ProjectDetailsStartDateViewModel model = (ProjectDetailsStartDateViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(project.getName(), model.getProjectName());
+        assertEquals(project.getTargetStartDate(), model.getTargetStartDate());
+
+        verify(projectService).getById(project.getId());
+        verifyNoMoreInteractions(projectService);
+        assertTrue(model.isKtpCompetition());
     }
 
     @Test
@@ -274,6 +430,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
         assertTrue(model.isGrantOfferLetterGenerated());
+        assertFalse(model.isKtpCompetition());
     }
 
     @Test
@@ -310,7 +467,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
         assertEquals("TW14 9QG", form.getPostcode());
-
     }
 
     @Test

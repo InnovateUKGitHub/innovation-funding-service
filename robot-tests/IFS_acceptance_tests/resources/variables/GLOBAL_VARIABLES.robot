@@ -50,6 +50,8 @@ ${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_na
 ${openGenericCompetition}  Generic innovation
 ${openGenericCompetitionId}  ${competition_ids['${openGenericCompetition}']}
 
+${ktpCompetitionName}     KTP Competition
+
 
 ${ukLeadInternationalCompetition}                        UK based Lead International Competition
 ${internationalLeadInternationalCompetition}             International Lead International Competition
@@ -273,6 +275,8 @@ ${organisationSmithName}              SmithZone
 ${organisationSmithId}                ${organisation_ids["${organisationSmithName}"]}
 ${organisationWardName}               Ward Ltd
 ${organisationWardId}                 ${organisation_ids["${organisationWardName}"]}
+${existingAcademicPartnerOrgName}     WORTH IT LTD
+${newPartnerOrgName}                  INNOVATE LTD
 ${internationalOrganisationName}      International Competition Ltd.
 
 # Organisation type ids
@@ -280,6 +284,7 @@ ${BUSINESS_TYPE_ID}       1
 ${ACADEMIC_TYPE_ID}       2
 ${RTO_TYPE_ID}            3
 ${PUBLIC_SECTOR_TYPE_ID}  4
+${KTP_TYPE_ID}            5
 
 # Competition template type
 ${compType_Programme}  Programme
@@ -291,12 +296,20 @@ ${compType_ATI}        Aerospace Technology Institute
 
 # Competition and Applicant lists
 # the questions are only the assessed questions for a particular compettion type
-@{milestones}             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
-@{programme_questions}    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
-@{sector_questions}       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
-@{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
-@{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
-@{project_details}        Project summary  Public description  Scope
+@{milestones}                             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
+@{programme_questions}                    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
+@{programme_questions_procurement_ati}    Business opportunity  Potential market  Project exploitation  Economic benefit  Innovation  Risks  Funding  Adding value
+@{other_questions_procurement_ati}        Technical approach  Project team
+@{sector_questions}                       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
+@{EOI_questions}                          Business opportunity and potential market  Innovation  Project team  Funding and adding value
+@{APC_questions}                          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
+@{project_details}                        Project summary  Public description  Scope
+
+#SBRI Type 1 competition milestones
+@{sbriType1Milestones}     Open date  Briefing event  Submission date
+
+#answer choices in application questions while creating a competition
+@{multiple_answer_choice}     answer2  answer3  answer4  answer5  answer6  answer7  answer8  answer9  answer10
 
 #Project Setup
 ${PROJECT_SETUP_COMPETITION_NAME}     New designs for a circular economy
@@ -311,3 +324,16 @@ ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}     HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}    ewan+1@hiveit.co.uk
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}               ${collaborator1_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}      ${collaborator2_credentials["email"]}
+
+#OrganisationTypes and Info text
+${businessOrganisationName}              Business
+${researchOrganisationName}              Research
+${rtoOrganisationName}                   Research and technology organisation (RTO)
+${nonProfitOrganisationName}             Public sector, charity or non Je-S registered research organisation
+${bussinessOrgInfoText}                  A person or organisation that provides goods or services in exchange for something of value, usually money.
+${nonJe-s/Public/CharityOrgInfoText}     A not-for-profit organisation focusing on innovation.
+${researchOrgInfoText}                   Higher education and organisations registered with Je-S.
+${rtoOrgInfoText}                        Organisations which solely promote and conduct collaborative research and innovation.
+
+#invalid organisation validation message
+${invalidOrganisationValidationMessage}     You are not eligible to start an application

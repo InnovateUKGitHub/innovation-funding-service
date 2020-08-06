@@ -9,6 +9,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -39,11 +40,16 @@ public abstract class Finance {
     @JoinColumn(name = "growthTableId")
     private GrowthTable growthTable;
 
-    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover) {
+    @OneToOne(fetch = FetchType.LAZY, cascade = REMOVE)
+    @JoinColumn(name = "ktpFinancialYearsId")
+    private KtpFinancialYears ktpFinancialYears;
+
+    public Finance(Organisation organisation, OrganisationSize organisationSize,  GrowthTable growthTable, EmployeesAndTurnover employeesAndTurnover, KtpFinancialYears ktpFinancialYears) {
         this.organisation = organisation;
         this.organisationSize = organisationSize;
         this.growthTable = growthTable;
         this.employeesAndTurnover = employeesAndTurnover;
+        this.ktpFinancialYears = ktpFinancialYears;
     }
 
     public Finance(Organisation organisation) {
@@ -89,6 +95,8 @@ public abstract class Finance {
     public FinancialYearAccounts getFinancialYearAccounts() {
         if (getGrowthTable() != null) {
             return getGrowthTable();
+        } else if (getKtpFinancialYears() != null) {
+            return getKtpFinancialYears();
         }
         return getEmployeesAndTurnover();
     }
@@ -107,6 +115,14 @@ public abstract class Finance {
 
     public void setGrowthTable(GrowthTable growthTable) {
         this.growthTable = growthTable;
+    }
+
+    public KtpFinancialYears getKtpFinancialYears() {
+        return ktpFinancialYears;
+    }
+
+    public void setKtpFinancialYears(KtpFinancialYears ktpFinancialYears) {
+        this.ktpFinancialYears = ktpFinancialYears;
     }
 
     public Competition getCompetition() {
@@ -136,6 +152,11 @@ public abstract class Finance {
                 .map(GrantClaimMaximum::getMaximum)
                 .orElse(0);
     }
+
+    public BigDecimal getMaximumFundingAmount() {
+        return getCompetition().getCompetitionApplicationConfig().getMaximumFundingSought();
+    }
+
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
         return isMatchingResearchCategory(grantClaimMaximum) && isMatchingOrganisationSize(grantClaimMaximum);
     }
