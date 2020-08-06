@@ -27,7 +27,7 @@
                         <p th:unless="${model.includeInternalUsers}" class="govuk-body">You can view the status of all external users.</p>
                         <div class="alignleft" th:if="${model.includeInternalUsers}">
                             <a th:href="@{/admin/invite-user/internal}" class="govuk-link alignleft">Invite a new internal user</a>
-                            <th:block th:if="${externalKtaRoleLinkEnabled}">
+                            <th:block th:if="${externalRoleLinkEnabled}">
                                 <span>|</span>
                                 <a th:href="@{/admin/invite-user/external}" class="govuk-link alignleft">Invite a new external user</a>
                             </th:block>

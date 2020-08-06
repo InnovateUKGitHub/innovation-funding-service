@@ -42,8 +42,8 @@ public class UsersManagementController extends AsyncAdaptor {
     @Autowired
     private InviteUserRestService inviteUserRestService;
 
-    @Value("${ifs.external.kta.role.enabled}")
-    private boolean externalKtaRoleLinkEnabled;
+    @Value("${ifs.external.role.enabled}")
+    private boolean externalRoleLinkEnabled;
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
@@ -126,7 +126,7 @@ public class UsersManagementController extends AsyncAdaptor {
                             adminUser
                     );
                     model.addAttribute("model", viewModel);
-                    model.addAttribute("externalKtaRoleLinkEnabled", externalKtaRoleLinkEnabled);
+                    model.addAttribute("externalRoleLinkEnabled", externalRoleLinkEnabled);
                 });
 
         return "admin/users";
