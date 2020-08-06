@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.externalrole;
+package org.innovateuk.ifs.management.externalrole.form;
 
 import org.innovateuk.ifs.user.resource.Role;
 

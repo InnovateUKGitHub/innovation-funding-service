@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.management.externalrole;
+package org.innovateuk.ifs.management.externalrole.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.management.externalrole.form.ExternalRoleForm;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ExternalRoleRestService;
