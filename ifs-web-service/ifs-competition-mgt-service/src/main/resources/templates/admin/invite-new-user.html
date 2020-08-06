@@ -104,7 +104,7 @@
                 </th:block>
             </div>
             <div class="govuk-form-group govuk-!-margin-top-6">
-                <button class="govuk-button">Send invite</button>
+                <button class="govuk-button" th:text="${form.isInternalUserView()} ? 'Send invite' : 'Save and return'">Send invite</button>
                 <a th:href="@{/admin/users/active}" class="button-clear">Cancel</a>
             </div>
         </form>
