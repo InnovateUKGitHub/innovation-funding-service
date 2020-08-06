@@ -7,8 +7,6 @@ import java.math.BigInteger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-@FieldRequiredIf(required = "description", argument = "costIsNotNull", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "cost", argument = "descriptionIsNotNull", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class AdditionalCostAndDescription {
 
     private String description;
