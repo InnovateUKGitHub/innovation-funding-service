@@ -26,7 +26,7 @@ Resource          ../../../resources/common/PS_Common.robot
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
 &{ktpExistingPartnerCredentials}      email=${existing_partner_ktp_email}  password=${short_password}
 &{ktpExistingAcademicCredentials}     email=${existing_academic_email}  password=${short_password}
-${ktpApplicationTitle}                KTP Application
+${ktpApplicationTitle}                KTP New Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         A Knowledge Base
 ${secondKTPOrgName}                   D Knowledge Base
@@ -449,7 +449,7 @@ the user fills in Associate development
     the user enters text to a text field    jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
 
 Requesting KTP Organisation ID
-    ${ktpOrganisationID} =  get organisation id by name     ${ktpOrganisationName}
+    ${ktpOrganisationID} =  get organisation id by name     ${ktpOrgName}
     Set suite variable      ${ktpOrganisationID}
 
 the user should see knowledge based organisation fields

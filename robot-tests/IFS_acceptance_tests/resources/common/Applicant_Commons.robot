@@ -330,9 +330,9 @@ the user fills in the funding information
     the user navigates to Your-finances page                        ${Application}
     the user clicks the button/link                                 link = Your funding
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
-    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP Application"    run keywords   the user selects the radio button     requestingFunding   true
+    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP New Application"    run keywords   the user selects the radio button     requestingFunding   true
     ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
-    ...         ELSE IF   "${Application}" != "KTP Application"     run keywords   the user selects the radio button     requestingFunding   true
+    ...         ELSE IF   "${Application}" != "KTP New Application"     run keywords   the user selects the radio button     requestingFunding   true
     ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
     the user selects the radio button                               otherFunding   false
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
