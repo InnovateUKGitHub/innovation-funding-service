@@ -29,7 +29,9 @@ import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +64,9 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         INVITE_COLLABORATOR,
         INVITE_KTA
     }
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserMapper userMapper;
@@ -191,7 +196,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     @Override
     @Transactional
     public ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        return validateUniqueKtaApplication(inviteResource, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
+        return validateKtaApplication(inviteResource, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
             ApplicationKtaInvite invite = mapKtaInviteResourceToKtaInvite(inviteResource);
             applicationKtaInviteRepository.save(invite);
             return applicationInviteNotificationService.inviteKta(invite);
@@ -368,11 +373,14 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
     }
 
-    private ServiceResult<Void> validateUniqueKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
-        List<Error> failures = new ArrayList<>();
+    private ServiceResult<Void> validateKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
         List<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
         if (!existing.isEmpty()) {
             return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
+        }
+        ServiceResult<UserResource> userResult = userService.findByEmail(inviteResource.getEmail());
+        if (userResult.isFailure() || !userResult.getSuccess().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)) {
+            return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "user.not.registered.kta"));
         }
         return serviceSuccess();
     }
