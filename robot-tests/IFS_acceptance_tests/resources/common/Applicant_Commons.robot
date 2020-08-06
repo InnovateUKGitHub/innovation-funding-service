@@ -587,22 +587,43 @@ the user can submit the application
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
-    [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
-    the user fills in the inviting steps                     ${partner_email}
+    [Arguments]   ${partner_email}  ${competition_title}
+    the user fills in the inviting steps                 ${partner_email}
+    Logout as user
+    the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                      link = Continue
+
+partner applicant completes the project finances
+    [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
+    logging in and error checking                    ${collaboratorEmail}  ${collaboratorPassword}
+    the user clicks the button/link                  css = .govuk-button[type="submit"]    #Save and continue
+    the user completes partner project finances      ${application_title}  ${is_KTP}
+
+lead applicant completes the application team
+    [Arguments]   ${email}   ${password}   ${application_title}
+    Log in as a different user                   ${email}   ${password}
+    the user clicks the button/link              link = ${application_title}
+    the applicant completes Application Team
+
+the lead invites a non-registered user
+    [Arguments]   ${partner_email}  ${competition_title}   ${application_title}  ${is_KTP}  ${fName}  ${lName}
+    the user fills in the inviting steps                   ${partner_email}
     Logout as user
     the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                        link = Continue
-    logging in and error checking                          &{collaborator1_credentials}
-    the user clicks the button/link                        css = .govuk-button[type="submit"]    #Save and continue
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user clicks the button/link                     jQuery = .govuk-button:contains("Yes, accept invitation")
+    ...                                             AND    the user provides uk based organisation details     Innovate   INNOVATE LTD
+    ...                                             AND    the user clicks the button/link                     name = save-organisation
+    ...                                             AND    the invited user fills the create account form      ${fName}  ${lName}
+    ...                                             AND    the user reads his email and clicks the link        ${partner_email}    Please verify your email address    Once verified you can sign into your account
+
+the user completes partner project finances
+    [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP finances as complete              ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions     Return to application overview
     ...                                             AND    Log in as a different user                               &{ktpLeadApplicantCredentials}
     ...  ELSE                              Run keywords    the user marks the finances as complete                  ${application_title}   Calculate  52,214  yes
     ...                                             AND    the user accept the competition terms and conditions     Return to application overview
-    ...                                             AND    Log in as a different user                               &{lead_applicant_credentials}
-    the user clicks the button/link                        link = ${application_title}
-    the applicant completes Application Team
 
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
@@ -620,3 +641,15 @@ the user sets max available funding
     [Arguments]  ${amount}  ${compId}
     ${id} =  User gets competition config id for max funding  ${compId}
     User sets a max funding level for a competition           ${id}  ${amount}
+
+the user selects organisation type as business
+    [Arguments]  ${organisationTypeId}
+    the user selects the radio button     organisationTypeId  ${organisationTypeId}
+    the user clicks the button/link       name = select-company-type
+
+the user provides uk based organisation details
+    [Arguments]  ${org_search_name}  ${org}
+    the user selects organisation type as business     radio-1
+    the user enters text to a text field               name = organisationSearchName  ${org_search_name}
+    the user clicks the button/link                    name = search-organisation
+    the user clicks the button/link                    link = ${org}
