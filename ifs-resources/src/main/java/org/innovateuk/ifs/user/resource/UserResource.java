@@ -202,11 +202,6 @@ public class UserResource implements Serializable {
         return CollectionUtils.containsAny(externalApplicantRoles(), roles);
     }
 
-    @JsonIgnore
-    public boolean isKtaUser() {
-        return roles.size() == 1 && CollectionUtils.containsAny(ktaRoles(), roles);
-    }
-
     public boolean hasAnyRoles(Role... acceptedRoles) {
         return !disjoint(roles, newHashSet(acceptedRoles));
     }
