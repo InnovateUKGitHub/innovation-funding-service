@@ -25,6 +25,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
@@ -97,8 +98,24 @@ public class YourProjectCostsFormValidator {
                 validateEstateCosts(form.getEstateCostRows(), validationHandler);
                 break;
             case ADDITIONAL_COMPANY_COSTS:
-                validateForm(form.getAdditionalCompanyCostForm(), validationHandler, "additionalCompanyCostForm.");
+                validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+        }
+    }
+
+    private void validateAdditionalCompanyCosts(AdditionalCompanyCostForm additionalCompanyCostForm, ValidationHandler validationHandler) {
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getAssociateSalary(), "additionalCompanyCostForm.associateSalary.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getCapitalEquipment(), "additionalCompanyCostForm.capitalEquipment.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getManagementSupervision(), "additionalCompanyCostForm.managementSupervision.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getOtherCosts(), "additionalCompanyCostForm.otherCosts.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getOtherStaff(), "additionalCompanyCostForm.otherStaff.", validationHandler);
+    }
+
+    private void validateAdditionalCompanyCost(AdditionalCostAndDescription cost, String path, ValidationHandler validationHandler) {
+        if (cost.getCost() == null && !isNullOrEmpty(cost.getDescription())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError(path + "cost", null, "validation.field.must.not.be.blank")));
+        } else if (cost.getCost() != null && isNullOrEmpty(cost.getDescription())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError(path + "description", null, "validation.field.must.not.be.blank")));
         }
     }
 

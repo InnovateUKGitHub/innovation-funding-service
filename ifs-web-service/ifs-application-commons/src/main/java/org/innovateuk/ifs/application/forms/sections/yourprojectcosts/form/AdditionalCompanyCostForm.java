@@ -2,22 +2,16 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
 import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
 
-import javax.validation.Valid;
 import java.math.BigInteger;
 
 import static java.util.Optional.ofNullable;
 
 public class AdditionalCompanyCostForm {
 
-    @Valid
     private AdditionalCostAndDescription associateSalary;
-    @Valid
     private AdditionalCostAndDescription managementSupervision;
-    @Valid
     private AdditionalCostAndDescription otherStaff;
-    @Valid
     private AdditionalCostAndDescription capitalEquipment;
-    @Valid
     private AdditionalCostAndDescription otherCosts;
 
     public AdditionalCompanyCostForm() {

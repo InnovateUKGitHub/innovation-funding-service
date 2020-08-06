@@ -3267,48 +3267,65 @@
 <!--/*<editor-fold defaultstate="collapsed">*/-->
 <th:block th:fragment="additional_company_costs"
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
-    <div th:if="${model.financeRowTypes.contains(financeRowType)}"
-         class="govuk-accordion" data-module="govuk-accordion">
-        <div class="govuk-accordion__section">
-            <div class="govuk-accordion__section-header">
-                <h3 class="govuk-accordion__section-heading">
-                    <span class="govuk-accordion__section-button" id="accordion-finances-heading-additional-company-costs">
-                        Additional company cost estimation
-                    </span>
-                    <span class="finance-total" data-mirror="#additional-company-costs-total"></span>
-                </h3>
-            </div>
-            <div id="accordion-finances-content-additional-company-costs" class="govuk-accordion__section-content">
+    <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Additional costs</h2>
+        <p class="govuk-body">These costs are not part of your overall project costs.</p>
+        <div class="govuk-accordion" data-module="govuk-accordion">
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                        <span class="govuk-accordion__section-button" id="accordion-finances-heading-additional-company-costs">
+                            Additional company cost estimation
+                        </span>
+                        <span class="finance-total" data-mirror="#additional-company-costs-total"></span>
+                        <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'additionalCompanyCostForm')}"
+                             class="section-status section-incomplete icon-only error-marker"></div>
+                    </h3>
+                </div>
+                <div id="accordion-finances-content-additional-company-costs" class="govuk-accordion__section-content">
 
-                <th:block th:unless="${model.isReadOnly(financeRowType)}" th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
+                    <th:block th:unless="${model.isReadOnly(financeRowType)}" th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
 
-                <table th:if="${model.isReadOnly(financeRowType)}" class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="col">Additional company cost estimation</th>
-                        <th class="govuk-table__header" scope="col">Description</th>
-                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Cost</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        <th:block th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
-                    </tbody>
-                </table>
-                <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total additional company cost estimations
-                    <span class="govuk-heading-s"
-                          data-mirror="#additional-company-costs-total"
-                          th:text="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"></span>
-                </h4>
-                <input type="hidden"
-                       data-calculation-fields=".additional-company-cost"
-                       data-calculation-operations="+"
-                       id="additional-company-costs-total"
-                       th:attr="data-calculation-rawvalue=${form.additionalCompanyCostForm.total}"
-                       th:value="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"/>
+                    <table th:if="${model.isReadOnly(financeRowType)}" class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="col">Additional company cost estimation</th>
+                            <th class="govuk-table__header" scope="col">Description</th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Cost</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <th:block th:insert="application/your-project-costs-fragments :: additional_cost_rows"/>
+                        </tbody>
+                        <tfoot class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" colspan="2" scope="row">Total additional company cost estimations</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                id="additional-company-costs-total"
+                                th:attr="data-calculation-rawvalue=${form.additionalCompanyCostForm.total}">
+                                &pound;<th:block th:text="${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0, 'DEFAULT')}"/>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <th:block th:unless="${model.isReadOnly(financeRowType)}" >
+                        <h4 class="govuk-heading-s alignright section-total-summary">
+                            Total additional company cost estimations
+                            <span class="govuk-heading-s"
+                                  data-mirror="#additional-company-costs-total"
+                                  th:text="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"></span>
+                        </h4>
+                        <input type="hidden"
+                               data-calculation-fields=".additional-company-cost"
+                               data-calculation-operations="+"
+                               id="additional-company-costs-total"
+                               th:attr="data-calculation-rawvalue=${form.additionalCompanyCostForm.total}"
+                               th:value="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"/>
+                    </th:block>
+                </div>
             </div>
         </div>
-    </div>
+    </th:block>
 </th:block>
 
 <th:block th:fragment="additional_cost_rows">
