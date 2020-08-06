@@ -14,11 +14,18 @@ ${KTPcompetitonId}   ${competition_ids["${KTPcompetiton}"]}
 &{KTPLead}           email=bob@knowledge.base    password=Passw0rd
 
 *** Test Cases ***
+Associate employment and development client side validation
+        And the user clicks the button/link       jQuery = button:contains("Associate employment")
+        And the user clicks the button/link       jQuery = button:contains("Associate development")
+    Given the user enters text to a text field     jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${EMPTY}
+    When the user enters text to a text field      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${EMPTY}
+    And the user enters text to a text field       jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${EMPTY}
+    Then the user should see the element           jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td:contains("This field cannot be left blank") ~ td:contains("This field cannot be left blank")
+    And the user should see the element            jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td:contains("This field cannot be left blank")
+
 Mark as complete with no associates is not allowed
     Given the user clicks the button/link     css = label[for="stateAidAgreed"]
     When the user clicks the button/link      jQuery = button:contains("Mark as complete")
-    And the user clicks the button/link       jQuery = button:contains("Associate employment")
-    And the user clicks the button/link       jQuery = button:contains("Associate development")
     Then the user should see the element      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td:contains("This field cannot be left blank") ~ td:contains("This field cannot be left blank")
     And the user should see the element       jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td:contains("This field cannot be left blank")
 
@@ -26,12 +33,14 @@ Entering duration in months autofills associate development
     Given the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  12
     And the user enters text to a text field      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
     Then the user should see the element          jQuery = table[id="associate-development-costs-table"] td:contains("12")
+    And the user should not see the element       jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td:contains("This field cannot be left blank") ~ td:contains("This field cannot be left blank")
 
 Calculation for associate employment and development
      Given the user enters text to a text field  jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
      Then the user should see the element        jQuery = span:contains("123") ~ button:contains("Associate development")
      And the user should see the element         jQuery = span:contains("123") ~ button:contains("Associate employment")
      And the user should see the element         jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="246"]
+     And the user should not see the element     jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td:contains("This field cannot be left blank")
 
 Knowledge base supervisor can only add two rows
     Given the user clicks the button/link        jQuery = button:contains("Knowledge base supervisor")
@@ -49,25 +58,34 @@ Knowledge base supervisor calculations
     When the user enters text to a text field     css = table[id="knowledge-base-table"] input[id$="cost"]         123
     Then the user should see the element          jQuery = div:contains("123") button:contains("Knowledge base supervisor")
     And the user should see the element           jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="369"]
+    And the user should not see the element       jQuery = table[id="knowledge-base-table"] td:contains("This field cannot be left blank") ~ td:contains("This field cannot be left blank")
 
 Estate validations
     Given the user clicks the button/link        jQuery = button:contains("Estates")
     Given the user enters text to a text field   css = input[id^="estate"][id$="description"]  estate
     When The user enters text to a text field    css = input[id^="estate"][id$="cost"]  11000
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
-    Then The user should see a summary error     You should enter less than £10,000 for estate costs
+    Then The user should see a field and summary error    You should enter less than £10,000 for estate costs
 
 Estate calculations
     Given the user enters text to a text field    css = input[id^="estate"][id$="cost"]  1000
     Then the user should see the element          jQuery = div:contains("1,000") button:contains("Estates")
     And the user should see the element           jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="1369"]
 
-Additional associate support calculation
+Additional associate support validations
    Given the user clicks the button/link        jQuery = button:contains("Additional associate support")
+   Given the user enters text to a text field   css = input[id^="associateSupport"][id$="description"]  ${EMPTY}
+   When The user enters text to a text field    css = input[id^="associateSupport"][id$="cost"]  ${EMPTY}
+   Then the user should see the element         jQuery = span:contains("This field cannot be left blank") ~input[id^="associateSupport"][id$="cost"]
+   And the user should see the element          jQuery = span:contains("This field cannot be left blank") ~input[id^="associateSupport"][id$="description"]
+
+Additional associate support calculation
    Given the user enters text to a text field   css = input[id^="associateSupport"][id$="description"]  associate support
    When The user enters text to a text field    css = input[id^="associateSupport"][id$="cost"]  1000
    Then the user should see the element         jQuery = div:contains("1,000") button:contains("Additional associate support")
    And the user should see the element           jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="2369"]
+   Then the user should not see the element         jQuery = span:contains("This field cannot be left blank") ~input[id^="associateSupport"][id$="cost"]
+   And the user should not see the element          jQuery = span:contains("This field cannot be left blank") ~input[id^="associateSupport"][id$="description"]
 
 Subcontracting costs calculations
     [Documentation]    INFUND-844
@@ -133,19 +151,6 @@ Custom suite setup
     the user clicks the button/link   link = ${KTPapplication}
     the user clicks the button/link   link = Your project finances
     the user clicks the button/link   link = Your project costs
-
-the user fills additional company costs
-    [Arguments]  ${description}  ${value}
-    the user enters text to a text field  css = textarea[id$="associateSalary.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="managementSupervision.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="capitalEquipment.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="otherCosts.description"]  ${description}
-    the user enters text to a text field  css = input[id$="associateSalary.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="managementSupervision.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
 
 the user should see the validation messages for addition company costs
     the user should see the element       jQuery = span:contains("This field cannot be left blank") ~ textarea[id$="associateSalary.description"]

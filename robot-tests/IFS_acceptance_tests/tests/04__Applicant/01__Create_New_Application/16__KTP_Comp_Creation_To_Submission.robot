@@ -190,7 +190,7 @@ Internal user is able to approve the GOL and the project is now Live
 *** Keywords ***
 the user marks the KTP finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
-    the user fills in the project costs                      ${overheadsCost}  ${totalCosts}
+    the user fills in ktp project costs
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section                     ${Application}
@@ -324,25 +324,25 @@ Custom suite teardown
     Close browser and delete emails
     Disconnect from database
 
-the user marks the ktp finances as complete
+the user fills in ktp project costs
     the user clicks the button/link  link = Your project costs
     the user fills in Associate employment
     the user fills in Associate development
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimation")
+    the user fills additional company costs    description  100
     the user clicks the button/link  css = label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery = button:contains("Mark as complete")
-    the user enters the project location
-    the user fills the organisation details with Project growth table   ${KTPapplicationTitle}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section        ${KTPapplicationTitle}
-        the user clicks the button/link  link = Back to application overview
-        the user should see the element  jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills in Associate employment
-    the user clicks the button/link         jQuery = button:contains("Associate employment")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="associate-salary-costs-table"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate employment")
     the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  123
     the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
 
 the user fills in Associate development
-    the user clicks the button/link         jQuery = button:contains("Associate development")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="associate-development-costs-table"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate development")
     the user enters text to a text field    jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
 
 Requesting KTP Organisation ID
