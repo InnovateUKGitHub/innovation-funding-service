@@ -53,4 +53,9 @@ public class MonitoringOfficerRestServiceImpl extends BaseRestService implements
     public RestResult<Boolean> isMonitoringOfficerOnProject(long projectId, long userId) {
         return getWithRestResult(String.format("%s/project/%d/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, projectId, "is-monitoring-officer", userId), Boolean.class);
     }
+
+    @Override
+    public RestResult<Boolean> isMonitoringOfficer(long userId) {
+        return getWithRestResult(String.format("%s/%s/%d", PROJECT_MONITORING_OFFICER_REST_URL, "is-monitoring-officer", userId), Boolean.class);
+    }
 }

@@ -84,11 +84,24 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         when(projectMonitoringOfficerServiceMock.getMonitoringOfficerProjects(userId)).thenReturn(serviceSuccess(emptyList()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/monitoring-officer/{userId}/projects", userId))
+        mockMvc.perform(get("/monitoring-officer/{userId}/projects", userId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(projectMonitoringOfficerServiceMock, only()).getMonitoringOfficerProjects(userId);
     }
+
+
+    @Test
+    public void isMonitoringOfficer() throws Exception {
+        long userId = 11;
+        when(projectMonitoringOfficerServiceMock.isMonitoringOfficer(userId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/is-monitoring-officer/{userId}", userId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(projectMonitoringOfficerServiceMock, only()).isMonitoringOfficer(userId);
+    }
+
 
     @Override
     protected MonitoringOfficerController supplyControllerUnderTest() {
