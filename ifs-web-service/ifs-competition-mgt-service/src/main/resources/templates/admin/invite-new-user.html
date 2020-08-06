@@ -98,7 +98,7 @@
                         <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                     </select>
                 </th:block>
-                <th:block th:if="${form.isKtaUserView()}">
+                <th:block th:if="${form.isExternalUserView()}">
                     <input type="hidden" name="role" th:value="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR}" />
                     <label class="govuk-label" for="role" th:text="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR.displayName}">KTA</label>
                 </th:block>

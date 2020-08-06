@@ -89,8 +89,8 @@ public class InviteUserForm extends BaseBindingResultTarget {
         return view.equals(InviteUserView.INTERNAL_USER);
     }
 
-    public boolean isKtaUserView() {
-        return view.equals(InviteUserView.KTA_USER);
+    public boolean isExternalUserView() {
+        return view.equals(InviteUserView.EXTERNAL_USER);
     }
 
     @Override
