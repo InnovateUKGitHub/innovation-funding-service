@@ -23,6 +23,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-labour"
                       th:text="${#ifsUtil.calculatePercentage(form.totalLabourCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'labour')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-1" class="govuk-accordion__section-content"
@@ -165,7 +167,8 @@
 </th:block>
 
 <th:block th:fragment="labour_row (id, row)">
-    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}" class="form-group-row-validated">
+    <tr th:with="path=${'labour.rows[__${id}__]'}" th:attr="data-repeatable-row=${path}" th:id="${path}" class="form-group-row-validated"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.role">
@@ -310,6 +313,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-overhead"
                       th:text="${#ifsUtil.calculatePercentage(form.totalOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'overhead')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-2" class="govuk-accordion__section-content"
@@ -585,14 +590,16 @@
         <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
             <div class="govuk-accordion__section-header">
                 <h3 class="govuk-accordion__section-heading">
-                <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
-                Overhead costs
-                </span>
-                <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
-                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
-                      data-calculation-operations="/,*"
-                      data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
-                      th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
+                    <span class="govuk-accordion__section-button" id="accordion-finances-heading-10">
+                    Overhead costs
+                    </span>
+                    <span class="finance-total" data-mirror="#section-total-procurement-overheads"></span>
+                    <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                          data-calculation-operations="/,*"
+                          data-calculation-fields="100, #total-cost, #section-total-procurement-overheads"
+                          th:text="${#ifsUtil.calculatePercentage(form.totalProcurementOverheadCosts, form.organisationFinanceTotal) + '%'}"></span>
+                    <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'procurementOverheadRows')}"
+                         class="section-status section-incomplete icon-only error-marker"></div>
                 </h3>
             </div>
             <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
@@ -700,7 +707,8 @@
 
 <th:block th:fragment="procurement-overheads_row (id, row)">
     <tr th:with="path=${'procurementOverheadRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
-        th:attr="data-repeatable-row=${path}" th:id="${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -843,6 +851,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-material"
                       th:text="${#ifsUtil.calculatePercentage(form.totalMaterialCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'materialRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-3" class="govuk-accordion__section-content"
@@ -955,7 +965,8 @@
 
 <th:block th:fragment="materials_row (id, row)">
     <tr th:with="path=${'materialRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
-        th:attr="data-repeatable-row=${path}" th:id="${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -1095,6 +1106,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-capital-usage"
                       th:text="${#ifsUtil.calculatePercentage(form.totalCapitalUsageCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'capitalUsageRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-4" class="govuk-accordion__section-content"
@@ -1178,7 +1191,8 @@
 
 <th:block th:fragment="capital_usage_row (id, row)">
     <div class="form-row" th:with="path=${'capitalUsageRows[__${id}__]'}" th:attr="data-repeatable-row=${path}"
-         th:id="${path}">
+         th:id="${path}"
+         th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <div class="govuk-form-group">
             <label class="govuk-label govuk-label--s"
@@ -1407,6 +1421,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-subcontracting"
                       th:text="${#ifsUtil.calculatePercentage(form.totalSubcontractingCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'subcontractingRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-5" class="govuk-accordion__section-content"
@@ -1626,6 +1642,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-travel"
                       th:text="${#ifsUtil.calculatePercentage(form.totalTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'travelRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-6" class="govuk-accordion__section-content"
@@ -1728,7 +1746,8 @@
 
 <th:block th:fragment="travel_row (id, row)">
     <tr class="govuk-table__row form-group-row-validated" th:with="path=${'travelRows[__${id}__]'}"
-        th:attr="data-repeatable-row=${path}" th:id="${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -1868,6 +1887,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-other"
                       th:text="${#ifsUtil.calculatePercentage(form.totalOtherCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'otherRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-7" class="govuk-accordion__section-content"
@@ -1943,7 +1964,8 @@
 <th:block th:fragment="other_costs_row (id, row)">
     <tr class="form-group-row-validated" th:with="path=${'otherRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
+        th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
@@ -2160,6 +2182,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-associate-salary-costs"
                       th:text="${#ifsUtil.calculatePercentage(form.totalAssociateSalaryCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'associateSalaryCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-8" class="govuk-accordion__section-content"
@@ -2215,7 +2239,7 @@
     <tr class="form-group-row-validated" th:with="path=${'associateSalaryCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
         th:id="${path}"
-        th:classappend="((${#fields.hasErrors('__${path}__.duration')}) or (${#fields.hasErrors('__${path}__.cost')})) ? 'govuk-form-group--error'">
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <input type="hidden" th:field="*{__${path}__.role}" />
         <td class="govuk-table__cell">
@@ -2330,6 +2354,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-associate-development-costs"
                       th:text="${#ifsUtil.calculatePercentage(form.totalAssociateDevelopmentCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'associateDevelopmentCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
@@ -2385,7 +2411,7 @@
     <tr class="form-group-row-validated" th:with="path=${'associateDevelopmentCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
         th:id="${path}"
-        th:classappend="${#fields.hasErrors('__${path}__.cost')} ? 'govuk-form-group--error'">
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <input type="hidden" th:field="*{__${path}__.role}" />
         <td class="govuk-table__cell">
@@ -2492,6 +2518,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-associate-support"
                       th:text="${#ifsUtil.calculatePercentage(form.totalAssociateSupportCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'associateSupportCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
@@ -2560,7 +2588,8 @@
 <th:block th:fragment="associate_support_row (id, row)">
     <tr class="form-group-row-validated" th:with="path=${'associateSupportCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
+        th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
@@ -2664,6 +2693,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-estate-costs"
                       th:text="${#ifsUtil.calculatePercentage(form.totalEstateCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'estateCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
@@ -2735,7 +2766,7 @@
     <tr class="form-group-row-validated" th:with="path=${'estateCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
         th:id="${path}"
-        th:classappend="((${#fields.hasErrors('__${path}__.description')}) or (${#fields.hasErrors('__${path}__.cost')}) or (${#fields.hasErrors('estateCostRows')})) ? 'govuk-form-group--error'">
+        th:classappend="((${#ifsUtil.hasErrorsStartingWith('form', path)}) or (${#fields.hasErrors('estateCostRows')})) ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
@@ -2840,6 +2871,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-material"
                       th:text="${#ifsUtil.calculatePercentage(form.totalConsumableCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'consumableCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-10" class="govuk-accordion__section-content"
@@ -2929,7 +2962,8 @@
 
 <th:block th:fragment="consumables_row (id, row)">
     <tr th:with="path=${'consumableCostRows[__${id}__]'}" class="govuk-table__row form-group-row-validated"
-        th:attr="data-repeatable-row=${path}" th:id="${path}">
+        th:attr="data-repeatable-row=${path}" th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.item">
@@ -3068,6 +3102,8 @@
                       data-calculation-operations="/,*"
                       data-calculation-fields="100, #total-cost, #section-total-knowledge-base"
                       th:text="${#ifsUtil.calculatePercentage(form.totalKnowledgeBaseCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'knowledgeBaseCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
             </h3>
         </div>
         <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
@@ -3139,7 +3175,8 @@
 <th:block th:fragment="knowledge_base_row (id, row)">
     <tr class="form-group-row-validated" th:with="path=${'knowledgeBaseCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
-        th:id="${path}">
+        th:id="${path}"
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.description">
@@ -3250,7 +3287,7 @@
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col">Additional company cost estimation</th>
                         <th class="govuk-table__header" scope="col">Description</th>
-                        <th class="govuk-table__header" scope="col">Cost</th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Cost</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">

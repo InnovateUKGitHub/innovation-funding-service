@@ -912,6 +912,7 @@ IFS.core.formValidation = (function () {
       var formGroup = field.closest('.govuk-form-group')
       var formGroupRow = field.closest('.form-group-row')
       var formGroupRowValidated = field.closest('.form-group-row-validated')
+      var accordion = field.closest('.govuk-accordion__section')
       var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
@@ -970,6 +971,13 @@ IFS.core.formValidation = (function () {
             var tr = jQuery(this)
             tr.removeClass('govuk-form-group--error')
           })
+        }
+      }
+
+      // If the error is within an accordion we can have a error icon marker on the accordion we want to remove.
+      if (accordion.length) {
+        if (accordion.find('.section-status.error-marker').length && !accordion.find('.govuk-input--error').length) {
+          accordion.find('.section-status.error-marker').remove()
         }
       }
 
