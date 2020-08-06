@@ -207,8 +207,8 @@ the user fills in ktp other costs
 
 the user fills in associate salary
     [Arguments]   ${duration}  ${cost}
-    Given the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${duration}
-    And the user enters text to a text field      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
+    the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${duration}
+    the user enters text to a text field      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
 
 expand the sections
     the user clicks the button/link       jQuery = button:contains("Associate employment")
