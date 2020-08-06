@@ -382,9 +382,10 @@ public enum CommonFailureKeys implements ErrorTemplate {
     COULD_NOT_SEND_FILE_TO_DOCUSIGN(INTERNAL_SERVER_ERROR),
 
     /**
-     * KTA user errors
+     * KTA user
      */
-    NOT_A_KTA_USER_ROLE(BAD_REQUEST);
+    NOT_A_KTA_USER_ROLE(BAD_REQUEST),
+    KTA_USER_ROLE_INVITE_INVALID_EMAIL(BAD_REQUEST);
 
     private ErrorTemplate errorTemplate;
 
