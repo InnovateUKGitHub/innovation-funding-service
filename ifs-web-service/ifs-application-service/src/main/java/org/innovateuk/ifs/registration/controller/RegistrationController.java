@@ -18,7 +18,8 @@ import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResour
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -161,7 +162,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerFormSubmit(@Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
                                      UserResource user,

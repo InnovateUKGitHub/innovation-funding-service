@@ -2,7 +2,8 @@ package org.innovateuk.ifs.kta.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ import javax.validation.groups.Default;
 public class KtaRegistrationController {
 
     @GetMapping("/{inviteHash}/register")
-    public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute("form") RegistrationForm form) {
+    public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm form) {
 //            StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).getSuccess();
         form.setEmail("mydummyemail@gmail.com");
         model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel()

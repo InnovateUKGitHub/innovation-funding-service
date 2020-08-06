@@ -5,7 +5,8 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -67,7 +68,7 @@ public class ProjectRegistrationController {
     }
 
     @PostMapping(REGISTER_MAPPING)
-    public String registerFormSubmit(@Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletRequest request,
                                      Model model,

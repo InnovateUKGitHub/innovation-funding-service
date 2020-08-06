@@ -43,7 +43,7 @@ public class ExternalFinanceRegistrationController {
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") RegistrationForm form) {
         CompetitionFinanceInviteResource competitionFinanceInviteResource = competitionSetupExternalFinanceUsersRestService.getExternalFinanceInvite(inviteHash).getSuccess();
         form.setEmail(competitionFinanceInviteResource.getEmail());
-        model.addAttribute("model", aRegistrationViewModel().withExternalUser(false).withInvitee(true).build());
+        model.addAttribute("model", aRegistrationViewModel().withTermsRequired(false).withPhoneRequired(false).withInvitee(true).build());
         return "registration/register";
     }
 
@@ -100,7 +100,7 @@ public class ExternalFinanceRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            model.addAttribute("model", aRegistrationViewModel().withExternalUser(false).withInvitee(true).build());
+            model.addAttribute("model", aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).build());
             return "registration/register";
         }
     }

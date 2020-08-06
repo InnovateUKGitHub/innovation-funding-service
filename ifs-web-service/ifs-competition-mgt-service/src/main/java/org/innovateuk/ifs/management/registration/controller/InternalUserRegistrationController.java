@@ -107,7 +107,7 @@ public class InternalUserRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            model.addAttribute("model", aRegistrationViewModel().withExternalUser(false).withInvitee(true).build());
+            model.addAttribute("model", aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).build());
             return "registration/register";
         }
     }

@@ -6,7 +6,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -61,7 +62,8 @@ public class GrantsRegistrationController {
             model.addAttribute("model",
                     aRegistrationViewModel()
                     .withInvitee(true)
-                    .withExternalUser(true)
+                    .withPhoneRequired(true)
+                    .withTermsRequired(true)
                     .withRole(invite.getGrantsInviteRole().getDisplayName())
                     .withProject(String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()))
                     .withPhoneGuidance(invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null)
@@ -75,7 +77,7 @@ public class GrantsRegistrationController {
     }
 
     @PostMapping
-    public String registerFormSubmit(@Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      @PathVariable long projectId,
                                      HttpServletRequest request,
@@ -86,7 +88,8 @@ public class GrantsRegistrationController {
             registrationForm.setEmail(invite.getEmail());
             model.addAttribute("model",  aRegistrationViewModel()
                     .withInvitee(true)
-                    .withExternalUser(true)
+                    .withPhoneRequired(true)
+                    .withTermsRequired(true)
                     .withRole(invite.getGrantsInviteRole().getDisplayName())
                     .withProject(String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()))
                     .withPhoneGuidance(invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null)

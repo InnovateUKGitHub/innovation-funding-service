@@ -21,7 +21,8 @@ import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreation
  */
 
 public class RegistrationForm extends BaseBindingResultTarget {
-    public interface ExternalUserRegistrationValidationGroup {}
+    public interface PhoneNumberValidationGroup {}
+    public interface TermsValidationGroup {}
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotBlank(message = "{validation.standard.email.required}")
     @Size(max = 254, message = "{validation.standard.email.length.max}")
@@ -52,11 +53,11 @@ public class RegistrationForm extends BaseBindingResultTarget {
     })
     private String lastName;
 
-    @NotBlank(message = "{validation.standard.phonenumber.required}", groups = ExternalUserRegistrationValidationGroup.class)
-    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}", groups = ExternalUserRegistrationValidationGroup.class)
+    @NotBlank(message = "{validation.standard.phonenumber.required}", groups = PhoneNumberValidationGroup.class)
+    @Pattern(regexp = VALID_PHONE_NUMBER,  message= "{validation.standard.phonenumber.format}", groups = PhoneNumberValidationGroup.class)
     private String phoneNumber;
 
-    @NotBlank(message = "{validation.account.termsandconditions.required}", groups = ExternalUserRegistrationValidationGroup.class)
+    @NotBlank(message = "{validation.account.termsandconditions.required}", groups = TermsValidationGroup.class)
     private String termsAndConditions;
 
     private Boolean allowMarketingEmails;

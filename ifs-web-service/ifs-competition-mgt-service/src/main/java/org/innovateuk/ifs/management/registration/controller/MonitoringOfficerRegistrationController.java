@@ -8,7 +8,8 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.management.registration.service.MonitoringOfficerService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.NavigationUtils;
@@ -62,7 +63,7 @@ public class MonitoringOfficerRegistrationController {
 
         MonitoringOfficerInviteResource monitoringOfficerInviteResource = competitionSetupMonitoringOfficerRestService.openMonitoringOfficerInvite(inviteHash).getSuccess();
         form.setEmail(monitoringOfficerInviteResource.getEmail());
-        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(true).withInvitee(true).build());
+        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(true).withTermsRequired(true).withInvitee(true).build());
         return "registration/register";
     }
 
@@ -74,7 +75,7 @@ public class MonitoringOfficerRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @ModelAttribute(FORM_ATTR_NAME) @Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) RegistrationForm monitoringOfficerRegistrationForm,
+                                    @ModelAttribute(FORM_ATTR_NAME) @Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) RegistrationForm monitoringOfficerRegistrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler,
                                     UserResource loggedInUser) {
@@ -123,7 +124,7 @@ public class MonitoringOfficerRegistrationController {
         if (loggedInUser != null) {
             return "registration/error";
         } else {
-            model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(true).withInvitee(true).build());
+            model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(true).withTermsRequired(true).withInvitee(true).build());
             return "registration/register";
         }
     }

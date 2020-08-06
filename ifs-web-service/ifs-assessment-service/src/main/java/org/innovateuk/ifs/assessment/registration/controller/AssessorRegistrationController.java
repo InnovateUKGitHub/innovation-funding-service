@@ -14,7 +14,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.form.RegistrationForm.ExternalUserRegistrationValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -82,7 +82,7 @@ public class AssessorRegistrationController {
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Validated({Default.class, ExternalUserRegistrationValidationGroup.class}) @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
+                                    @Validated({Default.class, PhoneNumberValidationGroup.class}) @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
@@ -154,7 +154,7 @@ public class AssessorRegistrationController {
     }
 
     private String doViewYourDetails(Model model, String inviteHash) {
-        model.addAttribute("model", aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withExternalUser(true).withInvitee(true).build());
+        model.addAttribute("model", aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).build());
         return "registration/register";
     }
 

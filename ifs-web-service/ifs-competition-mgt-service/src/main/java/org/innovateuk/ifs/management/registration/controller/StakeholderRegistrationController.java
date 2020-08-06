@@ -46,7 +46,7 @@ public class StakeholderRegistrationController {
     public String createAccount(@PathVariable("inviteHash") String inviteHash, Model model, @ModelAttribute("form") RegistrationForm form) {
         StakeholderInviteResource stakeholderInviteResource = competitionSetupStakeholderRestService.getStakeholderInvite(inviteHash).getSuccess();
         form.setEmail(stakeholderInviteResource.getEmail());
-        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(false).withInvitee(true).build());
+        model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).build());
         return "registration/register";
     }
 
@@ -102,7 +102,7 @@ public class StakeholderRegistrationController {
         if(loggedInUser != null) {
             return "registration/error";
         } else {
-            model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withExternalUser(false).withInvitee(true).build());
+            model.addAttribute("model", RegistrationViewModelBuilder.aRegistrationViewModel().withPhoneRequired(false).withTermsRequired(false).withInvitee(true).build());
             return "registration/register";
         }
     }
