@@ -4,6 +4,7 @@ Resource    ../../resources/defaultResources.robot
 *** Variables ***
 ${project_guidance}         https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 ${bannerMessageForLead}     Your application was reopened on
+${yourFundingSubTitle}      Are you requesting funding?
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -328,9 +329,11 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page                        ${Application}
     the user clicks the button/link                                 link = Your funding
-    the user selects the radio button                               requestingFunding   true
-    Run Keyword if    "${Application}" == "KTP Application"         the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
-    ...         ELSE                                                the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
+    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP Application"    run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
+    ...         ELSE IF   "${Application}" != "KTP Application"     run keywords   the user selects the radio button     requestingFunding   true
+    ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
     the user selects the radio button                               otherFunding   false
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
     the user clicks the button/link                                 link = Your funding
@@ -587,22 +590,43 @@ the user can submit the application
     the user clicks the button/link         id = submit-application-button
 
 the lead invites already registered user
-    [Arguments]   ${partner_email}  ${competition_title}  ${application_title}  ${is_KTP}
-    the user fills in the inviting steps                     ${partner_email}
+    [Arguments]   ${partner_email}  ${competition_title}
+    the user fills in the inviting steps                 ${partner_email}
+    Logout as user
+    the user reads his email and clicks the link         ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
+    the user clicks the button/link                      link = Continue
+
+partner applicant completes the project finances
+    [Arguments]   ${application_title}  ${is_KTP}  ${collaboratorEmail}  ${collaboratorPassword}
+    logging in and error checking                    ${collaboratorEmail}  ${collaboratorPassword}
+    the user clicks the button/link                  css = .govuk-button[type="submit"]    #Save and continue
+    the user completes partner project finances      ${application_title}  ${is_KTP}
+
+lead applicant completes the application team
+    [Arguments]   ${email}   ${password}   ${application_title}
+    Log in as a different user                   ${email}   ${password}
+    the user clicks the button/link              link = ${application_title}
+    the applicant completes Application Team
+
+the lead invites a non-registered user
+    [Arguments]   ${partner_email}  ${competition_title}   ${application_title}  ${is_KTP}  ${fName}  ${lName}
+    the user fills in the inviting steps                   ${partner_email}
     Logout as user
     the user reads his email and clicks the link           ${partner_email}   Invitation to collaborate in ${competition_title}    You will be joining as part of the organisation    2
-    the user clicks the button/link                        link = Continue
-    logging in and error checking                          &{collaborator1_credentials}
-    the user clicks the button/link                        css = .govuk-button[type="submit"]    #Save and continue
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user clicks the button/link                     jQuery = .govuk-button:contains("Yes, accept invitation")
+    ...                                             AND    the user provides uk based organisation details     Innovate   INNOVATE LTD
+    ...                                             AND    the user clicks the button/link                     name = save-organisation
+    ...                                             AND    the invited user fills the create account form      ${fName}  ${lName}
+    ...                                             AND    the user reads his email and clicks the link        ${partner_email}    Please verify your email address    Once verified you can sign into your account
+
+the user completes partner project finances
+    [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP finances as complete              ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions     Return to application overview
     ...                                             AND    Log in as a different user                               &{ktpLeadApplicantCredentials}
     ...  ELSE                              Run keywords    the user marks the finances as complete                  ${application_title}   Calculate  52,214  yes
     ...                                             AND    the user accept the competition terms and conditions     Return to application overview
-    ...                                             AND    Log in as a different user                               &{lead_applicant_credentials}
-    the user clicks the button/link                        link = ${application_title}
-    the applicant completes Application Team
 
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
@@ -633,3 +657,15 @@ the user fills additional company costs
     the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
     the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
     the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
+
+the user selects organisation type as business
+    [Arguments]  ${organisationTypeId}
+    the user selects the radio button     organisationTypeId  ${organisationTypeId}
+    the user clicks the button/link       name = select-company-type
+
+the user provides uk based organisation details
+    [Arguments]  ${org_search_name}  ${org}
+    the user selects organisation type as business     radio-1
+    the user enters text to a text field               name = organisationSearchName  ${org_search_name}
+    the user clicks the button/link                    name = search-organisation
+    the user clicks the button/link                    link = ${org}
