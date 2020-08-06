@@ -144,7 +144,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
-    public void saveUserInviteWhenRoleSpecifiedIsNotInternalRole() {
+    public void saveInternalUserInviteWhenRoleSpecifiedIsNotInternalRole() {
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, COLLABORATOR);
 
@@ -153,7 +153,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
-    public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
+    public void saveInternalUserInviteWhenEmailDomainIsIncorrect() throws Exception {
 
         Role role = Role.SUPPORT;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
@@ -164,7 +164,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
-    public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
+    public void saveInternalUserInviteWhenUserAlreadyInvited() throws Exception {
 
         RoleInvite roleInvite = new RoleInvite();
 
@@ -274,7 +274,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
-    public void saveUserInviteWhenEmailAlreadyTaken() throws Exception {
+    public void saveInternalUserInviteWhenEmailAlreadyTaken() throws Exception {
 
         Role role = Role.IFS_ADMINISTRATOR;
 
@@ -576,6 +576,84 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         // in this case to explicitly save, but is reused code with creating invites also)
         verify(roleInviteRepositoryMock).findById(123L);
         verifyNoMoreInteractions(roleInviteRepositoryMock, notificationService);
+    }
+
+    @Test
+    public void saveKtaUserInviteWhenEmailDomainIsIncorrect() throws Exception {
+
+        Role role = KNOWLEDGE_TRANSFER_ADVISOR;
+        invitedUser.setEmail("Astle.Pimenta@gmail.com");
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(KTA_USER_ROLE_INVITE_INVALID_EMAIL));
+        verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
+    }
+
+    @Test
+    public void saveKtaUserInviteWhenEmailAlreadyTaken() throws Exception {
+
+        invitedUser.setEmail("Astle.Pimenta@ktn-uk.org");
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISOR);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
+        verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
+    }
+
+    @Test
+    public void saveKtaUserInviteWhenUserAlreadyInvited() throws Exception {
+
+        RoleInvite roleInvite = new RoleInvite();
+        invitedUser.setEmail("Astle.Pimenta@ktn-uk.org");
+
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+        when(roleInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISOR);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
+        verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
+    }
+
+    @Test
+    public void saveKtaUserInviteSucceeds() throws Exception {
+
+        Role role = KNOWLEDGE_TRANSFER_ADVISOR;
+
+        invitedUser.setEmail("Astle.Pimenta@ktn-uk.org");
+
+        RoleInvite expectedRoleInvite = newRoleInvite().
+                withEmail("Astle.Pimenta@ktn-uk.org").
+                withName("Astle Pimenta").
+                withRole(role).
+                withStatus(CREATED).
+                withHash("1234").
+                build();
+
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+
+        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
+
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
+
+        assertTrue(result.isSuccess());
+
+        verify(roleInviteRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
+
+        List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
+        assertEquals("Astle.Pimenta@ktn-uk.org", captured.get(0).getEmail());
+        assertEquals("Astle Pimenta", captured.get(0).getName());
+        assertEquals(role, captured.get(0).getTarget());
+        assertEquals(CREATED, captured.get(0).getStatus());
     }
 
     private List<ApplicationInvite> setUpMockingCreateApplicationInvites() {

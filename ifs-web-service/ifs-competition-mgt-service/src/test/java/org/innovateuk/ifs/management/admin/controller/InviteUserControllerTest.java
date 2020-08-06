@@ -23,11 +23,22 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     private InviteUserService inviteUserServiceMock;
 
     @Test
-    public void inviteNewUser() throws Exception {
+    public void inviteInternalNewUser() throws Exception {
         InviteUserForm expectedUserForm = new InviteUserForm();
         expectedUserForm.setView(InviteUserView.INTERNAL_USER);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user/internal"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/invite-new-user"))
+                .andExpect(model().attribute("form", expectedUserForm));
+    }
+
+    @Test
+    public void inviteExternalNewUser() throws Exception {
+        InviteUserForm expectedUserForm = new InviteUserForm();
+        expectedUserForm.setView(InviteUserView.EXTERNAL_USER);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user/external"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"))
                 .andExpect(model().attribute("form", expectedUserForm));
