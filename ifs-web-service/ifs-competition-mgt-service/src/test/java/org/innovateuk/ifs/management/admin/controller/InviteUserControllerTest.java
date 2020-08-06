@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.management.admin.form.InviteUserForm;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.management.admin.form.InviteUserView;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +24,13 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
 
     @Test
     public void inviteNewUser() throws Exception {
+        InviteUserForm expectedUserForm = new InviteUserForm();
+        expectedUserForm.setView(InviteUserView.INTERNAL_USER);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user/internal"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"))
-                .andExpect(model().attribute("form", new InviteUserForm()));
+                .andExpect(model().attribute("form", expectedUserForm));
     }
 
     @Test
