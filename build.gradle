@@ -117,6 +117,10 @@ def osFileMap = [
 
         [name:'92-finance-data-service-sync', type: 'finance-data-service-sync'],
 
+        [name:'10-gluster-svc', type: 'gluster'],
+        [name:'11-gluster-endpoints', type: 'gluster'],
+        [name:'12-file-upload-claim', type: 'gluster'],
+
         [name:'4-application-service', type: 'ifs-services'],
         [name:'5-front-door-service', type: 'ifs-services'],
         [name:'31-data-service', type: 'ifs-services'],
