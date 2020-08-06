@@ -57,7 +57,7 @@
 
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-left-cell"><th:block th:text="${#numbers.formatDecimal(partner.fundingLevel,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell">&pound;<th:block th:text="${#numbers.formatInteger(partner.fundingSought,1,'DEFAULT')}" /></td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric shaded-cell border-right-cell"><th:block th:if="${!partner.totalGrantZero}"><th:block th:text="${#numbers.formatDecimal(partner.percentageOfTotalGrant,1,'DEFAULT',2,'DEFAULT')}" />&percnt;</th:block></td>
 
                             <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
                                 <label th:for="__${path}__.fundingLevel">
@@ -93,15 +93,17 @@
                                           th:attr="data-mirror=|[id='__${path}__.fundingSought']|"></span>
                                 </td>
                                 <td class="govuk-table__cell govuk-table__cell--numeric">
-                                    <input th:id="__${path}__.percentageOfTotalGrant"
-                                           type="hidden"
-                                           data-calculation-operations="*,/,negativeRoundUp"
-                                           data-calculation-format="decimal-percentage"
-                                           th:attr="data-calculation-fields=|100,[id='__${path}__.fundingSought'],#total-funding-sought|,
-                                                    data-calculation-rawValue=${partner.calculatePercentageTotalGrant(fundingLevel)}"
-                                           th:value="|${#numbers.formatDecimal(partner.calculatePercentageTotalGrant(fundingLevel),1,'DEFAULT',2,'DEFAULT')}%|"/>
-                                    <span th:text="|${#numbers.formatInteger(partner.calculatePercentageTotalGrant(fundingLevel),1,'DEFAULT')}%|"
-                                          th:attr="data-mirror=|[id='__${path}__.percentageOfTotalGrant']|"></span>
+                                    <th:block th:if="${!partner.totalGrantZero}">
+                                        <input th:id="__${path}__.percentageOfTotalGrant"
+                                               type="hidden"
+                                               data-calculation-operations="*,/,negativeRoundUp"
+                                               data-calculation-format="decimal-percentage"
+                                               th:attr="data-calculation-fields=|100,[id='__${path}__.fundingSought'],#total-funding-sought|,
+                                                        data-calculation-rawValue=${partner.calculatePercentageTotalGrant(fundingLevel)}"
+                                               th:value="|${#numbers.formatDecimal(partner.calculatePercentageTotalGrant(fundingLevel),1,'DEFAULT',2,'DEFAULT')}%|"/>
+                                        <span th:text="|${#numbers.formatInteger(partner.calculatePercentageTotalGrant(fundingLevel),1,'DEFAULT')}%|"
+                                              th:attr="data-mirror=|[id='__${path}__.percentageOfTotalGrant']|"></span>
+                                    </th:block>
                                 </td>
                             </th:block>
                         </tr>

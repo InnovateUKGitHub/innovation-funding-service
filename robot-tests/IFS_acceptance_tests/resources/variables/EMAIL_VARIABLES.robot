@@ -28,3 +28,7 @@ ${partner_international_email}  tim.simpson@test.com
 ${lead_intl_email_two}          roselin.messy1@empire.fr
 ${zero_funding_partner_email}   json.smith@gmail.com
 ${lead_ktp_email}               Indi.Gardiner@test.com
+${existing_lead_ktp_email}      troy.ward@gmail.com
+${new_partner_ktp_email}        Emma.Grant@test.com
+${existing_partner_ktp_email}   eve.smith@gmail.com
+${existing_academic_email}      roy.wheeler@example.com
