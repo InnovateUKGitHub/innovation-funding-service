@@ -77,6 +77,16 @@ input {
   }
 }
 
+th {
+  &.govuk-table__header {
+    .govuk-error-message {
+      &:first-child {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
 td {
   &.govuk-form-group {
     width: auto;
