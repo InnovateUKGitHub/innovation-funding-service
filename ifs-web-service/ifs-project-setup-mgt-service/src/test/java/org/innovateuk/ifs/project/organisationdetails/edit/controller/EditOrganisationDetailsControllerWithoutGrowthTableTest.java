@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.organisationdetails.edit.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableForm;
 import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormPopulator;
+import org.innovateuk.ifs.application.forms.sections.yourorganisation.form.YourOrganisationWithoutGrowthTableFormSaver;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.OrganisationFinancesWithoutGrowthTableResource;
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.RequestBuilder;
 
@@ -40,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(MockitoJUnitRunner.Silent.class)
-public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends BaseControllerMockMVCTest<EditOrganisationDetailsControllerWithoutGrowthTable> {
+public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends BaseControllerMockMVCTest<EditOrganisationDetailsWithoutGrowthTableController> {
 
 
     @Mock
@@ -58,17 +60,20 @@ public class EditOrganisationDetailsControllerWithoutGrowthTableTest extends Bas
     @Mock
     private CompetitionRestService competitionRestService;
 
+    @Spy
+    private YourOrganisationWithoutGrowthTableFormSaver saver;
+
     private static final long projectId = 3L;
     private static final long organisationId = 5L;
     private OrganisationFinancesWithoutGrowthTableResource organisationFinancesWithoutGrowthTableResource;
     private ProjectResource projectResource;
     private OrganisationResource organisationResource;
     private static CompetitionResource competitionResource;
-    private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size-without-growth-table";
+    private static final String VIEW_WITHOUT_GROWTH_TABLE_PAGE = "project/organisationdetails/edit-organisation-size";
 
     @Override
-    protected EditOrganisationDetailsControllerWithoutGrowthTable supplyControllerUnderTest() {
-        return new EditOrganisationDetailsControllerWithoutGrowthTable();
+    protected EditOrganisationDetailsWithoutGrowthTableController supplyControllerUnderTest() {
+        return new EditOrganisationDetailsWithoutGrowthTableController();
     }
 
     @Before

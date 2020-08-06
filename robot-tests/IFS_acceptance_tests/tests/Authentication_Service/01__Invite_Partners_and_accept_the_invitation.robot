@@ -140,7 +140,7 @@ The guest user applies to a competition and creates account
     [Documentation]  IFS-2440
     [Tags]
     # Business organisation type - Competition:Aerospace technology investment sector
-    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    Given the user applies to competition and enters organisation type link  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}   radio-1   org2
     Then the user creates an account and signs in
 
 New Lead Applicant invites new user as collaborator on his application
@@ -173,13 +173,13 @@ the user creates an account and signs in
 
 the lead applicant invites the collaborator
     Logging in and error checking                    ${newLeadApplicant}  ${correct_password}
-    The user clicks the button/link                  link = Untitled application (start here)
+    The user clicks the button/link                  link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user fills in the inviting steps no Edit     ${newCollaborator}
     The user logs out if they are logged in
 
 the lead applicant is no longer directed to the team page
     Log in as a different user          ${newLeadApplicant}  ${correct_password}
-    The user clicks the button/link     jQuery = .progress-list a:contains("Untitled application (start here)")
+    The user clicks the button/link     jQuery = .progress-list a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     The user should see the element     jQuery = h1:contains("Application overview")
     # Added the above check, to see that the user doesn't get directed to the team page (since he has not clicked on the Begin application button)
 

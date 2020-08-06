@@ -169,7 +169,7 @@ Non registered UK based users confirm their organisation details and create an a
     [Documentation]    IFS-7199
     [Tags]  HappyPath
     Given the user provides uk based organisation details             Nomensa  ${ukBasedOrganisationName}
-    And the user verifies their organisation details
+    And the user verifies uk based organisation details
     When the user clicks the button/link                              name = save-organisation
     And the user enters the details and clicks the create account     Tony  Blair  ${uk_based_applicant_new}  ${short_password}
     Then the user should not see an error in the page
@@ -209,11 +209,11 @@ Registered users applying for an international competition see only UK based org
 Registered UK based user applies for International Competition
     [Documentation]    IFS-7197
     [Tags]  HappyPath
-    Given the user clicks the button/link                                  link = Apply with a different organisation
-    When the user selects organisation type as business
-    And the user clicks enter details manually on companies house link
-    Then the user verifies their organisation details
-    And the user clicks the button/link                                    name = save-organisation
+    Given the user clicks the button/link                                          link = Apply with a different organisation
+    When the user selects organisation type as business                            radio-1
+    And the user enters organisation details manually on companies house link      ${ukLeadOrganisationName}
+    Then the user verifies uk based organisation details
+    And the user clicks the button/link                                            name = save-organisation
 
 Registered UK based lead user invites partner organisation(with registered email/user)
     [Documentation]    IFS-7197
@@ -301,7 +301,7 @@ Lead applicant can see organisation address details on the application team page
     [Documentation]    IFS-7264
     [Tags]  HappyPath
     [Setup]  the user navigates to the page     ${APPLICANT_DASHBOARD_URL}
-    Given the user clicks the button/link       link = Untitled application (start here)
+    Given the user clicks the button/link       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link         link = Application team
     Then the user should see the element        jQuery = td:contains("7 Pinchington Lane, Sydney, ")
 
@@ -683,15 +683,16 @@ the user verifies their organisation details
     the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
     the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
 
+the user verifies uk based organisation details
+    the user should see the element         jQuery = p:contains("${chooseYourOragnisationTypeInfoText}")
+    the user should not see the element     jQuery = p:contains("${ukBasedOrganisationFundingInfo}")
+    the user should see the element         jQuery = dt:contains("${organisationBasedInUkTitle}")
+
 the user sign in and apply for international comp
     [Arguments]  ${user}  ${password}   ${competitionName}
     the user select the competition and starts application      ${competitionName}
     the user clicks the button/link                             jQuery = .govuk-grid-column-one-half a:contains("Sign in")
     Logging in and Error Checking                               ${user}  ${password}
-
-the user selects organisation type as business
-    the user selects the radio button     organisationTypeId  radio-1
-    the user clicks the button/link       name = select-company-type
 
 organisation is able to accept project invite
     [Arguments]  ${fname}  ${sname}  ${email}  ${applicationID}  ${appTitle}
@@ -765,12 +766,12 @@ non-registered user selects business options
     [Arguments]  ${isBusinessInternational}
     the user clicks the button/link              link = Continue and create an account
     the user should see the element              jQuery = span:contains("${organisationBasedInUkTitle}")
-    the user should not see the element          jQuery = span:contains("Create an account")
+    the user should see the element              jQuery = span:contains("Create an account")
     user selects where is organisation based     ${isBusinessInternational}
 
 the user provides international organisation details
     [Arguments]  ${company_reg_no}  ${international_org_town}  ${international_org_country}  ${international_org_country_complete}  ${international_org_name}  ${button_id}
-    the user selects organisation type as business
+    the user selects organisation type as business                     radio-1
     the user enters text to a text field                               id = name  ${international_org_name}
     the user gets an error message on not filling mandatory fields     ${button_id}
     the user enters text to a text field                               id = companyRegistrationNumber  ${company_reg_no}
@@ -779,13 +780,6 @@ the user provides international organisation details
     input text                                                         id = country  ${international_org_country}
     the user clicks the button/link                                    jQuery = ul li:contains("${international_org_country_complete}")
     the user clicks the button/link                                    id = ${button_id}
-
-the user provides uk based organisation details
-    [Arguments]  ${org_search_name}  ${org}
-    the user selects organisation type as business
-    the user enters text to a text field               name = organisationSearchName  ${org_search_name}
-    the user clicks the button/link                    name = search-organisation
-    the user clicks the button/link                    link = ${org}
 
 the user gets an error message on not filling mandatory fields
     [Arguments]  ${button_id}
@@ -1140,7 +1134,7 @@ uk lead applicant completes application form
     Requesting nomensa organisation IDs
     log in as a different user                                      &{ukLeadOrganisationCredentials}
     the user navigates to the page                                  ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link                                 link = Untitled application (start here)
+    the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                                 link = Application details
     the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the user clicks the button/link                                 link = Application team
@@ -1215,14 +1209,9 @@ the user completes project team and can see international organisation addresses
     the user should see the element         jQuery = h2:contains("${leadApplicantOrganisationName}")
     the user should see the element         jQuery = td:contains("${addressLine1}")
 
-the user clicks enter details manually on companies house link
-    the user clicks the button/link       jQuery = span:contains("Enter details manually")
-    The user enters text to a text field  name = organisationName    ${ukLeadOrganisationName}
-    the user clicks the button/link       jQuery = button:contains("Continue")
-
 lead applicant assigns technical approach section to partner applicant
     log in as a different user            &{ukLeadOrganisationCredentials}
-    the user clicks the button/link       link = Untitled application (start here)
+    the user clicks the button/link       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link       jQuery = a:contains("Technical approach")
     the user uploads the file             css = input[name="appendix"]    ${valid_pdf}
     the user clicks the button/link       link = Assign to someone else.
@@ -1231,13 +1220,13 @@ lead applicant assigns technical approach section to partner applicant
 
 partner uploads the appendix file
     Log in as a different user          &{internationalPartnerOrganisationCredentials}
-    the user clicks the button/link     link = Untitled application (start here)
+    the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link     jQuery = a:contains("Technical approach")
     the user uploads the file           css = input[name="appendix"]    ${ods_file}
     the user uploads the file           css = input[name="appendix"]    ${excel_file}
     the user clicks the button/link     jQuery = button:contains("Assign to lead for review")
     Log in as a different user           &{ukLeadOrganisationCredentials}
-    the user clicks the button/link     link = Untitled application (start here)
+    the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link     jQuery = a:contains("Technical approach")
 
 the lead can see multiple appendices uploaded to the technical approach question
