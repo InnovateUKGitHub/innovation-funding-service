@@ -16,7 +16,7 @@ sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.branch.name", "${bamboo.repository.branch.name}"
+        property "sonar.branch.name", "development"
         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         // These exclusions are because SonarQube fails to parse the files
         // Raised DHS-400 to contact SonarQube for support
