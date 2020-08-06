@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +41,9 @@ public class UsersManagementController extends AsyncAdaptor {
 
     @Autowired
     private InviteUserRestService inviteUserRestService;
+
+    @Value("${ifs.external.kta.role.enabled}")
+    private boolean externalKtaRoleLinkEnabled;
 
     @AsyncMethod
     @SecuredBySpring(value = "UserManagementController.viewActive() method",
@@ -122,6 +126,7 @@ public class UsersManagementController extends AsyncAdaptor {
                             adminUser
                     );
                     model.addAttribute("model", viewModel);
+                    model.addAttribute("externalKtaRoleLinkEnabled", externalKtaRoleLinkEnabled);
                 });
 
         return "admin/users";
