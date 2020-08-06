@@ -915,6 +915,7 @@ IFS.core.formValidation = (function () {
       var errorSummary = jQuery('.govuk-error-summary__list')
       var name = IFS.core.formValidation.getName(field)
       var id = IFS.core.formValidation.getIdentifier(field)
+      var additionalMessage = ''
       // if it is a .govuk-form-group we assume the basic form structure with just one field per group
       // i.e.
       // <div class="govuk-form-group">
@@ -951,7 +952,9 @@ IFS.core.formValidation = (function () {
         var headerCell = table.find('th:eq(' + index + ')')
         if (headerCell.find('.govuk-error-message').length) {
           // Header cell has error so we're going to remove it and look for any other cell in the column with a input error that has no message.
-          headerCell.find('.govuk-error-message').remove()
+          var messageHolder = headerCell.find('.govuk-error-message')
+          additionalMessage = messageHolder.text()
+          messageHolder.remove()
           table.find('td:nth-of-type(' + (index + 1) + ')').filter(function () {
             var td = jQuery(this)
             return !td.find('.govuk-error-message').length && td.find('.govuk-input--error')
@@ -1000,6 +1003,9 @@ IFS.core.formValidation = (function () {
           errorSummary.find('[href="#' + id + '"]:contains(' + message + ')').parent().remove()
         } else {
           errorSummary.find('li:contains(' + message + ')').remove()
+        }
+        if (additionalMessage.length) {
+          errorSummary.find('li:contains(' + additionalMessage + ')').remove()
         }
         if (jQuery('.govuk-error-summary__list li:not(.list-header)').length === 0) {
           jQuery('.govuk-error-summary__list li.list-header').remove()
