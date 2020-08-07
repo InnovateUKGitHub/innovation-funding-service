@@ -94,8 +94,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Value("${ifs.system.internal.user.email.domain}")
     private String internalUserEmailDomain;
 
-    private static final String DEFAULT_KTA_USER_EMAIL_DOMAIN = "ktn-uk.org";
-
     @Value("${ifs.system.kta.user.email.domain}")
     private String ktaUserEmailDomain;
 
@@ -157,7 +155,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<Void> validateKtaEmail(String email) {
 
-        ktaUserEmailDomain = StringUtils.defaultIfBlank(ktaUserEmailDomain, DEFAULT_KTA_USER_EMAIL_DOMAIN);
+        ktaUserEmailDomain = StringUtils.defaultString(ktaUserEmailDomain);
 
         String domain = StringUtils.substringAfter(email, "@");
 
