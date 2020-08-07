@@ -25,9 +25,8 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     @Test
     public void inviteInternalNewUser() throws Exception {
         InviteUserForm expectedUserForm = new InviteUserForm();
-        expectedUserForm.setView(InviteUserView.INTERNAL_USER);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user/internal"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"))
                 .andExpect(model().attribute("form", expectedUserForm));
@@ -36,16 +35,15 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
     @Test
     public void inviteExternalNewUser() throws Exception {
         InviteUserForm expectedUserForm = new InviteUserForm();
-        expectedUserForm.setView(InviteUserView.EXTERNAL_USER);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-user/external"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/admin/invite-external-user"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"))
                 .andExpect(model().attribute("form", expectedUserForm));
     }
 
     @Test
-    public void saveUserInviteWhenSaveInviteFails() throws Exception {
+    public void saveInternalUserInviteWhenSaveInviteFails() throws Exception {
 
         when(inviteUserServiceMock.saveUserInvite(Mockito.any()))
                 .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
@@ -53,22 +51,51 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-user").
                 param("firstName", "First").
                 param("lastName", "Last").
-                param("emailAddress", "asdf@asdf.com").
+                param("emailAddress", "asdf@innovateuk.ukri.test").
                 param("role", "IFS_ADMINISTRATOR"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"));
     }
 
     @Test
-    public void saveUserInviteSuccess() throws Exception {
+    public void saveInternalUserInviteSuccess() throws Exception {
 
         when(inviteUserServiceMock.saveUserInvite(Mockito.any())).thenReturn(ServiceResult.serviceSuccess());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-user").
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-external-user").
                 param("firstName", "First").
                 param("lastName", "Last").
-                param("emailAddress", "asdf@asdf.com").
+                param("emailAddress", "asdf@innovateuk.ukri.test").
                 param("role", "IFS_ADMINISTRATOR"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/admin/users/pending"));
+    }
+
+    @Test
+    public void saveExternalUserInviteWhenSaveInviteFails() throws Exception {
+
+        when(inviteUserServiceMock.saveUserInvite(Mockito.any()))
+                .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-external-user").
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@ktn-uk.test").
+                param("role", "KNOWLEDGE_TRANSFER_ADVISOR"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/invite-new-user"));
+    }
+
+    @Test
+    public void saveExternalUserInviteSuccess() throws Exception {
+
+        when(inviteUserServiceMock.saveUserInvite(Mockito.any())).thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/invite-external-user").
+                param("firstName", "First").
+                param("lastName", "Last").
+                param("emailAddress", "asdf@ktn-uk.test").
+                param("role", "KNOWLEDGE_TRANSFER_ADVISOR"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/admin/users/pending"));
     }

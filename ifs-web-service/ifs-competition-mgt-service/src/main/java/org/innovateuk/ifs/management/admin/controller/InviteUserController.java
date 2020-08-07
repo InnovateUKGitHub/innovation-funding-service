@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
+import org.innovateuk.ifs.management.admin.viewmodel.InviteUserViewModel;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,30 +34,44 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*
 public class InviteUserController {
 
     private static final String FORM_ATTR_NAME = "form";
+    private static final String Model_ATTR_NAME = "model";
 
     @Autowired
     private InviteUserService inviteUserService;
 
-    @GetMapping("/invite-user/{view}")
-    public String inviteNewUser(@PathVariable String view, Model model) {
-        return viewInviteNewUser(view, model);
+    @GetMapping("/invite-user")
+    public String inviteNewUser(Model model) {
+        InviteUserForm form = new InviteUserForm();
+
+        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER);
     }
 
-    private static String viewInviteNewUser(String view, Model model) {
+    @GetMapping("/invite-external-user")
+    public String inviteNewExternalUser(Model model) {
         InviteUserForm form = new InviteUserForm();
-        form.setView(InviteUserView.getByName(view));
+
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER);
+    }
+
+    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type) {
+        InviteUserViewModel viewModel = new InviteUserViewModel(type);
 
         model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute(Model_ATTR_NAME, viewModel);
 
         return "admin/invite-new-user";
     }
 
     @PostMapping("/invite-user")
-    public String saveUserInvite(@Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
-                               @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+    public String saveUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
+                                 @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> "admin/invite-new-user";
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER);
 
+        return saveInvite(form, validationHandler, failureView);
+    }
+
+    private String saveInvite(InviteUserForm form, ValidationHandler validationHandler, Supplier<String> failureView) {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             InviteUserResource inviteUserResource = constructInviteUserResource(form);
@@ -67,6 +82,15 @@ public class InviteUserController {
                     failNowOrSucceedWith(failureView, () -> "redirect:/admin/users/pending");
 
         });
+    }
+
+    @PostMapping("/invite-external-user")
+    public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
+                                         @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
+
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER);
+
+        return saveInvite(form, validationHandler, failureView);
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {

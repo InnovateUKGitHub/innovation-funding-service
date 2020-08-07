@@ -39,8 +39,6 @@ public class InviteUserForm extends BaseBindingResultTarget {
 
     private Role role;
 
-    private InviteUserView view;
-
     public InviteUserForm() {
         // for spring form binding
     }
@@ -77,22 +75,6 @@ public class InviteUserForm extends BaseBindingResultTarget {
         this.role = role;
     }
 
-    public InviteUserView getView() {
-        return view;
-    }
-
-    public void setView(InviteUserView view) {
-        this.view = view;
-    }
-
-    public boolean isInternalUserView() {
-        return view.equals(InviteUserView.INTERNAL_USER);
-    }
-
-    public boolean isExternalUserView() {
-        return view.equals(InviteUserView.EXTERNAL_USER);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,7 +88,6 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(lastName, form.lastName)
                 .append(emailAddress, form.emailAddress)
                 .append(role, form.role)
-                .append(view, form.view)
                 .isEquals();
     }
 
@@ -117,7 +98,6 @@ public class InviteUserForm extends BaseBindingResultTarget {
                 .append(lastName)
                 .append(emailAddress)
                 .append(role)
-                .append(view)
                 .toHashCode();
     }
 }
