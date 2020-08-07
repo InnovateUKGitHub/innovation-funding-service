@@ -64,11 +64,13 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
             List<ApplicationKtaInviteResource> ktaInvites = ktaInvitesResult.getSuccess();
             if (ktaInvites.isEmpty()) {
                 reject(errors, "validation.kta.missing.invite");
-            }
-            Optional<ApplicationKtaInviteResource> maybeInvite = ktaInvites.stream().filter(invite -> invite.getStatus() == InviteStatus.OPENED).findFirst();
-            if (!maybeInvite.isPresent()) {
-                LOG.debug("MarkAsComplete kta validation message");
-                reject(errors, "validation.kta.pending.invite");
+            } else {
+                Optional<ApplicationKtaInviteResource> maybeInvite = ktaInvites.stream().filter(invite -> invite.getStatus() == InviteStatus.OPENED).findFirst();
+                if (!maybeInvite.isPresent()) {
+                    LOG.debug("MarkAsComplete kta validation message");
+                    reject(errors, "validation.kta.pending.invite");
+
+                }
             }
         }
 

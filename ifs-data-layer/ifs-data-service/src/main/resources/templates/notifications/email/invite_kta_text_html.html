@@ -2,7 +2,8 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
 <p style="margin: 0 0 1em 0;">You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application:</p>
-<p>${applicationId?c}.</p>
+<p>${applicationId?c}:${applicationName?c}</p>
+<@layout.button href="${inviteUrl}" text="Review the invitation" />
 <p style="margin: 0 0 1em 0;">Yours sincerely</p>
 <@layout.senderHTML />
 </@layout.default>

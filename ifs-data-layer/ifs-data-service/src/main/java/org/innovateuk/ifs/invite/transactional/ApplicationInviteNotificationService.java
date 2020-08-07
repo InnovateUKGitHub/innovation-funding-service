@@ -177,63 +177,34 @@ class ApplicationInviteNotificationService {
     }
 
     public ServiceResult<Void> removeKtaFromApplication(ApplicationKtaInvite invite) {
-        User loggedInUser = loggedInUserSupplier.get();
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(invite.getName(), invite.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         if (StringUtils.isNotEmpty(invite.getTarget().getName())) {
             notificationArguments.put("applicationName", invite.getTarget().getName());
-        }
-        notificationArguments.put("sentByName", loggedInUser.getName());
-        notificationArguments.put("applicationId", invite.getTarget().getId());
-        notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
-        notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(webBaseUrl, invite.getTarget()));
-        notificationArguments.put("inviteUrl", getInviteUrl(webBaseUrl, invite.getHash()));
-        ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
-        Organisation organisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
-        notificationArguments.put("leadOrganisation", organisation.getName());
-        notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
-
-        if (invite.getTarget().getLeadApplicant().getTitle() != null) {
-            notificationArguments.put("leadApplicantTitle", invite.getTarget().getLeadApplicant().getTitle());
         } else {
-            notificationArguments.put("leadApplicantTitle", "");
+            notificationArguments.put("applicationName", "-");
         }
-
-        notificationArguments.put("participationAction", "knowledge transfer advise");
+        notificationArguments.put("applicationId", invite.getTarget().getId());
+        notificationArguments.put("inviteUrl", getInviteUrl(webBaseUrl, invite.getHash()));
 
         Notification notification = new Notification(from, singletonList(to), Notifications.REMOVE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
     }
 
     private ServiceResult<Void> inviteKtaToApplication(String baseUrl, ApplicationKtaInvite invite) {
-
-        User loggedInUser = loggedInUserSupplier.get();
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new UserNotificationTarget(invite.getName(), invite.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         if (StringUtils.isNotEmpty(invite.getTarget().getName())) {
             notificationArguments.put("applicationName", invite.getTarget().getName());
-        }
-        notificationArguments.put("sentByName", loggedInUser.getName());
-        notificationArguments.put("applicationId", invite.getTarget().getId());
-        notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
-        notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite.getTarget()));
-        notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite.getHash()));
-        ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
-        Organisation organisation = organisationRepository.findById(leadRole.getOrganisationId()).get();
-        notificationArguments.put("leadOrganisation", organisation.getName());
-        notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
-
-        if (invite.getTarget().getLeadApplicant().getTitle() != null) {
-            notificationArguments.put("leadApplicantTitle", invite.getTarget().getLeadApplicant().getTitle());
         } else {
-            notificationArguments.put("leadApplicantTitle", "");
+            notificationArguments.put("applicationName", "-");
         }
-
-        notificationArguments.put("participationAction", "knowledge transfer advise");
+        notificationArguments.put("applicationId", invite.getTarget().getId());
+        notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite.getHash()));
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
