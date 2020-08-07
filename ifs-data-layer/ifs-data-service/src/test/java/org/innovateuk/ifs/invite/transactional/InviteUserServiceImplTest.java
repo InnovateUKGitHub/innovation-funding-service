@@ -104,6 +104,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     private static String webBaseUrl = "base";
 
+    private static String ktaUserEmailDomain = "ktn-uk.org";
+
     private UserResource invitedUser = null;
 
     @Before
@@ -121,6 +123,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         InviteUserServiceImpl inviteService = new InviteUserServiceImpl();
         ReflectionTestUtils.setField(inviteService, "webBaseUrl", webBaseUrl);
+        ReflectionTestUtils.setField(inviteService, "ktaUserEmailDomain", ktaUserEmailDomain);
 
         return inviteService;
     }
