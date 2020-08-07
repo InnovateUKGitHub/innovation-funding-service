@@ -69,7 +69,7 @@
 
             <th:block th:if="${model.addressRequired}" th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
-            <div th:if="${model.externalUser}" class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
+            <div th:if="${model.phoneRequired}" class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="phoneNumber">
                     Phone number
                 </label>
@@ -127,7 +127,7 @@
 
             <th:block th:insert="fragments/passwords :: password (fieldName='password', label='Create password')" />
 
-            <th:block th:if="${model.externalUser}">
+            <th:block th:if="${model.termsRequired}">
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('termsAndConditions')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-visually-hidden">
