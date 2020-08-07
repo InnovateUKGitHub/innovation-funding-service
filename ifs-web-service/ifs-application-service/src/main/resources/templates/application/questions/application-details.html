@@ -38,6 +38,7 @@
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
               data-autosave="autosaveFormPost" enctype="multipart/form-data"
               novalidate="novalidate">
+            <input type="hidden" name="ktpCompetition" th:value="${model.ktpCompetition}" />
             <th:block th:unless="${model.readonly}">
                 <!--/* To disable submission on pressing return (INFUND-6892) */-->
                 <button id="save-form-button" class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
@@ -57,14 +58,16 @@
                            th:errorclass="govuk-input--error" />
                 </div>
 
-                <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__startDate__}')} ? 'govuk-form-group--error'">
+                <div class="govuk-form-group" th:classappend="|${model.ktpCompetition ? 'govuk-!-margin-bottom-1' : ''} ${#fields.hasErrors('*{__startDate__}') ? 'govuk-form-group--error' : ''}|" >
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
                             <span>Estimated timescales</span>
                         </legend>
-                        <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='startDate')"  />
-                        <span class="govuk-hint">When do you wish to start your project? For example: <span data-example-date="">31 12 2020</span></span>
-                        <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='startDate',readonly=${false})" />
+                        <th:block th:unless="${model.ktpCompetition}">
+                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='startDate')"  />
+                            <span class="govuk-hint">When do you wish to start your project? For example: <span data-example-date="">31 12 2020</span></span>
+                            <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='startDate',readonly=${false})" />
+                        </th:block>
                     </fieldset>
                 </div>
 
@@ -313,9 +316,11 @@
                             <dd th:text="${model.application.competitionName}"></dd>
                             <dt>Application name</dt>
                             <dd th:text="${model.application.name}"></dd>
-                            <dt>When do you wish to start your project?</dt>
-                            <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
-                            <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
+                            <th:block th:unless="${model.ktpCompetition}">
+                                <dt>When do you wish to start your project?</dt>
+                                <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
+                                <dd th:unless="${model.application.startDate}"><span class="invisible">Not specified</span></dd>
+                            </th:block>
                             <dt>Duration in months</dt>
                             <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
                             <th:block th:if="${model.canSelectInnovationArea}">
