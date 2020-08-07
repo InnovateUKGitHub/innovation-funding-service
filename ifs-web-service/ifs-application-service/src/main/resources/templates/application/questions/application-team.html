@@ -296,54 +296,29 @@
                                 </table>
                             </form>
                         </div>
-                        <div th:if="${(model.ktaInvite != null) && (model.ktaInvite.status == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT)}">
+                        <div th:if="${(model.ktaInvite != null) && (model.ktaInvite.status != T(org.innovateuk.ifs.invite.constant.InviteStatus).CREATED)}">
                             <table class="govuk-table">
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full Name</th>
                                     <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
-                                    <th scope="col"  class="govuk-table__header"><span class="govuk-visually-hidden">Actions</span></th>
+                                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Actions</span></th>
                                 </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
                                 <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell hint">
+                                    <td class="govuk-table__cell" th:classappend="${(model.ktaInvite.status == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT) ? 'hint' : ''}">
                                         <th:block th:if="${model.ktaUser != null}" th:text="${model.ktaUser.name}" />
-                                        <th:block th:unless="${model.ktaUser != null}">-</th:block> (pending for <th:block th:text="${model.ktaInvitePendingDays}">5</th:block> days)
+                                        <th:block th:if="${model.ktaInvite.status == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT}">
+                                            <th:block th:unless="${model.ktaUser != null}">-</th:block> (pending for <th:block th:text="${model.ktaInvitePendingDays}">5</th:block> days)
+                                        </th:block>
                                     </td>
-                                    <td class="govuk-table__cell hint">
+                                    <td class="govuk-table__cell" th:classappend="${(model.ktaInvite.status == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT) ? 'hint' : ''}">
                                         <th:block th:text="${model.ktaInvite.email}">email of kta</th:block>
                                     </td>
                                     <td class="govuk-table__cell alignright buttoncolumn">
                                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
-                                            <button class="button-clear" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button>
-                                            <button class="button-clear" type="submit" name="remove-kta" th:value="${model.ktaInvite.id}">Remove</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div th:if="${(model.ktaInvite != null) && (model.ktaInvite.status == T(org.innovateuk.ifs.invite.constant.InviteStatus).OPENED)}">
-                            <table class="govuk-table">
-                                <thead class="govuk-table__head">
-                                <tr class="govuk-table__row">
-                                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full Name</th>
-                                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
-                                    <th scope="col"  class="govuk-table__header"><span class="govuk-visually-hidden">Actions</span></th>
-                                </tr>
-                                </thead>
-                                <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <th:block th:if="${model.ktaUser != null}" th:text="${model.ktaUser.name}" />
-                                        <th:block th:unless="${model.ktaUser != null}">-</th:block>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        <th:block th:text="${model.ktaInvite.email}">email of kta</th:block>
-                                    </td>
-                                    <td class="govuk-table__cell alignright buttoncolumn">
-                                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" method="post">
+                                            <button th:if="${model.ktaInvite.status == T(org.innovateuk.ifs.invite.constant.InviteStatus).SENT}" class="button-clear" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button>
                                             <button class="button-clear" type="submit" name="remove-kta" th:value="${model.ktaInvite.id}">Remove</button>
                                         </form>
                                     </td>

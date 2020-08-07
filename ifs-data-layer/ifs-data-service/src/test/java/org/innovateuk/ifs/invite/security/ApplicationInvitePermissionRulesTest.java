@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.organisation.builder.OrganisationBuilder;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.user.resource.Role;
@@ -37,6 +38,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
     private UserResource leadApplicant;
     private UserResource collaborator;
     private ApplicationInvite invite;
+    private ApplicationKtaInviteResource inviteKtaResource;
     private ApplicationInviteResource inviteResource;
     private ApplicationInviteResource inviteResourceCollab;
     private ApplicationInviteResource inviteResourceLead;
@@ -69,6 +71,8 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             inviteResource = new ApplicationInviteResource();
             inviteResource.setApplication(application.getId());
             inviteResource.setInviteOrganisation(inviteOrganisation.getId());
+            inviteKtaResource = new ApplicationKtaInviteResource();
+            inviteKtaResource.setApplication(application.getId());
             inviteResourceLead = newApplicationInviteResource().withApplication(application.getId()).withUsers(leadApplicant.getId()).build();
             inviteResourceCollab = newApplicationInviteResource().withApplication(application.getId()).withUsers(collaborator.getId()).build();
             when(inviteOrganisationRepository.findById(inviteOrganisation.getId())).thenReturn(Optional.of(inviteOrganisation));
@@ -108,6 +112,13 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.leadApplicantCanSaveInviteToTheApplication(inviteResource, leadApplicant));
         assertFalse(rules.leadApplicantCanSaveInviteToTheApplication(inviteResource, collaborator));
         assertFalse(rules.leadApplicantCanSaveInviteToTheApplication(inviteResource, otherLeadApplicant));
+    }
+
+    @Test
+    public void leadApplicantCanSaveKtaInviteToTheApplication() {
+        assertTrue(rules.leadApplicantCanSaveKtaInviteToTheApplication(inviteKtaResource, leadApplicant));
+        assertFalse(rules.leadApplicantCanSaveKtaInviteToTheApplication(inviteKtaResource, collaborator));
+        assertFalse(rules.leadApplicantCanSaveKtaInviteToTheApplication(inviteKtaResource, otherLeadApplicant));
     }
 
     @Test
