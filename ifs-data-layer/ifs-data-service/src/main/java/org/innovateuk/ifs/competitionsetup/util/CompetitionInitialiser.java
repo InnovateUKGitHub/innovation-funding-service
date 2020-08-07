@@ -72,6 +72,27 @@ public final class CompetitionInitialiser {
         ));
     }
 
+    /*
+    *
+    * Guessing at this point
+    *
+    * */
+    private static void addKtpFinanceTypes(Competition competition) {
+        competition.getFinanceRowTypes().addAll(EnumSet.of(
+                LABOUR,
+                OVERHEADS,
+                MATERIALS,
+                CAPITAL_USAGE,
+                SUBCONTRACTING_COSTS,
+                TRAVEL,
+                OTHER_COSTS,
+                GRANT_CLAIM_AMOUNT,
+                OTHER_FUNDING,
+                YOUR_FINANCE,
+                OTHER_FUNDING
+        ));
+    }
+
     private static void addProcurementFinanceTypes(Competition competition) {
         competition.getFinanceRowTypes().addAll(EnumSet.of(
                 LABOUR,
