@@ -187,6 +187,25 @@
             </tr>
             </tbody>
         </table>
+        <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge Transfer Adviser</h2>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Full name</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Email</th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"
+                        th:text="${model.ktaProcessRole.get().userName}"></td>
+                    <td class="govuk-table__cell ifs-table__email"
+                        th:text="${model.ktaProcessRole.get().userEmail}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
     </th:block>
 </th:block>
 

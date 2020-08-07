@@ -33,9 +33,7 @@ import static java.util.Collections.singleton;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
 public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOnlyViewModelPopulator<ApplicationTeamReadOnlyViewModel> {
@@ -55,14 +53,18 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
     @Override
     public ApplicationTeamReadOnlyViewModel populate(CompetitionResource competition, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
         boolean internalUser = data.getUser().isInternalUser();
-        List<ProcessRoleResource> processRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess()
-                .stream()
+        List<ProcessRoleResource> applicationProcessRoles = userRestService.findProcessRole(data.getApplication().getId()).getSuccess();
+        List<ProcessRoleResource> processRoles = applicationProcessRoles.stream()
                 .filter(role -> applicantProcessRoles().contains(role.getRole()))
                 .collect(toList());
         List<InviteOrganisationResource> inviteOrganisationResources = emptyList();
         if (showInvites(data)) {
             inviteOrganisationResources = inviteRestService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
         }
+        Optional<ProcessRoleResource> ktaProcessRole = applicationProcessRoles.stream()
+                .filter(role -> KNOWLEDGE_TRANSFER_ADVISOR == role.getRole())
+                .findAny();
+
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(data.getApplication().getId()).getSuccess();
 
         Multimap<Long, ProcessRoleResource> organisationToProcessRole = index(processRoles, ProcessRoleResource::getOrganisationId);
@@ -79,8 +81,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .map(this::toInviteOrganisationTeamViewModel)
                 .collect(toList()));
 
-        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, internalUser);
-
+        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, internalUser);
     }
 
     private boolean showInvites(ApplicationReadOnlyData data) {
