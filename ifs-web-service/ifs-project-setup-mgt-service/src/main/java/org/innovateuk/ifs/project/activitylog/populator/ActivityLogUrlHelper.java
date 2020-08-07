@@ -45,8 +45,9 @@ public class ActivityLogUrlHelper {
             case ELIGIBILITY_APPROVED:
                 return format("/project-setup-management/project/%d/finance-check/organisation/%d/eligibility", project.getId(), log.getOrganisation());
             case VIABILITY_RESET:
+                return format("/project-setup-management/project/%d/finance-check/organisation/%d/viability", project.getId(), log.getOrganisation());
             case ELIGIBILITY_RESET:
-            case FINANCE_CHECKS_RESET:
+                return format("/project-setup-management/project/%d/finance-check/organisation/%d/eligibility", project.getId(), log.getOrganisation());
             case FINANCE_QUERY:
             case FINANCE_QUERY_RESPONDED:
                 return log.getQueryType() != null ? format("/project-setup-management/project/%d/finance-check/organisation/%d/query?query_section=%s", project.getId(), log.getOrganisation(), log.getQueryType().name()) : null;

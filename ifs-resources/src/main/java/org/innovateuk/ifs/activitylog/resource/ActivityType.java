@@ -19,7 +19,6 @@ public enum ActivityType {
     ELIGIBILITY_APPROVED,
     VIABILITY_RESET,
     ELIGIBILITY_RESET,
-    FINANCE_CHECKS_RESET,
     FINANCE_QUERY,
     FINANCE_QUERY_RESPONDED,
     //PROJECT_FINANCE_EDITED, Not yet implemented but exists in database enum.

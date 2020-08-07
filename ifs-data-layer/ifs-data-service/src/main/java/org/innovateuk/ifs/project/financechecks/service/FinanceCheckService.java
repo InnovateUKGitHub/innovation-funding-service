@@ -49,13 +49,15 @@ public interface FinanceCheckService {
     ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_VIABILITY')")
-    ServiceResult<Void> resetViability(long projectId);
+    @Activity(projectId = "projectId", type = ActivityType.VIABILITY_RESET)
+    ServiceResult<Void> resetViability(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_ELIGIBILITY')")
-    ServiceResult<Void> resetEligibility(long projectId);
+    @Activity(projectId = "projectId", type = ActivityType.ELIGIBILITY_RESET)
+    ServiceResult<Void> resetEligibility(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_FINANCE_CHECKS')")
-    ServiceResult<Void> resetFinanceChecks(long projectId);
+    ServiceResult<Void> resetFinanceChecks(Long projectId);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
     default Optional<ActivityType> viabilityActivityType(ProjectOrganisationCompositeId projectOrganisationCompositeId, ViabilityState viability, ViabilityRagStatus viabilityRagStatus) {

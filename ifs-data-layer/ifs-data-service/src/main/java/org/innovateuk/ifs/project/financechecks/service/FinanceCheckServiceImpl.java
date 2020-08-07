@@ -344,7 +344,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetViability(long projectId) {
+    public ServiceResult<Void> resetViability(Long projectId) {
         projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
             long organisationId = projectFinance.getOrganisation().getId();
             viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
@@ -355,7 +355,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetEligibility(long projectId) {
+    public ServiceResult<Void> resetEligibility(Long projectId) {
         projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
             long organisationId = projectFinance.getOrganisation().getId();
             eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
@@ -366,11 +366,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetFinanceChecks(long projectId) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+    public ServiceResult<Void> resetFinanceChecks(Long projectId) {
             resetViability(projectId);
             resetEligibility(projectId);
-        });
         return serviceSuccess();
     }
 
