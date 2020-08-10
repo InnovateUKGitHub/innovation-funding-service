@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.populator;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -14,10 +15,8 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,12 +28,12 @@ import static java.util.Collections.singletonList;
 import static org.apache.commons.collections.ListUtils.union;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.ExcludedCostCategoryBuilder.newExcludedCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaimPercentage;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
-import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -49,13 +48,10 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Mock
-    private OrganisationRestService organisationRestService;
+    private ApplicationRestService applicationRestService;
 
     @Mock
-    private QuestionRestService questionRestService;
-
-    @Mock
-    private ApplicationService applicationService;
+    private CompetitionRestService competitionRestService;
 
     private UserResource user = newUserResource().build();
     private OrganisationResource organisation =  newOrganisationResource().build();
@@ -67,7 +63,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     private OtherFundingCostCategory otherFundingCategory;
     private ApplicationFinanceResource finance;
     private ApplicationResource application;
-    private QuestionResource otherFundingQuestion;
+    private CompetitionResource competition;
 
     @Override
     protected YourFundingFormPopulator supplyServiceUnderTest() {
@@ -96,7 +92,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                 .withFundingSource("someSource")
                 .build(1);
 
-
         otherFundingCategory = newOtherFundingCostCategory()
                 .withCosts(union(singletonList(otherFunding), otherFundingRows))
                 .build();
@@ -110,11 +105,11 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         application = newApplicationResource()
                 .withCompetition(2L)
                 .build();
-        otherFundingQuestion = newQuestionResource().build();
+        competition = newCompetitionResource().build();
 
-        when(organisationRestService.getOrganisationById(organisation.getId())).thenReturn(restSuccess(organisation));
+        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
+        when(competitionRestService.getCompetitionById(2L)).thenReturn(restSuccess(competition));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
-        when(applicationService.getById(APPLICATION_ID)).thenReturn(application);
     }
 
     @Test
@@ -128,14 +123,14 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
         assertEquals(form.getOtherFundingRows().size(), 2);
 
         long costId = otherFundingRows.get(0).getId();
-        OtherFundingRowForm row = form.getOtherFundingRows().get(String.valueOf(costId));
+        BaseOtherFundingRowForm row =  form.getOtherFundingRows().get(String.valueOf(costId));
         assertEquals(row.getFundingAmount(), new BigDecimal(123));
         assertEquals(row.getCostId(), (Long) costId);
         assertEquals(row.getDate(), "12-MMM");
         assertEquals(row.getSource(), "someSource");
 
         String unsavedRowId = form.getOtherFundingRows().keySet().stream().filter(id -> id.startsWith(AbstractCostRowForm.UNSAVED_ROW_PREFIX)).findFirst().get();
-        OtherFundingRowForm emptyRow = form.getOtherFundingRows().get(unsavedRowId);
+        BaseOtherFundingRowForm emptyRow = form.getOtherFundingRows().get(unsavedRowId);
         assertNull(emptyRow.getFundingAmount());
         assertNull(emptyRow.getCostId());
         assertNull(emptyRow.getDate());
