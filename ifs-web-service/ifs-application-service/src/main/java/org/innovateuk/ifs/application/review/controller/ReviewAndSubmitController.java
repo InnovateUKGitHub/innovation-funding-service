@@ -82,7 +82,17 @@ public class ReviewAndSubmitController {
     public String submitApplication(@PathVariable long applicationId,
                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationSubmitForm form,
                                     BindingResult bindingResult,
-                                    RedirectAttributes redirectAttributes) {
+                                    RedirectAttributes redirectAttributes,
+                                    UserResource user,
+                                    HttpServletResponse response) {
+
+            ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+
+            if (!ableToSubmitApplication(user, application)) {
+                cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
+                return  format("redirect:/application/%d/", applicationId);
+            }
+
         redirectAttributes.addFlashAttribute("termsAgreed", true);
         return format("redirect:/application/%d/confirm-submit", applicationId);
     }

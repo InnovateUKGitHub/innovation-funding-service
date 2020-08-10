@@ -3,16 +3,12 @@ package org.innovateuk.ifs.application.review.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.review.populator.ReviewAndSubmitViewModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.application.service.QuestionRestService;
-import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,8 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<ReviewAndSubmitController> {
 
     @Mock
-    private ReviewAndSubmitViewModelPopulator reviewAndSubmitViewModelPopulator;
-    @Mock
     private ApplicationRestService applicationRestService;
     @Mock
     private CompetitionRestService competitionRestService;
@@ -46,12 +40,6 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Mock
     private UserService userService;
-    @Mock
-    private QuestionStatusRestService questionStatusRestService;
-    @Mock
-    private UserRestService userRestService;
-    @Mock
-    private QuestionRestService questionRestService;
 
     @Override
     protected ReviewAndSubmitController supplyControllerUnderTest() {
