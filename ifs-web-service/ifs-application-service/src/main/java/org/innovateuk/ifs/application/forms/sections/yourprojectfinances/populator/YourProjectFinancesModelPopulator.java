@@ -68,7 +68,7 @@ public class YourProjectFinancesModelPopulator {
 
     private boolean isSectionExcluded(SectionResource section, CompetitionResource competition, OrganisationResource organisation) {
         if (section.getType() == SectionType.ORGANISATION_FINANCES) {
-            return competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
+            return !competition.applicantShouldSeeYourOrganisationSection(organisation.getOrganisationTypeEnum());
         }
         return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
     }

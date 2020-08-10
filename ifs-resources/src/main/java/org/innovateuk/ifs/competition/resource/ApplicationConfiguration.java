@@ -19,6 +19,8 @@ public interface ApplicationConfiguration {
 
     boolean isH2020();
 
+    boolean isKtp();
+
     Boolean getIncludeJesForm();
 
     Boolean getIncludeYourOrganisationSection();
@@ -39,9 +41,9 @@ public interface ApplicationConfiguration {
     }
 
     default boolean applicantShouldSeeYourOrganisationSection(OrganisationTypeEnum organisationType) {
-        return RESEARCH != organisationType ||
+        return !isKtp() && (RESEARCH != organisationType ||
                 Boolean.TRUE.equals(getIncludeYourOrganisationSection())
-                && getFundingType() == GRANT;
+                && getFundingType() == GRANT);
     }
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {

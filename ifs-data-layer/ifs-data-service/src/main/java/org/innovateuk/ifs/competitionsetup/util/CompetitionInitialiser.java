@@ -89,7 +89,7 @@ public final class CompetitionInitialiser {
                 GRANT_CLAIM_AMOUNT,
                 OTHER_FUNDING,
                 YOUR_FINANCE,
-                OTHER_FUNDING
+                PREVIOUS_FUNDING
         ));
     }
 

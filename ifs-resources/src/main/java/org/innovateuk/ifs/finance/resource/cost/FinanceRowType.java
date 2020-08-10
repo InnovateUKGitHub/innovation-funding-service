@@ -25,7 +25,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     GRANT_CLAIM_AMOUNT("grant_claim_amount", "Finance"),
     OTHER_FUNDING("other_funding", "Other Funding"),
     VAT("vat", "", COST),
-    PREVIOUS_FUNDING("previous_funding", "Previous Funding");
+    PREVIOUS_FUNDING("previous_funding", "Previous Funding", COST);
 
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE,

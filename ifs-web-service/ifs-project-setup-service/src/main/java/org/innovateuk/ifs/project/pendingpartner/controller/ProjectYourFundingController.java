@@ -5,10 +5,7 @@ import static java.lang.String.format;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -202,7 +199,7 @@ public class ProjectYourFundingController {
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
-        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
+        Map.Entry<String, BaseOtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());

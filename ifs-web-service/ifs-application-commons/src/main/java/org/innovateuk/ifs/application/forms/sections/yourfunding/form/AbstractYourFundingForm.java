@@ -3,9 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.form;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
@@ -14,7 +12,7 @@ public abstract class AbstractYourFundingForm {
 
     private Boolean otherFunding;
 
-    private Map<String, OtherFundingRowForm> otherFundingRows = new LinkedHashMap<>();
+    private Map<String, BaseOtherFundingRowForm> otherFundingRows = Collections.emptyMap();
 
     public Boolean getOtherFunding() {
         return otherFunding;
@@ -24,11 +22,19 @@ public abstract class AbstractYourFundingForm {
         this.otherFunding = otherFunding;
     }
 
-    public Map<String, OtherFundingRowForm> getOtherFundingRows() {
+    public Map<String, BaseOtherFundingRowForm> getOtherFundingRows() {
         return otherFundingRows;
     }
 
-    public void setOtherFundingRows(Map<String, OtherFundingRowForm> otherFundingRows) {
+    public void setOtherFundingRows(Map<String, BaseOtherFundingRowForm> otherFundingRows) {
+        this.otherFundingRows = otherFundingRows;
+    }
+
+    public Map<String, BaseOtherFundingRowForm> getPreviousFundingRows() {
+        return otherFundingRows;
+    }
+
+    public void setPreviousFundingRows(Map<String, BaseOtherFundingRowForm> otherFundingRows) {
         this.otherFundingRows = otherFundingRows;
     }
 
@@ -36,7 +42,7 @@ public abstract class AbstractYourFundingForm {
         return otherFundingRows == null ? BigDecimal.ZERO :
                 otherFundingRows.entrySet().stream()
                         .map(Map.Entry::getValue)
-                        .map(OtherFundingRowForm::getFundingAmount)
+                        .map(BaseOtherFundingRowForm::getFundingAmount)
                         .filter(Objects::nonNull)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

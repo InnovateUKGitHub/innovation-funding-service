@@ -3,10 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundingSaver;
@@ -117,9 +114,11 @@ public class YourFundingController {
                            @PathVariable long applicationId,
                            @PathVariable long sectionId,
                            @PathVariable long organisationId,
-                           @ModelAttribute("form") YourFundingPercentageForm form,
+                           YourFundingPercentageForm form,
                            BindingResult bindingResult,
-                           ValidationHandler validationHandler) {
+                           ValidationHandler validationHandler
+    ) {
+
         return complete(model,
                 user,
                 applicationId,
@@ -258,7 +257,7 @@ public class YourFundingController {
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
-        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
+        Map.Entry<String, BaseOtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());

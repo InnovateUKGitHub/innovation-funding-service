@@ -4,12 +4,10 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundin
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
+import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
@@ -19,7 +17,6 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -42,6 +39,9 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
 
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
+
+    @Autowired
+    private CompetitionRestService competitionRestService;
 
     @Override
     protected FinanceRowRestService getFinanceRowService() {
@@ -71,8 +71,8 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                 grantClaim.setAmount(new BigDecimal(value));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("otherFunding")) {
-                OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
-                OtherFunding otherFunding = otherFundingCategory.getOtherFunding();
+                BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+                BaseOtherFunding otherFunding = otherFundingCategory.getOtherFunding();
                 otherFunding.setOtherPublicFunding(Boolean.parseBoolean(value) ? "Yes" : "No");
                 getFinanceRowService().update(otherFunding).getSuccess();
             } else if (field.startsWith("otherFundingRows")) {
@@ -84,6 +84,33 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                     cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();
                 } else {
                     cost = (OtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
+                }
+
+                switch (rowField) {
+                    case "source":
+                        cost.setFundingSource(value);
+                        break;
+                    case "date":
+                        cost.setSecuredDate(value);
+                        break;
+                    case "fundingAmount":
+                        cost.setFundingAmount(new BigDecimal(value));
+                        break;
+                    default:
+                        throw new IFSRuntimeException(String.format("Auto save other funding field not handled %s", rowField), Collections.emptyList());
+                }
+                getFinanceRowService().update(cost);
+                return Optional.of(cost.getId());
+//                tidy up diplication
+            } else if (field.startsWith("previousFundingRows")) {
+                String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
+                String rowField = field.substring(field.indexOf("].") + 2);
+                PreviousFunding cost;
+
+                if (id.startsWith(UNSAVED_ROW_PREFIX)) {
+                    cost = (PreviousFunding) getFinanceRowService().create(new PreviousFunding(finance.getId())).getSuccess();
+                } else {
+                    cost = (PreviousFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
                 }
 
                 switch (rowField) {

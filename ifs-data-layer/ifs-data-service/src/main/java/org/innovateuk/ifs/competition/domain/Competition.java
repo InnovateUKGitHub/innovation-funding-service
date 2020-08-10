@@ -772,6 +772,13 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isKtp() {
+        return ofNullable(fundingType)
+                .map(type -> FundingType.KTP.equals(type))
+                .orElse(false);
+    }
+
+    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
