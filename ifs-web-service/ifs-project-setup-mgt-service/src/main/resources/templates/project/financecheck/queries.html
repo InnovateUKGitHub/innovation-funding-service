@@ -25,9 +25,11 @@
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <th:block th:each="err : ${nonFormErrors}">
-                        <li th:if="${err.arguments == null or err.arguments.length == 0}" th:text="#{${errMsg}}"></li>
-                        <li th:if="${err.arguments != null and err.arguments.length == 1}" th:text="#{${errMsg}(${err.arguments[0]})}"></li>
-                        <li th:if="${err.arguments != null and err.arguments.length == 2}" th:text="#{${errMsg}(${err.arguments[0]},${err.arguments[1]})}"></li>
+                        <th:block th:each="errMsg, iterStat : ${err.codes}">
+                            <li th:if="${err.arguments == null or err.arguments.length == 0}" th:text="#{${errMsg}}"></li>
+                            <li th:if="${err.arguments != null and err.arguments.length == 1}" th:text="#{${errMsg}(${err.arguments[0]})}"></li>
+                            <li th:if="${err.arguments != null and err.arguments.length == 2}" th:text="#{${errMsg}(${err.arguments[0]},${err.arguments[1]})}"></li>
+                        </th:block>
                     </th:block>
                 </ul>
             </div>

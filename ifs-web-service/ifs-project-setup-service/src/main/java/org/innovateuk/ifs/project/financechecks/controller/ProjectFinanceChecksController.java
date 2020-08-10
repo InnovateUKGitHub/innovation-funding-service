@@ -240,12 +240,14 @@ public class ProjectFinanceChecksController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
+
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-            if (result.isSuccess()) {
-                attachments.add(result.getSuccess().id);
+            result.ifSuccessful(uploadedAttachment -> {
+                attachments.add(uploadedAttachment.id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
-            }
+            });
+
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
             return result;
