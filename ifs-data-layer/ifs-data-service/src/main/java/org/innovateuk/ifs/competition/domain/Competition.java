@@ -778,15 +778,19 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public boolean isLoan() {
-        return FundingType.LOAN.equals(fundingType);
+        return FundingType.LOAN == fundingType;
     }
 
     public boolean isGrant() {
-        return FundingType.GRANT.equals(fundingType);
+        return FundingType.GRANT == fundingType;
     }
 
     public boolean isProcurement() {
-        return FundingType.PROCUREMENT.equals(fundingType);
+        return FundingType.PROCUREMENT == fundingType;
+    }
+
+    public boolean isKtp() {
+        return FundingType.KTP == fundingType;
     }
 
     public void releaseFeedback(ZonedDateTime date) {

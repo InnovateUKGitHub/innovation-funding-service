@@ -1,3 +1,5 @@
+-- IFS-7806 - include KTA invite type
+
 ALTER TABLE invite
     MODIFY COLUMN type enum('ROLE',
                             'COMPETITION',

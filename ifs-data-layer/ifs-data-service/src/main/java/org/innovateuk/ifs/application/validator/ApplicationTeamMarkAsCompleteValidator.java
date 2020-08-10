@@ -59,7 +59,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
             }
         }
 
-        if (FundingType.KTP == application.getCompetition().getFundingType()) {
+        if (application.getCompetition().isKtp()) {
             ServiceResult<List<ApplicationKtaInviteResource>> ktaInvitesResult = applicationInviteService.getKtaInvitesByApplication(application.getId());
             List<ApplicationKtaInviteResource> ktaInvites = ktaInvitesResult.getSuccess();
             if (ktaInvites.isEmpty()) {
