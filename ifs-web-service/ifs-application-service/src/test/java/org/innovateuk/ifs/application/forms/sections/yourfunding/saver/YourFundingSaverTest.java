@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -38,9 +37,6 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
-
-    @Mock
-    private OrganisationRestService organisationRestService;
 
     @Mock
     private ApplicationFinanceRowRestService financeRowRestService;
@@ -76,9 +72,9 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
 
         form.setOtherFunding(true);
 
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId()));
+        BaseOtherFundingRowForm<OtherFunding> emptyRow = new BaseOtherFundingRowForm<>(new OtherFunding(null, null, "emptySource", "emptyDate", new BigDecimal(123), finance.getId()));
 
-        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321), finance.getId()));
+        BaseOtherFundingRowForm<OtherFunding> existingRow = new BaseOtherFundingRowForm<>(new OtherFunding(20L, null, "existingSource", "existingDate", new BigDecimal(321), finance.getId()));
 
         form.setOtherFundingRows(asMap(
                 generateUnsavedRowId(), emptyRow,
@@ -102,12 +98,11 @@ public class YourFundingSaverTest extends BaseServiceUnitTest<YourFundingSaver> 
         verify(financeRowRestService).update(updatedEmptyRow);
     }
 
-
     @Test
     public void removeOtherFundingRowForm() {
         String rowId = "12";
         YourFundingPercentageForm form = new YourFundingPercentageForm();
-        form.setOtherFundingRows(asMap(rowId, new OtherFundingRowForm()));
+        form.setOtherFundingRows(asMap(rowId, new BaseOtherFundingRowForm<OtherFunding>(FinanceRowType.OTHER_FUNDING)));
 
         service.removeOtherFundingRowForm(form, rowId);
 

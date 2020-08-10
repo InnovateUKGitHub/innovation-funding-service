@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
+import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ public abstract class AbstractYourFundingSaver {
     protected abstract FinanceRowRestService getFinanceRowService();
 
     public void addOtherFundingRow(AbstractYourFundingForm form) {
-        OtherFundingRowForm rowForm = new OtherFundingRowForm();
+        BaseOtherFundingRowForm<OtherFunding> rowForm = new BaseOtherFundingRowForm<>(FinanceRowType.OTHER_FUNDING);
         form.getOtherFundingRows().put(generateUnsavedRowId(), rowForm);
     }
 

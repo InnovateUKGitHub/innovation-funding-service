@@ -33,16 +33,16 @@ public abstract class AbstractYourFundingFormPopulator {
             otherFundingCategory = (PreviousFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
             rows = otherFundingCategory.getCosts().stream().map(cost -> {
                 PreviousFunding previousFunding = (PreviousFunding) cost;
-                return new PreviousFundingRowForm(previousFunding);
+                return new BaseOtherFundingRowForm<>(previousFunding);
             }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            rows.put(generateUnsavedRowId(), new PreviousFundingRowForm());
+            rows.put(generateUnsavedRowId(), new BaseOtherFundingRowForm<>(FinanceRowType.PREVIOUS_FUNDING));
         } else {
             otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
             rows = otherFundingCategory.getCosts().stream().map(cost -> {
                 OtherFunding otherFunding = (OtherFunding) cost;
-                return new OtherFundingRowForm(otherFunding);
+                return new BaseOtherFundingRowForm<>(otherFunding);
             }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-            rows.put(generateUnsavedRowId(), new OtherFundingRowForm());
+            rows.put(generateUnsavedRowId(), new BaseOtherFundingRowForm<>(FinanceRowType.OTHER_FUNDING));
         }
 
         Boolean otherFundingSet = isOtherFundingSet(otherFundingCategory);

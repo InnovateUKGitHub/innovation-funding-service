@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingFormPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.populator.YourFundingViewModelPopulator;
@@ -9,10 +9,10 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.saver.YourFundi
 import org.innovateuk.ifs.application.forms.sections.yourfunding.validator.YourFundingFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
-import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Test;
@@ -237,7 +237,7 @@ public class YourFundingControllerTest extends BaseControllerMockMVCTest<YourFun
     @Test
     public void ajaxAddRow() throws Exception {
         String rowId = "123";
-        OtherFundingRowForm row = new OtherFundingRowForm();
+        BaseOtherFundingRowForm<OtherFunding> row = new BaseOtherFundingRowForm<>(FinanceRowType.OTHER_FUNDING);
         row.setCostId(Long.valueOf(rowId));
 
         doAnswer((invocation) -> {

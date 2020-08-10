@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.validator;
 
-import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -71,8 +70,8 @@ public class YourFundingFormValidatorTest extends BaseServiceUnitTest<YourFundin
         when(competitionApplicationConfigRestService.findOneByCompetitionId(competitionId)).thenReturn(restSuccess(competitionApplicationConfigResource));
 
         form.setOtherFunding(true);
-        OtherFundingRowForm emptyRow = new OtherFundingRowForm(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123), 1L));
-        OtherFundingRowForm existingRow = new OtherFundingRowForm(new OtherFunding(20L, null, null, "InvalidPattern", new BigDecimal("012345678901234567890"), 1L));
+        BaseOtherFundingRowForm<OtherFunding> emptyRow = new BaseOtherFundingRowForm<>(new OtherFunding(null, null, "Valid", "01-2019", new BigDecimal(123), 1L));
+        BaseOtherFundingRowForm<OtherFunding> existingRow = new BaseOtherFundingRowForm<>(new OtherFunding(20L, null, null, "InvalidPattern", new BigDecimal("012345678901234567890"), 1L));
 
         form.setOtherFundingRows(asMap(
                 unsavedId, emptyRow,
