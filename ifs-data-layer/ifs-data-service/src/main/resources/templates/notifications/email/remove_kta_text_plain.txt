@@ -4,7 +4,7 @@ Dear ${notificationTarget.name},
 
 You have been removed as the Knowledge Transfer Adviser for the Innovation Funding Service application:
 
-${applicationId?c}:${applicationId?c}
+${applicationId}:${applicationId}
 
 Yours sincerely
 
