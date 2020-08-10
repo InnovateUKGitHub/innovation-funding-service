@@ -258,9 +258,8 @@ public class CompetitionSetupApplicationController {
                                          @PathVariable long questionId,
                                          UserResource loggedInUser,
                                          Model model) {
-        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult, questionId);
-
         CompetitionResource competitionResource = competitionRestService.getCompetitionById(competitionId).getSuccess();
+        competitionSetupApplicationQuestionValidator.validate(competitionSetupForm, bindingResult, questionId, competitionResource);
 
         if (!competitionSetupService.hasInitialDetailsBeenPreviouslySubmitted(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
@@ -453,7 +452,7 @@ public class CompetitionSetupApplicationController {
                 subsection, questionId);
         GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competition, loggedInUser, section);
 
-        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename);
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable, filename, !competition.isKTP());
     }
 
     private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {
