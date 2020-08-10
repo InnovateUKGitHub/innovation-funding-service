@@ -101,10 +101,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Transactional
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
-        return validateInvite(invitedUser, role)
-                .andOnSuccess(() -> Role.KNOWLEDGE_TRANSFER_ADVISOR.equals(role)
-                        ? saveKtaUserInvite(invitedUser, role)
-                        : saveInternalUserInvite(invitedUser, role));
+        return validateInvite(invitedUser, role);
     }
 
     private ServiceResult<Void> saveInternalUserInvite(UserResource invitedUser, Role role) {
@@ -131,7 +128,10 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
-        return serviceSuccess();
+
+        return Role.KNOWLEDGE_TRANSFER_ADVISOR.equals(role)
+                ? saveKtaUserInvite(invitedUser, role)
+                : saveInternalUserInvite(invitedUser, role);
     }
 
     private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
