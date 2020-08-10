@@ -98,4 +98,8 @@ public class ProjectFinancePartnerFundingLevelViewModel {
         }
         return text;
     }
+
+    public boolean isTotalGrantZero() {
+        return totalGrant.equals(BigDecimal.ZERO);
+    }
 }

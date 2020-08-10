@@ -105,6 +105,9 @@ Create asciidoc
 
     ./gradlewe clean asciidoctorOnly
     
+Publish openshift configuration files to nexus (not to be used to publish from local machine), this task will publish all files under "os-files" folder.
+
+     ./gradlew publish -Pifs.version=<version> -Pnexus_username=<your_nexus_userName> -Pnexus_password=<your_nexus_password> 
 
 ## Pull docker images from nexus
 Instead of building individual service docker images locally, we can pull docker images from nexus and build/deploy services faster
