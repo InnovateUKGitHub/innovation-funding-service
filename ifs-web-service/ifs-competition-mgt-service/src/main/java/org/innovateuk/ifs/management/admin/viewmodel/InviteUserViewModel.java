@@ -4,13 +4,20 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.management.admin.form.InviteUserView;
+import org.innovateuk.ifs.user.resource.Role;
+
+import java.util.Set;
 
 public class InviteUserViewModel {
 
     private InviteUserView type;
 
-    public InviteUserViewModel(InviteUserView type) {
+    private Set<Role> roles;
+
+    public InviteUserViewModel(InviteUserView type, Set<Role> roles)
+    {
         this.type = type;
+        this.roles = roles;
     }
 
     public InviteUserView getType() {
@@ -25,6 +32,14 @@ public class InviteUserViewModel {
         return type.getName();
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public boolean isInternal() {
         return type.equals(InviteUserView.INTERNAL_USER);
     }
@@ -37,6 +52,7 @@ public class InviteUserViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(type)
+                .append(roles)
                 .toHashCode();
     }
 
@@ -50,6 +66,7 @@ public class InviteUserViewModel {
 
         return new EqualsBuilder()
                 .append(type, this.type)
+                .append(roles, this.roles)
                 .isEquals();
     }
 
@@ -57,6 +74,7 @@ public class InviteUserViewModel {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("type", type)
+                .append("roles", roles)
                 .toString();
     }
 }

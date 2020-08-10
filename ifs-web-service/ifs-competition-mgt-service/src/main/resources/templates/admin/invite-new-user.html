@@ -84,7 +84,7 @@
                 <label class="govuk-label govuk-label--s" for="role">
                     Role
                 </label>
-                <th:block th:if="${model.isInternal()}">
+                <th:block th:if="${#lists.size(model.roles) > 1}">
                     <th:block th:if="${#fields.hasErrors('role')}">
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('role')}" th:text="${err}"></span>
                     </th:block>
@@ -94,12 +94,12 @@
                             th:field="*{role}"
                             required="required"
                             data-required-errormessage="Please select a role">
-                        <option th:each="adminRole : ${T(org.innovateuk.ifs.user.resource.Role).internalRoles()}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
+                        <option th:each="adminRole : ${model.roles}" th:value="${adminRole}" th:text="${adminRole.displayName}"></option>
                     </select>
                 </th:block>
-                <th:block th:if="${model.isExternal()}">
-                    <input type="hidden" name="role" th:value="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR}" />
-                    <label class="govuk-label" for="role" th:text="${T(org.innovateuk.ifs.user.resource.Role).KNOWLEDGE_TRANSFER_ADVISOR.displayName}">KTA</label>
+                <th:block th:if="${#lists.size(model.roles) == 1}">
+                    <input type="hidden" name="role" th:value="${model.roles[0]}" />
+                    <label class="govuk-label" for="role" th:text="${model.roles[0].displayName}">KTA</label>
                 </th:block>
             </div>
             <div class="govuk-form-group govuk-!-margin-top-6">

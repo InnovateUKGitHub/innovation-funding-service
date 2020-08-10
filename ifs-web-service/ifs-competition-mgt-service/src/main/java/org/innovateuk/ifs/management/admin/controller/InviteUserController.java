@@ -9,6 +9,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.management.admin.viewmodel.InviteUserViewModel;
 import org.innovateuk.ifs.management.invite.service.InviteUserService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.groups.Default;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
@@ -43,18 +45,18 @@ public class InviteUserController {
     public String inviteNewUser(Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER);
+        return doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles());
     }
 
     @GetMapping("/invite-external-user")
     public String inviteNewExternalUser(Model model) {
         InviteUserForm form = new InviteUserForm();
 
-        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER);
+        return doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
     }
 
-    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type) {
-        InviteUserViewModel viewModel = new InviteUserViewModel(type);
+    private static String doViewInviteNewUser(Model model, InviteUserForm form, InviteUserView type, Set<Role> roles) {
+        InviteUserViewModel viewModel = new InviteUserViewModel(type, roles);
 
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute(Model_ATTR_NAME, viewModel);
@@ -66,7 +68,7 @@ public class InviteUserController {
     public String saveUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.INTERNAL_USER, Role.internalRoles());
 
         return saveInvite(form, validationHandler, failureView);
     }
@@ -88,7 +90,7 @@ public class InviteUserController {
     public String saveExternalUserInvite(Model model, @Validated({Default.class, Primary.class}) @ModelAttribute(FORM_ATTR_NAME) InviteUserForm form,
                                          @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER);
+        Supplier<String> failureView = () -> doViewInviteNewUser(model, form, InviteUserView.EXTERNAL_USER, Role.externalRolesToInvite());
 
         return saveInvite(form, validationHandler, failureView);
     }
