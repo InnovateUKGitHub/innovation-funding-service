@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
@@ -46,8 +45,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 
         Application application = (Application) target;
 
-        ServiceResult<List<InviteOrganisationResource>> invitesResult = applicationInviteService.getInvitesByApplication(application.getId());
-        List<InviteOrganisationResource> invites = invitesResult.getSuccess();
+        List<InviteOrganisationResource> invites = applicationInviteService.getInvitesByApplication(application.getId()).getSuccess();
         for (InviteOrganisationResource organisation : invites) {
             Optional<ApplicationInviteResource> maybeInvite = organisation.getInviteResources()
                     .stream()
@@ -60,16 +58,13 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
         }
 
         if (application.getCompetition().isKtp()) {
-            ServiceResult<List<ApplicationKtaInviteResource>> ktaInvitesResult = applicationInviteService.getKtaInvitesByApplication(application.getId());
-            List<ApplicationKtaInviteResource> ktaInvites = ktaInvitesResult.getSuccess();
+            List<ApplicationKtaInviteResource> ktaInvites = applicationInviteService.getKtaInvitesByApplication(application.getId()).getSuccess();
             if (ktaInvites.isEmpty()) {
                 reject(errors, "validation.kta.missing.invite");
             } else {
-                Optional<ApplicationKtaInviteResource> maybeInvite = ktaInvites.stream().filter(invite -> invite.getStatus() == InviteStatus.OPENED).findFirst();
-                if (!maybeInvite.isPresent()) {
+                if (ktaInvites.stream().anyMatch(invite -> invite.getStatus() != InviteStatus.OPENED)) {
                     LOG.debug("MarkAsComplete kta validation message");
                     reject(errors, "validation.kta.pending.invite");
-
                 }
             }
         }
