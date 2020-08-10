@@ -377,7 +377,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findById(1L).get();
         Competition competition = application.getCompetition();
 
-        int expectedTotalScorePossible = competition.getQuestions().stream()
+        Integer expectedTotalScorePossible = competition.getQuestions().stream()
                 .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> formInput.getActive() && ASSESSOR_SCORE == formInput.getType()))
                 .mapToInt(question -> ofNullable(question.getAssessorMaximumScore()).orElse(0))
                 .sum();
@@ -389,7 +389,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .build());
 
         AssessmentTotalScoreResource assessmentTotalScoreBefore = repository.getTotalScore(assessment.getId());
-        assertEquals(0, assessmentTotalScoreBefore.getTotalScoreGiven());
+        assertEquals(Integer.valueOf(0), assessmentTotalScoreBefore.getTotalScoreGiven());
         assertEquals(expectedTotalScorePossible, assessmentTotalScoreBefore.getTotalScorePossible());
 
         // Create form input responses for each of the score form inputs, tracking the total score given
@@ -413,7 +413,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         );
 
         AssessmentTotalScoreResource assessmentTotalScoreAfter = repository.getTotalScore(assessment.getId());
-        assertEquals(scoreGivenAccumulator.intValue(), assessmentTotalScoreAfter.getTotalScoreGiven());
+        assertEquals(scoreGivenAccumulator, assessmentTotalScoreAfter.getTotalScoreGiven());
         assertEquals(expectedTotalScorePossible, assessmentTotalScoreAfter.getTotalScorePossible());
     }
 
