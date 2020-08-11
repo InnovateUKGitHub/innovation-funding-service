@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -20,7 +19,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean complete;
     private final boolean displayActions;
     private final boolean lead;
-    private final FundingType fundingType;
+    private final boolean ktpCompetition;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.competitionName = data.getCompetition().getName();
@@ -43,7 +42,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
                 .map(isAssignedToProcessRole(data.getApplicantProcessRole()))
                 .orElse(false);
         this.displayActions = lead || assignedToUser;
-        this.fundingType = data.getCompetition().getFundingType();
+        this.ktpCompetition = data.getCompetition().isKtp();
     }
 
     private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
@@ -89,11 +88,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         return lead;
     }
 
-    public FundingType getFundingType() {
-        return fundingType;
-    }
-
     public boolean isKtpCompetition() {
-        return FundingType.KTP == fundingType;
+        return ktpCompetition;
     }
 }
