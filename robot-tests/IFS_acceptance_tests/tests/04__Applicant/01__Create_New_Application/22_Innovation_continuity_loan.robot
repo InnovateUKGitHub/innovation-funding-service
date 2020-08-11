@@ -18,6 +18,7 @@ ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplic
 ${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanCompId}/application/${continuityLoanApplicationId}
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/feedback
 ${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity loan from Innovate UK Loans Limited.
+${continuityLoanT&CLink}             Award terms and conditions
 
 
 *** Test Cases ***
@@ -68,13 +69,13 @@ Applicant can confirm t&c's
     Given the user selects the checkbox      agreed
     When the user clicks the button/link     css = button[type="submit"]add
     And the user clicks the button/link      link = Back to application overview
-    Then the user should see the element     jQuery = li:contains("${tandcLink}") .task-status-complete
+    Then the user should see the element     jQuery = li:contains("${continuityLoanT&CLink}") .task-status-complete
 
 Internal user sees correct label for T&C's
     [Documentation]  IFS-7235
     Given Log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${investorApplicationLink}
-    Then the user should see the element     jQuery = button:contains("${tandcLink}")
+    Then the user should see the element     jQuery = button:contains("${continuityLoanT&CLink}")
 
 Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-7235
