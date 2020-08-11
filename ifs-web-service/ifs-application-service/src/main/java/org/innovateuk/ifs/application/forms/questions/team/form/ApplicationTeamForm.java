@@ -18,7 +18,6 @@ public class ApplicationTeamForm {
     private String email;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.kta.email.format}")
-    @Size(max = 254, message = "{validation.kta.email.too.large}")
     private String ktaEmail;
 
     public String getName() {
