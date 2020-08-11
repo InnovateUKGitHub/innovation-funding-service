@@ -153,7 +153,7 @@
                             <p>Each document must be less than 10MB</p>
                         </div>
                     </details>
-                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet</p>
+                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
                     <ul class="govuk-list file-list">
                         <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
                             class="success">
