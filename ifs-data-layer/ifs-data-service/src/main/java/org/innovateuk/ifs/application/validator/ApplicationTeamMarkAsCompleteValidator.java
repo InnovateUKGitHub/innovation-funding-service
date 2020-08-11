@@ -52,7 +52,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
                     .filter(invite -> invite.getStatus() != OPENED)
                     .findFirst();
             if (maybeInvite.isPresent()) {
-                LOG.debug("MarkAsComplete application team validation message for invite organisation: " + organisation.getOrganisationName());
                 reject(errors, "validation.applicationteam.pending.invites", maybeInvite.get().getName(), organisation.getId());
             }
         }
@@ -63,7 +62,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
                 reject(errors, "validation.kta.missing.invite");
             } else {
                 if (ktaInvites.stream().anyMatch(invite -> invite.getStatus() != InviteStatus.OPENED)) {
-                    LOG.debug("MarkAsComplete kta validation message");
                     reject(errors, "validation.kta.pending.invite");
                 }
             }
