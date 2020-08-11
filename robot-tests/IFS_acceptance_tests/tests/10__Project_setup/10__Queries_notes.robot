@@ -66,35 +66,35 @@ Viability and eligibility sections both available
 Project finance user can upload a pdf file and remove it
     [Documentation]    INFUND-4840, IFS-7215
     [Tags]  HappyPath
-    Given the user uploads the file         name = attachment  ${5mb_pdf}
-    Then the user should see the element    jQuery = a:contains("${5mb_pdf}")+ .button-clear:contains("Remove")
-    And the user can remove an attachment   ${5mb_pdf}
+    Given the user uploads the file           name = attachment  ${5mb_pdf}
+    Then the user should see the element      jQuery = a:contains("${5mb_pdf}")+ .button-clear:contains("Remove")
+    And the user can remove an attachment     ${5mb_pdf}
 
 Project finance user can upload a spreadsheet(.ods) file and remove it
     [Documentation]    IFS-7215
     [Tags]  HappyPath
-    Given the user uploads the file         name = attachment  ${ods_file}
-    Then the user should see the element    jQuery = a:contains("${ods_file}")+ .button-clear:contains("Remove")
-    And the user can remove an attachment   ${ods_file}
+    Given the user uploads the file           name = attachment  ${ods_file}
+    Then the user should see the element      jQuery = a:contains("${ods_file}")+ .button-clear:contains("Remove")
+    And the user can remove an attachment     ${ods_file}
 
 Project finance user can upload a text document(.odt) file and remove it
     [Documentation]    IFS-7215
     [Tags]  HappyPath
-    Given the user uploads the file         name = attachment  ${valid_odt}
-    Then the user should see the element    jQuery = a:contains("${valid_odt}")+ .button-clear:contains("Remove")
-    And the user can remove an attachment   ${valid_odt}
+    Given the user uploads the file           name = attachment  ${valid_odt}
+    Then the user should see the element      jQuery = a:contains("${valid_odt}")+ .button-clear:contains("Remove")
+    And the user can remove an attachment     ${valid_odt}
 
 Project finance user cannot upload a document type that is not allowed
     [Documentation]    IFS-7215
     [Tags]  HappyPath
-    Given the user uploads the file          name = attachment  ${text_file}
-    Then the user should see a field error   ${finance_query_notes_filetype_error}
-    And the user clicks the button/link      jQuery = button:contains("Remove")
+    Given the user uploads the file            name = attachment  ${text_file}
+    Then the user should see a field error     ${finance_query_notes_filetype_error}
+    And the user clicks the button/link        jQuery = button:contains("Remove")
 
 Project finance user can upload more than one file and remove them
     [Documentation]    INFUND-4840, IFS-7215
     [Tags]
-    Given the user uploads multiple file types as attachment and removes them  ${valid_pdf}  ${ods_file}  ${valid_odt}
+    Given the user uploads multiple file types as attachment and removes them    ${valid_pdf}  ${ods_file}  ${valid_odt}
     Then the user should not see an error in the page
 
 Post new query client and server side validations
@@ -166,13 +166,13 @@ Queries show in reverse chronological order
 Applicant - Finance contact can view query and download attachments
     [Documentation]    INFUND-4843 IFS-7215
     [Tags]  HappyPath
-    Given log in as a different user                &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page             ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
-    Then The user clicks the button/link            jQuery = h2:contains("an eligibility query's title")
-    And the user should see the element             jQuery = h2:contains("a viability query's title")
+    Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
+    Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
+    And the user should see the element              jQuery = h2:contains("a viability query's title")
     And the user should see all the attachments
-    And open pdf link                               jQuery = a:contains("${valid_pdf}")
-    And the user is able to download attachments    ${ods_file}  ${valid_odt}
+    And open pdf link                                jQuery = a:contains("${valid_pdf}")
+    And the user is able to download attachments     ${ods_file}  ${valid_odt}
 
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
@@ -192,20 +192,20 @@ Applicant - Query response can be posted
     And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") small:contains("${today}")
     And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documentation")
 
-Applicant - Respond to older query and cannot upload any file other than allowed file formats(.xls, .pdf and .docx) to the response
+Applicant - Respond to older query and cannot upload any file other than allowed file types to the response
     [Documentation]    IFS-7215
     [Tags]
-    Given the user clicks the button/link        jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
-    When the user uploads the file               name = attachment    ${text_file}
-    Then the user should see a field error       ${applicant_query_response_filetype_error}
-    And the user clicks the button/link          jQuery = button:contains("Remove")
+    Given the user clicks the button/link      jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
+    When the user uploads the file             name = attachment    ${text_file}
+    Then the user should see a field error     ${applicant_query_response_filetype_error}
+    And the user clicks the button/link        jQuery = button:contains("Remove")
 
 Applicant - Respond to older query and upload files(.xls, .pdf and .docx) to the response
     [Documentation]    INFUND-4843, IFS-7215
     [Tags]
-    Given the user enters a query response details  ${valid_pdf}  ${valid_docx}  ${excel_file}
-    When the user clicks the button/link            jQuery = .govuk-button:contains("Post response")
-    And the user should see the element             jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
+    Given the user enters a query response details    ${valid_pdf}  ${valid_docx}  ${excel_file}
+    When the user clicks the button/link              jQuery = .govuk-button:contains("Post response")
+    And the user should see the element               jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
 
 Applicant - Repond to Viability query
     [Documentation]  IFS-2746
@@ -234,8 +234,8 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
 Project finance user can view the response and uploaded files
     [Documentation]    INFUND-4843  IFS-2716 IFS-7215
     [Tags]
-    [Setup]  log in as a different user   &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    [Setup]  log in as a different user                      &{internal_finance_credentials}
+    Given the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the project finance user view the query details
 
 Project finance user can continue the conversation
