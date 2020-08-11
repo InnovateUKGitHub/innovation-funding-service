@@ -444,7 +444,7 @@ the user should see all the attachments
 the user can remove an attachment
     [Arguments]  ${attachment_file}
     the user clicks the button/link        name = removeAttachment
-    the user should not see the element    jQuery = h3:contains("Supporting documentation") + ul:contains("${attachment_file}") .button-clear:contains("Remove")
+    the user should not see the element    jQuery = h3:contains("Supporting documents") + ul:contains("${attachment_file}") .button-clear:contains("Remove")
     the user should not see an error in the page
 
 the user uploads multiple file types as attachment and removes them

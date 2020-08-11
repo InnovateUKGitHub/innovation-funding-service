@@ -138,7 +138,7 @@
                      data-js-upload-file-input="attachment"
                      data-js-number-of-files="10"
                      data-js-upload-one-at-a-time="">
-                    <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
+                    <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
                     <details class="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">What file types can I upload?</span>
@@ -153,8 +153,7 @@
                             <p>Each document must be less than 10MB</p>
                         </div>
                     </details>
-                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No file currently
-                        uploaded.</p>
+                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet</p>
                     <ul class="govuk-list file-list">
                         <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
                             class="success">
