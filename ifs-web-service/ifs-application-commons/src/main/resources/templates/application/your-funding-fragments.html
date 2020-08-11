@@ -266,6 +266,14 @@
                 Source of funding
             </label>
             <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.source')}" th:text="${err}"/>
+            <input type="hidden"
+                   th:field="*{__${path}__.financeRowType}"
+                   class="govuk-input"
+                   th:id="__${path}__.financeRowType"
+                   th:errorclass="govuk-input--error"
+                   required="required"
+                   maxlength="255"
+                   th:attr="data-required-errormessage=#{validation.finance.funding.financeRowType.blank}"/>
             <input type="text"
                    th:field="*{__${path}__.source}"
                    class="govuk-input"
