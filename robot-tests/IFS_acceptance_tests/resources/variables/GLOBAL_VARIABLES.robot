@@ -221,7 +221,7 @@ ${403_error_message}                               You do not have the necessary
 ${404_error_message}                               Please check the web address or search term you entered for any errors
 ${500_error_message}                               something went wrong
 ${wrong_filetype_validation_error}                 Your upload must be a PDF.
-${finance_query_notes_filetype_error}              Your file must be a PDF or an open source document(.ods or .odt)
+${finance_query_notes_filetype_error}              Your file must be a PDF or an open source document
 ${applicant_query_response_filetype_error}         Your upload must be a PDF, document or a spreadsheet
 ${too_large_5MB_validation_error}                  Please upload a file less than 5MB in size.
 ${too_large_10MB_validation_error}                 Please upload a file less than 10MB in size.

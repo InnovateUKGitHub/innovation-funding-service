@@ -163,16 +163,20 @@ Queries show in reverse chronological order
     Given the user selects the option from the drop-down menu  All  id = querySection
     Then the user should see list of posted queries
 
-Applicant - Finance contact can view query and download attachments
-    [Documentation]    INFUND-4843 IFS-7215
+Applicant - Finance contact can view the query
+    [Documentation]    INFUND-4843
     [Tags]  HappyPath
     Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
     When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
     Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
     And the user should see the element              jQuery = h2:contains("a viability query's title")
-    And the user should see all the attachments
-    And open pdf link                                jQuery = a:contains("${valid_pdf}")
-    And the user is able to download attachments     ${ods_file}  ${valid_odt}
+
+Applicant - Finance Contact can view all the attachments and download them
+    [Documentation]   IFS-7215
+    [Tags]  HappyPath
+    Given the user should see all the attachments
+    And open pdf link                                 jQuery = a:contains("${valid_pdf}")
+    And the user is able to download attachments      ${ods_file}  ${valid_odt}
 
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
@@ -190,7 +194,7 @@ Applicant - Query response can be posted
     Then the user should not see the element  jQuery = .govuk-button:contains("Post response")
     And the user should see the element       jQuery = h2:contains("an eligibility") .section-awaiting
     And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") small:contains("${today}")
-    And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documentation")
+    And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documents")
 
 Applicant - Respond to older query and cannot upload any file other than allowed file types to the response
     [Documentation]    IFS-7215
@@ -203,9 +207,9 @@ Applicant - Respond to older query and cannot upload any file other than allowed
 Applicant - Respond to older query and upload files(.xls, .pdf and .docx) to the response
     [Documentation]    INFUND-4843, IFS-7215
     [Tags]
-    Given the user enters a query response details    ${valid_pdf}  ${valid_docx}  ${excel_file}
-    When the user clicks the button/link              jQuery = .govuk-button:contains("Post response")
-    And the user should see the element               jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
+    Given the user enters a query response details     ${valid_pdf}  ${valid_docx}  ${excel_file}
+    When the user clicks the button/link               jQuery = .govuk-button:contains("Post response")
+    Then the user should see the element               jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
 
 Applicant - Repond to Viability query
     [Documentation]  IFS-2746
@@ -231,12 +235,16 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     When the user clicks the button/link  link = Queries (1)
     Then the user mark the discussion as resolved
 
-Project finance user can view the response and uploaded files
-    [Documentation]    INFUND-4843  IFS-2716 IFS-7215
+Project finance user can view the response and supporting documents
+    [Documentation]   INFUND-4843  IFS-2716 IFS-7215
     [Tags]
     [Setup]  log in as a different user                      &{internal_finance_credentials}
-    Given the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    When the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the project finance user view the query details
+
+Project Finance user can doenload supporting documents
+    [Documentation]   IFS-7215
+    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -303,7 +311,7 @@ Project finance can upload a pdf file to notes
     [Tags]
     Given the user clicks the button/link  jQuery = .govuk-button:contains("Create a new note")
     When the user uploads the file         name = attachment  ${valid_pdf}
-    Then the user should see the element   jQuery = h2:contains("Supporting documentation") + ul:contains("${valid_pdf}")
+    Then the user should see the element   jQuery = h2:contains("Supporting documents") + ul:contains("${valid_pdf}")
 
 Project finance can remove the file from notes
     [Documentation]    INFUND-4845
@@ -583,7 +591,6 @@ the project finance user view the query details
     the user should see the element             jQuery = .govuk-heading-s:contains("Becky") + p:contains("This is some response text")
     the user should see the element             jQuery = a:contains("${valid_docx}")
     the user should see the element             jQuery = a:contains("${excel_file}")
-    the user is able to download attachments    ${valid_docx}  ${excel_file}
 
 the user navigates to notes section
     the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(2)
