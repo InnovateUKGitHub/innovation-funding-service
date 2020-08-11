@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -121,7 +122,8 @@ public class CompetitionSearchServiceImpl extends BaseTransactionalService imple
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
                 projectRepository.countByApplicationCompetitionId(competition.getId()),
-                applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition.getId()).getManageFundingEmailDate()
+                applicationRepository.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competition.getId())
+                        .map(Application::getManageFundingEmailDate).orElse(null)
         );
     }
 
