@@ -121,7 +121,7 @@
                             </div>
                             <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${post.body}"></p>
                             <h3 th:unless="${post.attachments.isEmpty()}" class="govuk-heading-s">Supporting
-                                documentation</h3>
+                                documents</h3>
                             <ul class="govuk-list">
                                 <li th:each="attachment : ${post.attachments}">
                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"

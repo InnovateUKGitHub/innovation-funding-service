@@ -78,7 +78,7 @@
                              data-js-number-of-files="10"
                              data-js-upload-one-at-a-time="">
                             <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
-                            <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No file currently uploaded.</p>
+                            <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
                             <ul class="govuk-list file-list">
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
                                     class="success">
