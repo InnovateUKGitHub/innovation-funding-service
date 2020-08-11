@@ -90,7 +90,7 @@ public class ReviewAndSubmitController {
 
             if (!ableToSubmitApplication(user, application)) {
                 cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-                return  format("redirect:/application/%d/", applicationId);
+                return  format("redirect:/application/%d", applicationId);
             }
 
         redirectAttributes.addFlashAttribute("termsAgreed", true);
@@ -186,7 +186,7 @@ public class ReviewAndSubmitController {
 
         if (!ableToSubmitApplication(user, application)) {
             cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
-            return "redirect:/application/" + applicationId + "/confirm-submit?termsAgreed=true";
+            return  format("redirect:/application/%d", applicationId);
         }
 
         RestResult<Void> updateResult = applicationRestService.updateApplicationState(applicationId, SUBMITTED);
@@ -236,7 +236,7 @@ public class ReviewAndSubmitController {
         RestResult<Void> updateResult = applicationRestService.reopenApplication(applicationId);
 
         Supplier<String> failureView = () -> applicationReopen(model, form, bindingResult, validationHandler, applicationId);
-        Supplier<String> successView = () -> format("redirect:/application/%d/", applicationId);
+        Supplier<String> successView = () -> format("redirect:/application/%d", applicationId);
 
         return validationHandler.addAnyErrors(updateResult)
                 .failNowOrSucceedWith(failureView, successView);

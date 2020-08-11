@@ -87,7 +87,7 @@ public class ReviewAndSubmitControllerTest extends BaseControllerMockMVCTest<Rev
 
         mockMvc.perform(post("/application/" + application.getId() + "/confirm-submit")
                 .param("agreeTerms", "yes"))
-                .andExpect(redirectedUrl("/application/1/confirm-submit?termsAgreed=true"));
+                .andExpect(redirectedUrl("/application/1"));
 
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
         verify(applicationRestService, never()).updateApplicationState(any(Long.class), any(ApplicationState.class));
