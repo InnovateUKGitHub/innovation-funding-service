@@ -273,7 +273,7 @@
                                 <p data-md-to-html="" class="govuk-body wysiwyg-styles"
                                    th:text="${post.body}"></p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documents</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
@@ -333,7 +333,7 @@
                                          data-js-upload-file-input="attachment"
                                          data-js-number-of-files="10"
                                          data-js-upload-one-at-a-time="">
-                                        <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
+                                        <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
                                         <details class="govuk-details">
                                             <summary class="govuk-details__summary">
                                                 <span class="govuk-details__summary-text">What file types can I upload?</span>
@@ -425,7 +425,7 @@
                                 <p data-md-to-html="" class="govuk-body wysiwyg-styles"
                                    th:text="${post.body}"></p>
                                 <th:block th:unless="${post.attachments.isEmpty()}">
-                                    <h3 class="govuk-heading-s">Supporting documentation</h3>
+                                    <h3 class="govuk-heading-s">Supporting documents</h3>
                                     <ul class="govuk-list">
                                         <li th:each="attachment : ${post.attachments}">
                                             <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
@@ -485,7 +485,7 @@
                                          data-js-upload-file-input="attachment"
                                          data-js-number-of-files="10"
                                          data-js-upload-one-at-a-time="">
-                                        <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
+                                        <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
                                         <details class="govuk-details">
                                             <summary class="govuk-details__summary">
                                                 <span class="govuk-details__summary-text">What file types can I upload?</span>
