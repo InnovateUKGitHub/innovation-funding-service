@@ -3,10 +3,7 @@ package org.innovateuk.ifs.finance.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
-import org.innovateuk.ifs.finance.handler.item.GrantClaimPercentageHandler;
-import org.innovateuk.ifs.finance.handler.item.JESCostHandler;
-import org.innovateuk.ifs.finance.handler.item.OtherFundingHandler;
+import org.innovateuk.ifs.finance.handler.item.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
     private OtherFundingHandler otherFundingHandler;
 
     @Autowired
+    private GrantClaimAmountHandler grantClaimAmountHandler;
+
+    @Autowired
     private JESCostHandler jesCostHandler;
 
     @Override
@@ -47,6 +47,7 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
             FinanceRowCostCategory financeRowCostCategory;
             switch (costType) {
                 case FINANCE:
+                case GRANT_CLAIM_AMOUNT:
                     financeRowCostCategory = new ExcludedCostCategory();
                     break;
                 case OTHER_FUNDING:
@@ -85,6 +86,9 @@ public class JesFinanceHandler extends AbstractOrganisationFinanceHandler implem
                 break;
             case OTHER_FUNDING:
                 handler = otherFundingHandler;
+                break;
+            case GRANT_CLAIM_AMOUNT:
+                handler = grantClaimAmountHandler;
                 break;
         }
         if (handler != null) {

@@ -17,7 +17,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -193,7 +192,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     @SafeVarargs
-    public final CompetitionBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
+    public final CompetitionBuilder withFinanceRowTypes(List<FinanceRowType>... financeRowTypes) {
         return withArraySetFieldByReflection("financeRowTypes", financeRowTypes);
     }
 

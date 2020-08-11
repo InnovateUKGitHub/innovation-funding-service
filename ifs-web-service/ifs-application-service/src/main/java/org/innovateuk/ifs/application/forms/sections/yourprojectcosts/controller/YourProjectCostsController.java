@@ -18,9 +18,7 @@ import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -36,10 +34,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 
@@ -96,7 +97,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        UserResource user,
                                        @PathVariable long applicationId,
                                        @PathVariable long sectionId,
-                                       @ModelAttribute("form") YourProjectCostsForm form) {
+                                       @ModelAttribute("form") YourProjectCostsForm form,
+                                       BindingResult bindingResult) {
         saver.save(form, applicationId, user);
         return redirectToYourFinances(applicationId);
     }
@@ -221,35 +223,29 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return node;
     }
 
-    private void recalculateTotals(YourProjectCostsForm form) {
-        form.getLabour().getRows().forEach((id, row) -> {
-            LabourCost cost = row.toCost(null);
-            row.setTotal(cost.getTotal(form.getLabour().getWorkingDaysPerYear()));
-            row.setRate(cost.getRate(form.getLabour().getWorkingDaysPerYear()));
-        });
-        recalculateTotal(form.getMaterialRows());
-        recalculateTotal(form.getCapitalUsageRows());
-        recalculateTotal(form.getSubcontractingRows());
-        recalculateTotal(form.getTravelRows());
-        recalculateTotal(form.getOtherRows());
-    }
-
-    private void recalculateTotal(Map<String, ? extends AbstractCostRowForm> rows) {
-        rows.forEach((id, row) -> {
-            FinanceRowItem cost = row.toCost(null);
-            row.setTotal(cost.getTotal());
-        });
-    }
-
     private String redirectToYourFinances(long applicationId) {
         return String.format("redirect:/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
     }
 
     private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
-        recalculateTotals(form);
+        form.recalculateTotals();
+        orderAssociateCosts(form);
         YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE));
         model.addAttribute("model", viewModel);
         return VIEW;
+    }
+
+    private void orderAssociateCosts(YourProjectCostsForm form) {
+        form.setAssociateSalaryCostRows(
+                form.getAssociateSalaryCostRows().entrySet().stream()
+                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
+                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
+        );
+        form.setAssociateDevelopmentCostRows(
+                form.getAssociateDevelopmentCostRows().entrySet().stream()
+                        .sorted(Comparator.comparing(entry -> entry.getValue().getRole()))
+                        .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new))
+        );
     }
 
     private long getProcessRoleId(long applicationId, long userId) {

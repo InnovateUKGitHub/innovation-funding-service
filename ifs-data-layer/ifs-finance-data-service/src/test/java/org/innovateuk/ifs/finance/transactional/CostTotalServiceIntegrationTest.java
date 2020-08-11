@@ -50,7 +50,7 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
                 .isEqualToComparingOnlyGivenFields(
                         newCostTotal()
                                 .withFinanceId(costTotalResource.getFinanceId())
-                                .withName(costTotalResource.getFinanceRowType().getName())
+                                .withName(costTotalResource.getFinanceRowType().getDisplayName())
                                 .withType(costTotalResource.getFinanceType().name())
                                 .withTotal(costTotalResource.getTotal())
                                 .build()
@@ -85,8 +85,8 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
                         newCostTotal()
                                 .withFinanceId(financeId)
                                 .withName(
-                                        costTotalResource1.getFinanceRowType().getName(),
-                                        costTotalResource2.getFinanceRowType().getName()
+                                        costTotalResource1.getFinanceRowType().getDisplayName(),
+                                        costTotalResource2.getFinanceRowType().getDisplayName()
                                 )
                                 .withType(
                                         costTotalResource1.getFinanceType().name(),

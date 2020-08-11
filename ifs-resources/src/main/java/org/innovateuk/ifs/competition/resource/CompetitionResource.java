@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
@@ -112,7 +113,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private boolean nonFinanceType;
     private CompetitionCompletionStage completionStage;
     private FundingType fundingType;
-    private Set<FinanceRowType> financeRowTypes;
+    private List<FinanceRowType> financeRowTypes;
     private FileEntryResource competitionTerms;
     private boolean hasAssessmentStage;
     private CovidType covidType;
@@ -210,11 +211,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
         this.projectSetupStages = projectSetupStages;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
+    public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
     }
 
-    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
+    public void setFinanceRowTypes(List<FinanceRowType> financeRowTypes) {
         this.financeRowTypes = financeRowTypes;
     }
 
