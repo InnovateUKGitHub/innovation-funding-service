@@ -22,8 +22,9 @@ Resource          ../../resources/common/Assessor_Commons.robot
 *** Variables ***
 ${applicationClosedAfterCompetitionClosed}     Competition not submitted before the deadline app
 ${closedCompetitionName}                       Competition not submitted before the deadline
-${closedCompetitionID}                         ${competition_ids['${closedCompetitionName}']
-
+${closedCompetitionID}                         ${competition_ids['${closedCompetitionName}']}
+${applicationNotEnteredCompetition}            This application has not been entered into the competition
+${applicationNotSubmitted}                     Application not sbmitted
 
 *** Test Cases ***
 Competition dashboard
@@ -56,18 +57,9 @@ Notify Assessors
 
 the user should be redirected to application summary page on click submit application seconds late to competition is close.
     [Documentation]  IFS-7479
-    Given log in as a different user                                                     &{lead_applicant_credentials}
-    When the user clicks the button/link                                                 link = ${applicationClosedAfterCompetitionClosed}
-    And the user clicks the button/link                                                  id = application-overview-submit-cta
-    And Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}
-    And the user clicks the button/link                                                  id = submit-application-form
-    Then the user should see the element                                                 jQuery = h2:contains("Application not sbmitted")
-    And the user should see the element                                                  jQuery = p:contains("This application has not been entered into the competition")
-    And the user should not see the element                                              id = submit-application-form
-
-
-
-
+    Given log in as a different user                                                   &{lead_applicant_credentials}
+    When the user submitted application 1 second late to the competition is closed
+    Then the user should see application is not submitted messages
 
 *** Keywords ***
 Custom suite setup
@@ -115,3 +107,14 @@ Update the competition submission date to 1 second after to the current time
     [Arguments]  ${competitionID}
     Execute sql string  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second)  WHERE `type` = 'SUBMISSION_DATE' AND `competition_id` = ${competitionID}";
     sleep    1s
+
+the user should see application is not submitted messages
+    the user should see the element         jQuery = h2:contains("${applicationNotSubmitted}")
+    the user should see the element         jQuery = p:contains("${applicationNotEnteredCompetition}")
+    the user should not see the element     id = submit-application-form
+
+the user submitted application 1 second late to the competition is closed
+    the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
+    the user clicks the button/link                                                  id = application-overview-submit-cta
+    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}
+    the user clicks the button/link                                                  id = submit-application-form
