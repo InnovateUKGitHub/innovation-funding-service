@@ -65,7 +65,7 @@ Partner applicant is able to see correct T&C's
     [Setup]  the lead invites already registered user    ${existing_lead_ktp_email}  ${continuityLoanCompName}
     Given logging in and error checking      &{troy_ward_crendentials}
     When the user clicks the button/link     id = save-organisation-button
-    And the user selects the radio button    selectedOrganisationId   ${organisationWardId} 
+    And the user selects the radio button    selectedOrganisationId   ${organisationWardId}
     And the user clicks the button/link      link = ${applicationT&CLink}
     Then the user should see the element     jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
     And the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sTitle}")
