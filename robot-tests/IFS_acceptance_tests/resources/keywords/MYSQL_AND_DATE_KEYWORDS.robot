@@ -274,5 +274,3 @@ User gets competition config id for max funding
 User sets a max funding level for a competition
     [Arguments]     ${id}  ${max_funding}
     execute sql string  UPDATE `${database_name}`.`competition_application_config` SET `maximum_funding_sought`='${max_funding}' WHERE `id`='${id}';
-
-Update the submission date to one second late be

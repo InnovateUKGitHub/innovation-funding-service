@@ -21,10 +21,10 @@ Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${applicationClosedAfterCompetitionClosed}     Competition not submitted before the deadline app
-${closedCompetitionName}                       Competition not submitted before the deadline
-${closedCompetitionID}                         ${competition_ids['${closedCompetitionName}']}
+${applicationNotSubmittedCompetitionName}      Competition not submitted before the deadline
+${closedCompetitionID}                         ${competition_ids['${applicationNotSubmittedCompetitionName}']}
 ${applicationNotEnteredCompetition}            This application has not been entered into the competition
-${applicationNotSubmitted}                     Application not sbmitted
+${applicationNotSubmitted}                     Application not submitted
 
 *** Test Cases ***
 Competition dashboard
@@ -55,10 +55,10 @@ Notify Assessors
     Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
 
-the user should be redirected to application summary page on click submit application seconds late to competition is close.
+the user should be redirected to application summary page on click submit application seconds late to competition closing time.
     [Documentation]  IFS-7479
     Given log in as a different user                                                   &{lead_applicant_credentials}
-    When the user submitted application 1 second late to the competition is closed
+    When the user submitted application 1 second late to the competition closing time
     Then the user should see application is not submitted messages
 
 *** Keywords ***
@@ -105,16 +105,16 @@ the user should see the milestones for the closed competitions
 
 Update the competition submission date to 1 second after to the current time
     [Arguments]  ${competitionID}
-    Execute sql string  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second)  WHERE `type` = 'SUBMISSION_DATE' AND `competition_id` = ${competitionID}";
-    sleep    1s
+     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second) WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
+     SLEEP  1s
 
 the user should see application is not submitted messages
     the user should see the element         jQuery = h2:contains("${applicationNotSubmitted}")
     the user should see the element         jQuery = p:contains("${applicationNotEnteredCompetition}")
     the user should not see the element     id = submit-application-form
 
-the user submitted application 1 second late to the competition is closed
+the user submitted application 1 second late to the competition closing time
     the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
     Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}
-    the user clicks the button/link                                                  id = submit-application-form
+    the user clicks the button/link                                                  id = submit-application-button
