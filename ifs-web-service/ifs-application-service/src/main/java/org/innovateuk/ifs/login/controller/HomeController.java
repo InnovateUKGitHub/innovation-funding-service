@@ -116,7 +116,7 @@ public class HomeController {
         }
 
         if (dashboardRoles.size() == 1) {
-            return navigationUtils.getRedirectToDashboardUrlForRole(dashboardRoles.get(0));
+            return navigationUtils.getRedirectToDashboardUrlForRole(dashboardRoles.stream().findAny().get());
         }
 
         List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
