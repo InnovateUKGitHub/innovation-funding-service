@@ -205,7 +205,7 @@ the user marks the Assessed questions as complete
     the user clicks the button/link  link = Competition details
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
-the user marks the KTP Assessed questions as complete
+the user marks the KTP Assessed questions as complete with no assessment score or feedback
     the user should not see assessment score or feedback settings in assessment questions
     the assessment questions are marked complete for other programme type competitions
     the user fills in the Finances questions without growth table                             false  true
