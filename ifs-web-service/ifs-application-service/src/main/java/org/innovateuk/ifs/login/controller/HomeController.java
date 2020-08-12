@@ -59,11 +59,15 @@ public class HomeController {
 
         UserResource user = (UserResource) authentication.getDetails();
 
-        if (user.hasMoreThanOneRoleOf(multiDashboardRoles()) || user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
+        if (userShouldViewDashboardSelection(user)) {
             return "redirect:/dashboard-selection";
         }
 
         return getRedirectUrlForUser(user);
+    }
+
+    private boolean userShouldViewDashboardSelection(UserResource user) {
+        return user.hasMoreThanOneRoleOf(multiDashboardRoles()) || user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR);
     }
 
     @GetMapping("/dashboard-selection")
