@@ -658,9 +658,9 @@ the user provides uk based organisation details
     the user clicks the button/link                    link = ${org}
 
 Existing user starts a new application
-    [Arguments]  ${competitionName}
+    [Arguments]  ${competitionName}   ${organisationID}
     the user select the competition and starts application     ${competitionName}
     the user selects the radio button                          createNewApplication  true
     the user clicks the button/link                            jQuery = button:contains("Continue")
-    the user selects the radio button                          selectedOrganisationId  ${EMPIRE_LTD_ID}
+    the user selects the radio button                          selectedOrganisationId  ${organisationID}
     the user clicks the button/link                            id = save-organisation-button

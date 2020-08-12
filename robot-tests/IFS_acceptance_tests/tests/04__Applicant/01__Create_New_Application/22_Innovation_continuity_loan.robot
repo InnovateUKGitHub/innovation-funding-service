@@ -48,7 +48,7 @@ Lead applicant is able to see correct T&C's
     [Documentation]  IFS-8002
     [Setup]  Update the competition with innovation continuity loan T&C's     ${continuityLoanCompId}
     Given Log in as a different user               &{lead_applicant_credentials}
-    And Existing user starts a new application     ${continuityLoanCompName}
+    And Existing user starts a new application     ${continuityLoanCompName}  ${EMPIRE_LTD_ID}
     When the user clicks the button/link           link = ${applicationT&CLink}
     Then the user should see the element           jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
     And the user should see the element            jQuery = h1:contains("${continuityLoanT&C'sTitle}")

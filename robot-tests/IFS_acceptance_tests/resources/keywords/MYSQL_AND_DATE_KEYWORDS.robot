@@ -24,7 +24,6 @@ update milestone to tomorrow
     execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${tomorrow}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
     reload page
 
-
 the calculation of the remaining days should be correct
     [Arguments]    ${END_DATE}    ${COMPETITION_ID}
     ${GET_TIME}=    get time    hour    UTC
