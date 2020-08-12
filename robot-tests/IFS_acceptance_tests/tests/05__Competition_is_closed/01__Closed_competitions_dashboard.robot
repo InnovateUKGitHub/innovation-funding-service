@@ -10,11 +10,20 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
+...
+...               IFS-7479 ISE when application is submitted less than a second late to competition close
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom Suite teardown
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
+
+*** Variables ***
+${applicationClosedAfterCompetitionClosed}     Competition not submitted before the deadline app
+${closedCompetitionName}                       Competition not submitted before the deadline
+${closedCompetitionID}                         ${competition_ids['${closedCompetitionName}']
+
 
 *** Test Cases ***
 Competition dashboard
@@ -44,6 +53,21 @@ Notify Assessors
     Given The user clicks the button/link            jQuery = .govuk-button:contains("Notify assessors")
     Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
+
+the user should be redirected to application summary page on click submit application seconds late to competition is close.
+    [Documentation]  IFS-7479
+    Given log in as a different user                                                     &{lead_applicant_credentials}
+    When the user clicks the button/link                                                 link = ${applicationClosedAfterCompetitionClosed}
+    And the user clicks the button/link                                                  id = application-overview-submit-cta
+    And Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}
+    And the user clicks the button/link                                                  id = submit-application-form
+    Then the user should see the element                                                 jQuery = h2:contains("Application not sbmitted")
+    And the user should see the element                                                  jQuery = p:contains("This application has not been entered into the competition")
+    And the user should not see the element                                              id = submit-application-form
+
+
+
+
 
 *** Keywords ***
 Custom suite setup
@@ -86,3 +110,8 @@ the user should see the milestones for the closed competitions
     the user should see the element    jQuery = button:contains("Notify assessors")
     the user should see the element    jQuery = li:contains("Assessor briefing").done
     the user should see the element    jQuery = li:contains("Assessor accepts").not-done
+
+Update the competition submission date to 1 second after to the current time
+    [Arguments]  ${competitionID}
+    Execute sql string  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second)  WHERE `type` = 'SUBMISSION_DATE' AND `competition_id` = ${competitionID}";
+    sleep    1s
