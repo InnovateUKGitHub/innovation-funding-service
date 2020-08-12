@@ -56,10 +56,10 @@ public class KtaInviteRestServiceImplTest extends BaseRestServiceUnitTest<KtaInv
     @Test
     public void getKtaInvitesByApplication() {
         Long applicationId = 2341L;
-        List<ApplicationKtaInviteResource> expected = newApplicationKtaInviteResource().build(2);
-        String url = inviteKtaRestURL + "/get-kta-invites-by-application-id/" + applicationId;
-        setupGetWithRestResultExpectations(url, applicationKtaInviteResourceListType(), expected, OK);
-        RestResult<List<ApplicationKtaInviteResource>> response = service.getKtaInvitesByApplication(applicationId);
+        ApplicationKtaInviteResource expected = newApplicationKtaInviteResource().build();
+        String url = inviteKtaRestURL + "/get-kta-invite-by-application-id/" + applicationId;
+        setupGetWithRestResultExpectations(url, ApplicationKtaInviteResource.class, expected, OK);
+        RestResult<ApplicationKtaInviteResource> response = service.getKtaInviteByApplication(applicationId);
 
         assertTrue(response.isSuccess());
         assertEquals(expected, response.getSuccess());

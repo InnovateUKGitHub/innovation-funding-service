@@ -1,23 +1,14 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
-
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -28,14 +19,6 @@ public class ApplicationKtaInviteControllerTest extends BaseControllerMockMVCTes
 
     @Mock
     private ApplicationKtaInviteService applicationKtaInviteService;
-
-    @Before
-    public void setUp() {
-       // when(inviteOrganisationRepositoryMock.save(isA(InviteOrganisation.class))).thenReturn(null);
-     //   when(applicationInviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
-     //   when(organisationRepositoryMock.findById(1L)).thenReturn(Optional.of(newOrganisation().build()));
-      //  when(applicationRepositoryMock.findById(1L)).thenReturn(Optional.of(newApplication().build()));
-    }
 
     @Override
     protected ApplicationKtaInviteController supplyControllerUnderTest() {

@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -53,7 +55,7 @@ public class ApplicationKtaInviteServiceImplTest {
         ApplicationKtaInvite otherInvite = newApplicationKtaInvite()
                 .withEmail("testemail2@example.com")
                 .build();
-        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(singletonList(otherInvite));
+        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(Optional.of(otherInvite));
 
         // when
         ServiceResult<Void> result = inviteKtaService.saveKtaInvite(invite);
@@ -70,7 +72,7 @@ public class ApplicationKtaInviteServiceImplTest {
         ApplicationKtaInviteResource invite = newApplicationKtaInviteResource()
                 .withEmail("testemail@example.com")
                 .withApplication(123L).build();
-        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(emptyList());
+        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(Optional.empty());
 
         UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
         given(userService.findByEmail("testemail@example.com")).willReturn(serviceSuccess(user));
@@ -90,7 +92,7 @@ public class ApplicationKtaInviteServiceImplTest {
         ApplicationKtaInviteResource invite = newApplicationKtaInviteResource()
                 .withEmail("testemail@example.com")
                 .withApplication(123L).build();
-        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(emptyList());
+        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(Optional.empty());
 
         UserResource user = newUserResource().withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISOR)).build();
         given(userService.findByEmail("testemail@example.com")).willReturn(serviceSuccess(user));

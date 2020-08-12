@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
@@ -64,11 +63,11 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
         if (application.getCompetition().isKtp() &&
             application.getProcessRoles().stream().noneMatch(pr -> Role.KNOWLEDGE_TRANSFER_ADVISOR == pr.getRole())) {
 
-            List<ApplicationKtaInviteResource> ktaInvites = applicationKtaInviteService.getKtaInvitesByApplication(application.getId()).getSuccess();
-            if (ktaInvites.isEmpty()) {
+            ApplicationKtaInviteResource ktaInvite = applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
+            if (ktaInvite == null) {
                 reject(errors, "validation.kta.missing.invite");
             } else {
-                if (ktaInvites.stream().anyMatch(invite -> invite.getStatus() != InviteStatus.OPENED)) {
+                if (ktaInvite.getStatus() != InviteStatus.OPENED) {
                     reject(errors, "validation.kta.pending.invite");
                 }
             }

@@ -14,9 +14,10 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
@@ -24,9 +25,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+@Service
 public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKtaInvite> implements ApplicationKtaInviteService {
 
     private static final String EDIT_EMAIL_FIELD = "stagedInvite.email";
@@ -50,13 +51,10 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     private ApplicationRepository applicationRepository;
 
     @Override
-    public ServiceResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId) {
+    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId) {
         return serviceSuccess(
-                simpleMap(
-                        applicationKtaInviteRepository.findByApplicationId(applicationId),
-                        applicationKtaInviteMapper::mapToResource
-                )
-        );
+                    applicationKtaInviteMapper.mapToResource(applicationKtaInviteRepository.findByApplicationId(applicationId).orElse(null))
+            );
     }
 
     @Override
@@ -95,8 +93,8 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     }
 
     private ServiceResult<Void> validateKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
-        List<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
-        if (!existing.isEmpty()) {
+        Optional<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
+        if (existing.isPresent()) {
             return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
         }
         ServiceResult<UserResource> userResult = userService.findByEmail(inviteResource.getEmail());

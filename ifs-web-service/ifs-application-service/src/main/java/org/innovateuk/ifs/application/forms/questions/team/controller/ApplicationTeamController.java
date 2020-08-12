@@ -94,9 +94,8 @@ public class ApplicationTeamController {
 
     @PostMapping(params = "resend-kta")
     public String resendKta(@PathVariable long applicationId,
-                         @PathVariable long questionId,
-                            @RequestParam("resend-kta") final long inviteId) {
-        resendKtaInvite(inviteId, applicationId);
+                         @PathVariable long questionId) {
+        resendKtaInvite(applicationId);
         return redirectToApplicationTeam(applicationId, questionId);
     }
 
@@ -178,12 +177,11 @@ public class ApplicationTeamController {
                 .ifPresent(invite -> inviteRestService.resendInvite(invite));
     }
 
-    private void resendKtaInvite(long inviteId, long applicationId){
-        List<ApplicationKtaInviteResource> inviteOrganisationResources = ktaInviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
-        inviteOrganisationResources.stream()
-                .filter(invite -> invite.getId().equals(inviteId))
-                .findFirst()
-                .ifPresent(invite -> ktaInviteRestService.resendKtaInvite(invite));
+    private void resendKtaInvite(long applicationId) {
+        ApplicationKtaInviteResource invite = ktaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
+        if (invite != null) {
+            ktaInviteRestService.resendKtaInvite(invite);
+        }
     }
 
     @PostMapping(params = "add-team-member")

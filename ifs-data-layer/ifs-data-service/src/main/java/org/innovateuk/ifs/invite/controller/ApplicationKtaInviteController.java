@@ -15,9 +15,9 @@ public class ApplicationKtaInviteController {
     @Autowired
     private ApplicationKtaInviteService applicationKtaInviteService;
 
-    @GetMapping("/get-kta-invites-by-application-id/{applicationId}")
-    public RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        return applicationKtaInviteService.getKtaInvitesByApplication(applicationId).toGetResponse();
+    @GetMapping("/get-kta-invite-by-application-id/{applicationId}")
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(@PathVariable("applicationId") Long applicationId) {
+        return applicationKtaInviteService.getKtaInviteByApplication(applicationId).toGetResponse();
     }
 
     @PostMapping("/save-kta-invite")

@@ -5,10 +5,6 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationKtaInviteResourceListType;
-
 @Service
 public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInviteRestService {
 
@@ -21,9 +17,9 @@ public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInvi
     }
 
     @Override
-    public RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId) {
-        String url = KTA_INVITE_REST_URL + "/get-kta-invites-by-application-id/"+ applicationId;
-        return getWithRestResult(url, applicationKtaInviteResourceListType());
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId) {
+        String url = KTA_INVITE_REST_URL + "/get-kta-invite-by-application-id/"+ applicationId;
+        return getWithRestResult(url, ApplicationKtaInviteResource.class);
     }
 
     @Override

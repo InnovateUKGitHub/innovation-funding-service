@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 
@@ -133,13 +134,13 @@ public class ApplicationTeamPopulatorTest {
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
-        when(ktaInviteRestService.getKtaInvitesByApplication(application.getId())).thenReturn(restSuccess(emptyList()));
+        when(ktaInviteRestService.getKtaInviteByApplication(application.getId())).thenReturn(restSuccess(null, HttpStatus.OK));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(collboratorOrganisation, leadOrganisation)));
         when(questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, application.getId())).thenReturn(restSuccess(singletonList(status)));
 
         ApplicationTeamViewModel viewModel = populator.populate(application.getId(), questionId, user);
 
-        assertEquals((Long) application.getId(), viewModel.getApplicationId());
+        assertEquals(application.getId(), viewModel.getApplicationId());
         assertEquals(application.getName(), viewModel.getApplicationName());
         assertEquals((long) user.getId(), viewModel.getLoggedInUserId());
         assertEquals(questionId, viewModel.getQuestionId());

@@ -105,7 +105,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
-        given(applicationKtaInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
+        given(applicationKtaInviteService.getKtaInviteByApplication(application.getId())).willReturn(serviceSuccess(null));
 
         Errors errors = mock(Errors.class);
 
@@ -124,7 +124,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
         ApplicationKtaInviteResource ktaInvite = newApplicationKtaInviteResource().withStatus(InviteStatus.SENT).build();
-        given(applicationKtaInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(singletonList(ktaInvite)));
+        given(applicationKtaInviteService.getKtaInviteByApplication(application.getId())).willReturn(serviceSuccess(ktaInvite));
 
         Errors errors = mock(Errors.class);
 
@@ -143,7 +143,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
         ApplicationKtaInviteResource ktaInvite = newApplicationKtaInviteResource().withStatus(InviteStatus.OPENED).build();
-        given(applicationKtaInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(singletonList(ktaInvite)));
+        given(applicationKtaInviteService.getKtaInviteByApplication(application.getId())).willReturn(serviceSuccess(ktaInvite));
 
         Errors errors = mock(Errors.class);
 

@@ -100,11 +100,9 @@ public class ApplicationTeamPopulator {
 
         sort(organisationViewModels);
 
-        List<ApplicationKtaInviteResource> ktaInvites = ktaInviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
-        ApplicationKtaInviteResource ktaInvite = null;
+        ApplicationKtaInviteResource ktaInvite = ktaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         UserResource ktaUser = null;
-        if (!ktaInvites.isEmpty()) {
-            ktaInvite = ktaInvites.get(0);
+        if (ktaInvite != null) {
             RestResult<UserResource> ktaUserResult = userRestService.findUserByEmail(ktaInvite.getEmail());
             if (ktaUserResult.isSuccess()) {
                 ktaUser = ktaUserResult.getSuccess();
