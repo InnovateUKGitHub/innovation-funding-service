@@ -129,7 +129,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
 
-        return Role.KNOWLEDGE_TRANSFER_ADVISOR.equals(role)
+        return Role.externalRolesToInvite().stream().anyMatch(externalRole -> externalRole == role)
                 ? saveExternalUserInvite(invitedUser, role)
                 : saveInternalUserInvite(invitedUser, role);
     }
