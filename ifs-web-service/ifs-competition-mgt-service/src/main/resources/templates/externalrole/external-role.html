@@ -12,7 +12,7 @@
 <div class="govuk-width-container">
     <th:block th:insert="fragments/layout :: phase-banner"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${userId})},dynamicBackLink=${true}"/>
+              th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${model.userId})},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new external role profile',size='govuk-heading-xl'" />
@@ -34,7 +34,7 @@
 
             <dl class="govuk-list">
                 <dt>Full name</dt>
-                <dd th:text="${userName}"/>
+                <dd th:text="${model.userName}"/>
             </dl>
 
             <div class="govuk-form-group"
@@ -46,7 +46,7 @@
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
                           th:text="${err}"></span>
                 </th:block>
-                <p class="govuk-body" id="email" th:text="${email}">Email address</p>
+                <p class="govuk-body" id="email" th:text="${model.email}">Email address</p>
             </div>
 
             <dl class="govuk-list">
@@ -56,7 +56,7 @@
 
             <p class="govuk-body govuk-!-margin-top-6">
                 <button class="govuk-button" type="submit">Confirm role profile</button>
-                <a th:href="@{/admin/user/{userId}/active(userId=${userId})}"
+                <a th:href="@{/admin/user/{userId}/active(userId=${model.userId})}"
                    class="button-clear">Cancel</a>
             </p>
         </form>

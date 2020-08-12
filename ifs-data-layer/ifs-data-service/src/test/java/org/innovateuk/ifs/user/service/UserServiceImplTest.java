@@ -79,8 +79,7 @@ import static org.innovateuk.ifs.user.builder.RoleProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -165,9 +164,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Override
     protected UserService supplyServiceUnderTest() {
-        UserServiceImpl spendProfileService = new UserServiceImpl();
-        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", WEB_BASE_URL);
-        return spendProfileService;
+        UserServiceImpl userService = new UserServiceImpl();
+        ReflectionTestUtils.setField(userService, "webBaseUrl", WEB_BASE_URL);
+        ReflectionTestUtils.setField(userService, "externalUserEmailDomain", ".test");
+        return userService;
     }
 
     @Test
@@ -751,6 +751,19 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isSuccess());
         assertTrue(user.hasRole(APPLICANT));
+    }
+
+    @Test
+    public void grantRole_invalidEmail() {
+        GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, KNOWLEDGE_TRANSFER_ADVISOR);
+        User user = newUser()
+                .withEmailAddress("test@invalid.com").build();
+        when(userRepositoryMock.findById(grantRoleCommand.getUserId())).thenReturn(Optional.of(user));
+
+        ServiceResult<UserResource> result = service.grantRole(grantRoleCommand);
+
+        assertTrue(result.isFailure());
+        assertFalse(user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR));
     }
 
     @Test

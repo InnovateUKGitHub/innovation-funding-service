@@ -18,11 +18,13 @@ public class ViewUserViewModel {
     private final UserResource user;
     private final UserResource loggedInUser;
     private final List<RoleProfileStatusResource> roleProfiles;
+    private final boolean externalRoleLinkEnabled;
 
-    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles) {
+    public ViewUserViewModel(UserResource user, UserResource loggedInUser, List<RoleProfileStatusResource> roleProfiles, boolean externalRoleLinkEnabled) {
         this.user = user;
         this.loggedInUser = loggedInUser;
         this.roleProfiles = roleProfiles;
+        this.externalRoleLinkEnabled = externalRoleLinkEnabled;
     }
 
     public UserResource getUser() {
@@ -35,6 +37,10 @@ public class ViewUserViewModel {
 
     public boolean isSupport() {
         return loggedInUser.hasRole(Role.SUPPORT);
+    }
+
+    public boolean isExternalRoleLinkEnabled() {
+        return externalRoleLinkEnabled;
     }
 
     public boolean isDisplayAssessorTitle() {

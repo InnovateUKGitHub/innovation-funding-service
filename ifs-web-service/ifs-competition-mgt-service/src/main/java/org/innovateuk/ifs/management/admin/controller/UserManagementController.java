@@ -16,6 +16,7 @@ import org.innovateuk.ifs.management.admin.viewmodel.ConfirmEmailViewModel;
 import org.innovateuk.ifs.management.admin.viewmodel.ViewUserViewModel;
 import org.innovateuk.ifs.management.registration.service.InternalUserService;
 import org.innovateuk.ifs.pagination.PaginationViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,6 +76,9 @@ public class UserManagementController extends AsyncAdaptor {
     @Autowired
     private RoleProfileStatusRestService roleProfileStatusRestService;
 
+    @Value("${ifs.external.role.enabled}")
+    private boolean externalRoleLinkEnabled;
+
     @PreAuthorize("hasAnyAuthority('ifs_administrator', 'support')")
     @SecuredBySpring(value = "UserManagementController.viewUser() method",
             description = "IFS admins and support users can view users.")
@@ -92,7 +97,7 @@ public class UserManagementController extends AsyncAdaptor {
     @GetMapping("/user/{userId}/inactive")
     public String viewInactiveUser(@PathVariable long userId, Model model, UserResource loggedInUser) {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn(user -> {
-            model.addAttribute("model", populateEditUserViewModel(user, loggedInUser));
+            model.addAttribute("model", populateEditUserViewModel(user, loggedInUser, externalRoleLinkEnabled));
             return "admin/inactive-user";
         }).getSuccess();
     }
@@ -221,7 +226,7 @@ public class UserManagementController extends AsyncAdaptor {
     }
 
     private String viewActiveUser(Model model, UserResource user, UserResource loggedInUser) {
-        model.addAttribute("model", populateEditUserViewModel(user, loggedInUser));
+        model.addAttribute("model", populateEditUserViewModel(user, loggedInUser, externalRoleLinkEnabled));
         return "admin/active-user";
     }
 
@@ -235,12 +240,17 @@ public class UserManagementController extends AsyncAdaptor {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    private ViewUserViewModel populateEditUserViewModel(UserResource user, UserResource loggedInUser) {
+    private ViewUserViewModel populateEditUserViewModel(UserResource user, UserResource loggedInUser, boolean externalRoleLinkEnabled) {
         return new ViewUserViewModel(user,
                 loggedInUser,
                 roleProfileStatusRestService.findByUserId(user.getId())
                         .getOptionalSuccessObject()
-                        .orElse(emptyList()));
+                        .orElse(emptyList()),
+                isExternalRoleLinkEnabled(externalRoleLinkEnabled, user));
+    }
+
+    private boolean isExternalRoleLinkEnabled(boolean externalRoleLinkEnabled, UserResource userResource) {
+        return externalRoleLinkEnabled && !userResource.getRoles().containsAll(Role.inviteExternalRoles());
     }
 
     private String redirectToActiveUsersTab() {
@@ -261,10 +271,10 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @GetMapping("/assessors/available")
     public String viewAvailableAssessors(Model model,
-                                      UserResource user,
-                                      @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
-                                      @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                      @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+                                         UserResource user,
+                                         @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                                         @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                         @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
         return viewAssessors(model, "available", filterForm.getFilter(), page, size);
     }
 
@@ -274,10 +284,10 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @GetMapping("/assessors/unavailable")
     public String viewUnavailableAssessors(Model model,
-                                         UserResource user,
-                                         @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
-                                         @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                         @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+                                           UserResource user,
+                                           @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                                           @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                           @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
         return viewAssessors(model, "unavailable", filterForm.getFilter(), page, size);
     }
 
@@ -287,10 +297,10 @@ public class UserManagementController extends AsyncAdaptor {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @GetMapping("/assessors/disabled")
     public String viewDisabledAssessors(Model model,
-                                         UserResource user,
-                                         @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
-                                         @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
-                                         @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
+                                        UserResource user,
+                                        @ModelAttribute(FORM_ATTR_NAME) UserManagementFilterForm filterForm,
+                                        @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                        @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size) {
         return viewAssessors(model, "disabled", filterForm.getFilter(), page, size);
     }
 

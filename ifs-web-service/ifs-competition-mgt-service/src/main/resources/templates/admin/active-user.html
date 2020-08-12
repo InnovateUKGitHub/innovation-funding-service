@@ -147,7 +147,7 @@
                 </div>
             </th:block>
 
-            <p th:if="${externalRoleLinkEnabled}" class="govuk-body">
+            <p th:if="${model.externalRoleLinkEnabled}" class="govuk-body">
                 <a th:href="@{/admin/user/{userId}/external-role(userId=${model.user.id})}">Add a new external role profile</a>
             </p>
 
