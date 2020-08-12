@@ -8,7 +8,8 @@ public enum FundingType {
     INVESTOR_PARTNERSHIPS("Investor Partnerships", "Investor Partnerships"),
     KTP("Knowledge Transfer Partnership (KTP)", "Knowledge Transfer Partnership (KTP)"),
     LOAN("Loan", "Loans"),
-    PROCUREMENT("Procurement", "Procurement");
+    PROCUREMENT("Procurement", "Procurement"),
+    SBRI("SBRI", "SBRI");
 
     private final String displayName;
     private final String defaultTermsName;

@@ -209,6 +209,17 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                         andOnSuccessReturnVoid());
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> removeAdditionalContractFileEntry(Long projectId) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateProjectIsActive(project).
+                        andOnSuccess(() -> removeAdditionalContractFileFromProject(project)).
+                        andOnSuccess(fileEntry -> fileService.deleteFileIgnoreNotFound(fileEntry.getId())).
+                        andOnSuccessReturnVoid());
+    }
+
+
     private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
         return getCurrentlyLoggedInUser().andOnSuccess(user ->
                 golWorkflowHandler.removeGrantOfferLetter(project, user) ?
@@ -220,6 +231,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return validateProjectIsActive(project).andOnSuccessReturn(() -> {
             FileEntry fileEntry = project.getGrantOfferLetter();
             project.setGrantOfferLetter(null);
+            return fileEntry;
+        });
+
+    }
+
+    private ServiceResult<FileEntry> removeAdditionalContractFileFromProject(Project project) {
+
+        return validateProjectIsActive(project).andOnSuccessReturn(() -> {
+            FileEntry fileEntry = project.getAdditionalContractFile();
+            project.setAdditionalContractFile(null);
             return fileEntry;
         });
 

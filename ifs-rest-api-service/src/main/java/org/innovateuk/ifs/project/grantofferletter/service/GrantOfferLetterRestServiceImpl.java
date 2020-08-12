@@ -49,6 +49,11 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
+    public RestResult<Void> removeAdditionalContractFile(Long projectId) {
+        return deleteWithRestResult(projectRestURL + "/" + projectId + "/additional-contract");
+    }
+
+    @Override
     public RestResult<Void> removeSignedGrantOfferLetter(Long projectId) {
         return deleteWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter");
     }
