@@ -45,7 +45,7 @@ Calculation for associate employment and development
 Knowledge base supervisor can only add two rows
     [Documentation]  IFS-7790
     Given the user clicks the button/link        jQuery = button:contains("Knowledge base supervisor")
-    Given the user clicks the button/link        css = button[value="KNOWLEDGE_BASE"]
+    When the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
     Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
 
 Knowledge base supervisor validations
@@ -65,8 +65,8 @@ Knowledge base supervisor calculations
 Estate validations
     [Documentation]  IFS-7790
     Given the user clicks the button/link        jQuery = button:contains("Estates")
-    Given the user enters text to a text field   css = input[id^="estate"][id$="description"]  estate
-    When The user enters text to a text field    css = input[id^="estate"][id$="cost"]  11000
+    When the user enters text to a text field    css = input[id^="estate"][id$="description"]  estate
+    And The user enters text to a text field     css = input[id^="estate"][id$="cost"]  11000
     When the user clicks the button/link         jQuery = button:contains("Mark as complete")
     Then The user should see a field and summary error    You should enter less than £10,000 for estate costs
 
@@ -78,8 +78,8 @@ Estate calculations
 Additional associate support validations
    [Documentation]  IFS-7790
    Given the user clicks the button/link        jQuery = button:contains("Additional associate support")
-   Given the user enters text to a text field   css = input[id^="associateSupport"][id$="description"]  ${EMPTY}
-   When The user enters text to a text field    css = input[id^="associateSupport"][id$="cost"]  ${EMPTY}
+   When the user enters text to a text field    css = input[id^="associateSupport"][id$="description"]  ${EMPTY}
+   And The user enters text to a text field     css = input[id^="associateSupport"][id$="cost"]  ${EMPTY}
    Then the user should see the element         jQuery = span:contains("This field cannot be left blank") ~input[id^="associateSupport"][id$="cost"]
    And the user should see the element          jQuery = span:contains("This field cannot be left blank") ~input[id^="associateSupport"][id$="description"]
 
@@ -120,13 +120,13 @@ Consumables calculations
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790
-    Given the user clicks the button/link           jQuery = button:contains("Additional company cost estimation")
-    When the user fills additional company costs   ${EMPTY}  ${EMPTY}
+    Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimation")
+    When the user fills additional company costs     ${EMPTY}  ${EMPTY}
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
     [Documentation]  IFS-7790
-    Given the user fills additional company costs    description  100
+    Given the user fills additional company costs       description  100
     Then the user should see the element                jQuery = h4:contains("Total additional company cost estimations"):contains("£500")
 
 Mark as complete and check read only view
@@ -177,7 +177,7 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total subcontracting costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
-    the user should see the element       jQuery = h4:contains("Total additional company cost estimations"):contains("£500")
+    the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£500")
 
 the user should see the correct data in the finance tables
     the user should see the element       jQuery = th:contains("Total") ~ th:contains("Associate salary costs") ~ th:contains("Associate development costs") ~ th:contains("Travel and subsistence")
