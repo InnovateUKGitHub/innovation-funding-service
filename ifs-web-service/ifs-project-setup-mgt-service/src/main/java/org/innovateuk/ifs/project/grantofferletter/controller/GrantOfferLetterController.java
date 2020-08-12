@@ -132,8 +132,7 @@ public class GrantOfferLetterController {
 
         return redirectToGrantOfferLetterPage(projectId);
     }
-
-//    does this need new permission? referring to ACCESS_GRANT_OFFER_LETTER_SEND_SECTION
+    
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(value = "/upload-annex", params = "removeAdditionalContractFileClicked")
     public String removeAdditionalContractFile(@P("projectId") @PathVariable("projectId") final Long projectId) {
