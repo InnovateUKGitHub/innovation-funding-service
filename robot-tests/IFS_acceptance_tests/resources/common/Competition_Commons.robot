@@ -206,11 +206,23 @@ the user marks the Assessed questions as complete
     the user should see the element  jQuery = div:contains("Application") ~ .task-status-complete
 
 the user marks the KTP Assessed questions as complete
+    the user should not see assessment score or feedback settings in assessment questions
     the assessment questions are marked complete for other programme type competitions
-    the user fills in the Finances questions without growth table                          false  true
-    the user clicks the button/link                                                        jQuery = button:contains("Done")
-    the user clicks the button/link                                                        link = Competition details
-    the user should see the element                                                        jQuery = div:contains("Application") ~ .task-status-complete
+    the user fills in the Finances questions without growth table                             false  true
+    the user clicks the button/link                                                           jQuery = button:contains("Done")
+    the user clicks the button/link                                                           link = Competition details
+    the user should see the element                                                           jQuery = div:contains("Application") ~ .task-status-complete
+
+the user should not see assessment score or feedback settings in assessment questions
+    :FOR   ${ELEMENT}   IN    @{programme_questions}
+         \    the user checks every KTP Assessment question    ${ELEMENT}
+
+the user checks every KTP Assessment question
+    [Arguments]  ${question_link}
+    the user clicks the button/link         jQuery = h4 a:contains("${question_link}")
+    the user should not see the element     jQuery = h2:contains("Assessment of this question")
+    the user should not see the element     jQuery = h2:contains("Written feedback")
+    the user clicks the button/link         link = Application
 
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
