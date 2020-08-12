@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -86,7 +87,7 @@ public class HomeController {
         return viewDashboardSelection(request, model, user);
     }
 
-    private List<Role> createKtaDashboardRoles(UserResource user, List<Role> dashboardRoles) {
+    private Set<Role> createKtaDashboardRoles(UserResource user, Set<Role> dashboardRoles) {
         List<ProcessRoleResource> processRoleResources = userRestService.findProcessRoleByUserId(user.getId()).getSuccess();
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
         boolean isApplicant = processRoleResources.stream().map(ProcessRoleResource::getRole)
@@ -94,13 +95,13 @@ public class HomeController {
         boolean isAssessor = processRoleResources.stream().map(ProcessRoleResource::getRole)
                 .anyMatch(Role::isAssessor);
 
-        if (isMonitoringOfficer && !dashboardRoles.contains(MONITORING_OFFICER)) {
+        if (isMonitoringOfficer) {
             dashboardRoles.add(MONITORING_OFFICER);
         }
-        if (isApplicant && !dashboardRoles.contains(APPLICANT)) {
+        if (isApplicant) {
             dashboardRoles.add(APPLICANT);
         }
-        if (isAssessor && !dashboardRoles.contains(ASSESSOR)) {
+        if (isAssessor) {
             dashboardRoles.add(ASSESSOR);
         }
 
@@ -108,7 +109,7 @@ public class HomeController {
     }
 
     private String viewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
-        List<Role> dashboardRoles = simpleFilter(user.getRoles(), multiDashboardRoles()::contains);
+        Set<Role> dashboardRoles = user.getRoles().stream().filter(multiDashboardRoles()::contains).collect(Collectors.toSet());
 
         if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
             dashboardRoles = createKtaDashboardRoles(user, dashboardRoles);
