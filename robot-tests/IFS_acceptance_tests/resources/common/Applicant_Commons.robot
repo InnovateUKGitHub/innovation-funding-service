@@ -662,5 +662,5 @@ Existing user starts a new application
     the user select the competition and starts application     ${competitionName}
     the user selects the radio button                          createNewApplication  true
     the user clicks the button/link                            jQuery = button:contains("Continue")
-    the user selects the radio button                          selectedOrganisationId  selectedOrganisationId3
+    the user selects the radio button                          selectedOrganisationId  21
     the user clicks the button/link                            id = save-organisation-button
