@@ -108,7 +108,6 @@ public class GrantOfferLetterServiceImplTest {
         assertTrue(result.isSuccess());
     }
 
-
     @Test
     public void testRemoveSignedGrantOfferLetter() {
         long projectId = 123L;

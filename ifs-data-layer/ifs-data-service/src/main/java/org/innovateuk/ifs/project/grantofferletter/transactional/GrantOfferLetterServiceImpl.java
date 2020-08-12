@@ -219,7 +219,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                         andOnSuccessReturnVoid());
     }
 
-
     private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
         return getCurrentlyLoggedInUser().andOnSuccess(user ->
                 golWorkflowHandler.removeGrantOfferLetter(project, user) ?
