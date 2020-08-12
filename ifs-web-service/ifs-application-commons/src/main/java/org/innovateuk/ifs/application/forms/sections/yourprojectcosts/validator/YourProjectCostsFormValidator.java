@@ -104,6 +104,7 @@ public class YourProjectCostsFormValidator {
     }
 
     private void validateAdditionalCompanyCosts(AdditionalCompanyCostForm additionalCompanyCostForm, ValidationHandler validationHandler) {
+        validateForm(additionalCompanyCostForm, validationHandler, "additionalCompanyCostForm.");
         validateAdditionalCompanyCost(additionalCompanyCostForm.getAssociateSalary(), "additionalCompanyCostForm.associateSalary.", validationHandler);
         validateAdditionalCompanyCost(additionalCompanyCostForm.getCapitalEquipment(), "additionalCompanyCostForm.capitalEquipment.", validationHandler);
         validateAdditionalCompanyCost(additionalCompanyCostForm.getManagementSupervision(), "additionalCompanyCostForm.managementSupervision.", validationHandler);
