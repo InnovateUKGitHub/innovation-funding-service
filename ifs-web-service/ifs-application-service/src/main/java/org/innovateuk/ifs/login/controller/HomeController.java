@@ -75,59 +75,46 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-
-        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
-            return createKtaDashboardSelection(request, user, model);
-        }
-
         if (!user.hasMoreThanOneRoleOf(multiDashboardRoles())) {
             return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
-        return createDashboardSelection(request, user, model);
+        return viewDashboardSelection(request, model, user);
     }
 
-    private String createDashboardSelection(HttpServletRequest request, UserResource user, Model model) {
-        List<Role> dashboardRoles = simpleFilter(user.getRoles(), multiDashboardRoles()::contains);
-        List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
-        return viewDashboardSelection(model, dashboardPanels);
-    }
-
-    private String createKtaDashboardSelection(HttpServletRequest request, UserResource user, Model model) {
-        List<DashboardPanel> dashboardPanels = new ArrayList<>();
+    private List<Role> createKtaDashboardRoles(UserResource user, List<Role> dashboardRoles) {
         List<ProcessRoleResource> processRoleResources = userRestService.findProcessRoleByUserId(user.getId()).getSuccess();
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
         boolean isApplicant = processRoleResources.stream().map(ProcessRoleResource::getRole)
-                .filter(Role::isKta)
-                .findAny()
-                .isPresent();
+                .anyMatch(Role::isKta);
         boolean isAssessor = processRoleResources.stream().map(ProcessRoleResource::getRole)
-                .filter(Role::isAssessor)
-                .findAny()
-                .isPresent();
+                .anyMatch(Role::isAssessor);
 
-        if (isMonitoringOfficer) {
-            dashboardPanels.add(createDashboardPanelForRole(request, MONITORING_OFFICER));
+        if (isMonitoringOfficer && !dashboardRoles.contains(MONITORING_OFFICER)) {
+            dashboardRoles.add(MONITORING_OFFICER);
         }
-        if (isApplicant) {
-            dashboardPanels.add(createDashboardPanelForRole(request, APPLICANT));
+        if (isApplicant && !dashboardRoles.contains(APPLICANT)) {
+            dashboardRoles.add(APPLICANT);
         }
-        if (isAssessor) {
-            dashboardPanels.add(createDashboardPanelForRole(request, ASSESSOR));
+        if (isAssessor && !dashboardRoles.contains(ASSESSOR)) {
+            dashboardRoles.add(ASSESSOR);
         }
 
-        if (dashboardPanels.isEmpty()) {
-            return getRedirectUrlForUser(user);
-        }
-
-        if (dashboardPanels.size() == 1) {
-            return navigationUtils.getRedirectToDashboardUrlForRole(dashboardPanels.get(0).getRole());
-        }
-
-        return viewDashboardSelection(model, dashboardPanels);
+        return dashboardRoles;
     }
 
-    private String viewDashboardSelection(Model model, List<DashboardPanel> dashboardPanels) {
+    private String viewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
+        List<Role> dashboardRoles = simpleFilter(user.getRoles(), multiDashboardRoles()::contains);
+
+        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
+            dashboardRoles = createKtaDashboardRoles(user, dashboardRoles);
+        }
+
+        if (dashboardRoles.size() == 1) {
+            return navigationUtils.getRedirectToDashboardUrlForRole(dashboardRoles.get(0));
+        }
+
+        List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
                 comparingInt(panel -> asList(multiDashboardRoles()).indexOf(panel.getRole())));
 
