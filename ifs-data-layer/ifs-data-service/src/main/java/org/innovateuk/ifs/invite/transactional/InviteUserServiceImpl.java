@@ -101,7 +101,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Transactional
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
-        return validateInvite(invitedUser, role);
+        return validateAndSaveInvite(invitedUser, role);
     }
 
     private ServiceResult<Void> saveInternalUserInvite(UserResource invitedUser, Role role) {
@@ -122,7 +122,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccessReturnVoid(() -> saveInvite(invitedUser, role));
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<Void> validateAndSaveInvite(UserResource invitedUser, Role role) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
