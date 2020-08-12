@@ -19,7 +19,6 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean complete;
     private final boolean displayActions;
     private final boolean lead;
-    private final boolean ktpCompetition;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.competitionName = data.getCompetition().getName();
@@ -42,7 +41,6 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
                 .map(isAssignedToProcessRole(data.getApplicantProcessRole()))
                 .orElse(false);
         this.displayActions = lead || assignedToUser;
-        this.ktpCompetition = data.getCompetition().isKtp();
     }
 
     private Function<QuestionStatusResource, Boolean> isAssignedToProcessRole(Optional<ProcessRoleResource> processRole) {
@@ -88,7 +86,4 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         return lead;
     }
 
-    public boolean isKtpCompetition() {
-        return ktpCompetition;
-    }
 }
