@@ -17,14 +17,14 @@ public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInvi
     }
 
     @Override
-    public RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId) {
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(long applicationId) {
         String url = KTA_INVITE_REST_URL + "/get-kta-invite-by-application-id/"+ applicationId;
         return getWithRestResult(url, ApplicationKtaInviteResource.class);
     }
 
     @Override
-    public RestResult<Void> removeKtaInvite(long inviteId) {
-        String url = KTA_INVITE_REST_URL + String.format("/remove-kta-invite/%s", inviteId);
+    public RestResult<Void> removeKtaInviteByApplication(long applicationId) {
+        String url = KTA_INVITE_REST_URL + String.format("/remove-kta-invite-by-application/%s", applicationId);
         return deleteWithRestResult(url);
     }
 

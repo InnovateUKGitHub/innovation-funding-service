@@ -62,10 +62,10 @@ public class ApplicationKtaInviteControllerTest extends BaseControllerMockMVCTes
     @Test
     public void removeKtaInvite() throws Exception {
 
-        long applicationInviteId = 456L;
-        when(applicationKtaInviteService.removeKtaApplicationInvite(applicationInviteId)).thenReturn(serviceSuccess());
+        long applicationId = 456L;
+        when(applicationKtaInviteService.removeKtaInviteByApplication(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/kta-invite/remove-kta-invite/"+applicationInviteId))
+        mockMvc.perform(delete("/kta-invite/remove-kta-invite-by-application/"+applicationId))
                 .andExpect(status().isNoContent());
     }
 }

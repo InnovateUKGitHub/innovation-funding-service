@@ -101,9 +101,8 @@ public class ApplicationTeamController {
 
     @PostMapping(params = "remove-kta")
     public String removeKta(@PathVariable long applicationId,
-                            @PathVariable long questionId,
-                            @RequestParam("remove-kta") final long inviteId) {
-        ktaInviteRestService.removeKtaInvite(inviteId).getSuccess();
+                            @PathVariable long questionId) {
+        ktaInviteRestService.removeKtaInviteByApplication(applicationId).getSuccess();
         return redirectToApplicationTeam(applicationId, questionId);
     }
 

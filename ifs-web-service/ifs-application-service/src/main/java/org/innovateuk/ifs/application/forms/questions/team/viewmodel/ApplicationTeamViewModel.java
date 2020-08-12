@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.Duration;
@@ -25,6 +26,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean complete;
     private final boolean ktpCompetition;
     private final ApplicationKtaInviteResource ktaInvite;
+    private final ProcessRoleResource ktaProcessRole;
     private final UserResource ktaUser;
 
     public ApplicationTeamViewModel(long applicationId,
@@ -39,6 +41,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean complete,
                                     boolean ktpCompetition,
                                     ApplicationKtaInviteResource ktaInvite,
+                                    ProcessRoleResource ktaProcessRole,
                                     UserResource ktaUser
                                     ) {
         this.applicationId = applicationId;
@@ -53,6 +56,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.complete = complete;
         this.ktpCompetition = ktpCompetition;
         this.ktaInvite = ktaInvite;
+        this.ktaProcessRole = ktaProcessRole;
         this.ktaUser = ktaUser;
     }
 
@@ -132,7 +136,36 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return Duration.between(ktaInvite.getSentOn().toInstant(), Instant.now()).toDays();
     }
 
-    public UserResource getKtaUser() {
-        return ktaUser;
+    public boolean hasAssignedKta() {
+        return ktaProcessRole != null || (ktaInvite != null && ktaInvite.getStatus() == InviteStatus.OPENED);
     }
+
+    public boolean hasPendingKta() {
+        return ktaProcessRole == null && (ktaInvite != null && ktaInvite.getStatus() != InviteStatus.OPENED);
+    }
+
+    public boolean hasNoKta() {
+        return ktaProcessRole == null && ktaInvite == null;
+    }
+
+    public String getKtaEmail() {
+        if (ktaProcessRole != null) {
+            return ktaProcessRole.getUserEmail();
+        }
+        if (ktaInvite != null) {
+            return ktaInvite.getEmail();
+        }
+        return null;
+    }
+
+    public String getKtaName() {
+        if (ktaProcessRole != null) {
+            return ktaProcessRole.getUserName();
+        }
+        if (ktaUser != null) {
+            return ktaUser.getName();
+        }
+        return null;
+    }
+
 }

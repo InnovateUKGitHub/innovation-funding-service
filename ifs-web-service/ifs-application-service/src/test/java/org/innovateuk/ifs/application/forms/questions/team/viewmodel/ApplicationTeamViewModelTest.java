@@ -23,7 +23,7 @@ public class ApplicationTeamViewModelTest {
                 .withSentOn(fiveDaysAgo)
                 .build();
         model = new ApplicationTeamViewModel(1, null, null, 1, null, 1,
-                false, false, false, false, true, invite, null);
+                false, false, false, false, true, invite, null, null);
 
         // when
         long pendingDays = model.getKtaInvitePendingDays();

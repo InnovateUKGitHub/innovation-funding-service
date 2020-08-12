@@ -46,10 +46,10 @@ public class KtaInviteRestServiceImplTest extends BaseRestServiceUnitTest<KtaInv
 
     @Test
     public void removeKtaInvite() {
-        final Long inviteId = 20310L;
+        final Long applicationId = 20310L;
 
-        setupDeleteWithRestResultExpectations(inviteKtaRestURL +  String.format("/remove-kta-invite/%s", inviteId), OK);
-        RestResult<Void> response = service.removeKtaInvite(inviteId);
+        setupDeleteWithRestResultExpectations(inviteKtaRestURL +  String.format("/remove-kta-invite-by-application/%s", applicationId), OK);
+        RestResult<Void> response = service.removeKtaInviteByApplication(applicationId);
         assertTrue(response.isSuccess());
     }
 

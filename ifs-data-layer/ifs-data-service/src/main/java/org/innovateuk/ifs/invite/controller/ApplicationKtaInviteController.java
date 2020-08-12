@@ -30,8 +30,8 @@ public class ApplicationKtaInviteController {
         return applicationKtaInviteService.resendKtaInvite(inviteResource).toPostCreateResponse();
     }
 
-    @DeleteMapping("/remove-kta-invite/{inviteId}")
-    public RestResult<Void> removeKtaInvite(@PathVariable("inviteId") long ktaInviteResourceId) {
-        return applicationKtaInviteService.removeKtaApplicationInvite(ktaInviteResourceId).toDeleteResponse();
+    @DeleteMapping("/remove-kta-invite-by-application/{applicationId}")
+    public RestResult<Void> removeKtaInvite(@PathVariable("applicationId") long applicationId) {
+        return applicationKtaInviteService.removeKtaInviteByApplication(applicationId).toDeleteResponse();
     }
 }

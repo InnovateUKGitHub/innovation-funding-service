@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 public interface KtaInviteRestService {
 
     RestResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource);
-    RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId);
-    RestResult<Void> removeKtaInvite(long inviteId);
+    RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(long applicationId);
+    RestResult<Void> removeKtaInviteByApplication(long applicationId);
     RestResult<Void> resendKtaInvite(ApplicationKtaInviteResource invite);
 }

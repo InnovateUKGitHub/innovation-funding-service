@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
@@ -10,6 +11,8 @@ import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -17,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
@@ -25,7 +30,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKtaInvite> implements ApplicationKtaInviteService {
@@ -50,6 +54,9 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
     @Override
     public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId) {
         return serviceSuccess(
@@ -67,9 +74,26 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
 
     @Override
     @Transactional
-    public ServiceResult<Void> removeKtaApplicationInvite(long ktaInviteResourceId) {
-        return find(applicationKtaInviteMapper.mapIdToDomain(ktaInviteResourceId), notFoundError(ApplicationKtaInvite.class))
-                .andOnSuccessReturnVoid(this::removeKtaInvite);
+    public ServiceResult<Void> removeKtaInviteByApplication(long applicationId) {
+        Optional<ApplicationKtaInvite> invite = applicationKtaInviteRepository.findByApplicationId(applicationId);
+        Application application;
+        if (invite.isPresent()) {
+            removeKtaInvite(invite.get());
+            application = invite.get().getTarget();
+        } else {
+            Optional<Application> maybeApplication = applicationRepository.findById(applicationId);
+            if (maybeApplication.isPresent()) {
+                application = maybeApplication.get();
+            } else {
+                return serviceFailure(notFoundError(ApplicationResource.class));
+            }
+        }
+
+        List<ProcessRole> rolesToRemove = application.getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISOR).collect(Collectors.toList());
+        if (!rolesToRemove.isEmpty()) {
+            processRoleRepository.deleteAll(rolesToRemove);
+        }
+        return serviceSuccess();
     }
 
     @Override
