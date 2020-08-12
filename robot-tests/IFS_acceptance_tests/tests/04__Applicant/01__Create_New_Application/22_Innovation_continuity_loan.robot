@@ -9,109 +9,123 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 ${continuityLoanCompName}            Innovation continuity loan
-${continuityLoanCompId}              ${competition_ids["${continuityLoanCompName}"]}
-${continuityLoanApplication}         Innovation continuity loan application
-${continuityLoanApplicationId}       ${application_ids["${continuityLoanApplication}"]}
-${continuityLoanT&CLink}             Innovation Continuity Loan
+${continuityLoanPSCompName}          Innovation continuity loan competition
 ${continuityLoanPSApplication}       Innovation continuity loan ps application
+${continuityLoanCompId}              ${competition_ids["${continuityLoanCompName}"]}
+${continuityLoanPSCompId}            ${competition_ids["${continuityLoanPSCompName}"]}
 ${continuityLoanPSApplicationId}     ${application_ids["${continuityLoanPSApplication}"]}
-${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanCompId}/application/${continuityLoanApplicationId}
+${continuityLoanApplicationLink}     ${server}/management/competition/${continuityLoanPSCompId}/application/${continuityLoanPSApplicationId}
 ${continuityLoanFeedbackLink}        ${server}/application/${continuityLoanPSApplicationId}/feedback
-${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity loan from Innovate UK Loans Limited.
-${continuityLoanT&CLink}             Award terms and conditions
+${continuityLoanT&C'sSubTitle}       General terms and conditions of an innovation continuity
+${continuityLoanT&C'sTitle}          Loans terms and conditions
+${continuityLoanT&CLink}             Innovation Continuity Loan
+${applicationT&CLink}                Award terms and conditions
+
 
 
 *** Test Cases ***
-#Investor partnership initial details
-#    [Documentation]  IFS-7213
-#    Given the user fills in initial details
-#    When the user clicks the button/link      link = Initial details
-#    Then the user should see the element      jQuery = dt:contains("Funding type") ~ dd:contains("Investor Partnership")
-#
-#Edit view of initial details
-#    [Documentation]  IFS-7213
-#    Given the user clicks the button/link     css = button[type="submit"]
-#    Then the user should see the element      jQuery = dt:contains("Funding type") ~ dd:contains("Investor Partnership")
-#    [Teardown]   navigate to comp setup of investor comp
-
 Innovation continuity loan T&C's can be confirmed
     [Documentation]  IFS-8002
     Given the user fills in initial details
-    When the user clicks the button/link        link = Terms and conditions
-    And the user confirmed T&C's
-    Then the user should see the element        link = Innovation Continuity Loan
-    And the user should see the element         jQuery = p:contains("These are the terms and conditions applicants must accept for this competition.")
+    When the user clicks the button/link             link = Terms and conditions
+    And the user confirmed terms and conditions
+    Then the user should see the element             link = ${continuityLoanT&CLink}
+    And the user should see the element              jQuery = p:contains("These are the terms and conditions applicants must accept for this competition.")
 
 Innovation continuity loan T&C's can be edited
     [Documentation]  IFS-8002
-    [Setup]  Change the milestone in the database to tomorrow     ${continuityLoanCompId}    OPEN_DATE
-    Given the user navigates to the page     ${server}/management/competition/setup/${continuityLoanCompId}
-    When the user edited T&C's
-    Then the user should see the element     link = Innovation Continuity Loan
+    Given the user clicks the button/link       jQuery = button:contains("Edit")
+    When the user selects the radio button      termsAndConditionsId  termsAndConditionsId12
+    And the user clicks the button/link         jQuery = button:contains("Done")
+    Then the user should see the element        link = ${continuityLoanT&CLink}
 
-Internal user is able to see correct T&C's and completes the competition setup
+Internal user is able to see correct T&C's
     [Documentation]  IFS-8002
-    Given the user clicks the button/link            link = Innovation Continuity Loan
-    Then the user should see the element             jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
-    And the user completes the competition setup
+    Given the user clicks the button/link     link = ${continuityLoanT&CLink}
+    Then the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
 
-Applicant is able to see correct T&C's
+Lead applicant is able to see correct T&C's
     [Documentation]  IFS-8002
-    [Setup]  update milestone to yesterday     ${continuityLoanCompId}    OPEN_DATE
-    Given Log in as a different user         ${peter_styles_email}  ${short_password}
-    when the user clicks the button/link     link = ${continuityLoanApplication}
-    And the user navigates to the page       ${server}/application/${continuityLoanApplicationId}/form/question/2071/terms-and-conditions
-    Then the user clicks the button/link     jQuery = ${continuityLoanT&C'sSubTitle}
-    Then the user should see the element     jQuery = h1:contains("Loans terms and conditions")
+    [Setup]  Update the competition with innovation continuity loan T&C's     ${continuityLoanCompId}
+    Given Log in as a different user               &{lead_applicant_credentials}
+    And Existing user starts a new application     ${continuityLoanCompName}
+    When the user clicks the button/link           link = ${applicationT&CLink}
+    Then the user should see the element           jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And the user should see the element            jQuery = h1:contains("${continuityLoanT&C'sTitle}")
 
-Applicant can confirm t&c's
-    [Documentation]  IFS-7235
+Lead applicant can confirm T&C's
+    [Documentation]  IFS-8002
     Given the user selects the checkbox      agreed
-    When the user clicks the button/link     css = button[type="submit"]add
-    And the user clicks the button/link      link = Back to application overview
-    Then the user should see the element     jQuery = li:contains("${continuityLoanT&CLink}") .task-status-complete
+    When the user clicks the button/link     css = button[type="submit"]
+    And the user clicks the button/link      link = Return to application overview
+    Then the user should see the element     jQuery = li:contains("${applicationT&CLink}") .task-status-complete
 
-Internal user sees correct label for T&C's
-    [Documentation]  IFS-7235
-    Given Log in as a different user         &{Comp_admin1_credentials}
-    When the user navigates to the page      ${investorApplicationLink}
-    Then the user should see the element     jQuery = button:contains("${continuityLoanT&CLink}")
+Partner applicant is able to see correct T&C's
+    [Documentation]  IFS-8002
+    [Setup]  the lead invites already registered user    ${existing_lead_ktp_email}  ${continuityLoanCompName}
+    Given logging in and error checking      &{troy_ward_crendentials}
+    When the user clicks the button/link     id = save-organisation-button
+    And the user clicks the button/link      link = ${applicationT&CLink}
+    Then the user should see the element     jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sTitle}")
 
-Application feedback page shows the correct link for t&c's
-    [Documentation]  IFS-7235
+Partner applicant can confirm T&C's
+    [Documentation]  IFS-8002
+    Given the user selects the checkbox      agreed
+    When the user clicks the button/link     css = button[type="submit"]
+    And the user clicks the button/link      link = Return to application overview
+    Then the user should see the element     jQuery = li:contains("${applicationT&CLink}") .task-status-complete
+
+Internal user sees correct T&C's in project setup
+    [Documentation]  IFS-8002
+    [Setup]  Update the competition with innovation continuity loan T&C's     ${continuityLoanPSCompId}
+    Given Log in as a different user                    &{Comp_admin1_credentials}
+    When the user navigates to terms and conditions
+    Then the user should see the element                jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And the user should see the element                 jQuery = h1:contains("${continuityLoanT&C'sTitle}")
+
+Application feedback page shows the correct T&C's
+    [Documentation]  IFS-8002
     Given Log in as a different user         &{troy_ward_crendentials}
-    When The user navigates to the page      ${investorFeedbackLink}
-    Then the user should see the element     link = View ${tandcLink}
+    When The user navigates to the page      ${continuityLoanFeedbackLink}
+    And the user clicks the button/link      link = View award terms and conditions
+    Then the user should see the element     jQuery = h1:contains("${continuityLoanT&C'sSubTitle}")
+    And the user should see the element      jQuery = h1:contains("${continuityLoanT&C'sTitle}")
 
 *** Keywords ***
 Custom suite setup
     Set predefined date variables
-    The user logs-in in new browser   &{Comp_admin1_credentials}
+    Connect To Database   @{database}
+    The user logs-in in new browser     &{Comp_admin1_credentials}
 
 Custom Suite teardown
     Close browser and delete emails
+    Disconnect from database
 
 the user fills in initial details
     the user navigates to the page               ${CA_UpcomingComp}
     the user clicks the button/link              jQuery = .govuk-button:contains("Create competition")
-    the user fills in the CS Initial details     Investor comp  ${month}  ${nextyear}  ${compType_Programme}  1  INVESTOR_PARTNERSHIPS
+    the user fills in the CS Initial details     Innovation continuity comp  ${month}  ${nextyear}  ${compType_Programme}  1  GRANT
 
 navigate to comp setup of investor comp
     the user clicks the button/link             jQuery = button:contains("Done")
     the user clicks the button/link             link = Competition details
 
-the user confirmed T&C's
-    the user clicks the button/link                     link = Terms and conditions
-    the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId12
-    the user clicks the button/link                     jQuery = button:contains("Done")
-
-the user edited T&C's
-    the user clicks the button/link                     link = Terms and conditions
-    the user clicks the button/link                     jQuery = button:contains("Edit")
-    the user sees that the radio button is selected     termsAndConditionsId  termsAndConditionsId12
-    the user clicks the button/link                     jQuery = button:contains("Done")
+the user confirmed terms and conditions
+    the user selects the radio button     termsAndConditionsId  termsAndConditionsId12
+    the user clicks the button/link       jQuery = button:contains("Done")
 
 the user completes the competition setup
-    the user clicks the button/link     link = Competition details
+    the user navigates to the page      ${server}/management/dashboard/upcoming
+    the user clicks the button/link     link = ${continuityLoanCompName}
     the user clicks the button/link     id = compCTA
     the user clicks the button/link     jQuery = button:contains("Done")
+
+Update the competition with innovation continuity loan T&C's
+    [Arguments]  ${competitionID}
+    Execute SQL String  UPDATE `${database_name}`.`competition` SET `terms_and_conditions_id`='32' WHERE `id`='${competitionID}'
+
+the user navigates to terms and conditions
+    the user navigates to the page       ${continuityLoanApplicationLink}
+    the user clicks the button/link      jQuery = button:contains("${applicationT&CLink}")
+    the user clicks the button/link      link = View terms and conditions

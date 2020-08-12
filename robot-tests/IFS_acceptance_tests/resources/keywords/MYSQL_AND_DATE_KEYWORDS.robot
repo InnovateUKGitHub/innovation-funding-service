@@ -18,6 +18,13 @@ update milestone to yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
     reload page
 
+update milestone to tomorrow
+    [Arguments]  ${competition_id}  ${milestone}
+    ${tomorrow} =  get tomorrow
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${tomorrow}' WHERE `competition_id`='${competition_id}' and type IN ('${milestone}');
+    reload page
+
+
 the calculation of the remaining days should be correct
     [Arguments]    ${END_DATE}    ${COMPETITION_ID}
     ${GET_TIME}=    get time    hour    UTC
@@ -274,4 +281,3 @@ User gets competition config id for max funding
 User sets a max funding level for a competition
     [Arguments]     ${id}  ${max_funding}
     execute sql string  UPDATE `${database_name}`.`competition_application_config` SET `maximum_funding_sought`='${max_funding}' WHERE `id`='${id}';
-
