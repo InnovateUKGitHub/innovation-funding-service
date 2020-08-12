@@ -3,8 +3,7 @@ package org.innovateuk.ifs.user.resource;
 import org.innovateuk.ifs.address.resource.AddressResource;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class UserCreationResource {
     private String firstName;
@@ -13,6 +12,7 @@ public class UserCreationResource {
     private String phoneNumber;
     private String password;
     private boolean allowMarketingEmails;
+    private boolean agreedTerms;
     private Role role;
 
     private AddressResource address;
@@ -21,6 +21,8 @@ public class UserCreationResource {
 
     private Long organisationId;
     private Long competitionId;
+
+    private boolean addLiveProjectUserRole;
 
     public String getFirstName() {
         return firstName;
@@ -70,6 +72,14 @@ public class UserCreationResource {
         this.allowMarketingEmails = allowMarketingEmails;
     }
 
+    public boolean isAgreedTerms() {
+        return agreedTerms;
+    }
+
+    public void setAgreedTerms(boolean agreedTerms) {
+        this.agreedTerms = agreedTerms;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -110,6 +120,14 @@ public class UserCreationResource {
         this.competitionId = competitionId;
     }
 
+    public boolean isAddLiveProjectUserRole() {
+        return addLiveProjectUserRole;
+    }
+
+    public void setAddLiveProjectUserRole(boolean addLiveProjectUserRole) {
+        this.addLiveProjectUserRole = addLiveProjectUserRole;
+    }
+
     public UserResource toUserResource() {
         UserResource user = new UserResource();
 
@@ -117,6 +135,10 @@ public class UserCreationResource {
             user.setRoles(newArrayList(IFS_ADMINISTRATOR, PROJECT_FINANCE));
         } else {
             user.setRoles(newArrayList(role));
+        }
+
+        if (addLiveProjectUserRole) {
+            user.getRoles().add(LIVE_PROJECTS_USER);
         }
 
         user.setEmail(email);
@@ -135,11 +157,13 @@ public class UserCreationResource {
         private String phoneNumber;
         private String password;
         private boolean allowMarketingEmails;
+        private boolean agreedTerms;
         private Role role;
         private AddressResource address;
         private String inviteHash;
         private Long organisationId;
         private Long competitionId;
+        private boolean addLiveProjectUserRole;
 
         private UserCreationResourceBuilder() {
         }
@@ -178,6 +202,11 @@ public class UserCreationResource {
             return this;
         }
 
+        public UserCreationResourceBuilder withAgreedTerms(boolean agreedTerms) {
+            this.agreedTerms = agreedTerms;
+            return this;
+        }
+
         public UserCreationResourceBuilder withRole(Role role) {
             this.role = role;
             return this;
@@ -203,6 +232,11 @@ public class UserCreationResource {
             return this;
         }
 
+        public UserCreationResourceBuilder withAddLiveProjectUserRole(boolean addLiveProjectUserRole) {
+            this.addLiveProjectUserRole = addLiveProjectUserRole;
+            return this;
+        }
+
         public UserCreationResource build() {
             UserCreationResource userCreationResource = new UserCreationResource();
             userCreationResource.setFirstName(firstName);
@@ -211,11 +245,13 @@ public class UserCreationResource {
             userCreationResource.setPhoneNumber(phoneNumber);
             userCreationResource.setPassword(password);
             userCreationResource.setAllowMarketingEmails(allowMarketingEmails);
+            userCreationResource.setAgreedTerms(agreedTerms);
             userCreationResource.setRole(role);
             userCreationResource.setAddress(address);
             userCreationResource.setInviteHash(inviteHash);
             userCreationResource.setOrganisationId(organisationId);
             userCreationResource.setCompetitionId(competitionId);
+            userCreationResource.setAddLiveProjectUserRole(addLiveProjectUserRole);
             return userCreationResource;
         }
     }

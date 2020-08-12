@@ -111,7 +111,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         if (shouldBePending(user)) {
             result = result.andOnSuccess(this::saveUserAsPending);
         } else {
-            result = result.andOnSuccess(this::markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole)
+            result = result.andOnSuccess(savedUser -> markLatestSiteTermsAndConditions(savedUser, user))
                     .andOnSuccess(savedUser -> handleInvite(savedUser, user));
         }
         if (shouldImmediatelyActivate(user)) {
@@ -207,8 +207,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return newUser;
     }
 
-    private ServiceResult<User> markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole(User userWithRole) {
-        return userWithRole.hasRole(Role.APPLICANT) || userWithRole.hasRole(MONITORING_OFFICER) ?
+    private ServiceResult<User> markLatestSiteTermsAndConditions(User userWithRole, UserCreationResource userCreationResource) {
+        return userCreationResource.isAgreedTerms() ?
                 agreeLatestSiteTermsAndConditionsForUser(userWithRole) : serviceSuccess(userWithRole);
     }
 
@@ -332,7 +332,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                                                    String hash) {
         if(monitoringOfficerInviteRepository.existsByHash(hash)) {
             return activateUser(user)
-                    .andOnSuccess(this::markLatestSiteTermsAndConditionsAgreedToIfRequiredByRole)
                     .andOnSuccess(activatedUser -> idpService.updateUserPassword(activatedUser.getUid(), password))
                     .andOnSuccessReturn(() -> user);
         }

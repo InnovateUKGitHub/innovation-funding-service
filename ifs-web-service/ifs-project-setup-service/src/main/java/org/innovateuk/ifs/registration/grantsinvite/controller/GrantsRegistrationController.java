@@ -25,7 +25,9 @@ import javax.validation.groups.Default;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_MONITORING_OFFICER;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 @Controller
 @SecuredBySpring(value = "Controller",
@@ -110,7 +112,8 @@ public class GrantsRegistrationController {
             }
 
             ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserCreationResource()
-                    .withRole(Role.LIVE_PROJECTS_USER)
+                    .withRole(invite.getGrantsInviteRole() == GRANTS_MONITORING_OFFICER ? MONITORING_OFFICER : Role.APPLICANT)
+                    .withAddLiveProjectUserRole(true)
                     .build())
                 .toServiceResult()
                     .andOnSuccess(newUser -> {

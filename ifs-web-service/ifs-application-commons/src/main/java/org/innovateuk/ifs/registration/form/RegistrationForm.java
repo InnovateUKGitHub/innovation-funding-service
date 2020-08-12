@@ -138,6 +138,7 @@ public class RegistrationForm extends BaseBindingResultTarget {
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withPhoneNumber(phoneNumber)
-                .withAllowMarketingEmails(allowMarketingEmails);
+                .withAllowMarketingEmails(allowMarketingEmails)
+                .withAgreedTerms("1".equals(termsAndConditions)); // this is weird.
     }
 }

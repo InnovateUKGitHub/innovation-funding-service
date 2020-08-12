@@ -473,7 +473,7 @@ the internal user enters the details to create account
     the user enters text to a text field   css = #firstName  New
     the user enters text to a text field   css = #lastName  Administrator
     the user enters text to a text field   css = #password  ${short_password}
-    the user should see the element        jQuery = h3:contains("Email") + p:contains("${email}")
+    the user should see the element        jQuery = label:contains("Email") ~ span:contains("${email}")
 
 the new internal user logs in and checks user details
     Logging in and Error Checking          ${email}  ${short_password}
