@@ -4,12 +4,9 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
@@ -27,7 +24,6 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean ktpCompetition;
     private final ApplicationKtaInviteResource ktaInvite;
     private final ProcessRoleResource ktaProcessRole;
-    private final UserResource ktaUser;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -41,8 +37,7 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean complete,
                                     boolean ktpCompetition,
                                     ApplicationKtaInviteResource ktaInvite,
-                                    ProcessRoleResource ktaProcessRole,
-                                    UserResource ktaUser
+                                    ProcessRoleResource ktaProcessRole
                                     ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
@@ -57,7 +52,6 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.ktpCompetition = ktpCompetition;
         this.ktaInvite = ktaInvite;
         this.ktaProcessRole = ktaProcessRole;
-        this.ktaUser = ktaUser;
     }
 
     @Override
@@ -162,8 +156,8 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         if (ktaProcessRole != null) {
             return ktaProcessRole.getUserName();
         }
-        if (ktaUser != null) {
-            return ktaUser.getName();
+        if (ktaInvite != null) {
+            return ktaInvite.getName();
         }
         return null;
     }

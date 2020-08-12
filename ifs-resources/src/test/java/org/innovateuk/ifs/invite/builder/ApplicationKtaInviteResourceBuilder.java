@@ -51,6 +51,10 @@ public class ApplicationKtaInviteResourceBuilder  extends BaseBuilder<Applicatio
         return withArraySetFieldByReflection("email", emails);
     }
 
+    public ApplicationKtaInviteResourceBuilder withName(String... names) {
+        return withArraySetFieldByReflection("name", names);
+    }
+
     @Override
     protected void postProcess(int index, ApplicationKtaInviteResource instance) {
         super.postProcess(index, instance);

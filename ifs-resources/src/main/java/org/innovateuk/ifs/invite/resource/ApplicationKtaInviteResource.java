@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 public class ApplicationKtaInviteResource extends InviteResource {
     private Long id;
     private String email;
+    private String name;
     private Long application;
     private InviteStatus status;
     private ZonedDateTime sentOn;
@@ -36,6 +37,14 @@ public class ApplicationKtaInviteResource extends InviteResource {
 
     public void setApplication(Long application) {
         this.application = application;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public InviteStatus getStatus() {
@@ -77,6 +86,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(email, that.email)
+                .append(name, that.name)
                 .append(application, that.application)
                 .append(status, that.status)
                 .append(sentOn, that.sentOn)
@@ -88,6 +98,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(email)
+                .append(name)
                 .append(application)
                 .append(status)
                 .append(sentOn)

@@ -14,16 +14,15 @@ public class ApplicationKtaInvite extends Invite<Application, ApplicationKtaInvi
     private Application application;
 
     public ApplicationKtaInvite() {
-        setName("kta");
     }
 
-    public ApplicationKtaInvite(String email, Application application, String hash, InviteStatus status) {
-        super("kta", email, hash, status);
+    public ApplicationKtaInvite(String name, String email, Application application, String hash, InviteStatus status) {
+        super(name, email, hash, status);
         this.application = application;
     }
 
-    public ApplicationKtaInvite(Long id,String email, Application application, String hash, InviteStatus status) {
-        super(id, "kta", email, hash, status);
+    public ApplicationKtaInvite(Long id, String name, String email, Application application, String hash, InviteStatus status) {
+        super(id, name, email, hash, status);
         this.application = application;
     }
 

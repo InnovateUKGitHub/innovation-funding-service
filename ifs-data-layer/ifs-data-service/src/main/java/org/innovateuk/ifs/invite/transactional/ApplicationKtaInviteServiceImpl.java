@@ -99,7 +99,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     @Override
     @Transactional
     public ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        return validateKtaApplication(inviteResource, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
+        return validateKtaApplication(inviteResource, EDIT_EMAIL_FIELD).andOnSuccess(validated -> {
             ApplicationKtaInvite invite = mapKtaInviteResourceToKtaInvite(inviteResource);
             applicationKtaInviteRepository.save(invite);
             return applicationInviteNotificationService.inviteKta(invite);
@@ -113,10 +113,10 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
 
     private ApplicationKtaInvite mapKtaInviteResourceToKtaInvite(ApplicationKtaInviteResource inviteResource) {
         Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
-        return new ApplicationKtaInvite(inviteResource.getEmail(), application, null, InviteStatus.CREATED);
+        return new ApplicationKtaInvite(inviteResource.getName(), inviteResource.getEmail(), application, null, InviteStatus.CREATED);
     }
 
-    private ServiceResult<Void> validateKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
+    private ServiceResult<ApplicationKtaInviteResource> validateKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
         Optional<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
         if (existing.isPresent()) {
             return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
@@ -125,7 +125,8 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
         if (userResult.isFailure() || !userResult.getSuccess().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)) {
             return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "user.not.registered.kta"));
         }
-        return serviceSuccess();
+        inviteResource.setName(userResult.getSuccess().getName());
+        return serviceSuccess(inviteResource);
     }
 
     @Override
