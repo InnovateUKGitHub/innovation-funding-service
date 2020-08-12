@@ -17,6 +17,7 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../../../resources/common/Applicant_Commons.robot
 Resource          ../../../resources/common/Competition_Commons.robot
 Resource          ../../../resources/common/PS_Common.robot
+Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 &{ktpLeadApplicantCredentials}     email=${lead_ktp_email}  password=${short_password}
@@ -24,6 +25,9 @@ ${KTPapplicationTitle}             KTP Application
 ${ktpOrganisationName}             KTP Organisation
 ${group_employees_header}          Number of full time employees in your corporate group (if applicable)
 ${group_employees}                 200
+${fname}                           Indi
+${lname}                           Gardiner 
+${phone_number}                    01234567897
 
 @{turnover}                        100000  98000   96000
 @{preTaxProfit}                    98000   96000   94000
@@ -83,10 +87,11 @@ Moving KTP Competition to Project Setup
 
 the project finance user cannot see the project start date
     [Documentation]  IFS-7805
-    Given the user navigates to the page         ${server}/project-setup-management/competition/${competitionId}/status/all
-    When the user clicks the button/link         link = ${ApplicationID}
-    Then the user should not see the element     jQuery = dt:contains("When do you wish to start your project?")
-    And the user should see the element          jQuery = dt:contains("Duration in months")
+    Given Log in as a different user                   &{internal_finance_credentials}
+    When the user navigates to the page                ${server}/project-setup-management/competition/${competitionId}/status/all
+    Then the user clicks the button/link               link = ${ApplicationID}
+    And the user should not see the element            jQuery = dt:contains("When do you wish to start your project?")
+    And the user should see the element                jQuery = dt:contains("Duration in months")
 
 The lead is able to complete the Project details section
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -209,6 +214,40 @@ Internal user is able to approve the GOL and the project is now Live
     When log in as a different user                                            &{ktpLeadApplicantCredentials}
     And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
     Then the user should see project is live with review its progress link
+
+The KTA looks at dashboard - Remove?
+    [Documentation]  IFS-7960
+     Given Log in as a different user                     &{ktpLeadApplicantCredentials}
+     Then the user should see the element                 jQuery = p:contains("Live project")
+     And the user clicks the button/link                  jQuery = a:contains(${KTPapplicationTitle})
+     And the user should see the element                  jQuery = span:contains(${KTPapplicationTitle})
+
+The KTA is added as an assessor
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    Given log in as a different user                        &{Comp_admin1_credentials}
+    When the user clicks the button/link                    link = Dashboard
+    Then the user clicks the button/link                    link = ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link                     link = Invite assessors to assess the competition
+    Then the user clicks the button/link                    jQuery = a:contains("Invite")
+    And the internal user invites a user as an assessor     Indi  ${lead_ktp_email}
+
+Internal user is able to assign a KTA as an MO
+    [Documentation]  IFS-7146  IFS-7147  IFS-7148
+    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
+    Given the user navigates to the page                  ${server}/project-setup-management/monitoring-officer/view-all
+    When the user clicks the button/link                  link = Add a monitoring officer
+    Then the user enters text to a text field             id = emailAddress  ${lead_ktp_email}
+    And the user clicks the button/link                   jQuery = button[type="submit"]
+    Then the user clicks the button/link                  jQuery = button[type="submit"]
+    And The internal user assign project to MO            116   High-speed rail and its effects on soil compaction
+    
+The KTA confirms that they have application, assessment and PS on dashboard
+    [Documentation]  IFS-7960
+     Given Log in as a different user                       &{ktpLeadApplicantCredentials}
+     Then the user should see the element                   jQuery = h2:contains("Applications")
+     And the user should see the element                    jQuery = h2:contains("Project setup")
+     And the user should see the element                    jQuery = h2:contains("Assessments")
+
 
 *** Keywords ***
 the user marks the KTP finances as complete
