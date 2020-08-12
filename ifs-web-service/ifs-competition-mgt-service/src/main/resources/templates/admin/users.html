@@ -25,7 +25,13 @@
                     <div class="govuk-grid-column-one-half">
                         <p th:if="${model.includeInternalUsers}" class="govuk-body">You can view the status of all users.</p>
                         <p th:unless="${model.includeInternalUsers}" class="govuk-body">You can view the status of all external users.</p>
-                        <p th:if="${model.includeInternalUsers}" class="govuk-body"><a th:href="@{/admin/invite-user}" class="govuk-link">Invite a new internal user</a></p>
+                        <div class="alignleft" th:if="${model.includeInternalUsers}">
+                            <a th:href="@{/admin/invite-user}" class="govuk-link alignleft">Invite a new internal user</a>
+                            <th:block th:if="${externalRoleLinkEnabled}">
+                                <span>|</span>
+                                <a th:href="@{/admin/invite-external-user}" class="govuk-link alignleft">Invite a new external user</a>
+                            </th:block>
+                        </div>
 
                         <div th:unless="${form.cleared}" class="clear-search-filter">
                             <p class="govuk-body"><b th:text="${model.totalCount}">7</b> users matching the search <b th:text="${form.filter}">Brad.smith@example.com</b> <a href="?page=1" class="govuk-link">Clear filters</a></p>

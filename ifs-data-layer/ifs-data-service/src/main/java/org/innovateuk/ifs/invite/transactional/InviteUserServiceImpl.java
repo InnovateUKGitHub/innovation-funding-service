@@ -94,12 +94,19 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Value("${ifs.system.internal.user.email.domain}")
     private String internalUserEmailDomain;
 
+    @Value("${ifs.system.kta.user.email.domain}")
+    private String ktaUserEmailDomain;
+
     @Override
     @Transactional
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
 
-        return validateInvite(invitedUser, role)
-                .andOnSuccess(() -> validateInternalUserRole(role))
+        return validateAndSaveInvite(invitedUser, role);
+    }
+
+    private ServiceResult<Void> saveInternalUserInvite(UserResource invitedUser, Role role) {
+
+        return validateInternalUserRole(role)
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
@@ -107,13 +114,24 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(this::inviteInternalUser);
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<Void> saveExternalUserInvite(UserResource invitedUser, Role role) {
+
+        return validateKtaEmail(invitedUser.getEmail())
+                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccessReturnVoid(() -> saveInvite(invitedUser, role));
+    }
+
+    private ServiceResult<Void> validateAndSaveInvite(UserResource invitedUser, Role role) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
-        return serviceSuccess();
+
+        return Role.externalRolesToInvite().stream().anyMatch(externalRole -> externalRole == role)
+                ? saveExternalUserInvite(invitedUser, role)
+                : saveInternalUserInvite(invitedUser, role);
     }
 
     private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
@@ -130,6 +148,19 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         if (!internalUserEmailDomain.equalsIgnoreCase(domain)) {
             return serviceFailure(USER_ROLE_INVITE_INVALID_EMAIL);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateKtaEmail(String email) {
+
+        ktaUserEmailDomain = StringUtils.defaultString(ktaUserEmailDomain);
+
+        String domain = StringUtils.substringAfter(email, "@");
+
+        if (!ktaUserEmailDomain.equalsIgnoreCase(domain)) {
+            return serviceFailure(KTA_USER_ROLE_INVITE_INVALID_EMAIL);
         }
 
         return serviceSuccess();

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Mockito.verify;
@@ -68,7 +69,8 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
                                 new PaginationViewModel(manageUserPageResource),
                                 new PaginationViewModel(roleInvitePageResource),
                                 false)
-                ));
+                ))
+                .andExpect(model().attribute("externalRoleLinkEnabled", true));
     }
 
     @Test
@@ -95,7 +97,8 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
                                 new PaginationViewModel(manageUserPageResource),
                                 new PaginationViewModel(roleInvitePageResource),
                                 false)
-                ));
+                ))
+                .andExpect(model().attribute("externalRoleLinkEnabled", true));
     }
 
     @Test
@@ -118,7 +121,8 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
                                 new PaginationViewModel(manageUserPageResource),
                                 new PaginationViewModel(roleInvitePageResource),
                                 true)
-                ));
+                ))
+                .andExpect(model().attribute("externalRoleLinkEnabled", true));
     }
 
     @Test
@@ -136,6 +140,8 @@ public class UsersManagementControllerTest extends AbstractAsyncWaitMockMVCTest<
 
     @Override
     protected UsersManagementController supplyControllerUnderTest() {
-        return new UsersManagementController();
+        UsersManagementController controller = new UsersManagementController();
+        ReflectionTestUtils.setField(controller, "externalRoleLinkEnabled", true);
+        return controller;
     }
 }
