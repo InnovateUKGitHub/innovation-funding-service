@@ -8,6 +8,8 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,6 +26,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -31,11 +34,15 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationTeamMarkAsCompleteValidatorTest {
+
     @InjectMocks
     private ApplicationTeamMarkAsCompleteValidator validator;
 
     @Mock
     private ApplicationInviteService applicationInviteService;
+
+    @Mock
+    private ApplicationKtaInviteService applicationKtaInviteService;
 
     @Test
     public void rejectWithUnopenedInvite() {
@@ -74,13 +81,31 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     }
 
     @Test
-    public void rejectWithKtpCompetitionNoKtaInvite() {
+    public void acceptWithKtpCompetitionWithKtaProcessRole() {
+        // given
+        Application application = ApplicationBuilder.newApplication()
+                .withProcessRole(newProcessRole().withRole(Role.KNOWLEDGE_TRANSFER_ADVISOR).build())
+                .withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
+
+        given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
+
+        Errors errors = mock(Errors.class);
+
+        // when
+        validator.validate(application, errors);
+
+        // then
+        verifyZeroInteractions(applicationKtaInviteService, errors);
+    }
+
+    @Test
+    public void rejectWithKtpCompetitionNoKtaProcessRoleAndNoInvite() {
         // given
         Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
-        given( applicationInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
+        given(applicationKtaInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
         Errors errors = mock(Errors.class);
 
@@ -92,14 +117,14 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     }
 
     @Test
-    public void rejectWithKtpCompetitionUnopenedKtaInvite() {
+    public void rejectWithKtpCompetitionNoKtaProcessRoleAndUnopenedKtaInvite() {
         // given
         Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
         ApplicationKtaInviteResource ktaInvite = newApplicationKtaInviteResource().withStatus(InviteStatus.SENT).build();
-        given( applicationInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(singletonList(ktaInvite)));
+        given(applicationKtaInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(singletonList(ktaInvite)));
 
         Errors errors = mock(Errors.class);
 
@@ -111,14 +136,14 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     }
 
     @Test
-    public void acceptWithKtpCompetitionAllInvitesOpened() {
+    public void acceptWithKtpCompetitionNoKtaProcessRoleAllInvitesOpened() {
         // given
         Application application = ApplicationBuilder.newApplication().withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));
 
         ApplicationKtaInviteResource ktaInvite = newApplicationKtaInviteResource().withStatus(InviteStatus.OPENED).build();
-        given( applicationInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(singletonList(ktaInvite)));
+        given(applicationKtaInviteService.getKtaInvitesByApplication(application.getId())).willReturn(serviceSuccess(singletonList(ktaInvite)));
 
         Errors errors = mock(Errors.class);
 

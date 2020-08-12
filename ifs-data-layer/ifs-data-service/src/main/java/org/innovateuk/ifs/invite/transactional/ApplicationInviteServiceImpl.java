@@ -67,25 +67,16 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private ApplicationInviteMapper applicationInviteMapper;
 
     @Autowired
-    private ApplicationKtaInviteMapper applicationKtaInviteMapper;
-
-    @Autowired
     private InviteOrganisationMapper inviteOrganisationMapper;
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
-
-    @Autowired
-    private ApplicationKtaInviteRepository applicationKtaInviteRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -160,47 +151,12 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     @Override
-    public ServiceResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId) {
-        return serviceSuccess(
-                simpleMap(
-                        applicationKtaInviteRepository.findByApplicationId(applicationId),
-                        applicationKtaInviteMapper::mapToResource
-                )
-        );
-    }
-
-    @Override
-    public ServiceResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        ApplicationKtaInvite invite = applicationKtaInviteMapper.mapToDomain(inviteResource);
-        invite.send(loggedInUserSupplier.get(), now());
-        applicationKtaInviteRepository.save(invite);
-        return applicationInviteNotificationService.resendKtaInvite(invite);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> removeKtaApplicationInvite(long ktaInviteResourceId) {
-        return find(applicationKtaInviteMapper.mapIdToDomain(ktaInviteResourceId), notFoundError(ApplicationKtaInvite.class))
-                .andOnSuccessReturnVoid(this::removeKtaInvite);
-    }
-
-    @Override
     @Transactional
     public ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources) {
         return validateUniqueEmails(inviteResources, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
             List<ApplicationInvite> invites = simpleMap(inviteResources, invite -> mapInviteResourceToInvite(invite, null));
             applicationInviteRepository.saveAll(invites);
             return applicationInviteNotificationService.inviteCollaborators(invites);
-        });
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        return validateKtaApplication(inviteResource, EDIT_EMAIL_FIELD).andOnSuccess(() -> {
-            ApplicationKtaInvite invite = mapKtaInviteResourceToKtaInvite(inviteResource);
-            applicationKtaInviteRepository.save(invite);
-            return applicationInviteNotificationService.inviteKta(invite);
         });
     }
 
@@ -276,11 +232,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         }
     }
 
-    private void removeKtaInvite(ApplicationKtaInvite applicationKtaInvite) {
-        applicationKtaInviteRepository.delete(applicationKtaInvite);
-        applicationInviteNotificationService.removeKtaFromApplication(applicationKtaInvite);
-    }
-
     private boolean isRemovingLastActiveCollaboratorUser(
             Application application,
             InviteOrganisation inviteOrganisation
@@ -346,10 +297,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return new ApplicationInvite(inviteResource.getId(), inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
-    private ApplicationKtaInvite mapKtaInviteResourceToKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        Application application = applicationRepository.findById(inviteResource.getApplication()).orElse(null);
-        return new ApplicationKtaInvite(inviteResource.getEmail(), application, null, InviteStatus.CREATED);
-    }
+
 
     private ServiceResult<Void> validateInviteOrganisationResource(InviteOrganisationResource inviteOrganisationResource) {
         if (inviteOrganisationResource.getOrganisation() != null || StringUtils.isNotBlank(inviteOrganisationResource.getOrganisationName())
@@ -373,18 +321,6 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             }
         });
         return failures.isEmpty() ? serviceSuccess() : serviceFailure(failures);
-    }
-
-    private ServiceResult<Void> validateKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
-        List<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
-        if (!existing.isEmpty()) {
-            return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
-        }
-        ServiceResult<UserResource> userResult = userService.findByEmail(inviteResource.getEmail());
-        if (userResult.isFailure() || !userResult.getSuccess().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)) {
-            return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "user.not.registered.kta"));
-        }
-        return serviceSuccess();
     }
 
     private Set<String> getUniqueEmailAddressesForApplication(long applicationId) {

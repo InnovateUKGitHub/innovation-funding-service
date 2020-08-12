@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -36,9 +34,6 @@ public interface ApplicationInviteService {
     ServiceResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
-    ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource);
-
-    @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
     ServiceResult<Void> resendInvite(ApplicationInviteResource inviteResource);
 
     @PreAuthorize("hasAuthority('system_registrar')")
@@ -61,13 +56,4 @@ public interface ApplicationInviteService {
 
     @PreAuthorize("hasPermission(#applicationInviteId, 'org.innovateuk.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
     ServiceResult<Void> removeApplicationInvite(long applicationInviteId);
-
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId);
-
-    @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
-    ServiceResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource);
-
-    @PreAuthorize("hasPermission(#ktaInviteResourceId, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'DELETE')")
-    ServiceResult<Void> removeKtaApplicationInvite(long ktaInviteResourceId);
 }

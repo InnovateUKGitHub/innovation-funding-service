@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -13,7 +12,6 @@ public interface InviteRestService {
     RestResult<Void> createInvitesByOrganisation(Long organisationId, List<ApplicationInviteResource> invites);
     RestResult<Void> createInvitesByOrganisationForApplication(Long applicationId, Long organisationId, List<ApplicationInviteResource> invites);
     RestResult<Void> saveInvites(List<ApplicationInviteResource> inviteResources);
-    RestResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource);
     RestResult<Void> resendInvite(ApplicationInviteResource inviteResource);
     RestResult<Void> acceptInvite(String inviteHash, long userId);
     RestResult<Void> acceptInvite(String inviteHash, long userId, long organisationId);
@@ -25,7 +23,4 @@ public interface InviteRestService {
     RestResult<ApplicationInviteResource> getInviteByHash(String hash);
     RestResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
     RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
-    RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId);
-    RestResult<Void> removeKtaInvite(long inviteId);
-    RestResult<Void> resendKtaInvite(ApplicationKtaInviteResource invite);
 }

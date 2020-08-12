@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.KtaInviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class ApplicationTeamController {
 
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private KtaInviteRestService ktaInviteRestService;
 
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
@@ -85,7 +89,7 @@ public class ApplicationTeamController {
                          @PathVariable long applicationId,
                          @PathVariable long questionId,
                          UserResource user) {
-        return inviteKta(form, validationHandler, applicationId, questionId, model, user, inviteRestService::saveKtaInvite);
+        return inviteKta(form, validationHandler, applicationId, questionId, model, user, ktaInviteRestService::saveKtaInvite);
     }
 
     @PostMapping(params = "resend-kta")
@@ -100,7 +104,7 @@ public class ApplicationTeamController {
     public String removeKta(@PathVariable long applicationId,
                             @PathVariable long questionId,
                             @RequestParam("remove-kta") final long inviteId) {
-        inviteRestService.removeKtaInvite(inviteId).getSuccess();
+        ktaInviteRestService.removeKtaInvite(inviteId).getSuccess();
         return redirectToApplicationTeam(applicationId, questionId);
     }
 
@@ -175,11 +179,11 @@ public class ApplicationTeamController {
     }
 
     private void resendKtaInvite(long inviteId, long applicationId){
-        List<ApplicationKtaInviteResource> inviteOrganisationResources = inviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
+        List<ApplicationKtaInviteResource> inviteOrganisationResources = ktaInviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
         inviteOrganisationResources.stream()
                 .filter(invite -> invite.getId().equals(inviteId))
                 .findFirst()
-                .ifPresent(invite -> inviteRestService.resendKtaInvite(invite));
+                .ifPresent(invite -> ktaInviteRestService.resendKtaInvite(invite));
     }
 
     @PostMapping(params = "add-team-member")

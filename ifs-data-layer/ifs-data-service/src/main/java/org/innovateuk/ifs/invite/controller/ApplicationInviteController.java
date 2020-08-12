@@ -3,7 +3,6 @@ package org.innovateuk.ifs.invite.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.crm.transactional.CrmService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
@@ -56,29 +55,14 @@ public class ApplicationInviteController {
         return applicationInviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 
-    @GetMapping("/get-kta-invites-by-application-id/{applicationId}")
-    public RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
-        return applicationInviteService.getKtaInvitesByApplication(applicationId).toGetResponse();
-    }
-
     @PostMapping("/save-invites")
     public RestResult<Void> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return applicationInviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
-    @PostMapping("/save-kta-invite")
-    public RestResult<Void> saveKtaInvite(@RequestBody ApplicationKtaInviteResource inviteResource) {
-        return applicationInviteService.saveKtaInvite(inviteResource).toPostCreateResponse();
-    }
-
     @PostMapping("/resend-invite")
     public RestResult<Void> resendInvite(@RequestBody ApplicationInviteResource inviteResource) {
         return applicationInviteService.resendInvite(inviteResource).toPostCreateResponse();
-    }
-
-    @PostMapping("/resend-kta-invite")
-    public RestResult<Void> resendKtaInvite(@RequestBody ApplicationKtaInviteResource inviteResource) {
-        return applicationInviteService.resendKtaInvite(inviteResource).toPostCreateResponse();
     }
 
     @PutMapping("/accept-invite/{hash}/{userId}")
@@ -104,11 +88,6 @@ public class ApplicationInviteController {
     @DeleteMapping("/remove-invite/{inviteId}")
     public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") long applicationInviteResourceId) {
         return applicationInviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
-    }
-
-    @DeleteMapping("/remove-kta-invite/{inviteId}")
-    public RestResult<Void> removeKtaInvite(@PathVariable("inviteId") long ktaInviteResourceId) {
-        return applicationInviteService.removeKtaApplicationInvite(ktaInviteResourceId).toDeleteResponse();
     }
 
     @GetMapping("/check-existing-user/{inviteHash}")

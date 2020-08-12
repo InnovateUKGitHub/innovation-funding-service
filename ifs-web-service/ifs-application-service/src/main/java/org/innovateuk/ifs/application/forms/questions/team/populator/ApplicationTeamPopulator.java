@@ -19,6 +19,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.KtaInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -47,6 +48,9 @@ public class ApplicationTeamPopulator {
 
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private KtaInviteRestService ktaInviteRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -96,7 +100,7 @@ public class ApplicationTeamPopulator {
 
         sort(organisationViewModels);
 
-        List<ApplicationKtaInviteResource> ktaInvites = inviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
+        List<ApplicationKtaInviteResource> ktaInvites = ktaInviteRestService.getKtaInvitesByApplication(applicationId).getSuccess();
         ApplicationKtaInviteResource ktaInvite = null;
         UserResource ktaUser = null;
         if (!ktaInvites.isEmpty()) {

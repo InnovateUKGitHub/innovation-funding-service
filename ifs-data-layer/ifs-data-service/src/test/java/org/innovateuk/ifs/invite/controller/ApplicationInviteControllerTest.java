@@ -8,7 +8,6 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
@@ -25,14 +24,14 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
-import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<ApplicationInviteController> {
@@ -66,7 +65,6 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
     @Before
     public void setUp() {
         when(inviteOrganisationRepositoryMock.save(isA(InviteOrganisation.class))).thenReturn(null);
-        when(applicationInviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
         when(applicationInviteRepositoryMock.save(isA(ApplicationInvite.class))).thenReturn(null);
         when(organisationRepositoryMock.findById(1L)).thenReturn(Optional.of(newOrganisation().build()));
         when(applicationRepositoryMock.findById(1L)).thenReturn(Optional.of(newApplication().build()));
@@ -140,50 +138,6 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .contentType(APPLICATION_JSON)
                 .content(toJson(inviteResource)))
                 .andExpect(status().isCreated());
-    }
-
-    @Test
-    public void resendKtaInvite() throws Exception {
-
-        long applicationId = 1L;
-        ApplicationKtaInviteResource inviteResource = newApplicationKtaInviteResource()
-                .withApplication(applicationId)
-                .withEmail("testemail")
-                .build();
-
-        when(applicationInviteService.resendKtaInvite(inviteResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/invite/resend-kta-invite")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(inviteResource)))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-    public void saveKtaInvite() throws Exception {
-
-        long applicationId = 1L;
-        ApplicationKtaInviteResource inviteResource = newApplicationKtaInviteResource()
-                .withApplication(applicationId)
-                .withEmail("testemail")
-                .build();
-
-        when(applicationInviteService.saveKtaInvite(inviteResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/invite/save-kta-invite")
-                .contentType(APPLICATION_JSON)
-                .content(toJson(inviteResource)))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
-    public void removeKtaInvite() throws Exception {
-
-        long applicationInviteId = 456L;
-        when(applicationInviteService.removeKtaApplicationInvite(applicationInviteId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(delete("/invite/remove-kta-invite/"+applicationInviteId))
-                .andExpect(status().isNoContent());
     }
 
     @Test

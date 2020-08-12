@@ -67,12 +67,6 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     }
 
     @Override
-    public RestResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        String url = inviteRestUrl + "/save-kta-invite";
-        return postWithRestResult(url, inviteResource, Void.class);
-    }
-
-    @Override
     public RestResult<Void> resendInvite(ApplicationInviteResource inviteResource) {
         String url = inviteRestUrl + "/resend-invite";
         return postWithRestResult(url, inviteResource, Void.class);
@@ -122,24 +116,6 @@ public class InviteRestServiceImpl extends BaseRestService implements InviteRest
     public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
         String url = inviteRestUrl + "/get-invites-by-application-id/"+ applicationId;
         return getWithRestResult(url, inviteOrganisationResourceListType());
-    }
-
-    @Override
-    public RestResult<List<ApplicationKtaInviteResource>> getKtaInvitesByApplication(Long applicationId) {
-        String url = inviteRestUrl + "/get-kta-invites-by-application-id/"+ applicationId;
-        return getWithRestResult(url, applicationKtaInviteResourceListType());
-    }
-
-    @Override
-    public RestResult<Void> removeKtaInvite(long inviteId) {
-        String url = inviteRestUrl + String.format("/remove-kta-invite/%s", inviteId);
-        return deleteWithRestResult(url);
-    }
-
-    @Override
-    public RestResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource) {
-        String url = inviteRestUrl + "/resend-kta-invite";
-        return postWithRestResult(url, inviteResource, Void.class);
     }
 
 }

@@ -9,15 +9,12 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
@@ -26,12 +23,13 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -50,20 +48,14 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
-import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteBuilder.newApplicationKtaInvite;
-import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -85,9 +77,6 @@ public class ApplicationInviteServiceImplTest {
     private ApplicationInviteRepository applicationInviteRepository;
 
     @Mock
-    private ApplicationKtaInviteRepository applicationKtaInviteRepository;
-
-    @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Mock
@@ -107,9 +96,6 @@ public class ApplicationInviteServiceImplTest {
 
     @Mock
     private ApplicationInviteNotificationService applicationInviteNotificationService;
-
-    @Mock
-    private UserService userService;
 
     @InjectMocks
     private ApplicationInviteServiceImpl inviteService;
@@ -587,67 +573,6 @@ public class ApplicationInviteServiceImplTest {
 
         assertThat(applicationInviteResult.isSuccess()).isTrue();
         assertThat(inviteOrganisation.getOrganisation()).isNull();
-    }
-
-    @Test
-    public void saveKtaInviteGivenInvitePresentAlready() {
-        // given
-        ApplicationKtaInviteResource invite = newApplicationKtaInviteResource()
-                .withEmail("testemail@example.com")
-                .withApplication(123L).build();
-
-        ApplicationKtaInvite otherInvite = newApplicationKtaInvite()
-                .withEmail("testemail2@example.com")
-                .build();
-        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(singletonList(otherInvite));
-
-        // when
-        ServiceResult<Void> result = inviteService.saveKtaInvite(invite);
-
-        // then
-        assertTrue(result.isFailure());
-        assertEquals(1, result.getFailure().getErrors().size());
-        assertEquals("kta.already.invited", result.getFailure().getErrors().get(0).getErrorKey());
-    }
-
-    @Test
-    public void saveKtaInviteForNonKtaUser() {
-        // given
-        ApplicationKtaInviteResource invite = newApplicationKtaInviteResource()
-                .withEmail("testemail@example.com")
-                .withApplication(123L).build();
-        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(emptyList());
-
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build();
-        given(userService.findByEmail("testemail@example.com")).willReturn(serviceSuccess(user));
-
-        // when
-        ServiceResult<Void> result = inviteService.saveKtaInvite(invite);
-
-        // then
-        assertTrue(result.isFailure());
-        assertEquals(1, result.getFailure().getErrors().size());
-        assertEquals("user.not.registered.kta", result.getFailure().getErrors().get(0).getErrorKey());
-    }
-
-    @Test
-    public void saveKtaInvite() {
-        // given
-        ApplicationKtaInviteResource invite = newApplicationKtaInviteResource()
-                .withEmail("testemail@example.com")
-                .withApplication(123L).build();
-        given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(emptyList());
-
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISOR)).build();
-        given(userService.findByEmail("testemail@example.com")).willReturn(serviceSuccess(user));
-
-        given(applicationInviteNotificationService.inviteKta(any())).willAnswer(invocation -> serviceSuccess());
-
-        // when
-        ServiceResult<Void> result = inviteService.saveKtaInvite(invite);
-
-        // then
-        assertTrue(result.isSuccess());
     }
 
     private void assertInvalidInvites(List<ApplicationInviteResource> inviteResources) {
