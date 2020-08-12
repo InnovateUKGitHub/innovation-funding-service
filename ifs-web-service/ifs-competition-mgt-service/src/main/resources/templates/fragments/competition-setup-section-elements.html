@@ -89,8 +89,9 @@
                 </th:block>
             </dl>
         </fieldset>
+    <th:block th:if="${model.displayAssessmentOptions}">
         <fieldset
-            th:if="${model.displayAssessmentOptions AND (question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null)}"
+            th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
             class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-top-6">
                 <h2 class="govuk-fieldset__heading">Assessment of this question</h2>
@@ -142,6 +143,7 @@
                 </th:block>
             </dl>
         </fieldset>
+    </th:block>
     </th:block>
     <th:block th:if="${editable}">
 
