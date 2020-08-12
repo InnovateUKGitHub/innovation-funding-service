@@ -114,7 +114,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(this::inviteInternalUser);
     }
 
-    private ServiceResult<Void> saveKtaUserInvite(UserResource invitedUser, Role role) {
+    private ServiceResult<Void> saveExternalUserInvite(UserResource invitedUser, Role role) {
 
         return validateKtaEmail(invitedUser.getEmail())
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
@@ -130,7 +130,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         }
 
         return Role.KNOWLEDGE_TRANSFER_ADVISOR.equals(role)
-                ? saveKtaUserInvite(invitedUser, role)
+                ? saveExternalUserInvite(invitedUser, role)
                 : saveInternalUserInvite(invitedUser, role);
     }
 
