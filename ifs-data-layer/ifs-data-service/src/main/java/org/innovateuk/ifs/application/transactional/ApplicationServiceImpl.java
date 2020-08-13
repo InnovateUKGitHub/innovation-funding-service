@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.google.common.collect.Sets;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationOrganisationAddress;
@@ -16,10 +15,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
-import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -27,7 +22,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,14 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.lang.String.format;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.STAKEHOLDER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -386,50 +377,4 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
-    private Collection<ApplicationState> getApplicationStatesFromFilter(String filter) {
-
-        Collection<ApplicationState> applicationStates;
-
-        switch (filter.toUpperCase()) {
-            case "INELIGIBLE":
-                applicationStates = ApplicationState.ineligibleStates;
-                break;
-
-            case "REJECTED":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.REJECTED);
-                break;
-
-            case "SUCCESSFUL":
-                applicationStates = Sets.immutableEnumSet(ApplicationState.APPROVED);
-                break;
-
-            case "ALL":
-            default:
-                applicationStates = ApplicationState.previousStates;
-                break;
-        }
-
-        return applicationStates;
-
-    }
-
-    private Sort getApplicationSortField(String sortBy) {
-        Sort result = APPLICATION_SORT_FIELD_MAP.get(sortBy);
-        return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
-    }
-
-    private PreviousApplicationResource convertToPreviousApplicationResource(Application application) {
-
-        ApplicationResource applicationResource = applicationMapper.mapToResource(application);
-        Organisation leadOrganisation = organisationRepository.findById(application.getLeadOrganisationId()).get();
-
-        return new PreviousApplicationResource(
-                applicationResource.getId(),
-                applicationResource.getName(),
-                leadOrganisation.getName(),
-                applicationResource.getApplicationState(),
-                applicationResource.getCompetition()
-        );
-
-    }
 }
