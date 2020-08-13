@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.organisation.domain;
 
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +28,17 @@ public class KnowledgeBase {
         // for ORM
     }
 
-    public KnowledgeBase(String name, String identifier, OrganisationType organisationType) {
+    public KnowledgeBase(String name, String identifier) {
         this.name = name;
         this.identifier = identifier;
-        this.organisationType = organisationType;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -56,6 +61,10 @@ public class KnowledgeBase {
         return organisationType;
     }
 
+    public OrganisationTypeEnum getOrganisationTypeEnum() {
+        return OrganisationTypeEnum.getFromId(getOrganisationType().getId());
+    }
+
     public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
     }
@@ -67,4 +76,5 @@ public class KnowledgeBase {
     public void setAddresses(List<KnowledgeBaseAddress> addresses) {
         this.addresses = addresses;
     }
+
 }

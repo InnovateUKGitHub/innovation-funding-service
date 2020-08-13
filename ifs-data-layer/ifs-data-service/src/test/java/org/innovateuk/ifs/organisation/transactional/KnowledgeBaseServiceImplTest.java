@@ -3,7 +3,9 @@ package org.innovateuk.ifs.organisation.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.domain.KnowledgeBase;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.KnowledgeBaseRepository;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -30,7 +32,7 @@ public class KnowledgeBaseServiceImplTest extends BaseServiceUnitTest<KnowledgeB
 
     @Before
     public void setup() {
-        knowledgeBase = new KnowledgeBase("KnowledgeBase 1");
+        knowledgeBase = new KnowledgeBase("KnowledgeBase 1", "123456789");
         knowledgeBase.setId(1L);
     }
 
@@ -52,15 +54,5 @@ public class KnowledgeBaseServiceImplTest extends BaseServiceUnitTest<KnowledgeB
 
         assertTrue(result.isSuccess());
         assertEquals(knowledgeBase.getName(), result.getSuccess().get(0));
-    }
-
-    @Test
-    public void createKnowledgeBase() {
-        when(knowledgeBaseRepository.save(any())).thenReturn(knowledgeBase);
-
-        ServiceResult<Long> result = service.createKnowledgeBase(knowledgeBase.getName());
-
-        assertTrue(result.isSuccess());
-        assertEquals(knowledgeBase.getId(), result.getSuccess());
     }
 }
