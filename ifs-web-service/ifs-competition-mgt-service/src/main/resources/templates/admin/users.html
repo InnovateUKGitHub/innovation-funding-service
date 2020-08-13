@@ -28,7 +28,7 @@
                         <div class="alignleft" th:if="${model.includeInternalUsers}">
                             <a th:href="@{/admin/invite-user}" class="govuk-link alignleft">Invite a new internal user</a>
                             <th:block th:if="${externalRoleLinkEnabled}">
-                                <span>|</span>
+                                <span> | </span>
                                 <a th:href="@{/admin/invite-external-user}" class="govuk-link alignleft">Invite a new external user</a>
                             </th:block>
                         </div>
