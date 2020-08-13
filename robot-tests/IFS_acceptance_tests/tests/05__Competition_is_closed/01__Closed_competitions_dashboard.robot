@@ -63,6 +63,13 @@ the user should be redirected to application summary page on click submit applic
     When the user submitted application 1 second late to the competition closing time
     Then the user should see application not submitted messages
 
+Application can be submitted sucessfully 300ms before the competition closing time
+    [Documentation]  IFS-8062
+    Given log in as a different user                                                  &{lead_applicant_credentials}
+    When the user submitted application 300ms before the competition closing time
+    Then the user should see the element
+
+
 *** Keywords ***
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
@@ -119,4 +126,10 @@ the user submitted application 1 second late to the competition closing time
     the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
     Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  1s
+    the user clicks the button/link                                                  id = submit-application-button
+
+the user submitted application 300ms before the competition closing time
+    the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
+    the user clicks the button/link                                                  id = application-overview-submit-cta
+    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  300ms
     the user clicks the button/link                                                  id = submit-application-button
