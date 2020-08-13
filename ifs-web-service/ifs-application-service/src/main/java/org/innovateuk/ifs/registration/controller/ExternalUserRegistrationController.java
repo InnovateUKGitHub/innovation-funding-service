@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.registration.controller;
 
+import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -21,9 +24,12 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 
 /**
@@ -42,6 +48,9 @@ public class ExternalUserRegistrationController {
 
     @Autowired
     private UserRestService userRestService;
+
+    @Autowired
+    private AddressRestService addressRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -103,7 +112,7 @@ public class ExternalUserRegistrationController {
                 return format("redirect:/registration/%s/register", inviteHash);
             }
             else {
-                return "registration/account-created";
+                return "registration/external-account-created";
             }
         }).getSuccess();
     }
@@ -117,6 +126,7 @@ public class ExternalUserRegistrationController {
                 viewModelBuilder.withTermsRequired(true)
                         .withPhoneRequired(true)
                         .withAddressRequired(true)
+                        .withInvitee(true)
                         .withRole(invite.getRole().getDisplayName())
                         .withPageTitle("Create " + invite.getRole().getDisplayName() + " account")
                         .withSubTitle("");
@@ -124,5 +134,34 @@ public class ExternalUserRegistrationController {
             model.addAttribute("model", viewModelBuilder.build());
             return "registration/register";
         }
+    }
+
+
+    @PostMapping(value = "/{inviteHash}/register", params = FORM_ACTION_PARAMETER)
+    public String addressFormAction(Model model,
+                                    @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
+                                    BindingResult bindingResult,
+                                    ValidationHandler validationHandler,
+                                    @PathVariable("inviteHash") String inviteHash,
+                                    UserResource user) {
+
+        RoleInviteResource invite = inviteUserRestService.getInvite(inviteHash).getSuccess();
+        registrationForm.getAddressForm().validateAction(bindingResult);
+        if (validationHandler.hasErrors()) {
+            return doViewYourDetails(model, invite, user);
+        }
+
+        AddressForm addressForm = registrationForm.getAddressForm();
+        addressForm.handleAction(this::searchPostcode);
+
+        return doViewYourDetails(model, invite, user);
+    }
+
+    private List<AddressResource> searchPostcode(String postcodeInput) {
+        RestResult<List<AddressResource>> addressLookupRestResult =
+                addressRestService.doLookup(postcodeInput);
+        return addressLookupRestResult.handleSuccessOrFailure(
+                failure -> new ArrayList<>(),
+                addresses -> addresses);
     }
 }

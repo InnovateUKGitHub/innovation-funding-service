@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name}
 
-You've been invited to become a ${role.toLowerCase()} for the Innovation Funding Service
+You've been invited to become a ${role} for the Innovation Funding Service
 
 Create your account: ${inviteUrl}
 

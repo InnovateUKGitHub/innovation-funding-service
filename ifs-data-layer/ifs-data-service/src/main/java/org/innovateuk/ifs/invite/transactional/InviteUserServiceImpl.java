@@ -250,7 +250,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     private Map<String, Object> createGlobalArgsForExternalUserInvite(RoleInvite roleInvite) {
         Map<String, Object> globalArguments = new HashMap<>();
         Role roleResource = roleInvite.getTarget();
-        globalArguments.put("role", roleResource.getDisplayName());
+        globalArguments.put("role", roleResource.getDisplayName().toLowerCase());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + EXTERNAL_USER_WEB_CONTEXT, roleInvite));
         return globalArguments;
     }

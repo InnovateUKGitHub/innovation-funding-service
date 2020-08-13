@@ -16,7 +16,8 @@ public abstract class RoleInviteMapper extends BaseMapper<RoleInvite, RoleInvite
 
     @Mappings({
             @Mapping(source = "target.name", target = "roleName"),
-            @Mapping(source = "target.id", target = "roleId")
+            @Mapping(source = "target.id", target = "roleId"),
+            @Mapping(source = "target", target = "role")
     })
     @Override
     public abstract RoleInviteResource mapToResource(RoleInvite domain);
