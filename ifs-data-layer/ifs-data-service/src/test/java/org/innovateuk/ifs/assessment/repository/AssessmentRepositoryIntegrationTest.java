@@ -413,7 +413,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         );
 
         AssessmentTotalScoreResource assessmentTotalScoreAfter = repository.getTotalScore(assessment.getId());
-        assertEquals(scoreGivenAccumulator, assessmentTotalScoreAfter.getTotalScoreGiven());
+        assertEquals(scoreGivenAccumulator.intValue(), assessmentTotalScoreAfter.getTotalScoreGiven().intValue());
         assertEquals(expectedTotalScorePossible, assessmentTotalScoreAfter.getTotalScorePossible());
     }
 
