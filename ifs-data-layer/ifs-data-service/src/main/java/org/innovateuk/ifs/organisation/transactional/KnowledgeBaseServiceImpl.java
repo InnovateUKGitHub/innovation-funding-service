@@ -35,17 +35,4 @@ public class KnowledgeBaseServiceImpl extends RootTransactionalService implement
         return find(knowledgeBaseRepository.findById(id), notFoundError(KnowledgeBase.class, singletonList(id)))
                 .andOnSuccessReturn(KnowledgeBase::getName);
     }
-
-    @Override
-    @Transactional
-    public ServiceResult<Long> createKnowledgeBase(String name) {
-        return serviceSuccess(knowledgeBaseRepository.save(new KnowledgeBase(name)).getId());
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> deleteKnowledgeBase(long id) {
-        knowledgeBaseRepository.deleteById(id);
-        return serviceSuccess();
-    }
 }

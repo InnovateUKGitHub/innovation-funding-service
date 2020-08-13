@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.organisation.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.innovateuk.ifs.organisation.KnowledgeBaseAddress;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class KnowledgeBase {
@@ -14,20 +15,27 @@ public class KnowledgeBase {
 
     private String name;
 
+    private String identifier;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private OrganisationType organisationType;
+
+    @OneToMany(mappedBy = "knowledge_base",
+            cascade = CascadeType.ALL)
+    private List<KnowledgeBaseAddress> addresses = new ArrayList<>();
+
     KnowledgeBase() {
         // for ORM
     }
 
-    public KnowledgeBase(String name) {
+    public KnowledgeBase(String name, String identifier, OrganisationType organisationType) {
         this.name = name;
+        this.identifier = identifier;
+        this.organisationType = organisationType;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -36,5 +44,29 @@ public class KnowledgeBase {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public OrganisationType getOrganisationType() {
+        return organisationType;
+    }
+
+    public void setOrganisationType(OrganisationType organisationType) {
+        this.organisationType = organisationType;
+    }
+
+    public List<KnowledgeBaseAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<KnowledgeBaseAddress> addresses) {
+        this.addresses = addresses;
     }
 }
