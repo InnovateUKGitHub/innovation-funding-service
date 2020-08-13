@@ -57,11 +57,11 @@ Notify Assessors
     Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
 
-the user should be redirected to application summary page on click submit application seconds late to competition closing time.
+the user should be redirected to application summary page on click submit application seconds late to the competition closing time.
     [Documentation]  IFS-7479
     Given log in as a different user                                                      &{lead_applicant_credentials}
     When the user submitted application 1 second late to the competition closing time
-    Then the user should see application is not submitted messages
+    Then the user should see application not submitted messages
 
 *** Keywords ***
 Custom suite setup
@@ -110,7 +110,7 @@ Update the competition submission date to 1 second after to the current time
      Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second) WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
      sleep  ${sleepTime}
 
-the user should see application is not submitted messages
+the user should see application not submitted messages
     the user should see the element         jQuery = h2:contains("${applicationNotSubmitted}")
     the user should see the element         jQuery = p:contains("${applicationNotEnteredCompetition}")
     the user should not see the element     id = submit-application-form
