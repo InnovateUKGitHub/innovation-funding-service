@@ -180,7 +180,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long applicationId,
                                                                             ZonedDateTime date) {
-        return getOpenApplication(applicationId).andOnSuccessReturn(existingApplication -> {
+        return getApplication(applicationId).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
