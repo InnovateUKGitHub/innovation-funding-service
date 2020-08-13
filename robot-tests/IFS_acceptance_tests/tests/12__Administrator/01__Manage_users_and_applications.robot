@@ -54,7 +54,7 @@ ${firstNameValidationMessage}           Please enter a first name.
 ${lastNameValidationMessage}            Please enter a last name.
 ${emailAddressValidationMessage}        Please enter an email address.
 ${invalidKTNDomainValidationMessage}    Users cannot be registered without a Knowledge Transfer Network email address.
-${validKTNDomainEmail}                  jake.Rayan@ktn-uk.org
+${validKTNDomainEmail}                  jake.Rayan@ktn-uk.test
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
@@ -353,38 +353,31 @@ Deactivated innovation lead cannot be selected on initial details
     When the user clicks the button/link      css = button[type=submit]
     Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
-Administrator invites a KTA external user
-    [Documentation]  IFS-7975
-    Given the user clicks the button/link                    link = Manage users
-    When the user clicks the button/link                     link = Invite a new external user
-    Then the user should see invite external user fields
-
 Invite a new external user field validations
     [Documentation]  IFS-7975
-    Given the user clicks the button/link                                            jQuery = button:contains("Save and return")
+    Given the user clicks the button/link                                          link = Manage users
+    When the user clicks the button/link                                           link = Invite a new external user
+    And the user clicks the button/link                                            jQuery = button:contains("Save and return")
     Then the user should see invite a new external user field validation message
 
 KTN email domain validations
     [Documentation]  IFS-7975
-    Given the user enters text to a text field     id = emailAddress  ${invalidEmail}
-    When the user clicks the button/link           jQuery = button:contains("Save and return")
-    Then the user should see a summary error       ${invalidKTNDomainValidationMessage}
-    And the user should see a field error          ${invalidKTNDomainValidationMessage}
+    Given the user fills invite a new external user fields     Jake  Rayan  ${invalidEmail}
+    When the user clicks the button/link                       jQuery = button:contains("Save and return")
+    Then the user should see a field and summary error         ${invalidKTNDomainValidationMessage}
 
-Administrator can cancel the new external user details
+Administrator can cancel the new external user details entered
     [Documentation]  IFS-7975
-    Given the user fills invite a new external user fields          Jake  Rayan  Jake.Rayan@ktn-uk.org
+    Given the user fills invite a new external user fields          Jake  Rayan  ${validKTNDomainEmail}
     When the user clicks the button/link                            link = Cancel
-    And the user search for an active user by an email address      Jake.Rayan@ktn-uk.org
-    Then the user should not see the element                        link = Jake.Rayan@ktn-uk.org
+    Then the user should see the element                            link = Invite a new external user
 
-Administrator can sucessfully invite a new external user
+Administrator can sucessfully save and return to the manage users page
     [Documentation]  IFS-7975
     Given the user clicks the button/link                          link = Invite a new external user
-    When the user fills invite a new external user fields          Jake  Rayan  Jake.Rayan@ktn-uk.org
+    When the user fills invite a new external user fields          Jake  Rayan  ${validKTNDomainEmail}
     And the user clicks the button/link                            jQuery = button:contains("Save and return")
-    And the user search for an active user by an email address     Jake.Rayan@ktn-uk.org
-    Then the user should see the element                           link = Jake.Rayan@ktn-uk.org
+    Then the user should see the element                           link = Invite a new external user
 
 *** Keywords ***
 the user adds a new partner organisation in application
@@ -605,7 +598,7 @@ the user should see invite external user fields
     the user should see the element     id = firstName
     the user should see the element     id = lastName
     the user should see the element     id = emailAddress
-    the user should see the element     css = [value="KNOWLEDGE_TRANSFER_ADVISOR"]
+    the user should see the element     jQuery = label:contains("Knowledge transfer adviser")
     the user should see the element     jQuery = button:contains("Save and return")
     the user should see the element     link = Cancel
     the user should see the element     link = Back to manage Users
@@ -624,7 +617,7 @@ the user fills invite a new external user fields
     the user enters text to a text field     id = lastName  ${lastName}
     the user enters text to a text field     id = emailAddress  ${emailAddress}
 
-the user search for an active user by an email address
-    [Arguments]  ${emailAddress}
-    the user enters text to a text field      id = filter  ${emailAddress}
-    the user clicks the button/link           css = input[value="Search"]
+#the user search for an active user by an email address
+#    [Arguments]  ${emailAddress}
+#    the user enters text to a text field      id = filter  ${emailAddress}
+#    the user clicks the button/link           css = input[value="Search"]
