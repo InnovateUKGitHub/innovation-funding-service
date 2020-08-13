@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.organisation;
+package org.innovateuk.ifs.organisation.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.organisation.domain.KnowledgeBase;

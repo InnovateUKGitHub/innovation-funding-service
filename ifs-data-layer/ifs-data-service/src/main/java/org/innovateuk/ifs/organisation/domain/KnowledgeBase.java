@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.organisation.domain;
 
-import org.innovateuk.ifs.organisation.KnowledgeBaseAddress;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +18,7 @@ public class KnowledgeBase {
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
 
-    @OneToMany(mappedBy = "knowledge_base",
+    @OneToMany(mappedBy = "knowledgeBase",
             cascade = CascadeType.ALL)
     private List<KnowledgeBaseAddress> addresses = new ArrayList<>();
 

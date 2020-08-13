@@ -3,8 +3,8 @@ apiVersion: v1
 metadata:
   name: shibboleth-config
 data:
-  SHIBBOLETH_LDAP_BASE_DN: "${LDAP_BASEDN}"
-  SHIBBOLETH_LDAP_USER: "${SHIBBOLETH_LDAP_USER}"
+  SHIBBOLETH_LDAP_BASE_DN: "dc=int,dc=g2g3digital,dc=net"
+  SHIBBOLETH_LDAP_USER: "cn=admin,dc=int,dc=g2g3digital,dc=net"
   SHIBBOLETH_API_KEYS: "1234567890"
   SHIBBOLETH_LDAP_PORT: "${SHIBBOLETH_LDAP_PORT}"
   SP_DOMAIN: "${SHIB_ADDRESS}"
