@@ -23,6 +23,7 @@ import javax.validation.groups.Default;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.KTA_USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_ROLE_INVITE_INVALID_EMAIL;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
@@ -96,7 +97,11 @@ public class InviteUserController {
     }
 
     private ValidationHandler handleSaveUserInviteErrors(ServiceResult<Void> saveResult, ValidationHandler validationHandler) {
-        return validationHandler.addAnyErrors(saveResult, mappingErrorKeyToField(USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"), fieldErrorsToFieldErrors(), asGlobalErrors());
+        return validationHandler.addAnyErrors(saveResult,
+                mappingErrorKeyToField(USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"),
+                mappingErrorKeyToField(KTA_USER_ROLE_INVITE_INVALID_EMAIL, "emailAddress"),
+                fieldErrorsToFieldErrors(),
+                asGlobalErrors());
     }
 
     private InviteUserResource constructInviteUserResource(InviteUserForm form) {
