@@ -149,11 +149,24 @@ Validating GOL page error message
     When the user clicks the button/link                 jQuery = button:contains("Send letter to project team")
     And the user clicks the button/link                  jQuery = button:contains("Send grant offer letter")
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
+    And the user should see the element                  name = removeGrantOfferLetterClicked
+
+Comp admin user uploads new annex file
+    When the user uploads a file             annex  ${5mb_pdf}
+    Then the user should see the element     jQuery = a:contains("${5mb_pdf}")
+    And the user should see the element      name = removeAdditionalContractFileClicked
+
+Comp admin can not upload a new file without removing the previous annex file
+    Then the user should not see the element     jQuery = label:contains("Upload")
+
+Comp admin can remove the annex file
+    When the user clicks the button/link        name = removeAdditionalContractFileClicked
+    Then the user should see the element        jQuery = label:contains("Upload")
+    And the user should not see the element     jQuery = a:contains("${5mb_pdf}")
 
 Comp Admin user uploads new grant offer letter
     [Documentation]    INFUND-6377, INFUND-5988
     [Tags]  HappyPath
-    And the user should see the element         jQuery = button:contains("Remove")
     When the user uploads a file                annex  ${valid_pdf}
     And the user selects the checkbox           confirmation
     And the user clicks the button/link         id = send-gol
