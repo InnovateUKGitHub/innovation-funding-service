@@ -13,6 +13,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               IFS-7479 ISE when application is submitted less than a second late to competition close
 ...
+...               IFS-8062 Application status page gettting ISE on submit application 500ms before the competition closing time
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom Suite teardown
 Force Tags        CompAdmin
@@ -57,7 +59,7 @@ Notify Assessors
 
 the user should be redirected to application summary page on click submit application seconds late to competition closing time.
     [Documentation]  IFS-7479
-    Given log in as a different user                                                   &{lead_applicant_credentials}
+    Given log in as a different user                                                      &{lead_applicant_credentials}
     When the user submitted application 1 second late to the competition closing time
     Then the user should see application is not submitted messages
 
@@ -104,9 +106,9 @@ the user should see the milestones for the closed competitions
     the user should see the element    jQuery = li:contains("Assessor accepts").not-done
 
 Update the competition submission date to 1 second after to the current time
-    [Arguments]  ${competitionID}
+    [Arguments]  ${competitionID}  ${sleepTime}
      Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second) WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
-     SLEEP  1s
+     sleep  ${sleepTime}
 
 the user should see application is not submitted messages
     the user should see the element         jQuery = h2:contains("${applicationNotSubmitted}")
@@ -116,5 +118,5 @@ the user should see application is not submitted messages
 the user submitted application 1 second late to the competition closing time
     the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
-    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}
+    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  1s
     the user clicks the button/link                                                  id = submit-application-button
