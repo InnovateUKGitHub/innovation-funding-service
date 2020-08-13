@@ -209,8 +209,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
             }
 
             if (currentUserRole.isPresent()) {
-                if (applicantProcessRoles().contains(currentUserRole.get().getRole())
-                        && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
+                if (applicantProcessRoles().contains(currentUserRole.get().getRole())) {
                     return Optional.of(applicantLink(application.getId()));
                 }
             }
