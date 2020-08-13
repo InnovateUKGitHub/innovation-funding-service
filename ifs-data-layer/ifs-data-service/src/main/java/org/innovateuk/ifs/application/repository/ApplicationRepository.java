@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -105,7 +106,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     List<Application> findByCompetitionId(long competitionId);
 
-    Application findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
+    Optional<Application> findTopByCompetitionIdOrderByManageFundingEmailDateDesc(long competitionId);
 
     @Query(APPLICATION_SELECT + COMP_STATUS_FILTER_WHERE)
     Page<Application> findByApplicationStateAndFundingDecision(@Param("compId") long competitionId,
