@@ -45,7 +45,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     private final SectionRestService sectionRestService;
     private final QuestionRestService questionRestService;
     private final UserRestService userRestService;
-    private final MessageSource messageSource;org.innovateuk.ifs.organisation.KnowledgeBaseAddress.knowledge_base
+    private final MessageSource messageSource;
     private final OrganisationRestService organisationRestService;
     private final QuestionStatusRestService questionStatusRestService;
     private final SectionStatusRestService sectionStatusRestService;
