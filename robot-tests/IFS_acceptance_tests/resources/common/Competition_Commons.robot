@@ -185,7 +185,7 @@ the user marks the KTP application details as done
     [Arguments]  ${comp_type}
     the user clicks the button/link                                link = Application
     the user marks the Application details section as complete     ${comp_type}
-    the user marks the KTP Assessed questions as complete
+    the user marks the KTP Assessed questions as complete with no assessment score or feedback
 
 The user removes the Project details questions and marks the Application section as done
     [Arguments]  ${growthTable}  ${comp_type}  ${competition}
