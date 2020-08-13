@@ -345,12 +345,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> resetViability(Long projectId) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
-            long organisationId = projectFinance.getOrganisation().getId();
-            viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
-            projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
-        });
+        partnerOrganisationRepository.findByProjectId(projectId).forEach(partnerOrganisation -> {
+                    projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisation.getOrganisation().getId()).ifPresent(projectFinance -> {
+                        viabilityWorkflowHandler.viabilityReset(partnerOrganisation, getCurrentlyLoggedInUser().getSuccess());
+                        projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
+                    });
+                });
         return serviceSuccess();
+
     }
 
     @Override
