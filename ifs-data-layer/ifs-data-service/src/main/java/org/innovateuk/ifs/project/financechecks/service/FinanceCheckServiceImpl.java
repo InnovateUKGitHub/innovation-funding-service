@@ -358,10 +358,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> resetEligibility(Long projectId) {
-        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
-            long organisationId = projectFinance.getOrganisation().getId();
-            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
-            projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
+        partnerOrganisationRepository.findByProjectId(projectId).forEach(partnerOrganisation -> {
+            projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisation.getOrganisation().getId()).ifPresent(projectFinance -> {
+                eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, getCurrentlyLoggedInUser().getSuccess());
+                projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
+            });
         });
         return serviceSuccess();
     }

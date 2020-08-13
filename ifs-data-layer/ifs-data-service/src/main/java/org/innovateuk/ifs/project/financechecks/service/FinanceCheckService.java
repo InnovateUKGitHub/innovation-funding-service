@@ -57,6 +57,7 @@ public interface FinanceCheckService {
     ServiceResult<Void> resetEligibility(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'RESET_FINANCE_CHECKS')")
+    @Activity(projectId = "projectId", type = ActivityType.FINANCE_CHECKS_RESET)
     ServiceResult<Void> resetFinanceChecks(Long projectId);
 
     @NotSecured(value = "Not secured", mustBeSecuredByOtherServices = false)
