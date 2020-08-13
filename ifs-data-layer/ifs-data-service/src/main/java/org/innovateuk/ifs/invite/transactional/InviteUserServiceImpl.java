@@ -83,10 +83,12 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    public static final String WEB_CONTEXT = "/management/registration";
+    public static final String INTERNAL_USER_WEB_CONTEXT = "/management/registration";
+    public static final String EXTERNAL_USER_WEB_CONTEXT = "/registration";
 
     enum Notifications {
-        INVITE_INTERNAL_USER
+        INVITE_INTERNAL_USER,
+        INVITE_EXTERNAL_USER,
     }
 
     private static final String DEFAULT_INTERNAL_USER_EMAIL_DOMAIN = "innovateuk.ukri.org";
@@ -115,11 +117,14 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<Void> saveExternalUserInvite(UserResource invitedUser, Role role) {
-
-        return validateKtaEmail(invitedUser.getEmail())
-                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
+        ServiceResult<Void> result = serviceSuccess();
+        if (role == Role.KNOWLEDGE_TRANSFER_ADVISOR) {
+            result = result.andOnSuccess(() -> validateKtaEmail(invitedUser.getEmail()));
+        }
+        return result.andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccessReturnVoid(() -> saveInvite(invitedUser, role));
+                .andOnSuccess(() -> saveInvite(invitedUser, role))
+                .andOnSuccess(this::inviteExternalUser);
     }
 
     private ServiceResult<Void> validateAndSaveInvite(UserResource invitedUser, Role role) {
@@ -187,14 +192,13 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         return serviceSuccess(invite);
     }
-
     private ServiceResult<Void> inviteInternalUser(RoleInvite roleInvite) {
 
         try {
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
 
             Notification notification = new Notification(systemNotificationSource,
-                    singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
+                    singletonList(createUserNotificationTarget(roleInvite)),
                     Notifications.INVITE_INTERNAL_USER, globalArgs);
 
             ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -209,8 +213,29 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
         }
     }
+    private ServiceResult<Void> inviteExternalUser(RoleInvite roleInvite) {
 
-    private NotificationTarget createInviteInternalUserNotificationTarget(RoleInvite roleInvite) {
+        try {
+            Map<String, Object> globalArgs = createGlobalArgsForExternalUserInvite(roleInvite);
+
+            Notification notification = new Notification(systemNotificationSource,
+                    singletonList(createUserNotificationTarget(roleInvite)),
+                    Notifications.INVITE_EXTERNAL_USER, globalArgs);
+
+            ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotificationWithFlush(notification, EMAIL);
+
+            inviteContactEmailSendResult.handleSuccessOrFailure(
+                    failure -> handleInviteError(roleInvite, failure),
+                    success -> handleInviteSuccess(roleInvite)
+            );
+            return inviteContactEmailSendResult;
+        } catch (IllegalArgumentException e) {
+            LOG.error(String.format("Role %s lookup failed for user %s", roleInvite.getEmail(), roleInvite.getTarget().getName()), e);
+            return ServiceResult.serviceFailure(new Error(CommonFailureKeys.ADMIN_INVALID_USER_ROLE));
+        }
+    }
+
+    private NotificationTarget createUserNotificationTarget(RoleInvite roleInvite) {
         return new UserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
     }
 
@@ -218,7 +243,15 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         Map<String, Object> globalArguments = new HashMap<>();
         Role roleResource = roleInvite.getTarget();
         globalArguments.put("role", roleResource.getDisplayName());
-        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, roleInvite));
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + INTERNAL_USER_WEB_CONTEXT, roleInvite));
+        return globalArguments;
+    }
+
+    private Map<String, Object> createGlobalArgsForExternalUserInvite(RoleInvite roleInvite) {
+        Map<String, Object> globalArguments = new HashMap<>();
+        Role roleResource = roleInvite.getTarget();
+        globalArguments.put("role", roleResource.getDisplayName());
+        globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + EXTERNAL_USER_WEB_CONTEXT, roleInvite));
         return globalArguments;
     }
 

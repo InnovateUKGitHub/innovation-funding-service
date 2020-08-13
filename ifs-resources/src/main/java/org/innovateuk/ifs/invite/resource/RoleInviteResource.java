@@ -10,6 +10,7 @@ public class RoleInviteResource extends InviteResource {
     private Long roleId;
     private String roleName;
     private String hash;
+    private Role role;
 
     public RoleInviteResource() {
     }
@@ -69,6 +70,14 @@ public class RoleInviteResource extends InviteResource {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @JsonIgnore

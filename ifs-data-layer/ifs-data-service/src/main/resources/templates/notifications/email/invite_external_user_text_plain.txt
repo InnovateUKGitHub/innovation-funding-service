@@ -1,0 +1,12 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name}
+
+You've been invited to become a ${role.toLowerCase()} for the Innovation Funding Service
+
+Create your account: ${inviteUrl}
+
+Yours sincerely
+
+<@layout.innovateSenderPlainText />
+</@layout.defaultPlainText>

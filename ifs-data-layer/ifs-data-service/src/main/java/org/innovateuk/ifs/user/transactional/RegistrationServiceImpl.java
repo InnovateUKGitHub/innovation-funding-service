@@ -122,9 +122,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private boolean shouldImmediatelyActivate(UserCreationResource user) {
-        return EnumSet.of(STAKEHOLDER, EXTERNAL_FINANCE,
-                INNOVATION_LEAD, PROJECT_FINANCE, IFS_ADMINISTRATOR, COMP_ADMIN, SUPPORT)
-                .contains(user.getRole());
+        return user.getInviteHash() != null; // Already answered an email notificaiton.x
     }
 
     private boolean shouldSendVerificationEmail(UserCreationResource user) {
@@ -160,7 +158,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private boolean shouldBePending(UserCreationResource user) {
-        return user.getRole() == MONITORING_OFFICER;
+        return user.getRole() == MONITORING_OFFICER && !user.isAddLiveProjectUserRole();
     }
 
     private ServiceResult<User> saveUserAsPending(User user) {

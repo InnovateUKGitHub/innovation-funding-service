@@ -3,6 +3,10 @@ package org.innovateuk.ifs.registration.viewmodel;
 public class RegistrationViewModel {
     private static final String DEFAULT_PHONE_GUIDANCE = "We may use this to contact you about the application.";
     private static final String DEFAULT_BUTTON_TEXT = "Create account";
+    private static final String DEFAULT_PAGE_TITLE = "Your details";
+    private static final String DEFAULT_SUB_TITLE = "Create your account";
+    private String pageTitle;
+    private String subTitle;
     private final boolean invitee;
     private final String role;
     private final String project;
@@ -12,7 +16,9 @@ public class RegistrationViewModel {
     private final boolean termsRequired;
     private final boolean addressRequired;
 
-    public RegistrationViewModel(boolean invitee, String role, String project, String phoneGuidance, String buttonText, boolean phoneRequired, boolean termsRequired, boolean addressRequired) {
+    public RegistrationViewModel(String pageTitle, String subTitle, boolean invitee, String role, String project, String phoneGuidance, String buttonText, boolean phoneRequired, boolean termsRequired, boolean addressRequired) {
+        this.pageTitle = pageTitle == null ? DEFAULT_PAGE_TITLE : pageTitle;
+        this.subTitle = subTitle == null ? DEFAULT_SUB_TITLE : subTitle;
         this.invitee = invitee;
         this.role = role;
         this.project = project;
@@ -21,6 +27,14 @@ public class RegistrationViewModel {
         this.phoneRequired = phoneRequired;
         this.termsRequired = termsRequired;
         this.addressRequired = addressRequired;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
     }
 
     public boolean isInvitee() {
@@ -60,6 +74,8 @@ public class RegistrationViewModel {
     }
 
     public static final class RegistrationViewModelBuilder {
+        private String pageTitle;
+        private String subTitle;
         private boolean invitee;
         private String role;
         private String project;
@@ -74,6 +90,16 @@ public class RegistrationViewModel {
 
         public static RegistrationViewModelBuilder aRegistrationViewModel() {
             return new RegistrationViewModelBuilder();
+        }
+
+        public RegistrationViewModelBuilder withPageTitle(String pageTitle) {
+            this.pageTitle = pageTitle;
+            return this;
+        }
+
+        public RegistrationViewModelBuilder withSubTitle(String subTitle) {
+            this.subTitle = subTitle;
+            return this;
         }
 
         public RegistrationViewModelBuilder withInvitee(boolean invitee) {
@@ -117,7 +143,7 @@ public class RegistrationViewModel {
         }
 
         public RegistrationViewModel build() {
-            return new RegistrationViewModel(invitee, role, project, phoneGuidance, buttonText, phoneRequired, termsRequired, addressRequired);
+            return new RegistrationViewModel(pageTitle, subTitle, invitee, role, project, phoneGuidance, buttonText, phoneRequired, termsRequired, addressRequired);
         }
     }
 }
