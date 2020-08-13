@@ -22,11 +22,12 @@ Resource          ../../resources/defaultResources.robot
 Resource          ../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
-${applicationClosedAfterCompetitionClosed}     Competition not submitted before the deadline app
-${applicationNotSubmittedCompetitionName}      Competition not submitted before the deadline
-${closedCompetitionID}                         ${competition_ids['${applicationNotSubmittedCompetitionName}']}
-${applicationNotEnteredCompetition}            This application has not been entered into the competition
-${applicationNotSubmitted}                     Application not submitted
+${applicationClosedAfterCompetitionClosed}        Competition not submitted before the deadline app
+${applicationSubmitedBeforeCompetitionClosed}     Application submitted before competition closing time
+${applicationNotSubmittedCompetitionName}         Competition not submitted before the deadline
+${closedCompetitionID}                            ${competition_ids['${applicationNotSubmittedCompetitionName}']}
+${applicationNotEnteredCompetition}               This application has not been entered into the competition
+${applicationNotSubmitted}                        Application not submitted
 
 *** Test Cases ***
 Competition dashboard
@@ -63,11 +64,12 @@ the user should be redirected to application summary page on click submit applic
     When the user submitted application 1 second late to the competition closing time
     Then the user should see application not submitted messages
 
-Application can be submitted sucessfully 300ms before the competition closing time
+Application can be submitted sucessfully 800ms before the competition closing time
     [Documentation]  IFS-8062
-    Given log in as a different user                                                  &{lead_applicant_credentials}
-    When the user submitted application 300ms before the competition closing time
-    Then the user should see the element
+    Given the user clicks the button/link                                             link = Dashboard
+    When the user submitted application 800ms before the competition closing time
+    Then the user should see the element                                              jQuery = h1:contains("Application status")
+    And the user should see the element                                               jQuery = h2:contains("What happens next?")
 
 
 *** Keywords ***
@@ -128,8 +130,8 @@ the user submitted application 1 second late to the competition closing time
     Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  1s
     the user clicks the button/link                                                  id = submit-application-button
 
-the user submitted application 300ms before the competition closing time
-    the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
+the user submitted application 800ms before the competition closing time
+    the user clicks the button/link                                                  link = ${applicationSubmitedBeforeCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
-    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  300ms
+    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  200ms
     the user clicks the button/link                                                  id = submit-application-button
