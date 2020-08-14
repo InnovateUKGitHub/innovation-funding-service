@@ -7,42 +7,43 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	      KTP application
-${KTPapplicationId}       ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}          KTP new competition
-${KTPcompetitonId}        ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                email=bob@knowledge.base    password=Passw0rd
-${estateValue}            11000
-
+${KTPapplication}  	             KTP application
+${KTPapplicationId}              ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}                 KTP new competition
+${KTPcompetitonId}               ${competition_ids["${KTPcompetiton}"]}
+&{KTPLead}                       email=bob@knowledge.base    password=Passw0rd
+${estateValue}                   11000
+${associateSalaryTable}          associate-salary-costs-table
+${associateDevelopmentTable}     associate-development-costs-table
 
 *** Test Cases ***
 Associate employment and development client side validation
     [Documentation]  IFS-7790
     Given expand the sections
     When the user fills in associate salary        ${EMPTY}  ${EMPTY}
-    And the user enters text to a text field       jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${EMPTY}
-    Then the user should see the element           jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
-    And the user should see the element            jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
+    And the user enters text to a text field       jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${EMPTY}
+    Then the user should see the element           jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
+    And the user should see the element            jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
 
 Mark as complete with no associates is not allowed
     [Documentation]  IFS-7790
     Given the user clicks the button/link     css = label[for="stateAidAgreed"]
     When the user clicks the button/link      jQuery = button:contains("Mark as complete")
-    Then the user should see the element      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
-    And the user should see the element       jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
+    Then the user should see the element      jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
+    And the user should see the element       jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
 
 Entering duration in months autofills associate development
     [Documentation]  IFS-7790
     Given the user fills in associate salary      12  123
-    Then the user should see the element          jQuery = table[id="associate-development-costs-table"] td:contains("12")
-    And the user should not see the element       jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
+    Then the user should see the element          jQuery = table[id="${associateDevelopmentTable}"] td:contains("12")
+    And the user should not see the element       jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
 
 Calculation for associate employment and development
     [Documentation]  IFS-7790
-     Given the user enters text to a text field      jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  123
+     Given the user enters text to a text field      jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  123
      When the user should see the element            jQuery = span:contains("123") ~ button:contains("Associate development")
      Then the user should see the right values       123   Associate employment    246
-     And the user should not see the element         jQuery = table[id="associate-development-costs-table"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
+     And the user should not see the element         jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message})
 
 Knowledge base supervisor can only add two rows
     [Documentation]  IFS-7790
@@ -206,8 +207,8 @@ the user fills in ktp other costs
 
 the user fills in associate salary
     [Arguments]   ${duration}  ${cost}
-    the user enters text to a text field    jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="duration"]  ${duration}
-    the user enters text to a text field      jQuery = table[id="associate-salary-costs-table"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="duration"]  ${duration}
+    the user enters text to a text field      jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${cost}
 
 expand the sections
     the user clicks the button/link       jQuery = button:contains("Associate employment")
