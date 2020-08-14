@@ -170,6 +170,38 @@
         </div>
     </th:block>
 
+    <!-- ===========================Form: kb finance breakdown table =========================== -->
+    <th:block th:fragment="kb-finance-breakdown-table(breakdown)">
+        <div class="project-cost-breakdown">
+            <div class="table-overflow" th:each="row : ${breakdown.rows}">
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">
+                            <div th:text="${row.organisationName}"></div>
+                            <div><small th:text="${row.status}">Lead organisation</small></div>
+                        </th>
+                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Cost(£)</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row" th:each="type : ${breakdown.financeRowTypes}">
+                        <th class="govuk-table__cell" scope="row"
+                            th:text="${type.displayName}">Labour</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric"
+                            th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Total</th>
+                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                            th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
 
     <!-- ===========================Form: Research Participations alert messages =========================== -->
     <th:block th:fragment="research-participation-alert(alertmodel)">

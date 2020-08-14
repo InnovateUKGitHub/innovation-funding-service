@@ -53,6 +53,7 @@ public class FinanceReadOnlyViewModelPopulator extends AsyncAdaptor {
                 resolve(applicationFinanceSummaryViewModel),
                 resolve(applicationResearchParticipationViewModel),
                 resolve(applicationFundingBreakdownViewModel),
-                application.isCollaborativeProject());
+                application.isCollaborativeProject(),
+                competition.isKtp());
     }
 }
