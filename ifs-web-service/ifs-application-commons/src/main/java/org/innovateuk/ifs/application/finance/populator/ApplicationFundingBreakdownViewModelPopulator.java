@@ -87,7 +87,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
         List<FinanceRowType> types = competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
 
         List<BreakdownTableRow> rows = organisations.stream()
-                //.filter(organisation -> competition.isKtp() ? organisation.getId().equals(leadOrganisationId) : true)
+                .filter(organisation -> competition.isKtp() ? organisation.getId().equals(leadOrganisationId) : true)
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
                 .collect(toList());
 
