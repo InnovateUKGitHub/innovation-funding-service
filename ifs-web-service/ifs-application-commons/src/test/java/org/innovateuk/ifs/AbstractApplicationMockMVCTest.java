@@ -195,7 +195,7 @@ public abstract class AbstractApplicationMockMVCTest<ControllerType> extends Abs
                 .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
                 .build();
 
-        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+        competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource();
 

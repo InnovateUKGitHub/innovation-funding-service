@@ -75,6 +75,22 @@ public class IndustrialCostFinanceHandlerTest {
     private OtherFundingHandler otherFundingHandler;
     @Spy
     private VatHandler vatHandler;
+    @Spy
+    private ProcurementsOverheadsHandler procurementsOverheadsHandler;
+    @Spy
+    private AdditionalCompanyCostHandler additionalCompanyCostHandler;
+    @Spy
+    private AssociateDevelopmentCostHandler associateDevelopmentCostHandler;
+    @Spy
+    private AssociateSalaryCostHandler associateSalaryCostHandler;
+    @Spy
+    private AssociateSupportCostHandler associateSupportCostHandler;
+    @Spy
+    private ConsumableHandler consumableHandler;
+    @Spy
+    private EstateCostHandler estateCostHandler;
+    @Spy
+    private KnowledgeBaseCostHandler knowledgeBaseCostHandler;
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
     private ApplicationFinance applicationFinance;
@@ -86,7 +102,8 @@ public class IndustrialCostFinanceHandlerTest {
         MockitoAnnotations.initMocks(this);
         industrialCostFinanceHandler.setFinanceRowHandlers(asList(labourCostHandler, capitalUsageHandler, materialsHandler, otherCostHandler,
                 overheadsHandler, subContractingCostHandler, travelCostHandler, grantClaimAmountHandler, grantClaimHandler,
-                otherFundingHandler, vatHandler));
+                otherFundingHandler, vatHandler, procurementsOverheadsHandler, additionalCompanyCostHandler, associateDevelopmentCostHandler, associateSalaryCostHandler,
+                associateSupportCostHandler, consumableHandler, estateCostHandler, knowledgeBaseCostHandler));
 
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
