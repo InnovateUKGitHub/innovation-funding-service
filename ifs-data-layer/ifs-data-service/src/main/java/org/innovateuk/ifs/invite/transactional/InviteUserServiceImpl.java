@@ -116,7 +116,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<Void> saveExternalUserInvite(UserResource invitedUser, Role role) {
 
-        return validateKtaEmail(invitedUser.getEmail())
+        return validateExternalUserEmail(invitedUser.getEmail(), role)
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccessReturnVoid(() -> saveInvite(invitedUser, role));
@@ -153,14 +153,16 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateKtaEmail(String email) {
+    private ServiceResult<Void> validateExternalUserEmail(String email, Role role) {
 
-        ktaUserEmailDomain = StringUtils.defaultString(ktaUserEmailDomain);
+        if (role == Role.KNOWLEDGE_TRANSFER_ADVISER) {
+            ktaUserEmailDomain = StringUtils.defaultString(ktaUserEmailDomain);
 
-        String domain = StringUtils.substringAfter(email, "@");
+            String domain = StringUtils.substringAfter(email, "@");
 
-        if (!ktaUserEmailDomain.equalsIgnoreCase(domain)) {
-            return serviceFailure(KTA_USER_ROLE_INVITE_INVALID_EMAIL);
+            if (!ktaUserEmailDomain.equalsIgnoreCase(domain)) {
+                return serviceFailure(KTA_USER_ROLE_INVITE_INVALID_EMAIL);
+            }
         }
 
         return serviceSuccess();
