@@ -114,7 +114,7 @@ the user should see the milestones for the closed competitions
     the user should see the element    jQuery = li:contains("Assessor briefing").done
     the user should see the element    jQuery = li:contains("Assessor accepts").not-done
 
-Update the competition submission date to 1 second after to the current time
+Update the competition closing time to 1 second after to the current time
     [Arguments]  ${competitionID}  ${sleepTime}
      Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`=(NOW() + Interval 1 second) WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
      sleep  ${sleepTime}
@@ -127,11 +127,11 @@ the user should see application not submitted messages
 the user submitted application 1 second late to the competition closing time
     the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
-    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  1s
+    Update the competition closing time to 1 second after to the current time        ${closedCompetitionID}  1s
     the user clicks the button/link                                                  id = submit-application-button
 
 the user submitted application 800ms before the competition closing time
     the user clicks the button/link                                                  link = ${applicationSubmitedBeforeCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
-    Update the competition submission date to 1 second after to the current time     ${closedCompetitionID}  200ms
+    Update the competition closing time to 1 second after to the current time        ${closedCompetitionID}  200ms
     the user clicks the button/link                                                  id = submit-application-button
