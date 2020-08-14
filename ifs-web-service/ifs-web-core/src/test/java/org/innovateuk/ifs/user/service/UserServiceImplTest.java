@@ -192,16 +192,6 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void createLeadApplicantForOrganisationWithCompetitionId() {
-        when(userRestService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
-        ServiceResult<UserResource> result = service.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
-
-        verify(userRestService, times(1)).createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyLong(), anyBoolean());
-        verifyNoMoreInteractions(userRestService);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
     public void updateDetails() {
         when(userRestService.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean())).thenReturn(restSuccess(new UserResource()));
         ServiceResult<UserResource> result = service.updateDetails(anyLong(), anyString(), anyString(), anyString(), anyString(), anyString(), anyBoolean());

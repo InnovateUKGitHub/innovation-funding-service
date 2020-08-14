@@ -17,6 +17,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -104,14 +105,14 @@ public class CompetitionSetupFinanceUserControllerTest extends BaseControllerMoc
         resource.setFirstName("Leny");
         resource.setLastName("White");
 
-        when(registrationService.createCompetitionFinanceUser(TEST_HASH, resource)).thenReturn(serviceSuccess());
+        when(registrationService.createUser(any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/competition/setup/finance-users/create/" + TEST_HASH)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(resource)))
                 .andExpect(status().is2xxSuccessful());
 
-        verify(registrationService).createCompetitionFinanceUser(TEST_HASH, resource);
+        verify(registrationService).createUser(any());
 
     }
 

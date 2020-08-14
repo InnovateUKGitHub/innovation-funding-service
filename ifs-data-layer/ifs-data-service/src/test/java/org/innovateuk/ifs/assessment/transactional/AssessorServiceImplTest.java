@@ -42,6 +42,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleProfileStatusRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.junit.Before;
@@ -97,6 +98,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -181,6 +183,19 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                         .withPostcode("S1 2BJ")
                         .build())
                 .build();
+        UserCreationResource userCreationResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withPassword("Password123")
+                .withEmail(email)
+                .withAddress(newAddressResource()
+                        .withAddressLine1("Electric Works")
+                        .withTown("Sheffield")
+                        .withPostcode("S1 2BJ")
+                        .build())
+                .withRole(Role.ASSESSOR)
+                .build();
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource().build();
 
@@ -203,7 +218,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         List<AssessmentParticipant> participantsForOtherInvites = Stream.generate(
                 () -> Mockito.spy(new AssessmentParticipant())).limit(2).collect(Collectors.toList());
 
-        when(registrationService.createUser(userRegistrationResource)).thenReturn(serviceSuccess(createdUserResource));
+        when(registrationService.createUser(refEq(userCreationResource))).thenReturn(serviceSuccess(createdUserResource));
 
         when(registrationService.activateAssessorAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(assessmentInviteService.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
@@ -218,7 +233,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                                   userRepository, assessmentParticipantRepository, innovationAreaMapper,
                                   profileRepository, roleProfileStatusRepository);
         inOrder.verify(assessmentInviteService).getInvite(hash);
-        inOrder.verify(registrationService).createUser(userRegistrationResource);
+        inOrder.verify(registrationService).createUser(refEq(userCreationResource));
         inOrder.verify(registrationService).activateAssessorAndSendDiversitySurvey(createdUserResource.getId());
         inOrder.verify(userRepository).findById(createdUserResource.getId());
         inOrder.verify(assessmentParticipantRepository).getByInviteEmail(email);
@@ -276,15 +291,24 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withEmail("email@example.com")
                 .build();
 
+        UserCreationResource userCreationResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withPassword("Password123")
+                .withEmail(competitionInviteResource.getEmail())
+                .withRole(Role.ASSESSOR)
+                .build();
+
         when(assessmentInviteService.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
-        when(registrationService.createUser(userRegistrationResource)).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
+        when(registrationService.createUser(refEq(userCreationResource))).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         InOrder inOrder = inOrder(assessmentInviteService, registrationService);
         inOrder.verify(assessmentInviteService).getInvite(hash);
-        inOrder.verify(registrationService).createUser(userRegistrationResource);
+        inOrder.verify(registrationService).createUser(refEq(userCreationResource));
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isFailure());

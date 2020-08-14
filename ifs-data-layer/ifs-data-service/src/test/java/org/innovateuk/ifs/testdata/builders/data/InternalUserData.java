@@ -2,23 +2,21 @@ package org.innovateuk.ifs.testdata.builders.data;
 
 import org.innovateuk.ifs.user.resource.Role;
 
-import java.util.List;
-
 /**
  * Running data context for generating Internal Users (e.g. comp admins)
  */
 public class InternalUserData extends BaseUserData {
 
-    private List<Role> roles;
+    private Role role;
 
     private String emailAddress;
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public void setEmailAddress(String emailAddress) {

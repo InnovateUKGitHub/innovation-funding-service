@@ -9,8 +9,7 @@ import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Stakeholder;
-import org.innovateuk.ifs.competition.domain.StakeholderInvite;
+import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
@@ -19,60 +18,42 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
-import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.project.monitoring.domain.MonitoringOfficerInvite;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
-import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
-import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
-import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
-import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.SiteTermsAndConditionsResourceBuilder.newSiteTermsAndConditionsResource;
-import static org.innovateuk.ifs.competition.builder.StakeholderInviteBuilder.newStakeholderInvite;
 import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
-import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
-import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.stakeholder.builder.StakeholderRegistrationResourceBuilder.newStakeholderRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -136,22 +117,23 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Mock
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
 
+    @Mock
+    private CompetitionFinanceInviteRepository competitionFinanceInviteRepository;
+
 
     @Test
     public void createUser() {
-        Set<Role> roles = singleton(Role.ASSESSOR);
         AddressResource addressResource = newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
         Address address = newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
 
-        UserRegistrationResource userToCreateResource = newUserRegistrationResource()
-                .withTitle(Mr)
+        UserCreationResource userToCreateResource = anUserCreationResource()
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
                 .withAddress(addressResource)
-                .withRoles(new ArrayList(roles))
+                .withRole(Role.ASSESSOR)
                 .build();
 
         Long profileId = 1L;
@@ -162,12 +144,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         User userToCreate = newUser()
                 .withId((Long) null)
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
-                .withRoles(roles)
+                .withRoles(singleton(Role.ASSESSOR))
                 .withProfileId(userProfile.getId())
                 .build();
 
@@ -181,7 +162,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         User userToSave = createLambdaMatcher(user -> {
             assertNull(user.getId());
-            assertEquals(Mr, user.getTitle());
             assertEquals("First Last", user.getName());
             assertEquals("First", user.getFirstName());
             assertEquals("Last", user.getLastName());
@@ -190,7 +170,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertEquals(roles, user.getRoles());
+            assertEquals(userToCreate.getRoles(), user.getRoles());
 
             assertNotNull(user.getProfileId());
             Profile profile = profileRepositoryMock.findById(user.getProfileId()).get();
@@ -212,6 +192,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserResource savedUserResource = newUserResource().build();
 
         when(userRepositoryMock.save(userToSave)).thenReturn(savedUser);
+        when(userRepositoryMock.save(savedUser)).thenReturn(savedUser);
         when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
 
         UserResource result = service.createUser(userToCreateResource).getSuccess();
@@ -220,87 +201,26 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void createUser_organisation() {
-
-        UserResourceBuilder userBuilder = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr);
-
-        UserResource userToCreate = userBuilder.build();
-
-        SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
-        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
-
-
-        when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
-        when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
-
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
-        User expectedCreatedUser = createLambdaMatcher(user -> {
-
-            assertNull(user.getId());
-            assertEquals("First Last", user.getName());
-            assertEquals("First", user.getFirstName());
-            assertEquals("Last", user.getLastName());
-
-            assertEquals("email@example.com", user.getEmail());
-            assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
-            assertEquals("new-uid", user.getUid());
-            assertEquals(1, user.getRoles().size());
-            assertTrue(user.getRoles().contains(Role.APPLICANT));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
-            assertEquals(new LinkedHashSet<>(singletonList(siteTermsAndConditions.getId())), user.getTermsAndConditionsIds());
-
-            return true;
-        });
-
-        User savedUser = newUser().with(id(999L)).build();
-
-        UserResource savedUserResource = userBuilder.withId(savedUser.getId()).build();
-
-        when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
-
-        when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-        when(registrationEmailServiceMock.sendUserVerificationEmail(savedUserResource, Optional.empty(), Optional.empty())).thenReturn(serviceSuccess());
-
-        UserResource result = service.createUser(userToCreate).getSuccess();
-        assertEquals(savedUserResource, result);
-
-        verify(userMapperMock).mapToResource(savedUser);
-        verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
-        verify(registrationEmailServiceMock).sendUserVerificationEmail(savedUserResource, Optional.empty(), Optional.empty());
-    }
-
-    @Test
     public void createUser_applicantUserButIdpCallFails() {
 
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                build();
+        UserCreationResource userToCreateResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withEmail("email@example.com")
+                .withPassword("thepassword")
+                .withRole(Role.APPLICANT)
+                .build();
+        UserResource user = new UserResource();
 
         SiteTermsAndConditionsResource siteTermsAndConditions = newSiteTermsAndConditionsResource().build();
-        Organisation selectedOrganisation = newOrganisation().build();
 
         when(termsAndConditionsServiceMock.getLatestSiteTermsAndConditions()).thenReturn(serviceSuccess(siteTermsAndConditions));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(user);
+        when(passwordPolicyValidatorMock.validatePassword(eq("thepassword"), any(UserResource.class))).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createUser(userToCreate);
+        ServiceResult<UserResource> result = service.createUser(userToCreateResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
     }
@@ -308,28 +228,37 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void createUser_applicantUserButPasswordValidationFails() {
 
-        UserResource userToCreate = newUserResource().withPassword("thepassword").build();
-        Organisation selectedOrganisation = newOrganisation().build();
+        UserCreationResource userToCreateResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withEmail("email@example.com")
+                .withPassword("thepassword")
+                .withRole(Role.APPLICANT)
+                .build();
+        UserResource user = new UserResource();
 
-        when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
+        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(user);
+        when(passwordPolicyValidatorMock.validatePassword(eq("thepassword"), any(UserResource.class))).thenReturn(serviceFailure(badRequestError("bad password")));
 
-        ServiceResult<UserResource> result = service.createUser(userToCreate);
+        ServiceResult<UserResource> result = service.createUser(userToCreateResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(Error.fieldError("password", null, "bad password")));
     }
 
     @Test
     public void createInternalUser() {
-        RoleInvite roleInvite = newRoleInvite().withRole(Role.PROJECT_FINANCE).build();
-        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
+        UserCreationResource userToCreateResource = anUserCreationResource()
                 .withFirstName("First")
                 .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withPassword("thepassword")
+                .withInviteHash("SomeInviteHash")
+                .build();
+        RoleInvite roleInvite = newRoleInvite()
+                .withRole(Role.PROJECT_FINANCE)
                 .withEmail("email@example.com")
-                .withPassword("Passw0rd123")
-                .withRoles(singletonList(Role.PROJECT_FINANCE))
                 .build();
 
         User userToCreate = newUser()
@@ -337,53 +266,20 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withFirstName("First")
                 .withLastName("Last")
                 .withEmailAddress("email@example.com")
+                .withUid("new-uid")
                 .withRoles(singleton(Role.PROJECT_FINANCE))
                 .build();
 
         when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
+        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
         when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
         when(idpServiceMock.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
         when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
-        ServiceResult<Void> result = service.createInternalUser("SomeInviteHash", internalUserRegistrationResource);
+        ServiceResult<UserResource> result = service.createUser(userToCreateResource);
         assertTrue(result.isSuccess());
         assertEquals(InviteStatus.OPENED, roleInvite.getStatus());
-    }
-
-    @Test
-    public void createStakeholderUser() {
-        StakeholderRegistrationResource stakeholderRegistrationResource = newStakeholderRegistrationResource()
-                .withFirstName("First")
-                .withLastName("Last")
-                .withPassword("Passw0rd")
-                .build();
-
-        User userToCreate = newUser()
-                .withId((Long) null)
-                .withFirstName("First")
-                .withLastName("Last")
-                .withEmailAddress("test@test.test")
-                .withRoles(singleton(Role.STAKEHOLDER))
-                .build();
-
-        StakeholderInvite invite = newStakeholderInvite().build();
-        Stakeholder stakeholder = new Stakeholder(newCompetition().build(), newUser().build());
-
-        when(stakeholderInviteRepository.getByHash("hash1234")).thenReturn(invite);
-        when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
-        when(idpServiceMock.createUserRecordWithUid("test@test.test", "Passw0rd")).thenReturn(serviceSuccess("new-uid"));
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
-        when(userMapperMock.mapToDomain(any(UserResource.class))).thenReturn(userToCreate);
-        when(idpServiceMock.activateUser("new-uid")).thenReturn(serviceSuccess("new-uid"));
-        when(userRepositoryMock.save(any(User.class))).thenReturn(userToCreate);
-        when(stakeholderRepository.save(any(Stakeholder.class))).thenReturn(stakeholder);
-
-        ServiceResult<Void> result = service.createStakeholder("hash1234", stakeholderRegistrationResource);
-
-        assertTrue(result.isSuccess());
-        assertEquals(InviteStatus.OPENED, invite.getStatus());
     }
 
     @Test
@@ -513,74 +409,18 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         assertTrue(result.isFailure());
     }
 
-    @Test
-    public void createUser_compAdminOrganisationUser() {
-
-        Role roleResource = Role.COMP_ADMIN;
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                withRolesGlobal(singletonList(roleResource)).
-                build();
-
-        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
-
-        when(organisationRepositoryMock.findById(123L)).thenReturn(Optional.of(selectedOrganisation));
-        when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
-
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
-        User expectedCreatedUser = createLambdaMatcher(user -> {
-
-            assertNull(user.getId());
-            assertEquals("First Last", user.getName());
-            assertEquals("First", user.getFirstName());
-            assertEquals("Last", user.getLastName());
-
-            assertEquals("email@example.com", user.getEmail());
-            assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
-            assertEquals("new-uid", user.getUid());
-            assertEquals(1, user.getRoles().size());
-            assertTrue(user.getRoles().contains(Role.COMP_ADMIN));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
-
-            return true;
-        });
-
-        User savedUser = newUser().with(id(999L)).build();
-
-        when(userRepositoryMock.save(expectedCreatedUser)).thenReturn(savedUser);
-
-        Token expectedToken = createLambdaMatcher(token -> {
-            assertEquals(TokenType.VERIFY_EMAIL_ADDRESS, token.getType());
-            assertEquals(User.class.getName(), token.getClassName());
-            assertEquals(savedUser.getId(), token.getClassPk());
-            assertFalse(token.getHash().isEmpty());
-            return true;
-        });
-
-        when(tokenRepositoryMock.save(expectedToken)).thenReturn(expectedToken);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-        when(registrationEmailServiceMock.sendUserVerificationEmail(userToCreate, Optional.empty(), Optional.empty())).thenReturn(serviceSuccess());
-
-        UserResource result = service.createUser(userToCreate).getSuccess();
-
-        assertEquals(userToCreate, result);
-
-        verify(userMapperMock).mapToResource(savedUser);
-        verify(passwordPolicyValidatorMock).validatePassword("thepassword", userToCreate);
-        verify(registrationEmailServiceMock).sendUserVerificationEmail(userToCreate, Optional.empty(), Optional.empty());
-    }
 
     @Test
     public void createPendingMonitoringOfficer() {
+        UserCreationResource userToCreateResource = anUserCreationResource()
+                .withFirstName("First")
+                .withLastName("Last")
+                .withPhoneNumber("01234 567890")
+                .withEmail("email@example.com")
+                .withPassword("thepassword")
+                .withRole(Role.MONITORING_OFFICER)
+                .build();
+
         User user = newUser().withEmailAddress("test@test.test").build();
         MonitoringOfficerCreateResource resource = new MonitoringOfficerCreateResource(
                 "Steve", "Smith", "011432333333", "test@test.test");
@@ -589,7 +429,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
         when(userRepositoryMock.save(any(User.class))).thenReturn(user);
 
-        service.createPendingMonitoringOfficer(resource).getSuccess();
+        service.createUser(userToCreateResource).getSuccess();
 
         verify(idpServiceMock).createUserRecordWithUid(anyString(), anyString());
         verify(profileRepositoryMock).save(any(Profile.class));

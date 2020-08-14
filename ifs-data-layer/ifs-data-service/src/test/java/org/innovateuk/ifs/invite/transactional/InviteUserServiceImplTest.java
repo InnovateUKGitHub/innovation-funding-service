@@ -61,6 +61,7 @@ import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl.Notifications.INVITE_EXTERNAL_USER;
 import static org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
@@ -199,7 +200,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.ukri.org");
         Map<String, Object> expectedNotificationArgs = asMap(
                 "role", role.getDisplayName(),
-                "inviteUrl", webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
+                "inviteUrl", webBaseUrl + InviteUserServiceImpl.INTERNAL_USER_WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
         );
 
         Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_INTERNAL_USER, expectedNotificationArgs);
@@ -253,7 +254,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.ukri.org");
         Map<String, Object> expectedNotificationArgs = asMap(
                 "role", role.getDisplayName(),
-                "inviteUrl", webBaseUrl + InviteUserServiceImpl.WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
+                "inviteUrl", webBaseUrl + InviteUserServiceImpl.INTERNAL_USER_WEB_CONTEXT + "/" + expectedRoleInvite.getHash() + "/register"
         );
         Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_INTERNAL_USER, expectedNotificationArgs);
 
@@ -646,17 +647,27 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
+        NotificationTarget notificationTarget = new UserNotificationTarget(expectedRoleInvite.getName(), expectedRoleInvite.getEmail());
+
+        Map<String, Object> emailTemplateArgs = asMap("role", role.getDisplayName().toLowerCase(),
+                "inviteUrl", "base/registration/1234/register");
+
+        Notification expectedNotification = new Notification(systemNotificationSource, notificationTarget, INVITE_EXTERNAL_USER, emailTemplateArgs);
+
+        when(notificationService.sendNotificationWithFlush(expectedNotification, EMAIL)).thenReturn(serviceSuccess());
+
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
 
         assertTrue(result.isSuccess());
 
-        verify(roleInviteRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
+        verify(roleInviteRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
         assertEquals("Astle.Pimenta@ktn-uk.org", captured.get(0).getEmail());
         assertEquals("Astle Pimenta", captured.get(0).getName());
         assertEquals(role, captured.get(0).getTarget());
         assertEquals(CREATED, captured.get(0).getStatus());
+        assertNotNull(captured.get(1).getSentOn());
     }
 
     private List<ApplicationInvite> setUpMockingCreateApplicationInvites() {

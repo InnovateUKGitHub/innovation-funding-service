@@ -122,11 +122,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private boolean shouldImmediatelyActivate(UserCreationResource user) {
-        return user.getInviteHash() != null; // Already answered an email notificaiton.x
+        return user.getInviteHash() != null; // Already answered an email notification.
     }
 
     private boolean shouldSendVerificationEmail(UserCreationResource user) {
-        return user.getRole() != ASSESSOR &&  !shouldImmediatelyActivate(user);
+        return user.getRole() != ASSESSOR &&
+                !shouldImmediatelyActivate(user) &&
+                !shouldBePending(user);
     }
 
     private ServiceResult<User> handleInvite(User created, UserCreationResource user) {

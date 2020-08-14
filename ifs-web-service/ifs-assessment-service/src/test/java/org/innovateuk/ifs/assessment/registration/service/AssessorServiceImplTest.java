@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.registration.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
         String phoneNumber = "12345678";
         String password = "password";
 
-        AssessorRegistrationForm form = new AssessorRegistrationForm();
+        RegistrationForm form = new RegistrationForm();
         form.setFirstName(firstName);
         form.setLastName(lastName);
         form.setPhoneNumber(phoneNumber);

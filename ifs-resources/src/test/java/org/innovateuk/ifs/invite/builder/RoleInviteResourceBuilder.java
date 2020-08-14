@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -51,4 +52,9 @@ public class RoleInviteResourceBuilder extends BaseBuilder<RoleInviteResource, R
     public RoleInviteResourceBuilder withHash(String... hashes) {
         return withArraySetFieldByReflection("hash", hashes);
     }
+
+    public RoleInviteResourceBuilder withRole(Role... roles) {
+        return withArraySetFieldByReflection("role", roles);
+    }
+
 }

@@ -259,6 +259,8 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                 .withLastName(userRegistrationResource.getLastName())
                 .withEmail(userRegistrationResource.getEmail())
                 .withPassword(userRegistrationResource.getPassword())
+                .withAddress(userRegistrationResource.getAddress())
+                .withPhoneNumber(userRegistrationResource.getPhoneNumber())
                 .withRole(Role.ASSESSOR)
                 .build())
                 .andOnSuccess(

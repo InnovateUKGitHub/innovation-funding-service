@@ -5,7 +5,6 @@ import org.innovateuk.ifs.documentation.EditUserResourceDocs;
 import org.innovateuk.ifs.documentation.UserDocs;
 import org.innovateuk.ifs.documentation.UserOrganisationResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
-import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.command.GrantRoleCommand;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
@@ -20,16 +19,16 @@ import org.springframework.util.MultiValueMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.UserDocs.*;
-import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
+import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.user.builder.ManageUserResourceBuilder.newManageUserResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -80,8 +79,8 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     public void createUser() throws Exception {
         final long organisationId = 9999L;
 
-        final UserResource userResource = newUserResource().build();
-        when(registrationService.createUser(userResource)).thenReturn(serviceSuccess(userResource));
+        final UserCreationResource userResource = anUserCreationResource().build();
+        when(registrationService.createUser(userResource)).thenReturn(serviceSuccess(new UserResource()));
 
         mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
@@ -134,28 +133,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
-    public void createUserWithCompetitionId() throws Exception {
-        final long organisationId = 9999L;
-        final long competitionId = 8888L;
-
-        final UserResource userResource = newUserResource().build();
-        when(registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-
-        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}/{competitionId}", organisationId, competitionId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userResource))
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("user/{method-name}",
-                        pathParameters(
-                                parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for"),
-                                parameterWithName("competitionId").description("Identifier of the competition that the user is applying for")
-                        ),
-                        requestFields(userResourceFields),
-                        responseFields(userResourceFields)
-                ));
-    }
-
-    @Test
     public void findActive() throws Exception {
         ManageUserPageResource userPageResource = buildManageUserPageResource();
         when(userService.findActive("filter", PageRequest.of(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(userPageResource));
@@ -193,32 +170,6 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         pageResource.setTotalPages(2);
         pageResource.setContent(newManageUserResource().withEmail("example@innovateuk.test").build(5));
         return pageResource;
-    }
-
-    @Test
-    public void createInternalUser() throws Exception {
-
-        List<Role> roleResources = singletonList(Role.PROJECT_FINANCE);
-        InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
-                .withFirstName("First")
-                .withLastName("Last")
-                .withEmail("email@example.com")
-                .withPassword("Passw0rd123")
-                .withRoles(roleResources)
-                .build();
-
-        when(registrationService.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/user/internal/create/{inviteHash}", "SomeHashString")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(internalUserRegistrationResource))
-                .header("IFS_AUTH_TOKEN", "123abc"))
-                .andDo(document("user/{method-name}",
-                        pathParameters(
-                                parameterWithName("inviteHash").description("Hash from invite to be used for creating new account")
-                        ),
-                        requestFields(internalUserRegistrationResourceFields)
-                ));
     }
 
     @Test

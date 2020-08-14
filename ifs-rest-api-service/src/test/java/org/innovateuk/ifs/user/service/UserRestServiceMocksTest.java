@@ -12,14 +12,11 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -92,140 +89,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void createLeadApplicantForOrganisation() {
-
-        setLoggedInUser(null);
-
-        UserResource userResource = newUserResource()
-                .with(id(null))
-                .withEmail("testemail@test.test")
-                .withTitle(Mr)
-                .withFirstName("testFirstName")
-                .withLastName("testLastName")
-                .withPassword("testPassword")
-                .withPhoneNumber("1234567890")
-                .withAllowMarketingEmails(true)
-                .build();
-
-        Long organisationId = 1L;
-
-        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId, UserResource.class, userResource, userResource, OK);
-
-        UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                organisationId,
-                userResource.getAllowMarketingEmails()
-        ).getSuccess();
-
-        assertEquals(userResource, receivedResource);
-    }
-
-    @Test
-    public void createLeadApplicantForOrganisationWithDiversity() {
-
-        setLoggedInUser(null);
-
-        UserResource userResource = newUserResource()
-                .with(id(null))
-                .withEmail("testemail@test.test")
-                .withTitle(Mr)
-                .withFirstName("testFirstName")
-                .withLastName("testLastName")
-                .withPassword("testPassword")
-                .withPhoneNumber("1234567890")
-                .withAllowMarketingEmails(true)
-                .build();
-
-        Long organisationId = 1L;
-
-        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId, UserResource.class, userResource, userResource, OK);
-
-        UserResource receivedResource = service.createLeadApplicantForOrganisation(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                organisationId,
-                userResource.getAllowMarketingEmails()
-        ).getSuccess();
-
-        assertEquals(userResource, receivedResource);
-    }
-
-    @Test
-    public void createLeadApplicantForOrganisationWithCompetitionId() {
-        setLoggedInUser(null);
-
-        UserResource userResource = newUserResource()
-                .with(id(null))
-                .withEmail("testemail@test.test")
-                .withTitle(Mrs)
-                .withFirstName("testFirstName")
-                .withLastName("testLastName")
-                .withPassword("testPassword")
-                .withPhoneNumber("1234567890")
-                .withAllowMarketingEmails(true)
-                .build();
-
-        Long organisationId = 1L;
-        Long competitionId = 1L;
-
-        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
-
-        UserResource receivedResource = service.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                organisationId,
-                competitionId,
-                userResource.getAllowMarketingEmails()
-        ).getSuccess();
-
-        assertEquals(userResource, receivedResource);
-    }
-
-    @Test
-    public void createLeadApplicantForOrganisationWithCompetitionIdWithDiversity() {
-        setLoggedInUser(null);
-
-        UserResource userResource = newUserResource()
-                .with(id(null))
-                .withEmail("testemail@test.test")
-                .withTitle(Miss)
-                .withFirstName("testFirstName")
-                .withLastName("testLastName")
-                .withPassword("testPassword")
-                .withPhoneNumber("1234567890")
-                .withAllowMarketingEmails(true)
-                .build();
-
-        Long organisationId = 1L;
-        Long competitionId = 1L;
-
-        setupPostWithRestResultAnonymousExpectations(USERS_URL + "/create-lead-applicant-for-organisation/" + organisationId + "/" + competitionId, UserResource.class, userResource, userResource, OK);
-
-        UserResource receivedResource = service.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                organisationId,
-                competitionId,
-                userResource.getAllowMarketingEmails()
-        ).getSuccess();
-
-        assertEquals(userResource, receivedResource);
-    }
-
-    @Test
     public void resendEmailVerificationNotification() {
         final String emailAddress = "sample@me.com";
 
@@ -246,40 +109,14 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertEquals(expected, response);
     }
 
-//    @Test
-//    public void testGetActiveInternalUsers() {
-//        UserPageResource expected = new UserPageResource();
-//
-//        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/active", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
-//
-//        UserPageResource result = service.getActiveInternalUsers(0, 5).getSuccess();
-//
-//        assertEquals(expected, result);
-//    }
-//
-//    @Test
-//    public void testGetInactiveInternalUsers() {
-//        UserPageResource expected = new UserPageResource();
-//
-//        setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
-//
-//        UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccess();
-//
-//        assertEquals(expected, result);
-//    }
-
     @Test
     public void testCreateInternalUser() {
         setLoggedInUser(null);
 
-        List<Role> roleResources = singletonList(Role.PROJECT_FINANCE);
-
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
-                .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
-                .withRoles(roleResources)
                 .build();
 
         String inviteHash = "hash";

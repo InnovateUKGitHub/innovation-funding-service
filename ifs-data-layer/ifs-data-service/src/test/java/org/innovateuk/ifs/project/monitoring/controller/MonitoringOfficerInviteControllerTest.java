@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.MonitoringOfficerInviteResourceBuilder.newMonitoringOfficerInviteResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -135,10 +137,10 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
 
     @Test
     public void createPendingMonitoringOfficer() throws Exception {
-        User user = newUser()
+        UserResource user = newUserResource()
                 .withFirstName("Steve")
                 .withLastName("Smith")
-                .withEmailAddress("steve@smith.com")
+                .withEmail("steve@smith.com")
                 .withPhoneNumber("01142356565")
                 .build();
 
@@ -148,15 +150,15 @@ public class MonitoringOfficerInviteControllerTest extends BaseControllerMockMVC
         when(userServiceMock.findByEmail(user.getEmail()))
                 .thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 
-        when(registrationServiceMock.createPendingMonitoringOfficer(any(MonitoringOfficerCreateResource.class)))
+        when(registrationServiceMock.createUser(any()))
                 .thenReturn(serviceSuccess(user));
 
         mockMvc.perform(post("/monitoring-officer-registration/create-pending-monitoring-officer")
                 .content(toJson(resource))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(userServiceMock).findByEmail(user.getEmail());
-        verify(registrationServiceMock).createPendingMonitoringOfficer(any(MonitoringOfficerCreateResource.class));
+        verify(registrationServiceMock).createUser(any());
     }
 }

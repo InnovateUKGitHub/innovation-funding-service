@@ -26,7 +26,6 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.phoneNumber").description("Telephone number of the user").optional(),
             fieldWithPath("user.imageUrl").description("Not used").optional(),
             fieldWithPath("user.email").description("Email address of the user").optional(),
-            fieldWithPath("user.password").description("Password of the user").optional(),
             fieldWithPath("user.status").description("Status of the user").optional(),
             fieldWithPath("user.roles").description("Roles that the user is associated with").optional(),
             fieldWithPath("user.allowMarketingEmails").description("allow marketing emails").optional(),

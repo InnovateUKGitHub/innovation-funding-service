@@ -4,8 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionSetupStakeholderRestService;
-import org.innovateuk.ifs.management.registration.form.StakeholderRegistrationForm;
-import org.innovateuk.ifs.management.registration.service.StakeholderServiceImpl;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +23,7 @@ public class StakeholderServiceImplTest extends BaseServiceUnitTest<StakeholderS
 
     @Test
     public void createStakeholder() {
-        StakeholderRegistrationForm registrationForm = new StakeholderRegistrationForm("Billy", "Ocean", "Passw0rd");
+        RegistrationForm registrationForm = new RegistrationForm("Billy", "Ocean", "Passw0rd");
         StakeholderRegistrationResource stakeholderRegistrationResource =
                 newStakeholderRegistrationResource()
                         .withFirstName(registrationForm.getFirstName())

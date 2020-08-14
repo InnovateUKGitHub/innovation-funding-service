@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 
 /**
  * Base builder for generating data for non-active and active registered users
@@ -20,10 +20,10 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
 
     public abstract S registerUser(String firstName, String lastName, String emailAddress, String phoneNumber);
 
-    protected void registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, List<Role> roles, T data) {
+    protected void registerUser(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, T data) {
 
         doAs(systemRegistrar(), () -> {
-            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, phoneNumber, roles, data);
+            doRegisterUserWithExistingOrganisation(firstName, lastName, emailAddress, phoneNumber, role, data);
         });
     }
 
@@ -58,14 +58,14 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         data.setUser(user);
     }
 
-    private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, List<Role> roles) {
+    private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, Role role) {
 
-        UserResource created = registrationService.createUser(newUserResource().
+        UserResource created = registrationService.createUser(anUserCreationResource().
                 withFirstName(firstName).
                 withLastName(lastName).
                 withEmail(emailAddress).
                 withPhoneNumber(phoneNumber).
-                withRolesGlobal(roles).
+                withRole(role).
                 withPassword("Passw0rd").
                 build()).
                 getSuccess();
@@ -73,8 +73,8 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
         return created;
     }
 
-    private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String phoneNumber, List<Role> roles, T data) {
-        UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, phoneNumber, roles);
+    private void doRegisterUserWithExistingOrganisation(String firstName, String lastName, String emailAddress, String phoneNumber, Role role, T data) {
+        UserResource registeredUser = createUserViaRegistration(firstName, lastName, emailAddress, phoneNumber, role);
         updateUserInUserData(data, registeredUser.getId());
     }
 

@@ -15,6 +15,7 @@ import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -40,25 +41,20 @@ import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.project.invite.builder.SentProjectPartnerInviteResourceBuilder.newSentProjectPartnerInviteResource;
-import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
-import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.invite.builder.SentProjectPartnerInviteResourceBuilder.newSentProjectPartnerInviteResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
+import static org.innovateuk.ifs.util.CookieTestUtil.encryptor;
+import static org.innovateuk.ifs.util.CookieTestUtil.setupEncryptedCookieService;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.refEq;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -119,7 +115,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.of(new UserResource()));
-        when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyBoolean())).thenReturn(serviceSuccess(new UserResource()));
 
         inviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
         usedInviteHashCookie = new Cookie(RegistrationCookieService.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
@@ -279,7 +274,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
+                .andExpect(model().attributeHasFieldErrors("form", "email"));
     }
 
     @Test
@@ -301,12 +296,12 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"));
+                .andExpect(model().attributeHasFieldErrors("form", "password"))
+                .andExpect(model().attributeHasFieldErrors("form", "email"))
+                .andExpect(model().attributeHasFieldErrors("form", "firstName"))
+                .andExpect(model().attributeHasFieldErrors("form", "lastName"))
+                .andExpect(model().attributeHasFieldErrors("form", "phoneNumber"))
+                .andExpect(model().attributeHasFieldErrors("form", "termsAndConditions"));
     }
 
     @Test
@@ -321,7 +316,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
+                .andExpect(model().attributeHasFieldErrors("form", "email"));
     }
 
     @Test
@@ -337,7 +332,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "email"));
+                .andExpect(model().attributeHasFieldErrors("form", "email"));
 
         verifyNoMoreInteractions(userService);
     }
@@ -356,7 +351,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
+                .andExpect(model().attributeHasFieldErrors("form", "password"));
     }
 
 
@@ -370,7 +365,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), nullable(String.class), anyString(), anyLong(), anyLong(), nullable(Boolean.class))).thenReturn(serviceFailure(error));
+        when(userRestService.createUser(any(UserCreationResource.class))).thenReturn(restFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -385,7 +380,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "password"));
+                .andExpect(model().attributeHasFieldErrors("form", "password"));
     }
 
     @Test
@@ -400,7 +395,7 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/register"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "termsAndConditions"));
+                .andExpect(model().attributeHasFieldErrors("form", "termsAndConditions"));
     }
 
     @Test
@@ -408,26 +403,21 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
         when(registrationCookieService.getInviteHashCookieValue(any(HttpServletRequest.class))).thenReturn(Optional.empty());
 
-        UserResource userResource = newUserResource()
+        UserCreationResource userResource = anUserCreationResource()
                 .withPassword("password123")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
-                .withId(1L)
+                .withRole(Role.APPLICANT)
+                .withOrganisationId(1L)
+                .withCompetitionId(1L)
+                .withAgreedTerms(true)
                 .build();
 
+
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
-                eq(userResource.getLastName()),
-                eq(userResource.getPassword()),
-                eq(userResource.getEmail()),
-                nullable(String.class),
-                eq(userResource.getPhoneNumber()),
-                eq(1L),
-                eq(1L),
-                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
+        when(userRestService.createUser(refEq(userResource))).thenReturn(restSuccess(new UserResource()));
         when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -435,7 +425,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .cookie(organisationCookie)
                 .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
-                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
@@ -451,26 +440,20 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
         logoutCurrentUser();
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
-        UserResource userResource = newUserResource()
+        UserCreationResource userResource = anUserCreationResource()
                 .withPassword("password")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("invited@email.com")
-                .withId(1L)
+                .withRole(Role.APPLICANT)
+                .withOrganisationId(1L)
+                .withCompetitionId(1L)
+                .withAgreedTerms(true)
                 .build();
 
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
-                eq(userResource.getLastName()),
-                eq(userResource.getPassword()),
-                eq(userResource.getEmail()),
-                nullable(String.class),
-                eq(userResource.getPhoneNumber()),
-                eq(1L),
-                eq(1L),
-                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
+        when(userRestService.createUser(refEq(userResource))).thenReturn(restSuccess(newUserResource().build()));
         when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong(), anyLong())).thenReturn(restSuccess());
 
@@ -478,7 +461,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(inviteHashCookie, organisationCookie)
                 .param("password", userResource.getPassword())
-                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
@@ -493,26 +475,20 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     public void unsuccessfulPageReturnedForDuplicateOrganisationRegister() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
 
-        UserResource userResource = newUserResource()
+        UserCreationResource userResource = anUserCreationResource()
                 .withPassword("password")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("invited@email.com")
-                .withId(1L)
+                .withRole(Role.APPLICANT)
+                .withOrganisationId(1L)
+                .withCompetitionId(1L)
+                .withAgreedTerms(true)
                 .build();
 
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
-                eq(userResource.getLastName()),
-                eq(userResource.getPassword()),
-                eq(userResource.getEmail()),
-                nullable(String.class),
-                eq(userResource.getPhoneNumber()),
-                eq(1L),
-                eq(1L),
-                nullable(Boolean.class))).thenReturn(serviceSuccess(userResource));
+        when(userRestService.createUser(refEq(userResource))).thenReturn(restSuccess(new UserResource()));
 
         InviteAndIdCookie projectInviteCookie = new InviteAndIdCookie(1L, "hashy");
 
@@ -527,7 +503,6 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .cookie(inviteHashCookie, organisationCookie)
                 .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
-                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
@@ -536,20 +511,13 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
                 .andExpect(view().name("redirect:/registration/duplicate-project-organisation"))
                 .andExpect(status().is3xxRedirection());
 
-        InOrder inOrder = inOrder(registrationCookieService, projectPartnerInviteRestService, userService );
+        InOrder inOrder = inOrder(registrationCookieService, projectPartnerInviteRestService, userService, userRestService);
 
         inOrder.verify(registrationCookieService).getInviteHashCookieValue(any(HttpServletRequest.class));
         inOrder.verify(projectPartnerInviteRestService).getInviteByHash(projectInviteCookie.getId(), projectInviteCookie.getHash());
         inOrder.verify(userService).findUserByEmail(eq(userResource.getEmail()));
-        inOrder.verify(userService).createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
-                eq(userResource.getLastName()),
-                eq(userResource.getPassword()),
-                eq(userResource.getEmail()),
-                nullable(String.class),
-                eq(userResource.getPhoneNumber()),
-                eq(1L),
-                eq(1L),
-                nullable(Boolean.class));
+        inOrder.verify(userRestService).createUser(refEq(userResource));
+
         inOrder.verify(registrationCookieService).getProjectInviteHashCookieValue(any(HttpServletRequest.class));
         inOrder.verify(projectPartnerInviteRestService).getInviteByHash(projectInviteCookie.getId(), projectInviteCookie.getHash());
         inOrder.verify(registrationCookieService).getOrganisationIdCookieValue(any(HttpServletRequest.class));
@@ -602,34 +570,25 @@ public class RegistrationControllerTest extends AbstractInviteMockMVCTest<Regist
     @Test
     public void errorsReturnedInEnvelopeAreAddedToTheModel() throws Exception {
         OrganisationResource organisation = newOrganisationResource().withId(1L).withName("Organisation 1").build();
-        UserResource userResource = newUserResource()
+        UserCreationResource userResource = anUserCreationResource()
                 .withPassword("password")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
-                .withId(1L)
                 .withAllowMarketingEmails(true)
                 .build();
 
         Error error = new Error("errorname", BAD_REQUEST);
 
         when(organisationRestService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(restSuccess(organisation));
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                1L, 1L, userResource.getAllowMarketingEmails())).thenReturn(serviceFailure(error));
+        when(userRestService.createUser(refEq(userResource))).thenReturn(restSuccess(new UserResource()));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie(organisationCookie)
                 .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
-                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())

@@ -62,6 +62,15 @@ public class RegistrationForm extends BaseBindingResultTarget {
 
     private Boolean allowMarketingEmails;
 
+    public RegistrationForm() {
+    }
+
+    public RegistrationForm(String firstName, String lastName, String password) {
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -138,7 +147,7 @@ public class RegistrationForm extends BaseBindingResultTarget {
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withPhoneNumber(phoneNumber)
-                .withAllowMarketingEmails(allowMarketingEmails)
+                .withAllowMarketingEmails(allowMarketingEmails == null ? false : allowMarketingEmails)
                 .withAgreedTerms("1".equals(termsAndConditions)); // this is weird.
     }
 }

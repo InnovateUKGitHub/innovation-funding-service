@@ -20,7 +20,6 @@ public class UserDocs {
             fieldWithPath("phoneNumber").description("telephone number of the user"),
             fieldWithPath("imageUrl").description("not used"),
             fieldWithPath("email").type("String").description("e-mail address of the user"),
-            fieldWithPath("password").description("password of the user"),
             fieldWithPath("status").description("status of the user"),
             fieldWithPath("roles").description("roles that the user is associated with"),
             fieldWithPath("profileId").description("profile ID of the user"),
