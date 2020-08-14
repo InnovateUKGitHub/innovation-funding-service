@@ -173,10 +173,6 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         return organisationType;
     }
 
-    public boolean isKnowledgeBaseOrganisation() {
-        return OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType;
-    }
-
     /* view logic */
     public boolean isReadOnly() {
         return complete || !open;

@@ -86,7 +86,4 @@ public class ProjectYourFundingViewModel {
         return OrganisationTypeEnum.BUSINESS == organisationType;
     }
 
-    public boolean isKnowledgeBaseOrganisation() {
-        return OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType;
-    }
 }

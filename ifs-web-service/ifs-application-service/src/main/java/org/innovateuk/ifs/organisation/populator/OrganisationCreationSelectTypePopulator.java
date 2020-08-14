@@ -41,9 +41,9 @@ public class OrganisationCreationSelectTypePopulator {
             allowedTypes.remove(RESEARCH);
         }
         if (competitionResource.getFundingType() == FundingType.KTP) {
-            allowedTypes.removeAll(asList(RESEARCH, RTO, KNOWLEDGE_BASE));
+            allowedTypes.removeAll(asList(RESEARCH, RTO, CATAPULT, UNIVERSITY));
         } else {
-            allowedTypes.remove(KNOWLEDGE_BASE);
+            allowedTypes.removeAll(asList(CATAPULT, UNIVERSITY));
         }
         organisationTypeResourceList = organisationTypeResourceList.stream()
                 .filter(resource -> allowedTypes.contains(OrganisationTypeEnum.getFromId(resource.getId())))
