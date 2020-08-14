@@ -616,8 +616,3 @@ the user fills invite a new external user fields
     the user enters text to a text field     id = firstName  ${firstName}
     the user enters text to a text field     id = lastName  ${lastName}
     the user enters text to a text field     id = emailAddress  ${emailAddress}
-
-#the user search for an active user by an email address
-#    [Arguments]  ${emailAddress}
-#    the user enters text to a text field      id = filter  ${emailAddress}
-#    the user clicks the button/link           css = input[value="Search"]
