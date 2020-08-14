@@ -325,7 +325,7 @@ public class ErrorControllerAdvice {
         }
         addGoogleAnalytics(mav, googleAnalyticsKeys);
         mav.addAllObjects(populateExceptionMap(e, req, arguments));
-        LOG.error("Error caught and returning error page.  Original error:", e);
+        LOG.error(String.format("Error caught and returning error page. url: %s Original error:", req.getRequestURI()), e);
         return mav;
     }
 

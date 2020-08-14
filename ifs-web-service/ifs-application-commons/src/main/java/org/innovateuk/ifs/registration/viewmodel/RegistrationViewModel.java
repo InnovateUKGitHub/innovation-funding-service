@@ -4,7 +4,7 @@ public class RegistrationViewModel {
     private static final String DEFAULT_PHONE_GUIDANCE = "We may use this to contact you about the application.";
     private static final String DEFAULT_BUTTON_TEXT = "Create account";
     private static final String DEFAULT_PAGE_TITLE = "Your details";
-    private static final String DEFAULT_SUB_TITLE = "Create your account";
+    private static final String DEFAULT_SUB_TITLE = "Create an account";
     private String pageTitle;
     private String subTitle;
     private final boolean invitee;

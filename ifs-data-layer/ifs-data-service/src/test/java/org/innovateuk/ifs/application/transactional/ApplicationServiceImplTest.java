@@ -590,7 +590,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                 .build();
 
         when(applicationRepositoryMock.findTopByCompetitionIdOrderByManageFundingEmailDateDesc(competitionId))
-                .thenReturn(application);
+                .thenReturn(Optional.of(application));
 
         ServiceResult<ZonedDateTime> result = service
                 .findLatestEmailFundingDateByCompetitionId(competitionId);
