@@ -430,3 +430,6 @@ INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Smi
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('The Steel Construction Institute', 3, '1916698');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('TWI Limited', 3, '3859442');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('The National Archives', 3, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('East of Scotland KTP Centre', 3, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('West of Scotland KTP Centre', 3, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('North of Scotland KTP Centre', 3, '');

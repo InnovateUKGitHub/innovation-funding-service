@@ -1306,3 +1306,12 @@ INSERT INTO knowledge_base_address (address_id, knowledge_base_id) VALUES (LAST_
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('Kew', '', '', 'Richmond', 'TW9 4DU', 'Surrey', 'United Kingdom');
 SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'The National Archives');
 INSERT INTO knowledge_base_address (address_id, knowledge_base_id) VALUES (LAST_INSERT_ID(), @knowledge_base_id);
+INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('Edinburgh Napier University', '10 Colinton Road', 'Merchiston Capus', 'Edinburgh', 'EH10 5DT', '', 'United Kingdom');
+SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'East of Scotland KTP Centre');
+INSERT INTO knowledge_base_address (address_id, knowledge_base_id) VALUES (LAST_INSERT_ID(), @knowledge_base_id);
+INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('West of Scotland KTP Centre', 'Graham Hills Building', '50 George Street', 'Glasgow', 'G1 1QE', '', 'United Kingdom');
+SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'West of Scotland KTP Centre');
+INSERT INTO knowledge_base_address (address_id, knowledge_base_id) VALUES (LAST_INSERT_ID(), @knowledge_base_id);
+INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('Robert Gordon University', ' SB13 Garthdee House Annexe', 'Garthdee Road', 'Aberdeen', 'AB10 7QB', '', 'United Kingdom');
+SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'North of Scotland KTP Centre');
+INSERT INTO knowledge_base_address (address_id, knowledge_base_id) VALUES (LAST_INSERT_ID(), @knowledge_base_id);
