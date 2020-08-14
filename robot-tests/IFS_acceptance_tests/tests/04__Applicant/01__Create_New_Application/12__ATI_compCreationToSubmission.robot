@@ -50,14 +50,18 @@ Single applicant cannot submit his application to a collaborative comp
     When the user completes the application
     Then the application cannot be submited
 
-The lead invites a collaborator
+The lead invites a collaborator and sets the max available funding to 50000
     [Documentation]  IFS-3421  IFS-5920
-    Given the lead invites already registered user     ${collaborator1_credentials["email"]}  ${ATIcompetitionTitle}  ${ATIapplicationTitle}  no
-    And the user sets max available funding            50000   ${competitionId}
+    Given the lead invites already registered user            ${collaborator1_credentials["email"]}  ${ATIcompetitionTitle}
+    When partner applicant completes the project finances     ${ATIapplicationTitle}  no  ${collaborator1_credentials["email"]}  ${short_password}
+    Then the user sets max available funding                  50000   ${competitionId}
 
-Assign an application question to partner organisation
+lead completes the application team and assigns an application question to partner organisation
      [Documentation]  IFS-7703
-     Given lead assigns a question to partner organisation     ${project_team_question}
+     [Setup]  Log in as a different user                      ${lead_applicant}  ${short_password}
+     Given the user clicks the button/link                    link = ${ATIapplicationTitle}
+     When the applicant completes Application Team
+     Then lead assigns a question to partner organisation     ${project_team_question}
 
 The partner answers the question and assigns the question back to lead for review
      [Documentation]  IFS-7703
