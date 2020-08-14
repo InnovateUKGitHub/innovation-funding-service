@@ -58,7 +58,7 @@ Notify Assessors
     Then the user should see the element             jQuery = h1:contains("In assessment")
     [Teardown]  Reset competition's milestone
 
-the user should be redirected to application summary page on click submit application seconds late to the competition closing time.
+the user should be redirected to application summary page on click submit application seconds late to the competition closing time
     [Documentation]  IFS-7479
     Given log in as a different user                                                      &{lead_applicant_credentials}
     When the user submitted application 1 second late to the competition closing time
