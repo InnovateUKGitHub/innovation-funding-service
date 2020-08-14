@@ -21,7 +21,7 @@ public class RequiredFileValidator extends BaseValidator {
         FormInputResponse response = (FormInputResponse) target;
 
         if (response.getFileEntries() == null || response.getFileEntries().isEmpty()) {
-            rejectValue(errors, "fileEntry", "validation.file.required");
+            rejectValue(errors, "fileEntries", "validation.file.required");
         }
     }
 }
