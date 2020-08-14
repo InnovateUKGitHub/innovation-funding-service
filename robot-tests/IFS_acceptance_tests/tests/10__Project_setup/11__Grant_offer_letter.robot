@@ -52,6 +52,9 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-6021 External applicant dashboard - reflect internal Previous Tab behaviour
 ...
 ...               IFS-6731 Enable new partners to enter their location when joining a project & MO has been assigned
+...
+...               IFS-7531 Ability to remove annex upload through remove link
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -151,15 +154,18 @@ Validating GOL page error message
     Then the user should see a field and summary error   You must confirm that the grant offer letter has been approved by another member of your team.
     And the user should see the element                  name = removeGrantOfferLetterClicked
 
-Comp admin user uploads new annex file
+Comp admin user uploads new annex file and can see remove link for annex file
+    [Documentation]  IFS-7531
     When the user uploads a file             annex  ${5mb_pdf}
     Then the user should see the element     jQuery = a:contains("${5mb_pdf}")
     And the user should see the element      name = removeAdditionalContractFileClicked
 
 Comp admin can not upload a new file without removing the previous annex file
+    [Documentation]  IFS-7531
     Then the user should not see the element     jQuery = label:contains("Upload")
 
 Comp admin can remove the annex file
+    [Documentation]  IFS-7531
     When the user clicks the button/link        name = removeAdditionalContractFileClicked
     Then the user should see the element        jQuery = label:contains("Upload")
     And the user should not see the element     jQuery = a:contains("${5mb_pdf}")
