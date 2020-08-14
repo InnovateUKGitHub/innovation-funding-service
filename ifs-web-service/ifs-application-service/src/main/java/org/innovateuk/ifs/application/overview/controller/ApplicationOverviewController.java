@@ -54,6 +54,8 @@ public class ApplicationOverviewController {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId)
                 .getSuccess();
 
+        System.out.println("here in the application service");
+
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());
         }
@@ -63,6 +65,8 @@ public class ApplicationOverviewController {
         }
 
         changeApplicationStatusToOpen(application, user);
+
+
 
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, user));
         return "application-overview";

@@ -117,7 +117,8 @@
             </div>
         </div>
 
-        <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+        <!--<th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />-->
+        <th:block th:insert="application/readonly/application-read-only :: something (${model.applicationReadOnlyViewModel})" />
 
         <div th:unless="${model.externalFinanceUser}" class="govuk-body govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${model.application.competition},appId=${model.application.id})}"

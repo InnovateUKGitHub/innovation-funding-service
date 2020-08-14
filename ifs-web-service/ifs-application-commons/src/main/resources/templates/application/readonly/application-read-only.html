@@ -70,5 +70,110 @@
     </th:block>
 </th:block>
 
+<th:block th:fragment="something(model)">
+    <!--<section th:each="section : ${model.sections.values()}" th:unless="${section.name.equals('Finances') or section.name.equals('Terms and conditions')}">-->
+        <!--<th:block th:if="${section.name.equals('Project details')}">-->
+            <!--<ul class="govuk-list list-overview govuk-!-margin-top-6">-->
+                <!--<th:block th:each="question : ${model.sectionQuestions.get(section.id)}" th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).APPLICATION_DETAILS}">-->
+                    <!--<li class="section-status">-->
+                        <!--<div class="govuk-grid-row">-->
+                            <!--<div class="govuk-grid-column-two-thirds">-->
+                                <!--<h3 class="govuk-heading-s">-->
+                                    <!--<a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"-->
+                                       <!--th:text="${question.shortName}"-->
+                                       <!--class="govuk-link">Project summary</a>-->
+                                <!--</h3>-->
+                            <!--</div>-->
+                            <!--<div class="govuk-grid-column-one-third">-->
+                                <!--<th:block th:if="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">-->
+                                    <!--<p th:unless="${model.scores.scopeAssessed}" class="govuk-body govuk-hint govuk-!-margin-0">No feedback provided</p>-->
+                                    <!--<p class="govuk-body" th:if="${model.scores.scopeAssessed}">-->
+                                        <!--In scope? <span th:text="${model.scores.inScope}">4</span>/<span th:text="${model.scores.totalScope}">5</span>-->
+                                    <!--</p>-->
+                                <!--</th:block>-->
+                                <!--<th:block th:unless="${question.questionSetupType == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">-->
+                                    <!--<p class="govuk-hint govuk-!-margin-0">No feedback provided</p>-->
+                                <!--</th:block>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</li>-->
+                <!--</th:block>-->
+            <!--</ul>-->
+        <!--</th:block>-->
+
+        <!--<th:block th:if="${!section.name.equals('Project details')}">-->
+            <!--<h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-9">Application questions</h2>-->
+            <!--<p class="govuk-body govuk-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>-->
+
+            <!--<ul class="govuk-list list-overview">-->
+                <!--<li class="section-status" th:each="question : ${model.sectionQuestions.get(section.id)}">-->
+                    <!--<div class="govuk-grid-row">-->
+                        <!--<div class="govuk-grid-column-two-thirds">-->
+                            <!--<h3 class="govuk-heading-s">-->
+                                <!--<a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${model.application.id},qId=${question.id})}"-->
+                                   <!--th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}"-->
+                                   <!--class="govuk-link">1. Business opportunity</a>-->
+                            <!--</h3>-->
+                        <!--</div>-->
+                        <!--<div>-->
+                            <!--<div class="govuk-grid-column-one-third" th:text="|Average score ${model.scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</li>-->
+            <!--</ul>-->
+            <!--<div class="govuk-grid-row govuk-!-margin-top-6">-->
+                <!--<div class="govuk-grid-column-two-thirds">-->
+                    <!--&nbsp;-->
+                <!--</div>-->
+                <!--<div class="govuk-grid-column-one-third">-->
+                    <!--<p class="govuk-body">Average overall: <strong class="heading-" th:text="|${model.scores.averagePercentage}%|">70%</strong></p>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</th:block>-->
+    <!--</section>-->
+
+    <!--<th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">-->
+        <!--<h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>-->
+        <!--<div class="govuk-form-group download">-->
+            <!--<h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>-->
+            <!--<a target="_blank"-->
+               <!--th:href="@{/application/{applicationId}/feedback/download-feedback(applicationId=${model.application.id})}"-->
+               <!--th:text="|${model.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"-->
+               <!--class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.-->
+        <!--</div>-->
+    <!--</th:block>-->
+
+    <section th:if="${model.hasFinanceSection}">
+        <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Finance</h2>
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finance">
+            <div class="govuk-accordion__section">
+                <div class="govuk-accordion__section-header">
+                    <h3 class="govuk-accordion__section-heading">
+                                    <span class="govuk-accordion__section-button" id="accordion-finance-heading-1">
+                                        Finances summary
+                                    </span>
+                    </h3>
+                </div>
+                <div id="accordion-finance-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finance-heading-1">
+                    <div th:replace="finance/finance-summary :: application-finances-summary(${model.applicationFinanceSummaryViewModel})"></div>
+                    <h4 class="govuk-heading-m">Funding breakdown</h4>
+                    <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})" />
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block th:fragment="assessor_feedback(model)">
+    <div th:if="!${#lists.isEmpty(model.feedback)}">
+        <h2 class="govuk-heading-m govuk-!-margin-top-9">Assessor feedback</h2>
+        <ul class="govuk-list boxed-list">
+            <li th:each="item, iterStat : ${model.feedback}">
+                <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+                <div th:text="${item}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
+            </li>
+        </ul>
+    </div>
+</th:block>
 
 </html>
