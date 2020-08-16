@@ -60,6 +60,11 @@ public interface SpendProfileService {
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'EDIT_SPEND_PROFILE')")
     ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table);
 
+    @PreAuthorize("hasAnyAuthority('system_maintainer', 'project_finance')")
+    @SecuredBySpring(value = "DELETE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can delete a Spend Profile for any Project" )
+    @Activity(projectId = "projectId", type = ActivityType.SPEND_PROFILE_DELETED)
+    ServiceResult<Void> deleteSpendProfile(Long projectId);
+
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'MARK_SPEND_PROFILE_COMPLETE')")
     ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId);
 

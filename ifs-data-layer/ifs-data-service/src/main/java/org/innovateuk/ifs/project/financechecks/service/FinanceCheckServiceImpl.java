@@ -25,6 +25,7 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -92,6 +93,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private SpendProfileService spendProfileService;
+
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
@@ -141,7 +145,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
 
         return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                totalProjectCost, totalFundingSought, fundingAppliedFor,totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
+                totalProjectCost, totalFundingSought, fundingAppliedFor, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     @Override
@@ -150,15 +154,15 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
 
         return projectFinanceService.financeChecksDetails(projectId, organisationId).andOnSuccessReturn(projectFinance ->
-                        new FinanceCheckEligibilityResource(project.getId(),
-                                organisationId,
-                                application.getDurationInMonths(),
-                                projectFinance.getTotal(),
-                                projectFinance.getGrantClaimPercentage(),
-                                projectFinance.getTotalFundingSought(),
-                                projectFinance.getTotalOtherFunding(),
-                                projectFinance.getTotalContribution(),
-                                hasAnyApplicationFinances(application, projectFinance))
+                new FinanceCheckEligibilityResource(project.getId(),
+                        organisationId,
+                        application.getDurationInMonths(),
+                        projectFinance.getTotal(),
+                        projectFinance.getGrantClaimPercentage(),
+                        projectFinance.getTotalFundingSought(),
+                        projectFinance.getTotalOtherFunding(),
+                        projectFinance.getTotalContribution(),
+                        hasAnyApplicationFinances(application, projectFinance))
         );
     }
 
@@ -192,17 +196,17 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         boolean actionRequired = false;
 
         ServiceResult<ProjectFinanceResource> resource = projectFinanceService.financeChecksDetails(projectId, organisationId);
-        if(resource.isSuccess()) {
-                ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
-                if(queries.isSuccess()) {
-                    actionRequired = queries.getSuccess().stream().anyMatch(q -> q.awaitingResponse);
-                }
+        if (resource.isSuccess()) {
+            ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
+            if (queries.isSuccess()) {
+                actionRequired = queries.getSuccess().stream().anyMatch(q -> q.awaitingResponse);
+            }
         }
 
         return serviceSuccess(actionRequired);
     }
 
-    private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org)  {
+    private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org) {
         return new ProjectOrganisationCompositeId(org.getProject().getId(), org.getOrganisation().getId());
     }
 
@@ -345,24 +349,23 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> resetViability(Long projectId) {
-        partnerOrganisationRepository.findByProjectId(projectId).forEach(partnerOrganisation -> {
-                    projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisation.getOrganisation().getId()).ifPresent(projectFinance -> {
-                        viabilityWorkflowHandler.viabilityReset(partnerOrganisation, getCurrentlyLoggedInUser().getSuccess());
-                        projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
-                    });
-                });
-        return serviceSuccess();
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            viabilityWorkflowHandler.viabilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+            projectFinance.setViabilityStatus(ViabilityRagStatus.UNSET);
+        });
 
+        return serviceSuccess();
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> resetEligibility(Long projectId) {
-        partnerOrganisationRepository.findByProjectId(projectId).forEach(partnerOrganisation -> {
-            projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, partnerOrganisation.getOrganisation().getId()).ifPresent(projectFinance -> {
-                eligibilityWorkflowHandler.eligibilityReset(partnerOrganisation, getCurrentlyLoggedInUser().getSuccess());
-                projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
-            });
+        projectFinanceRepository.findByProjectId(projectId).forEach(projectFinance -> {
+            long organisationId = projectFinance.getOrganisation().getId();
+            eligibilityWorkflowHandler.eligibilityReset(getPartnerOrganisation(projectId, organisationId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+            projectFinance.setEligibilityStatus(EligibilityRagStatus.UNSET);
+
         });
         return serviceSuccess();
     }
@@ -370,8 +373,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     @Transactional
     public ServiceResult<Void> resetFinanceChecks(Long projectId) {
-            resetViability(projectId);
-            resetEligibility(projectId);
+        resetViability(projectId);
+        resetEligibility(projectId);
+
+        if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
+            spendProfileService.deleteSpendProfile(projectId).toPutResponse();
+        }
+
         return serviceSuccess();
     }
 

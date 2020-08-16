@@ -497,6 +497,20 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     @Transactional
+    public ServiceResult<Void> deleteSpendProfile(Long projectId) {
+        List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
+
+        Project project = getProject(projectId).getSuccess();
+        project.getSpendProfiles().removeAll(spendProfiles);
+        project.setSpendProfileSubmittedDate(null);
+
+        spendProfileRepository.deleteAll(spendProfiles);
+        spendProfileWorkflowHandler.spendProfileDeleted(getProject(projectId).getSuccess(), getCurrentlyLoggedInUser().getSuccess());
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {

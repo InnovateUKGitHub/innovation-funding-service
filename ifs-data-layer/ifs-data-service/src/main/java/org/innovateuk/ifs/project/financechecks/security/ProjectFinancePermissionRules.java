@@ -86,21 +86,21 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "RESET_ELIGIBILITY",
-            description = "System Maintenance can reset Eligibility")
+            description = "Project finance user can reset Eligibility")
     public boolean projectFinanceUserCanResetEligibility(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "RESET_VIABILITY",
-            description = "System Maintenance can reset Viability")
+            description = "Project finance user can reset Viability")
     public boolean projectFinanceUserCanResetViability(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
     }
 
     @PermissionRule(
             value = "RESET_FINANCE_CHECKS",
-            description = "System Maintenance can reset both Viability and Eligibility Checks")
+            description = "Project finance user can reset both Viability and Eligibility Checks")
     public boolean projectFinanceUserCanResetFinanceChecks(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectFinanceUser(user) && isProjectActive(projectCompositeId.id());
     }

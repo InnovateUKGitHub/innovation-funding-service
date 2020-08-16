@@ -59,6 +59,7 @@ public class ActivityLogUrlHelper {
             case SPEND_PROFILE_APPROVED:
             case SPEND_PROFILE_REJECTED:
                 return format("/project-setup-management/project/%d/spend-profile/approval", project.getId());
+            case SPEND_PROFILE_DELETED:
             case GRANT_OFFER_LETTER_UPLOADED:
             case GRANT_OFFER_LETTER_PUBLISHED:
             case GRANT_OFFER_LETTER_SIGNED:

@@ -32,8 +32,7 @@ public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendPro
     public void configure(StateMachineStateConfigurer<SpendProfileState, SpendProfileEvent> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(EnumSet.of(PENDING, CREATED, SUBMITTED, APPROVED, REJECTED))
-                .end(APPROVED);
+                .states(EnumSet.of(PENDING, CREATED, SUBMITTED, APPROVED, REJECTED));
     }
 
     @Override
@@ -55,6 +54,11 @@ public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendPro
                 .target(SUBMITTED)
                 .and()
                 .withExternal()
+                .source(CREATED)
+                .event(SPEND_PROFILE_DELETED)
+                .target(PENDING)
+                .and()
+                .withExternal()
                 .source(SUBMITTED)
                 .event(SPEND_PROFILE_APPROVED)
                 .target(APPROVED)
@@ -65,8 +69,23 @@ public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendPro
                 .target(REJECTED)
                 .and()
                 .withExternal()
+                .source(SUBMITTED)
+                .event(SPEND_PROFILE_DELETED)
+                .target(PENDING)
+                .and()
+                .withExternal()
                 .source(REJECTED)
                 .event(SPEND_PROFILE_SUBMITTED)
-                .target(SUBMITTED);
+                .target(SUBMITTED)
+                .and()
+                .withExternal()
+                .source(REJECTED)
+                .event(SPEND_PROFILE_DELETED)
+                .target(PENDING)
+                .and()
+                .withExternal()
+                .source(APPROVED)
+                .event(SPEND_PROFILE_DELETED)
+                .target(PENDING);
     }
 }
