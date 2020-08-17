@@ -220,7 +220,7 @@
                     <tbody class="govuk-table__body">
                     <th:block th:each="entry : *{otherFundingRows}">
                         <th:block
-                            th:insert="application/your-funding-fragments :: other_funding_row (${entry.key}, ${entry.value})"/>
+                            th:insert="application/your-funding-fragments :: other_funding_row (${entry.key}, ${entry.value}, ${model.fundingType})"/>
                     </th:block>
                     </tbody>
                 </table>
@@ -251,84 +251,160 @@
 
 <th:block th:fragment="ajax_other_funding_row">
     <th:block th:object="${form}">
-        <th:block th:insert="application/your-funding-fragments :: other_funding_row (${id}, ${row})"/>
+        <th:block th:insert="application/your-funding-fragments :: other_funding_row (${id}, ${row}, ${fundingType})"/>
     </th:block>
 </th:block>
 
-<!--make it either previous or other-->
-<th:block th:fragment="other_funding_row (id, row)">
-    <tr class="govuk-table__row form-group-row-validated" th:with="path=${'previousFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
-        <input type="hidden"
-               th:field="*{__${path}__.costId}"/>
-        <td class="govuk-table__cell govuk-form-group"
-            th:classappend="${#fields.hasErrors('__${path}__.source')} ? 'govuk-form-group--error'">
-            <label th:for="__${path}__.source" class="govuk-visually-hidden">
-                Source of funding
-            </label>
-            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.source')}" th:text="${err}"/>
+<th:block th:fragment="other_funding_row (id, row, fundingType)">
+    <th:block th:if="${fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP}">
+        <tr class="govuk-table__row form-group-row-validated" th:with="path=${'previousFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
             <input type="hidden"
-                   th:field="*{__${path}__.financeRowType}"
-                   class="govuk-input"
-                   th:id="__${path}__.financeRowType"
-                   th:errorclass="govuk-input--error"
-                   required="required"
-                   maxlength="255"
-                   th:attr="data-required-errormessage=#{validation.finance.funding.financeRowType.blank}"/>
-            <input type="text"
-                   th:field="*{__${path}__.source}"
-                   class="govuk-input"
-                   th:id="__${path}__.source"
-                   th:errorclass="govuk-input--error"
-                   required="required"
-                   maxlength="255"
-                   th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}"/>
-        </td>
-        <td class="govuk-table__cell govuk-form-group"
-            th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
-            <label th:for="__${path}__.date" class="govuk-visually-hidden">
-                Date secured
-            </label>
-            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.date')}" th:text="${err}"/>
-            <input type="text"
-                   th:field="*{__${path}__.date}"
-                   class="govuk-input"
-                   th:id="__${path}__.date"
-                   placeholder="MM-YYYY"
-                   pattern="(0[1-9]|1[012])-[0-9]{4}"
-                   th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
-                   maxlength="7"
-                   th:errorclass="govuk-input--error"
-                   required="required"/>
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
-            th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">
-            <label th:for="__${path}__.fundingAmount" class="govuk-visually-hidden">
-                Funding amount (&pound;)
-            </label>
-            <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.fundingAmount')}"
-                  th:text="${err}"/>
-            <input class="govuk-input govuk-input--width-10"
-                   type="number"
-                   th:field="*{__${path}__.fundingAmount}"
-                   th:id="__${path}__.fundingAmount"
-                   th:errorclass="govuk-input--error"
-                   required="required"
-                   placeholder="0"
-                   min="1"
-                   max="9999999999999999999"
-                   data-prevent-input-non-number
-                   step="1"
-                   th:attr="data-max-errormessage=#{validation.finance.funding.amount.invalid},
+                   th:field="*{__${path}__.costId}"/>
+            <td class="govuk-table__cell govuk-form-group"
+                th:classappend="${#fields.hasErrors('__${path}__.source')} ? 'govuk-form-group--error'">
+                <label th:for="__${path}__.source" class="govuk-visually-hidden">
+                    Source of funding
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.source')}" th:text="${err}"/>
+                <input type="hidden"
+                       th:field="*{__${path}__.financeRowType}"
+                       class="govuk-input"
+                       th:id="__${path}__.financeRowType"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       maxlength="255"
+                       th:attr="data-required-errormessage=#{validation.finance.funding.financeRowType.blank}"/>
+                <input type="text"
+                       th:field="*{__${path}__.source}"
+                       class="govuk-input"
+                       th:id="__${path}__.source"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       maxlength="255"
+                       th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}"/>
+            </td>
+            <td class="govuk-table__cell govuk-form-group"
+                th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
+                <label th:for="__${path}__.date" class="govuk-visually-hidden">
+                    Date secured
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.date')}" th:text="${err}"/>
+                <input type="text"
+                       th:field="*{__${path}__.date}"
+                       class="govuk-input"
+                       th:id="__${path}__.date"
+                       placeholder="MM-YYYY"
+                       pattern="(0[1-9]|1[012])-[0-9]{4}"
+                       th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
+                       maxlength="7"
+                       th:errorclass="govuk-input--error"
+                       required="required"/>
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
+                th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">
+                <label th:for="__${path}__.fundingAmount" class="govuk-visually-hidden">
+                    Funding amount (&pound;)
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.fundingAmount')}"
+                      th:text="${err}"/>
+                <input class="govuk-input govuk-input--width-10"
+                       type="number"
+                       th:field="*{__${path}__.fundingAmount}"
+                       th:id="__${path}__.fundingAmount"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       placeholder="0"
+                       min="1"
+                       max="9999999999999999999"
+                       data-prevent-input-non-number
+                       step="1"
+                       th:attr="data-max-errormessage=#{validation.finance.funding.amount.invalid},
                                 data-required-errormessage=#{validation.finance.funding.amount}"/>
-        </td>
-        <td class="govuk-table__cell">
-            <button type="submit"
-                    name="remove_cost"
-                    class="button-clear js-remove-row"
-                    th:value="${id}">Remove <span class="govuk-visually-hidden">item</span>
-            </button>
-        </td>
-    </tr>
+            </td>
+            <td class="govuk-table__cell">
+                <button type="submit"
+                        name="remove_cost"
+                        class="button-clear js-remove-row"
+                        th:value="${id}">Remove <span class="govuk-visually-hidden">item</span>
+                </button>
+            </td>
+        </tr>
+    </th:block>
+    <th:block th:unless="${fundingType == T(org.innovateuk.ifs.competition.publiccontent.resource.FundingType).KTP}">
+        <tr class="govuk-table__row form-group-row-validated" th:with="path=${'otherFundingRows[__${id}__]'}" th:attr="data-repeatable-row=${path}">
+            <input type="hidden"
+                   th:field="*{__${path}__.costId}"/>
+            <td class="govuk-table__cell govuk-form-group"
+                th:classappend="${#fields.hasErrors('__${path}__.source')} ? 'govuk-form-group--error'">
+                <label th:for="__${path}__.source" class="govuk-visually-hidden">
+                    Source of funding
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.source')}" th:text="${err}"/>
+                <input type="hidden"
+                       th:field="*{__${path}__.financeRowType}"
+                       class="govuk-input"
+                       th:id="__${path}__.financeRowType"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       maxlength="255"
+                       th:attr="data-required-errormessage=#{validation.finance.funding.financeRowType.blank}"/>
+                <input type="text"
+                       th:field="*{__${path}__.source}"
+                       class="govuk-input"
+                       th:id="__${path}__.source"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       maxlength="255"
+                       th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}"/>
+            </td>
+            <td class="govuk-table__cell govuk-form-group"
+                th:classappend="${#fields.hasErrors('__${path}__.date')} ? 'govuk-form-group--error'">
+                <label th:for="__${path}__.date" class="govuk-visually-hidden">
+                    Date secured
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.date')}" th:text="${err}"/>
+                <input type="text"
+                       th:field="*{__${path}__.date}"
+                       class="govuk-input"
+                       th:id="__${path}__.date"
+                       placeholder="MM-YYYY"
+                       pattern="(0[1-9]|1[012])-[0-9]{4}"
+                       th:attr="data-pattern-errormessage=#{validation.finance.funding.date.invalid}"
+                       maxlength="7"
+                       th:errorclass="govuk-input--error"
+                       required="required"/>
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group"
+                th:classappend="${#fields.hasErrors('__${path}__.fundingAmount')} ? 'govuk-form-group--error'">
+                <label th:for="__${path}__.fundingAmount" class="govuk-visually-hidden">
+                    Funding amount (&pound;)
+                </label>
+                <span class="govuk-error-message" th:each="err : ${#fields.errors('__${path}__.fundingAmount')}"
+                      th:text="${err}"/>
+                <input class="govuk-input govuk-input--width-10"
+                       type="number"
+                       th:field="*{__${path}__.fundingAmount}"
+                       th:id="__${path}__.fundingAmount"
+                       th:errorclass="govuk-input--error"
+                       required="required"
+                       placeholder="0"
+                       min="1"
+                       max="9999999999999999999"
+                       data-prevent-input-non-number
+                       step="1"
+                       th:attr="data-max-errormessage=#{validation.finance.funding.amount.invalid},
+                                data-required-errormessage=#{validation.finance.funding.amount}"/>
+            </td>
+            <td class="govuk-table__cell">
+                <button type="submit"
+                        name="remove_cost"
+                        class="button-clear js-remove-row"
+                        th:value="${id}">Remove <span class="govuk-visually-hidden">item</span>
+                </button>
+            </td>
+        </tr>
+    </th:block>
+
 </th:block>
 
 <th:block th:fragment="applicant-business">
