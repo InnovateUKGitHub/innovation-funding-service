@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.finance.populator;
+package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -11,6 +11,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.HttpServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,8 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
-public class AbstractFinanceModelPopulator {
+@Component
+public class FinanceLinksUtil {
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -30,7 +32,7 @@ public class AbstractFinanceModelPopulator {
     @Autowired
     private CompetitionAssessmentConfigRestService competitionAssessmentConfigRestService;
 
-    protected Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
+    public Optional<String> financesLink(OrganisationResource organisation, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());

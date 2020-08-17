@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.populator;
 
+import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -33,7 +34,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @Component
-public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinanceModelPopulator {
+public class ApplicationFundingBreakdownViewModelPopulator {
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -55,6 +56,9 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
     @Autowired
     private AssessmentRestService assessmentRestService;
+
+    @Autowired
+    private FinanceLinksUtil financeLinksUtil;
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
 
@@ -100,7 +104,7 @@ public class ApplicationFundingBreakdownViewModelPopulator extends AbstractFinan
 
     private BreakdownTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, long leadOrganisationId, List<ProcessRoleResource> processRoles, UserResource user, ApplicationResource application, CompetitionResource competition) {
         Optional<ApplicationFinanceResource> finance = Optional.ofNullable(finances.get(organisation.getId()));
-        Optional<String> financeLink = financesLink(organisation, processRoles, user, application, competition);
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, processRoles, user, application, competition);
         boolean lead = organisation.getId().equals(leadOrganisationId);
         return new BreakdownTableRow(
                 organisation.getId(),

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.populator;
 
+import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceSummaryTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -36,7 +37,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
-public class ApplicationFinanceSummaryViewModelPopulator extends AbstractFinanceModelPopulator {
+public class ApplicationFinanceSummaryViewModelPopulator {
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -64,6 +65,9 @@ public class ApplicationFinanceSummaryViewModelPopulator extends AbstractFinance
 
     @Autowired
     private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
+
+    @Autowired
+    private FinanceLinksUtil financeLinksUtil;
 
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -172,7 +176,7 @@ public class ApplicationFinanceSummaryViewModelPopulator extends AbstractFinance
                                           UserResource user, List<ProcessRoleResource> processRoles) {
 
         return competition.isKtp()
-                ? financesLink(organisation,processRoles, user, application, competition)
+                ? financeLinksUtil.financesLink(organisation,processRoles, user, application, competition)
                 : Optional.empty();
     }
 }
