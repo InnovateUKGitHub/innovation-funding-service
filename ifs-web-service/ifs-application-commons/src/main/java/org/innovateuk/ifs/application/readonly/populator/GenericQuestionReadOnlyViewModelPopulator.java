@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.readonly.ApplicationReadOnlySettings;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionFileViewModel;
 import org.innovateuk.ifs.application.readonly.viewmodel.GenericQuestionReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.*;
@@ -46,20 +47,21 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
-        Optional<AssessorFormInputResponseResource> feedback = Optional.empty();
-        Optional<AssessorFormInputResponseResource> score = Optional.empty();
+        List<String> feedback = new ArrayList<>();
         if (settings.isIncludeAssessment()) {
-            Optional<Collection<AssessorFormInputResponseResource>> responses = Optional.ofNullable(data.getQuestionToAssessorResponse().get(question.getId()));
+            if (settings.getAssessmentId() != null) {
+                ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map(ApplicationAssessmentResource::getFeedback)
+                        .map(feedbackMap -> feedbackMap.get(question.getId()))
+                        .ifPresent(feedback::add);
+            } else {
+                data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::getFeedback)
+                        .map(feedbackMap -> feedbackMap.get(question.getId()))
+                        .forEach(feedback::add);
 
-            feedback = responses.flatMap(resps ->
-                    resps.stream()
-                            .filter(resp -> data.getFormInputIdToAssessorFormInput().get(resp.getFormInput()).getType().equals(TEXTAREA))
-                            .findAny());
-
-            score = responses.flatMap(resps ->
-                    resps.stream()
-                            .filter(resp -> data.getFormInputIdToAssessorFormInput().get(resp.getFormInput()).getType().equals(ASSESSOR_SCORE))
-                            .findAny());
+            }
         }
 
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
@@ -70,8 +72,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
-                feedback.map(AssessorFormInputResponseResource::getValue).orElse(null),
-                score.map(AssessorFormInputResponseResource::getValue).orElse(null)
+                feedback
             );
     }
 

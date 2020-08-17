@@ -12,7 +12,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
@@ -36,6 +36,7 @@ import java.util.*;
 import java.util.concurrent.Future;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toCollection;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
@@ -97,7 +98,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<QuestionStatusResource>> questionStatusesFuture = async(() -> getQuestionStatuses(application, user, settings));
         Future<List<SectionResource>> sectionsFuture = async(() -> sectionRestService.getByCompetition(application.getCompetition()).getSuccess());
         Future<Optional<ProcessRoleResource>> processRoleFuture = async(() -> getProcessRole(application, user, settings));
-        Future<List<AssessorFormInputResponseResource>> assessorResponseFuture = async(() -> getAssessmentResponses(settings));
+        Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
 
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
@@ -153,10 +154,18 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         return questionStatusRestService.findByApplicationAndOrganisation(application.getId(), organisationId).getSuccess();
     }
 
-    private List<AssessorFormInputResponseResource> getAssessmentResponses(ApplicationReadOnlySettings settings) {
+    private List<ApplicationAssessmentResource> getAssessmentResponses(ApplicationResource application, ApplicationReadOnlySettings settings) {
         if (!settings.isIncludeAssessment()) {
             return emptyList();
         }
-        return assessorFormInputResponseRestService.getAllAssessorFormInputResponses(settings.getAssessmentId()).getSuccess();
+        if (settings.getAssessmentId() != null) {
+            return singletonList(
+                    assessorFormInputResponseRestService.getApplicationAssessment(application.getId(), settings.getAssessmentId()).getSuccess()
+            );
+        }
+        if (settings.isIncludeAllAssessorFeedback()) {
+            return assessorFormInputResponseRestService.getApplicationAssessments(application.getId()).getSuccess().getAssessments();
+        }
+        return emptyList();
     }
 }

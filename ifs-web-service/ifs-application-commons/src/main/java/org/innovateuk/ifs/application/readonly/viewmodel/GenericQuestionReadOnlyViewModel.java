@@ -14,10 +14,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final GenericQuestionFileViewModel templateFile;
     private final String templateDocumentTitle;
     private final long competitionId;
-    private final String feedback;
-    private final String score;
+    private final List<String> feedback;
 
-    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle,String feedback, String score) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle,List<String> feedback) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
@@ -27,7 +26,6 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.templateDocumentTitle = templateDocumentTitle;
         this.competitionId = data.getCompetition().getId();
         this.feedback = feedback;
-        this.score = score;
     }
 
     public String getDisplayName() {
@@ -58,14 +56,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return competitionId;
     }
 
-    public String getFeedback() {
+    public List<String> getFeedback() {
         return feedback;
     }
-
-    public String getScore() {
-        return score;
-    }
-
 
     @Override
     public String getName() {
@@ -78,12 +71,10 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     }
 
     public boolean hasFeedback() {
-        return feedback != null;
+        return !feedback.isEmpty();
     }
-    public boolean hasScore() {
-        return score != null;
-    }
+
     public boolean hasAssessorResponse() {
-        return hasFeedback() && hasScore();
+        return hasFeedback();
     }
 }

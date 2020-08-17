@@ -9,8 +9,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -18,8 +16,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
@@ -87,9 +83,9 @@ public class ManagementApplicationPopulator {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
-        List<String> feedback = assessmentRestService.getApplicationFeedback(applicationId).getSuccess().getFeedback();
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(true);
 
-        ApplicationReadOnlySettings settings = defaultSettings();
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {
             settings.setIncludeStatuses(true);
@@ -104,19 +100,19 @@ public class ManagementApplicationPopulator {
 //        3. retrieve question scores
 //        4. add stuff to model for rendering
 
-        List<SectionResource> allByCompetitionId = sectionService.getAllByCompetitionId(competition.getId());
-
+//        List<SectionResource> allByCompetitionId = sectionService.getAllByCompetitionId(competition.getId());
+//
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
-
-        allByCompetitionId.forEach((section) -> {
-            section.getQuestions().forEach((questionId) -> {
-                QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
-                AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionResource.getId())
-                .getSuccess();
-                System.out.println("rest question name ref:" + questionResource.getName());
-            });
-        });
+//
+//        allByCompetitionId.forEach((section) -> {
+//            section.getQuestions().forEach((questionId) -> {
+//                QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
+//                AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionResource.getId())
+//                .getSuccess();
+//                System.out.println("rest question name ref:" + questionResource.getName());
+//            });
+//        });
 
 //        applicationReadOnlyViewModel.getSections().forEach((section) -> {
 //          section.getQuestions().forEach((question) -> {
@@ -125,7 +121,7 @@ public class ManagementApplicationPopulator {
 //        });
 
 
-        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
+//        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 //        System.out.println("scores" + scores.getScores().toString());
 
         Long projectId = null;
@@ -143,9 +139,7 @@ public class ManagementApplicationPopulator {
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
                 support,
                 projectId,
-                user.hasRole(Role.EXTERNAL_FINANCE),
-                feedback,
-                scores
+                user.hasRole(Role.EXTERNAL_FINANCE)
         );
 
     }

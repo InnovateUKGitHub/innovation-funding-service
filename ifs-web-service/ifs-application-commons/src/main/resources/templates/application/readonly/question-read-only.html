@@ -34,19 +34,9 @@
         </div>
 
         <th:block th:if="${model.hasAssessorResponse()}">
-            <div class="clear-floats">
-                <div class="govuk-grid-row govuk-!-margin-top-6">
-                    <div class="govuk-grid-column-one-half">
-                        <h3 class="govuk-heading-s">Feedback</h3>
-                    </div>
-                    <div class="govuk-grid-column-one-half alignright govuk-heading-s">
-                        Score <span th:text="${model.score}">Feedback score</span>/10
-                    </div>
-                </div>
-            </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <p class="govuk-body" th:text="${model.feedback}">Feedback text</p>
+                    <p th:each="feedback : ${model.feedback}" class="govuk-body" th:text="${feedback}">Feedback text</p>
                 </div>
             </div>
         </th:block>

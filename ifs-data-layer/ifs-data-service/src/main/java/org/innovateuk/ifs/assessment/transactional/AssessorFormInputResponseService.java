@@ -28,5 +28,9 @@ public interface AssessorFormInputResponseService {
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ')")
     ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId);
+
+    ServiceResult<ApplicationAssessmentResource> getApplicationAssessment(long applicationId, long assessmentId);
+
+    ServiceResult<ApplicationAssessmentsResource> getApplicationAssessments(long applicationId);
 }
 
