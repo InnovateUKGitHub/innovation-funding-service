@@ -7,12 +7,18 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
@@ -65,6 +71,16 @@ public class ManagementApplicationPopulator {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+
     public ManagementApplicationViewModel populate(long applicationId,
                                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -78,8 +94,27 @@ public class ManagementApplicationPopulator {
             settings.setIncludeStatuses(true);
         }
 
+//        1. loop through the sections within applicationReadOnlyViewModel
+//        2. for each question within the section;
+//          1. retrieve the question type (questionRestService.findById(questionId).getSuccess();)
+//          2. retrieve the feedback for the question via (extracted from AssessorQuestionFeedbackPopulator) AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
+//                .getAssessmentAggregateFeedback(applicationId, questionResource.getId())
+//                .getSuccess();
+//        3. log out
+
+        List<SectionResource> allByCompetitionId = sectionService.getAllByCompetitionId(competition.getId());
+
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
+
+        allByCompetitionId.forEach((section) -> {
+            section.getQuestions().forEach((questionId) -> {
+                QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
+                AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionResource.getId())
+                .getSuccess();
+                System.out.println("loopada question man" + aggregateResource.getFeedback().toString());
+            });
+        });
 
         Long projectId = null;
         if (application.getApplicationState() == ApplicationState.APPROVED) {
