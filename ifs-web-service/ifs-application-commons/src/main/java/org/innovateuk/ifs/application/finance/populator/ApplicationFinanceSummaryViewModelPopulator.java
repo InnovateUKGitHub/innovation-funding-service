@@ -7,15 +7,11 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
-import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
-import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -26,7 +22,6 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
-import org.innovateuk.ifs.util.HttpServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,17 +29,14 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 
-import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.user.resource.Role.assessorProcessRoles;
 
 @Component
-public class ApplicationFinanceSummaryViewModelPopulator {
+public class ApplicationFinanceSummaryViewModelPopulator extends AbstractFinanceModelPopulator {
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -72,12 +64,6 @@ public class ApplicationFinanceSummaryViewModelPopulator {
 
     @Autowired
     private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private HttpServletUtil httpServletUtil;
 
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
@@ -182,40 +168,11 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         return null;
     }
 
-    private String internalLink(long applicationId, OrganisationResource organisation) {
-        return format("/application/%d/form/%s/%d", applicationId, SectionType.FINANCE.name(), organisation.getId());
-    }
-
-    private String applicantLink(long applicationId) {
-        return format("/application/%d/form/%s", applicationId, SectionType.FINANCE.name());
-    }
-
     private Optional<String> financesLink(OrganisationResource organisation, ApplicationResource application, CompetitionResource competition,
                                           UserResource user, List<ProcessRoleResource> processRoles) {
 
-        if (competition.isKtp()) {
-            Optional<ProcessRoleResource> currentUserRole = getCurrentUsersRole(processRoles, user);
-            UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(httpServletUtil.request());
-
-            if (authenticatedUser.isInternalUser() || authenticatedUser.getRoles().contains(STAKEHOLDER) || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
-                if (!application.isSubmitted()) {
-                    if (authenticatedUser.getRoles().contains(IFS_ADMINISTRATOR) || authenticatedUser.getRoles().contains(SUPPORT)
-                            || authenticatedUser.getRoles().contains(EXTERNAL_FINANCE)) {
-                        return Optional.of(internalLink(application.getId(), organisation));
-                    }
-                } else {
-                    return Optional.of(internalLink(application.getId(), organisation));
-                }
-            }
-
-            if (currentUserRole.isPresent()) {
-                if (applicantProcessRoles().contains(currentUserRole.get().getRole())
-                        && currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
-                    return Optional.of(applicantLink(application.getId()));
-                }
-            }
-        }
-
-        return Optional.empty();
+        return competition.isKtp()
+                ? financesLink(organisation,processRoles, user, application, competition)
+                : Optional.empty();
     }
 }
