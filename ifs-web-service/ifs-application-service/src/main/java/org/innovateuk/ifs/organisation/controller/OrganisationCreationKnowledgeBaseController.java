@@ -2,6 +2,7 @@ package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.registration.form.KnowledgeBaseCreateForm;
 import org.innovateuk.ifs.registration.form.KnowledgeBaseForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -43,6 +44,15 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         addPageSubtitleToModel(request, user, model);
         model.addAttribute("knowledgeBases", knowledgeBaseRestService.getKnowledgeBases().getSuccess());
         return "registration/organisation/knowledge-base";
+    }
+
+    @GetMapping("/details")
+    public String createKnowledgeBase(@ModelAttribute(name = "form", binding = false) KnowledgeBaseCreateForm organisationForm,
+                                      Model model,
+                                      HttpServletRequest request,
+                                      UserResource user) {
+        addPageSubtitleToModel(request, user, model);
+        return "registration/organisation/knowledge-base-details";
     }
 
     @PostMapping

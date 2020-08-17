@@ -42,7 +42,7 @@
                             th:field="*{knowledgeBase}"
                             data-auto-complete=""
                             required="required"
-                            th:attr="data-required-errormessage=#{validation.standard.organisation.required}">
+                            th:attr="data-required-errormessage=#{validation.standard.knowledgebase.organisation.required}">
                         <option value="">Knowledge base organisation</option>
                         <option th:each="knowledgeBase : ${knowledgeBases}"
                                 th:value="${knowledgeBase}"
@@ -55,6 +55,12 @@
                         class="govuk-button">Save and continue</button>
             </div>
         </form>
+
+        <h2 class="govuk-heading-m">Unable to find your organisation</h2>
+        <p class="govuk-body">If you are unable to fund your organisation in the list above, please try
+            <a href="https://www.officeforstudents.org.uk/advice-and-guidance/the-register/the-ofs-register/">checking your organisations's alternative name</a>.</p>
+
+        <p class="govuk-body">If you cannot find your organisation, <a th:href="@{/organisation/create/knowledge-base/details}">enter its details manually</a>.</p>
 
         <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
