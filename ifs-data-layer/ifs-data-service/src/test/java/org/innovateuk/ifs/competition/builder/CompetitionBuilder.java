@@ -18,8 +18,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -191,9 +193,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((grantClaimMaximums, c) -> c.setGrantClaimMaximums(grantClaimMaximums), grantClaimMaximumses);
     }
 
-    @SafeVarargs
-    public final CompetitionBuilder withFinanceRowTypes(List<FinanceRowType>... financeRowTypes) {
-        return withArraySetFieldByReflection("financeRowTypes", financeRowTypes);
+    public final CompetitionBuilder withFinanceRowTypes(List<FinanceRowType> financeRowTypes) {
+        List<CompetitionFinanceRowTypes> types = IntStream.range(0, financeRowTypes.size()).mapToObj(
+                i -> new CompetitionFinanceRowTypes(null, financeRowTypes.get(i), i)
+        ).collect(toList());
+        return with(comp -> comp.getCompetitionFinanceRowTypes().addAll(types));
     }
 
     public CompetitionBuilder withTermsAndConditions(GrantTermsAndConditions... termsAndConditions) {

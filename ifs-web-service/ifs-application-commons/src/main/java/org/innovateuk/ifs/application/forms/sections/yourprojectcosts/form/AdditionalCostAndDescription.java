@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
-import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.finance.resource.cost.AdditionalCompanyCost;
 
+import javax.validation.constraints.DecimalMin;
 import java.math.BigInteger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.VALUE_MUST_BE_HIGHER_MESSAGE;
 
 public class AdditionalCostAndDescription {
 
     private String description;
+
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     private BigInteger cost;
 
     public AdditionalCostAndDescription() {}

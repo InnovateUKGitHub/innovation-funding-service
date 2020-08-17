@@ -2,6 +2,7 @@ package org.innovateuk.ifs.util;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.thymeleaf.context.IExpressionContext;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +18,7 @@ public class ThymeleafUtilTest {
 
     @Before
     public void setUp() throws Exception {
-        thymeleafUtil = new ThymeleafUtil();
+        thymeleafUtil = new ThymeleafUtil(mock(IExpressionContext.class));
     }
 
     @Test

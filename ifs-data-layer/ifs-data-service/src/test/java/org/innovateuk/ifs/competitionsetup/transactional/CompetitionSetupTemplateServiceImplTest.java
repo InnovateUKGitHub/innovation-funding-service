@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigRepository;
+import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.form.domain.Section;
@@ -29,7 +30,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.resource.ApplicationFinanceType.NO_FINANCES;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.refEq;
@@ -61,6 +61,9 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private FileTypeRepository fileTypeRepository;
+
+    @Mock
+    private CompetitionInitialiser competitionInitialiser;
 
     @Test
     public void initializeCompetitionByCompetitionTemplate_competitionTypeCantBeFoundShouldResultException() {
@@ -191,7 +194,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
-                .withFinanceRowTypes(singletonList(FINANCE))
                 .build();
 
         List<Competition> competitions = singletonList(competitionTemplate);
@@ -239,7 +241,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
-                .withFinanceRowTypes(singletonList(FINANCE))
                 .build();
 
         List<Competition> competitions = singletonList(competitionTemplate);
@@ -289,7 +290,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withTermsAndConditions(templateTermsAndConditions)
                 .withGrantClaimMaximums()
                 .withAcademicGrantPercentage(30)
-                .withFinanceRowTypes(singletonList(FINANCE))
                 .build();
 
         List<Competition> competitions = singletonList(competitionTemplate);
