@@ -186,18 +186,20 @@
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row" th:each="type : ${breakdown.financeRowTypes}">
-                        <th class="govuk-table__cell" scope="row"
-                            th:text="${type.displayName}">Labour</th>
+                        <td class="govuk-table__cell"
+                            th:text="${type.displayName}">Labour</td>
                         <td class="govuk-table__cell govuk-table__cell--numeric"
                             th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
                     </tr>
+                    </tbody>
+                    <tfoot class="govuk-table__foot">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">Total</th>
                         <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
                             th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
                         </td>
                     </tr>
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
         </div>
