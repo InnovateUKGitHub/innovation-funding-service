@@ -585,7 +585,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveKtaUserInviteWhenEmailDomainIsIncorrect() throws Exception {
 
-        Role role = KNOWLEDGE_TRANSFER_ADVISOR;
+        Role role = KNOWLEDGE_TRANSFER_ADVISER;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, role);
@@ -602,7 +602,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISER);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
@@ -618,7 +618,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(roleInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, KNOWLEDGE_TRANSFER_ADVISER);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
         verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
@@ -627,7 +627,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveKtaUserInviteSucceeds() throws Exception {
 
-        Role role = KNOWLEDGE_TRANSFER_ADVISOR;
+        Role role = KNOWLEDGE_TRANSFER_ADVISER;
 
         invitedUser.setEmail("Astle.Pimenta@ktn-uk.org");
 

@@ -81,7 +81,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
                 param("firstName", "First").
                 param("lastName", "Last").
                 param("emailAddress", "asdf@ktn-uk.test").
-                param("role", "KNOWLEDGE_TRANSFER_ADVISOR"))
+                param("role", "KNOWLEDGE_TRANSFER_ADVISER"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("admin/invite-new-user"));
     }
@@ -95,7 +95,7 @@ public class InviteUserControllerTest extends BaseControllerMockMVCTest<InviteUs
                 param("firstName", "First").
                 param("lastName", "Last").
                 param("emailAddress", "asdf@ktn-uk.test").
-                param("role", "KNOWLEDGE_TRANSFER_ADVISOR"))
+                param("role", "KNOWLEDGE_TRANSFER_ADVISER"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/admin/users/pending"));
     }
