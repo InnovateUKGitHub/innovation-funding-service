@@ -390,7 +390,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
 
         if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
-            grantOfferLetterService.deleteGrantOfferLetterFileEntry(projectId);
+            grantOfferLetterService.resetGrantOfferLetterFileEntry(projectId);
         }
         return serviceSuccess();
     }

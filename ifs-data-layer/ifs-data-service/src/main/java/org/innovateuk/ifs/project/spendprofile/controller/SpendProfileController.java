@@ -95,4 +95,9 @@ public class SpendProfileController {
     public RestResult<Void> completeSpendProfilesReview(@PathVariable("projectId") final Long projectId) {
         return spendProfileService.completeSpendProfilesReview(projectId).toPostResponse();
     }
+
+    @DeleteMapping("/spend-profile/reset")
+    public RestResult<Void> deleteSpendProfile(@PathVariable("projectId") final Long projectId) {
+        return spendProfileService.deleteSpendProfile(projectId).toDeleteResponse();
+    }
 }
