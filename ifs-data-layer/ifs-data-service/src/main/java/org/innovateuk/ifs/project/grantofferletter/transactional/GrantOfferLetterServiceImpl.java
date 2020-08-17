@@ -25,7 +25,6 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -52,7 +51,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.docusign.resource.DocusignRequest.DocusignRequestBuilder.aDocusignRequest;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -87,7 +85,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private DocusignService docusignService;
 
     @Autowired
-    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
+    private GrantOfferLetterWorkflowHandler grantOfferLetterWorkflowHandler;
 
 
     @Value("${ifs.web.baseURL}")
@@ -262,22 +260,17 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> resetGrantOfferLetterFileEntry(Long projectId) {
-//        removeGrantOfferLetterFileEntry(projectId);
-
         Project project = getProject(projectId).getSuccess();
 
         if (project.getGrantOfferLetter() != null) {
             fileService.deleteFileIgnoreNotFound(project.getGrantOfferLetter().getId());
             project.setGrantOfferLetter(null);
         }
-
         if (project.getAdditionalContractFile() != null) {
             fileService.deleteFileIgnoreNotFound(project.getAdditionalContractFile().getId());
             project.setAdditionalContractFile(null);
         }
-
-        grantOfferLetterProcessRepository.findOneByTargetId(projectId).setProcessState(PENDING);
-
+        grantOfferLetterWorkflowHandler.grantOfferLetterReset(project, getCurrentlyLoggedInUser().getSuccess());
         return serviceSuccess();
     }
 
