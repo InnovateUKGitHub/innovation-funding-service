@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
@@ -100,7 +101,8 @@ public class ManagementApplicationPopulator {
 //          2. retrieve the feedback for the question via (extracted from AssessorQuestionFeedbackPopulator) AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
 //                .getAssessmentAggregateFeedback(applicationId, questionResource.getId())
 //                .getSuccess();
-//        3. log out
+//        3. retrieve question scores
+//        4. add stuff to model for rendering
 
         List<SectionResource> allByCompetitionId = sectionService.getAllByCompetitionId(competition.getId());
 
@@ -112,9 +114,19 @@ public class ManagementApplicationPopulator {
                 QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
                 AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionResource.getId())
                 .getSuccess();
-                System.out.println("loopada question man" + aggregateResource.getFeedback().toString());
+                System.out.println("rest question name ref:" + questionResource.getName());
             });
         });
+
+//        applicationReadOnlyViewModel.getSections().forEach((section) -> {
+//          section.getQuestions().forEach((question) -> {
+//              System.out.println("view question ref:" + question);
+//          });
+//        });
+
+
+        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
+//        System.out.println("scores" + scores.getScores().toString());
 
         Long projectId = null;
         if (application.getApplicationState() == ApplicationState.APPROVED) {
@@ -132,7 +144,8 @@ public class ManagementApplicationPopulator {
                 support,
                 projectId,
                 user.hasRole(Role.EXTERNAL_FINANCE),
-                feedback
+                feedback,
+                scores
         );
 
     }
