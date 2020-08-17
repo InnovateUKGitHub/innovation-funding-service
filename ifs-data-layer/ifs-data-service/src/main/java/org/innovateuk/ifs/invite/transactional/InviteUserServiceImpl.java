@@ -49,6 +49,8 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -102,47 +104,32 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Override
     @Transactional
     public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role role) {
-
-        return validateAndSaveInvite(invitedUser, role);
-    }
-
-    private ServiceResult<Void> saveInternalUserInvite(UserResource invitedUser, Role role) {
-
-        return validateInternalUserRole(role)
-                .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
-                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> saveInvite(invitedUser, role))
-                .andOnSuccess(this::inviteInternalUser);
-    }
-
-    private ServiceResult<Void> saveExternalUserInvite(UserResource invitedUser, Role role) {
-        return validateExternalUserEmail(invitedUser.getEmail(), role)
-                .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
-                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> saveInvite(invitedUser, role))
-                .andOnSuccess(this::inviteExternalUser);
-    }
-
-    private ServiceResult<Void> validateAndSaveInvite(UserResource invitedUser, Role role) {
-
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || role == null){
             return serviceFailure(USER_ROLE_INVITE_INVALID);
         }
 
-        return Role.externalRolesToInvite().stream().anyMatch(externalRole -> externalRole == role)
-                ? saveExternalUserInvite(invitedUser, role)
-                : saveInternalUserInvite(invitedUser, role);
+        if (externalRolesToInvite().contains(role)) {
+            return validateExternalUserEmailDomain(invitedUser.getEmail(), role)
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role))
+                    .andOnSuccess(this::inviteExternalUser);
+        } else if (internalRoles().contains(role)) {
+            return validateInternalUserEmailDomain(invitedUser.getEmail())
+                    .andOnSuccess(() -> validateAndSaveInvite(invitedUser, role))
+                    .andOnSuccess(this::inviteInternalUser);
+        } else {
+            return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+        }
     }
 
-    private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
+    private ServiceResult<RoleInvite> validateAndSaveInvite(UserResource invitedUser, Role role) {
+                return validateUserEmailAvailable(invitedUser)
+                .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
+                .andOnSuccess(() -> saveInvite(invitedUser, role));
 
-        return Role.internalRoles().stream().anyMatch(internalRole -> internalRole == userRoleType)
-                ? serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 
-    private ServiceResult<Void> validateEmail(String email) {
+    private ServiceResult<Void> validateInternalUserEmailDomain(String email) {
 
         internalUserEmailDomain = StringUtils.defaultIfBlank(internalUserEmailDomain, DEFAULT_INTERNAL_USER_EMAIL_DOMAIN);
 
@@ -155,7 +142,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateExternalUserEmail(String email, Role role) {
+    private ServiceResult<Void> validateExternalUserEmailDomain(String email, Role role) {
 
         if (role == Role.KNOWLEDGE_TRANSFER_ADVISER) {
             ktaUserEmailDomain = StringUtils.defaultString(ktaUserEmailDomain);
