@@ -67,6 +67,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withPhoneNumber(phoneNumber).
                 withRole(role).
                 withPassword("Passw0rd").
+                withAgreedTerms(true).
                 build()).
                 getSuccess();
 
