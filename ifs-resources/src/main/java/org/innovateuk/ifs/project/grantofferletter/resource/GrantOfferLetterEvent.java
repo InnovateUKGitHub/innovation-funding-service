@@ -13,6 +13,7 @@ public enum GrantOfferLetterEvent implements ProcessEvent {
     GOL_REMOVED("gol-removed"),
     GOL_SENT("gol-sent"),
     GOL_SIGNED("gol-signed"),
+    GOL_DELETED("gol-deleted"),
     SIGNED_GOL_REMOVED("signed-gol-removed"),
     SIGNED_GOL_APPROVED("signed-gol-approved"),
     SIGNED_GOL_REJECTED("signed-gol-rejected");

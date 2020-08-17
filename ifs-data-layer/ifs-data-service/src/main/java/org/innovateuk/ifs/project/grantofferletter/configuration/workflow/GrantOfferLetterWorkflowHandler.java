@@ -68,6 +68,10 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fireEvent(internalUserEvent(project, internalUser, SIGNED_GOL_REJECTED), project);
     }
 
+    public boolean grantOfferLetterDeleted(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, GOL_DELETED), project);
+    }
+
     public boolean grantOfferLetterApproved(Project project, User internalUser) {
         return fireEvent(internalUserEvent(project, internalUser, SIGNED_GOL_APPROVED), project);
     }

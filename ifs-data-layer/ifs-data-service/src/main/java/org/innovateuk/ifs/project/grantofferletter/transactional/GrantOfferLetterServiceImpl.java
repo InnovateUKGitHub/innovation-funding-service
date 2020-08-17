@@ -25,6 +25,7 @@ import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -51,6 +52,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.docusign.resource.DocusignRequest.DocusignRequestBuilder.aDocusignRequest;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.core.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.resource.ProjectState.ON_HOLD;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
@@ -83,6 +85,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Autowired
     private DocusignService docusignService;
+
+    @Autowired
+    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
+
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -251,6 +257,28 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             project.setSignedGrantOfferLetter(null);
             return fileEntry;
         });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> deleteGrantOfferLetterFileEntry(Long projectId) {
+//        removeGrantOfferLetterFileEntry(projectId);
+
+        Project project = getProject(projectId).getSuccess();
+
+        if (project.getGrantOfferLetter() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getGrantOfferLetter().getId());
+            project.setGrantOfferLetter(null);
+        }
+
+        if (project.getAdditionalContractFile() != null) {
+            fileService.deleteFileIgnoreNotFound(project.getAdditionalContractFile().getId());
+            project.setAdditionalContractFile(null);
+        }
+
+        grantOfferLetterProcessRepository.findOneByTargetId(projectId).setProcessState(PENDING);
+
+        return serviceSuccess();
     }
 
     @Override

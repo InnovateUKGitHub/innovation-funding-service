@@ -21,6 +21,8 @@ import org.innovateuk.ifs.project.financechecks.domain.*;
 import org.innovateuk.ifs.project.financechecks.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -54,6 +56,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DECIMAL_PLACES;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -95,6 +98,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private SpendProfileService spendProfileService;
+
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
+
+    @Autowired
+    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -377,9 +386,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         resetEligibility(projectId);
 
         if (projectRepository.findById(projectId).get().isSpendProfileGenerated()) {
-            spendProfileService.deleteSpendProfile(projectId).toPutResponse();
+            spendProfileService.deleteSpendProfile(projectId);
         }
 
+        if (grantOfferLetterProcessRepository.findOneByTargetId(projectId).isInState(SENT)) {
+            grantOfferLetterService.deleteGrantOfferLetterFileEntry(projectId);
+        }
         return serviceSuccess();
     }
 
