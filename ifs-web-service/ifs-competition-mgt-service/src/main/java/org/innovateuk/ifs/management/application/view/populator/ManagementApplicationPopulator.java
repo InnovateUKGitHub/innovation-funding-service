@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySetting
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
+
 
 @Component
 public class ManagementApplicationPopulator {
@@ -60,10 +62,16 @@ public class ManagementApplicationPopulator {
     @Autowired
     private ProjectRestService projectRestService;
 
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
     public ManagementApplicationViewModel populate(long applicationId,
                                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+
+        List<String> feedback = assessmentRestService.getApplicationFeedback(applicationId).getSuccess().getFeedback();
+
         ApplicationReadOnlySettings settings = defaultSettings();
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {
@@ -88,7 +96,8 @@ public class ManagementApplicationPopulator {
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
                 support,
                 projectId,
-                user.hasRole(Role.EXTERNAL_FINANCE)
+                user.hasRole(Role.EXTERNAL_FINANCE),
+                feedback
         );
 
     }

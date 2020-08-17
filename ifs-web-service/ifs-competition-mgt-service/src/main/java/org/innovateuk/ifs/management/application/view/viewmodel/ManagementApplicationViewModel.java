@@ -30,6 +30,7 @@ public class ManagementApplicationViewModel {
     private final Long projectId;
     private final boolean externalFinanceUser;
     private final boolean ktpCompetition;
+    private final List<String> feedback;
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
@@ -40,7 +41,8 @@ public class ManagementApplicationViewModel {
                                           boolean canReinstate,
                                           boolean support,
                                           Long projectId,
-                                          boolean externalFinanceUser) {
+                                          boolean externalFinanceUser,
+                                          List<String> feedback) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -51,6 +53,8 @@ public class ManagementApplicationViewModel {
         this.support = support;
         this.projectId = projectId;
         this.externalFinanceUser = externalFinanceUser;
+
+        this.feedback = feedback;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();

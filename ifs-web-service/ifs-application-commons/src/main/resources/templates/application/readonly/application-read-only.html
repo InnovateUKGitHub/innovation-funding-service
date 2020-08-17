@@ -15,7 +15,7 @@
 
 <th:block th:fragment="accordion(model)">
     <th:block th:each="section, sectionIter : ${model.sections}">
-        <section>
+        <section th:if="${section.name == 'Finances'}">
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
             <!--/* Show the accordion sections */-->
@@ -143,25 +143,25 @@
         <!--</div>-->
     <!--</th:block>-->
 
-    <section th:if="${model.hasFinanceSection}">
-        <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Finance</h2>
-        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finance">
-            <div class="govuk-accordion__section">
-                <div class="govuk-accordion__section-header">
-                    <h3 class="govuk-accordion__section-heading">
-                                    <span class="govuk-accordion__section-button" id="accordion-finance-heading-1">
-                                        Finances summary
-                                    </span>
-                    </h3>
-                </div>
-                <div id="accordion-finance-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finance-heading-1">
-                    <div th:replace="finance/finance-summary :: application-finances-summary(${model.applicationFinanceSummaryViewModel})"></div>
-                    <h4 class="govuk-heading-m">Funding breakdown</h4>
-                    <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})" />
-                </div>
-            </div>
-        </div>
-    </section>
+<!--    <section th:if="${model.hasFinanceSection}">-->
+<!--        <h2 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0">Finance</h2>-->
+<!--        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finance">-->
+<!--            <div class="govuk-accordion__section">-->
+<!--                <div class="govuk-accordion__section-header">-->
+<!--                    <h3 class="govuk-accordion__section-heading">-->
+<!--                                    <span class="govuk-accordion__section-button" id="accordion-finance-heading-1">-->
+<!--                                        Finances summary-->
+<!--                                    </span>-->
+<!--                    </h3>-->
+<!--                </div>-->
+<!--                <div id="accordion-finance-content-1" class="govuk-accordion__section-content" aria-labelledby="accordion-finance-heading-1">-->
+<!--                    <div th:replace="finance/finance-summary :: application-finances-summary(${model.applicationFinanceSummaryViewModel})"></div>-->
+<!--                    <h4 class="govuk-heading-m">Funding breakdown</h4>-->
+<!--                    <th:block th:insert="finance/finance-summary :: finance-breakdown-table(${model.applicationFundingBreakdownViewModel})" />-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </section>-->
 </th:block>
 
 <th:block th:fragment="assessor_feedback(model)">
