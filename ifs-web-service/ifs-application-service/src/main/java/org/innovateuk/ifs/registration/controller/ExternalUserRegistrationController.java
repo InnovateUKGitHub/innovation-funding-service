@@ -125,7 +125,7 @@ public class ExternalUserRegistrationController {
             return "registration/error";
         } else {
             RegistrationViewModelBuilder viewModelBuilder = aRegistrationViewModel();
-            if (invite.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISOR) {
+            if (invite.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER) {
                 viewModelBuilder.withTermsRequired(true)
                         .withPhoneRequired(true)
                         .withAddressRequired(true)
