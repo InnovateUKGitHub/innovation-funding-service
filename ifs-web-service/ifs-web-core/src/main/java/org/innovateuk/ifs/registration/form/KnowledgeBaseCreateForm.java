@@ -1,42 +1,30 @@
 package org.innovateuk.ifs.registration.form;
 
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 public class KnowledgeBaseCreateForm {
 
     private String name;
 
-    private OrganisationTypeEnum organisationTypeEnum;
+    private Long organisationType;
 
     private String identification;
 
-    @NotBlank(message = "{validation.international.addressline1.required}")
-    private String addressLine1;
-
-    private String addressLine2;
-
-    @NotBlank(message = "{validation.international.town.required}")
-    private String town;
-
-    @NotBlank(message = "{validation.international.country.required}")
-    private String country;
-
-    private String zipCode;
+    @Valid
+    private AddressForm addressForm = new AddressForm();
 
     public KnowledgeBaseCreateForm() {
     }
 
-    public KnowledgeBaseCreateForm(String name, OrganisationTypeEnum organisationTypeEnum, String identification, String addressLine1, String addressLine2, String town, String country, String zipCode) {
+    public KnowledgeBaseCreateForm(String name, Long organisationType, String identification, AddressForm addressForm) {
         this.name = name;
-        this.organisationTypeEnum = organisationTypeEnum;
+        this.organisationType = organisationType;
         this.identification = identification;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.town = town;
-        this.country = country;
-        this.zipCode = zipCode;
+        this.addressForm = addressForm;
     }
 
     public String getName() {
@@ -47,12 +35,12 @@ public class KnowledgeBaseCreateForm {
         this.name = name;
     }
 
-    public OrganisationTypeEnum getOrganisationTypeEnum() {
-        return organisationTypeEnum;
+    public Long getOrganisationType() {
+        return organisationType;
     }
 
-    public void setOrganisationTypeEnum(OrganisationTypeEnum organisationTypeEnum) {
-        this.organisationTypeEnum = organisationTypeEnum;
+    public void setOrganisationType(Long organisationType) {
+        this.organisationType = organisationType;
     }
 
     public String getIdentification() {
@@ -63,43 +51,11 @@ public class KnowledgeBaseCreateForm {
         this.identification = identification;
     }
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public AddressForm getAddressForm() {
+        return addressForm;
     }
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
-    }
-
-    public String getAddressLine2() {
-        return addressLine2;
-    }
-
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
-    }
-
-    public String getTown() {
-        return town;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
+    public void setAddressForm(AddressForm addressForm) {
+        this.addressForm = addressForm;
     }
 }

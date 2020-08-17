@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 <body class="govuk-template__body create-application-eligibility">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 <div class="govuk-width-container">
-    <th:block th:insert="fragments/layout :: phase-banner" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkUrl='/organisation/create/knowledge-base',currentApplication=${currentApplication},dynamicBackLink=${true}" />
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back',linkUrl='/organisation/create/knowledge-base',currentApplication=${currentApplication},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
@@ -19,9 +21,10 @@
              tabindex="-1"
              data-module="govuk-error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
-            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Enter details manually',subTitle=${subtitle},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Enter details manually',subTitle=${subtitle},size='govuk-heading-xl'"/>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"
@@ -29,34 +32,189 @@
               novalidate="novalidate">
 
             <div class="govuk-form-group"
-                 th:classappend="${#fields.hasErrors('*{organisationName}') and organisationForm.triedToSave} ? 'govuk-form-group--error'">
+                 th:classappend="${#fields.hasErrors('*{name}')} ? 'govuk-form-group--error'">
                 <label class="govuk-label"
                        for="organisationName">
-                    Organisation name
+                    Knowledge base organisation name
                 </label>
                 <span class="govuk-error-message"
-                      th:if="${#fields.hasErrors('*{organisationName}') and organisationForm.triedToSave}"
-                      th:errors="*{organisationName}"></span>
+                      th:if="${#fields.hasErrors('*{name}')}"
+                      th:errors="*{name}"></span>
                 <input class="govuk-input"
                        id="organisationName"
-                       th:field="*{organisationName}"
-                       th:attr="data-required-errormessage=#{validation.standard.organisationname.required}"
+                       th:field="*{name}"
+                       th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
                        type="text" required="required"/>
+            </div>
+
+
+            <div class="govuk-form-group">
+                <!--                 th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group&#45;&#45;error'">-->
+                <fieldset class="govuk-fieldset">
+                    <legend id="org-type" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        What type of knowledge base is your organisation?
+                    </legend>
+
+
+
+
+
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item" th:attr="data-target=${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id ? 'rto-guidance' : null}"
+                             th:each="type : ${model.types}">
+                            <input th:id="'radio-'+ ${type.id}" type="radio"
+                                   class="govuk-radios__input"
+                                   th:field="*{organisationTypeId}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                                   th:value="${type.id}" />
+                            <label th:for="'radio-'+ ${type.id}"
+                                   class="govuk-label govuk-radios__label">
+                                <span th:text="${type.name}"></span>
+                                <span class="govuk-hint" th:text="${type.description}"></span>
+                            </label>
+                            <div th:if="${model.leadJourney && T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).RTO.id == type.id}" id="rto-guidance" class="govuk-body panel">
+                                <h2 class="govuk-heading-s">You can only lead an application as an RTO if both the following rules are met:</h2>
+                                <ul class="govuk-list govuk-list--bullet">
+                                    <li>you must prove within the scope section of your application that you are the best placed consortium partner to lead this project</li>
+                                    <li>your project is essential to lay the foundations for the growth of an early stage industry</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <th:block>
+
+                        <!--                        <th:block th:if="${#fields.hasErrors('vatForm.registered')}">-->
+                        <!--                                <span class="govuk-error-message" th:each="err : ${#fields.errors('vatForm.registered')}"-->
+                        <!--                                      th:text="${err}">-->
+                        <!--                                </span>-->
+                        <!--                        </th:block>-->
+
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item" data-target="catapult-registration-number"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input class="govuk-radios__input"
+                                       id="catapult"
+                                       type="radio"
+                                       th:field="*{organisationType}"
+                                       value="true"
+                                       required="required"/>
+                                <!--                                       th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>-->
+                                <label class="govuk-label govuk-radios__label" for="catapult">
+                                    Catapult
+                                </label>
+                            </div>
+
+                            <div id="catapult-registration-number" class="panel">
+                                <div class="govuk-form-group">
+                                    <div class="govuk-grid-column">
+                                        <label for="catapult-number" class="govuk-heading-s">Registration number</label>
+                                    </div>
+                                    <input class="govuk-input govuk-input--width-10"
+                                           id="catapult-number"
+                                           th:field="*{identification}"
+                                           type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="govuk-radios__item" data-target="rto-registration-number"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input class="govuk-radios__input"
+                                       id="rto"
+                                       type="radio"
+                                       th:field="*{organisationType}"
+                                       value="true"
+                                       required="required"/>
+                                <!--                                       th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>-->
+                                <label class="govuk-label govuk-radios__label" for="rto">
+                                    Research and technology organisation (RTO)
+                                </label>
+                            </div>
+
+                            <div id="rto-registration-number" class="panel">
+                                <div class="govuk-form-group">
+                                    <div class="govuk-grid-column">
+                                        <label for="catapult-number" class="govuk-heading-s">Registration number</label>
+                                    </div>
+                                    <input class="govuk-input govuk-input--width-10"
+                                           id="rto-number"
+                                           th:field="*{identification}"
+                                           type="text" required="required"/>
+                                </div>
+                            </div>
+
+                            <div class="govuk-radios__item" data-target="university-registration-number"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input class="govuk-radios__input"
+                                       id="university"
+                                       type="radio"
+                                       th:field="*{organisationType}"
+                                       value="true"
+                                       required="required"/>
+                                <!--                                       th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>-->
+                                <label class="govuk-label govuk-radios__label" for="university">
+                                    University
+                                </label>
+                            </div>
+
+                            <div id="university-registration-number" class="panel">
+                                <div class="govuk-form-group">
+                                    <div class="govuk-grid-column">
+                                        <label for="university-number" class="govuk-heading-s">UKPRN number</label>
+                                    </div>
+                                    <input class="govuk-input govuk-input--width-10"
+                                           id="university-number"
+                                           th:field="*{identification}"
+                                           type="text" required="required"/>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </fieldset>
+            </div>
+
+            <div id="custom-postcode" class="govuk-body">
+                <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form},legend=${'Find UK address'}"/>
             </div>
 
             <div class="govuk-form-group">
                 <button type="submit"
-                        class="govuk-button">Save and continue</button>
+                        class="govuk-button">Save and continue
+                </button>
             </div>
         </form>
 
-        <th:block th:insert="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"/>
     </main>
 
 </div>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-<th:block th:insert="fragments/service-layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
 </body>
 </html>
