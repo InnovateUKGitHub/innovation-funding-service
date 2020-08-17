@@ -48,7 +48,7 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     @Override
     @Cacheable(cacheNames="getInnovationAreas", key = "#root.methodName", unless = "#result.isFailure()")
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreas() {
-        return find(innovationAreaRepository.findAllByOrderByPriorityAsc(), notFoundError(InnovationArea.class))
+        return find(innovationAreaRepository.findAllByOrderByNameAsc(), notFoundError(InnovationArea.class))
                 .andOnSuccessReturn(innovationAreaMapper::mapToResource);
     }
 
@@ -69,7 +69,7 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
     @Override
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreasBySector(long sectorId) {
         return find(innovationSectorRepository.findById(sectorId), notFoundError(InnovationSector.class, sectorId))
-                .andOnSuccess(parent -> getInnovationAreasFromParent(parent));
+                .andOnSuccess(this::getInnovationAreasFromParent);
     }
 
     private ServiceResult<List<InnovationAreaResource>> getInnovationAreasFromParent(InnovationSector parent) {
