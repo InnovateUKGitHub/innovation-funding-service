@@ -79,7 +79,7 @@ public class UserPermissionRules {
         return isSystemRegistrationUser(user);
     }
 
-    @PermissionRule(value = "CREATE", description = "A System Registration User can create new Users on behalf of non-logged in users")
+    @PermissionRule(value = "CREATE", description = "An internal user can invite a monitoring officer and create the pending user associated.")
     public boolean compAdminProjectFinanceCanCreateMonitoringOfficer(UserCreationResource userToCreate, UserResource user) {
         return userToCreate.getRole() == MONITORING_OFFICER &&
                 (isCompAdmin(user) || isProjectFinanceUser(user));
