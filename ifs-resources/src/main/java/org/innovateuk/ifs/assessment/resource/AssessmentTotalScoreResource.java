@@ -9,18 +9,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class AssessmentTotalScoreResource {
 
-    private int totalScoreGiven;
-    private int totalScorePossible;
+    private Integer totalScoreGiven;
+    private Integer totalScorePossible;
 
     public AssessmentTotalScoreResource() {
     }
 
-    public AssessmentTotalScoreResource(int totalScoreGiven, int totalScorePossible) {
+    public AssessmentTotalScoreResource(Integer totalScoreGiven, Integer totalScorePossible) {
         this.totalScoreGiven = totalScoreGiven;
         this.totalScorePossible = totalScorePossible;
     }
 
-    public int getTotalScoreGiven() {
+    public Integer getTotalScoreGiven() {
         return totalScoreGiven;
     }
 
@@ -28,7 +28,7 @@ public class AssessmentTotalScoreResource {
         this.totalScoreGiven = totalScoreGiven;
     }
 
-    public int getTotalScorePossible() {
+    public Integer getTotalScorePossible() {
         return totalScorePossible;
     }
 
@@ -37,7 +37,10 @@ public class AssessmentTotalScoreResource {
     }
 
     @JsonIgnore
-    public int getTotalScorePercentage() {
+    public Integer getTotalScorePercentage() {
+        if (totalScoreGiven == null || totalScoreGiven == 0) {
+            return 0;
+        }
         return totalScorePossible == 0 ? 0 : Math.round(totalScoreGiven * 100.0f / totalScorePossible);
     }
 
