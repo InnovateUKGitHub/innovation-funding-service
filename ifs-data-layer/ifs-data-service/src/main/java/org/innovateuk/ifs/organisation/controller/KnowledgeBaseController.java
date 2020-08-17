@@ -23,14 +23,4 @@ public class KnowledgeBaseController {
     public RestResult<String> getKnowledgeBase(@PathVariable long id) {
         return knowledgeBaseService.getKnowledegeBase(id).toGetResponse();
     }
-
-    @PostMapping
-    public RestResult<Long> createKnowledgeBase(@RequestParam String name) {
-        return knowledgeBaseService.createKnowledgeBase(name).toPostCreateResponse();
-    }
-
-    @DeleteMapping("/{id}")
-    public RestResult<Void> deleteKnowledgeBase(@PathVariable long id) {
-        return knowledgeBaseService.deleteKnowledgeBase(id).toDeleteResponse();
-    }
 }

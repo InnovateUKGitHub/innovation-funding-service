@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -29,7 +30,6 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTypeController.NOT_ELIGIBLE;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.KNOWLEDGE_BASE;
 
 @RequestMapping("/organisation/select")
 @SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
@@ -126,8 +126,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
     private boolean knowledge_base_competition(HttpServletRequest request) {
         CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
-
-        return competition.getLeadApplicantTypes().contains(KNOWLEDGE_BASE.getId());
+        return competition.getFundingType().equals(FundingType.KTP);
     }
 
     private boolean validateLeadApplicant(HttpServletRequest request, OrganisationSelectionForm form) {
