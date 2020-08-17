@@ -15,7 +15,6 @@
               th:with="linkTitle='Back to view user details',linkUrl=@{/admin/user/{userId}/active(userId=${model.userId})},dynamicBackLink=${true}"/>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new external role profile',size='govuk-heading-xl'" />
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
              aria-labelledby="error-summary-title"
@@ -25,6 +24,8 @@
             <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
         </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Add a new external role profile',size='govuk-heading-xl'" />
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
               method="POST"
@@ -40,7 +41,7 @@
             <div class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('email')} ? 'govuk-form-group--error'">
                 <label class="govuk-label--s" for="email">
-                    Email
+                    Email address
                 </label>
                 <th:block th:if="${#fields.hasErrors('email')}">
                     <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
