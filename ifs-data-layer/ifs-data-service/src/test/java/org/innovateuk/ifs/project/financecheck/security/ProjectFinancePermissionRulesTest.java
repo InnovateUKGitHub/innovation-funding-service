@@ -384,6 +384,21 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void projectFinancelUsersCanResetFinanceChecks() {
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+
+        when(projectProcessRepository.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isProjectFinanceUser(user)) {
+                assertTrue(rules.projectFinanceUserCanResetFinanceChecks(projectId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanResetFinanceChecks(projectId, user));
+            }
+        });
+    }
+
+    @Test
     public void partnersCanAddEmptyRowWhenReadingProjectCosts() {
 
         UserResource user = newUserResource().build();

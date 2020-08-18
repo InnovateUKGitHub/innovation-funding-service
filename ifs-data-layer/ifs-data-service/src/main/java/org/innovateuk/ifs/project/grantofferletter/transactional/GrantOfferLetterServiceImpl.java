@@ -84,10 +84,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Autowired
     private DocusignService docusignService;
 
-    @Autowired
-    private GrantOfferLetterWorkflowHandler grantOfferLetterWorkflowHandler;
-
-
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -270,7 +266,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             fileService.deleteFileIgnoreNotFound(project.getAdditionalContractFile().getId());
             project.setAdditionalContractFile(null);
         }
-        grantOfferLetterWorkflowHandler.grantOfferLetterReset(project, getCurrentlyLoggedInUser().getSuccess());
+        golWorkflowHandler.grantOfferLetterReset(project, getCurrentlyLoggedInUser().getSuccess());
         return serviceSuccess();
     }
 

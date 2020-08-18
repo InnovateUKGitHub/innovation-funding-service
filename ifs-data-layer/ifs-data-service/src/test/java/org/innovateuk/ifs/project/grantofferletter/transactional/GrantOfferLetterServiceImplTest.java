@@ -27,10 +27,12 @@ import org.innovateuk.ifs.project.core.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.project.core.domain.ProjectUser;
 import org.innovateuk.ifs.project.core.repository.ProjectRepository;
+import org.innovateuk.ifs.project.core.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.core.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.core.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.repository.CostRepository;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterProcessRepository;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -163,6 +165,12 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
     @Mock
     private GrantProcessConfigurationRepository grantProcessConfigurationRepository;
+
+    @Mock
+    private ProjectUserRepository projectUserRepository;
+
+    @Mock
+    private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
 
     @Before
     public void setUp() {
@@ -489,36 +497,23 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
-//    @Test
-//    public void resetGrantOfferLetter() {
-//        Long userId = 1234L;
-//        UserResource loggedInUser = newUserResource().withId(userId).build();
-//        User user = newUser().withId(loggedInUser.getId()).build();
-//        setLoggedInUser(loggedInUser);
-//        Application application = newApplication().build();
-//        ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.PROJECT_FINANCE).withOrganisationId(null).withApplication(application).build();
-//        FileEntry golFile = newFileEntry().build();
-//        Long projectId = 4234L;
-//        Project project = newProject()
-//                .withId(projectId)
-//                .withApplication(application)
-//                .withGrantOfferLetter(golFile)
-//                .withAdditionalContractFile(null)
-//                .withSpendProfileSubmittedDate(ZonedDateTime.now())
-//                .build();
-//
-//        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, SENT);
-//
-//        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
-//        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-//        when(golWorkflowHandler.grantOfferLetterReset(project, user)).thenReturn(true);
-//        when(projectWorkflowHandler.getState(project)).thenReturn(SETUP);
-//        when(fileServiceMock.deleteFileIgnoreNotFound(golFile.getId())).thenReturn(serviceSuccess(golFile));
-//
-//        ServiceResult<Void> result = service.resetGrantOfferLetter(project.getId());
-//
-//        assertTrue(result.isSuccess());
-//    }
+    @Test
+    public void resetGrantOfferLetter() {
+
+        UserResource externalUser = newUserResource().build();
+        setLoggedInUser(externalUser);
+
+        FileEntry existingSignedGOLFile = newFileEntry().build();
+        project.setSignedGrantOfferLetter(existingSignedGOLFile);
+
+        when(userRepository.findById(externalUser.getId())).thenReturn(Optional.of(user));
+        when(fileServiceMock.deleteFileIgnoreNotFound(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
+        when(golWorkflowHandler.grantOfferLetterReset(project, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.resetGrantOfferLetter(123L);
+        assertTrue(result.isSuccess());
+        assertNull(project.getGrantOfferLetter());
+    }
 
     @Test
     public void sendGrantOfferLetterNoGol() {
