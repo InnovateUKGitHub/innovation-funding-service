@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakd
 import org.innovateuk.ifs.application.finance.viewmodel.BreakdownTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -55,9 +54,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
     private InviteService inviteService;
 
     @Autowired
-    private AssessmentRestService assessmentRestService;
-
-    @Autowired
     private FinanceLinksUtil financeLinksUtil;
 
     public ApplicationFundingBreakdownViewModel populate(long applicationId, UserResource user) {
@@ -90,8 +86,6 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 types,
                 finances.values().stream().anyMatch(ApplicationFinanceResource::isVatRegistered));
     }
-
-
 
     private Collection<BreakdownTableRow> pendingOrganisations(long applicationId, List<FinanceRowType> types) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
