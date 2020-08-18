@@ -176,7 +176,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                                           UserResource user, List<ProcessRoleResource> processRoles) {
 
         return competition.isKtp()
-                ? financeLinksUtil.financesLink(organisation,processRoles, user, application, competition)
+                ? financeLinksUtil.financesLink(organisation, processRoles, user, application, competition)
                 : Optional.empty();
     }
 }
