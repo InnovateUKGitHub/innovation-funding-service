@@ -15,7 +15,7 @@
 
 <th:block th:fragment="accordion(model)">
     <th:block th:each="section, sectionIter : ${model.sections}">
-        <section th:if="${section.name == 'Application questions'}">
+        <section>
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
             <!--/* Show the accordion sections */-->
