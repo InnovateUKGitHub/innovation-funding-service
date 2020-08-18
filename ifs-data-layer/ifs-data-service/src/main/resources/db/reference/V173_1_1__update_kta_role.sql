@@ -1,0 +1,1 @@
+UPDATE role SET name = 'knowledge_transfer_adviser' WHERE id = 23;
