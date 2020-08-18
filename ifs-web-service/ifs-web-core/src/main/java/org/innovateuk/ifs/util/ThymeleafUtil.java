@@ -3,9 +3,15 @@ package org.innovateuk.ifs.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.config.IfsThymeleafExpressionObjectFactory;
+import org.springframework.validation.Errors;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.spring5.context.IThymeleafRequestContext;
+import org.thymeleaf.spring5.context.SpringContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.StringFunctions.countWords;
@@ -19,6 +25,12 @@ import static org.innovateuk.ifs.util.StringFunctions.countWords;
  */
 public class ThymeleafUtil {
     private static final Log LOG = LogFactory.getLog(ThymeleafUtil.class);
+
+    private IExpressionContext context;
+
+    public ThymeleafUtil(IExpressionContext context) {
+        this.context = context;
+    }
 
     /**
      * Gets the uri for used for form posts.
@@ -51,4 +63,18 @@ public class ThymeleafUtil {
     public long calculatePercentage(long part, long total){
         return Math.round(part * 100.0/total);
     }
+
+
+    //You can find the form (beanName) from the request context but I can't figure out how atm.
+    public boolean hasErrorsStartingWith(String form, String startsWith) {
+        final IThymeleafRequestContext requestContext = SpringContextUtils.getRequestContext(context);
+        Optional<Errors> maybeErrors = requestContext.getErrors(form);
+        if (maybeErrors.isPresent()) {
+            Errors errors = maybeErrors.get();
+            return errors.getFieldErrors().stream()
+                    .anyMatch(error -> error.getField().startsWith(startsWith));
+        }
+        return false;
+    }
+
 }

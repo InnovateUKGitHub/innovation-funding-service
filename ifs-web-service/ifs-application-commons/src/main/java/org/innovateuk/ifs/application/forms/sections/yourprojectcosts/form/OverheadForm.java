@@ -9,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 
@@ -87,5 +88,21 @@ public class OverheadForm {
 
     public void setCostId(Long costId) {
         this.costId = costId;
+    }
+
+    public BigDecimal calculateTotal(BigDecimal labourTotal) {
+        if (rateType == null) {
+            return BigDecimal.ZERO;
+        }
+        switch(rateType) {
+            case NONE:
+                return BigDecimal.ZERO;
+            case DEFAULT_PERCENTAGE:
+                return labourTotal.multiply(new BigDecimal(rateType.getRate()));
+            case TOTAL:
+            case HORIZON_2020_TOTAL:
+                return ofNullable(getTotalSpreadsheet()).map(BigDecimal::new).orElse(BigDecimal.ZERO);
+        }
+        return BigDecimal.ZERO;
     }
 }

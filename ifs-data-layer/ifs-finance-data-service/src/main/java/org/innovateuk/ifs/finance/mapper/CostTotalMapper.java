@@ -21,7 +21,7 @@ public abstract class CostTotalMapper extends BaseMapper<CostTotal, FinanceCostT
 
     @Mappings({
             @Mapping(target = "type", source = "financeType"),
-            @Mapping(target = "name", source = "financeRowType.name")
+            @Mapping(target = "name", source = "financeRowType.displayName")
     })
     @Override
     public abstract CostTotal mapToDomain(FinanceCostTotalResource resource);

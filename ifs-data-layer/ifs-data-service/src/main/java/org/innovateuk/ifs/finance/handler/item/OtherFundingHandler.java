@@ -15,8 +15,10 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
 
 /**
@@ -26,7 +28,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUND
 @Component
 public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     public static final String COST_KEY = "other-funding";
-    public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getName();
+    public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getDisplayName();
 
     @Autowired
     private OtherFundingValidator validator;
@@ -87,7 +89,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     }
 
     @Override
-    protected Optional<OtherFunding> intialiseCost(Finance finance) {
+    protected List<OtherFunding> intialiseCosts(Finance finance) {
         Long id = null;
         String otherPublicFunding;
         if (finance.getCompetition().isFullyFunded()) {
@@ -98,6 +100,6 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         String fundingSource = OtherFundingCostCategory.OTHER_FUNDING;
         String securedDate = null;
         BigDecimal fundingAmount = new BigDecimal(0);
-        return Optional.of(new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
+        return newArrayList(new OtherFunding(id, otherPublicFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
     }
 }

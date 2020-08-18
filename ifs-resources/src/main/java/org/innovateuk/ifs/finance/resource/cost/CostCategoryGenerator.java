@@ -5,7 +5,7 @@ public interface CostCategoryGenerator<T> extends Comparable<T> {
 
     boolean isIncludedInSpendProfile();
 
-    String getName();
+    String getDisplayName();
 
     String getLabel();
 }
