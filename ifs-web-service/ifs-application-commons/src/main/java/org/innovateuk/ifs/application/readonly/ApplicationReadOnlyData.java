@@ -47,7 +47,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                                    List<QuestionResource> questions, List<FormInputResource> formInputs,
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
-                                   List<ApplicationAssessmentResource> assessements) {
+                                   List<ApplicationAssessmentResource> assessments) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -64,7 +64,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         this.formInputIdToFormInputResponses = formInputResponses.stream()
                 .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
-        this.assessmentToApplicationAssessment = assessements.stream()
+        this.assessmentToApplicationAssessment = assessments.stream()
                 .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
     }
 
