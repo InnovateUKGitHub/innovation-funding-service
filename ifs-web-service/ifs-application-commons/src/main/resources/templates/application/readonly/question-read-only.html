@@ -130,8 +130,15 @@
                       th:if="${model.open}"/>
         </th:block>
 
-        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
-        <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+        <th:block th:unless="${model.ktpCompetition}">
+            <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
+            <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+        </th:block>
+
+        <th:block th:if="${model.ktpCompetition}">
+            <h2 class="govuk-heading-s">Project costs summary</h2>
+            <th:block th:insert="finance/finance-summary :: kb-finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
+        </th:block>
     </div>
 </th:block>
 

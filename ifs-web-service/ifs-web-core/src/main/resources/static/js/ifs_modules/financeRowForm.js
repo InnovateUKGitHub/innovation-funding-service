@@ -18,6 +18,15 @@ IFS.core.financeRowForm = (function () {
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
         IFS.core.financeRowForm.persistUnsavedRow(name, newFieldId)
       })
+      jQuery('body').on('click', 'form button', function (e) {
+        var button = jQuery(this)
+        if (button.closest('form').attr('data-save-status') === 'progress') {
+          e.preventDefault()
+          setTimeout(function () {
+            button.click()
+          }, 500)
+        }
+      })
     },
     getUrl: function (el) {
       return jQuery(el).closest('form').data('row-operation-url')
@@ -38,14 +47,17 @@ IFS.core.financeRowForm = (function () {
         target.append(data)
         addRowButton.prevAll('.govuk-hint').remove()
         jQuery('body').trigger('updateSerializedFormState')
+        IFS.core.financeRowForm.hideOrShowAddButton(addRowButton)
       })
     },
     removeRow: function (el, event) {
       var removeButton = jQuery(el)
       var id = removeButton.val()
+      var addRowButton = removeButton.closest('.govuk-accordion__section-content').find('[data-repeatable-rowcontainer]')
       var removeRow = function () {
         removeButton.closest('[data-repeatable-row]').remove()
         jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
+        IFS.core.financeRowForm.hideOrShowAddButton(addRowButton)
       }
       event.preventDefault()
       if (id === '' || id.indexOf('unsaved') !== -1) {
@@ -58,6 +70,16 @@ IFS.core.financeRowForm = (function () {
       }).done(function (data) {
         removeRow()
       })
+    },
+    hideOrShowAddButton: function (addRowButton) {
+      if (addRowButton) {
+        var target = jQuery(addRowButton.attr('data-repeatable-rowcontainer'))
+        var maximum = addRowButton.data('repeatable-row-maximum')
+        if (maximum && target.length) {
+          var size = target.find('[data-repeatable-row]').length
+          addRowButton.toggleClass('govuk-visually-hidden', size >= maximum)
+        }
+      }
     },
     backForwardCacheReload: function () {
       // INFUND-2965 ajax results don't show when using the back button on the page after

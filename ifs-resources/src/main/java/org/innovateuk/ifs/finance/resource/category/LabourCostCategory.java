@@ -23,7 +23,6 @@ public class LabourCostCategory implements FinanceRowCostCategory {
         return costs;
     }
 
-    @Override
     public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.resource.totals;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
 import javax.validation.constraints.NotNull;
@@ -64,5 +65,15 @@ public class FinanceCostTotalResource {
 
     public void setFinanceId(Long financeId) {
         this.financeId = financeId;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("financeType", financeType)
+                .append("financeRowType", financeRowType)
+                .append("total", total)
+                .append("financeId", financeId)
+                .toString();
     }
 }

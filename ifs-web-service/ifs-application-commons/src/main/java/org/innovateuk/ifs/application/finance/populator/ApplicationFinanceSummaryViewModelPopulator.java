@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.populator;
 
+import org.innovateuk.ifs.application.finance.populator.util.FinanceLinksUtil;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceSummaryTableRow;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -12,7 +13,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -34,8 +34,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
 public class ApplicationFinanceSummaryViewModelPopulator {
@@ -67,6 +66,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
     @Autowired
     private CompetitionApplicationConfigRestService competitionApplicationConfigRestService;
 
+    @Autowired
+    private FinanceLinksUtil financeLinksUtil;
+
     public ApplicationFinanceSummaryViewModel populate(long applicationId, UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
@@ -88,7 +90,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<FinanceSummaryTableRow> rows = emptyList();
         if (financeSection != null) {
             rows = organisations.stream()
-                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection, application))
+                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection, application, competition, user, processRoles))
                     .collect(toList());
 
             if (!application.isSubmitted()) {
@@ -129,9 +131,12 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 .getOrganisationId();
     }
 
-    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection, ApplicationResource application) {
+    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances,
+                                                     Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection,
+                                                     ApplicationResource application, CompetitionResource competition, UserResource user, List<ProcessRoleResource> processRoles) {
         Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
         boolean lead = organisation.getId().equals(leadOrganisationId);
+        Optional<String> financeLink = financesLink(organisation, application, competition, user, processRoles);
         return new FinanceSummaryTableRow(
                 organisation.getId(),
                 organisation.getName(),
@@ -143,7 +148,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO),
                 ofNullable(completedSections.get(organisation.getId()))
                         .map(completedIds -> completedIds.contains(financeSection.getId()))
-                        .orElse(false)
+                        .orElse(false),
+                financeLink.isPresent(),
+                financeLink.orElse(null)
         );
     }
 
@@ -163,5 +170,13 @@ public class ApplicationFinanceSummaryViewModelPopulator {
             return sections.get(0);
         }
         return null;
+    }
+
+    private Optional<String> financesLink(OrganisationResource organisation, ApplicationResource application, CompetitionResource competition,
+                                          UserResource user, List<ProcessRoleResource> processRoles) {
+
+        return competition.isKtp()
+                ? financeLinksUtil.financesLink(organisation, processRoles, user, application, competition)
+                : Optional.empty();
     }
 }
