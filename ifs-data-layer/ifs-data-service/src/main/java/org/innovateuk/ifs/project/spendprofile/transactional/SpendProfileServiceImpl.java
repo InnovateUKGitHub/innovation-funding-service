@@ -501,6 +501,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
 
         Project project = getProject(projectId).getSuccess();
+        project.getSpendProfiles().removeAll(spendProfiles);
         project.setSpendProfileSubmittedDate(null);
 
         spendProfileRepository.deleteAll(spendProfiles);
