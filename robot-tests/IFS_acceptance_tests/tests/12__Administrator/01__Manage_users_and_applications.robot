@@ -26,6 +26,8 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-7429 Administrator has access to Project Details after Finance reviewer is assigned
 ...
 ...               IFS-7483 Inactive innovation lead appearing in list of available innovation leads
+...
+...               IFS-7976 IFS Admin can add a role profile of KTA to an external user
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -343,7 +345,44 @@ Deactivated innovation lead cannot be selected on initial details
     When the user clicks the button/link      css = button[type=submit]
     Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
+IFS Admin cannot add a role profile of KTA to a non-KT Network user
+    [Documentation]  IFS-7976
+    Given the user navigates to the page                     ${server}/management/admin/users/active
+    When the user selects a user to edit details             Simon  simon.bates@gmail.com
+    And the user adds a new external role profile of KTA
+    Then the user should see a field and summary error       Role profile cannot be created without a Knowledge Transfer Network email address.
+
+IFS Admin can add a role profile of KTA to a user in KT Network
+    [Documentation]  IFS-7976
+    Given the user navigates to the page                     ${server}/management/admin/users/active
+    When the user selects a user to edit details             Alyssa  alyssa.smith@ktn-uk.test
+    And the user adds a new external role profile of KTA
+    Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
+
+Comp Admin should be able to see the details of assessor with new role profile of KTA
+    [Documentation]  IFS-7976
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given the user clicks the button/link       link = Assessor status
+    And the user search for a user              Alyssa
+    When the user clicks the button/link        link = View details
+    Then the user should see the element        jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
+    And the user should not see the element     jQuery = button:contains("Save and return")
+
 *** Keywords ***
+the user search for a user
+    [Arguments]  ${name}
+    the user enters text to a text field     id = filter  ${name}
+    the user clicks the button/link          css = input[type="submit"]
+
+the user selects a user to edit details
+    [Arguments]  ${name}  ${email}
+    the user search for a user          ${name}
+    the user clicks the button/link     jQuery = .user-profile:contains("${email}") a:contains("Edit")
+
+the user adds a new external role profile of KTA
+    the user clicks the button/link     link = Add a new external role profile
+    the user clicks the button/link     css = button[type="submit"]
+
 the user adds a new partner organisation in application
     [Arguments]  ${navigateTo}  ${partnerOrgName}  ${persFullName}  ${email}
     the user navigates to the page             ${navigateTo}
