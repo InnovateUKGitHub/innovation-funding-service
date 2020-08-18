@@ -80,7 +80,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (!user.hasMoreThanOneRoleOf(multiDashboardRoles())) {
+        if (!userShouldViewDashboardSelection(user)) {
             return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
