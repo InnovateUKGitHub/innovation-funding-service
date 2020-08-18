@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.readonly.viewmodel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyViewModel {
@@ -15,8 +16,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String templateDocumentTitle;
     private final long competitionId;
     private final List<String> feedback;
+    private final List<BigDecimal> scores;
 
-    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle,List<String> feedback) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle, List<String> feedback, List<BigDecimal> scores) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
@@ -26,6 +28,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.templateDocumentTitle = templateDocumentTitle;
         this.competitionId = data.getCompetition().getId();
         this.feedback = feedback;
+        this.scores = scores;
     }
 
     public String getDisplayName() {
@@ -58,6 +61,10 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     public List<String> getFeedback() {
         return feedback;
+    }
+
+    public List<BigDecimal> getScores() {
+        return scores;
     }
 
     @Override

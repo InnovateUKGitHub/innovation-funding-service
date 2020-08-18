@@ -14,6 +14,7 @@ import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,12 +49,18 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
         List<String> feedback = new ArrayList<>();
+        List<BigDecimal> scores = new ArrayList<>();
         if (settings.isIncludeAssessment()) {
             if (settings.getAssessmentId() != null) {
                 ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
                         .map(ApplicationAssessmentResource::getFeedback)
                         .map(feedbackMap -> feedbackMap.get(question.getId()))
                         .ifPresent(feedback::add);
+
+                ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map(ApplicationAssessmentResource::getScores)
+                        .map(scoresMap -> scoresMap.get(question.getId()))
+                        .ifPresent(scores::add);
             } else {
                 data.getAssessmentToApplicationAssessment().values()
                         .stream()
@@ -61,6 +68,11 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                         .map(feedbackMap -> feedbackMap.get(question.getId()))
                         .forEach(feedback::add);
 
+                data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::getScores)
+                        .map(scoresMap -> scoresMap.get(question.getId()))
+                        .forEach(scores::add);
             }
         }
 
@@ -72,7 +84,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
-                feedback
+                feedback,
+                scores
             );
     }
 
