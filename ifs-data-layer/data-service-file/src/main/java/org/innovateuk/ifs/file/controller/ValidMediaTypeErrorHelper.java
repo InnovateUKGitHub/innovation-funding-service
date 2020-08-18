@@ -25,7 +25,8 @@ public class ValidMediaTypeErrorHelper {
             EnumSet.of(PDF, SPREADSHEET),
             EnumSet.of(PDF, DOCUMENT),
             EnumSet.of(PDF, DOCUMENT, SPREADSHEET),
-            EnumSet.of(OPEN_DOCUMENT, OPEN_SPREADSHEET)
+            EnumSet.of(OPEN_DOCUMENT, OPEN_SPREADSHEET),
+            EnumSet.of(OPEN_SPREADSHEET, OPEN_DOCUMENT, PDF)
     );
 
     public String findErrorKey(List<MediaType> validMediaTypesList) {

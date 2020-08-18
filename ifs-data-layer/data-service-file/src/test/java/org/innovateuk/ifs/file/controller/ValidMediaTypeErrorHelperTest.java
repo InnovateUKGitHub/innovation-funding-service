@@ -72,6 +72,14 @@ public class ValidMediaTypeErrorHelperTest {
     }
 
     @Test
+    public void openSpreadSheetOrOpenDocumentOrPdfOnlyMessage() {
+        assertSpecialisedMessageProduced(
+                mediaTypeFromCategories(OPEN_SPREADSHEET, OPEN_DOCUMENT, PDF),
+                "UNSUPPORTED_MEDIA_TYPE_PDF_OR_OPEN_DOCUMENT_OR_OPEN_SPREADSHEET_ONLY"
+        );
+    }
+
+    @Test
     public void noDirectMatchWithValidMediaTypes() {
         assertSpecialisedMessageProduced(singletonList(MediaType.APPLICATION_JSON), UNSUPPORTED_MEDIA_TYPE.name());
     }
