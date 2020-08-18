@@ -258,8 +258,8 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginPaulPlum();
 
         AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccess();
-        assertEquals(72, result.getTotalScoreGiven());
-        assertEquals(100, result.getTotalScorePossible());
+        assertEquals(Integer.valueOf(72), result.getTotalScoreGiven());
+        assertEquals(Integer.valueOf(100), result.getTotalScorePossible());
     }
 
     @Test

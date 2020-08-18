@@ -90,17 +90,17 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
             // We need CostCategories
             List<CostCategory> costCategories = simpleMap(costCategoryGenerators, this::newCostCategory);
             // We need a CostCategoryGroup - a logical grouping of the CostCategories with a description
-            String costCategoryGroupDescription = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
+            String costCategoryGroupDescription = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getDisplayName, ", ");
             CostCategoryGroup costCategoryGroup = new CostCategoryGroup(costCategoryGroupDescription, costCategories);
             // We need a CostCategoryType - a description of the CostCategoryGroup. E.g. currently we would expect one for Industrial and one for Academic
-            String costCategoryTypeName = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getName, ", ");
+            String costCategoryTypeName = DESCRIPTION_PREFIX + simpleJoiner(costCategoryGenerators, CostCategoryGenerator::getDisplayName, ", ");
             CostCategoryType costCategoryTypeToCreate = new CostCategoryType(costCategoryTypeName, costCategoryGroup);
             return costCategoryTypeRepository.save(costCategoryTypeToCreate);
         });
     }
 
     private CostCategory newCostCategory(CostCategoryGenerator costCategoryGenerator) {
-        CostCategory newCostCategory = new CostCategory(costCategoryGenerator.getName());
+        CostCategory newCostCategory = new CostCategory(costCategoryGenerator.getDisplayName());
         newCostCategory.setLabel(costCategoryGenerator.getLabel());
         return newCostCategory;
     }
@@ -127,14 +127,14 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     private boolean areEqual(CostCategory cc, CostCategoryGenerator ccg) {
         if(ccg == null
                 || ccg.getLabel() == null
-                || ccg.getName() == null
+                || ccg.getDisplayName() == null
                 || cc == null
                 || cc.getName() == null
                 || ccg.getLabel() == null) {
             return false;
         }
 
-        return ccg.getLabel().equals(cc.getLabel()) && ccg.getName().equals(cc.getName());
+        return ccg.getLabel().equals(cc.getLabel()) && ccg.getDisplayName().equals(cc.getName());
     }
 
 }

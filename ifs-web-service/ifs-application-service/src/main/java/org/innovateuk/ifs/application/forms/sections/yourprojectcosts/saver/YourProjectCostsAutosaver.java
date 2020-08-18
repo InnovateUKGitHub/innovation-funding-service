@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver;
 
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
 import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -63,6 +65,20 @@ public class YourProjectCostsAutosaver {
                 return autosaveTravelCost(field, value, finance);
             } else if (field.startsWith("otherRows")) {
                 return autosaveOtherCost(field, value, finance);
+            } else if (field.startsWith("associateSalaryCostRows")) {
+                return autosaveAssociateSalaryCost(field, value, finance);
+            } else if (field.startsWith("associateDevelopmentCostRows")) {
+                return autosaveAssociateDevelopmentCost(field, value, finance);
+            } else if (field.startsWith("associateSupportCostRows")) {
+                return autosaveAssociateSupportCost(field, value, finance);
+            } else if (field.startsWith("consumableCostRows")) {
+                return autosaveConsumableCost(field, value, finance);
+            } else if (field.startsWith("knowledgeBaseCostRows")) {
+                return autosaveKnowledgeBaseCost(field, value, finance);
+            } else if (field.startsWith("additionalCompanyCostForm")) {
+                return autosaveAdditionalCompanyCostForm(field, value, finance);
+            } else if (field.startsWith("estateCostRows")) {
+                return autosaveEstateCost(field, value, finance);
             } else if (field.startsWith("procurementOverheadRows")) {
                 return autosaveProcurementOverheadCost(field, value, finance);
             } else if (field.startsWith("vat")) {
@@ -75,6 +91,120 @@ public class YourProjectCostsAutosaver {
             LOG.info(format("Unable to auto save field (%s) value (%s)", field, value));
         }
         return Optional.empty();
+    }
+
+    private Optional<Long> autosaveAdditionalCompanyCostForm(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        AdditionalCompanyCostCategory costCategory = (AdditionalCompanyCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ADDITIONAL_COMPANY_COSTS);
+        AdditionalCompanyCost toSave;
+        switch (rowField) {
+            case "associateSalary.cost":
+                toSave = costCategory.getAssociateSalary();
+                toSave.setCost(new BigInteger(value));
+                break;
+            case "associateSalary.description":
+                toSave = costCategory.getAssociateSalary();
+                toSave.setDescription(value);
+                break;
+            case "managementSupervision.cost":
+                toSave = costCategory.getManagementSupervision();
+                toSave.setCost(new BigInteger(value));
+                break;
+            case "managementSupervision.description":
+                toSave = costCategory.getManagementSupervision();
+                toSave.setDescription(value);
+                break;
+            case "otherStaff.cost":
+                toSave = costCategory.getOtherStaff();
+                toSave.setCost(new BigInteger(value));
+                break;
+            case "otherStaff.description":
+                toSave = costCategory.getOtherStaff();
+                toSave.setDescription(value);
+                break;
+            case "capitalEquipment.cost":
+                toSave = costCategory.getCapitalEquipment();
+                toSave.setCost(new BigInteger(value));
+                break;
+            case "capitalEquipment.description":
+                toSave = costCategory.getCapitalEquipment();
+                toSave.setDescription(value);
+                break;
+            case "otherCosts.cost":
+                toSave = costCategory.getOtherCosts();
+                toSave.setCost(new BigInteger(value));
+                break;
+            case "otherCosts.description":
+                toSave = costCategory.getOtherCosts();
+                toSave.setDescription(value);
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save consumable field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(toSave);
+        return Optional.empty();
+    }
+
+    private Optional<Long> autosaveKnowledgeBaseCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        KnowledgeBaseCost cost = getCost(id, () -> new KnowledgeBaseCost(finance.getId()));
+        switch (rowField) {
+            case "description":
+                cost.setDescription(value);
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save consumable field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveConsumableCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        Consumable cost = getCost(id, () -> new Consumable(finance.getId()));
+        switch (rowField) {
+            case "item":
+                cost.setItem(value);
+                break;
+            case "quantity":
+                cost.setQuantity(Integer.parseInt(value));
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save consumable field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveAssociateDevelopmentCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        AssociateDevelopmentCost cost = getCost(id, () -> new AssociateDevelopmentCost(finance.getId()));
+
+        switch (rowField) {
+            case "role":
+                cost.setRole(value);
+                break;
+            case "duration":
+                cost.setDuration(Integer.parseInt(value));
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save associate development field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
     }
 
     private Optional<Long> autosaveLabourCost(String field, String value, ApplicationFinanceResource finance) {
@@ -94,6 +224,64 @@ public class YourProjectCostsAutosaver {
                 break;
             default:
                 throw new IFSRuntimeException(format("Auto save labour field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveAssociateSalaryCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        AssociateSalaryCost cost = getCost(id, () -> new AssociateSalaryCost(finance.getId()));
+
+        switch (rowField) {
+            case "role":
+                cost.setRole(value);
+                break;
+            case "duration":
+                cost.setDuration(Integer.parseInt(value));
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save associate salary field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveAssociateSupportCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        AssociateSupportCost cost = getCost(id, () -> new AssociateSupportCost(finance.getId()));
+        switch (rowField) {
+            case "description":
+                cost.setDescription(value);
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save associate support field not handled %s", rowField), emptyList());
+        }
+        financeRowRestService.update(cost);
+        return Optional.of(cost.getId());
+    }
+
+    private Optional<Long> autosaveEstateCost(String field, String value, ApplicationFinanceResource finance) {
+        String id = idFromRowPath(field);
+        String rowField = fieldFromRowPath(field);
+        EstateCost cost = getCost(id, () -> new EstateCost(finance.getId()));
+        switch (rowField) {
+            case "description":
+                cost.setDescription(value);
+                break;
+            case "cost":
+                cost.setCost(new BigInteger(value));
+                break;
+            default:
+                throw new IFSRuntimeException(format("Auto save estate costs field not handled %s", rowField), emptyList());
         }
         financeRowRestService.update(cost);
         return Optional.of(cost.getId());
