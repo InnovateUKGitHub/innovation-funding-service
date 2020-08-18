@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.competition.setup.application.validator;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.MultipleChoiceValidationGroup;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource.TextAreaValidationGroup;
@@ -38,9 +39,11 @@ public class CompetitionSetupApplicationQuestionValidator {
     @Autowired
     private QuestionSetupCompetitionRestService questionSetupCompetitionRestService;
 
-    public void validate(QuestionForm form, BindingResult bindingResult, long questionId) {
-        validateRadioButtons(form, bindingResult);
-        validateAssessmentGuidanceRows(form, bindingResult);
+    public void validate(QuestionForm form, BindingResult bindingResult, long questionId, CompetitionResource competitionResource) {
+        validateRadioButtons(form, bindingResult, competitionResource);
+        if (!competitionResource.isKtp()) {
+            validateAssessmentGuidanceRows(form, bindingResult);
+        }
         validateFileUploaded(form, bindingResult, questionId);
         validateTypeOfQuestion(form, bindingResult);
         validateAppendix(form, bindingResult);
@@ -75,18 +78,20 @@ public class CompetitionSetupApplicationQuestionValidator {
         }
     }
 
-    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult) {
-        if(competitionSetupForm.getNumberOfUploads() == null) {
+    private void validateRadioButtons(QuestionForm competitionSetupForm, BindingResult bindingResult, CompetitionResource competitionResource) {
+        if (competitionSetupForm.getNumberOfUploads() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "numberOfUploads", "This field cannot be left blank."));
         }
-        if(competitionSetupForm.getQuestion().getTemplateDocument() == null) {
+        if (competitionSetupForm.getQuestion().getTemplateDocument() == null) {
             bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.templateDocument", "This field cannot be left blank."));
         }
-        if(competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.writtenFeedback", "This field cannot be left blank."));
-        }
-        if(competitionSetupForm.getQuestion().getScored() == null) {
-            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.scored", "This field cannot be left blank."));
+        if (!competitionResource.isKtp()) {
+            if (competitionSetupForm.getQuestion().getWrittenFeedback() == null) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.writtenFeedback", "This field cannot be left blank."));
+            }
+            if (competitionSetupForm.getQuestion().getScored() == null) {
+                bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "question.scored", "This field cannot be left blank."));
+            }
         }
     }
 
@@ -111,11 +116,12 @@ public class CompetitionSetupApplicationQuestionValidator {
                 validateTextArea(form, bindingResult);
             }
             if (TRUE.equals(form.getQuestion().getMultipleChoice())) {
-                validateMultipleChoice(form , bindingResult);
+                validateMultipleChoice(form, bindingResult);
             }
         }
 
     }
+
     private void validateTextArea(AbstractQuestionForm form, BindingResult bindingResult) {
         ValidationUtils.invokeValidator(validator, form, bindingResult, TextAreaValidationGroup.class);
     }

@@ -43,7 +43,6 @@ public class DefaultCostCategory implements FinanceRowCostCategory {
         return false;
     }
 
-    @Override
     public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }

@@ -205,8 +205,7 @@
                              data-js-upload-file-input="appendix"
                              th:attr="data-js-number-of-files=${model.maximumAppendices}"
                              data-js-upload-one-at-a-time="">
-                            <p th:if="${model.appendices.isEmpty()}" class="govuk-body no-file-uploaded">No file currently
-                                uploaded.</p>
+                            <p th:if="${model.appendices.isEmpty()}" class="govuk-body no-file-uploaded">No file have been uploaded yet.</p>
                             <ul class="govuk-list file-list">
                                 <li th:each="appendix : ${model.appendices}"
                                     class="success">

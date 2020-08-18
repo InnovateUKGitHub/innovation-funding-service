@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 
 import static java.lang.Long.parseLong;
 import static java.math.RoundingMode.HALF_UP;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -81,7 +82,7 @@ public abstract class AbstractYourFundingSaver {
     private void saveGrantClaimPercentage(BaseFinanceResource finance, YourFundingPercentageForm form, ValidationMessages messages) {
         GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
-            claim.setPercentage(form.getGrantClaimPercentage().setScale(MAX_DECIMAL_PLACES, HALF_UP));
+            claim.setPercentage(ofNullable(form.getGrantClaimPercentage()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(BigDecimal.ZERO));
         } else {
             claim.setPercentage(BigDecimal.ZERO);
         }

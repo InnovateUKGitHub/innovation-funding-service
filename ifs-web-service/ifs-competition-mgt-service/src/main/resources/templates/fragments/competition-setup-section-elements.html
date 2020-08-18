@@ -89,6 +89,7 @@
                 </th:block>
             </dl>
         </fieldset>
+    <th:block th:if="${model.displayAssessmentOptions}">
         <fieldset
             th:if="${question.scored != null or question.writtenFeedback != null or question.researchCategoryQuestion != null or question.scope != null}"
             class="govuk-fieldset">
@@ -142,6 +143,7 @@
                 </th:block>
             </dl>
         </fieldset>
+    </th:block>
     </th:block>
     <th:block th:if="${editable}">
 
@@ -602,7 +604,7 @@
 
             <!--/* ASSESSMENT */-->
             <th:block
-                th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE}">
+                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE)}">
 
                 <input type="hidden" name="competitionSetupForm.question.type"
                        th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}"/>

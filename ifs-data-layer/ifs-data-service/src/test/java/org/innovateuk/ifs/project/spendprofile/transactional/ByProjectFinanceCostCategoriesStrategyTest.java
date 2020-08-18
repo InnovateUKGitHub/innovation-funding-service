@@ -86,10 +86,10 @@ import org.mockito.Mock;
         fod.put(FinanceRowType.MATERIALS, materialsFrcc);
         ProjectFinanceResource projectFinance = newProjectFinanceResource().withFinanceOrganisationDetails(fod).build();
         CostCategoryType expectedCct = newCostCategoryType().
-                withName(DESCRIPTION_PREFIX + LABOUR.getName() + ", " + MATERIALS.getName()).
+                withName(DESCRIPTION_PREFIX + LABOUR.getDisplayName() + ", " + MATERIALS.getDisplayName()).
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().
-                                withName(LABOUR.getName(), MATERIALS.getName()).
+                                withName(LABOUR.getDisplayName(), MATERIALS.getDisplayName()).
                                 build(2)).
                         build()).
                 build();
@@ -124,7 +124,7 @@ import org.mockito.Mock;
                 withName("A name that will not match - we care only about the contained CostCategories").
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().
-                                withName(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getName, String.class)).
+                                withName(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getDisplayName, String.class)).
                                 withLabel(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getLabel, String.class)).
                                 build(spendProfileGenerators.length)).
                         build()).
@@ -163,11 +163,11 @@ import org.mockito.Mock;
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(AcademicCostCategoryGenerator.values(),
                                                                         AcademicCostCategoryGenerator::isIncludedInSpendProfile),
-                                                           AcademicCostCategoryGenerator::getName,
+                                                           AcademicCostCategoryGenerator::getDisplayName,
                                                            ", ")).
                 withCostCategoryGroup(newCostCategoryGroup().
                         withCostCategories(newCostCategory().
-                                withName(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getName, String.class)).
+                                withName(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getDisplayName, String.class)).
                                 withLabel(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getLabel, String.class)).
                                 build(spendProfileGenerators.length)).
                         build()).
