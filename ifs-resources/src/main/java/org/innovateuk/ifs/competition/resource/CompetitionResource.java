@@ -190,6 +190,11 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     }
 
     @JsonIgnore
+    public boolean isKTP() {
+        return KTP.equals(fundingType);
+    }
+
+    @JsonIgnore
     public boolean onlyOneOrgAllowedPerApplication() {
         return isH2020() || isProcurement();
     }

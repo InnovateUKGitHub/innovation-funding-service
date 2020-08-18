@@ -41,6 +41,11 @@ public class AssessmentTotalScoreResourceTest {
         assertEquals("Expected 100% since the score given equals the maximum score possible", 100, getTotalScorePercentage(50, 50));
     }
 
+    @Test
+    public void getTotalScorePercentage_zeroIfNoScoreGiven() {
+        assertEquals(0, getTotalScorePercentage(0,0));
+    }
+
     private int getTotalScorePercentage(int totalScoreGiven, int totalScorePossible) {
         return new AssessmentTotalScoreResource(totalScoreGiven, totalScorePossible).getTotalScorePercentage();
     }

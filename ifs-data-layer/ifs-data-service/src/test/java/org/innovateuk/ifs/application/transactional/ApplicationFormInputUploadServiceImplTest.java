@@ -113,6 +113,18 @@ public class ApplicationFormInputUploadServiceImplTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
+        orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
+        org2 = newOrganisation().withId(345L).build();
+        org3 = newOrganisation().withId(456L).build();
+
+        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
+        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
+
+        roles = newProcessRole().withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
+        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
         question = QuestionBuilder.newQuestion().build();
 
@@ -127,33 +139,19 @@ public class ApplicationFormInputUploadServiceImplTest {
         formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L, 999L);
 
         existingFileEntry = newArrayList(newFileEntry().with(id(999L)).build());
-        existingFormInputResponse = newFormInputResponse().withFileEntries(existingFileEntry).withFormInputs(formInput).build();
+        existingFormInputResponse = newFormInputResponse().withFileEntries(existingFileEntry).withApplication(app).withFormInputs(formInput).build();
         existingFormInputResponses = newArrayList(existingFormInputResponse);
-        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntries(emptyList()).build();
+        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withApplication(app).withFileEntries(emptyList()).build();
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(openApplication));
-
-        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
-        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
-
-        orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
-        org2 = newOrganisation().withId(345L).build();
-        org3 = newOrganisation().withId(456L).build();
-
-        roles = newProcessRole().withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
-        section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
-        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
-        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
         when(applicationRepositoryMock.findById(app.getId())).thenReturn(Optional.of(app));
         when(organisationRepositoryMock.findById(234L)).thenReturn(Optional.of(org1));
         when(organisationRepositoryMock.findById(345L)).thenReturn(Optional.of(org2));
         when(organisationRepositoryMock.findById(456L)).thenReturn(Optional.of(org3));
     }
-
 
     @Test
     public void createFormInputResponseFileUpload() {
