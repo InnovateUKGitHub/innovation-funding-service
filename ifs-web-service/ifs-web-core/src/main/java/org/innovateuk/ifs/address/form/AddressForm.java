@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.address.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.validation.ValidAddressForm;
 import org.springframework.validation.BindingResult;
@@ -101,10 +102,12 @@ public class AddressForm {
         }
     }
 
+    @JsonIgnore
     public boolean isManualAddressEntry() {
         return addressType == AddressType.MANUAL_ENTRY;
     }
 
+    @JsonIgnore
     public boolean isPostcodeAddressEntry() {
         return addressType == AddressType.POSTCODE_LOOKUP;
     }

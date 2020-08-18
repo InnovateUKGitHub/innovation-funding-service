@@ -18,9 +18,12 @@ public enum OrganisationTypeEnum {
     private static final EnumSet<OrganisationTypeEnum> knowledgeBaseCollaboratorTypes =
             EnumSet.of(BUSINESS, PUBLIC_SECTOR_OR_CHARITY);
 
+    public static final EnumSet<OrganisationTypeEnum> knowledgeBaseLeadTypes =
+            EnumSet.of(CATAPULT, RTO, UNIVERSITY);
+
     private final long id;
 
-    OrganisationTypeEnum(long organisationTypeId){
+    OrganisationTypeEnum(long organisationTypeId) {
         this.id = organisationTypeId;
     }
 
@@ -28,16 +31,16 @@ public enum OrganisationTypeEnum {
         return id;
     }
 
-    public static OrganisationTypeEnum getFromId(long organisationTypeId){
+    public static OrganisationTypeEnum getFromId(long organisationTypeId) {
         return simpleFindFirst(values(), v -> v.id == organisationTypeId).orElse(null);
     }
 
-    public static boolean isResearch(OrganisationTypeEnum organisationType){
+    public static boolean isResearch(OrganisationTypeEnum organisationType) {
         return organisationType.equals(RESEARCH);
     }
 
-    public static boolean isResearch(long organisationTypeId){
-        return isResearch( getFromId(organisationTypeId ) );
+    public static boolean isResearch(long organisationTypeId) {
+        return isResearch(getFromId(organisationTypeId));
     }
 
     public static boolean isResearchParticipationType(OrganisationTypeEnum organisationType) {
@@ -45,7 +48,7 @@ public enum OrganisationTypeEnum {
     }
 
     public static boolean isResearchParticipationOrganisation(long organisationTypeId) {
-        return  isResearchParticipationType( getFromId(organisationTypeId) );
+        return isResearchParticipationType(getFromId(organisationTypeId));
     }
 
     public static boolean isKnowledgeBaseCollaborator(OrganisationTypeEnum organisationType) {
@@ -53,6 +56,6 @@ public enum OrganisationTypeEnum {
     }
 
     public static boolean isValidKnowledgeBaseCollaborator(long organisationTypeId) {
-        return  isKnowledgeBaseCollaborator( getFromId(organisationTypeId) );
+        return isKnowledgeBaseCollaborator(getFromId(organisationTypeId));
     }
 }
