@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -74,6 +75,22 @@ public class IndustrialCostFinanceHandlerTest {
     private OtherFundingHandler otherFundingHandler;
     @Spy
     private VatHandler vatHandler;
+    @Spy
+    private ProcurementsOverheadsHandler procurementsOverheadsHandler;
+    @Spy
+    private AdditionalCompanyCostHandler additionalCompanyCostHandler;
+    @Spy
+    private AssociateDevelopmentCostHandler associateDevelopmentCostHandler;
+    @Spy
+    private AssociateSalaryCostHandler associateSalaryCostHandler;
+    @Spy
+    private AssociateSupportCostHandler associateSupportCostHandler;
+    @Spy
+    private ConsumableHandler consumableHandler;
+    @Spy
+    private EstateCostHandler estateCostHandler;
+    @Spy
+    private KnowledgeBaseCostHandler knowledgeBaseCostHandler;
     @Mock
     private ApplicationFinanceRepository applicationFinanceRepository;
     private ApplicationFinance applicationFinance;
@@ -85,14 +102,15 @@ public class IndustrialCostFinanceHandlerTest {
         MockitoAnnotations.initMocks(this);
         industrialCostFinanceHandler.setFinanceRowHandlers(asList(labourCostHandler, capitalUsageHandler, materialsHandler, otherCostHandler,
                 overheadsHandler, subContractingCostHandler, travelCostHandler, grantClaimAmountHandler, grantClaimHandler,
-                otherFundingHandler, vatHandler));
+                otherFundingHandler, vatHandler, procurementsOverheadsHandler, additionalCompanyCostHandler, associateDevelopmentCostHandler, associateSalaryCostHandler,
+                associateSupportCostHandler, consumableHandler, estateCostHandler, knowledgeBaseCostHandler));
 
         when(financeRowRepositoryMock.saveAll(anyList())).then(returnsFirstArg());
 
         Competition competition = newCompetition()
                 .withFundingType(FundingType.GRANT)
                 .withCompetitionType(newCompetitionType().withName("Horizon 2020").build())
-                .withFinanceRowTypes(EnumSet.allOf(FinanceRowType.class))
+                .withFinanceRowTypes(Arrays.stream(FinanceRowType.values()).collect(Collectors.toList()))
                 .build();
 
         Application application = newApplication().withCompetition(competition).build();

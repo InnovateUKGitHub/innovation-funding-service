@@ -267,7 +267,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     @SafeVarargs
-    public final CompetitionResourceBuilder withFinanceRowTypes(Set<FinanceRowType>... financeRowTypes) {
+    public final CompetitionResourceBuilder withFinanceRowTypes(List<FinanceRowType>... financeRowTypes) {
         return withArray((financeRowType, competitionResource) -> competitionResource.setFinanceRowTypes(financeRowType), financeRowTypes);
     }
 
