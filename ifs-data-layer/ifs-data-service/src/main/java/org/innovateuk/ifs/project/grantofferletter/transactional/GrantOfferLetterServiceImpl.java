@@ -259,7 +259,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> resetGrantOfferLetterFileEntry(Long projectId) {
+    public ServiceResult<Void> resetGrantOfferLetter(Long projectId) {
         Project project = getProject(projectId).getSuccess();
 
         if (project.getGrantOfferLetter() != null) {

@@ -728,6 +728,27 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     @Test
+    public void deleteSpendProfile() {
+        Long userId = 1234L;
+        UserResource loggedInUser = newUserResource().withId(userId).build();
+        User user = newUser().withId(loggedInUser.getId()).build();
+        setLoggedInUser(loggedInUser);
+        Long projectId = 4234L;
+        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+        Project project = newProject().withId(projectId).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
+
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(spendProfileRepository.findByProjectId(projectId)).thenReturn(spendProfileList);
+        when(spendProfileWorkflowHandler.spendProfileDeleted(project, user)).thenReturn(true);
+
+        ServiceResult<Void> result = service.deleteSpendProfile(projectId);
+
+        assertTrue(result.isSuccess());
+        assertNull(project.getSpendProfileSubmittedDate());
+    }
+
+    @Test
     public void approveSpendProfileProcessNotApproved() {
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
         Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();

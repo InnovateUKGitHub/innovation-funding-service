@@ -9,12 +9,15 @@ import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityState.APPROVED;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,7 +35,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     private ProjectFinanceService projectFinanceService;
 
     @Test
-    public void testGetViability() throws Exception {
+    public void getViability() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
 
@@ -51,7 +54,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testSaveViability() throws Exception {
+    public void saveViability() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
         ViabilityState viability = ViabilityState.APPROVED;
@@ -66,11 +69,11 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testGetEligibility() throws Exception {
+    public void getEligibility() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        EligibilityResource expectedEligibilityResource = new EligibilityResource(EligibilityState.APPROVED, EligibilityRagStatus.GREEN);
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(APPROVED, EligibilityRagStatus.GREEN);
         expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
         expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
         expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
@@ -85,11 +88,11 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testSaveEligibility() throws Exception {
+    public void saveEligibility() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        EligibilityState eligibility = EligibilityState.APPROVED;
+        EligibilityState eligibility = APPROVED;
         EligibilityRagStatus eligibilityRagStatus = EligibilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
@@ -101,7 +104,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testGetCreditReport() throws Exception {
+    public void getCreditReport() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
 
@@ -115,7 +118,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testSaveCreditReport() throws Exception {
+    public void saveCreditReport() throws Exception {
         Long projectId = 1L;
         Long organisationId = 2L;
 
@@ -128,16 +131,30 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testFinanceDetails() throws Exception {
+    public void financeDetails() throws Exception {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectFinanceService.financeChecksDetails(123L, 456L)).thenReturn(serviceSuccess(projectFinanceResource));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/project/{projectId}/organisation/{organisationId}/finance-details", "123", "456"))
+        mockMvc.perform(get("/project/{projectId}/organisation/{organisationId}/finance-details", "123", "456"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectFinanceResource)));
 
         verify(projectFinanceService).financeChecksDetails(123L, 456L);
+    }
+
+    @Test
+    public void resetFinanceChecks() throws Exception {
+        Long projectId = 1L;
+        FinanceCheckPartnerStatusResource partnerStatusResource = newFinanceCheckPartnerStatusResource().withEligibility(APPROVED).withViability(ViabilityState.APPROVED).build();
+        FinanceCheckSummaryResource finance = newFinanceCheckSummaryResource().withProjectId(projectId).withPartnerStatusResources(singletonList(partnerStatusResource)).build();
+
+        when(financeCheckService.resetFinanceChecks(finance.getProjectId())).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/finance-checks/reset", projectId))
+                .andExpect(status().isOk());
+
+        verify(financeCheckService).resetFinanceChecks(projectId);
     }
 
     @Override

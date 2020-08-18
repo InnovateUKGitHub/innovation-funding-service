@@ -185,6 +185,6 @@ public class GrantOfferLetterController {
     @DeleteMapping(value = "/{projectId}/grant-offer/reset")
     public RestResult<Void> resetGrantOfferLetter(
             @PathVariable long projectId) {
-        return grantOfferLetterService.resetGrantOfferLetterFileEntry(projectId).toDeleteResponse();
+        return grantOfferLetterService.resetGrantOfferLetter(projectId).toDeleteResponse();
     }
 }

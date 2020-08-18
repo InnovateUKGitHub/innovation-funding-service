@@ -56,12 +56,14 @@ public class ActivityLogUrlHelper {
             case SPEND_PROFILE_GENERATED:
                 return format("/project-setup-management/project/%d/finance-check", project.getId());
             case SPEND_PROFILE_SENT:
+            case SPEND_PROFILE_DELETED:
             case SPEND_PROFILE_APPROVED:
             case SPEND_PROFILE_REJECTED:
                 return format("/project-setup-management/project/%d/spend-profile/approval", project.getId());
             case GRANT_OFFER_LETTER_UPLOADED:
             case GRANT_OFFER_LETTER_PUBLISHED:
             case GRANT_OFFER_LETTER_SIGNED:
+            case GRANT_OFFER_LETTER_RESET:
             case GRANT_OFFER_LETTER_APPROVED:
             case GRANT_OFFER_LETTER_REJECTED:
                 return format("/project-setup-management/project/%d/grant-offer-letter/send", project.getId());

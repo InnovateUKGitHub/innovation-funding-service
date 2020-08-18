@@ -34,7 +34,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,26 +44,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendProfileController> {
 
     @Mock
-    private SpendProfileService spendProfileServiceMock;
+    private SpendProfileService spendProfileService;
 
     @Test
-    public void testGenerateSpendProfile() throws Exception {
-        when(spendProfileServiceMock.generateSpendProfile(123L)).thenReturn(serviceSuccess());
+    public void generateSpendProfile() throws Exception {
+        when(spendProfileService.generateSpendProfile(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/123/spend-profile/generate")).andExpect(status().isCreated());
 
-        verify(spendProfileServiceMock).generateSpendProfile(123L);
+        verify(spendProfileService).generateSpendProfile(123L);
     }
 
     @Test
-    public void testGenerateSpendProfileForPartnerOrganisation() throws Exception {
-        when(spendProfileServiceMock.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L))
+    public void generateSpendProfileForPartnerOrganisation() throws Exception {
+        when(spendProfileService.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L))
                 .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/1/partner-organisation/2/user/7/spend-profile/generate"))
                 .andExpect(status().isCreated());
 
-        verify(spendProfileServiceMock).generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
+        verify(spendProfileService).generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
+    }
+
+    @Test
+    public void deleteSpendProfile() throws Exception {
+        long projectId = 123L;
+        when(spendProfileService.deleteSpendProfile(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/spend-profile/reset", projectId))
+                .andExpect(status().isNoContent()).
+                andDo(document("project/{method-name}"));
+
+        verify(spendProfileService).deleteSpendProfile(projectId);
     }
 
     @Test
@@ -72,12 +86,12 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         final ProjectOrganisationCompositeId projectOrganisationCompositeId
                 = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+        when(spendProfileService.markSpendProfileComplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete",
                 projectId, organisationId, true).contentType(APPLICATION_JSON).content(toJson(table)))
                 .andExpect(status().isOk());
 
-        verify(spendProfileServiceMock).markSpendProfileComplete(projectOrganisationCompositeId);
+        verify(spendProfileService).markSpendProfileComplete(projectOrganisationCompositeId);
     }
 
     @Test
@@ -87,14 +101,14 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         final SpendProfileTableResource table = new SpendProfileTableResource();
         final ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
+        when(spendProfileService.markSpendProfileIncomplete(projectOrganisationCompositeId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId, true)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(table)))
                 .andExpect(status().isOk());
 
-        verify(spendProfileServiceMock).markSpendProfileIncomplete(projectOrganisationCompositeId);
+        verify(spendProfileService).markSpendProfileIncomplete(projectOrganisationCompositeId);
     }
 
 
@@ -121,7 +135,7 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
                 2L, asList(new BigDecimal("70"), new BigDecimal("50"), new BigDecimal("60")),
                 3L, asList(new BigDecimal("50"), new BigDecimal("5"), new BigDecimal("0"))));
 
-        when(spendProfileServiceMock.getSpendProfileTable(eq(projectOrganisationCompositeId))).thenReturn(serviceSuccess(expectedTable));
+        when(spendProfileService.getSpendProfileTable(eq(projectOrganisationCompositeId))).thenReturn(serviceSuccess(expectedTable));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -146,7 +160,7 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         expectedResource.setFileName("TEST_Spend_Profile_2016-10-30_10-11_12.csv");
         expectedResource.setCsvData(generateTestCSVDataUsing(expectedTable));
 
-        when(spendProfileServiceMock.getSpendProfileCSV(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedResource));
+        when(spendProfileService.getSpendProfileCSV(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -160,7 +174,7 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         final ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         final SpendProfileResource spendProfileResource = SpendProfileResourceBuilder.newSpendProfileResource().build();
 
-        when(spendProfileServiceMock.getSpendProfile(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileResource));
+        when(spendProfileService.getSpendProfile(projectOrganisationCompositeId)).thenReturn(serviceSuccess(spendProfileResource));
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
@@ -174,7 +188,7 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
         final SpendProfileTableResource table = new SpendProfileTableResource();
         final ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(spendProfileServiceMock.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess());
+        when(spendProfileService.saveSpendProfile(projectOrganisationCompositeId, table)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
@@ -184,10 +198,10 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
 
 
     @Test
-    public void testCompleteSpendProfilesReview() throws Exception {
+    public void completeSpendProfilesReview() throws Exception {
         final Long projectId = 1L;
 
-        when(spendProfileServiceMock.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
+        when(spendProfileService.completeSpendProfilesReview(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/complete-spend-profiles-review", projectId))
                 .andExpect(status().isOk());

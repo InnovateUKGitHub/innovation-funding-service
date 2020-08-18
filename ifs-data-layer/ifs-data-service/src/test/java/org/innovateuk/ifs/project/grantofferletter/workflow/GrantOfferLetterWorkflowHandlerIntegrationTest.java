@@ -47,7 +47,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() {
+    public void projectCreated() {
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
 
@@ -67,7 +67,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRemoved() {
+    public void grantOfferLetterRemoved() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)),
 
@@ -76,7 +76,16 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() {
+    public void grantOfferLetterReset() {
+
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterReset(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                GrantOfferLetterState.SENT, GrantOfferLetterState.PENDING, GrantOfferLetterEvent.GOL_RESET);
+
+    }
+    @Test
+    public void grantOfferLetterRemovedNotAllowedInNonPendingStates() {
 
         asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
@@ -87,7 +96,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSignedGrantOfferLetterRemovedNotAllowedInNonSentStates() {
+    public void signedGrantOfferLetterRemovedNotAllowedInNonSentStates() {
 
         asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
@@ -107,7 +116,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterSent() {
+    public void grantOfferLetterSent() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterSent(project, internalUser)),
 
@@ -116,7 +125,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterSigned() {
+    public void grantOfferLetterSigned() {
 
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterSigned(project, projectUser)),
 
@@ -125,7 +134,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRejected() {
+    public void grantOfferLetterRejected() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterRejected(project, internalUser)),
 
@@ -134,7 +143,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterApproved() {
+    public void grantOfferLetterApproved() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
@@ -143,7 +152,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetter() {
+    public void approveSignedGrantOfferLetter() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
@@ -152,7 +161,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSignGrantOfferLetterWithoutProjectUser() {
+    public void signGrantOfferLetterWithoutProjectUser() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.sign(project)),
 
@@ -161,7 +170,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSignedGrantOfferLetterRemoved() {
+    public void signedGrantOfferLetterRemoved() {
 
         callWorkflowAndCheckTransitionAndEventFired((project, projectUser) -> {
 
@@ -176,7 +185,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSignedGrantOfferLetterNotRemovedIfNotProjectManager() {
+    public void signedGrantOfferLetterNotRemovedIfNotProjectManager() {
 
         callWorkflowAndCheckTransitionFailsExternalUser((project, projectUser) -> {
 
