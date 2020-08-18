@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * Abstract class for holding helper methods shared by all finance row item types.
@@ -27,5 +30,9 @@ public abstract class AbstractFinanceRowItem implements FinanceRowItem {
 
     public void setTargetId(Long targetId) {
         this.targetId = targetId;
+    }
+
+    protected BigDecimal bigDecimalOrNull(BigInteger bigInteger) {
+        return ofNullable(bigInteger).map(BigDecimal::new).orElse(null);
     }
 }

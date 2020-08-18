@@ -238,6 +238,7 @@ ${enter_a_valid_phone_number}                      Please enter a valid phone nu
 ${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
 ${only_accept_whole_numbers_message}               This field can only accept whole numbers.
 ${field_should_be_1_or_higher}                     This field should be 1 or higher.
+${estate_Error_Message}                            You should enter less than £10,000 for estate costs
 
 # Database variables
 ${database_name}    ifs

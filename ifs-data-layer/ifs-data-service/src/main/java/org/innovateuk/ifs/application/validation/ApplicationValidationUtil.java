@@ -108,7 +108,7 @@ public class ApplicationValidationUtil {
                 validationMessages.addAll(isQuestionValid(question, application, markedAsCompleteById));
             }
         }
-        Set<FinanceRowType> competitionFinanceTypes = section.getCompetition().getFinanceRowTypes();
+        List<FinanceRowType> competitionFinanceTypes = section.getCompetition().getFinanceRowTypes();
         if (SectionType.PROJECT_COST_FINANCES == section.getType()) {
              asSet(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING_COSTS, TRAVEL, OTHER_COSTS)
                     .stream()

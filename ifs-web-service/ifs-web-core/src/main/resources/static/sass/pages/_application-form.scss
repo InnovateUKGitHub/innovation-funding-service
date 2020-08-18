@@ -96,6 +96,15 @@ table {
   }
 }
 
+#accordion-finances-content-additional-company-costs {
+  tfoot {
+    th,
+    td {
+      border-bottom: none;
+    }
+  }
+}
+
 #other-costs-table {
   textarea {
     min-height: 80px;
