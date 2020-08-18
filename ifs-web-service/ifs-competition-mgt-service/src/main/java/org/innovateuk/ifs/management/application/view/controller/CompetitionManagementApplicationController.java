@@ -68,7 +68,8 @@ public class CompetitionManagementApplicationController {
                                         UserResource user,
                                         Model model) {
         System.out.println("Found him?");
-        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user);
+        ManagementApplicationViewModel populate = managementApplicationPopulator.populate(applicationId, user);
+        ManagementApplicationViewModel viewModel = populate;
         model.addAttribute("model", viewModel);
         return "competition-mgt-application-overview";
     }

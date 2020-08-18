@@ -64,7 +64,7 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             }
         }
 
-        return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
+        GenericQuestionReadOnlyViewModel genericQuestionReadOnlyViewModel = new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 answerInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
                         ? textResponse.map(FormInputResponseResource::getMultipleChoiceOptionText).orElse(null)
@@ -73,7 +73,10 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
                 feedback
-            );
+        );
+
+        genericQuestionReadOnlyViewModel.setQuestionId(question.getId());
+        return genericQuestionReadOnlyViewModel;
     }
 
     private List<GenericQuestionFileViewModel> files(FormInputResponseResource response, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {

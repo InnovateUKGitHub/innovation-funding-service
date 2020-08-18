@@ -15,6 +15,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final String templateDocumentTitle;
     private final long competitionId;
     private final List<String> feedback;
+    private long questionId = 0;
 
     public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle,List<String> feedback) {
         super(data, questionResource);
@@ -58,6 +59,15 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     public List<String> getFeedback() {
         return feedback;
+    }
+
+    public void setQuestionId(long questionId) {
+        this.questionId = questionId;
+    }
+
+    @Override
+    public long getQuestionId() {
+        return questionId;
     }
 
     @Override
