@@ -11,8 +11,10 @@ import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 
 /**
@@ -68,10 +70,10 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    protected Optional<LabourCost> intialiseCost(Finance finance) {
+    protected List<LabourCost> intialiseCosts(Finance finance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
-        return Optional.of(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, finance.getId()));
+        return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, finance.getId()));
     }
 
 }

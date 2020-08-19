@@ -21,10 +21,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.UNSAVED_ROW_PREFIX;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.defaultConverters;
@@ -77,7 +78,71 @@ public class YourProjectCostsFormValidator {
                 break;
             case VAT:
                 validateVat(form.getVatForm(), validationHandler);
+            case ASSOCIATE_SALARY_COSTS:
+                validateRowsIfNotBlank(form.getAssociateSalaryCostRows(), "associateSalaryCostRows[%s].", validationHandler);
+                break;
+            case ASSOCIATE_DEVELOPMENT_COSTS:
+                validateRowsIfNotBlank(form.getAssociateDevelopmentCostRows(), "associateDevelopmentCostRows[%s].", validationHandler);
+                validateSameNumberOfNonBlankAssociateRows(form.getAssociateDevelopmentCostRows(), form.getAssociateSalaryCostRows(), validationHandler);
+                break;
+            case CONSUMABLES:
+                validateRows(form.getConsumableCostRows(), "consumableCostRows[%s].", validationHandler);
+                break;
+            case ASSOCIATE_SUPPORT:
+                validateRows(form.getAssociateSupportCostRows(), "associateSupportCostRows[%s].", validationHandler);
+                break;
+            case KNOWLEDGE_BASE:
+                validateRows(form.getKnowledgeBaseCostRows(), "knowledgeBaseCostRows[%s].", validationHandler);
+                break;
+            case ESTATE_COSTS:
+                validateEstateCosts(form.getEstateCostRows(), validationHandler);
+                break;
+            case ADDITIONAL_COMPANY_COSTS:
+                validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
+                break;
         }
+    }
+
+    private void validateAdditionalCompanyCosts(AdditionalCompanyCostForm additionalCompanyCostForm, ValidationHandler validationHandler) {
+        validateForm(additionalCompanyCostForm, validationHandler, "additionalCompanyCostForm.");
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getAssociateSalary(), "additionalCompanyCostForm.associateSalary.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getCapitalEquipment(), "additionalCompanyCostForm.capitalEquipment.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getManagementSupervision(), "additionalCompanyCostForm.managementSupervision.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getOtherCosts(), "additionalCompanyCostForm.otherCosts.", validationHandler);
+        validateAdditionalCompanyCost(additionalCompanyCostForm.getOtherStaff(), "additionalCompanyCostForm.otherStaff.", validationHandler);
+    }
+
+    private void validateAdditionalCompanyCost(AdditionalCostAndDescription cost, String path, ValidationHandler validationHandler) {
+        if (cost.getCost() == null && !isNullOrEmpty(cost.getDescription())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError(path + "cost", null, "validation.field.must.not.be.blank")));
+        } else if (cost.getCost() != null && isNullOrEmpty(cost.getDescription())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError(path + "description", null, "validation.field.must.not.be.blank")));
+        }
+    }
+
+    private void validateEstateCosts(Map<String, EstateCostRowForm> estateCostRows, ValidationHandler validationHandler) {
+        validateRows(estateCostRows, "estateCostRows[%s].", validationHandler);
+        BigInteger total = estateCostRows.values().stream()
+                .map(EstateCostRowForm::getCost)
+                .filter(Objects::nonNull)
+                .reduce(BigInteger.ZERO, BigInteger::add);
+        if (total.intValue() > 10000) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("estateCostRows", total.intValue(), "validation.finance.maximum.estate.costs")));
+        }
+    }
+
+    /*
+    This is a bit ugly but its validating that if there is a missmatch in the number of blank rows between assocaite dev and associate salary that we validate the form of the missmatching blank row
+     */
+    private void validateSameNumberOfNonBlankAssociateRows(Map<String, AssociateDevelopmentCostRowForm> associateDevelopmentCostRows, Map<String, AssociateSalaryCostRowForm> associateSalaryCostRows, ValidationHandler validationHandler) {
+        List<Map.Entry<String, AssociateDevelopmentCostRowForm>> blankDevRows = associateDevelopmentCostRows.entrySet().stream().filter(entry -> entry.getValue().isBlank()).collect(Collectors.toList());
+        List<Map.Entry<String, AssociateSalaryCostRowForm>> blankSalRows = associateSalaryCostRows.entrySet().stream().filter(entry -> entry.getValue().isBlank()).collect(Collectors.toList());
+        if (blankDevRows.size() == 1 && blankSalRows.size() == 0) {
+            validateForm(blankDevRows.get(0).getValue(), validationHandler,"associateDevelopmentCostRows[%s].", blankDevRows.get(0).getKey());
+        } else if (blankDevRows.size() == 0 && blankSalRows.size() == 1) {
+            validateForm(blankSalRows.get(0).getValue(), validationHandler,"associateSalaryCostRows[%s].", blankSalRows.get(0).getKey());
+        }
+        // both having 1 blank row, or both having 0 blank rows is valid.
     }
 
     public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
@@ -124,6 +189,14 @@ public class YourProjectCostsFormValidator {
     private <R extends AbstractCostRowForm> void validateRows(Map<String, R> rows, String path, ValidationHandler validationHandler) {
         rows.forEach((id, row) -> {
             if (!(id.startsWith(UNSAVED_ROW_PREFIX) && row.isBlank())) {
+                validateForm(row, validationHandler, path, id);
+            }
+        });
+    }
+
+    private <R extends AbstractCostRowForm> void validateRowsIfNotBlank(Map<String, R> rows, String path, ValidationHandler validationHandler) {
+        rows.forEach((id, row) -> {
+            if (!row.isBlank()) {
                 validateForm(row, validationHandler, path, id);
             }
         });

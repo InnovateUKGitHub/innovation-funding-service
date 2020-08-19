@@ -14,7 +14,7 @@ public class CostTotalBuilderTest {
 
     private Long[] ids = {1L, 2L};
     private Long[] financeIds = {10L, 11L};
-    private String[] names = {FinanceRowType.MATERIALS.getName(), FinanceRowType.LABOUR.getName()};
+    private String[] names = {FinanceRowType.MATERIALS.getDisplayName(), FinanceRowType.LABOUR.getDisplayName()};
     private String[] types = {"APPLICATION", "APPLICATION"};
     private BigDecimal[] totals = {BigDecimal.valueOf(10000L), BigDecimal.valueOf(20000L)};
 
