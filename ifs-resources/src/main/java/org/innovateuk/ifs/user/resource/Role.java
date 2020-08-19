@@ -89,6 +89,10 @@ public enum Role implements Identifiable {
 
     public boolean isAssessor() {return this == ASSESSOR; }
 
+    public boolean isKta() {
+        return this == KNOWLEDGE_TRANSFER_ADVISOR;
+    }
+
     public static Set<Role> applicantProcessRoles() {
         return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
     }

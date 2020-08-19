@@ -71,6 +71,11 @@ public class NavigationUtilsTest {
     }
 
     @Test
+    public void getDirectDashboardUrlForKnowledgeTransferAdvisor() throws Exception {
+        assertEquals("https://site:8080/assessment/assessor/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, KNOWLEDGE_TRANSFER_ADVISOR));
+    }
+
+    @Test
     public void getRedirectToSameDomainUrl() throws Exception {
         String url = "management/dashboard";
 
