@@ -33,10 +33,12 @@
             </p>
         </div>
 
-        <th:block th:if="${model.hasAssessorResponse()}">
-            <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
-
+        <th:block th:if="${model.hasScore()}">
             <p th:text="${#numbers.formatDecimal(model.getAverageScore(), 1, 'DEFAULT', 2, 'DEFAULT')}"></p>
+        </th:block>
+
+        <th:block th:if="${model.hasFeedback()}">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
@@ -46,14 +48,6 @@
                             <p class="govuk-body" th:text="${feedback}">Feedback text</p>
                         </div>
                     </th:block>
-
-<!--                    <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">SCORES</h2>-->
-
-<!--                    <th:block th:each="score : ${model.scores}">-->
-<!--                        <div class="govuk-!-padding-3 bordered govuk-!-margin-top-2">-->
-<!--                            <p class="govuk-body" th:text="${#numbers.formatDecimal(score, 1, 'DEFAULT', 2, 'DEFAULT')}">score test</p>-->
-<!--                        </div>-->
-<!--                    </th:block>-->
                 </div>
             </div>
         </th:block>

@@ -81,19 +81,19 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return !feedback.isEmpty();
     }
 
+    public boolean hasScore() { return !scores.isEmpty(); }
+
     public boolean hasAssessorResponse() {
-        return hasFeedback();
+        return hasFeedback() && hasScore();
     }
     
     public BigDecimal getAverageScore() {
-//        return BigDecimal.TEN;
         BigDecimal totalScore = BigDecimal.ZERO;
         for (int i = 0; i < scores.size(); i++){
-            totalScore.add(scores.get(i));
+            totalScore = totalScore.add(scores.get(i));
         };
 
-        BigDecimal average = totalScore.divide(BigDecimal.valueOf(scores.size()));
-//        totalScore.divide();
+        BigDecimal average = totalScore.divide(BigDecimal.valueOf(scores.size()), 1, BigDecimal.ROUND_HALF_UP);
 
         return average;
     };
