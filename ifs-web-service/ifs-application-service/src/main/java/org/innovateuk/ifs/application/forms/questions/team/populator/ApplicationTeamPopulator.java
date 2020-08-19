@@ -103,7 +103,7 @@ public class ApplicationTeamPopulator {
         ApplicationKtaInviteResource ktaInvite = null;
 
         Optional<ProcessRoleResource> kta = processRoles.stream()
-                .filter(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISOR).findAny();
+                .filter(pr -> pr.getRole() == KNOWLEDGE_TRANSFER_ADVISER).findAny();
 
         if (kta.isPresent()) {
             ktaProcessRole = kta.get();

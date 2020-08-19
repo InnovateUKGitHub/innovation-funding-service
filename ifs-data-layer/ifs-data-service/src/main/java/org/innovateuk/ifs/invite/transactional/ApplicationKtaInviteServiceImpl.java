@@ -89,7 +89,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
             }
         }
 
-        List<ProcessRole> rolesToRemove = application.getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISOR).collect(Collectors.toList());
+        List<ProcessRole> rolesToRemove = application.getProcessRoles().stream().filter(pr -> pr.getRole() == Role.KNOWLEDGE_TRANSFER_ADVISER).collect(Collectors.toList());
         if (!rolesToRemove.isEmpty()) {
             processRoleRepository.deleteAll(rolesToRemove);
         }
@@ -122,7 +122,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
             return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
         }
         ServiceResult<UserResource> userResult = userService.findByEmail(inviteResource.getEmail());
-        if (userResult.isFailure() || !userResult.getSuccess().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)) {
+        if (userResult.isFailure() || !userResult.getSuccess().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)) {
             return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "user.not.registered.kta"));
         }
         inviteResource.setName(userResult.getSuccess().getName());

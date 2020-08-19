@@ -84,7 +84,7 @@ public class ApplicationTeamMarkAsCompleteValidatorTest {
     public void acceptWithKtpCompetitionWithKtaProcessRole() {
         // given
         Application application = ApplicationBuilder.newApplication()
-                .withProcessRole(newProcessRole().withRole(Role.KNOWLEDGE_TRANSFER_ADVISOR).build())
+                .withProcessRole(newProcessRole().withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build())
                 .withCompetition(newCompetition().withFundingType(FundingType.KTP).build()).build();
 
         given(applicationInviteService.getInvitesByApplication(application.getId())).willReturn(serviceSuccess(emptyList()));

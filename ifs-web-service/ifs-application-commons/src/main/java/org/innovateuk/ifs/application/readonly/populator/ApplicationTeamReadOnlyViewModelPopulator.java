@@ -62,7 +62,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
             inviteOrganisationResources = inviteRestService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
         }
         Optional<ProcessRoleResource> ktaProcessRole = applicationProcessRoles.stream()
-                .filter(role -> KNOWLEDGE_TRANSFER_ADVISOR == role.getRole())
+                .filter(role -> KNOWLEDGE_TRANSFER_ADVISER == role.getRole())
                 .findAny();
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(data.getApplication().getId()).getSuccess();

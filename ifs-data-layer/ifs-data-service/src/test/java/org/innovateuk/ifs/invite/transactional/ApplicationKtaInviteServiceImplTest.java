@@ -94,7 +94,7 @@ public class ApplicationKtaInviteServiceImplTest {
                 .withApplication(123L).build();
         given(applicationKtaInviteRepository.findByApplicationId(invite.getApplication())).willReturn(Optional.empty());
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISOR)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER)).build();
         given(userService.findByEmail("testemail@example.com")).willReturn(serviceSuccess(user));
 
         given(applicationInviteNotificationService.inviteKta(any())).willAnswer(invocation -> serviceSuccess());

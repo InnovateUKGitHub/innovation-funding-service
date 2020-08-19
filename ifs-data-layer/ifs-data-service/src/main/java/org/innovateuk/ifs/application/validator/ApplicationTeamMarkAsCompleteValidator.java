@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
         }
 
         if (application.getCompetition().isKtp() &&
-            application.getProcessRoles().stream().noneMatch(pr -> Role.KNOWLEDGE_TRANSFER_ADVISOR == pr.getRole())) {
+            application.getProcessRoles().stream().noneMatch(pr -> Role.KNOWLEDGE_TRANSFER_ADVISER == pr.getRole())) {
 
             ApplicationKtaInviteResource ktaInvite = applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
             if (ktaInvite == null) {
