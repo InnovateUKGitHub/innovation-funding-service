@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -34,7 +33,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKtaInvite> implements ApplicationKtaInviteService {
 
-    private static final String EDIT_EMAIL_FIELD = "stagedInvite.email";
+    private static final String EDIT_EMAIL_FIELD = "ktaEmail";
 
     @Autowired
     private UserService userService;
@@ -119,11 +118,11 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     private ServiceResult<ApplicationKtaInviteResource> validateKtaApplication(ApplicationKtaInviteResource inviteResource, String errorField) {
         Optional<ApplicationKtaInvite> existing = applicationKtaInviteRepository.findByApplicationId(inviteResource.getApplication());
         if (existing.isPresent()) {
-            return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "kta.already.invited"));
+            return serviceFailure(fieldError(errorField, inviteResource.getEmail(), "kta.already.invited"));
         }
         ServiceResult<UserResource> userResult = userService.findByEmail(inviteResource.getEmail());
         if (userResult.isFailure() || !userResult.getSuccess().hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)) {
-            return serviceFailure(fieldError(format(errorField), inviteResource.getEmail(), "user.not.registered.kta"));
+            return serviceFailure(fieldError(errorField, inviteResource.getEmail(), "user.not.registered.kta"));
         }
         inviteResource.setName(userResult.getSuccess().getName());
         return serviceSuccess(inviteResource);
