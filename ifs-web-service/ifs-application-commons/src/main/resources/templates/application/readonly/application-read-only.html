@@ -13,7 +13,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="accordion(model)">
+<th:block th:fragment="accordion">
     <th:block th:each="section, sectionIter : ${model.sections}">
         <section>
             <h2 th:text="${section.name}"
@@ -41,6 +41,9 @@
 
                         <th:block
                             th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
+                        <p th:text="${question.getQuestionId()}"></p>
+                        <p th:text="${scores.scores.get(question.getQuestionId())}"></p>
+
 
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
                               method="post"

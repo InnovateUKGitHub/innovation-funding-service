@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -121,7 +122,7 @@ public class ManagementApplicationPopulator {
 //        });
 
 
-//        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
+        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
 //        System.out.println("scores" + scores.getScores().toString());
 
         Long projectId = null;
@@ -139,7 +140,8 @@ public class ManagementApplicationPopulator {
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
                 support,
                 projectId,
-                user.hasRole(Role.EXTERNAL_FINANCE)
+                user.hasRole(Role.EXTERNAL_FINANCE),
+                scores
         );
 
     }

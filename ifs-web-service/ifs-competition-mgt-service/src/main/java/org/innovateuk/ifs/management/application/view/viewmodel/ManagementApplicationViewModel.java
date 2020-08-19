@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ public class ManagementApplicationViewModel {
     private final Long projectId;
     private final boolean externalFinanceUser;
     private final boolean ktpCompetition;
+    private final ApplicationAssessmentAggregateResource scores;
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
@@ -40,7 +42,8 @@ public class ManagementApplicationViewModel {
                                           boolean canReinstate,
                                           boolean support,
                                           Long projectId,
-                                          boolean externalFinanceUser) {
+                                          boolean externalFinanceUser,
+                                          ApplicationAssessmentAggregateResource scores) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -51,6 +54,8 @@ public class ManagementApplicationViewModel {
         this.support = support;
         this.projectId = projectId;
         this.externalFinanceUser = externalFinanceUser;
+
+        this.scores = scores;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -149,5 +154,9 @@ public class ManagementApplicationViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public ApplicationAssessmentAggregateResource getScores() {
+        return scores;
     }
 }

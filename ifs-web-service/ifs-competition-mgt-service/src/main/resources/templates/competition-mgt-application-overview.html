@@ -117,7 +117,7 @@
             </div>
         </div>
 
-        <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+        <th:block th:insert="application/readonly/application-read-only :: accordion (model=${model.applicationReadOnlyViewModel}, scores=${model.scores})" />
 <!--        <th:block th:insert="application/readonly/application-read-only :: something (${model.applicationReadOnlyViewModel})" />-->
 
         <div th:unless="${model.externalFinanceUser}" class="govuk-body govuk-!-margin-top-6">

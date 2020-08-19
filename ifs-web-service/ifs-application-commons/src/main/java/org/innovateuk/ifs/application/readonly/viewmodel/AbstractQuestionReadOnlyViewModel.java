@@ -57,6 +57,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         return competitionName;
     }
 
+    @Override
     public long getQuestionId() {
         return questionId;
     }
