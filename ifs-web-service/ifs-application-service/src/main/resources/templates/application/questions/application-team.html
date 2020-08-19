@@ -326,7 +326,7 @@
                                         <th:block th:text="${model.ktaEmail}">email of kta</th:block>
                                     </td>
                                     <td class="govuk-table__cell alignright buttoncolumn">
-                                        <button th:if="${model.hasPendingKta()}" class="button-clear govuk-!-margin-right-2" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button>
+                                        <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button><span>|</span></th:block>
                                         <button class="button-clear" type="submit" name="remove-kta" value="${model.applicationId}">Remove</button>
                                     </td>
                                 </tr>
