@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -10,8 +12,10 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ErrorToObjectErrorConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.invite.service.KtaInviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,7 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATION_BASE_URL;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
 
 @Controller
@@ -42,6 +47,9 @@ public class ApplicationTeamController {
 
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private KtaInviteRestService ktaInviteRestService;
 
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
@@ -68,7 +76,33 @@ public class ApplicationTeamController {
                                          @PathVariable long applicationId,
                                          @PathVariable long questionId,
                                          UserResource user) {
-        return markAsComplete(form, bindingResult, validationHandler, model, applicationId, questionId, user);
+        return markAsComplete(form, bindingResult,
+                validationHandler, model, applicationId, questionId, user);
+    }
+
+    @PostMapping(params = "invite-kta")
+    public String addKta(@Valid @ModelAttribute(value = "form") ApplicationTeamForm form,
+                         BindingResult bindingResult,
+                         ValidationHandler validationHandler,
+                         Model model,
+                         @PathVariable long applicationId,
+                         @PathVariable long questionId,
+                         UserResource user) {
+        return inviteKta(form, validationHandler, applicationId, questionId, model, user, ktaInviteRestService::saveKtaInvite);
+    }
+
+    @PostMapping(params = "resend-kta")
+    public String resendKta(@PathVariable long applicationId,
+                         @PathVariable long questionId) {
+        resendKtaInvite(applicationId);
+        return redirectToApplicationTeam(applicationId, questionId);
+    }
+
+    @PostMapping(params = "remove-kta")
+    public String removeKta(@PathVariable long applicationId,
+                            @PathVariable long questionId) {
+        ktaInviteRestService.removeKtaInviteByApplication(applicationId).getSuccess();
+        return redirectToApplicationTeam(applicationId, questionId);
     }
 
     @PostMapping(params = "complete")
@@ -94,6 +128,9 @@ public class ApplicationTeamController {
         return  e -> {
             if ("validation.applicationteam.pending.invites".equals(e.getErrorKey())) {
                 return Optional.of(newFieldError(e, "organisation." + e.getArguments().get(1), e.getFieldRejectedValue()));
+            }
+            if ("validation.kta.pending.invite".equals(e.getErrorKey()) || "validation.kta.missing.invite".equals(e.getErrorKey())) {
+                return Optional.of(newFieldError(e, "ktaEmail", e.getFieldRejectedValue()));
             }
             return Optional.empty();
         };
@@ -139,6 +176,13 @@ public class ApplicationTeamController {
                 .filter(applicationInvite -> applicationInvite.getId().equals(inviteId))
                 .findFirst()
                 .ifPresent(invite -> inviteRestService.resendInvite(invite));
+    }
+
+    private void resendKtaInvite(long applicationId) {
+        ApplicationKtaInviteResource invite = ktaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
+        if (invite != null) {
+            ktaInviteRestService.resendKtaInvite(invite);
+        }
     }
 
     @PostMapping(params = "add-team-member")
@@ -197,12 +241,18 @@ public class ApplicationTeamController {
                                         UserResource user,
                                         Function<ApplicationInviteResource, RestResult<Void>> inviteAction) {
 
-
         Supplier<String> failureView = () -> {
             model.addAttribute("model", applicationTeamPopulator.populate(applicationId, questionId, user)
                     .openAddTeamMemberForm(organisationId));
             return "application/questions/application-team";
         };
+
+        if (StringUtils.isBlank(form.getEmail())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("email", null, "validation.applicationteam.email.required")));
+        }
+        if (StringUtils.isBlank(form.getName())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("name", null, "validation.standard.name.required")));
+        }
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ApplicationInviteResource invite = new ApplicationInviteResource(
@@ -214,6 +264,33 @@ public class ApplicationTeamController {
             validationHandler.addAnyErrors(inviteAction.apply(invite),
                     mappingErrorKeyToField("email.already.in.invite", "email"),
                     defaultConverters());
+            return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToApplicationTeam(applicationId, questionId));
+        });
+    }
+
+    private String inviteKta(ApplicationTeamForm form,
+                             ValidationHandler validationHandler,
+                             long applicationId,
+                             long questionId,
+                             Model model,
+                             UserResource user,
+                             Function<ApplicationKtaInviteResource, RestResult<Void>> inviteAction) {
+
+        Supplier<String> failureView = () -> {
+            model.addAttribute("model", applicationTeamPopulator.populate(applicationId, questionId, user));
+            return "application/questions/application-team";
+        };
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            ApplicationKtaInviteResource invite = new ApplicationKtaInviteResource(
+                    form.getKtaEmail(),
+                    applicationId
+            );
+
+            validationHandler.addAnyErrors(inviteAction.apply(invite),
+                    mappingErrorKeyToField("kta.already.invited", "ktaEmail"),
+                    ArrayUtils.add(defaultConverters(),
+                            mappingErrorKeyToField("user.not.registered.kta", "ktaEmail")));
             return validationHandler.failNowOrSucceedWith(failureView, () -> redirectToApplicationTeam(applicationId, questionId));
         });
     }

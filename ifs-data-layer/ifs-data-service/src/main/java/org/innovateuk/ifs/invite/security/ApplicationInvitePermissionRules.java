@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,16 @@ public class ApplicationInvitePermissionRules {
     @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for their organisation")
     public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final ApplicationInviteResource invite, final UserResource user) {
         return applicationIsEditableById(invite.getApplication()) && isCollaboratorOnInvite(invite, user);
+    }
+
+    @PermissionRule(value = "SAVE", description = "lead applicant can save invite kta to the application")
+    public boolean leadApplicantCanSaveKtaInviteToTheApplication(final ApplicationKtaInviteResource invite, final UserResource user) {
+        return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
+    }
+
+    @PermissionRule(value = "DELETE", description = "lead applicant can remove kta invite to the application")
+    public boolean leadApplicantCanRemoveKtaInviteToTheApplication(final ApplicationKtaInviteResource invite, final UserResource user) {
+        return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
     }
 
     @PermissionRule(value = "READ", description = "collaborator can view an invite to the application on for their organisation")
@@ -108,6 +119,10 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final ApplicationInviteResource invite, final UserResource user) {
+        return checkProcessRole(user, invite.getApplication(), LEADAPPLICANT, processRoleRepository);
+    }
+
+    private boolean isLeadForInvite(final ApplicationKtaInviteResource invite, final UserResource user) {
         return checkProcessRole(user, invite.getApplication(), LEADAPPLICANT, processRoleRepository);
     }
 

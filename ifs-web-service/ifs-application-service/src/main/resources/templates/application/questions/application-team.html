@@ -259,6 +259,83 @@
                        id="add-a-partner-organisation"
                        class="govuk-link">Add a partner organisation</a>
                 </p>
+
+                <th:block th:if="${model.ktpCompetition} ">
+                    <h3 class="govuk-heading-s">Knowledge Transfer Adviser</h3>
+                    <p class="govuk-body">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
+                    <p class="govuk-body">The lead applicant cannot mark the page as complete until a Knowledge Transfer Adviser has accepted their invitation.</p>
+
+
+                    <div th:if="${model.hasNoKta()}" class="govuk-form-group">
+                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
+                            <table class="govuk-table">
+                                <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Email</th>
+                                        <th scope="col"  class="govuk-table__header govuk-!-width-one-quarter"><span class="govuk-visually-hidden">Actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
+                                    <tr th:if="${#fields.hasErrors('ktaEmail')}">
+                                        <td colspan="2">
+                                            <span class="govuk-error-message govuk-!-margin-bottom-0" th:each="err : ${#fields.errors('ktaEmail')}"
+                                                  th:text="${err}"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell govuk-form-group">
+                                            <input type="text" id="ktaEmail"
+                                                   th:field="*{ktaEmail}"
+                                                   class="govuk-input"
+                                                   th:errorclass="govuk-input--error" />
+                                        </td>
+                                        <td class="govuk-table__cell alignright buttoncolumn">
+                                            <button class="govuk-button" type="submit" name="invite-kta">Invite to application</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div th:if="${model.hasAssignedKta() || model.hasPendingKta()}">
+                        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
+                            <table class="govuk-table">
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Full Name</th>
+                                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">Email</th>
+                                    <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Actions</span></th>
+                                </tr>
+                                </thead>
+                                <tbody class="govuk-table__body">
+                                <tr th:if="${#fields.hasErrors('ktaEmail')}">
+                                    <td colspan="3">
+                                                    <span class="govuk-error-message govuk-!-margin-bottom-0" th:each="err : ${#fields.errors('ktaEmail')}"
+                                                          th:text="${err}"/>
+                                    </td>
+                                </tr>
+                                <tr class="govuk-table__row">
+
+                                    <td class="govuk-table__cell" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
+                                        <th:block th:text="${model.ktaName}" />
+                                        <th:block th:if="${model.hasPendingKta()}">
+                                            <th:block th:unless="${model.ktaName != null}">-</th:block> (pending for <th:block th:text="${model.ktaInvitePendingDays}">5</th:block> days)
+                                        </th:block>
+                                    </td>
+                                    <td id="ktaEmail" class="govuk-table__cell" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
+                                        <th:block th:text="${model.ktaEmail}">email of kta</th:block>
+                                    </td>
+                                    <td class="govuk-table__cell alignright buttoncolumn">
+                                        <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button><span>|</span></th:block>
+                                        <button class="button-clear" type="submit" name="remove-kta" value="${model.applicationId}">Remove</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </th:block>
+
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate"
                       method="post">
                     <div th:if="${model.open}" class="form-footer govuk-!-margin-top-8">
