@@ -1,21 +1,28 @@
 package org.innovateuk.ifs.registration.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class KnowledgeBaseCreateForm implements Serializable {
 
+    @NotEmpty(message = "{validation.standard.knowledgebasename.required}")
     private String name;
 
+    @NotNull(message = "{validation.standard.knowledgebasetype.required}")
     private Long organisationType;
 
     private String rtoNumber;
+
     private String catapultNumber;
+
     private String universityNumber;
 
     @Valid
@@ -43,6 +50,18 @@ public class KnowledgeBaseCreateForm implements Serializable {
 
     public String getUniversityNumber() {
         return universityNumber;
+    }
+
+    public void setRtoNumber(String rtoNumber) {
+        this.rtoNumber = rtoNumber;
+    }
+
+    public void setCatapultNumber(String catapultNumber) {
+        this.catapultNumber = catapultNumber;
+    }
+
+    public void setUniversityNumber(String universityNumber) {
+        this.universityNumber = universityNumber;
     }
 
     public String getName() {

@@ -108,7 +108,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
             }
 
             if (registrationCookieService.isCollaboratorJourney(request)) {
-                if (knowledge_base_competition(request)) {
+                if (isKnowledgeBaseCompetition(request)) {
                     if (!validateCollaborator(form))
                         return "redirect:" + BASE_URL + "/" + ORGANISATION_TYPE + "/" + NOT_ELIGIBLE;
                 }
@@ -124,7 +124,7 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
         return OrganisationTypeEnum.isValidKnowledgeBaseCollaborator(organisation.getOrganisationType());
     }
 
-    private boolean knowledge_base_competition(HttpServletRequest request) {
+    private boolean isKnowledgeBaseCompetition(HttpServletRequest request) {
         CompetitionResource competition = competitionRestService.getCompetitionById(getCompetitionIdFromInviteOrCookie(request)).getSuccess();
         return competition.getFundingType().equals(FundingType.KTP);
     }

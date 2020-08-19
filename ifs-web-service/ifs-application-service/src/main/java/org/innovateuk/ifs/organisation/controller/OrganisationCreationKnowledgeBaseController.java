@@ -29,10 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.text.Collator;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -97,6 +95,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess()
                 .stream()
                 .filter(resource -> allowedTypes.contains(OrganisationTypeEnum.getFromId(resource.getId())))
+                .sorted(Comparator.comparing(OrganisationTypeResource::getName))
                 .collect(Collectors.toList());
 
         return simpleFilter(organisationTypeResourceList,
@@ -105,7 +104,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
     }
 
     @PostMapping("/details")
-    public String saveKnowledgeBaseDetails(@ModelAttribute(name = "form") KnowledgeBaseCreateForm organisationForm,
+    public String saveKnowledgeBaseDetails(@ModelAttribute(name = "form") @Valid KnowledgeBaseCreateForm organisationForm,
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
@@ -183,16 +182,13 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         organisationResource.setName(knowledgeBaseCreateForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
         organisationResource.setInternational(false);
+//        TODO sort saving address, wait until find out about unique names
 //        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(knowledgeBaseCreateForm));
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
 
         return organisationJourneyEnd.completeProcess(request, response, userResource, organisationResource.getId());
     }
-
-//    private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, Optional<KnowledgeBaseCreateForm> knowledgeBaseCreateForm) {
-//        return new OrganisationAddressResource(organisationResource, createAddressResource(knowledgeBaseCreateForm), new AddressTypeResource(INTERNATIONAL.getId(), INTERNATIONAL.name()));
-//    }
 
     private AddressResource createAddressResource(Optional<KnowledgeBaseCreateForm> form) {
         if (form.isPresent() && form.get().getAddressForm() != null) {

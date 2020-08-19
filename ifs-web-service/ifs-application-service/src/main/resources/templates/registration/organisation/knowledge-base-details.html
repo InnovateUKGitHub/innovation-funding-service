@@ -48,13 +48,14 @@
             </div>
 
 
-            <div class="govuk-form-group">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend id="org-type" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         What type of knowledge base is your organisation?
                     </legend>
-
-
+                    <span class="govuk-error-message"
+                          th:if="${#fields.hasErrors('*{organisationType}')}"
+                          th:errors="*{organisationType}"></span>
                     <div class="govuk-radios">
                         <th:block th:each="type : ${types}">
                             <div class="govuk-radios__item" th:attr="data-target=|item-${type.id}|"
@@ -79,8 +80,6 @@
                                         <label th:for="${type.name}" class="govuk-heading-s">Registration number</label>
                                     </div>
                                     <input class="govuk-input govuk-input--width-10"
-                                           th:id="${fieldName}"
-                                           th:name="${fieldName}"
                                            th:field="*{__${fieldName}__}"
                                            type="text" required="required"/>
                                 </div>

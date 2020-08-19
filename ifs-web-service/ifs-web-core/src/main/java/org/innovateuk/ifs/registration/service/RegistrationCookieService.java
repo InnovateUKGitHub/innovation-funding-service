@@ -114,6 +114,10 @@ public class RegistrationCookieService {
         cookieUtil.removeCookie(response, ORGANISATION_FORM);
     }
 
+    public void deleteKnowledgeBaseDetailsCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, KNOWLEDGE_BASE_DETAILS);
+    }
+
     public void deleteOrganisationInternationalDetailsCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, ORGANISATION_INTERNATIONAL_DETAILS);
     }
@@ -142,6 +146,7 @@ public class RegistrationCookieService {
         deleteProjectInviteHashCookie(response);
         deleteOrganisationInternationalCookie(response);
         deleteOrganisationInternationalDetailsCookie(response);
+        deleteKnowledgeBaseDetailsCookie(response);
     }
 
     public boolean isCollaboratorJourney(HttpServletRequest request) {

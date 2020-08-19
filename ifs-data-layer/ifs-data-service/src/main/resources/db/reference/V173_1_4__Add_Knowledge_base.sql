@@ -403,7 +403,13 @@ INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Con
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Digital Catapult', 6, '7964699');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Energy Systems Catapult Limited', 6, '8705784');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('High Value Manufacturing Catapult', 6, '7708659');
-INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (PA4 9LJ)', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (S60 5TZ)', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (TS10 4RF)', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (CV7 9JU)', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (BS16 7FS)', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (S60 5WG)', 6, '');
+INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('HVMC Catapult (CV4 7AL)', 6, '');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Medicines Discovery Catapult Limited', 6, '9928547');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Offshore Renewable Energy Catapult', 6, '4659351');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Satellite Applications Catapult Limited', 6, '7964746');
