@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="score-details(model)">
+    <div class="govuk-form-group">
+        <th:block th:if="${model.hasScore()}">
+            <p th:text="${#numbers.formatDecimal(model.getAverageScore(), 1, 'DEFAULT', 2, 'DEFAULT')}"></p>
+        </th:block>
+    </div>
+</th:block>
