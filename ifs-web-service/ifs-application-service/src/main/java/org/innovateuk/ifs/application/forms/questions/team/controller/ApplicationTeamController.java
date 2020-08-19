@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.forms.questions.team.controller;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.util.Arrays;
 import org.innovateuk.ifs.application.forms.questions.team.form.ApplicationTeamForm;
 import org.innovateuk.ifs.application.forms.questions.team.populator.ApplicationTeamPopulator;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
@@ -129,6 +128,9 @@ public class ApplicationTeamController {
         return  e -> {
             if ("validation.applicationteam.pending.invites".equals(e.getErrorKey())) {
                 return Optional.of(newFieldError(e, "organisation." + e.getArguments().get(1), e.getFieldRejectedValue()));
+            }
+            if ("validation.kta.pending.invite".equals(e.getErrorKey()) || "validation.kta.missing.invite".equals(e.getErrorKey())) {
+                return Optional.of(newFieldError(e, "ktaEmail", e.getFieldRejectedValue()));
             }
             return Optional.empty();
         };
