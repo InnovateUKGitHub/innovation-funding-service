@@ -112,7 +112,7 @@ Comp admin should be able to view but not edit the finances for every partner
     When Log in as a different user                  &{collaborator1_credentials}
     Then the user navigates to Your-finances page    ${OPEN_COMPETITION_APPLICATION_NAME}
     And the applicant edits the Subcontracting costs section
-    And the user reloads the page
+    And the user should see the element              jQuery = h1:contains("Your project finances")
     When Log in as a different user                  &{Comp_admin1_credentials}
     And the user navigates to the page               ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     Then the user should see the correct finances change
