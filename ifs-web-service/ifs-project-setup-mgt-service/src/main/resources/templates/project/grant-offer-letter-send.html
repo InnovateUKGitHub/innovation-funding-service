@@ -133,8 +133,8 @@
                                filename=${model.additionalContractFile?.filename},
                                inputField='annex',
                                validationField=${inputField},
-                               mayRemove=false,
-                               removeName='',
+                               mayRemove=true,
+                               removeName='removeAdditionalContractFileClicked',
                                saveName='uploadAnnexClicked'">
                     <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
