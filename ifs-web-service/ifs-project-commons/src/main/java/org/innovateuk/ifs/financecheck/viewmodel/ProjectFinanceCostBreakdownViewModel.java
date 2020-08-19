@@ -7,7 +7,6 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -18,7 +17,7 @@ public class ProjectFinanceCostBreakdownViewModel {
     private List<ProjectFinanceResource> finances;
     private List<PartnerOrganisationResource> organisationResources;
     private BigDecimal total;
-    private Set<FinanceRowType> financeRowTypes;
+    private List<FinanceRowType> financeRowTypes;
 
     public ProjectFinanceCostBreakdownViewModel() {}
 
@@ -50,7 +49,7 @@ public class ProjectFinanceCostBreakdownViewModel {
                 .orElse(new PartnerOrganisationResource());
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
+    public List<FinanceRowType> getFinanceRowTypes() {
         return financeRowTypes;
     }
 }

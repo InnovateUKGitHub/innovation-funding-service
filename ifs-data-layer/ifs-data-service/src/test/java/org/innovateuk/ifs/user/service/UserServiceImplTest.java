@@ -755,7 +755,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void grantRole_invalidEmail() {
-        GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, KNOWLEDGE_TRANSFER_ADVISOR);
+        GrantRoleCommand grantRoleCommand = new GrantRoleCommand(1L, KNOWLEDGE_TRANSFER_ADVISER);
         User user = newUser()
                 .withEmailAddress("test@invalid.com").build();
         when(userRepositoryMock.findById(grantRoleCommand.getUserId())).thenReturn(Optional.of(user));
@@ -763,7 +763,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<UserResource> result = service.grantRole(grantRoleCommand);
 
         assertTrue(result.isFailure());
-        assertFalse(user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR));
+        assertFalse(user.hasRole(KNOWLEDGE_TRANSFER_ADVISER));
     }
 
     @Test

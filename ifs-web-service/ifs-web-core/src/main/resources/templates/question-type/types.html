@@ -116,7 +116,7 @@
          */-->
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
-            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body no-file-uploaded">No file currently uploaded</p>
+            <p th:if="${#strings.isEmpty(filename)}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
             <ul th:unless="${#strings.isEmpty(filename)}"
                 class="govuk-list file-list">
                 <li class="success">
@@ -153,7 +153,7 @@
                     </th:block>
                 </th:block>
                 <th:block th:if="${#strings.isEmpty(filename)}">
-                    <p class="govuk-body no-file-uploaded ">No file currently uploaded.</p>
+                    <p class="govuk-body no-file-uploaded ">No files have been uploaded yet.</p>
                     <input type="file"  th:id="${inputField}" th:name="${inputField}" class="inputfile" aria-label="Upload a file"
                            data-set-section-valid=".ajax-upload" />
                     <label th:for="${inputField}" class="govuk-!-margin-top-6">Upload</label>

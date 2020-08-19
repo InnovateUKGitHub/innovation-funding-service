@@ -188,6 +188,11 @@ ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
 ${valid_pdf}      testing.pdf
 ${gol_pdf}        GOL_template.pdf
+${valid_xls}    testing.xls
+${valid_odt}    testing.odt
+${valid_doc}    testing.doc
+${valid_docx}    testing.docx
+${valid_jpeg}   testing.jpeg
 ${5mb_pdf}        testing_5MB.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
@@ -216,6 +221,8 @@ ${403_error_message}                               You do not have the necessary
 ${404_error_message}                               Please check the web address or search term you entered for any errors
 ${500_error_message}                               something went wrong
 ${wrong_filetype_validation_error}                 Your upload must be a PDF.
+${finance_query_notes_filetype_error}              Your file must be a PDF or an open source document
+${applicant_query_response_filetype_error}         Your upload must be a PDF, document or a spreadsheet
 ${too_large_5MB_validation_error}                  Please upload a file less than 5MB in size.
 ${too_large_10MB_validation_error}                 Please upload a file less than 10MB in size.
 ${unsuccessful_login_message}                      Your sign in was unsuccessful because of the following issues
@@ -231,6 +238,7 @@ ${enter_a_valid_phone_number}                      Please enter a valid phone nu
 ${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
 ${only_accept_whole_numbers_message}               This field can only accept whole numbers.
 ${field_should_be_1_or_higher}                     This field should be 1 or higher.
+${estate_Error_Message}                            You should enter less than £10,000 for estate costs
 
 # Database variables
 ${database_name}    ifs

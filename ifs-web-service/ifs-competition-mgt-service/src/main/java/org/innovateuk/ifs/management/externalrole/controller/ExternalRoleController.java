@@ -45,7 +45,7 @@ public class ExternalRoleController {
                                 Model model,
                                 ValidationHandler validationHandler) {
 
-        form.setRole(Role.KNOWLEDGE_TRANSFER_ADVISOR);
+        form.setRole(Role.KNOWLEDGE_TRANSFER_ADVISER);
 
         Supplier<String> failureView = () -> viewUser(userId, form, model);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
