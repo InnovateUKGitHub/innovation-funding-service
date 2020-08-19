@@ -33,10 +33,6 @@
             </p>
         </div>
 
-        <th:block th:if="${model.hasScore()}">
-            <p th:text="${#numbers.formatDecimal(model.getAverageScore(), 1, 'DEFAULT', 2, 'DEFAULT')}"></p>
-        </th:block>
-
         <th:block th:if="${model.hasFeedback()}">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
 
