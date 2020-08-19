@@ -27,7 +27,8 @@
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
                             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                                <span class="section-status govuk-hint govuk-!-margin-0 float-right">No feedback provided</span>
+                                <th:block
+                                    th:insert="application/readonly/score-overview :: ${question.fragment} (${question})"/>
                             </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
@@ -37,12 +38,8 @@
                     </div>
                     <div th:id="|accordion-questions-content-${sectionIter.count}-${questionIter.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
 
-                        <!-- TODO: add average scores. currently not available on the question object -->
-
                         <th:block
                             th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
-                        <p th:text="${question.getQuestionId()}"></p>
-                        <p th:text="${scores.scores.get(question.getQuestionId())}"></p>
 
 
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
