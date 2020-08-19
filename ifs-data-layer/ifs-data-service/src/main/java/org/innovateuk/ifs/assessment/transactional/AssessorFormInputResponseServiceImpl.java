@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.uwyn.jhighlight.fastutil.chars.Char2ObjectFunctions;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
@@ -28,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.ZonedDateTime.now;
@@ -177,7 +175,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<ApplicationAssessmentsResource> getApplicationAssessments(long applicationId) {
-        List<ServiceResult<ApplicationAssessmentResource>> results = assessmentRepository.findByTargetId(applicationId).stream()
+        List<ServiceResult<ApplicationAssessmentResource>> results = assessmentRepository.findByTargetIdAndActivityStateIn(applicationId, Collections.singleton(AssessmentState.SUBMITTED)).stream()
                 .map(assessment -> getApplicationAssessment(applicationId, assessment.getId()))
                 .collect(toList());
         return aggregate(results)

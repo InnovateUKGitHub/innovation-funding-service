@@ -54,23 +54,27 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
             if (settings.getAssessmentId() != null) {
                 ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
                         .map(ApplicationAssessmentResource::getFeedback)
+                        .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
                         .map(feedbackMap -> feedbackMap.get(question.getId()))
                         .ifPresent(feedback::add);
 
                 ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
                         .map(ApplicationAssessmentResource::getScores)
+                        .filter(scoresMap -> scoresMap.containsKey(question.getId()))
                         .map(scoresMap -> scoresMap.get(question.getId()))
                         .ifPresent(scores::add);
             } else {
                 data.getAssessmentToApplicationAssessment().values()
                         .stream()
                         .map(ApplicationAssessmentResource::getFeedback)
+                        .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
                         .map(feedbackMap -> feedbackMap.get(question.getId()))
                         .forEach(feedback::add);
 
                 data.getAssessmentToApplicationAssessment().values()
                         .stream()
                         .map(ApplicationAssessmentResource::getScores)
+                        .filter(scoresMap -> scoresMap.containsKey(question.getId()))
                         .map(scoresMap -> scoresMap.get(question.getId()))
                         .forEach(scores::add);
             }

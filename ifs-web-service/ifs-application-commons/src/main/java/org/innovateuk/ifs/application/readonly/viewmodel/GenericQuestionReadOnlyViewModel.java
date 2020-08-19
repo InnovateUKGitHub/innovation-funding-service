@@ -84,4 +84,17 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     public boolean hasAssessorResponse() {
         return hasFeedback();
     }
+    
+    public BigDecimal getAverageScore() {
+//        return BigDecimal.TEN;
+        BigDecimal totalScore = BigDecimal.ZERO;
+        for (int i = 0; i < scores.size(); i++){
+            totalScore.add(scores.get(i));
+        };
+
+        BigDecimal average = totalScore.divide(BigDecimal.valueOf(scores.size()));
+//        totalScore.divide();
+
+        return average;
+    };
 }
