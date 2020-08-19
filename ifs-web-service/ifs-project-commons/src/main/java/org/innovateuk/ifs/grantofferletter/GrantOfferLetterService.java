@@ -28,6 +28,8 @@ public interface GrantOfferLetterService {
 
     ServiceResult<Void> removeGrantOfferLetter(Long projectId);
 
+    ServiceResult<Void> removeAdditionalContractFile(Long projectId);
+
     ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId);
 
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
