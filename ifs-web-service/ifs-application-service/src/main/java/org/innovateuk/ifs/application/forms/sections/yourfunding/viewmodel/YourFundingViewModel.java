@@ -177,4 +177,12 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
     public boolean isReadOnly() {
         return complete || !open;
     }
+
+    /*
+    * Will all lead applicants on a ktp competition be Knowledge Base
+    *
+    * */
+    public boolean hideAreYouRequestingFunding() {
+        return isKtpFundingType() && !leadApplicant;
+    }
 }

@@ -78,7 +78,7 @@
                                 <div class="govuk-form-group">
                                     <div class="govuk-grid-column">
                                         <label th:for="${type.name}" class="govuk-heading-s"
-                                               th:text="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).UNIVERSITY.id == type.id ? 'Registration number' : 'UKPRN number'}">Registration number</label>
+                                               th:text="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).UNIVERSITY.id == type.id ? 'UKPRN number' : 'Registration number'}">Registration number</label>
                                     </div>
                                     <input class="govuk-input govuk-input--width-10"
                                            th:field="*{__${fieldName}__}"

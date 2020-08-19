@@ -16,6 +16,7 @@ public class ProjectYourFundingViewModel {
     private final long competitionId;
     private final boolean overridingFundingRules;
     private final FundingType fundingType;
+    private final boolean leadOrganisation;
 
     public ProjectYourFundingViewModel(ProjectResource project,
                                        long organisationId,
@@ -25,7 +26,8 @@ public class ProjectYourFundingViewModel {
                                        long competitionId,
                                        boolean overridingFundingRules,
                                        FundingType fundingType,
-                                       OrganisationTypeEnum organisationType) {
+                                       OrganisationTypeEnum organisationType,
+                                       boolean leadOrganisation) {
         this.projectName = project.getName();
         this.projectId = project.getId();
         this.organisationId = organisationId;
@@ -36,6 +38,7 @@ public class ProjectYourFundingViewModel {
         this.competitionId = competitionId;
         this.overridingFundingRules = overridingFundingRules;
         this.fundingType = fundingType;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public String getProjectName() {
@@ -84,6 +87,15 @@ public class ProjectYourFundingViewModel {
 
     public boolean isBusiness() {
         return OrganisationTypeEnum.BUSINESS == organisationType;
+    }
+
+    /* view logic */
+    /*
+     * Will all lead applicants on a ktp competition be Knowledge Base
+     *
+     * */
+    public boolean hideAreYouRequestingFunding() {
+        return isKtpFundingType() && !leadOrganisation;
     }
 
 }
