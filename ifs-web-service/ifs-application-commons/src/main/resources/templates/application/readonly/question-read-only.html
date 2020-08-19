@@ -34,12 +34,12 @@
         </div>
 
         <th:block th:if="${model.hasAssessorResponse()}">
-            <h2 class="govuk-label govuk-!-margin-top-6">Assessor feedback</h2>
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Assessor feedback</h2>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <th:block th:each="feedback, iteration : ${model.feedback}">
-                        <div class="border-padding-needed">
-                            <h3 class="govuk-label" th:text="|Assessor ${iteration.count}|">Assessor</h3>
+                        <div class="govuk-!-padding-3 bordered govuk-!-margin-top-2">
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-1" th:text="|Assessor ${iteration.count}|">Assessor</h3>
                             <p class="govuk-body" th:text="${feedback}">Feedback text</p>
                         </div>
                     </th:block>
