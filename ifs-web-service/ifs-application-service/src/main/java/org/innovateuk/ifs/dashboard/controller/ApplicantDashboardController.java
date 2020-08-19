@@ -19,9 +19,9 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/applicant/dashboard")
-@SecuredBySpring(value = "Controller", description = "Each applicant has permission to view their own dashboard",
+@SecuredBySpring(value = "Controller", description = "Each applicant or kta has permission to view their own dashboard",
         securedType = ApplicantDashboardController.class)
-@PreAuthorize("hasAuthority('applicant')")
+@PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_advisor')")
 public class ApplicantDashboardController {
 
     @Autowired

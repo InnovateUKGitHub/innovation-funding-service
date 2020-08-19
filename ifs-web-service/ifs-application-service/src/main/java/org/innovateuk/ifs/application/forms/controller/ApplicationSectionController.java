@@ -43,7 +43,7 @@ public class ApplicationSectionController {
     private ApplicationRestService applicationRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
+    @PreAuthorize("hasAnyAuthority('support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_advisor')")
     @GetMapping("/{sectionType}/{organisationId}")
     public String redirectToSectionManagement(@PathVariable SectionType sectionType,
                                               @PathVariable long applicationId,
@@ -57,7 +57,7 @@ public class ApplicationSectionController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('applicant')")
+    @PreAuthorize("hasAnyAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable SectionType sectionType,
                                     @PathVariable long applicationId,
