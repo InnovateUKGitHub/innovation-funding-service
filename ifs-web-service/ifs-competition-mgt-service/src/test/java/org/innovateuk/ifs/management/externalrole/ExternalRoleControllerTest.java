@@ -22,10 +22,7 @@ public class ExternalRoleControllerTest extends BaseControllerMockMVCTest<Extern
 
     @Override
     protected ExternalRoleController supplyControllerUnderTest() {
-
-        ExternalRoleController controller = new ExternalRoleController();
-        ReflectionTestUtils.setField(controller, "externalRoleLinkEnabled", true);
-        return controller;
+        return new ExternalRoleController();
     }
 
     @InjectMocks

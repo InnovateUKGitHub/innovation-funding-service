@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -336,6 +337,8 @@ public class UserManagementControllerTest extends AbstractAsyncWaitMockMVCTest<U
 
     @Override
     protected UserManagementController supplyControllerUnderTest() {
-        return new UserManagementController();
+        UserManagementController controller = new UserManagementController();
+        ReflectionTestUtils.setField(controller, "externalRoleLinkEnabled", true);
+        return controller;
     }
 }
