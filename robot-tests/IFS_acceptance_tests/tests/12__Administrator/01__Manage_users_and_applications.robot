@@ -27,6 +27,8 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7483 Inactive innovation lead appearing in list of available innovation leads
 ...
+...               IFS-7975 KTP Invite new KTA
+...
 ...               IFS-7976 IFS Admin can add a role profile of KTA to an external user
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
@@ -37,16 +39,23 @@ Resource          ../../resources/common/PS_Common.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
-${localEmailInvtedUser}   ifs.innovationLead@innovateuk.ukri.test
-${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.ukri.org
-${invalidEmail}           test@test.com
-${adminChangeEmailOld}    aaron.powell@example.com
-${adminChangeEmailNew}    aaron.powell2@example.com
-${supportChangeEmailOld}  jacqueline.white@gmail.com
-${supportChangeEmailNew}  jacqueline.white2@gmail.com
-${newPendingEmail}        gintare@tester.com
-${emailToChange}          steve.smith@empire.com
-
+${localEmailInvtedUser}                 ifs.innovationLead@innovateuk.ukri.test
+${remoteEmailInvtedUser}                ifs.innovationLead@innovateuk.ukri.org
+${invalidEmail}                         test@test.com
+${adminChangeEmailOld}                  aaron.powell@example.com
+${adminChangeEmailNew}                  aaron.powell2@example.com
+${supportChangeEmailOld}                jacqueline.white@gmail.com
+${supportChangeEmailNew}                jacqueline.white2@gmail.com
+${newPendingEmail}                      gintare@tester.com
+${emailToChange}                        steve.smith@empire.com
+${inviteExternalUserText}               Invite a new external user
+${firstNameInvalidCharacterMessage}     Your first name should have at least 2 characters.
+${lastNameInvalidCharacterMessage}      Your first name should have at least 2 characters.
+${firstNameValidationMessage}           Please enter a first name.
+${lastNameValidationMessage}            Please enter a last name.
+${emailAddressValidationMessage}        Please enter an email address.
+${invalidKTNDomainValidationMessage}    Users cannot be registered without a Knowledge Transfer Network email address.
+${validKTNDomainEmail}                  jake.Rayan@ktn-uk.test
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
     [Documentation]  INFUND-604
@@ -345,6 +354,32 @@ Deactivated innovation lead cannot be selected on initial details
     When the user clicks the button/link      css = button[type=submit]
     Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
+Invite a new external user field validations
+    [Documentation]  IFS-7975
+    Given the user clicks the button/link                                          link = Manage users
+    When the user clicks the button/link                                           link = Invite a new external user
+    And the user clicks the button/link                                            jQuery = button:contains("Save and return")
+    Then the user should see invite a new external user field validation message
+
+KTN email domain validations
+    [Documentation]  IFS-7975
+    Given the user fills invite a new external user fields     Jake  Rayan  ${invalidEmail}
+    When the user clicks the button/link                       jQuery = button:contains("Save and return")
+    Then the user should see a field and summary error         ${invalidKTNDomainValidationMessage}
+
+Administrator can cancel the new external user details entered
+    [Documentation]  IFS-7975
+    Given the user fills invite a new external user fields          Jake  Rayan  ${validKTNDomainEmail}
+    When the user clicks the button/link                            link = Cancel
+    Then the user should see the element                            link = Invite a new external user
+
+Administrator can sucessfully save and return to the manage users page
+    [Documentation]  IFS-7975
+    Given the user clicks the button/link                          link = Invite a new external user
+    When the user fills invite a new external user fields          Jake  Rayan  ${validKTNDomainEmail}
+    And the user clicks the button/link                            jQuery = button:contains("Save and return")
+    Then the user should see the element                           link = Invite a new external user
+
 IFS Admin cannot add a role profile of KTA to a non-KT Network user
     [Documentation]  IFS-7976
     Given the user navigates to the page                     ${server}/management/admin/users/active
@@ -595,3 +630,27 @@ the finance user searches for an assessor
     the user clicks the button/link         css = input[type="submit"]
     the user should see the element         jQuery = p:contains("${searchTerm}") ~ p:contains("Assessor")
     the user clicks the button/link         link = View details
+
+the user should see invite external user fields
+    the user should see the element     jQuery = h1:contains("${inviteExternalUserText}")
+    the user should see the element     id = firstName
+    the user should see the element     id = lastName
+    the user should see the element     id = emailAddress
+    the user should see the element     jQuery = label:contains("Knowledge transfer adviser")
+    the user should see the element     jQuery = button:contains("Save and return")
+    the user should see the element     link = Cancel
+    the user should see the element     link = Back to manage Users
+    the user should see the element     link = Return to manage Users
+
+the user should see invite a new external user field validation message
+    The user should see a field and summary error     ${firstNameInvalidCharacterMessage}
+    The user should see a field and summary error     ${firstNameValidationMessage}
+    The user should see a field and summary error     ${lastNameValidationMessage}
+    The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
+    The user should see a field and summary error     ${emailAddressValidationMessage}
+
+the user fills invite a new external user fields
+    [Arguments]  ${firstName}  ${lastName}  ${emailAddress}
+    the user enters text to a text field     id = firstName  ${firstName}
+    the user enters text to a text field     id = lastName  ${lastName}
+    the user enters text to a text field     id = emailAddress  ${emailAddress}

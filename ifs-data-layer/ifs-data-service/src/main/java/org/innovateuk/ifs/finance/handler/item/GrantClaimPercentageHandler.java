@@ -14,8 +14,10 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 
 /**
@@ -57,7 +59,7 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     }
 
     @Override
-    protected Optional<GrantClaimPercentage> intialiseCost(Finance finance) {
+    protected List<GrantClaimPercentage> intialiseCosts(Finance finance) {
         Competition competition = finance.getCompetition();
         GrantClaimPercentage costItem = new GrantClaimPercentage(finance.getId());
         if (competition.isFullyFunded()) {
@@ -65,6 +67,6 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
         } else {
             costItem.setPercentage(null);
         }
-        return Optional.of(costItem);
+        return newArrayList(costItem);
     }
 }

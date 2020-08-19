@@ -109,6 +109,12 @@ Publish openshift configuration files to nexus (not to be used to publish from l
 
      ./gradlew publish -Pifs.version=<version> -Pnexus_username=<your_nexus_userName> -Pnexus_password=<your_nexus_password> 
 
+## Auto sign in issue in chrome
+If you notice the behaviour in chrome browsers, where if you click Sign out link, and it keeps logging you in and taking you to dashboard but not showing login screen then below flags needs to be disabled in chrome settings.
+
+     chrome://flags/#same-site-by-default-cookies => Disabled
+     chrome://flags/#cookies-without-same-site-must-be-secure => Disabled
+
 ## Pull docker images from nexus
 Instead of building individual service docker images locally, we can pull docker images from nexus and build/deploy services faster
 There are two steps to pull service docker images from nexus. 

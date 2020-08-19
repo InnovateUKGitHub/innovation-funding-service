@@ -8,7 +8,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -106,7 +105,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
 
         for (Map.Entry<FinanceRowType, FinanceRowCostCategory> costCategoryDetails : spendRows.entrySet()) {
-            CostCategory costCategory = findIndustrialCostCategoryForName(costCategoryType, costCategoryDetails.getKey().getName());
+            CostCategory costCategory = findIndustrialCostCategoryForName(costCategoryType, costCategoryDetails.getKey().getDisplayName());
             valuesPerCostCategory.put(costCategory, costCategoryDetails.getValue().getTotal());
         }
 
@@ -138,7 +137,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
 
     private CostCategory findAcademicCostCategoryForName(CostCategoryType costCategoryType, AcademicCostCategoryGenerator academicCostCategoryMatch) {
         return simpleFindFirst(costCategoryType.getCostCategories(), cat ->
-                        cat.getName().equals(academicCostCategoryMatch.getName()) &&
+                        cat.getName().equals(academicCostCategoryMatch.getDisplayName()) &&
                         cat.getLabel().equals(academicCostCategoryMatch.getLabel()))
                 .orElse(null);
     }
