@@ -121,14 +121,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         }
         if (shouldImmediatelyActivate(user)) {
             result = result
-                    .andOnSuccess(this::activateUser)
-                    .andOnSuccess(u -> {
-                        if (u.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
-                            return sendApplicantDiversitySurvey(u)
-                                    .andOnSuccessReturn(()  -> u);
-                        }
-                        return serviceSuccess(u);
-                    });
+                    .andOnSuccess(this::activateUser);
         }
         return result
                 .andOnSuccessReturn(userMapper::mapToResource);
