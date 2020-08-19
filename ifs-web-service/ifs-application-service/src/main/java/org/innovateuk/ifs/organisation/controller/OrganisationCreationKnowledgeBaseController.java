@@ -182,7 +182,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         OrganisationResource organisationResource = new OrganisationResource();
         organisationResource.setName(knowledgeBaseCreateForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
-        organisationResource.setInternational(false);
+        organisationResource.setRegistrationNumber(knowledgeBaseCreateForm.get().getIdentification());
         organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, knowledgeBaseCreateForm)));
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
