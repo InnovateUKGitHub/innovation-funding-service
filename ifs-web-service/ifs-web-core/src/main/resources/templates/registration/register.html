@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org"de>
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account - Your Details ',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
@@ -20,7 +20,7 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.pageTitle},subTitle=${model.subTitle},size='govuk-heading-xl'" />
 
-        <p class="govuk-body">To continue, you need to create an account with the Innovation Funding Service.</p>
+        <p class="govuk-body" th:text="${model.guidance}"></p>
 
         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" novalidate="novalidate">
             <div class="govuk-form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'govuk-form-group--error'">
@@ -67,7 +67,9 @@
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
             </div>
 
-            <th:block th:if="${model.addressRequired}" th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
+            <div class="govuk-!-margin-bottom-6" th:if="${model.addressRequired}">
+                <th:block th:insert="fragments/addresses :: address-details" th:with="form=${form}, legend='Address search', formHint=${model.postcodeGuidance}"/>
+            </div>
 
             <div th:if="${model.phoneRequired}" class="govuk-form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'govuk-form-group--error'">
                 <label class="govuk-label govuk-label--s" for="phoneNumber">

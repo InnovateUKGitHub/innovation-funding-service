@@ -132,7 +132,9 @@ public class ExternalUserRegistrationController {
                         .withInvitee(true)
                         .withRole(invite.getRole().getDisplayName())
                         .withPageTitle("Create " + invite.getRole().getDisplayName() + " account")
-                        .withSubTitle("");
+                        .withSubTitle("")
+                        .withPostcodeGuidance(null)
+                        .withGuidance(null);
             }
             model.addAttribute("model", viewModelBuilder.build());
             return "registration/register";

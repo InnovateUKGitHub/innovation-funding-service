@@ -11,7 +11,9 @@ import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteReposit
 import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
+import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.repository.AllInviteRepository;
 import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -93,6 +95,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     @Autowired
     private ExternalFinanceRepository externalFinanceRepository;
 
+    @Autowired
+    private AllInviteRepository allInviteRepository;
+
     @Override
     @Transactional
     public ServiceResult<UserResource> createUser(UserCreationResource user) {
@@ -115,7 +120,15 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                     .andOnSuccess(savedUser -> handleInvite(savedUser, user));
         }
         if (shouldImmediatelyActivate(user)) {
-            result = result.andOnSuccess(this::activateUser);
+            result = result
+                    .andOnSuccess(this::activateUser)
+                    .andOnSuccess(u -> {
+                        if (u.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
+                            return sendApplicantDiversitySurvey(u)
+                                    .andOnSuccessReturn(()  -> u);
+                        }
+                        return serviceSuccess(u);
+                    });
         }
         return result
                 .andOnSuccessReturn(userMapper::mapToResource);
@@ -146,7 +159,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             externalFinanceInvite.ifPresent(this::updateCompetitionFinanceInviteStatus);
             externalFinanceInvite.ifPresent(invite -> associateCompetitionFinanceUserWithCompetition(invite.getTarget(), created));
 
-            //TODO KTA INVITE
+            Invite invite =  allInviteRepository.getByHash(user.getInviteHash());
+            if (invite == null) {
+                allInviteRepository.save(invite.open());
+            }
         }
         return serviceSuccess(created);
     }
