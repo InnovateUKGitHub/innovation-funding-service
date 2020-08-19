@@ -19,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +26,8 @@ import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingInt;
 import static org.innovateuk.ifs.user.resource.Role.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.sort;
 
 /**
  * This Controller redirects the request from http://<domain>/ to the relevant user dashboard based on the user's
@@ -59,16 +59,13 @@ public class HomeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserResource user = (UserResource) authentication.getDetails();
+        Set<Role> roles = getMultiDashboardRoles(user);
 
-        if (userShouldViewDashboardSelection(user)) {
+        if (roles.size() > 1) {
             return "redirect:/dashboard-selection";
         }
 
         return getRedirectUrlForUser(user);
-    }
-
-    private boolean userShouldViewDashboardSelection(UserResource user) {
-        return user.hasMoreThanOneRoleOf(multiDashboardRoles()) || user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR);
     }
 
     @GetMapping("/dashboard-selection")
@@ -80,11 +77,22 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserResource user = (UserResource) authentication.getDetails();
-        if (!userShouldViewDashboardSelection(user)) {
+        Set<Role> roles = getMultiDashboardRoles(user);
+
+        if (roles.size() < 1) {
             return navigationUtils.getRedirectToLandingPageUrl(request);
         }
 
-        return viewDashboardSelection(request, model, user);
+        return viewDashboardSelection(request, model, roles);
+    }
+
+    private Set<Role> getMultiDashboardRoles(UserResource user) {
+        Set<Role> dashboardRoles = user.getRoles().stream().filter(multiDashboardRoles()::contains).collect(Collectors.toSet());
+
+        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
+            dashboardRoles = createKtaDashboardRoles(user, dashboardRoles);
+        }
+        return dashboardRoles;
     }
 
     private Set<Role> createKtaDashboardRoles(UserResource user, Set<Role> dashboardRoles) {
@@ -108,18 +116,12 @@ public class HomeController {
         return dashboardRoles;
     }
 
-    private String viewDashboardSelection(HttpServletRequest request, Model model, UserResource user) {
-        Set<Role> dashboardRoles = user.getRoles().stream().filter(multiDashboardRoles()::contains).collect(Collectors.toSet());
-
-        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
-            dashboardRoles = createKtaDashboardRoles(user, dashboardRoles);
+    private String viewDashboardSelection(HttpServletRequest request, Model model, Set<Role> roles) {
+        if (roles.size() == 1) {
+            return navigationUtils.getRedirectToDashboardUrlForRole(roles.stream().findAny().get());
         }
 
-        if (dashboardRoles.size() == 1) {
-            return navigationUtils.getRedirectToDashboardUrlForRole(dashboardRoles.stream().findAny().get());
-        }
-
-        List<DashboardPanel> dashboardPanels = simpleMap(dashboardRoles, role -> createDashboardPanelForRole(request, role));
+        List<DashboardPanel> dashboardPanels = simpleMap(roles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
                 comparingInt(panel -> asList(multiDashboardRoles()).indexOf(panel.getRole())));
 

@@ -4,8 +4,11 @@ import com.google.common.collect.Sets;
 import org.innovateuk.ifs.identity.Identifiable;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Role defines database relations and a model to use client side and server side.
@@ -116,4 +119,10 @@ public enum Role implements Identifiable {
         return EnumSet.of(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
     }
 
+    public List<String> getAuthorities() {
+        if (this == KNOWLEDGE_TRANSFER_ADVISOR) {
+            return newArrayList(this.name, ASSESSOR.name);
+        }
+        return newArrayList(this.name);
+    }
 }
