@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="score-details(model)">
-    <div class="govuk-form-group">
-        <th:block th:if="${model.hasScore()}">
-            <p th:text="${#numbers.formatDecimal(model.getAverageScore(), 1, 'DEFAULT', 2, 'DEFAULT')}"></p>
-        </th:block>
-    </div>
+<th:block th:fragment="generic(model)">
+    <th:block th:if="${model.hasScore()}">
+        <!-- TODO: need access to ${question.getAssessorMaximumScore()} -->
+        <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Average score ${question.getAverageScore()} / 10|">No feedback provided</span>
+    </th:block>
+    <th:block th:if="${!model.hasScore()}">
+        <span class="section-status govuk-hint govuk-!-margin-0 float-right">No feedback provided</span>
+    </th:block>
 </th:block>
+
+<th:block th:fragment="application-details (model)">
+<!--    TODO: pick up scope value if question.name == 'Scope' -->
+<!--    <th:block th:if="${model.hasScore()}">-->
+<!--        <span class="section-status govuk-hint govuk-!-margin-0 float-right">Show a score</span>-->
+<!--    </th:block>-->
+<!--    <th:block th:if="${model.name != 'Scope'}">-->
+<!--        <span class="section-status govuk-hint govuk-!-margin-0 float-right">No feedback provided</span>-->
+<!--    </th:block>-->
+<!--    <th:block th:if="${model.name == 'Scope'}">-->
+<!--        <span class="section-status govuk-hint govuk-!-margin-0 float-right">Scope 0/2</span>-->
+<!--    </th:block>-->
+    <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|application-details: ${model.name}|">application-details:</span>
+</th:block>
+
+<!-- TODO: confirm what should appear in each section -->
+<th:block th:fragment="empty (model)"></th:block>
+
+<th:block th:fragment="research-category (model)">
+    <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|research-category: ${model.name}|">research-category:</span>
+</th:block>
+
+<th:block th:fragment="finance-summary (model)"></th:block>
+
+<th:block th:fragment="application-team (model)">
+    <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|application-team: ${model.name}|">application-team:</span>
+</th:block>
+
+<th:block th:fragment="grant-transfer-details(model)"></th:block>
+
+<th:block th:fragment="grant-agreement(model)"></th:block>
+
+<th:block th:fragment="terms-and-conditions(model)"></th:block>
+
+<th:block th:fragment="terms-and-conditions-assessment(model)"></th:block>
