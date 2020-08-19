@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
@@ -37,7 +38,6 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
 @Component
@@ -84,20 +84,22 @@ public class ApplicationFundingBreakdownViewModelPopulator {
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
         long leadOrganisationId = application.getLeadOrganisationId();
+        List<FinanceRowType> types = competition.getFinanceRowTypes().stream().filter(FinanceRowType::isCost).collect(toList());
 
         List<BreakdownTableRow> rows = organisations.stream()
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
                 .collect(toList());
 
         if (!application.isSubmitted()) {
-            rows.addAll(pendingOrganisations(applicationId));
+            rows.addAll(pendingOrganisations(applicationId, types));
         }
 
         return new ApplicationFundingBreakdownViewModel(applicationId,
                 competition.getName(),
                 rows,
                 application.isCollaborativeProject(),
-                competition.getFinanceRowTypes(),
+                competition.getFundingType() == FundingType.KTP,
+                types,
                 finances.values().stream().anyMatch(ApplicationFinanceResource::isVatRegistered));
     }
 
@@ -108,12 +110,12 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .findFirst();
     }
 
-    private Collection<BreakdownTableRow> pendingOrganisations(long applicationId) {
+    private Collection<BreakdownTableRow> pendingOrganisations(long applicationId, List<FinanceRowType> types) {
         return inviteService.getPendingInvitationsByApplicationId(applicationId).stream()
                 .filter(ApplicationInviteResource::isInviteNameConfirmed)
                 .map(ApplicationInviteResource::getInviteOrganisationNameConfirmedSafe)
                 .distinct()
-                .map(BreakdownTableRow::pendingOrganisation)
+                .map((name) -> BreakdownTableRow.pendingOrganisation(name, types))
                 .collect(toList());
     }
 
@@ -127,16 +129,12 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 organisationText(application, lead),
                 financeLink.isPresent(),
                 financeLink.orElse(null),
-                finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, LABOUR)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, OVERHEADS)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, PROCUREMENT_OVERHEADS)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, MATERIALS)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, CAPITAL_USAGE)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, SUBCONTRACTING_COSTS)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, TRAVEL)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, OTHER_COSTS)).orElse(BigDecimal.ZERO),
-                finance.map(appFinance -> getCategoryOrZero(appFinance, VAT)).orElse(BigDecimal.ZERO)
+                competition.getFinanceRowTypes().stream()
+                    .filter(FinanceRowType::isCost)
+                        .collect(toMap(Function.identity(),
+                                type -> finance.map(f -> f.getFinanceOrganisationDetails().get(type).getTotal()).orElse(BigDecimal.ZERO)
+                        )),
+                finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO)
         );
     }
 

@@ -52,8 +52,6 @@ public class YourProjectCostsViewModelPopulator {
 
         boolean includeVat = STANDARD_WITH_VAT.equals(competition.getApplicationFinanceType());
 
-        boolean procurementCompetition = FundingType.PROCUREMENT == competition.getFundingType();
-
         return new YourProjectCostsViewModel(applicationId,
                 competition.getName(),
                 sectionId,
@@ -65,7 +63,8 @@ public class YourProjectCostsViewModelPopulator {
                 application.getName(),
                 organisation.getName(),
                 getYourFinancesUrl(applicationId, organisationId, internalUser),
-                procurementCompetition,
+                FundingType.PROCUREMENT == competition.getFundingType(),
+                FundingType.KTP == competition.getFundingType(),
                 competition.getFinanceRowTypes(),
                 competition.isOverheadsAlwaysTwenty(),
                 CovidType.ADDITIONAL_FUNDING.equals(competition.getCovidType()));

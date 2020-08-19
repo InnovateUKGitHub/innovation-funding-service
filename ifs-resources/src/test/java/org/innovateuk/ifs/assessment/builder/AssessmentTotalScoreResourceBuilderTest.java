@@ -12,8 +12,8 @@ public class AssessmentTotalScoreResourceBuilderTest {
 
     @Test
     public void buildOne() throws Exception {
-        int expectedTotalScoreGiven = 57;
-        int expectedTotalScorePossible = 200;
+        Integer expectedTotalScoreGiven = 57;
+        Integer expectedTotalScorePossible = 200;
 
         AssessmentTotalScoreResource assessmentTotalScoreResource = newAssessmentTotalScoreResource()
                 .withTotalScoreGiven(expectedTotalScoreGiven)
@@ -35,11 +35,11 @@ public class AssessmentTotalScoreResourceBuilderTest {
                 .build(2);
 
         AssessmentTotalScoreResource first = assessmentTotalScoreResources.get(0);
-        assertEquals(expectedTotalScoreGivens[0].intValue(), first.getTotalScoreGiven());
-        assertEquals(expectedTotalScorePossibles[0].intValue(), first.getTotalScorePossible());
+        assertEquals(expectedTotalScoreGivens[0], first.getTotalScoreGiven());
+        assertEquals(expectedTotalScorePossibles[0], first.getTotalScorePossible());
 
         AssessmentTotalScoreResource second = assessmentTotalScoreResources.get(1);
-        assertEquals(expectedTotalScoreGivens[1].intValue(), second.getTotalScoreGiven());
-        assertEquals(expectedTotalScorePossibles[1].intValue(), second.getTotalScorePossible());
+        assertEquals(expectedTotalScoreGivens[1], second.getTotalScoreGiven());
+        assertEquals(expectedTotalScorePossibles[1], second.getTotalScorePossible());
     }
 }

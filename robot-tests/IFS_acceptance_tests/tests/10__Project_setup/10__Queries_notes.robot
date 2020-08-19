@@ -20,6 +20,8 @@ Documentation     INFUND-4840 As a project finance team member I want to be able
 ...               IFS-2746 External queries redesign: query statuses and banner messages
 ...
 ...               IFS-3559 Email subject for new finance queries to include competition name and application ID
+...
+...               IFS-7215 Project finance user and lead applicant can upload multiple documents of different file types as a part of finance queries and response to it.
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -61,25 +63,39 @@ Viability and eligibility sections both available
     Then the user should see the option in the drop-down menu   Viability      id = section
     And the user should see the option in the drop-down menu    Eligibility    id = section
 
-Project finance user can upload a pdf file
-    [Documentation]    INFUND-4840
+Project finance user can upload a pdf file and remove it
+    [Documentation]    INFUND-4840, IFS-7215
     [Tags]  HappyPath
-    Given the user uploads the file       name = attachment  ${valid_pdf}
-    Then the user should see the element  jQuery = a:contains("${valid_pdf}")+ .button-clear:contains("Remove")
+    Given the user uploads the file           name = attachment  ${5mb_pdf}
+    Then the user should see the element      jQuery = a:contains("${5mb_pdf}")+ .button-clear:contains("Remove")
+    And the user can remove an attachment     ${5mb_pdf}
 
-Project finance can remove the file
-    [Documentation]    INFUND-4840
+Project finance user can upload a spreadsheet(.ods) file and remove it
+    [Documentation]    IFS-7215
     [Tags]  HappyPath
-    Given the user navigates to the page        ${dreambit_finance_checks}/query/new-query
-    When the user clicks the button/link        name = removeAttachment
-    Then the user should not see the element    jQuery = h3:contains("Supporting documentation") + ul:contains("${valid_pdf}") .button-clear:contains("Remove")
-    And the user should not see an error in the page
+    Given the user uploads the file           name = attachment  ${ods_file}
+    Then the user should see the element      jQuery = a:contains("${ods_file}")+ .button-clear:contains("Remove")
+    And the user can remove an attachment     ${ods_file}
 
-Project finance user can upload more than one file and remove it
-    [Documentation]    INFUND-4840
+Project finance user can upload a text document(.odt) file and remove it
+    [Documentation]    IFS-7215
+    [Tags]  HappyPath
+    Given the user uploads the file           name = attachment  ${valid_odt}
+    Then the user should see the element      jQuery = a:contains("${valid_odt}")+ .button-clear:contains("Remove")
+    And the user can remove an attachment     ${valid_odt}
+
+Project finance user cannot upload a document type that is not allowed
+    [Documentation]    IFS-7215
+    [Tags]  HappyPath
+    Given the user uploads the file            name = attachment  ${text_file}
+    Then the user should see a field error     ${finance_query_notes_filetype_error}
+    And the user clicks the button/link        jQuery = button:contains("Remove")
+
+Project finance user can upload more than one file and remove them
+    [Documentation]    INFUND-4840, IFS-7215
     [Tags]
-    Given the user uploads the file        name = attachment    ${valid_pdf}
-    Then the user clicks the button/link  jQuery = a:contains("${valid_pdf}")+ .button-clear:contains("Remove")
+    Given the user uploads multiple file types as attachment and removes them    ${valid_pdf}  ${ods_file}  ${valid_odt}
+    Then the user should not see an error in the page
 
 Post new query client and server side validations
     [Documentation]    INFUND-4840
@@ -103,11 +119,11 @@ New query can be cancelled
     And the user should not see the element     css = .editor
 
 Query can be re-entered (Eligibility)
-    [Documentation]    INFUND-4840
+    [Documentation]    INFUND-4840, IFS-7215
     [Tags]  HappyPath
     Given the user navigates to the page         ${dreambit_finance_checks}/query
     When the user clicks the button/link         jQuery = .govuk-button:contains("Post a new query")
-    Then the user enters a new query details
+    Then the user enters a new query details     ${valid_pdf}  ${ods_file}  ${valid_odt}
 
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
@@ -147,14 +163,20 @@ Queries show in reverse chronological order
     Given the user selects the option from the drop-down menu  All  id = querySection
     Then the user should see list of posted queries
 
-Applicant - Finance contact can view query
+Applicant - Finance contact can view the query
     [Documentation]    INFUND-4843
     [Tags]  HappyPath
-    Given log in as a different user      &{PublicSector_lead_applicant_credentials}
-    When the user navigates to the page   ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
-    Then The user clicks the button/link  jQuery = h2:contains("an eligibility query's title")
-    And the user should see the element   jQuery = h2:contains("a viability query's title")
-    And open pdf link                     jQuery = li:nth-child(1):contains("testing") a
+    Given log in as a different user                 &{PublicSector_lead_applicant_credentials}
+    When the user navigates to the page              ${server}/project-setup/project/${Queries_Application_Project}/finance-checks
+    Then The user clicks the button/link             jQuery = h2:contains("an eligibility query's title")
+    And the user should see the element              jQuery = h2:contains("a viability query's title")
+
+Applicant - Finance Contact can view all the attachments and download them
+    [Documentation]   IFS-7215
+    [Tags]  HappyPath
+    Given the user should see all the attachments
+    And open pdf link                                 jQuery = a:contains("${valid_pdf}")
+    And the user is able to download attachments      ${ods_file}  ${valid_odt}
 
 Applicant - Response to query validations
     [Documentation]  INFUND-4843 IFS-2746
@@ -172,15 +194,22 @@ Applicant - Query response can be posted
     Then the user should not see the element  jQuery = .govuk-button:contains("Post response")
     And the user should see the element       jQuery = h2:contains("an eligibility") .section-awaiting
     And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") small:contains("${today}")
-    And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documentation")
+    And the user should see the element       jQuery = .govuk-heading-s:contains("Becky Mason") ~ .govuk-heading-s:contains("Supporting documents")
 
-Applicant - Respond to older query
-    [Documentation]    INFUND-4843
+Applicant - Respond to older query and cannot upload any file other than allowed file types to the response
+    [Documentation]    IFS-7215
     [Tags]
     Given the user clicks the button/link      jQuery = #accordion-awaiting-queries-content-1 a:contains("Respond")   #an eligibility query response
-    When the user enters text to a text field  css = .editor    one more response to the eligibility query
-    Then the user clicks the button/link       jQuery = .govuk-button:contains("Post response")
-    And the user should see the element        jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
+    When the user uploads the file             name = attachment    ${text_file}
+    Then the user should see a field error     ${applicant_query_response_filetype_error}
+    And the user clicks the button/link        jQuery = button:contains("Remove")
+
+Applicant - Respond to older query and upload files(.xls, .pdf and .docx) to the response
+    [Documentation]    INFUND-4843, IFS-7215
+    [Tags]
+    Given the user enters a query response details     ${valid_pdf}  ${valid_docx}  ${excel_file}
+    When the user clicks the button/link               jQuery = .govuk-button:contains("Post response")
+    Then the user should see the element               jQuery = .panel + .panel:contains("Becky ")  #is the 2nd response
 
 Applicant - Repond to Viability query
     [Documentation]  IFS-2746
@@ -206,12 +235,16 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     When the user clicks the button/link  link = Queries (1)
     Then the user mark the discussion as resolved
 
-Project finance user can view the response and uploaded files
-    [Documentation]    INFUND-4843  IFS-2716
+Project finance user can view the response and supporting documents
+    [Documentation]   INFUND-4843  IFS-2716 IFS-7215
     [Tags]
-    [Setup]  log in as a different user   &{internal_finance_credentials}
-    Given the user navigates to the page  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
+    [Setup]  log in as a different user                      &{internal_finance_credentials}
+    When the user navigates to the page                     ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check
     Then the project finance user view the query details
+
+Project Finance user can doenload supporting documents
+    [Documentation]   IFS-7215
+    Given the user is able to download attachments    ${valid_docx}  ${excel_file}
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -278,7 +311,7 @@ Project finance can upload a pdf file to notes
     [Tags]
     Given the user clicks the button/link  jQuery = .govuk-button:contains("Create a new note")
     When the user uploads the file         name = attachment  ${valid_pdf}
-    Then the user should see the element   jQuery = h2:contains("Supporting documentation") + ul:contains("${valid_pdf}")
+    Then the user should see the element   jQuery = h2:contains("Supporting documents") + ul:contains("${valid_pdf}")
 
 Project finance can remove the file from notes
     [Documentation]    INFUND-4845
@@ -358,7 +391,7 @@ Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user uploads the file                  name = attachment    ${text_file}
-    Then the user should see a field error           ${wrong_filetype_validation_error}
+    Then the user should see a field error           ${finance_query_notes_filetype_error}
 
 Project finance can upload a pdf file to note comments
     [Documentation]    INFUND-7756
@@ -411,6 +444,38 @@ Custom Suite Setup
     set suite variable  ${today}
     The guest user opens the browser
 
+the user should see all the attachments
+    the user should see the element     jQuery = a:contains("${valid_pdf}")
+    the user should see the element     jQuery = a:contains("${ods_file}")
+    the user should see the element     jQuery = a:contains("${valid_odt}")
+
+the user can remove an attachment
+    [Arguments]  ${attachment_file}
+    the user clicks the button/link        name = removeAttachment
+    the user should not see the element    jQuery = h3:contains("Supporting documents") + ul:contains("${attachment_file}") .button-clear:contains("Remove")
+    the user should not see an error in the page
+
+the user uploads multiple file types as attachment and removes them
+    [Arguments]  ${file_type1}  ${file_type2}  ${file_type3}
+    the user uploads the file            name = attachment    ${file_type1}
+    the user clicks the button/link      jQuery = a:contains("${file_type1}")+ .button-clear:contains("Remove")
+    the user should not see the element  jQuery = a:contains("${file_type1}")+ .button-clear:contains("Remove")
+    the user uploads the file            name = attachment    ${file_type2}
+    the user clicks the button/link      jQuery = a:contains("${file_type2}")+ .button-clear:contains("Remove")
+    the user should not see the element  jQuery = a:contains("${file_type2}")+ .button-clear:contains("Remove")
+    the user uploads the file            name = attachment    ${file_type3}
+    the user clicks the button/link      jQuery = a:contains("${file_type3}")+ .button-clear:contains("Remove")
+    the user should not see the element  jQuery = a:contains("${file_type3}")+ .button-clear:contains("Remove")
+
+the user is able to download attachments
+    [Arguments]  ${attachment1}  ${attachment2}
+    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment1}
+    Download should be done
+    remove the file from the operating system   ${attachment1}
+    The user downloads the file                 ${PublicSector_lead_applicant_credentials["email"]}  ${server}/project-setup-management/project/${Queries_Application_Project}/finance-check  ${DOWNLOAD_FOLDER}/${attachment2}
+    Download should be done
+    remove the file from the operating system   ${attachment2}
+
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}
     the user clicks the button/link  jQuery = #accordion-queries-content-${section} a:contains("Mark as resolved")    #a viability query
@@ -444,10 +509,25 @@ the user should see post a new query sever side validations
     the user should not see an error in the page
 
 the user enters a new query details
+    [Arguments]  ${file1}  ${file2}  ${file3}
     the user enters text to a text field     id = queryTitle    an eligibility query's title
     the user enters text to a text field     css = .editor    this is some query text
-    the user uploads the file                name = attachment    ${valid_pdf}
-    the user uploads the file                name = attachment    ${valid_pdf}
+    the user uploads the file                name = attachment    ${file1}
+    the user should see the element          jQuery = a:contains("${file1}")+ .button-clear:contains("Remove")
+    the user uploads the file                name = attachment    ${file2}
+    the user should see the element          jQuery = a:contains("${file2}")+ .button-clear:contains("Remove")
+    the user uploads the file                name = attachment    ${file3}
+    the user should see the element          jQuery = a:contains("${file3}")+ .button-clear:contains("Remove")
+
+the user enters a query response details
+    [Arguments]  ${file-1}  ${file-2}  ${file-3}
+    the user enters text to a text field     css = .editor    this is some query text
+    the user uploads the file                name = attachment    ${file-1}
+    the user should see the element          jQuery = a:contains("${file-1}")+ .button-clear:contains("Remove")
+    the user uploads the file                name = attachment    ${file-2}
+    the user should see the element          jQuery = a:contains("${file-2}")+ .button-clear:contains("Remove")
+    the user uploads the file                name = attachment    ${file-3}
+    the user should see the element          jQuery = a:contains("${file-3}")+ .button-clear:contains("Remove")
 
 the user should see submitted query details
     the user expands the section         an eligibility query's title
@@ -506,11 +586,11 @@ the user mark the discussion as resolved
     [Teardown]  the user collapses the section      a viability query's title
 
 the project finance user view the query details
-    the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(6)  # View
-    the user expands the section      an eligibility query's title
-    the user should see the element   jQuery = .govuk-heading-s:contains("Becky") + p:contains("This is some response text")
-    the user should see the element   jQuery = .panel li:nth-of-type(1) a:contains("${valid_pdf}")
-    open pdf link                     jQuery = div:contains("Becky") ~ ul:contains("${valid_pdf}") a
+    the user clicks the button/link             css = table.table-progress tr:nth-child(1) td:nth-child(6)  # View
+    the user expands the section                an eligibility query's title
+    the user should see the element             jQuery = .govuk-heading-s:contains("Becky") + p:contains("This is some response text")
+    the user should see the element             jQuery = a:contains("${valid_docx}")
+    the user should see the element             jQuery = a:contains("${excel_file}")
 
 the user navigates to notes section
     the user clicks the button/link   css = table.table-progress tr:nth-child(1) td:nth-child(2)
