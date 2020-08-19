@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.application.finance.populator.util;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
+import org.innovateuk.ifs.competition.resource.CompetitionAssessmentConfigResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestService;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -10,13 +14,13 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.HttpServletUtil;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -26,9 +30,11 @@ import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.competition.builder.CompetitionAssessmentConfigResourceBuilder.newCompetitionAssessmentConfigResource;
+
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -46,31 +52,46 @@ public class FinanceLinksUtilTest {
     @InjectMocks
     private FinanceLinksUtil financeLinksUtil;
 
-    @Test
-    public void financesLinkForInternalUser() {
-        long applicationId = 1L;
+    private CompetitionResource competition;
+
+    private ApplicationResource application;
+
+    private OrganisationResource organisation;
+
+    private ProcessRoleResource processRole;
+
+    private  long userId = 4L;
+
+    private long applicationId = 1L;
+
+    @Before
+    public void setup() {
         long competitionId = 2L;
         long organisationId = 3L;
-        long userId = 4L;
 
-        UserResource user = newUserResource()
-                .withId(userId)
-                .withRoleGlobal(Role.IFS_ADMINISTRATOR)
-                .build();
-        CompetitionResource competition = newCompetitionResource()
+        competition = newCompetitionResource()
                 .withId(competitionId)
                 .withFundingType(GRANT)
                 .withFinanceRowTypes(Collections.singletonList(FinanceRowType.FINANCE))
                 .build();
-        ApplicationResource application = newApplicationResource()
+        application = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competition.getId())
+                .withApplicationState(ApplicationState.CREATED)
                 .build();
-        OrganisationResource organisation = newOrganisationResource().withId(organisationId).build();
-        ProcessRoleResource processRole = newProcessRoleResource()
+        organisation = newOrganisationResource().withId(organisationId).build();
+        processRole = newProcessRoleResource()
                 .withUserId(userId)
                 .withRole(Role.LEADAPPLICANT)
                 .withOrganisation(organisationId)
+                .build();
+    }
+
+    @Test
+    public void financesLinkForInternalUser() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.IFS_ADMINISTRATOR)
                 .build();
 
         when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
@@ -79,5 +100,111 @@ public class FinanceLinksUtilTest {
 
         assertTrue(financeLink.isPresent());
         assertEquals("/application/1/form/FINANCE/3", financeLink.get());
+    }
+
+    @Test
+    public void financesLinkForSupport() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.SUPPORT)
+                .build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertTrue(financeLink.isPresent());
+        assertEquals("/application/1/form/FINANCE/3", financeLink.get());
+    }
+
+    @Test
+    public void financesLinkForExternalFinance() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.EXTERNAL_FINANCE)
+                .build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertTrue(financeLink.isPresent());
+        assertEquals("/application/1/form/FINANCE/3", financeLink.get());
+    }
+
+    @Test
+    public void financesLinkForStakeHolder() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.STAKEHOLDER)
+                .build();
+        application = newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competition.getId())
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertTrue(financeLink.isPresent());
+        assertEquals("/application/1/form/FINANCE/3", financeLink.get());
+    }
+
+    @Test
+    public void financesLinkForLeadApplicant() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.LEADAPPLICANT)
+                .build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertTrue(financeLink.isPresent());
+        assertEquals("/application/1/form/FINANCE", financeLink.get());
+    }
+
+    @Test
+    public void financesLinkForCollaborator() {
+        long organisationId = 4L;
+
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.COLLABORATOR)
+                .build();
+        organisation = newOrganisationResource().withId(organisationId).build();
+        CompetitionAssessmentConfigResource assessmentConfigResource = newCompetitionAssessmentConfigResource().build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(anyLong())).thenReturn(RestResult.restSuccess(assessmentConfigResource));
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertFalse(financeLink.isPresent());
+    }
+
+    @Test
+    public void financesLinkForAssessor() {
+        UserResource user = newUserResource()
+                .withId(userId)
+                .withRoleGlobal(Role.ASSESSOR)
+                .build();
+        processRole = newProcessRoleResource()
+                .withUserId(userId)
+                .withRole(Role.ASSESSOR)
+                .build();
+        CompetitionAssessmentConfigResource assessmentConfigResource = newCompetitionAssessmentConfigResource()
+                .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+
+        when(userAuthenticationService.getAuthenticatedUser(any())).thenReturn(user);
+        when(competitionAssessmentConfigRestService.findOneByCompetitionId(anyLong())).thenReturn(RestResult.restSuccess(assessmentConfigResource));
+
+        Optional<String> financeLink = financeLinksUtil.financesLink(organisation, Collections.singletonList(processRole), user, application, competition);
+
+        assertTrue(financeLink.isPresent());
+        assertEquals("/assessment/application/1/detailed-finances/organisation/3", financeLink.get());
     }
 }
