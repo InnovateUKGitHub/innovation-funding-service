@@ -311,7 +311,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a KTA role")
     public boolean isGrantingKTARoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
-        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(KNOWLEDGE_TRANSFER_ADVISOR);
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @PermissionRule(value = "GRANT_ROLE", description = "An stakeholder can request applicant role")

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISOR;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 
 /**
  * A view model for serving page listing users to be managed by IFS Administrators
@@ -56,7 +56,7 @@ public class ViewUserViewModel {
     }
 
     public boolean isLinkVisibleToIfsAdmin() {
-        return isIfsAdmin() && !user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR) && isExternalRoleLinkEnabled();
+        return isIfsAdmin() && !user.hasRole(KNOWLEDGE_TRANSFER_ADVISER) && isExternalRoleLinkEnabled();
     }
 
     public boolean isCanEditUserDetails() {
