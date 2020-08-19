@@ -146,22 +146,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<User> handleInvite(User created, UserCreationResource user) {
         if (user.getInviteHash() != null) {
-
-            //TODO try calling invite repo once. Let descriminator do the work.
-            Optional<RoleInvite> roleInvite = internalUserInvite(user.getInviteHash());
-            roleInvite.ifPresent(this::updateInviteStatus);
-
-            Optional<StakeholderInvite> stakeholderInvite = getStakeholderInviteByHash(user.getInviteHash());
-            stakeholderInvite.ifPresent(this::updateStakeholderInviteStatus);
-            stakeholderInvite.ifPresent(invite -> associateUserWithCompetition(invite.getTarget(), created));
-
-            Optional<ExternalFinanceInvite> externalFinanceInvite = getCompetitionFinanceInviteByHash(user.getInviteHash());
-            externalFinanceInvite.ifPresent(this::updateCompetitionFinanceInviteStatus);
-            externalFinanceInvite.ifPresent(invite -> associateCompetitionFinanceUserWithCompetition(invite.getTarget(), created));
-
             Invite invite =  allInviteRepository.getByHash(user.getInviteHash());
-            if (invite == null) {
+            if (invite != null) {
                 allInviteRepository.save(invite.open());
+
+                if (invite instanceof StakeholderInvite) {
+                    associateUserWithCompetition(((StakeholderInvite) invite).getTarget(), created);
+                }
+                if (invite instanceof ExternalFinanceInvite) {
+                    associateCompetitionFinanceUserWithCompetition(((ExternalFinanceInvite) invite).getTarget(), created);
+                }
             }
         }
         return serviceSuccess(created);
@@ -207,18 +201,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
         newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
-        Optional<RoleInvite> roleInvite = internalUserInvite(userCreationResource.getInviteHash());
-        roleInvite.ifPresent(invite -> {
+
+        if (userCreationResource.getInviteHash() != null) {
+            Invite invite = allInviteRepository.getByHash(userCreationResource.getInviteHash());
             newUser.setEmail(invite.getEmail());
-            newUser.setRoles(new HashSet<>(getInternalRoleResources(invite.getTarget()).getSuccess()));
-            userCreationResource.setRole(invite.getTarget());
-        });
 
-        Optional<StakeholderInvite> stakeholderInvite = getStakeholderInviteByHash(userCreationResource.getInviteHash());
-        stakeholderInvite.ifPresent(invite -> newUser.setEmail(invite.getEmail()));
-
-        Optional<ExternalFinanceInvite> externalFinanceInvite = getCompetitionFinanceInviteByHash(userCreationResource.getInviteHash());
-        externalFinanceInvite.ifPresent(invite -> newUser.setEmail(invite.getEmail()));
+            if (invite instanceof RoleInvite) {
+                newUser.setRoles(new HashSet<>(getInternalRoleResources(((RoleInvite) invite).getTarget()).getSuccess()));
+                userCreationResource.setRole(((RoleInvite) invite).getTarget());
+            }
+        }
 
         return newUser;
     }
@@ -274,24 +266,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> associateCompetitionFinanceUserWithCompetition(Competition competition, User user) {
         externalFinanceRepository.save(new ExternalFinance(competition, user));
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
-        roleInvite.open();
-        roleInviteRepository.save(roleInvite);
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> updateStakeholderInviteStatus(StakeholderInvite stakeholderInvite) {
-        stakeholderInvite.open();
-        stakeholderInviteRepository.save(stakeholderInvite);
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> updateCompetitionFinanceInviteStatus(ExternalFinanceInvite externalFinanceInvite) {
-        externalFinanceInvite.open();
-        competitionFinanceInviteRepository.save(externalFinanceInvite);
         return serviceSuccess();
     }
 
