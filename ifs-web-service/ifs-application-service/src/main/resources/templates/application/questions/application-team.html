@@ -278,7 +278,7 @@
                                 <tbody class="govuk-table__body">
                                     <tr th:if="${#fields.hasErrors('ktaEmail')}">
                                         <td colspan="2">
-                                            <span class="govuk-error-message" th:each="err : ${#fields.errors('ktaEmail')}"
+                                            <span class="govuk-error-message govuk-!-margin-bottom-0" th:each="err : ${#fields.errors('ktaEmail')}"
                                                   th:text="${err}"/>
                                         </td>
                                     </tr>
@@ -310,7 +310,7 @@
                                 <tbody class="govuk-table__body">
                                 <tr th:if="${#fields.hasErrors('ktaEmail')}">
                                     <td colspan="3">
-                                                    <span class="govuk-error-message" th:each="err : ${#fields.errors('ktaEmail')}"
+                                                    <span class="govuk-error-message govuk-!-margin-bottom-0" th:each="err : ${#fields.errors('ktaEmail')}"
                                                           th:text="${err}"/>
                                     </td>
                                 </tr>
