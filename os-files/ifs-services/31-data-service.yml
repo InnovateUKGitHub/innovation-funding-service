@@ -202,6 +202,11 @@ items:
                     configMapKeyRef:
                       name: data-service-config
                       key: IFS_SYSTEM_INTERNAL_USER_EMAIL_DOMAINS
+                - name: IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN
+                  valueFrom:
+                    configMapKeyRef:
+                      name: data-service-config
+                      key: IFS_SYSTEM_KTA_USER_EMAIL_DOMAIN
                 - name: IFS_DOCUSIGN_API_ACCOUNT
                   valueFrom:
                     configMapKeyRef:

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.groups.Default;
+import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 
 /**
@@ -49,7 +51,7 @@ public class GrantClaimAmountHandler extends FinanceRowHandler<GrantClaimAmount>
     }
 
     @Override
-    protected Optional<GrantClaimAmount> intialiseCost(Finance finance) {
-        return Optional.of(new GrantClaimAmount(finance.getId()));
+    protected List<GrantClaimAmount> intialiseCosts(Finance finance) {
+        return newArrayList(new GrantClaimAmount(finance.getId()));
     }
 }
