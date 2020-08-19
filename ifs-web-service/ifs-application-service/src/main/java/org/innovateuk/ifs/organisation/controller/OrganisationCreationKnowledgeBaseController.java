@@ -38,6 +38,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
+import static org.innovateuk.ifs.address.resource.OrganisationAddressType.KNOWLEDGE_BASE;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.UNIVERSITY;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -90,7 +91,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
 
     private List<OrganisationTypeResource> getOrganisationTypes() {
 
-        EnumSet<OrganisationTypeEnum> allowedTypes = knowledgeBaseLeadTypes;
+        EnumSet<OrganisationTypeEnum> allowedTypes = knowledgeBaseTypes;
 
         List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess()
                 .stream()
@@ -182,12 +183,15 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         organisationResource.setName(knowledgeBaseCreateForm.get().getName());
         organisationResource.setOrganisationType(organisationTypeForm.get().getOrganisationType());
         organisationResource.setInternational(false);
-//        TODO sort saving address, wait until find out about unique names
-//        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(knowledgeBaseCreateForm));
+        organisationResource.setAddresses(singletonList(createOrganisationAddressResource(organisationResource, knowledgeBaseCreateForm)));
 
         organisationResource = organisationRestService.createOrMatch(organisationResource).getSuccess();
 
         return organisationJourneyEnd.completeProcess(request, response, userResource, organisationResource.getId());
+    }
+
+    private OrganisationAddressResource createOrganisationAddressResource(OrganisationResource organisationResource, Optional<KnowledgeBaseCreateForm> organisationDetailsForm) {
+        return new OrganisationAddressResource(organisationResource, createAddressResource(organisationDetailsForm), new AddressTypeResource(KNOWLEDGE_BASE.getId(), KNOWLEDGE_BASE.name()));
     }
 
     private AddressResource createAddressResource(Optional<KnowledgeBaseCreateForm> form) {

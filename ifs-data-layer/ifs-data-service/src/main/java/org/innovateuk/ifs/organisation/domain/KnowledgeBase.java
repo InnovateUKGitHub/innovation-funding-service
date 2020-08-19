@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.domain;
 
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
@@ -20,9 +21,8 @@ public class KnowledgeBase {
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
 
-    @OneToMany(mappedBy = "knowledgeBase",
-            cascade = CascadeType.ALL)
-    private List<KnowledgeBaseAddress> addresses = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    private Address address;
 
     KnowledgeBase() {
         // for ORM
@@ -69,12 +69,11 @@ public class KnowledgeBase {
         this.organisationType = organisationType;
     }
 
-    public List<KnowledgeBaseAddress> getAddresses() {
-        return addresses;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddresses(List<KnowledgeBaseAddress> addresses) {
-        this.addresses = addresses;
+    public void setAddress(Address address) {
+        this.address = address;
     }
-
 }

@@ -90,13 +90,13 @@ public class KnowledgeBaseCreateForm implements Serializable {
 
     @JsonIgnore
     public String getIdentification() {
-        if (rtoNumber != null) {
+        if (!rtoNumber.isEmpty()) {
             return rtoNumber;
         }
-        if (catapultNumber != null) {
+        if (!catapultNumber.isEmpty()) {
             return catapultNumber;
         }
-        if (universityNumber != null) {
+        if (!universityNumber.isEmpty()) {
             return universityNumber;
         }
         return null;
