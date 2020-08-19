@@ -330,9 +330,9 @@ the user fills in the funding information
     the user navigates to Your-finances page                        ${Application}
     the user clicks the button/link                                 link = Your funding
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
-    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP Application"    run keywords   the user selects the radio button     requestingFunding   true
+    Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP New Application"    run keywords   the user selects the radio button     requestingFunding   true
     ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
-    ...         ELSE IF   "${Application}" != "KTP Application"     run keywords   the user selects the radio button     requestingFunding   true
+    ...         ELSE IF   "${Application}" != "KTP New Application"     run keywords   the user selects the radio button     requestingFunding   true
     ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
     the user selects the radio button                               otherFunding   false
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
@@ -645,6 +645,19 @@ the user sets max available funding
     ${id} =  User gets competition config id for max funding  ${compId}
     User sets a max funding level for a competition           ${id}  ${amount}
 
+the user fills additional company costs
+    [Arguments]  ${description}  ${value}
+    the user enters text to a text field  css = textarea[id$="associateSalary.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="managementSupervision.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="capitalEquipment.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="otherCosts.description"]  ${description}
+    the user enters text to a text field  css = input[id$="associateSalary.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="managementSupervision.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
+
 the user selects organisation type as business
     [Arguments]  ${organisationTypeId}
     the user selects the radio button     organisationTypeId  ${organisationTypeId}
@@ -656,3 +669,11 @@ the user provides uk based organisation details
     the user enters text to a text field               name = organisationSearchName  ${org_search_name}
     the user clicks the button/link                    name = search-organisation
     the user clicks the button/link                    link = ${org}
+
+Existing user starts a new application
+    [Arguments]  ${competitionName}   ${organisationID}
+    the user select the competition and starts application     ${competitionName}
+    the user selects the radio button                          createNewApplication  true
+    the user clicks the button/link                            jQuery = button:contains("Continue")
+    the user selects the radio button                          selectedOrganisationId  ${organisationID}
+    the user clicks the button/link                            id = save-organisation-button

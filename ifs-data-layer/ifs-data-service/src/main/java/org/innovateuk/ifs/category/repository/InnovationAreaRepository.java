@@ -14,7 +14,7 @@ public interface InnovationAreaRepository extends CrudRepository<InnovationArea,
 
     InnovationArea findByName(String name);
 
-    List<InnovationArea> findAllByOrderByPriorityAsc();
+    List<InnovationArea> findAllByOrderByNameAsc();
 
     List<InnovationArea> findAll();
 }

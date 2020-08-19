@@ -25,9 +25,11 @@
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <th:block th:each="err : ${nonFormErrors}">
-                        <li th:if="${err.arguments == null or err.arguments.length == 0}" th:text="#{${errMsg}}"></li>
-                        <li th:if="${err.arguments != null and err.arguments.length == 1}" th:text="#{${errMsg}(${err.arguments[0]})}"></li>
-                        <li th:if="${err.arguments != null and err.arguments.length == 2}" th:text="#{${errMsg}(${err.arguments[0]},${err.arguments[1]})}"></li>
+                        <th:block th:each="errMsg, iterStat : ${err.codes}">
+                            <li th:if="${err.arguments == null or err.arguments.length == 0}" th:text="#{${errMsg}}"></li>
+                            <li th:if="${err.arguments != null and err.arguments.length == 1}" th:text="#{${errMsg}(${err.arguments[0]})}"></li>
+                            <li th:if="${err.arguments != null and err.arguments.length == 2}" th:text="#{${errMsg}(${err.arguments[0]},${err.arguments[1]})}"></li>
+                        </th:block>
                     </th:block>
                 </ul>
             </div>
@@ -119,7 +121,7 @@
                             </div>
                             <p data-md-to-html="" class="govuk-body wysiwyg-styles" th:text="${post.body}"></p>
                             <h3 th:unless="${post.attachments.isEmpty()}" class="govuk-heading-s">Supporting
-                                documentation</h3>
+                                documents</h3>
                             <ul class="govuk-list">
                                 <li th:each="attachment : ${post.attachments}">
                                     <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}"
@@ -184,10 +186,22 @@
                                      data-js-upload-file-input="attachment"
                                      data-js-number-of-files="10"
                                      data-js-upload-one-at-a-time="">
-                                    <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documentation</h2>
-                                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No
-                                        file currently
-                                        uploaded.</p>
+                                    <h2 class="govuk-heading-s govuk-!-margin-0">Supporting documents</h2>
+                                    <details class="govuk-details">
+                                        <summary class="govuk-details__summary">
+                                            <span class="govuk-details__summary-text">What file types can I upload?</span>
+                                        </summary>
+                                        <div class="govuk-details__text wysiwyg-styles">
+                                            <p class="govuk-body"><strong>You can only upload these file types</strong></p>
+                                            <ul class="govuk-list govuk-list--bullet">
+                                                <li>spreadsheet (.ods)</li>
+                                                <li>text document (.odt)</li>
+                                                <li>PDF (.pdf)</li>
+                                            </ul>
+                                            <p>Each document must be less than 10MB</p>
+                                        </div>
+                                    </details>
+                                    <p th:if="${model.newAttachmentLinks.isEmpty()}" class="govuk-body no-file-uploaded">No files have been uploaded yet.</p>
                                     <ul class="govuk-list file-list">
                                         <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}"
                                             class="success">
@@ -204,7 +218,6 @@
                                             </div>
                                         </li>
                                     </ul>
-                                    <h2 class="govuk-heading-s">Upload supporting documentation in pdf format</h2>
                                     <div th:class="${#fields.hasErrors('attachment')} ? 'govuk-form-group--error' : ''">
                                         <th:block th:if="${#fields.hasErrors('attachment')}">
                                             <span class="govuk-error-message" th:each="err : ${#fields.errors('attachment')}"

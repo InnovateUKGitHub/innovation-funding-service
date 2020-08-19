@@ -173,11 +173,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Column(name = "funding_type")
     private FundingType fundingType;
 
-    @ElementCollection(targetClass = FinanceRowType.class)
-    @JoinTable(name = "competition_finance_row_types", joinColumns = @JoinColumn(name = "competition_id"))
-    @Column(name = "finance_row_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Set<FinanceRowType> financeRowTypes = new HashSet<>();
+    @OneToMany(mappedBy = "competitionFinanceRowTypesId.competition")
+    @OrderBy("priority")
+    private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectStages> projectStages = new ArrayList<>();
@@ -266,12 +264,8 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
         this.covidType = covidType;
     }
 
-    public Set<FinanceRowType> getFinanceRowTypes() {
-        return financeRowTypes;
-    }
-
-    public void setFinanceRowTypes(Set<FinanceRowType> financeRowTypes) {
-        this.financeRowTypes = financeRowTypes;
+    public List<FinanceRowType> getFinanceRowTypes() {
+        return competitionFinanceRowTypes.stream().map(CompetitionFinanceRowTypes::getFinanceRowType).collect(toList());
     }
 
     public List<ProjectStages> getProjectStages() {
@@ -986,6 +980,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
                 .orElse(true)) ;
     }
 
+    public List<CompetitionFinanceRowTypes> getCompetitionFinanceRowTypes() {
+        return competitionFinanceRowTypes;
+    }
 
     public void setHasAssessmentStage(boolean hasAssessmentStage) {
         this.hasAssessmentStage = hasAssessmentStage;

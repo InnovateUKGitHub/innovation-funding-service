@@ -74,7 +74,6 @@ public class OtherFundingCostCategory implements FinanceRowCostCategory {
         return true;
     }
 
-    @Override
     public void setCosts(List<FinanceRowItem> costItems) {
         costs = costItems;
     }
