@@ -358,6 +358,7 @@ IFS Admin can add a role profile of KTA to a user in KT Network
     When the user selects a user to edit details             Alyssa  alyssa.smith@ktn-uk.test
     And the user adds a new external role profile of KTA
     Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
+    And the user should not see the element                  link = Add a new external role profile
 
 Comp Admin should be able to see the details of assessor with new role profile of KTA
     [Documentation]  IFS-7976
