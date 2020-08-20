@@ -19,7 +19,7 @@ public abstract class AbstractYourFundingAmountForm<T extends BaseOtherFundingRo
     }
 
     @Override
-    protected FinanceRowType financeType() {
+    public FinanceRowType financeType() {
         return GRANT_CLAIM_AMOUNT;
     }
 }

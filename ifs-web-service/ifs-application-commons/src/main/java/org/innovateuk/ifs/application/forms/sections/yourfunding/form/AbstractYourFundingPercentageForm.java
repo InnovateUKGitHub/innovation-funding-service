@@ -29,7 +29,7 @@ public abstract class AbstractYourFundingPercentageForm<T extends BaseOtherFundi
     }
 
     @Override
-    protected FinanceRowType financeType() {
+    public FinanceRowType financeType() {
         return FINANCE;
     }
 }
