@@ -209,10 +209,8 @@ The user must use an Innovate UK email
 
 Client side validations for invite new internal user
     [Documentation]  IFS-27
-    Given the user navigates to the page       ${server}/management/admin/invite-user
-    Then the user enters the text and checks for validation message   firstName  A  ${enter_a_first_name}  ${firstNameInvalidCharacterMessage}
-    And the user enters the text and checks for validation message    lastName  D  ${enter_a_last_name}  ${lastNameInvalidCharacterMessage}
-    And the user enters the text and checks for validation message    emailAddress  astle  Please enter an email address.  ${enter_a_valid_email}
+    When the user navigates to the page       ${server}/management/admin/invite-user
+    Then the user validates the fields
 
 Administrator can successfully invite a new user
     [Documentation]  IFS-27 IFS-983
@@ -396,6 +394,14 @@ The KTA creates a new account
     When the user clicks the button/link                        name = create-account
     Then the user should see the element                        jQuery = h1:contains("Your account has been created")
 
+IFS Admin can see the new KTA user in the system
+    [Documentation]  IFS-7934
+    [Setup]  The user logs-in in new browser     &{ifs_admin_user_credentials}
+    Given the user clicks the button/link        link = Manage users
+    And the user enters text to a text field     id = filter  jake.Rayan
+    When the user clicks the button/link         css = input[type="submit"]
+    Then the user should see the element         link = ${validKTNDomainEmail}
+
 *** Keywords ***
 the KTA user enters the details to create account
     [Arguments]  ${firstName}  ${lastName}  ${email}
@@ -412,6 +418,11 @@ the KTA user checks for all validations
     the user enters the text and checks for validation message     phoneNumber  12  ${enter_a_valid_phone_number}  ${enter_a_phone_number_between_8_and_20_digits}
     the user clicks the button/link                                name = create-account
     the user should see the element                                jquery = span:contains("${search_a_valid_postcode}")
+
+the user validates the fields
+    the user enters the text and checks for validation message    firstName  A  ${enter_a_first_name}  ${firstNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message    lastName  D  ${enter_a_last_name}  ${lastNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message    emailAddress  astle  Please enter an email address.  ${enter_a_valid_email}
 
 the user adds a new partner organisation in application
     [Arguments]  ${navigateTo}  ${partnerOrgName}  ${persFullName}  ${email}
