@@ -83,3 +83,9 @@ body {
 .float-right {
   float:right;
 }
+
+.text-align {
+  &__right{
+    text-align: right;
+  }
+}
