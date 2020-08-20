@@ -3,8 +3,7 @@
 
 <th:block th:fragment="generic(model)">
     <th:block th:if="${model.hasScore()}">
-        <!-- TODO: need access to ${question.getAssessorMaximumScore()} -->
-        <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Average score ${question.getAverageScore()} / 10|">No feedback provided</span>
+        <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
     </th:block>
     <th:block th:if="${!model.hasScore()}">
         <span class="section-status govuk-hint govuk-!-margin-0 float-right">No feedback provided</span>
@@ -13,15 +12,6 @@
 
 <th:block th:fragment="application-details (model)">
 <!--    TODO: pick up scope value if question.name == 'Scope' -->
-<!--    <th:block th:if="${model.hasScore()}">-->
-<!--        <span class="section-status govuk-hint govuk-!-margin-0 float-right">Show a score</span>-->
-<!--    </th:block>-->
-<!--    <th:block th:if="${model.name != 'Scope'}">-->
-<!--        <span class="section-status govuk-hint govuk-!-margin-0 float-right">No feedback provided</span>-->
-<!--    </th:block>-->
-<!--    <th:block th:if="${model.name == 'Scope'}">-->
-<!--        <span class="section-status govuk-hint govuk-!-margin-0 float-right">Scope 0/2</span>-->
-<!--    </th:block>-->
     <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|application-details: ${model.name}|">application-details:</span>
 </th:block>
 
