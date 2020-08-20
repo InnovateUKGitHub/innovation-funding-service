@@ -243,7 +243,7 @@ public class ReviewAndSubmitController {
     }
 
     @SecuredBySpring(value = "APPLICANT_TRACK", description = "Applicants and kta can track their application after submitting.")
-    @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_advisor')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping("/{applicationId}/track")
     public String applicationTrack(Model model,
                                    @PathVariable long applicationId,

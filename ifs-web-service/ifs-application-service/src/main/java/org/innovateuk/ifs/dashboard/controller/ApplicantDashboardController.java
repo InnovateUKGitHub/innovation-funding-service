@@ -19,9 +19,9 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/applicant/dashboard")
-@SecuredBySpring(value = "Controller", description = "Each applicant or kta has permission to view their own dashboard",
+@SecuredBySpring(value = "Controller", description = "Each applicant has permission to view their own dashboard",
         securedType = ApplicantDashboardController.class)
-@PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_advisor')")
+@PreAuthorize("hasAuthority('applicant')")
 public class ApplicantDashboardController {
 
     @Autowired
@@ -30,6 +30,8 @@ public class ApplicantDashboardController {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @SecuredBySpring(value = "ApplicantDashboardController", description = "applicant and kta has permission to view their own dashboard")
+    @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping
     @NavigationRoot
     public String dashboard(Model model,
