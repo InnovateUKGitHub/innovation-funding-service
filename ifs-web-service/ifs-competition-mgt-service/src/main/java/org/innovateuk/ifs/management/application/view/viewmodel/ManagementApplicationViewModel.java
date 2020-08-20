@@ -31,7 +31,6 @@ public class ManagementApplicationViewModel {
     private final Long projectId;
     private final boolean externalFinanceUser;
     private final boolean ktpCompetition;
-    private final ApplicationAssessmentAggregateResource scores;
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
@@ -42,8 +41,7 @@ public class ManagementApplicationViewModel {
                                           boolean canReinstate,
                                           boolean support,
                                           Long projectId,
-                                          boolean externalFinanceUser,
-                                          ApplicationAssessmentAggregateResource scores) {
+                                          boolean externalFinanceUser) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -54,8 +52,6 @@ public class ManagementApplicationViewModel {
         this.support = support;
         this.projectId = projectId;
         this.externalFinanceUser = externalFinanceUser;
-
-        this.scores = scores;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -154,9 +150,5 @@ public class ManagementApplicationViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
-    }
-
-    public ApplicationAssessmentAggregateResource getScores() {
-        return scores;
     }
 }

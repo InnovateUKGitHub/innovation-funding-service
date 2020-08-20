@@ -92,38 +92,10 @@ public class ManagementApplicationPopulator {
             settings.setIncludeStatuses(true);
         }
 
-//        1. loop through the sections within applicationReadOnlyViewModel
-//        2. for each question within the section;
-//          1. retrieve the question type (questionRestService.findById(questionId).getSuccess();)
-//          2. retrieve the feedback for the question via (extracted from AssessorQuestionFeedbackPopulator) AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
-//                .getAssessmentAggregateFeedback(applicationId, questionResource.getId())
-//                .getSuccess();
-//        3. retrieve question scores
-//        4. add stuff to model for rendering
-
-//        List<SectionResource> allByCompetitionId = sectionService.getAllByCompetitionId(competition.getId());
-//
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
-//
-//        allByCompetitionId.forEach((section) -> {
-//            section.getQuestions().forEach((questionId) -> {
-//                QuestionResource questionResource = questionRestService.findById(questionId).getSuccess();
-//                AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionResource.getId())
-//                .getSuccess();
-//                System.out.println("rest question name ref:" + questionResource.getName());
-//            });
-//        });
-
-//        applicationReadOnlyViewModel.getSections().forEach((section) -> {
-//          section.getQuestions().forEach((question) -> {
-//              System.out.println("view question ref:" + question);
-//          });
-//        });
-
 
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess();
-//        System.out.println("scores" + scores.getScores().toString());
 
         Long projectId = null;
         if (application.getApplicationState() == ApplicationState.APPROVED) {
@@ -140,8 +112,7 @@ public class ManagementApplicationPopulator {
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
                 support,
                 projectId,
-                user.hasRole(Role.EXTERNAL_FINANCE),
-                scores
+                user.hasRole(Role.EXTERNAL_FINANCE)
         );
 
     }
