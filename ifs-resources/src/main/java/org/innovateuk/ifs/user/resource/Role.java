@@ -40,7 +40,7 @@ public enum Role implements Identifiable {
     STAKEHOLDER                 (20, "stakeholder",               "Stakeholder"),
     LIVE_PROJECTS_USER          (21, "live_projects_user",        "Live projects user"),
     EXTERNAL_FINANCE            (22, "external_finance",        "External finance reviewer"),
-    KNOWLEDGE_TRANSFER_ADVISOR  (23, "knowledge_transfer_advisor", "Knowledge transfer advisor");
+    KNOWLEDGE_TRANSFER_ADVISER  (23, "knowledge_transfer_adviser", "Knowledge transfer adviser");
 
     final long id;
     final String name;
@@ -93,7 +93,7 @@ public enum Role implements Identifiable {
     public boolean isAssessor() {return this == ASSESSOR; }
 
     public boolean isKta() {
-        return this == KNOWLEDGE_TRANSFER_ADVISOR;
+        return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
     public static Set<Role> applicantProcessRoles() {
@@ -120,9 +120,13 @@ public enum Role implements Identifiable {
     }
 
     public List<String> getAuthorities() {
-        if (this == KNOWLEDGE_TRANSFER_ADVISOR) {
+        if (this == KNOWLEDGE_TRANSFER_ADVISER) {
             return newArrayList(this.name, ASSESSOR.name);
         }
         return newArrayList(this.name);
+    }
+
+    public static Set<Role> externalRolesToInvite(){
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
     }
 }

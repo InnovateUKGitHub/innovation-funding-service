@@ -30,10 +30,12 @@
             <h2 class="govuk-panel__title">Part A: Innovation Funding Service application</h2>
             <div class="govuk-panel__body govuk-!-font-size-19">
                 Application number: <span th:text="${model.currentApplication.id}"/><br/>
-                You completed part A on
-                    <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"/>
-                    at
-                    <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}"/>.
+                <th:block th:if="${model.currentApplication.submittedDate}">
+                    You completed part A on
+                        <th:block th:text="${#temporals.format(model.currentApplication.submittedDate, 'd MMMM yyyy')}"/>
+                        at
+                        <th:block th:text="${#strings.toLowerCase(#temporals.format(model.currentApplication.submittedDate, 'h:mma'))}"/>.
+                </th:block>
                 <div class="govuk-!-margin-top-6">
                     <a th:href="@{/application/{id}/summary(id=${model.currentApplication.getId()})}"
                        class="govuk-link govuk-!-margin-right-6">View part A</a>

@@ -25,6 +25,8 @@ public interface GrantOfferLetterRestService {
 
     RestResult<Void> removeGrantOfferLetter(Long projectId);
 
+    RestResult<Void> removeAdditionalContractFile(Long projectId);
+
     RestResult<Void> removeSignedGrantOfferLetter(Long projectId);
 
     RestResult<Optional<ByteArrayResource>> getGrantOfferFile(Long projectId);
