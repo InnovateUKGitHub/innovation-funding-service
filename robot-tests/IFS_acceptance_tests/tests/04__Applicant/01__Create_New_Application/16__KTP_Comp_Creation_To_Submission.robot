@@ -14,7 +14,9 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-7805  KTP Application: Users cannot see project start date
 ...
 ...            IFS-7790  KTP: Your finances - Edit
-
+...
+...            IFS-7806  KTP Assigning KTA on application
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -44,6 +46,17 @@ ${costsValue}                         123
 @{employees}                          2000    1500    1200
 ${associateSalaryTable}               associate-salary-costs-table
 ${associateDevelopmentTable}          associate-development-costs-table
+${noKTAInApplicationValidation}       You cannot mark as complete until a Knowledge Transfer Adviser has been added to the application.
+${nonRegisteredUserValidation}        You cannot invite the Knowledge Transfer Adviser as their email address is not registered.
+${acceptInvitationValidation}         You cannot mark as complete until the Knowledge Transfer Adviser has accepted the invitation.
+${ktaEmail}                           Keli.Janney@ktn-uk.org
+${nonKTAEmail}                        James.Smith@ktn-uk.test
+${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
+${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
+${invitationEmailSubject}             Invitation to be Knowledge Transfer Adviser
+${removedEmailSubject}                Removed as Knowledge Transfer Adviser
+
+
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -134,11 +147,11 @@ New Lead applicant selects a knowledge based organisation
 
 New lead applicant creates an account and completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
-    Given the user clicks the button/link                  jQuery = button:contains("Save and continue")
-    And the user creates an account and verifies email     Indi  Gardiner  ${lead_ktp_email}  ${short_password}
-    When Logging in and Error Checking                     &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                    jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then the user completes the KTP application
+    Given the user clicks the button/link                                   jQuery = button:contains("Save and continue")
+    And the user creates an account and verifies email                      Indi  Gardiner  ${lead_ktp_email}  ${short_password}
+    When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    Then The user completes the KTP application except application team
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
@@ -147,6 +160,56 @@ New lead applicant invites a new partner organisation user and fills in project 
     And Logging in and Error Checking                    &{ktpNewPartnerCredentials}
     And the user clicks the button/link                  link = ${ktpApplicationTitle}
     Then the user completes partner project finances     ${ktpApplicationTitle}  yes
+
+System should display a validation if no email address entered while inviting the KTA
+    [Documentation]  IFS-7806
+    Given Log in as a different user                       &{ktpLeadApplicantCredentials}
+    When the user clicks the button/link                   link = ${ktpApplicationTitle}
+    And the user clicks the button/link                    link = Application team
+    And the user clicks the button/link                    name = invite-kta
+    Then the user should see a field and summary error     ${nonRegisteredUserValidation}
+
+The applicant should not be able to mark the application team section as complete until they add a KTA to the application
+    [Documentation]  IFS-7806
+    When the user clicks the button/link                   id = application-question-complete
+    Then the user should see a field and summary error     ${noKTAInApplicationValidation}
+
+System should not allow a KTA to be invited if they do not have a KTA account in IFS
+    [Documentation]  IFS-7806
+    Given the user enters text to a text field             id = ktaEmail   ${nonKTAEmail}
+    When the user clicks the button/link                   name = invite-kta
+    Then the user should see a field and summary error     ${nonRegisteredUserValidation}
+
+The applicant invites a KTA user to the application
+    [Documentation]  IFS-7806
+    Given the user enters text to a text field     id = ktaEmail   ${ktaEmail}
+    When the user clicks the button/link           name = invite-kta
+    Then The user reads his email                  ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    And the user should see the element            jQuery = td:contains("pending for 0 days")
+    And the user should see the element            Jquery = td:contains("${ktaEmail}")
+
+The applicant should not be able to mark the application team section as complete until the KTA has accepted the invitation to join the application
+    [Documentation]  IFS-7806
+    When the user clicks the button/link                   id = application-question-complete
+    Then the user should see a field and summary error     ${acceptInvitationValidation}
+
+The applicant can resend the invite to the existing KTA
+    [Documentation]  IFS-7806
+    When the user clicks the button/link     name = resend-kta
+    Then The user reads his email            ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+
+The applicant can remove pending KTA from the application and send a notification to the KTA
+    [Documentation]  IFS-7806
+    When the user clicks the button/link         name = remove-kta
+    Then the user should not see the element     name = remove-kta
+    And The user reads his email                 ${ktaEmail}   ${removedEmailSubject}   ${removedEmailPattern}
+
+The KTA has accepted the invitation
+    [Documentation]  IFS-7806
+    Given the user enters text to a text field                                       id = ktaEmail   ${ktaEmail}
+    When the user clicks the button/link                                             name = invite-kta
+    Then the user reads his email and clicks the link                                ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    And KTA should see application name, organisation and lead applicant details
 
 New lead applicant submits the application
    [Documentation]  IFS-7812  IFS-7814
@@ -389,10 +452,10 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-The user completes the KTP application
+The user completes the KTP application except application team
     the user clicks the button/link                                                 link = Application details
     the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    the applicant completes Application Team
+    #the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                        ${ktpApplicationTitle}
@@ -486,3 +549,10 @@ the user slectes non profitable organisation type
     the user selects the radio button                           organisationTypeId   4
     the user clicks the button/link                             jQuery = button:contains("Save and continue")
     the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}
+
+KTA should see application name, organisation and lead applicant details
+    And the user should see the element                   jQuery = h1:contains("${invitationEmailSubject}")
+    And the user should see the element                   jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
+    And the user should see the element                   jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
+    And the user should see the element                   link = ${ktpApplicationTitle}
+
