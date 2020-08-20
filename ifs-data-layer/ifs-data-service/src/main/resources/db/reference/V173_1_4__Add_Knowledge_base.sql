@@ -1,5 +1,3 @@
-DELETE FROM knowledge_base WHERE id in (1,2,3,4,5);
-
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('Lamda Limited', 5, '10003758');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('The University of Surrey', 5, '10007160');
 INSERT INTO knowledge_base (name, organisation_type_id, identifier) VALUES ('University of York', 5, '10007167');
