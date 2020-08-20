@@ -56,4 +56,5 @@ public abstract class BaseOtherFundingRowForm<T extends BaseOtherFunding> extend
     public boolean isBlank() {
         return isNullOrEmpty(source) && isNullOrEmpty(date) && fundingAmount == null;
     }
+
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
@@ -93,7 +94,7 @@ public abstract class AbstractYourFundingSaver {
     }
 
     private void saveOtherFunding(BaseFinanceResource finance, AbstractYourFundingForm<OtherFundingRowForm> form, ValidationMessages messages) {
-        OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+        BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(form.financeType());
         otherFundingCategory.getOtherFunding().setOtherPublicFunding(form.getOtherFunding() ? "Yes" : "No");
         messages.addAll(getFinanceRowService().update(otherFundingCategory.getOtherFunding()).getSuccess());
         if (form.getOtherFunding()) {

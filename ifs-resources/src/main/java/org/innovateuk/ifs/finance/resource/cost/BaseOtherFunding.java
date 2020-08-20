@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
-public abstract class BaseOtherFunding extends AbstractFinanceRowItem{
+public abstract class BaseOtherFunding extends AbstractFinanceRowItem {
 
     private Long id;
 

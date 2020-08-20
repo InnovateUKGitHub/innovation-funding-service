@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.PREVIOUS_F
  * {@code PreviousFundingCostCategory} implementation for {@link FinanceRowCostCategory}. Retrieving the previous funding
  * for an application.
  */
-public class PreviousFundingCostCategory  extends BaseOtherFundingCostCategory {
+public class PreviousFundingCostCategory extends BaseOtherFundingCostCategory {
 //    do i need
     @Override
     protected BaseOtherFunding getFunding() {

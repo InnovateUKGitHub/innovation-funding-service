@@ -47,7 +47,7 @@ public abstract class AbstractYourFundingForm<T extends BaseOtherFundingRowForm>
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    protected abstract FinanceRowType financeType();
+    public abstract FinanceRowType financeType();
 
     public boolean isFundingPercentage() {
         return FINANCE.equals(financeType());
