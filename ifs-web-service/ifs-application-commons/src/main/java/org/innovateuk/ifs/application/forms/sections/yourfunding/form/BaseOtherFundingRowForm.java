@@ -25,7 +25,7 @@ public class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends Abstrac
 
     private FinanceRowType financeRowType;
 
-    public BaseOtherFundingRowForm() {
+    private BaseOtherFundingRowForm() {
         super(null);
     }
 
@@ -89,10 +89,6 @@ public class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends Abstrac
             throw new IllegalArgumentException();
         }
         this.financeRowType = financeRowType;
-    }
-
-    public FinanceRowType getFinanceRowType() {
-        return financeRowType;
     }
 
     @Override
