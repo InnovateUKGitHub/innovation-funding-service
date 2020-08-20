@@ -11,8 +11,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
-import org.innovateuk.ifs.form.resource.SectionResource;
-import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +50,9 @@ public class YourProjectFinancesModelPopulator {
         List<Long> completedSections = sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
-
         List<YourFinancesRowViewModel> rows = sectionRestService.getChildSectionsByParentId(sectionId).getSuccess()
                 .stream()
-                .filter(subSection -> !isSectionExcluded(subSection, competition, organisation))
+                .filter(subSection -> !subSection.getType().isSectionTypeNotRequiredForOrganisationAndCompetition(competition, organisation.getOrganisationTypeEnum(), organisation.getId().equals(application.getLeadOrganisationId())))
                 .map(subSection ->
                         new YourFinancesRowViewModel(subSection.getName(),
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),
@@ -66,10 +63,5 @@ public class YourProjectFinancesModelPopulator {
                 rows);
     }
 
-    private boolean isSectionExcluded(SectionResource section, CompetitionResource competition, OrganisationResource organisation) {
-        if (section.getType() == SectionType.ORGANISATION_FINANCES) {
-            return !competition.applicantShouldSeeYourOrganisationSection(organisation.getOrganisationTypeEnum());
-        }
-        return section.getType() == SectionType.FUNDING_FINANCES && competition.isFullyFunded();
-    }
+
 }

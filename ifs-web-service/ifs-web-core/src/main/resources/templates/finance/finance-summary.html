@@ -51,8 +51,11 @@
                     <th scope="col" class="govuk-table__header govuk-table__header--numeric "
                         th:classappend="${summary.fundingSoughtFirst} ? 'width-80' : 'width-100'"
                         th:text="${summary.fundingSoughtFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding sought (&pound;)</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150">Other public sector funding (&pound;)</th>
-                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Contribution to project (&pound;)</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-150"
+                        th:text="${summary.ktp ? 'Other funding (£)' : 'Other public sector funding (£)'}">Other public sector funding (&pound;)</th>
+                    <th th:if="${summary.ktp}" scope="col" class="govuk-table__header govuk-table__header--numeric width-100">Company contribution (%)</th>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric width-100"
+                        th:text="${summary.ktp ? 'Company contribution (£)' : 'Contribution to project (£)'}">Contribution to project (&pound;)</th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -86,6 +89,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingSoughtFirst} ? ${fundingLevel} : ${fundingSought}"/>
                     </th:block>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.otherFunding, 0, 'DEFAULT')}"/>
+                    <td th:if="${summary.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contributionPercentage, 0, 'DEFAULT')}"/>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(row.contribution, 0, 'DEFAULT')}"/>
                 </tr>
                 <tr class="govuk-table__row" th:if="${summary.collaborativeProject}">
@@ -113,6 +117,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${summary.fundingSoughtFirst} ? '' : ${fundingSought}"/>
                     </th:block>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summary.otherFunding, 0, 'DEFAULT')}"></td>
+                    <td th:if="${summary.ktp}" class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summary.contributionPercentage, 0, 'DEFAULT')}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${#numbers.formatInteger(summary.contribution, 0, 'DEFAULT')}"></td>
                 </tr>
                 </tbody>

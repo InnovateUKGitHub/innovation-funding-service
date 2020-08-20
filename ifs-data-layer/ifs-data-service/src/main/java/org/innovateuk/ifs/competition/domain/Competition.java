@@ -1007,6 +1007,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isExpressionOfInterest() {
+        return competitionType.isExpressionOfInterest();
+    }
+
+    @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }

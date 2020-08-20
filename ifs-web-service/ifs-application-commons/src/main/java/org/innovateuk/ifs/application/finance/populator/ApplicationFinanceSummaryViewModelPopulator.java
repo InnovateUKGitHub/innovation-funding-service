@@ -12,7 +12,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -88,7 +87,7 @@ public class ApplicationFinanceSummaryViewModelPopulator {
         List<FinanceSummaryTableRow> rows = emptyList();
         if (financeSection != null) {
             rows = organisations.stream()
-                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection, application))
+                    .map(organisation -> toFinanceTableRow(organisation, finances, completedSections, leadOrganisationId, financeSection, application, competition))
                     .collect(toList());
 
             if (!application.isSubmitted()) {
@@ -129,8 +128,9 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 .getOrganisationId();
     }
 
-    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection, ApplicationResource application) {
+    private FinanceSummaryTableRow toFinanceTableRow(OrganisationResource organisation, Map<Long, ApplicationFinanceResource> finances, Map<Long, Set<Long>> completedSections, long leadOrganisationId, SectionResource financeSection, ApplicationResource application, CompetitionResource competition) {
         Optional<ApplicationFinanceResource> finance = ofNullable(finances.get(organisation.getId()));
+        Optional<ApplicationFinanceResource> leadFinance = ofNullable(finances.get(leadOrganisationId));
         boolean lead = organisation.getId().equals(leadOrganisationId);
         return new FinanceSummaryTableRow(
                 organisation.getId(),
@@ -139,13 +139,57 @@ public class ApplicationFinanceSummaryViewModelPopulator {
                 finance.map(ApplicationFinanceResource::getTotal).orElse(BigDecimal.ZERO),
                 finance.map(ApplicationFinanceResource::getGrantClaimPercentage).orElse(BigDecimal.ZERO),
                 finance.map(ApplicationFinanceResource::getTotalFundingSought).orElse(BigDecimal.ZERO),
-                finance.map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO),
-                finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO),
+                calculateOtherFundingColumn(competition, finance),
+                calculateContributionColumn(competition, finance, leadFinance),
+                calculateContributionPercentageColumn(competition, finance, leadFinance),
                 ofNullable(completedSections.get(organisation.getId()))
                         .map(completedIds -> completedIds.contains(financeSection.getId()))
                         .orElse(false)
         );
     }
+
+
+    private BigDecimal calculateOtherFundingColumn(CompetitionResource competition, Optional<ApplicationFinanceResource> finance) {
+        if (competition.isKtp()) {
+            return finance.map(ApplicationFinanceResource::getTotalPreviousFunding).orElse(BigDecimal.ZERO);
+        } else {
+            return finance.map(ApplicationFinanceResource::getTotalOtherFunding).orElse(BigDecimal.ZERO);
+        }
+    }
+
+    private BigDecimal calculateContributionColumn(CompetitionResource competition, Optional<ApplicationFinanceResource> finance, Optional<ApplicationFinanceResource> leadFinance) {
+        if (competition.isKtp()) {
+            if (finance.isPresent() && leadFinance.isPresent()) {
+                if (finance.get().getOrganisation().equals(leadFinance.get().getOrganisation())) {
+                    return BigDecimal.ZERO; //lead
+                } else {
+                    return leadFinance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO); // non-lead provides the contribution
+                }
+            } else {
+                return BigDecimal.ZERO;
+            }
+        } else {
+            return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
+        }
+    }
+
+    private BigDecimal calculateContributionPercentageColumn(CompetitionResource competition, Optional<ApplicationFinanceResource> finance, Optional<ApplicationFinanceResource> leadFinance) {
+        if (competition.isKtp()) {
+            if (finance.isPresent() && leadFinance.isPresent()) {
+                if (finance.get().getOrganisation().equals(leadFinance.get().getOrganisation())) {
+                    return BigDecimal.ZERO; //lead
+                } else {
+                    return leadFinance.map(ApplicationFinanceResource::getGrantClaimPercentage)
+                            .map(per -> BigDecimal.valueOf(100).subtract(per))
+                            .orElse(BigDecimal.ZERO); // non-lead provides the contribution
+                }
+            } else {
+                return BigDecimal.ZERO;
+            }
+        } else {
+            return finance.map(ApplicationFinanceResource::getTotalContribution).orElse(BigDecimal.ZERO);
+        }    }
+
 
     private String organisationText(ApplicationResource application, boolean lead) {
         if (!application.isCollaborativeProject()) {

@@ -25,6 +25,7 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     private final boolean fundingLevelFirst;
     private final Long currentUsersOrganisationId;
     private final BigDecimal competitionMaximumFundingSought;
+    private final boolean ktp;
 
     public ApplicationFinanceSummaryViewModel(long applicationId,
                                               CompetitionResource competition,
@@ -42,6 +43,7 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
         this.fundingLevelFirst = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
         this.currentUsersOrganisationId = currentUsersOrganisationId;
         this.competitionMaximumFundingSought = competitionMaximumFundingSought;
+        this.ktp = competition.isKtp();
     }
 
 
@@ -81,6 +83,10 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
 
     public BigDecimal getCompetitionMaximumFundingSought() {
         return competitionMaximumFundingSought;
+    }
+
+    public boolean isKtp() {
+        return ktp;
     }
 
     public boolean isAllFinancesComplete() {
@@ -129,6 +135,12 @@ public class ApplicationFinanceSummaryViewModel implements BaseAnalyticsViewMode
     public BigDecimal getContribution() {
         return rows.stream()
                 .map(FinanceSummaryTableRow::getContribution)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getContributionPercentage() {
+        return rows.stream()
+                .map(FinanceSummaryTableRow::getContributionPercentage)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator.YourProjectCostsViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.ApplicationYourProjectCostsSaver;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsAutosaver;
-import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.saver.YourProjectCostsCompleter;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator.YourProjectCostsFormValidator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.viewmodel.YourProjectCostsViewModel;
 import org.innovateuk.ifs.application.service.SectionStatusRestService;
@@ -74,9 +73,6 @@ public class YourProjectCostsController extends AsyncAdaptor {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
-    @Autowired
-    private YourProjectCostsCompleter completeSectionAction;
-
     @GetMapping
     @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
     @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants and internal users can view the Your project costs page")
@@ -117,7 +113,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
-                validationHandler.addAnyErrors(completeSectionAction.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId())));
+                validationHandler.addAnyErrors(
+                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()));
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });

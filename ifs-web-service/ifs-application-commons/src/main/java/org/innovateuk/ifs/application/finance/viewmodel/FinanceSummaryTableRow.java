@@ -13,6 +13,7 @@ public class FinanceSummaryTableRow {
     private final BigDecimal fundingSought;
     private final BigDecimal otherFunding;
     private final BigDecimal contribution;
+    private final BigDecimal contributionPercentage;
 
     private final boolean complete;
 
@@ -24,6 +25,7 @@ public class FinanceSummaryTableRow {
                                   BigDecimal fundingSought,
                                   BigDecimal otherFunding,
                                   BigDecimal contribution,
+                                  BigDecimal contributionPercentage,
                                   boolean complete) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
@@ -33,6 +35,7 @@ public class FinanceSummaryTableRow {
         this.fundingSought = fundingSought;
         this.otherFunding = otherFunding;
         this.contribution = contribution;
+        this.contributionPercentage = contributionPercentage;
         this.complete = complete;
     }
 
@@ -68,6 +71,10 @@ public class FinanceSummaryTableRow {
         return contribution;
     }
 
+    public BigDecimal getContributionPercentage() {
+        return contributionPercentage;
+    }
+
     public boolean isComplete() {
         return complete;
     }
@@ -82,6 +89,7 @@ public class FinanceSummaryTableRow {
                 null,
                 organisationName,
                 "(pending)",
+                BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
