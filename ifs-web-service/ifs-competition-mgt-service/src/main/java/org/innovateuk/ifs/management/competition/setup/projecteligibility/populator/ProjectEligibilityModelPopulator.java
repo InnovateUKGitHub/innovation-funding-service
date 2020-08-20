@@ -52,14 +52,11 @@ public class ProjectEligibilityModelPopulator implements CompetitionSetupSection
     ) {
         List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccess();
 
-//        this is rubbish
         List<OrganisationTypeResource> leadApplicantTypes;
         if (competitionResource.isKtp()) {
             leadApplicantTypes = simpleFilter(organisationTypes,
                     organisationType ->
-                            OrganisationTypeEnum.getFromId(organisationType.getId()).equals(OrganisationTypeEnum.CATAPULT) ||
-                                    OrganisationTypeEnum.getFromId(organisationType.getId()).equals(OrganisationTypeEnum.UNIVERSITY) ||
-                                    OrganisationTypeEnum.getFromId(organisationType.getId()).equals(OrganisationTypeEnum.RTO));
+                            OrganisationTypeEnum.isKnowledgeBaseType(OrganisationTypeEnum.getFromId(organisationType.getId()));
         } else {
             leadApplicantTypes = simpleFilter(organisationTypes, OrganisationTypeResource::getVisibleInSetup);
         }
