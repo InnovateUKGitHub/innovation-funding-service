@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
@@ -115,7 +116,11 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
 
         Supplier<String> failureView = () -> knowledgeBaseDetails(organisationForm, model, request, user);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+            organisationTypeForm.setOrganisationType(organisationForm.getOrganisationType());
             registrationCookieService.saveToKnowledgeBaseDetailsCookie(organisationForm, response);
+            registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/knowledge-base/confirm";
         });
     }
@@ -148,11 +153,28 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
                                         UserResource user) {
         Supplier<String> failureView = () -> selectKnowledgeBase(organisationForm, model, request, user);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            OrganisationCreationForm organisationCreationForm = registrationCookieService.getOrganisationCreationCookieValue(request).get();
-            organisationCreationForm.setOrganisationName(organisationForm.getKnowledgeBase());
-            registrationCookieService.saveToOrganisationCreationCookie(organisationCreationForm, response);
-            return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/" + CONFIRM_ORGANISATION;
+            KnowledgeBaseResource knowledgeBaseResource = knowledgeBaseRestService.getKnowledgeBaseByName(organisationForm.getKnowledgeBase()).getSuccess();
+            KnowledgeBaseCreateForm knowledgeBaseCreateForm = processCreationForm(knowledgeBaseResource);
+
+            OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
+            organisationTypeForm.setOrganisationType(knowledgeBaseResource.getOrganisationType());
+
+            registrationCookieService.saveToKnowledgeBaseDetailsCookie(knowledgeBaseCreateForm, response);
+            registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
+            return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/knowledge-base/confirm";
         });
+    }
+
+    private KnowledgeBaseCreateForm processCreationForm(KnowledgeBaseResource knowledgeBaseResource) {
+        KnowledgeBaseCreateForm form = new KnowledgeBaseCreateForm();
+        form.setName(knowledgeBaseResource.getName());
+        form.setOrganisationType(knowledgeBaseResource.getOrganisationType());
+        form.setIdentification(knowledgeBaseResource.getRegistrationNumber());
+        AddressResource addressResource = knowledgeBaseResource.getAddress().getAddress();
+        form.getAddressForm().setPostcodeResults(singletonList(addressResource));
+        form.getAddressForm().setSelectedPostcodeIndex(0);
+        return form;
+
     }
 
     @GetMapping("/confirm")

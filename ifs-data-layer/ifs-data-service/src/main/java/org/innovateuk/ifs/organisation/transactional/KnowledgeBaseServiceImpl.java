@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.organisation.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
 import org.innovateuk.ifs.organisation.domain.KnowledgeBase;
+import org.innovateuk.ifs.organisation.mapper.KnowledgeBaseMapper;
 import org.innovateuk.ifs.organisation.repository.KnowledgeBaseRepository;
 import org.innovateuk.ifs.transactional.RootTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class KnowledgeBaseServiceImpl extends RootTransactionalService implement
     @Autowired
     private KnowledgeBaseRepository knowledgeBaseRepository;
 
+    @Autowired
+    private KnowledgeBaseMapper knowledgeBaseMapper;
+
     @Override
     public ServiceResult<List<String>> getKnowledegeBases() {
         return serviceSuccess(stream(knowledgeBaseRepository.findAll().spliterator(), false)
@@ -31,8 +36,14 @@ public class KnowledgeBaseServiceImpl extends RootTransactionalService implement
     }
 
     @Override
-    public ServiceResult<String> getKnowledegeBase(long id) {
+    public ServiceResult<String> getKnowledgeBase(long id) {
         return find(knowledgeBaseRepository.findById(id), notFoundError(KnowledgeBase.class, singletonList(id)))
                 .andOnSuccessReturn(KnowledgeBase::getName);
+    }
+
+    @Override
+    public ServiceResult<KnowledgeBaseResource> getKnowledgeBaseByName(String name) {
+        return find(knowledgeBaseRepository.findByName(name), notFoundError(KnowledgeBase.class, singletonList(name)))
+                .andOnSuccessReturn(knowledgeBaseMapper::mapToResource);
     }
 }

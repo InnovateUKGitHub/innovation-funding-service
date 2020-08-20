@@ -11,6 +11,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class KnowledgeBaseCreateForm implements Serializable {
 
     @NotEmpty(message = "{validation.standard.knowledgebasename.required}")
@@ -90,15 +92,30 @@ public class KnowledgeBaseCreateForm implements Serializable {
 
     @JsonIgnore
     public String getIdentification() {
-        if (!rtoNumber.isEmpty()) {
+        if (!isEmpty(rtoNumber)) {
             return rtoNumber;
         }
-        if (!catapultNumber.isEmpty()) {
+        if (!isEmpty(catapultNumber)) {
             return catapultNumber;
         }
-        if (!universityNumber.isEmpty()) {
+        if (!isEmpty(universityNumber)) {
             return universityNumber;
         }
         return null;
+    }
+
+    @JsonIgnore
+    public void setIdentification(String identification) {
+        switch (OrganisationTypeEnum.getFromId(organisationType)) {
+            case RTO:
+                setRtoNumber(identification);
+                break;
+            case UNIVERSITY:
+                setUniversityNumber(identification);
+                break;
+            case CATAPULT:
+                setCatapultNumber(identification);
+                break;
+        }
     }
 }

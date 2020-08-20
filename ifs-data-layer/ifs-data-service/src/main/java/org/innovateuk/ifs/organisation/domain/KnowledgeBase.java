@@ -24,13 +24,16 @@ public class KnowledgeBase {
     @OneToOne(fetch = FetchType.LAZY)
     private Address address;
 
-    KnowledgeBase() {
+    public KnowledgeBase() {
         // for ORM
     }
 
-    public KnowledgeBase(String name, String identifier) {
+    public KnowledgeBase(Long id, String name, String identifier, OrganisationType organisationType, Address address) {
+        this.id = id;
         this.name = name;
         this.identifier = identifier;
+        this.organisationType = organisationType;
+        this.address = address;
     }
 
     public Long getId() {
