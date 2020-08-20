@@ -7,15 +7,18 @@ import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
 import org.innovateuk.ifs.finance.resource.GrowthTableResource;
 import org.innovateuk.ifs.finance.resource.KtpYearsResource;
 import org.innovateuk.ifs.finance.resource.cost.BaseOtherFunding;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.resource.cost.PreviousFunding;
 
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-public class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends AbstractCostRowForm<T> {
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value = PreviousFundingRowForm.class, name = "PreviousFundingRowForm"),
+//        @JsonSubTypes.Type(value = OtherFundingRowForm.class, name = "OtherFundingRowForm")
+//})
+public abstract class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends AbstractCostRowForm<T> {
 
     private String source;
 
@@ -23,15 +26,8 @@ public class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends Abstrac
 
     private BigDecimal fundingAmount;
 
-    private FinanceRowType financeRowType;
-
-    private BaseOtherFundingRowForm() {
-        super(null);
-    }
-
-    public BaseOtherFundingRowForm(FinanceRowType financeRowType) {
-        super(null);
-        this.financeRowType = financeRowType;
+    public BaseOtherFundingRowForm() {
+        this(null);
     }
 
     public BaseOtherFundingRowForm(T fundingRow) {
@@ -40,7 +36,6 @@ public class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends Abstrac
             this.source = fundingRow.getFundingSource();
             this.date = fundingRow.getSecuredDate();
             this.fundingAmount = fundingRow.getFundingAmount();
-            this.financeRowType = fundingRow.getCostType();
         }
     }
 
@@ -66,29 +61,6 @@ public class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends Abstrac
 
     public void setFundingAmount(BigDecimal fundingAmount) {
         this.fundingAmount = fundingAmount;
-    }
-
-    @Override
-    public FinanceRowType getRowType() {
-        return financeRowType;
-    }
-
-    @Override
-    public T toCost(Long financeId) {
-        if (financeRowType == FinanceRowType.PREVIOUS_FUNDING) {
-            return (T) new PreviousFunding(getCostId(), null, getSource(), getDate(), getFundingAmount(), financeId);
-        }
-        if (financeRowType == FinanceRowType.OTHER_FUNDING) {
-            return (T) new OtherFunding(getCostId(), null, getSource(), getDate(), getFundingAmount(), financeId);
-        }
-        throw new IllegalArgumentException();
-    }
-
-    public void setFinanceRowType(FinanceRowType financeRowType) {
-        if (FinanceRowType.PREVIOUS_FUNDING != financeRowType && FinanceRowType.OTHER_FUNDING != financeRowType) {
-            throw new IllegalArgumentException();
-        }
-        this.financeRowType = financeRowType;
     }
 
     @Override

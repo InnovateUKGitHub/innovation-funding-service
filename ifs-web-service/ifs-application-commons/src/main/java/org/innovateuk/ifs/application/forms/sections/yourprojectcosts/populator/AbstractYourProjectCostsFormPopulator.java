@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator;
 
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.PreviousFundingRowForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
