@@ -17,6 +17,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7806  KTP Assigning KTA on application
 ...
+...            IFS-8001  KTP KTA Accepting invite
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -49,7 +51,7 @@ ${associateDevelopmentTable}          associate-development-costs-table
 ${noKTAInApplicationValidation}       You cannot mark as complete until a Knowledge Transfer Adviser has been added to the application.
 ${nonRegisteredUserValidation}        You cannot invite the Knowledge Transfer Adviser as their email address is not registered.
 ${acceptInvitationValidation}         You cannot mark as complete until the Knowledge Transfer Adviser has accepted the invitation.
-${ktaEmail}                           Keli.Janney@ktn-uk.org
+${ktaEmail}                           john.fenton@ktn-uk.test
 ${nonKTAEmail}                        James.Smith@ktn-uk.test
 ${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
 ${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
@@ -182,8 +184,9 @@ System should not allow a KTA to be invited if they do not have a KTA account in
 
 The applicant invites a KTA user to the application
     [Documentation]  IFS-7806
-    Given the user enters text to a text field     id = ktaEmail   ${ktaEmail}
-    When the user clicks the button/link           name = invite-kta
+    [Setup]  Assign the KTA role to the user
+    Given Log in as a different user               &{ktpLeadApplicantCredentials}
+    When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
     Then The user reads his email                  ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
     And the user should see the element            jQuery = td:contains("pending for 0 days")
     And the user should see the element            Jquery = td:contains("${ktaEmail}")
@@ -204,10 +207,12 @@ The applicant can remove pending KTA from the application and send a notificatio
     Then the user should not see the element     name = remove-kta
     And The user reads his email                 ${ktaEmail}   ${removedEmailSubject}   ${removedEmailPattern}
 
+#require 8001 to be completed to pass the test
 The KTA has accepted the invitation
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806  IFS-8001
     Given the user enters text to a text field                                       id = ktaEmail   ${ktaEmail}
     When the user clicks the button/link                                             name = invite-kta
+    And Logout as user
     Then the user reads his email and clicks the link                                ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
     And KTA should see application name, organisation and lead applicant details
 
@@ -551,8 +556,29 @@ the user slectes non profitable organisation type
     the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}
 
 KTA should see application name, organisation and lead applicant details
-    And the user should see the element                   jQuery = h1:contains("${invitationEmailSubject}")
-    And the user should see the element                   jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
-    And the user should see the element                   jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
-    And the user should see the element                   link = ${ktpApplicationTitle}
+    the user should see the element     jQuery = h1:contains("${invitationEmailSubject}")
+    the user should see the element     jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
+    the user should see the element     jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
+    the user should see the element     link = ${ktpApplicationTitle}
+
+Assign the KTA role to the user
+    log in as a different user               &{ifs_admin_user_credentials}
+    the user clicks the button/link          link = Manage users
+    the user enters text to a text field     id = filter   ${ktaEmail}
+    the user clicks the button/link          css = [class="btn"]
+    the user clicks the button/link          jQuery = a:contains("Edit")
+    the user clicks the button/link          link = Add a new external role profile
+    the user clicks the button/link          jQuery = button:contains("Confirm role profile")
+    the user clicks the button/link          jQuery = button:contains("Save and return")
+
+the user invites a KTA to application
+    [Arguments]  ${applicationName}   ${email}
+    the user clicks the button/link          link = ${applicationName}
+    the user clicks the button/link          link = Application team
+    the user enters text to a text field     id = ktaEmail   ${email}
+    the user clicks the button/link          name = invite-kta
+
+
+
+
 
