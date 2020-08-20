@@ -66,6 +66,11 @@ public class ApplicationInvitePermissionRules {
         return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
     }
 
+    @PermissionRule(value = "VIEW_AND_ACCEPT", description = "lead applicant can remove kta invite to the application")
+    public boolean ktaCanViewAndAcceptAnInviteAddressedToThem(final ApplicationKtaInviteResource invite, final UserResource user) {
+        return invite.getEmail().equals(user.getEmail());
+    }
+
     @PermissionRule(value = "READ", description = "collaborator can view an invite to the application on for their organisation")
     public boolean collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(final ApplicationInvite invite, final UserResource user) {
         return isCollaboratorOnInvite(invite, user);

@@ -10,11 +10,18 @@ public interface ApplicationKtaInviteService {
     ServiceResult<Void> saveKtaInvite(ApplicationKtaInviteResource inviteResource);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId);
+    ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(long applicationId);
 
     @PreAuthorize("hasPermission(#inviteResource, 'SAVE')")
     ServiceResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<Void> removeKtaInviteByApplication(long applicationId);
+
+    @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'VIEW_AND_ACCEPT')")
+    ServiceResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash);
+
+    @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'VIEW_AND_ACCEPT')")
+    ServiceResult<Void> acceptInvite(String hash);
+
 }

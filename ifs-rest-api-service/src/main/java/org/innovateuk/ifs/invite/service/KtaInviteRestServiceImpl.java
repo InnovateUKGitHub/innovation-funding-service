@@ -33,4 +33,16 @@ public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInvi
         String url = KTA_INVITE_REST_URL + "/resend-kta-invite";
         return postWithRestResult(url, inviteResource, Void.class);
     }
+
+    @Override
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash) {
+        String url = KTA_INVITE_REST_URL + "/hash/" + hash;
+        return getWithRestResult(url, ApplicationKtaInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String hash) {
+        String url = KTA_INVITE_REST_URL + "/hash/" + hash;
+        return postWithRestResult(url, Void.class);
+    }
 }

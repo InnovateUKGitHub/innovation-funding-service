@@ -57,7 +57,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     private ProcessRoleRepository processRoleRepository;
 
     @Override
-    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId) {
+    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(long applicationId) {
         return serviceSuccess(
                     applicationKtaInviteMapper.mapToResource(applicationKtaInviteRepository.findByApplicationId(applicationId).orElse(null))
             );
@@ -126,6 +126,25 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
         }
         inviteResource.setName(userResult.getSuccess().getName());
         return serviceSuccess(inviteResource);
+    }
+
+    @Override
+    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash) {
+        return getByHash(hash)
+                .andOnSuccessReturn(applicationKtaInviteMapper::mapToResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> acceptInvite(String hash) {
+        return getByHash(hash)
+                .andOnSuccess(invite -> {
+                    invite.open();
+                    ProcessRole ktaProcessRole = new ProcessRole(invite.getUser(), invite.getTarget().getId(), Role.KNOWLEDGE_TRANSFER_ADVISER);
+                    processRoleRepository.save(ktaProcessRole);
+                    return serviceSuccess();
+
+                });
     }
 
     @Override
