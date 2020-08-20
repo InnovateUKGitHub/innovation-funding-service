@@ -47,8 +47,8 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
 
     @GetMapping
     @AsyncMethod
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
-    @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_advisor')")
+    @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants, internal users and kta can view the Your organisation page")
     public String viewPage(
             @PathVariable long applicationId,
             @PathVariable long competitionId,
@@ -58,7 +58,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
+                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));

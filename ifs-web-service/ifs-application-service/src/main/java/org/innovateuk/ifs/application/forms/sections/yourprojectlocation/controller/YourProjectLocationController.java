@@ -81,8 +81,8 @@ public class YourProjectLocationController extends AsyncAdaptor {
 
     @GetMapping
     @AsyncMethod
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
-    @SecuredBySpring(value = "VIEW_PROJECT_LOCATION", description = "Applicants, stakeholders and internal users can view the Your project location page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_advisor')")
+    @SecuredBySpring(value = "VIEW_PROJECT_LOCATION", description = "Applicants, stakeholders, internal users and kta can view the Your project location page")
     public String viewPage(
             @PathVariable("applicationId") long applicationId,
             @PathVariable("organisationId") long organisationId,
@@ -91,7 +91,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)));
 
         Future<YourProjectLocationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));

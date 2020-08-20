@@ -43,7 +43,7 @@ public abstract class AbstractProjectYourOrganisationFormController<F> extends A
     @GetMapping
     @AsyncMethod
     @PreAuthorize("hasAnyAuthority('applicant')")
-    @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants and internal users can view the Your organisation page")
+    @SecuredBySpring(value = "VIEW_YOUR_ORGANISATION", description = "Applicants, internal users and kta can view the Your organisation page")
     public String viewPage(
             @PathVariable long projectId,
             @PathVariable long organisationId,

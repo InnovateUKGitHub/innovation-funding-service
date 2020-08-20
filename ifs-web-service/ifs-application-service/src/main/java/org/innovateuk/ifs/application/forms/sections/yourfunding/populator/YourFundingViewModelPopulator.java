@@ -64,7 +64,7 @@ public class YourFundingViewModelPopulator {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     public YourFundingViewModel populate(long applicationId, long sectionId, long organisationId, UserResource user) {
-        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
+        if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE) || user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)) {
             return populateManagement(applicationId, sectionId, organisationId, user);
         }
         return populate(applicationId, sectionId, user);
