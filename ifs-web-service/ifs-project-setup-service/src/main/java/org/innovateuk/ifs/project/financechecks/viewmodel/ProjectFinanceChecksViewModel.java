@@ -27,7 +27,6 @@ public class ProjectFinanceChecksViewModel {
     private String baseUrl;
     private boolean isAcademic;
     private boolean loanCompetition;
-
     private final boolean procurementCompetition;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
