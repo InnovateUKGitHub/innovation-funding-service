@@ -37,12 +37,18 @@ public class SpendProfileCostFilterTest {
                         FinanceRowType.CAPITAL_USAGE,
                         FinanceRowType.SUBCONTRACTING_COSTS,
                         FinanceRowType.TRAVEL,
-                        FinanceRowType.OTHER_COSTS
+                        FinanceRowType.OTHER_COSTS,
+                        FinanceRowType.ASSOCIATE_SALARY_COSTS,
+                        FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
+                        FinanceRowType.CONSUMABLES,
+                        FinanceRowType.ASSOCIATE_SUPPORT,
+                        FinanceRowType.KNOWLEDGE_BASE,
+                        FinanceRowType.ESTATE_COSTS
                 )
-                .build(8);
+                .build(14);
 
         assertThat(financeCostTotalResourceResult)
                 .usingRecursiveFieldByFieldElementComparator()
-                .containsExactlyElementsOf(expectedCostTotalResources);
+                .containsExactlyInAnyOrder(expectedCostTotalResources.toArray(new FinanceCostTotalResource[expectedCostTotalResources.size()]));
     }
 }

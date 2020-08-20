@@ -18,8 +18,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OVERHEADS;
 
 /**
@@ -89,8 +91,8 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
         }
     }
 
-    protected Optional<Overhead> intialiseCost(Finance finance) {
-        return Optional.of(new Overhead(finance.getId()));
+    protected List<Overhead> intialiseCosts(Finance finance) {
+        return newArrayList(new Overhead(finance.getId()));
     }
 
 }

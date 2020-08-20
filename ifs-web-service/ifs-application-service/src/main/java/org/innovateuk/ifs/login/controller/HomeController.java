@@ -89,13 +89,13 @@ public class HomeController {
     private Set<Role> getMultiDashboardRoles(UserResource user) {
         Set<Role> dashboardRoles = user.getRoles().stream().filter(multiDashboardRoles()::contains).collect(Collectors.toSet());
 
-        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR)) {
-            dashboardRoles = createKtaDashboardRoles(user, dashboardRoles);
+        if (user.hasRole(KNOWLEDGE_TRANSFER_ADVISER)) {
+            addKtaRoles(user, dashboardRoles);
         }
         return dashboardRoles;
     }
 
-    private Set<Role> createKtaDashboardRoles(UserResource user, Set<Role> dashboardRoles) {
+    private void addKtaRoles(UserResource user, Set<Role> dashboardRoles) {
         List<ProcessRoleResource> processRoleResources = userRestService.findProcessRoleByUserId(user.getId()).getSuccess();
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
         boolean isApplicant = processRoleResources.stream().map(ProcessRoleResource::getRole)
@@ -112,8 +112,6 @@ public class HomeController {
         if (isAssessor) {
             dashboardRoles.add(ASSESSOR);
         }
-
-        return dashboardRoles;
     }
 
     private String viewDashboardSelection(HttpServletRequest request, Model model, Set<Role> roles) {

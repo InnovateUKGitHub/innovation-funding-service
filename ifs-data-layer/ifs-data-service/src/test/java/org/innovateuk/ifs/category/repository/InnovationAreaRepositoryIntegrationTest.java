@@ -60,7 +60,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
                 .withDescription("aaa description", "bbb description", "ccc description")
                 .build(3);
 
-        List<InnovationArea> actual = repository.findAllByOrderByPriorityAsc();
+        List<InnovationArea> actual = repository.findAllByOrderByNameAsc();
 
         assertEquals(expectedInnovationAreas, actual);
     }

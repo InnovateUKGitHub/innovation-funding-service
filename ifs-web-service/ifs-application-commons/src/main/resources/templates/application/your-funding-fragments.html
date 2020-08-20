@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
-        <div th:if="${form.fundingPercentage}" class="govuk-form-group"
-             th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    Are you requesting funding?
-                </legend>
-                <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
-                      th:text="${err}"></span>
-                <div id="requestingFunding" class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="govuk-radios__item">
-                        <input type="radio"
-                               class="govuk-radios__input"
-                               id="request-funding-yes"
-                               value="true"
-                               th:field="*{requestingFunding}"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"
-                               data-aria-controls="request-funding"/>
-                        <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
+        <th:block th:if="${form.fundingPercentage}">
+            <div th:unless="${hideAreYouRequestingFunding}" class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('requestingFunding')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Are you requesting funding?
+                    </legend>
+                    <span class="govuk-error-message" th:each="err : ${#fields.errors('requestingFunding')}"
+                          th:text="${err}"></span>
+                    <div id="requestingFunding" class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="request-funding-yes"
+                                   value="true"
+                                   th:field="*{requestingFunding}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"
+                                   data-aria-controls="request-funding"/>
+                            <label for="request-funding-yes" class="govuk-label govuk-radios__label">Yes</label>
+                        </div>
+                        <th:block th:insert="application/your-funding-fragments :: requesting_funding(
+                                guidanceFragment=${guidanceFragment},
+                                maximumFundingLevel=${maximumFundingLevel}
+                            )"/>
+                        <div class="govuk-radios__item">
+                            <input type="radio"
+                                   class="govuk-radios__input"
+                                   id="request-funding-no"
+                                   name="request-funding"
+                                   value="false"
+                                   th:field="*{requestingFunding}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
+                            <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
+                        </div>
                     </div>
-                    <th:block th:insert="application/your-funding-fragments :: requesting_funding(
-                            guidanceFragment=${guidanceFragment},
-                            maximumFundingLevel=${maximumFundingLevel}
-                        )"/>
-                    <div class="govuk-radios__item">
-                        <input type="radio"
-                               class="govuk-radios__input"
-                               id="request-funding-no"
-                               name="request-funding"
-                               value="false"
-                               th:field="*{requestingFunding}"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.finance.funding.requesting.blank}"/>
-                        <label for="request-funding-no" class="govuk-label govuk-radios__label">No</label>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
+                </fieldset>
+            </div>
+
+            <th:block th:if="${hideAreYouRequestingFunding}">
+                <input type="hidden" name="grantClaimPercentage" value="0"/>
+                <input type="hidden" name="requestingFunding" value="false"/>
+            </th:block>
+        </th:block>
+
 
         <div th:if="${form.fundingAmount}"
              class="govuk-form-group govuk-!-margin-bottom-9"
@@ -110,7 +118,7 @@
         </div>
     </th:block>
     <th:block th:if="${readOnly}">
-        <dl class="govuk-list readonly-data" th:if="${form.fundingPercentage}">
+        <dl class="govuk-list readonly-data" th:if="${form.fundingPercentage && !hideAreYouRequestingFunding}">
             <dt>Funding level</dt>
             <dd th:text="${#numbers.formatDecimal(form.grantClaimPercentage == null ? 0 : form.grantClaimPercentage,1,'DEFAULT',2,'DEFAULT') +'%'}">50%</dd>
         </dl>

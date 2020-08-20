@@ -38,8 +38,11 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.max.filesize.bytes}")
     private Long maxFilesizeBytesForProjectFinanceThreadsAttachments;
 
-    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.valid.media.types}")
-    private List<String> validMediaTypesForProjectFinanceThreadsAttachments;
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.valid.media.types.internal}")
+    private List<String> validMediaTypesForProjectFinanceThreadsAttachmentsInternal;
+
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.valid.media.types.external}")
+    private List<String> validMediaTypesForProjectFinanceThreadsAttachmentsExternal;
 
     @Autowired
     private FileService fileService;
@@ -73,7 +76,15 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
                                                     Long projectId, HttpServletRequest request) {
 
-        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
+        if (loggedInUserSupplier.get().isInternalUser()) {
+
+            return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachmentsInternal, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
+                    (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                            .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
+                                    .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
+        }
+
+        return fileControllerUtils.handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachmentsExternal, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
                                 .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();

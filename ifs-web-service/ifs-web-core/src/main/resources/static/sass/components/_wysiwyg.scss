@@ -128,6 +128,10 @@ button {
     @extend p;
     margin-top: em(20, 16);
   }
+
+  a {
+    @extend %govuk-link;
+  }
 }
 
 [contenteditable="true"],

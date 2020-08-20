@@ -57,7 +57,7 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
     }
 
     @Test
-    public void findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById() throws Exception {
+    public void findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById() {
         List<Question> questions = newQuestion()
                 .withId(98L, 108L)
                 .build(2);

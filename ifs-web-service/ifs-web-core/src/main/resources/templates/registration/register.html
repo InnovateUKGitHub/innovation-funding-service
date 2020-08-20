@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create your account - Your Details ',hasFormErrors=${#fields.hasErrors('${registrationForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an account - Your Details ',hasFormErrors=${#fields.hasErrors('${registrationForm.*}')}" />
 </head>
 
 <body class="govuk-template__body sign-in">
@@ -18,7 +18,7 @@
             <th:block th:insert="fragments/elements :: error-summary-list(registrationForm)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create an account',size='govuk-heading-xl'" />
 
         <p class="govuk-body">To continue, you need to create an account with the Innovation Funding Service.</p>
 

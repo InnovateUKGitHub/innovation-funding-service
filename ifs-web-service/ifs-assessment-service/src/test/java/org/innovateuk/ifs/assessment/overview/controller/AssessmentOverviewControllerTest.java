@@ -392,7 +392,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
                 .withFundingType(GRANT)
                 .build();
 
-        competitionResource.setFinanceRowTypes(new HashSet<>(asList(FinanceRowType.values())));
+        competitionResource.setFinanceRowTypes(asList(FinanceRowType.values()));
 
         ApplicationResource applicationResource = applications.get(0);
 

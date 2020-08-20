@@ -48,7 +48,8 @@
                                 form=${form},
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'project-business' : 'project-non-business'},
-                               maximumFundingLevel=${model.maximumFundingLevel}
+                               maximumFundingLevel=${model.maximumFundingLevel},
+                               hideAreYouRequestingFunding=${model.ktpFundingType && !model.knowledgeBaseOrganisation}
                    )" />
 
                 <div class="form-footer">
