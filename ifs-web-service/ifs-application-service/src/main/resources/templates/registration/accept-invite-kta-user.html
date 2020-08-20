@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Join an application'" />
+</head>
+<body class="govuk-template__body create-application-eligibility">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner" />
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='You have been invited to be a knowledge transfer adviser',size='govuk-heading-xl'" />
+        <h3 class="govuk-heading-l">Application details</h3>
+        <dl class="govuk-list govuk-!-margin-bottom-6">
+            <dt>Application:</dt>
+            <dd th:text="|${model.applicationId}: ${model.applicationName}|"></dd>
+            <dt>Lead organisation:</dt>
+            <dd th:text="${model.leadOrganisationName}"></dd>
+            <dt>Lead applicant:</dt>
+            <dd th:text="${model.leadApplicantName}"></dd>
+        </dl>
+        <h3 class="govuk-heading-m">We have found an existing account with your email address.</h3>
+        <h3 class="govuk-heading-m">Please select 'Continue' to accept this invitation.</h3>
+        <a th:href="@{/dashboard-selection}" class="govuk-button">Continue</a>
+        <p class="govuk-body govuk-!-margin-bottom-9">If you do not wish to accept this invitation, please let the lead applicant know.</p>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </main>
+</div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
+</body>
+</html>

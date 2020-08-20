@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,13 @@ public abstract class AbstractAcceptInviteController {
     }
 
     protected final boolean loggedInAsNonInviteUser(ApplicationInviteResource invite, UserResource loggedInUser) {
+        if (loggedInUser == null || invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
+            return false;
+        }
+        return true;
+    }
+
+    protected final boolean loggedInAsNonKtaInviteUser(ApplicationKtaInviteResource invite, UserResource loggedInUser) {
         if (loggedInUser == null || invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
             return false;
         }

@@ -18,7 +18,7 @@ public interface ApplicationKtaInviteService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<Void> removeKtaInviteByApplication(long applicationId);
 
-    @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'VIEW_AND_ACCEPT')")
+    @PreAuthorize("hasAuthority('system_registrar')")
     ServiceResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash);
 
     @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'VIEW_AND_ACCEPT')")

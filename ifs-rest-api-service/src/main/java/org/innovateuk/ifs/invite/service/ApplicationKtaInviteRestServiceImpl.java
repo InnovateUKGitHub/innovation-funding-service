@@ -37,7 +37,7 @@ public class ApplicationKtaInviteRestServiceImpl extends BaseRestService impleme
     @Override
     public RestResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash) {
         String url = KTA_INVITE_REST_URL + "/hash/" + hash;
-        return getWithRestResult(url, ApplicationKtaInviteResource.class);
+        return getWithRestResultAnonymous(url, ApplicationKtaInviteResource.class);
     }
 
     @Override

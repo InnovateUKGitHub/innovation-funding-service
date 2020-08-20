@@ -10,6 +10,10 @@ public class ApplicationKtaInviteResource extends InviteResource {
     private Long id;
     private String email;
     private String name;
+    private String applicationName;
+    private String competitionName;
+    private String leadApplicant;
+    private Long leadOrganisation;
     private Long application;
     private InviteStatus status;
     private ZonedDateTime sentOn;
@@ -71,6 +75,38 @@ public class ApplicationKtaInviteResource extends InviteResource {
         this.id = id;
     }
 
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
+    }
+
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
+
+    public String getLeadApplicant() {
+        return leadApplicant;
+    }
+
+    public void setLeadApplicant(String leadApplicant) {
+        this.leadApplicant = leadApplicant;
+    }
+
+    public Long getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(Long leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -87,6 +123,10 @@ public class ApplicationKtaInviteResource extends InviteResource {
                 .append(id, that.id)
                 .append(email, that.email)
                 .append(name, that.name)
+                .append(applicationName, that.applicationName)
+                .append(competitionName, that. competitionName)
+                .append(leadApplicant, that.leadApplicant)
+                .append(leadOrganisation, that.leadOrganisation)
                 .append(application, that.application)
                 .append(status, that.status)
                 .append(sentOn, that.sentOn)
@@ -99,6 +139,10 @@ public class ApplicationKtaInviteResource extends InviteResource {
                 .append(id)
                 .append(email)
                 .append(name)
+                .append(applicationName)
+                .append(competitionName)
+                .append(leadApplicant)
+                .append(leadOrganisation)
                 .append(application)
                 .append(status)
                 .append(sentOn)
