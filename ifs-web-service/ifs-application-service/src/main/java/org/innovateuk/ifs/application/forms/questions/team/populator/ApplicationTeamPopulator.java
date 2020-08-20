@@ -18,7 +18,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.invite.service.KtaInviteRestService;
+import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -48,7 +48,7 @@ public class ApplicationTeamPopulator {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private KtaInviteRestService ktaInviteRestService;
+    private ApplicationKtaInviteRestService applicationKtaInviteRestService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -108,7 +108,7 @@ public class ApplicationTeamPopulator {
         if (kta.isPresent()) {
             ktaProcessRole = kta.get();
         } else {
-            ktaInvite = ktaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
+            ktaInvite = applicationKtaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         }
 
         return new ApplicationTeamViewModel(applicationId, application.getName(), application.getCompetitionName(), questionId, organisationViewModels, user.getId(),

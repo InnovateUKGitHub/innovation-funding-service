@@ -33,6 +33,8 @@ public class ApplicationKtaInviteLookupStrategyTest {
     private ApplicationKtaInviteRepository applicationKtaInviteRepository;
 
     private final Long inviteId = 123L;
+    private final String hash = "hash";
+
 
     @Test
     public void testFindById() {
@@ -41,5 +43,14 @@ public class ApplicationKtaInviteLookupStrategyTest {
         when(applicationKtaInviteMapper.mapToResource(applicationKtaInvite)).thenReturn(applicationKtaInviteResource);
         when(applicationKtaInviteRepository.findById(inviteId)).thenReturn(Optional.of(applicationKtaInvite));
         assertEquals(applicationKtaInviteResource, lookup.getApplicationInviteResource(inviteId));
+    }
+
+    @Test
+    public void testFindByHash() {
+        ApplicationKtaInviteResource applicationKtaInviteResource = newApplicationKtaInviteResource().withId(inviteId).build();
+        ApplicationKtaInvite applicationKtaInvite = newApplicationKtaInvite().withId(inviteId).build();
+        when(applicationKtaInviteMapper.mapToResource(applicationKtaInvite)).thenReturn(applicationKtaInviteResource);
+        when(applicationKtaInviteRepository.getByHash(hash)).thenReturn(applicationKtaInvite);
+        assertEquals(applicationKtaInviteResource, lookup.getKtaInviteByHash(hash));
     }
 }

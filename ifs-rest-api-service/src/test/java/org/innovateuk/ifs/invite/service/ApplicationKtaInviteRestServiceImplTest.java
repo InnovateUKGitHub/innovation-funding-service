@@ -5,21 +5,18 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationKtaInviteResourceListType;
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class KtaInviteRestServiceImplTest extends BaseRestServiceUnitTest<KtaInviteRestServiceImpl> {
+public class ApplicationKtaInviteRestServiceImplTest extends BaseRestServiceUnitTest<ApplicationKtaInviteRestServiceImpl> {
 
     private static final String inviteKtaRestURL = "/kta-invite";
 
     @Override
-    protected KtaInviteRestServiceImpl registerRestServiceUnderTest() {
-        return new KtaInviteRestServiceImpl();
+    protected ApplicationKtaInviteRestServiceImpl registerRestServiceUnderTest() {
+        return new ApplicationKtaInviteRestServiceImpl();
     }
 
     @Test
@@ -63,5 +60,28 @@ public class KtaInviteRestServiceImplTest extends BaseRestServiceUnitTest<KtaInv
 
         assertTrue(response.isSuccess());
         assertEquals(expected, response.getSuccess());
+    }
+
+    @Test
+    public void getKtaInviteByHash() {
+        String hash = "hash";
+        ApplicationKtaInviteResource expected = newApplicationKtaInviteResource().build();
+        String url = inviteKtaRestURL + "/hash/" + hash;
+        setupGetWithRestResultExpectations(url, ApplicationKtaInviteResource.class, expected, OK);
+        RestResult<ApplicationKtaInviteResource> response = service.getKtaInviteByHash(hash);
+
+        assertTrue(response.isSuccess());
+        assertEquals(expected, response.getSuccess());
+    }
+
+    @Test
+    public void acceptInvite() {
+        final String hash = "Hash";
+
+        setupPostWithRestResultExpectations(inviteKtaRestURL +  "/hash/" + hash, OK);
+        RestResult<Void> response = service.acceptInvite(hash);
+        assertTrue(response.isSuccess());
+
+        setupPostWithRestResultVerifications(inviteKtaRestURL +  "/hash/" + hash, Void.class);
     }
 }

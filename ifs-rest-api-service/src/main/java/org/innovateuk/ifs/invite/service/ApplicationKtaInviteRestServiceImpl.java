@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInviteRestService {
+public class ApplicationKtaInviteRestServiceImpl extends BaseRestService implements ApplicationKtaInviteRestService {
 
     private final static String KTA_INVITE_REST_URL = "/kta-invite";
 

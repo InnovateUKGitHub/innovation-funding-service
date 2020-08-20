@@ -15,7 +15,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.invite.service.KtaInviteRestService;
+import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class ApplicationTeamController {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private KtaInviteRestService ktaInviteRestService;
+    private ApplicationKtaInviteRestService applicationKtaInviteRestService;
 
     @Autowired
     private QuestionStatusRestService questionStatusRestService;
@@ -88,7 +88,7 @@ public class ApplicationTeamController {
                          @PathVariable long applicationId,
                          @PathVariable long questionId,
                          UserResource user) {
-        return inviteKta(form, validationHandler, applicationId, questionId, model, user, ktaInviteRestService::saveKtaInvite);
+        return inviteKta(form, validationHandler, applicationId, questionId, model, user, applicationKtaInviteRestService::saveKtaInvite);
     }
 
     @PostMapping(params = "resend-kta")
@@ -101,7 +101,7 @@ public class ApplicationTeamController {
     @PostMapping(params = "remove-kta")
     public String removeKta(@PathVariable long applicationId,
                             @PathVariable long questionId) {
-        ktaInviteRestService.removeKtaInviteByApplication(applicationId).getSuccess();
+        applicationKtaInviteRestService.removeKtaInviteByApplication(applicationId).getSuccess();
         return redirectToApplicationTeam(applicationId, questionId);
     }
 
@@ -179,9 +179,9 @@ public class ApplicationTeamController {
     }
 
     private void resendKtaInvite(long applicationId) {
-        ApplicationKtaInviteResource invite = ktaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
+        ApplicationKtaInviteResource invite = applicationKtaInviteRestService.getKtaInviteByApplication(applicationId).getSuccess();
         if (invite != null) {
-            ktaInviteRestService.resendKtaInvite(invite);
+            applicationKtaInviteRestService.resendKtaInvite(invite);
         }
     }
 
