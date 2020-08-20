@@ -208,12 +208,10 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isH2020() {
-        System.out.println("is h2020" + h2020);
         return h2020;
     }
 
     public boolean isProcurement() {
-        System.out.println("is procur" + procurement);;
         return procurement;
     }
 
