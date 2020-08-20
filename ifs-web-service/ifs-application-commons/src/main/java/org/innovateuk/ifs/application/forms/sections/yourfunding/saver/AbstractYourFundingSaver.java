@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.OtherFundingRowForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -44,7 +41,7 @@ public abstract class AbstractYourFundingSaver {
         }
     }
 
-    protected ServiceResult<Void> save(BaseFinanceResource finance, YourFundingAmountForm form) {
+    protected ServiceResult<Void> save(BaseFinanceResource finance, AbstractYourFundingAmountForm form) {
         ValidationMessages messages = new ValidationMessages();
 
         saveGrantClaimAmount(finance, form, messages);
@@ -60,7 +57,7 @@ public abstract class AbstractYourFundingSaver {
         }
     }
 
-    protected ServiceResult<Void> save(BaseFinanceResource finance, YourFundingPercentageForm form) {
+    protected ServiceResult<Void> save(BaseFinanceResource finance, AbstractYourFundingPercentageForm form) {
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -79,7 +76,7 @@ public abstract class AbstractYourFundingSaver {
         }
     }
 
-    private void saveGrantClaimPercentage(BaseFinanceResource finance, YourFundingPercentageForm form, ValidationMessages messages) {
+    private void saveGrantClaimPercentage(BaseFinanceResource finance, AbstractYourFundingPercentageForm form, ValidationMessages messages) {
         GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
             claim.setPercentage(ofNullable(form.getGrantClaimPercentage()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(BigDecimal.ZERO));
@@ -89,14 +86,13 @@ public abstract class AbstractYourFundingSaver {
         messages.addAll(getFinanceRowService().update(claim).getSuccess());
     }
 
-    private void saveGrantClaimAmount(BaseFinanceResource finance, YourFundingAmountForm form, ValidationMessages messages) {
+    private void saveGrantClaimAmount(BaseFinanceResource finance, AbstractYourFundingAmountForm form, ValidationMessages messages) {
         GrantClaimAmount claim = (GrantClaimAmount) finance.getGrantClaim();
         claim.setAmount(form.getAmount());
         messages.addAll(getFinanceRowService().update(claim).getSuccess());
     }
 
-    private void saveOtherFunding(BaseFinanceResource finance, AbstractYourFundingForm form, ValidationMessages messages) {
-
+    private void saveOtherFunding(BaseFinanceResource finance, AbstractYourFundingForm<OtherFundingRowForm> form, ValidationMessages messages) {
         OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
         otherFundingCategory.getOtherFunding().setOtherPublicFunding(form.getOtherFunding() ? "Yes" : "No");
         messages.addAll(getFinanceRowService().update(otherFundingCategory.getOtherFunding()).getSuccess());

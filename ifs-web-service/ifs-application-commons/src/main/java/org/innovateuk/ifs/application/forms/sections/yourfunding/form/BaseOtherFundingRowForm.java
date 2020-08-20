@@ -1,23 +1,12 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.form;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
-import org.innovateuk.ifs.finance.resource.EmployeesAndTurnoverResource;
-import org.innovateuk.ifs.finance.resource.GrowthTableResource;
-import org.innovateuk.ifs.finance.resource.KtpYearsResource;
 import org.innovateuk.ifs.finance.resource.cost.BaseOtherFunding;
-import org.innovateuk.ifs.finance.resource.cost.PreviousFunding;
 
 import java.math.BigDecimal;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-//@JsonSubTypes({
-//        @JsonSubTypes.Type(value = PreviousFundingRowForm.class, name = "PreviousFundingRowForm"),
-//        @JsonSubTypes.Type(value = OtherFundingRowForm.class, name = "OtherFundingRowForm")
-//})
 public abstract class BaseOtherFundingRowForm<T extends BaseOtherFunding> extends AbstractCostRowForm<T> {
 
     private String source;

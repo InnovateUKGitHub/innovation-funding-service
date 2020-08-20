@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -48,12 +47,12 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
         return financeRowRestService;
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, YourFundingAmountForm form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, YourFundingPercentageForm form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
