@@ -131,10 +131,10 @@ public class ExternalUserRegistrationController {
                         .withAddressRequired(true)
                         .withInvitee(true)
                         .withRole(invite.getRole().getDisplayName())
-                        .withPageTitle("Create " + invite.getRole().getDisplayName() + " account")
+                        .withPageTitle("Create " + invite.getRole().getDisplayName().toLowerCase() + " account")
                         .withSubTitle("")
-                        .withPostcodeGuidance(null)
-                        .withGuidance(null);
+                        .withPostcodeGuidance("")
+                        .withGuidance("");
             }
             model.addAttribute("model", viewModelBuilder.build());
             return "registration/register";
