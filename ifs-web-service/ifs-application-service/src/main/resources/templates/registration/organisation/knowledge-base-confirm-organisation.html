@@ -29,7 +29,7 @@
             <dd th:text="${organisationName}">name</dd>
 
             <th:block th:if="${identification != null}">
-                <dt th:text="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).UNIVERSITY.id == knowledgeBaseType.id ? 'Registration number' : 'UKPRN number'}">Registration number</dt>
+                <dt th:text="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).UNIVERSITY.id == knowledgeBaseType.id ? 'UKPRN number' : 'Registration number'}">Registration number</dt>
                 <dd th:text="${identification}">1234</dd>
             </th:block>
             <dt>Address</dt>
