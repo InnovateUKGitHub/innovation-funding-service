@@ -230,7 +230,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
         form.recalculateTotals();
         orderAssociateCosts(form);
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE) || user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR));
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE) || user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER));
         model.addAttribute("model", viewModel);
         return VIEW;
     }

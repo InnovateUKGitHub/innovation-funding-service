@@ -54,11 +54,11 @@ public class MonitoringOfficerPermissionRulesTest extends BasePermissionRulesTes
 
         UserResource monitoringOfficer = newUserResource()
                 .withId(id)
-                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISOR).build();
+                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
 
         UserResource userToView = newUserResource()
                 .withId(id)
-                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISOR).build();
+                .withRoleGlobal(KNOWLEDGE_TRANSFER_ADVISER).build();
 
         assertTrue(rules.usersCanSeeIfTheyAreMonitoringOfficerOnProjects(monitoringOfficer, userToView));
     }

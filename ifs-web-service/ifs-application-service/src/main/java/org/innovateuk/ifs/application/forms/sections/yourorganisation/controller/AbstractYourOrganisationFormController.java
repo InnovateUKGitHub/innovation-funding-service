@@ -58,7 +58,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)));
+                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));

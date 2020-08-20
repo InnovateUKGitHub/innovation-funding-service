@@ -234,7 +234,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
            " LEFT JOIN ProcessRole pr " +
            "    ON app.id = pr.applicationId " +
            "        AND pr.user.id=:userId " +
-           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR, org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISOR) " +
+           "        AND pr.role in (org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT, org.innovateuk.ifs.user.resource.Role.COLLABORATOR, org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER) " +
            " LEFT JOIN Project proj " +
            "    ON proj.application.id = app.id " +
            " LEFT JOIN ProjectUser pu " +

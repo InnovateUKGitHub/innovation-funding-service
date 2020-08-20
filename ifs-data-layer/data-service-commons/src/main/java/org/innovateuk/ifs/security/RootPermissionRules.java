@@ -44,6 +44,6 @@ public abstract class RootPermissionRules {
     }
 
     protected boolean isKta(long applicationId, UserResource user) {
-        return checkProcessRole(user, applicationId, KNOWLEDGE_TRANSFER_ADVISOR, processRoleRepository);
+        return checkProcessRole(user, applicationId, KNOWLEDGE_TRANSFER_ADVISER, processRoleRepository);
     }
 }

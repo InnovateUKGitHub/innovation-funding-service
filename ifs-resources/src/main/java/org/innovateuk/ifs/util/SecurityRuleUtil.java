@@ -60,6 +60,6 @@ public final class SecurityRuleUtil {
     }
 
     public static boolean isKta(UserResource user) {
-        return user.hasRole(KNOWLEDGE_TRANSFER_ADVISOR);
+        return user.hasRole(KNOWLEDGE_TRANSFER_ADVISER);
     }
 }

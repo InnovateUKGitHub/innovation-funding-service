@@ -22,7 +22,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.application.resource.ApplicationState.OPENED;
-import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISOR;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 
 /**
@@ -78,7 +78,7 @@ public class ApplicationOverviewController {
         List<ProcessRoleResource> processRoleResources = userRestService.findProcessRole(applicationId).getSuccess();
         return processRoleResources.stream()
                 .anyMatch(processRole -> processRole.getUser().equals(userId)
-                        && processRole.getRole().equals(KNOWLEDGE_TRANSFER_ADVISOR));
+                        && processRole.getRole().equals(KNOWLEDGE_TRANSFER_ADVISER));
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {

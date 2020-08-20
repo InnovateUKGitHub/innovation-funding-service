@@ -91,7 +91,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)));
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE) || loggedInUser.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER)));
 
         Future<YourProjectLocationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));
