@@ -58,14 +58,15 @@ do_baseline () {
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # clean database
-  #  run_flyway_clean
+    run_flyway_clean
 
     # navigate to project root
     cd ${project_root_dir}
 
     ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused clean processResources processTestResources
 
-    IFS_GENERATE_TEST_DATA_EXECUTION=MULTI_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=BY_NAME ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    # run generator test class
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused $profile -Pcloud=automated -Pifs.companies.house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
     # extract the current version of the webtest data
     current_version="`get_current_patch_level`_"
@@ -83,8 +84,8 @@ do_baseline () {
     cd ${project_root_dir}
 
     # check that the new sequence of patches works
-   # run_flyway_clean
-   # run_flyway_migrate
+    run_flyway_clean
+    run_flyway_migrate
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
