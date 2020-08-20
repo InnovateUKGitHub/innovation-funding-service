@@ -17,6 +17,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final long competitionId;
     private final List<String> feedback;
     private final List<BigDecimal> scores;
+    private final QuestionResource questionResource;
 
     public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle, List<String> feedback, List<BigDecimal> scores) {
         super(data, questionResource);
@@ -29,6 +30,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.competitionId = data.getCompetition().getId();
         this.feedback = feedback;
         this.scores = scores;
+        this.questionResource = questionResource;
     }
 
     public String getDisplayName() {
@@ -86,6 +88,13 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     public boolean hasAssessorResponse() {
         return hasFeedback() && hasScore();
     }
+
+    public int getAssessorMaximumScore() {
+        if(!hasScore()) {
+            return 0;
+        }
+        return questionResource.getAssessorMaximumScore();
+    };
     
     public BigDecimal getAverageScore() {
         BigDecimal totalScore = BigDecimal.ZERO;
