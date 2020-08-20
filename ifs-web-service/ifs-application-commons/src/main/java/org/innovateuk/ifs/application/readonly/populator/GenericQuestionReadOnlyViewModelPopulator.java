@@ -50,6 +50,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
 
         List<String> feedback = new ArrayList<>();
         List<BigDecimal> scores = new ArrayList<>();
+        int inScope = 0;
+        int totalScope = 0;
         if (settings.isIncludeAssessment()) {
             if (settings.getAssessmentId() != null) {
                 ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
@@ -63,6 +65,12 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                         .filter(scoresMap -> scoresMap.containsKey(question.getId()))
                         .map(scoresMap -> scoresMap.get(question.getId()))
                         .ifPresent(scores::add);
+
+                inScope = ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map((ApplicationAssessmentResource::isInScope)).orElse(false) ? 1 : 0;
+
+                totalScope = ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map((ApplicationAssessmentResource::isInScope)).orElse(false) ? 1 : 0;
             } else {
                 data.getAssessmentToApplicationAssessment().values()
                         .stream()
@@ -77,6 +85,14 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                         .filter(scoresMap -> scoresMap.containsKey(question.getId()))
                         .map(scoresMap -> scoresMap.get(question.getId()))
                         .forEach(scores::add);
+
+                inScope = (int) data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::isInScope).filter(is -> is).count();
+
+                totalScope = (int) data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::isInScope).count();
             }
         }
 
@@ -89,7 +105,9 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
                 feedback,
-                scores
+                scores,
+                inScope,
+                totalScope
             );
     }
 
