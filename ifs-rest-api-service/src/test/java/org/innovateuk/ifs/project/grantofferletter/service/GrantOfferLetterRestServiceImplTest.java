@@ -89,6 +89,21 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
+    public void testRemoveAdditionalContractFile() {
+
+        Long projectId = 123L;
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/additional-contract";
+
+        setupDeleteWithRestResultExpectations(nonBaseUrl);
+
+        RestResult<Void> result = service.removeAdditionalContractFile(projectId);
+
+        assertTrue(result.isSuccess());
+
+        setupDeleteWithRestResultVerifications(nonBaseUrl);
+    }
+
+    @Test
     public void testRemoveSignedGrantOfferLetter() {
 
         Long projectId = 123L;

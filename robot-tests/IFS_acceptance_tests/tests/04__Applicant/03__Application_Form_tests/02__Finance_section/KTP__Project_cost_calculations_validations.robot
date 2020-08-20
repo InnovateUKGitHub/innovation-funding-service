@@ -34,7 +34,8 @@ Mark as complete with no associates is not allowed
 
 Entering duration in months autofills associate development
     [Documentation]  IFS-7790
-    Given the user fills in associate salary      12  123
+    Given the user clicks the button/link         jQuery = button:contains("Open all")
+    When the user fills in associate salary       12  123
     Then the user should see the element          jQuery = table[id="${associateDevelopmentTable}"] td:contains("12")
     And the user should not see the element       jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td:contains(${empty_field_warning_message}) ~ td:contains(${empty_field_warning_message})
 
@@ -47,8 +48,7 @@ Calculation for associate employment and development
 
 Knowledge base supervisor can only add two rows
     [Documentation]  IFS-7790
-    Given the user clicks the button/link        jQuery = button:contains("Knowledge base supervisor")
-    When the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
+    Given the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
     Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
 
 Knowledge base supervisor validations
@@ -67,11 +67,11 @@ Knowledge base supervisor calculations
 
 Estate validations
     [Documentation]  IFS-7790
-    Given the user clicks the button/link                 jQuery = button:contains("Estates")
-    When the user enters text to a text field             css = input[id^="estate"][id$="description"]  estate
-    And The user enters text to a text field              css = input[id^="estate"][id$="cost"]  ${estateValue}
-    When the user clicks the button/link                  jQuery = button:contains("Mark as complete")
-    Then The user should see a field and summary error    ${estate_Error_Message}
+    #Given the user clicks the button/link                 jQuery = button:contains("Estates")
+    Given the user enters text to a text field             css = input[id^="estate"][id$="description"]  estate
+    When The user enters text to a text field              css = input[id^="estate"][id$="cost"]  ${estateValue}
+    Then the user clicks the button/link                   jQuery = button:contains("Mark as complete")
+    And The user should see a field and summary error      ${estate_Error_Message}
 
 Estate calculations
     [Documentation]  IFS-7790
@@ -80,11 +80,10 @@ Estate calculations
 
 Additional associate support validations
    [Documentation]  IFS-7790
-   Given the user clicks the button/link        jQuery = button:contains("Additional associate support")
-   When the user enters text to a text field    css = input[id^="associateSupport"][id$="description"]  ${EMPTY}
-   And The user enters text to a text field     css = input[id^="associateSupport"][id$="cost"]  ${EMPTY}
-   Then the user should see the element         jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="cost"]
-   And the user should see the element          jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
+   Given the user enters text to a text field    css = input[id^="associateSupport"][id$="description"]  ${EMPTY}
+   When The user enters text to a text field     css = input[id^="associateSupport"][id$="cost"]  ${EMPTY}
+   Then the user should see the element          jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="cost"]
+   And the user should see the element           jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
 
 Additional associate support calculation
    [Documentation]  IFS-7790
@@ -96,17 +95,15 @@ Additional associate support calculation
 
 Subcontracting costs calculations
     [Documentation]  IFS-7790
-    Given the user clicks the button/link                jQuery = button:contains("Subcontracting costs")
-    When the user enters text to a text field            css = input[id^="subcontracting"][id$="cost"]        1000
+    Given the user enters text to a text field            css = input[id^="subcontracting"][id$="cost"]        1000
     Then the user fills in the subcontracting values
 
 Travel and subsistence calculations
     [Documentation]  IFS-7790
-    Given the user clicks the button/link       jQuery = button:contains("Travel and subsistence")
-    When the user enters text to a text field   css = input[id^="travelRows"][id$="item"]    Travel
-    And the user enters text to a text field    css = input[id^="travelRows"][id$="times"]       2
-    And the user enters text to a text field    css = input[id^="travelRows"][id$="eachCost"]    1000
-    Then the user should see the right values   2,000    Travel and subsistence    5369
+    Given the user enters text to a text field     css = input[id^="travelRows"][id$="item"]    Travel
+    When the user enters text to a text field      css = input[id^="travelRows"][id$="times"]       2
+    Then the user enters text to a text field      css = input[id^="travelRows"][id$="eachCost"]    1000
+    And the user should see the right values       2,000    Travel and subsistence    5369
 
 Other costs calculations
     [Documentation]  IFS-7790
@@ -189,7 +186,6 @@ the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("£8,369") ~ td:contains("123") ~ td:contains("123") ~ td:contains(2,000) ~ td:contains(2,000) ~ td:contains("123") ~ td:contains("1,000") ~ td:contains(1,000) ~ td:contains(1,000) ~ td:contains("1,000")
 
 the user fills in consumables
-    the user clicks the button/link          jQuery = button:contains("Consumables")
     the user enters text to a text field     css = input[id^="consumableCost"][id$="item"]  consumable
     the user enters text to a text field     css = input[id^="consumableCost"][id$="quantity"]       2
     the user enters text to a text field     css = input[id^="consumableCost"][id$="cost"]       1000
@@ -201,7 +197,6 @@ the user should see the right values
 
 the user fills in ktp other costs
     [Arguments]   ${description}   ${estimate}
-    the user clicks the button/link          jQuery = button:contains("Other costs")
     the user enters text to a text field     css = textarea[id^="otherRows"][id$="description"]    ${description}
     the user enters text to a text field     css = input[id^="otherRows"][id$="estimate"]       ${estimate}
 
