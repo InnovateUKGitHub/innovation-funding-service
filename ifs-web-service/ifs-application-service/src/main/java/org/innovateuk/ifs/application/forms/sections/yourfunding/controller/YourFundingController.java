@@ -15,9 +15,7 @@ import org.innovateuk.ifs.application.service.SectionStatusRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionApplicationConfigResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionApplicationConfigRestService;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -68,9 +66,6 @@ public class YourFundingController {
 
     @Autowired
     private ApplicationRestService applicationRestService;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
 
     @GetMapping
     @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
@@ -258,9 +253,7 @@ public class YourFundingController {
     }
 
     @PostMapping("add-row")
-    public String ajaxAddRow(Model model, @PathVariable long applicationId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+    public String ajaxAddRow(Model model) {
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
@@ -268,7 +261,6 @@ public class YourFundingController {
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());
-        model.addAttribute("fundingType", competitionResource.getFundingType());
         return "application/your-funding-fragments :: ajax_other_funding_row";
     }
 
