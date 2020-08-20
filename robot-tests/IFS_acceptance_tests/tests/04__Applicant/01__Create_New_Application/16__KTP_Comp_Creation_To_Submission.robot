@@ -25,6 +25,7 @@ Resource          ../../../resources/common/Assessor_Commons.robot
 
 *** Variables ***
 <<<<<<< HEAD
+<<<<<<< HEAD
 &{ktpLeadApplicantCredentials}        email=${lead_ktp_email}  password=${short_password}
 &{ktpNewPartnerCredentials}           email=${new_partner_ktp_email}  password=${correct_password}
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
@@ -47,9 +48,13 @@ ${costsValue}                         123
 ${associateSalaryTable}               associate-salary-costs-table
 ${associateDevelopmentTable}          associate-development-costs-table
 =======
+=======
+>>>>>>> feature/IFS-7960-ktp-kta-dashboard
 &{ktpLeadApplicantCredentials}     email=${lead_ktp_email}  password=${short_password}
 ${KTPapplicationTitle}             KTP Application
+${secondKTPApplicationTitle}       KTP Application with existing users
 ${ktpOrganisationName}             KTP Organisation
+${secondKTPOrgName}                D Knowledge Base
 ${group_employees_header}          Number of full time employees in your corporate group (if applicable)
 ${group_employees}                 200
 ${fname}                           Indi
@@ -63,6 +68,11 @@ ${phone_number}                    01234567897
 @{shareHolderFunds}                20000   15000   10000
 @{loans}                           35000   40000   45000
 @{employees}                       2000    1500    1200
+<<<<<<< HEAD
+>>>>>>> feature/IFS-7960-ktp-kta-dashboard
+=======
+${associateSalaryTable}            associate-salary-costs-table
+${associateDevelopmentTable}       associate-development-costs-table
 >>>>>>> feature/IFS-7960-ktp-kta-dashboard
 
 *** Test Cases ***
