@@ -33,6 +33,7 @@ public class FinanceChecksEligibilityViewModel {
     private boolean externalView;
     private boolean isUsingJesFinances;
     private final boolean h2020;
+    private final boolean procurement;
     private final boolean projectIsActive;
     private final boolean loanCompetition;
     private final boolean collaborativeProject;
@@ -60,6 +61,7 @@ public class FinanceChecksEligibilityViewModel {
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
         this.h2020 = competition.isH2020();
+        this.procurement = competition.isProcurement();
         this.loanCompetition = competition.isLoan();
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
@@ -206,7 +208,13 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isH2020() {
+        System.out.println("is h2020" + h2020);
         return h2020;
+    }
+
+    public boolean isProcurement() {
+        System.out.println("is procur" + procurement);;
+        return procurement;
     }
 
     public boolean isProjectIsActive() {
