@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -457,7 +458,7 @@ public class ProjectFinanceChecksController {
 
         boolean isUsingJesFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
         if (!isUsingJesFinances) {
-            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypes(), competition.isOverheadsAlwaysTwenty(), competition.getName()));
+            model.addAttribute("model", new FinanceChecksProjectCostsViewModel(application.getId(), competition.getFinanceRowTypes(), competition.isOverheadsAlwaysTwenty(), competition.getName(), competition.getFundingType() == FundingType.KTP));
             model.addAttribute("form", formPopulator.populateForm(project.getId(), organisation.getId()));
         } else {
             model.addAttribute("academicCostForm", projectAcademicCostFormPopulator.populate(new AcademicCostForm(), project.getId(), organisation.getId()));

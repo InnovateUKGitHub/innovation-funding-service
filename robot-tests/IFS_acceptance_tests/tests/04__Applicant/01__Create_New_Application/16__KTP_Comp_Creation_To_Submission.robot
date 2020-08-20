@@ -12,6 +12,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-7841  KTP: Knowledge base organisation type
 ...
 ...            IFS-7805  KTP Application: Users cannot see project start date
+...
+...            IFS-7790  KTP: Your finances - Edit
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -26,12 +28,13 @@ Resource          ../../../resources/common/PS_Common.robot
 &{ktpExistingLeadCredentials}         email=${existing_lead_ktp_email}  password=${short_password}
 &{ktpExistingPartnerCredentials}      email=${existing_partner_ktp_email}  password=${short_password}
 &{ktpExistingAcademicCredentials}     email=${existing_academic_email}  password=${short_password}
-${ktpApplicationTitle}                KTP Application
+${ktpApplicationTitle}                KTP New Application
 ${secondKTPApplicationTitle}          KTP Application with existing users
 ${ktpOrgName}                         A Knowledge Base
 ${secondKTPOrgName}                   D Knowledge Base
 ${group_employees_header}             Number of full time employees in your corporate group (if applicable)
 ${group_employees}                    200
+${costsValue}                         123
 @{turnover}                           100000  98000   96000
 @{preTaxProfit}                       98000   96000   94000
 @{netCurrentAssets}                   100000  100000  100000
@@ -39,6 +42,8 @@ ${group_employees}                    200
 @{shareHolderFunds}                   20000   15000   10000
 @{loans}                              35000   40000   45000
 @{employees}                          2000    1500    1200
+${associateSalaryTable}               associate-salary-costs-table
+${associateDevelopmentTable}          associate-development-costs-table
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -283,7 +288,7 @@ Internal user is able to approve the GOL and the project is now Live
 *** Keywords ***
 the user marks the KTP finances as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
-    the user fills in the project costs                      ${overheadsCost}  ${totalCosts}
+    the user fills in ktp project costs
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section                     ${Application}
@@ -426,6 +431,27 @@ Requesting IDs of this Project
 Custom suite teardown
     Close browser and delete emails
     Disconnect from database
+
+the user fills in ktp project costs
+    the user clicks the button/link             link = Your project costs
+    the user fills in Associate employment
+    the user fills in Associate development
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimation")
+    the user fills additional company costs     description  100
+    the user clicks the button/link             css = label[for="stateAidAgreed"]
+    the user clicks the button/link             jQuery = button:contains("Mark as complete")
+
+the user fills in Associate employment
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="${associateSalaryTable}"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate employment")
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="duration"]  ${costsValue}  
+    the user enters text to a text field    jQuery = table[id="${associateSalaryTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}  
+
+the user fills in Associate development
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   jQuery = table[id="${associateDevelopmentTable}"]
+    Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Associate development")
+    the user enters text to a text field    jQuery = table[id="${associateDevelopmentTable}"] td:contains("Associate 1") ~ td input[id$="cost"]  ${costsValue}  
 
 Requesting KTP Organisation ID
     ${ktpOrganisationID} =  get organisation id by name     ${ktpOrgName}

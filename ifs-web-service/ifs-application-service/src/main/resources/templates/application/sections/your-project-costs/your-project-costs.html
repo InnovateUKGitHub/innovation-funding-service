@@ -55,14 +55,9 @@
                 to one member of your team.</p>
 
             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-finances">
-                <th:block th:insert="application/your-project-costs-fragments :: labour"/>
-                <th:block th:insert="application/your-project-costs-fragments :: overheads"/>
-                <th:block th:insert="application/your-project-costs-fragments :: procurement-overheads"/>
-                <th:block th:insert="application/your-project-costs-fragments :: materials"/>
-                <th:block th:insert="application/your-project-costs-fragments :: capital_usage"/>
-                <th:block th:insert="application/your-project-costs-fragments :: subcontracting_costs"/>
-                <th:block th:insert="application/your-project-costs-fragments :: travel"/>
-                <th:block th:insert="application/your-project-costs-fragments :: other_costs"/>
+                <th:block th:each="type : ${model.orderedAccordionFinanceRowTypes}">
+                    <th:block th:insert="application/your-project-costs-fragments :: __${type.name().toLowerCase()}__"/>
+                </th:block>
             </div>
 
             <div class="govuk-grid-row total-cost">
@@ -81,104 +76,9 @@
                 </div>
             </div>
 
-            <div class="govuk-form-group" th:if="${model.financeRowTypes.contains(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
-                 th:classappend="${#fields.hasErrors('vatForm.registered')} ? 'govuk-form-group--error'">
-                <fieldset class="govuk-fieldset">
-                    <legend id="vatForm.registered" class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                        Are you VAT registered?
-                    </legend>
-                    <th:block th:unless="${model.readOnly}">
-                        <span class="govuk-hint">If you are VAT registered, VAT will be calculated at 20%</span>
+            <th:block th:insert="application/your-project-costs-fragments :: vat"/>
 
-                        <th:block th:if="${#fields.hasErrors('vatForm.registered')}">
-                                <span class="govuk-error-message" th:each="err : ${#fields.errors('vatForm.registered')}"
-                                      th:text="${err}">
-                                </span>
-                        </th:block>
-
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item" data-target="vatRegistered-totals"
-                                 data-target-clear-validation="true" data-target-clear-form="true">
-                                <input class="govuk-radios__input"
-                                       id="vat-registered-yes"
-                                       type="radio"
-                                       th:checked="${vatForm == null ? false : vatForm.registered}"
-                                       th:field="*{vatForm.registered}"
-                                       value="true"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}"/>
-                                <label class="govuk-label govuk-radios__label" for="vat-registered-yes">
-                                    Yes
-                                </label>
-                            </div>
-
-                            <div id="vatRegistered-totals" class="panel">
-                                <div class="govuk-form-group">
-                                    <div class="govuk-grid-column-one-half alignleft">
-                                        <label for="total-cost" class="govuk-heading-m">Total VAT</label>
-                                    </div>
-
-                                    <div class="govuk-grid-column-one-half alignright">
-                                        <label id="vat-total" class="govuk-heading-m"
-                                               data-calculation-fields="#total-cost,0.2"
-                                               data-calculation-operations="*"
-                                               th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
-                                    </div>
-                                    <div class="govuk-grid-column-one-half alignleft">
-                                        <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
-                                    </div>
-                                    <div class="govuk-grid-column-one-half alignright">
-                                        <label for="total-cost" class="govuk-heading-m"
-                                               data-calculation-fields="#vat-total,#total-cost"
-                                               data-calculation-operations="+"
-                                               th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="govuk-radios__item"
-                                 data-target-clear-validation="true" data-target-clear-form="true">
-                                <input class="govuk-radios__input"
-                                       id="vat-registered-no"
-                                       th:checked="${vatForm == null ? false : vatForm.registered}"
-                                       type="radio"
-                                       th:field="*{vatForm.registered}"
-                                       value="false"
-                                       required="required"
-                                       th:attr=
-                                           "data-required-errormessage=#{validation.yourProjectCostsForm.vatRegistered.required}">
-                                <label class="govuk-label govuk-radios__label" for="vat-registered-no">
-                                    No
-                                </label>
-                            </div>
-                        </div>
-                    </th:block>
-
-                    <th:block th:if="${model.readOnly}">
-                        <span class="govuk-body"
-                              th:text="${form.vatForm.registered ? 'Yes' : 'No'}">No</span>
-                        <div class="govuk-grid-row total-cost" th:if="${form.vatForm.registered}">
-                            <div class="govuk-grid-column-one-half">
-                                <label for="total-cost" class="govuk-heading-m">Total VAT</label>
-                            </div>
-
-                            <div class="govuk-grid-row govuk-grid-column-one-half alignright">
-                                <label for="total-cost" class="govuk-heading-m"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getVatTotal(), 0, 'DEFAULT')}">£120</label>
-                            </div>
-
-                            <div class="govuk-grid-column-one-half">
-                                <label for="total-cost" class="govuk-heading-m">Total project costs inclusive of VAT</label>
-                            </div>
-
-                            <div class="govuk-grid-row govuk-grid-column-one-half alignright">
-                                <label for="total-cost" class="govuk-heading-m"
-                                       th:text="'£' + ${#numbers.formatInteger(form.getProjectVatTotal(), 0, 'DEFAULT')}">£120</label>
-                            </div>
-                        </div>
-                    </th:block>
-                </fieldset>
-            </div>
+            <th:block th:insert="application/your-project-costs-fragments :: additional_company_costs"/>
 
             <div th:unless="${model.readOnly}" class="govuk-form-group"
                  th:classappend="${#fields.hasErrors('eligibleAgreement')} ? 'govuk-form-group--error': ''">
