@@ -17,8 +17,10 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.PREVIOUS_FUNDING;
 
@@ -29,7 +31,6 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.PREVIOUS_F
 @Component
 public class PreviousFundingHandler extends FinanceRowHandler<PreviousFunding> {
     public static final String COST_KEY = "other-funding";
-    public static final String OTHER_FUNDING_NAME = OTHER_FUNDING.getName();
 
     @Autowired
     private PreviousFundingValidator validator;
@@ -90,7 +91,7 @@ public class PreviousFundingHandler extends FinanceRowHandler<PreviousFunding> {
     }
 
     @Override
-    protected Optional<PreviousFunding> intialiseCost(Finance finance) {
+    protected List<PreviousFunding> intialiseCosts(Finance finance) {
         Long id = null;
         String receivedOtherFunding;
         if (finance.getCompetition().isFullyFunded()) {
@@ -101,6 +102,6 @@ public class PreviousFundingHandler extends FinanceRowHandler<PreviousFunding> {
         String fundingSource = BaseOtherFundingCostCategory.OTHER_FUNDING;
         String securedDate = null;
         BigDecimal fundingAmount = new BigDecimal(0);
-        return Optional.of(new PreviousFunding(id, receivedOtherFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
+        return newArrayList(new PreviousFunding(id, receivedOtherFunding, fundingSource, securedDate, fundingAmount, finance.getId()));
     }
 }

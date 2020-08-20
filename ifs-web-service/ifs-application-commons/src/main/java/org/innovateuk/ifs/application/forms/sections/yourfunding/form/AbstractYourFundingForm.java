@@ -12,7 +12,7 @@ public abstract class AbstractYourFundingForm<T extends BaseOtherFundingRowForm>
 
     private Boolean otherFunding;
 
-    private Map<String, T> otherFundingRows = Collections.emptyMap();
+    private Map<String, T> otherFundingRows = new LinkedHashMap<>();
 
     public Boolean getOtherFunding() {
         return otherFunding;
