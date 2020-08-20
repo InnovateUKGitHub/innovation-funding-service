@@ -108,7 +108,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationReadOnlyViewModel(settings, sectionViews);
+        return new ApplicationReadOnlyViewModel(settings, sectionViews, data.getApplicationScore());
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {

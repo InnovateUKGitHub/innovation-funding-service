@@ -15,6 +15,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,6 +67,17 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
         this.assessmentToApplicationAssessment = assessments.stream()
                 .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
+    }
+
+    public BigDecimal getApplicationScore() {
+        BigDecimal totalAssessmentScore = assessmentToApplicationAssessment.values()
+                .stream()
+                .map(v -> v.getAveragePercentage())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal average = totalAssessmentScore.divide(BigDecimal.valueOf(assessmentToApplicationAssessment.size()), 1, BigDecimal.ROUND_HALF_UP);
+
+        return average;
     }
 
     @Override
