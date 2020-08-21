@@ -997,6 +997,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
+    public boolean isSbriPilot() {
+        return SBRI_PILOT.equals(name);
+    }
+
+    @Override
     public ApplicationConfiguration getApplicationConfiguration() {
         return this;
     }

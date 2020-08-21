@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -74,7 +75,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -134,6 +134,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+    @Autowired
+    private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
+    @Autowired
+    private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
+    @Autowired
+    private CompetitionService competitionService;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
@@ -275,32 +281,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
-
-        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
-            CostCategory cc = costCategoryRepository.findById(summary.getCategory().getId()).orElse(null);
-
-            return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
-
-                BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
-
-                return new Cost(costValueForThisMonth).
-                        withCategory(cc).
-                        withTimePeriod(i, MONTH, 1, MONTH);
-
-            }).collect(toList());
-        });
-
-        return flattenLists(spendProfileCostsPerCategory);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
-                andOnSuccess(spendProfileCostCategorySummaries ->
-                        generateSpendProfileForOrganisation(projectId, organisationId, spendProfileCostCategorySummaries, user, Calendar.getInstance()));
+        List<List<Cost>> costs;
+        if (project.getApplication().getCompetition().isSbriPilot()) {
+            costs = sbriPilotSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
+        } else {
+            costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
+        }
+        return flattenLists(costs);
     }
 
     @Override

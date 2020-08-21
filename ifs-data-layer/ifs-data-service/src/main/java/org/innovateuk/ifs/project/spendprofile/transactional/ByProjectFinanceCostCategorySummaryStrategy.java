@@ -5,9 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -64,34 +62,37 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
         CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
-        boolean useAcademicFinances = competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(
                 costCategoryType ->
-                       createCostCategorySummariesWithCostCategoryType(project, finances, useAcademicFinances, costCategoryType));
+                       createCostCategorySummariesWithCostCategoryType(project, finances, competition, organisation, costCategoryType));
     }
 
     private SpendProfileCostCategorySummaries createCostCategorySummariesWithCostCategoryType(
-            ProjectResource project, ProjectFinanceResource finances, boolean useAcademicFinances, CostCategoryType costCategoryType) {
+            ProjectResource project, ProjectFinanceResource finances, CompetitionResource competition, OrganisationResource organisation, CostCategoryType costCategoryType) {
 
         List<SpendProfileCostCategorySummary> costCategorySummaries = new ArrayList<>();
-        Map<CostCategory, BigDecimal> totalsPerCostCategory = getTotalsPerCostCategory(finances, useAcademicFinances, costCategoryType);
+        Map<CostCategory, BigDecimal> totalsPerCostCategory = getTotalsPerCostCategory(finances, competition, organisation, costCategoryType);
         totalsPerCostCategory.forEach((cc, total) -> costCategorySummaries.add(new SpendProfileCostCategorySummary(cc, total, project.getDurationInMonths())));
 
         return new SpendProfileCostCategorySummaries(costCategorySummaries, costCategoryType);
     }
 
-    private Map<CostCategory, BigDecimal> getTotalsPerCostCategory(ProjectFinanceResource finances, boolean useAcademicFinances, CostCategoryType costCategoryType) {
+    private Map<CostCategory, BigDecimal> getTotalsPerCostCategory(ProjectFinanceResource finances, CompetitionResource competition, OrganisationResource organisation, CostCategoryType costCategoryType) {
 
         Map<FinanceRowType, FinanceRowCostCategory> spendRows = getSpendProfileCostCategories(finances);
-        return getTotalsPerCostCategory(useAcademicFinances, costCategoryType, spendRows);
+        return getTotalsPerCostCategory(competition, organisation, costCategoryType, spendRows);
     }
 
-    private Map<CostCategory, BigDecimal> getTotalsPerCostCategory(boolean useAcademicFinances, CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
+    private Map<CostCategory, BigDecimal> getTotalsPerCostCategory(CompetitionResource competition, OrganisationResource organisation, CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
 
-        return useAcademicFinances ?
-                getAcademicTotalsPerCostCategory(costCategoryType, spendRows) :
-                getIndustrialTotalsPerCostCategory(costCategoryType, spendRows);
+        if (competition.isSbriPilot()) {
+            return getSbriPilotTotalsPerCostCategory(costCategoryType, spendRows);
+        } else if (competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
+            return getAcademicTotalsPerCostCategory(costCategoryType, spendRows);
+        } else {
+            return  getIndustrialTotalsPerCostCategory(costCategoryType, spendRows);
+        }
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> getSpendProfileCostCategories(ProjectFinanceResource finances) {
@@ -112,6 +113,27 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         return valuesPerCostCategory;
     }
 
+    private Map<CostCategory, BigDecimal> getSbriPilotTotalsPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
+
+        Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
+        costCategoryType.getCostCategories().forEach(cc -> valuesPerCostCategory.put(cc, BigDecimal.ZERO));
+
+        for (FinanceRowCostCategory costCategoryDetails : spendRows.values()) {
+            List<FinanceRowItem> costs = costCategoryDetails.getCosts();
+
+            for (FinanceRowItem cost : costs) {
+                SbriPilotCostCategoryGenerator academicCostCategoryMatch = SbriPilotCostCategoryGenerator.fromFinanceRowType(cost.getCostType());
+                if(academicCostCategoryMatch != null) {
+                    CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, academicCostCategoryMatch);
+                    BigDecimal value = cost.getTotal();
+                    BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
+                    valuesPerCostCategory.put(costCategory, currentValue.add(value));
+                }
+            }
+        }
+        return valuesPerCostCategory;
+    }
+
     private Map<CostCategory, BigDecimal> getAcademicTotalsPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
 
         Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
@@ -125,7 +147,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
                 String costCategoryName = cost.getName();
                 AcademicCostCategoryGenerator academicCostCategoryMatch = AcademicCostCategoryGenerator.fromFinanceRowName(costCategoryName);
                 if(academicCostCategoryMatch != null) {
-                    CostCategory costCategory = findAcademicCostCategoryForName(costCategoryType, academicCostCategoryMatch);
+                    CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, academicCostCategoryMatch);
                     BigDecimal value = cost.getTotal();
                     BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
                     valuesPerCostCategory.put(costCategory, currentValue.add(value));
@@ -135,7 +157,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         return valuesPerCostCategory;
     }
 
-    private CostCategory findAcademicCostCategoryForName(CostCategoryType costCategoryType, AcademicCostCategoryGenerator academicCostCategoryMatch) {
+    private CostCategory findCostCategoryFromGenerator(CostCategoryType costCategoryType, CostCategoryGenerator academicCostCategoryMatch) {
         return simpleFindFirst(costCategoryType.getCostCategories(), cat ->
                         cat.getName().equals(academicCostCategoryMatch.getDisplayName()) &&
                         cat.getLabel().equals(academicCostCategoryMatch.getLabel()))
