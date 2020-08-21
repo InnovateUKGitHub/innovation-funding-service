@@ -289,6 +289,7 @@
                                             <input type="text" id="ktaEmail"
                                                    th:field="*{ktaEmail}"
                                                    class="govuk-input"
+                                                   th:classappend="${#fields.hasErrors('ktaEmail')} ? 'govuk-!-margin-left-3'"
                                                    th:errorclass="govuk-input--error" />
                                         </td>
                                         <td class="govuk-table__cell alignright buttoncolumn">
