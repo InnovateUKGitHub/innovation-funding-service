@@ -7,9 +7,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.resource.cost.PreviousFunding;
-import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
 import org.innovateuk.ifs.finance.validator.PreviousFundingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_FUNDING;
+import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.OTHER_FUNDING_NAME;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.PREVIOUS_FUNDING;
 
 /**
@@ -62,7 +60,7 @@ public class PreviousFundingHandler extends FinanceRowHandler<PreviousFunding> {
     }
 
     private PreviousFunding buildRowItem(FinanceRow cost) {
-        if (PREVIOUS_FUNDING.equals(cost.getDescription())) {
+        if (OTHER_FUNDING_NAME.equals(cost.getDescription())) {
             return new PreviousFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost(), cost.getTarget().getId());
         }
         return new PreviousFunding(cost.getId(), null, cost.getDescription(), cost.getItem(), cost.getCost(), cost.getTarget().getId());
