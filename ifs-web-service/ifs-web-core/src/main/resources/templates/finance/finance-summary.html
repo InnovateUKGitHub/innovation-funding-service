@@ -64,6 +64,9 @@
                         <div>
                             <div th:text="${row.organisationName}">OrganisationName</div>
                             <small th:text="${row.status}">Lead</small>
+                            <a th:if="${row.showViewFinancesLink}"
+                               th:href="${row.url}"
+                               class="govuk-link govuk-!-font-weight-regular">View finances</a>
 
                             <th:block th:unless="${summary.readOnly}">
                                 <th:block th:if="${row.complete}">
@@ -127,57 +130,93 @@
 
     <!-- ===========================Form: finance breakdown table =========================== -->
     <th:block th:fragment="finance-breakdown-table(breakdown)">
-        <div class="project-cost-breakdown">
-            <div class="table-overflow">
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell"></td>
-                        <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
-                        <th scope="col"
-                            th:each="type : ${breakdown.financeRowTypes}"
-                            class="govuk-table__header govuk-table__header--numeric"
-                            th:text="|${type.displayName} (£)|">Labour (&pound;)</th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row" th:each="row : ${breakdown.rows}">
-                        <th class="govuk-table__header" scope="row">
-                            <div th:text="${row.organisationName}"></div>
-                            <div><small th:text="${row.status}">Lead organisation</small></div>
-                            <a th:if="${row.showViewFinancesLink}"
-                               th:href="${row.url}"
-                               class="govuk-link govuk-!-font-weight-regular">View finances</a>
-                        </th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
-                            th:text="|£${#numbers.formatInteger(row.total, 0, 'DEFAULT')}|">
-                        </td>
-                        <td th:each="type : ${breakdown.financeRowTypes}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
-                    </tr>
-                    <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
-                        <th class="govuk-table__header" scope="row">Total</th>
-                        <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
-                            th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
-                        </td>
-                        <td th:each="type : ${breakdown.financeRowTypes}"
-                            class="govuk-table__cell govuk-table__cell--numeric"
-                            th:text="${#numbers.formatInteger(breakdown.getTypeTotal(type), 0, 'DEFAULT')}">
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+        <th:block th:unless="${breakdown.ktpCompetition}" >
+            <div class="project-cost-breakdown">
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell"></td>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Total</th>
+                            <th scope="col"
+                                th:each="type : ${breakdown.financeRowTypes}"
+                                class="govuk-table__header govuk-table__header--numeric"
+                                th:text="|${type.displayName} (£)|">Labour (&pound;)</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="row : ${breakdown.rows}">
+                            <th class="govuk-table__header" scope="row">
+                                <div th:text="${row.organisationName}"></div>
+                                <div><small th:text="${row.status}">Lead organisation</small></div>
+                                <a th:if="${row.showViewFinancesLink}"
+                                   th:href="${row.url}"
+                                   class="govuk-link govuk-!-font-weight-regular">View finances</a>
+                            </th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                                th:text="|£${#numbers.formatInteger(row.total, 0, 'DEFAULT')}|">
+                            </td>
+                            <td th:each="type : ${breakdown.financeRowTypes}"
+                                class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
+                        </tr>
+                        <tr class="govuk-table__row" th:if="${breakdown.collaborativeProject}">
+                            <th class="govuk-table__header" scope="row">Total</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                                th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
+                            </td>
+                            <td th:each="type : ${breakdown.financeRowTypes}"
+                                class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${#numbers.formatInteger(breakdown.getTypeTotal(type), 0, 'DEFAULT')}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </th:block>
+        <th:block th:if="${breakdown.ktpCompetition}" >
+            <div class="project-cost-breakdown">
+                <div class="table-overflow" th:each="row : ${breakdown.rows}">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">
+                                <div th:text="${row.organisationName}"></div>
+                                <div><small th:text="${row.status}">Lead organisation</small></div>
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric" scope="col">Cost(£)</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row" th:each="type : ${breakdown.financeRowTypes}">
+                            <td class="govuk-table__cell"
+                                th:text="${type.displayName}">Labour</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                th:text="${#numbers.formatInteger(row.getCost(type), 0, 'DEFAULT')}">0</td>
+                        </tr>
+                        </tbody>
+                        <tfoot class="govuk-table__foot">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">Total</th>
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-font-weight-bold"
+                                th:text="'£'+${#numbers.formatInteger(breakdown.total, 0, 'DEFAULT')}">
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </th:block>
     </th:block>
-
 
     <!-- ===========================Form: Research Participations alert messages =========================== -->
     <th:block th:fragment="research-participation-alert(alertmodel)">
-        <div th:if="${alertmodel.researchParticipationPercentage &gt; alertmodel.currentCompetition.maxResearchRatio}" class="warning-alert">
-            <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are not within the required range</h2>
-            <p class="govuk-body">The research participation costs must be <span th:text="${alertmodel.currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
-        </div>
+        <th:block th:unless="${alertmodel.currentCompetition.isKtp()}">
+            <div th:if="${alertmodel.researchParticipationPercentage &gt; alertmodel.currentCompetition.maxResearchRatio}" class="warning-alert">
+                <h2 class="govuk-heading-s govuk-!-margin-0">The participation levels of this project are not within the required range</h2>
+                <p class="govuk-body">The research participation costs must be <span th:text="${alertmodel.currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
+            </div>
+        </th:block>
     </th:block>
 </html>
