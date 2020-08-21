@@ -90,6 +90,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    @Value("${ifs.system.external.user.email.domain}")
+    private String externalUserEmailDomain;
+
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
@@ -407,10 +410,32 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @UserUpdate
     public ServiceResult<UserResource> grantRole(GrantRoleCommand grantRoleCommand) {
         return getUser(grantRoleCommand.getUserId())
+                .andOnSuccess(user -> validateRoleDoesNotExist(user, grantRoleCommand.getTargetRole()))
+                .andOnSuccess(user -> validateEmail(user, grantRoleCommand.getTargetRole()))
                 .andOnSuccessReturn(user -> {
                     user.getRoles().add(grantRoleCommand.getTargetRole());
                     return user;
                 }).andOnSuccessReturn(userMapper::mapToResource);
+    }
+
+    private ServiceResult<User> validateEmail(User user, Role role) {
+
+        if (role.isKTA()) {
+            String domain = StringUtils.substringAfter(user.getEmail(), "@");
+
+            if (!externalUserEmailDomain.equalsIgnoreCase(domain)) {
+                return serviceFailure(USER_ADD_ROLE_INVALID_EMAIL);
+            }
+        }
+
+        return serviceSuccess(user);
+    }
+
+    private ServiceResult<User> validateRoleDoesNotExist(User user, Role role) {
+        if(user.getRoles().contains(role)) {
+            return serviceFailure(USER_ADD_ROLE_ROLE_ALREADY_EXISTS);
+        }
+        return serviceSuccess(user);
     }
 
     @Override
