@@ -179,13 +179,13 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£500")
 
 the user should see the correct data in the finance tables
-    the user should see the element       jQuery = td:contains("Associate salary costs") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Associate development costs") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Travel and subsistence") ~ td:contains("2,000")
     the user should see the element       jQuery = td:contains("Consumables") ~ td:contains("2,000")
-    the user should see the element       jQuery = td:contains("Knowledge base advisor") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Knowledge base supervisor") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Estate") ~ td:contains("1,000")
-    the user should see the element       jQuery = td:contains("Associate support costs") ~ td:contains("1,000")
+    the user should see the element       jQuery = td:contains("Additional associate support") ~ td:contains("1,000")
     the user should see the element       jQuery = td:contains("Subcontracting") ~ td:contains("1,000")
     the user should see the element       jQuery = td:contains("Other costs") ~ td:contains("1,000")
     the user should see the element       jQuery = th:contains("Total") ~ td:contains("£8,369")
