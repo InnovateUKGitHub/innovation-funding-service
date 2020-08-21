@@ -8,6 +8,7 @@ import java.time.ZonedDateTime;
 
 public class ApplicationKtaInviteResource extends InviteResource {
     private Long id;
+    private Long leadOrganisationId;
     private String email;
     private String name;
     private String applicationName;
@@ -107,6 +108,14 @@ public class ApplicationKtaInviteResource extends InviteResource {
         this.leadOrganisationName = leadOrganisationName;
     }
 
+    public Long getLeadOrganisationId() {
+        return leadOrganisationId;
+    }
+
+    public void setLeadOrganisationId(Long leadOrganisationId) {
+        this.leadOrganisationId = leadOrganisationId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -121,6 +130,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(leadOrganisationId, that.leadOrganisationId)
                 .append(email, that.email)
                 .append(name, that.name)
                 .append(applicationName, that.applicationName)
@@ -137,6 +147,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(leadOrganisationId)
                 .append(email)
                 .append(name)
                 .append(applicationName)
