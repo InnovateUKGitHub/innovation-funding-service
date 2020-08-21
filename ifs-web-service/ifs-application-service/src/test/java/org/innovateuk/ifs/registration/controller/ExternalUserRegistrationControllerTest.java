@@ -47,7 +47,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
 
 
         when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
                 .withEmail("blah@gmail.com")
                 .build()));
         MvcResult result = mockMvc.perform(get(URL_PREFIX + "/hash/register"))
@@ -68,7 +68,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
     public void testSubmitYourDetails() throws Exception {
         setLoggedInUser(null);
         when(inviteUserRestService.getInvite("hash")).thenReturn(restSuccess(newRoleInviteResource()
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
                 .withEmail("blah@gmail.com")
                 .build()));
 
@@ -81,7 +81,7 @@ public class ExternalUserRegistrationControllerTest extends BaseControllerMockMV
         registrationForm.setTermsAndConditions("1");
         when(userRestService.createUser(refEq(registrationForm.constructUserCreationResource()
                 .withInviteHash("hash")
-                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISOR)
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
                 .build())))
             .thenReturn(restSuccess(new UserResource()));
         mockMvc.perform(post(URL_PREFIX + "/hash/register")
