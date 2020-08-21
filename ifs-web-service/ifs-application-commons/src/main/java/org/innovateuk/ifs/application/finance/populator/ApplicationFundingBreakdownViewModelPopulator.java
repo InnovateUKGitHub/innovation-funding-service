@@ -74,7 +74,7 @@ public class ApplicationFundingBreakdownViewModelPopulator {
                 .map(organisation -> toFinanceTableRow(organisation, finances, leadOrganisationId, processRoles, user, application, competition))
                 .collect(toList());
 
-        if (!application.isSubmitted()) {
+        if (!application.isSubmitted() && !competition.isKtp()) {
             rows.addAll(pendingOrganisations(applicationId, types));
         }
 

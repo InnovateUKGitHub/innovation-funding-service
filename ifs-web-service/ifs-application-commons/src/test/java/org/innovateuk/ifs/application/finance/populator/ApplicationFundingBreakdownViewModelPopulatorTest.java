@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -121,6 +122,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
+
+        Mockito.verify(inviteService, times(1)).getPendingInvitationsByApplicationId(applicationId);
     }
 
     @Test
@@ -175,5 +178,8 @@ public class ApplicationFundingBreakdownViewModelPopulatorTest {
 
         assertNotNull(leadOrganisationFinanceBreakdown);
         assertEquals(leadOrganisationId, leadOrganisationFinanceBreakdown.getOrganisationId().longValue());
+
+        Mockito.verify(inviteService, times(0)).getPendingInvitationsByApplicationId(applicationId);
     }
+
 }
