@@ -91,7 +91,7 @@ public class PreviousFundingHandler extends FinanceRowHandler<PreviousFunding> {
     }
 
     @Override
-    protected List<PreviousFunding> intialiseCosts(Finance finance) {
+    protected List<PreviousFunding> initialiseCosts(Finance finance) {
         Long id = null;
         String receivedOtherFunding;
         if (finance.getCompetition().isFullyFunded()) {

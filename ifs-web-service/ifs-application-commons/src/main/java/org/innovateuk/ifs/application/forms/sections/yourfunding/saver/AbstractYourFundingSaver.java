@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
@@ -26,12 +25,18 @@ public abstract class AbstractYourFundingSaver {
 
     protected abstract FinanceRowRestService getFinanceRowService();
 
-    public void addOtherFundingRow(AbstractYourFundingForm form) {
-        OtherFundingRowForm rowForm = new OtherFundingRowForm();
-        form.getOtherFundingRows().put(generateUnsavedRowId(), rowForm);
+    public <T extends BaseOtherFundingRowForm> void addOtherFundingRow(AbstractYourFundingForm<T> form) {
+
+        T row = null;
+        if (FinanceRowType.OTHER_FUNDING == form.otherFundingType()) {
+            row = (T) new OtherFundingRowForm();
+        } else if (FinanceRowType.PREVIOUS_FUNDING == form.otherFundingType()) {
+            row = (T) new PreviousFundingRowForm();
+        }
+        form.getOtherFundingRows().put(generateUnsavedRowId(), row);
     }
 
-    public void removeOtherFundingRowForm(AbstractYourFundingForm form, String costId) {
+    public void removeOtherFundingRowForm(AbstractYourFundingForm<? extends BaseOtherFundingRowForm> form, String costId) {
         form.getOtherFundingRows().remove(costId);
         removeOtherFundingRow(costId);
     }
@@ -42,7 +47,7 @@ public abstract class AbstractYourFundingSaver {
         }
     }
 
-    protected ServiceResult<Void> save(BaseFinanceResource finance, AbstractYourFundingAmountForm form) {
+    protected ServiceResult<Void> save(BaseFinanceResource finance, AbstractYourFundingAmountForm<? extends BaseOtherFundingRowForm> form) {
         ValidationMessages messages = new ValidationMessages();
 
         saveGrantClaimAmount(finance, form, messages);
@@ -58,7 +63,7 @@ public abstract class AbstractYourFundingSaver {
         }
     }
 
-    protected ServiceResult<Void> save(BaseFinanceResource finance, AbstractYourFundingPercentageForm form) {
+    protected ServiceResult<Void> save(BaseFinanceResource finance, AbstractYourFundingPercentageForm<? extends BaseOtherFundingRowForm> form) {
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -77,7 +82,7 @@ public abstract class AbstractYourFundingSaver {
         }
     }
 
-    private void saveGrantClaimPercentage(BaseFinanceResource finance, AbstractYourFundingPercentageForm form, ValidationMessages messages) {
+    private void saveGrantClaimPercentage(BaseFinanceResource finance, AbstractYourFundingPercentageForm<? extends BaseOtherFundingRowForm> form, ValidationMessages messages) {
         GrantClaimPercentage claim = (GrantClaimPercentage) finance.getGrantClaim();
         if (form.getRequestingFunding()) {
             claim.setPercentage(ofNullable(form.getGrantClaimPercentage()).map(v -> v.setScale(MAX_DECIMAL_PLACES, HALF_UP)).orElse(BigDecimal.ZERO));
@@ -87,13 +92,13 @@ public abstract class AbstractYourFundingSaver {
         messages.addAll(getFinanceRowService().update(claim).getSuccess());
     }
 
-    private void saveGrantClaimAmount(BaseFinanceResource finance, AbstractYourFundingAmountForm form, ValidationMessages messages) {
+    private void saveGrantClaimAmount(BaseFinanceResource finance, AbstractYourFundingAmountForm<? extends BaseOtherFundingRowForm> form, ValidationMessages messages) {
         GrantClaimAmount claim = (GrantClaimAmount) finance.getGrantClaim();
         claim.setAmount(form.getAmount());
         messages.addAll(getFinanceRowService().update(claim).getSuccess());
     }
 
-    private void saveOtherFunding(BaseFinanceResource finance, AbstractYourFundingForm<OtherFundingRowForm> form, ValidationMessages messages) {
+    private void saveOtherFunding(BaseFinanceResource finance, AbstractYourFundingForm<? extends BaseOtherFundingRowForm> form, ValidationMessages messages) {
         BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(form.otherFundingType());
         otherFundingCategory.getOtherFunding().setOtherPublicFunding(form.getOtherFunding() ? "Yes" : "No");
         messages.addAll(getFinanceRowService().update(otherFundingCategory.getOtherFunding()).getSuccess());
