@@ -62,7 +62,8 @@ public class CompetitionSetupPostAwardServiceServiceImpl extends BaseTransaction
                     if (config.isPresent() && config.get().isSendByDefault()) {
                         postAwardService = PostAwardService.IFS_POST_AWARD;
                     } else {
-                        postAwardService = PostAwardService.CONNECT;
+                    	// IFS-8108 Default post award service to IFS PA
+                        postAwardService = PostAwardService.IFS_POST_AWARD;
                     }
 
                     CompetitionPostAwardServiceResource resource = new CompetitionPostAwardServiceResource();
