@@ -81,5 +81,4 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
             return URL_HASH_INVALID_TEMPLATE;
         }
     }
-
 }
