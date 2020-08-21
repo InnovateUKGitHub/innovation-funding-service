@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper(
         componentModel = "spring",
         uses = {
-                ApplicationMapper.class,
+                ApplicationMapper.class
         }
 )
 public abstract class ApplicationKtaInviteMapper extends BaseMapper<ApplicationKtaInvite, ApplicationKtaInviteResource, Long> {

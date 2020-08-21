@@ -37,7 +37,7 @@ public class ApplicationKtaInviteLookupStrategyTest {
 
 
     @Test
-    public void testFindById() {
+    public void findById() {
         ApplicationKtaInviteResource applicationKtaInviteResource = newApplicationKtaInviteResource().withId(inviteId).build();
         ApplicationKtaInvite applicationKtaInvite = newApplicationKtaInvite().withId(inviteId).build();
         when(applicationKtaInviteMapper.mapToResource(applicationKtaInvite)).thenReturn(applicationKtaInviteResource);
@@ -46,7 +46,7 @@ public class ApplicationKtaInviteLookupStrategyTest {
     }
 
     @Test
-    public void testFindByHash() {
+    public void findByHash() {
         ApplicationKtaInviteResource applicationKtaInviteResource = newApplicationKtaInviteResource().withId(inviteId).build();
         ApplicationKtaInvite applicationKtaInvite = newApplicationKtaInvite().withId(inviteId).build();
         when(applicationKtaInviteMapper.mapToResource(applicationKtaInvite)).thenReturn(applicationKtaInviteResource);

@@ -66,8 +66,8 @@ public class ApplicationInvitePermissionRules {
         return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
     }
 
-    @PermissionRule(value = "VIEW_AND_ACCEPT", description = "lead applicant can remove kta invite to the application")
-    public boolean ktaCanViewAndAcceptAnInviteAddressedToThem(final ApplicationKtaInviteResource invite, final UserResource user) {
+    @PermissionRule(value = "ACCEPT", description = "Kta user can accept the invite to the application")
+    public boolean ktaCanAcceptAnInviteAddressedToThem(final ApplicationKtaInviteResource invite, final UserResource user) {
         return invite.getEmail().equals(user.getEmail());
     }
 
