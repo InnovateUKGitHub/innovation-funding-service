@@ -385,7 +385,7 @@ IFS Admin cannot add a role profile of KTA to a non-KT Network user
     Given the user navigates to the page                     ${server}/management/admin/users/active
     When the user selects a user to edit details             Simon  simon.bates@gmail.com
     And the user adds a new external role profile of KTA
-    Then the user should see a field and summary error       Role profile cannot be created without a Knowledge Transfer Network email address.
+    Then the user should see a field and summary error       Role profile cannot be created without a knowledge transfer network email address.
 
 IFS Admin can add a role profile of KTA to a user in KT Network
     [Documentation]  IFS-7976
