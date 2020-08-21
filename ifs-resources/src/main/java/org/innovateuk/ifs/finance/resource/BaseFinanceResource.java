@@ -150,19 +150,19 @@ public abstract class BaseFinanceResource {
     @JsonIgnore
     public boolean isRequestingFunding() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim.isRequestingFunding();
+        return grantClaim == null ? false :grantClaim.isRequestingFunding();
     }
 
     @JsonIgnore
     public BigDecimal getGrantClaimPercentage() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
+        return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateClaimPercentage(getTotal(), getTotalOtherFunding());
     }
 
     @JsonIgnore
     public BigDecimal getTotalFundingSought() {
         GrantClaim grantClaim = getGrantClaim();
-        return grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
+        return grantClaim == null ? BigDecimal.ZERO : grantClaim.calculateFundingSought(getTotal(), getTotalOtherFunding())
                 .max(BigDecimal.ZERO);
     }
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectfinances.populator;
 
 import org.innovateuk.ifs.application.ApplicationUrlHelper;
+import org.innovateuk.ifs.application.finance.populator.FinanceSummaryTableViewModelPopulator;
 import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourFinancesRowViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectfinances.viewmodel.YourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -44,12 +45,14 @@ public class YourProjectFinancesModelPopulator {
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
 
+    @Autowired
+    private FinanceSummaryTableViewModelPopulator financeSummaryTableViewModelPopulator;
+
     public YourProjectFinancesViewModel populate(long applicationId, long sectionId, long organisationId) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         List<Long> completedSections = sectionStatusRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         List<YourFinancesRowViewModel> rows = sectionRestService.getChildSectionsByParentId(sectionId).getSuccess()
                 .stream()
                 .filter(subSection -> !subSection.getType().isSectionTypeNotRequiredForOrganisationAndCompetition(competition, organisation.getOrganisationTypeEnum(), organisation.getId().equals(application.getLeadOrganisationId())))
@@ -59,7 +62,7 @@ public class YourProjectFinancesModelPopulator {
                                 completedSections.contains(subSection.getId()))
                 ).collect(toList());
         return new YourProjectFinancesViewModel(applicationId, application.getName(), competition,
-                applicationFinanceResource,
+                financeSummaryTableViewModelPopulator.populateSingleOrganisation(application, competition, organisation),
                 rows);
     }
 
