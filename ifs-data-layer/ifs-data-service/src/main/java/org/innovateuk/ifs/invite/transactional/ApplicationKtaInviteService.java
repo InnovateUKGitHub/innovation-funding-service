@@ -21,7 +21,7 @@ public interface ApplicationKtaInviteService {
     @PreAuthorize("hasAuthority('system_registrar')")
     ServiceResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash);
 
-    @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'VIEW_AND_ACCEPT')")
+    @PreAuthorize("hasPermission(#hash, 'org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource', 'ACCEPT')")
     ServiceResult<Void> acceptInvite(String hash);
 
 }

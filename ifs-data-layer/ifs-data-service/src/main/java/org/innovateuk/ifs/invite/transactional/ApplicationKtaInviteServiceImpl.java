@@ -143,6 +143,7 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
         ApplicationKtaInviteResource ktaInviteResource = applicationKtaInviteMapper.mapToResource(applicationKtaInvite);
         Organisation leadOrganisation = organisationRepository.findById(ktaInviteResource.getLeadOrganisationId()).get();
         ktaInviteResource.setLeadOrganisationName(leadOrganisation.getName());
+        ktaInviteResource.setHash(applicationKtaInvite.getHash());
         return ktaInviteResource;
     }
 
