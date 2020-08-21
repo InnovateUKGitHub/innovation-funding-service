@@ -54,7 +54,7 @@ ${lastNameInvalidCharacterMessage}      Your first name should have at least 2 c
 ${firstNameValidationMessage}           Please enter a first name.
 ${lastNameValidationMessage}            Please enter a last name.
 ${emailAddressValidationMessage}        Please enter an email address.
-${invalidKTNDomainValidationMessage}    Users cannot be registered without a Knowledge Transfer Network email address.
+${invalidKTNDomainValidationMessage}    Users cannot be registered without a knowledge transfer network email address.
 ${validKTNDomainEmail}                  jake.Rayan@ktn-uk.test
 *** Test Cases ***
 Project finance user cannot navigate to manage users page
