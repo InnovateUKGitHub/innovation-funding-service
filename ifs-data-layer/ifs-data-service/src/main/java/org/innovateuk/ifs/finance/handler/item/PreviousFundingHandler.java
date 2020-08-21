@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.PreviousFunding;
-import org.innovateuk.ifs.finance.validator.PreviousFundingValidator;
+import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -31,7 +31,7 @@ public class PreviousFundingHandler extends FinanceRowHandler<PreviousFunding> {
     public static final String COST_KEY = "other-funding";
 
     @Autowired
-    private PreviousFundingValidator validator;
+    private OtherFundingValidator validator;
 
     @Override
     public void validate(@NotNull PreviousFunding previousFunding, @NotNull BindingResult bindingResult) {

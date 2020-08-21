@@ -5,9 +5,7 @@ import org.innovateuk.ifs.application.forms.sections.yourfunding.form.BaseOtherF
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.ExcludedCostCategory;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
@@ -16,7 +14,6 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -35,7 +32,6 @@ import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantC
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -47,13 +43,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
     @Mock
     private ApplicationFinanceRestService applicationFinanceRestService;
 
-    @Mock
-    private ApplicationRestService applicationRestService;
-
-    @Mock
-    private CompetitionRestService competitionRestService;
-
-    private UserResource user = newUserResource().build();
     private OrganisationResource organisation =  newOrganisationResource().build();
 
     private GrantClaimPercentage grantClaim;
@@ -107,8 +96,6 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                 .build();
         competition = newCompetitionResource().build();
 
-        when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(application));
-        when(competitionRestService.getCompetitionById(2L)).thenReturn(restSuccess(competition));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
     }
 
