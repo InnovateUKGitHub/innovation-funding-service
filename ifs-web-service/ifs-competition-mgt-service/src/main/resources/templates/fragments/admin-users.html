@@ -51,7 +51,8 @@
                         <button type="submit"
                                 class="govuk-button govuk-button--secondary"
                                 th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},
-                                data-modal-input-invite-id=${invite.id},
+                                data-modal-input-internal-invite-id=${invite.id},
+                                data-modal-input-external-invite-id=${invite.id},
                                 data-js-modal=${invite.externalInvite ? 'modal-resend-external-user' : 'modal-resend-internal-user'}">Resend invite</button>
                     </form>
                 </td>
