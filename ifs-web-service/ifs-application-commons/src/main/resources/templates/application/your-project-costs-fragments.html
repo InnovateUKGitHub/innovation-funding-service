@@ -2160,9 +2160,9 @@
         </th:block>
     </fieldset>
 </div>
-<div class="govuk-!-margin-bottom-4">
-    <th:block th:if="${model.internal}"
-                  th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+<div th:if="${model.internal}" class="govuk-!-margin-bottom-4">
+    <th:block th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 </div>
 </th:block>
 <!--/*</editor-fold>*/-->
