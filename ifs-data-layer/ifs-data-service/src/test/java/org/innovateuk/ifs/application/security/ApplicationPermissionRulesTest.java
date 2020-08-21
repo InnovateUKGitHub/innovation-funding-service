@@ -59,6 +59,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private ApplicationResource applicationResource2;
     private ProcessRole processRole1;
     private ProcessRole processRole2;
+    private ProcessRole processRole3;
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
     private UserResource stakeholderUserResourceOnCompetition;
@@ -71,6 +72,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource projectFinance;
     private UserResource panelAssessor;
     private UserResource interviewAssessor;
+    private UserResource kta;
 
     private static final Set<Role> applicantRoles = EnumSet.of(LEADAPPLICANT, COLLABORATOR);
 
@@ -108,13 +110,15 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         projectFinance = projectFinanceUser();
         panelAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
         interviewAssessor = newUserResource().withRolesGlobal(singletonList(ASSESSOR)).build();
+        kta = ktaUser();
 
         applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPENED).build();
         applicationResource2 = newApplicationResource().build();
-        Application application1 = newApplication().withId(applicationResource1.getId()).withCompetition(competition).withProcessRoles(processRole1).build();
+        Application application1 = newApplication().withId(applicationResource1.getId()).withCompetition(competition).withProcessRoles(processRole1, processRole3).build();
         Application application2 = newApplication().withId(applicationResource2.getId()).withProcessRoles(processRole2).build();
         processRole1 = newProcessRole().withRole(LEADAPPLICANT).withApplication(application1).build();
         processRole2 = newProcessRole().withRole(APPLICANT).withApplication(application2).build();
+        processRole3 = newProcessRole().withRole(KNOWLEDGE_TRANSFER_ADVISER).withApplication(application1).build();
 
         when(applicationRepository.existsById(applicationResource1.getId())).thenReturn(true);
         when(applicationRepository.existsById(applicationResource2.getId())).thenReturn(true);
@@ -126,6 +130,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(user2.getId(), applicantProcessRoles(), applicationResource1.getId())).thenReturn(null);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource2.getId(), LEADAPPLICANT)).thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(user3.getId(), applicationResource2.getId(), APPLICANT)).thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), applicationResource1.getId(), KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
 
         when(processRoleRepository.existsByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource1.getId())).thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource2.getId())).thenReturn(false);
@@ -205,6 +210,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, user2));
         assertFalse(rules.assessorCanSeeTheApplicationFinancesTotals(applicationResource1, leadOnApplication1));
         assertFalse(rules.usersConnectedToTheApplicationCanView(applicationResource2, assessor));
+    }
+
+    @Test
+    public void ktaCanSeeTheApplicationFinancesTotals() {
+        assertTrue(rules.ktaCanSeeTheApplicationFinanceTotals(applicationResource1, kta));
+        assertFalse(rules.ktaCanSeeTheApplicationFinanceTotals(applicationResource1, compAdmin));
     }
 
     @Test
@@ -334,6 +345,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void ktaCanSeeTheResearchParticipantPercentage() {
+        assertTrue(rules.ktaCanSeeTheResearchParticipantPercentage(applicationResource1, kta));
+        assertFalse(rules.ktaCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
+    }
+
+    @Test
     public void leadApplicantCanUpdateTheInnovationArea() {
         assertTrue(rules.leadApplicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanUpdateApplicationResource(applicationResource1, user2));
@@ -343,6 +360,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void leadApplicantCanSeeTheApplicationFinanceDetails() {
         assertTrue(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, leadOnApplication1));
         assertFalse(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, user2));
+    }
+
+    @Test
+    public void ktaCanSeeTheApplicationFinanceDetails() {
+        assertTrue(rules.ktaCanSeeTheApplicationFinanceDetails(applicationResource1, kta));
+        assertFalse(rules.ktaCanSeeTheApplicationFinanceDetails(applicationResource1, compAdmin));
     }
 
     @Test
