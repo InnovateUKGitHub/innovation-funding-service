@@ -9,14 +9,12 @@ import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
 import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.resource.SiteTermsAndConditionsResource;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
+import org.innovateuk.ifs.invite.repository.AllInviteRepository;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -103,22 +101,16 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private BaseUserService baseUserServiceMock;
 
     @Mock
-    private RoleInviteRepository roleInviteRepositoryMock;
+    private AllInviteRepository allInviteRepository;
 
     @Mock
     private RegistrationNotificationService registrationEmailServiceMock;
-
-    @Mock
-    private StakeholderInviteRepository stakeholderInviteRepository;
 
     @Mock
     private StakeholderRepository stakeholderRepository;
 
     @Mock
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepositoryMock;
-
-    @Mock
-    private CompetitionFinanceInviteRepository competitionFinanceInviteRepository;
 
 
     @Test
@@ -270,7 +262,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withRoles(singleton(Role.PROJECT_FINANCE))
                 .build();
 
-        when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(allInviteRepository.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());

@@ -56,5 +56,21 @@ public class UserDocs {
             fieldWithPath("email").type("String").description("e-mail address of the user"),
     };
 
+    public static final FieldDescriptor[] userCreationFields = {
+            fieldWithPath("firstName").type("String").description("first name of the user"),
+            fieldWithPath("lastName").type("String").description("last name of the user"),
+            fieldWithPath("phoneNumber").description("telephone number of the user"),
+            fieldWithPath("email").type("String").description("e-mail address of the user"),
+            fieldWithPath("role").description("role that the user is associated with"),
+            fieldWithPath("allowMarketingEmails").description("allow marketing emails"),
+            fieldWithPath("password").description("Password to create the user"),
+            fieldWithPath("agreedTerms").description("Has the user agreed terms"),
+            fieldWithPath("address").description("Address of the user"),
+            fieldWithPath("inviteHash").description("Invite hash if responding to invite"),
+            fieldWithPath("organisationId").description("Organisation id to join"),
+            fieldWithPath("competitionId").description("Competition id applying to"),
+            fieldWithPath("addLiveProjectUserRole").description("Should add role for IFSPA")
+    };
+
     public static final FieldDescriptor[] userPageResourceFields = pageResourceFields;
 }

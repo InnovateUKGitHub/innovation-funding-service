@@ -7,14 +7,11 @@ import org.innovateuk.ifs.authentication.validator.PasswordPolicyValidator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.mapper.ExternalFinanceRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionFinanceInviteRepository;
-import org.innovateuk.ifs.competition.repository.StakeholderInviteRepository;
 import org.innovateuk.ifs.competition.repository.StakeholderRepository;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.repository.AllInviteRepository;
-import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.project.monitoring.repository.MonitoringOfficerInviteRepository;
@@ -72,25 +69,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserSurveyService userSurveyService;
 
     @Autowired
-    private RoleInviteRepository roleInviteRepository;
-
-    @Autowired
     private TermsAndConditionsService termsAndConditionsService;
 
     @Autowired
     private RegistrationNotificationService registrationEmailService;
 
     @Autowired
-    private StakeholderInviteRepository stakeholderInviteRepository;
-
-    @Autowired
     private MonitoringOfficerInviteRepository monitoringOfficerInviteRepository;
 
     @Autowired
     private StakeholderRepository stakeholderRepository;
-
-    @Autowired
-    private CompetitionFinanceInviteRepository competitionFinanceInviteRepository;
 
     @Autowired
     private ExternalFinanceRepository externalFinanceRepository;
@@ -260,18 +248,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> associateCompetitionFinanceUserWithCompetition(Competition competition, User user) {
         externalFinanceRepository.save(new ExternalFinance(competition, user));
         return serviceSuccess();
-    }
-
-    private Optional<RoleInvite> internalUserInvite(String hash) {
-        return ofNullable(roleInviteRepository.getByHash(hash));
-    }
-
-    private Optional<StakeholderInvite> getStakeholderInviteByHash(String hash) {
-        return ofNullable(stakeholderInviteRepository.getByHash(hash));
-    }
-
-    private Optional<ExternalFinanceInvite> getCompetitionFinanceInviteByHash(String hash) {
-        return ofNullable(competitionFinanceInviteRepository.getByHash(hash));
     }
 
     @Override

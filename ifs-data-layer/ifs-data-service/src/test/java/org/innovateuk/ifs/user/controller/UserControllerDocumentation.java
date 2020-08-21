@@ -21,8 +21,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
-import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.documentation.UserDocs.*;
 import static org.innovateuk.ifs.user.builder.ManageUserResourceBuilder.newManageUserResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -77,20 +76,16 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
     @Test
     public void createUser() throws Exception {
-        final long organisationId = 9999L;
 
         final UserCreationResource userResource = anUserCreationResource().build();
-        when(registrationService.createUser(userResource)).thenReturn(serviceSuccess(new UserResource()));
+        when(registrationService.createUser(any())).thenReturn(serviceSuccess(new UserResource()));
 
-        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}", organisationId)
+        mockMvc.perform(post("/user")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userResource))
                 .header("IFS_AUTH_TOKEN", "123abc"))
                 .andDo(document("user/{method-name}",
-                        pathParameters(
-                                parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for")
-                        ),
-                        requestFields(userResourceFields),
+                        requestFields(userCreationFields),
                         responseFields(userResourceFields)
                 ));
     }
