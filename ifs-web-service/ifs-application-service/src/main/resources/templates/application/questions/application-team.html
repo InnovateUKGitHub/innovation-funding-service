@@ -320,8 +320,8 @@
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell"
                                         th:classappend="${#fields.hasErrors('ktaEmail')} ? 'govuk-form-group--error'">
-                                        <th:block th:if="${model.hasAssignedKta()}" th:text="${model.ktaName}" />
-                                        <span class="hint" th:if="${model.hasPendingKta()}">
+                                        <th:block th:if="${model.hasAssignedKta()}" th:text="${model.ktaName}" th:classappend="${#fields.hasErrors('ktaEmail')} ? 'govuk-!-margin-left-3'" />
+                                        <span class="hint" th:classappend="${#fields.hasErrors('ktaEmail')} ? 'govuk-!-margin-left-3'" th:if="${model.hasPendingKta()}">
                                             <th:block th:if="${model.ktaName != null}" th:text="${model.ktaName}" />
                                             <th:block th:unless="${model.ktaName != null}">-</th:block> (pending for <th:block th:text="${model.ktaInvitePendingDays}">5</th:block> days)
                                         </span>
