@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.innovateuk.ifs.exception.ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
@@ -58,17 +57,15 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
             model.addAttribute("model", acceptRejectApplicationKtaInviteModelPopulator.populateModel(invite.getSuccess()));
             return "registration/accept-invite-kta-user";
         } else {
-            clearDownInviteFlowCookiesFn(response);
             return URL_HASH_INVALID_TEMPLATE;
         }
     }
 
-    @GetMapping("/kta/accept-invite/confirm")
-    public String acceptKtaInvite(final String hash,
+    @GetMapping("/kta/accept-invite/{hash}/accept")
+    public String acceptKtaPage(
+            @PathVariable("hash") final String hash,
             UserResource loggedInUser,
-            HttpServletResponse response,
-            HttpServletRequest request,
-            Model model) {
+            HttpServletResponse response) {
 
         RestResult<ApplicationKtaInviteResource> invite = ktaInviteRestService.getKtaInviteByHash(hash);
         if (invite.isSuccess()) {
@@ -79,11 +76,10 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
                 return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
             }
             ktaInviteRestService.acceptInvite(hash).toServiceResult();
-            model.addAttribute("model", acceptRejectApplicationKtaInviteModelPopulator.populateModel(invite.getSuccess()));
             return "redirect:/";
         } else {
-            clearDownInviteFlowCookiesFn(response);
-            return inviteEntryPage(hash, loggedInUser, response, model);
+            return URL_HASH_INVALID_TEMPLATE;
         }
     }
+
 }

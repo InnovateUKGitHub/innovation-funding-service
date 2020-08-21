@@ -13,6 +13,7 @@ public class AcceptRejectApplicationKtaInviteModelPopulator {
                 invite.getApplicationName(),
                 invite.getCompetitionName(),
                 invite.getLeadOrganisationName(),
-                invite.getLeadApplicant());
+                invite.getLeadApplicant(),
+                invite.getHash());
     }
 }

@@ -9,17 +9,20 @@ public class AcceptRejectApplicationKtaInviteViewModel implements BaseAnalyticsV
     private String competitionName;
     private String leadOrganisationName;
     private String leadApplicantName;
+    private String hash;
 
     public AcceptRejectApplicationKtaInviteViewModel(long applicationId,
                                                      String applicationName,
                                                      String competitionName,
                                                      String leadOrganisationName,
-                                                     String leadApplicantName) {
+                                                     String leadApplicantName,
+                                                     String hash) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.applicationName = applicationName;
         this.leadOrganisationName = leadOrganisationName;
         this.leadApplicantName = leadApplicantName;
+        this.hash = hash;
     }
 
     @Override
@@ -44,4 +47,7 @@ public class AcceptRejectApplicationKtaInviteViewModel implements BaseAnalyticsV
         return leadApplicantName;
     }
 
+    public String getHash() {
+        return hash;
+    }
 }

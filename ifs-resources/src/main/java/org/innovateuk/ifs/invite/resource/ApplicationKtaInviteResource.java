@@ -18,6 +18,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
     private Long application;
     private InviteStatus status;
     private ZonedDateTime sentOn;
+    private String hash;
 
     public ApplicationKtaInviteResource(String email, Long application) {
         this.email = email;
@@ -116,6 +117,14 @@ public class ApplicationKtaInviteResource extends InviteResource {
         this.leadOrganisationId = leadOrganisationId;
     }
 
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -140,6 +149,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
                 .append(application, that.application)
                 .append(status, that.status)
                 .append(sentOn, that.sentOn)
+                .append(hash, that.hash)
                 .isEquals();
     }
 
@@ -157,6 +167,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
                 .append(application)
                 .append(status)
                 .append(sentOn)
+                .append(hash)
                 .toHashCode();
     }
 }
