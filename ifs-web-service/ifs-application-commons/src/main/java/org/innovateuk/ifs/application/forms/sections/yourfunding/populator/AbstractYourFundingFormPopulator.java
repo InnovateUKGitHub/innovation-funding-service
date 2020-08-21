@@ -2,13 +2,15 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.populator;
 
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.category.PreviousFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.AbstractCostRowForm.generateUnsavedRowId;
@@ -16,30 +18,32 @@ import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourFundingFormPopulator {
 
-    protected AbstractYourFundingForm populateForm(BaseFinanceResource finance) {
+    protected AbstractYourFundingForm populateForm(BaseFinanceResource finance, CompetitionResource competitionResource) {
 
         AbstractYourFundingForm form = getForm(finance);
 
-        populateOtherFunding(form, finance);
+        populateOtherFunding(form, finance, competitionResource);
         return form;
     }
 
-    private void populateOtherFunding(AbstractYourFundingForm form, BaseFinanceResource finance) {
-
-        Function<FinanceRowItem, BaseOtherFundingRowForm> rowFromCost;
-        Supplier<BaseOtherFundingRowForm> rowFromNothing;
-        if (FinanceRowType.PREVIOUS_FUNDING == form.otherFundingType()) {
-            rowFromCost = cost -> new PreviousFundingRowForm((PreviousFunding) cost);
-            rowFromNothing = PreviousFundingRowForm::new;
+    private void populateOtherFunding(AbstractYourFundingForm form, BaseFinanceResource finance, CompetitionResource competitionResource) {
+        BaseOtherFundingCostCategory otherFundingCategory;
+        Map<String, BaseOtherFundingRowForm> rows;
+        if (competitionResource.isKtp()) {
+            otherFundingCategory = (PreviousFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
+            rows = otherFundingCategory.getCosts().stream().map(cost -> {
+                PreviousFunding previousFunding = (PreviousFunding) cost;
+                return new PreviousFundingRowForm(previousFunding);
+            }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+            rows.put(generateUnsavedRowId(), new PreviousFundingRowForm());
         } else {
-            rowFromCost = cost -> new OtherFundingRowForm((OtherFunding) cost);
-            rowFromNothing = OtherFundingRowForm::new;
+            otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+            rows = otherFundingCategory.getCosts().stream().map(cost -> {
+                OtherFunding otherFunding = (OtherFunding) cost;
+                return new OtherFundingRowForm(otherFunding);
+            }).collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
+            rows.put(generateUnsavedRowId(), new OtherFundingRowForm());
         }
-
-        BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(form.otherFundingType());
-        Map<String, BaseOtherFundingRowForm> rows = otherFundingCategory.getCosts().stream().map(rowFromCost)
-                .collect(toLinkedMap((row) -> String.valueOf(row.getCostId()), Function.identity()));
-        rows.put(generateUnsavedRowId(), rowFromNothing.get());
 
         Boolean otherFundingSet = isOtherFundingSet(otherFundingCategory);
 
