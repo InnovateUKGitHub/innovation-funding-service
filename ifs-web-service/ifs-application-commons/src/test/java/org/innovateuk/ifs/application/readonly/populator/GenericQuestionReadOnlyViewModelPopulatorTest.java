@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
@@ -42,6 +43,8 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
 
     @InjectMocks
     private GenericQuestionReadOnlyViewModelPopulator populator;
+
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     private ApplicationResource application;
 
@@ -121,32 +124,31 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withValue("1")
                 .build();
 
-//        Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
-//        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
+        List<ApplicationAssessmentResource> assessorResponseFuture = (List<ApplicationAssessmentResource>) assessorFormInputResponseRestService.getApplicationAssessment(application.getId(), 1L).getSuccess();
 
-//        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
-//                asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
-//                templateDocumentResponse), emptyList(), asList(feedbackResponse, scoreResponse));
-//
-//        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
-//                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
-//
-//        assertEquals("Some text", viewModel.getAnswer());
-//        assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());
-//        assertEquals("Appendix2.pdf", viewModel.getAppendices().get(1).getFilename());
-//        assertEquals("Question text?", viewModel.getQuestion());
-//        assertEquals("template.pdf", viewModel.getTemplateFile().getFilename());
-//        assertEquals("Document Title", viewModel.getTemplateDocumentTitle());
-//
-//        assertEquals("1. Question", viewModel.getName());
-//        assertEquals(application.getId(), (Long) viewModel.getApplicationId());
-//        assertEquals(question.getId(), (Long) viewModel.getQuestionId());
-//        assertFalse(viewModel.isComplete());
-//        assertFalse(viewModel.isLead());
-//
-//        assertTrue(viewModel.hasAssessorResponse());
-//        assertEquals("Feedback", viewModel.getFeedback());
-//        assertEquals("1", viewModel.getScore());
+        ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
+                asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
+                templateDocumentResponse), emptyList(), assessorResponseFuture);
+
+        GenericQuestionReadOnlyViewModel viewModel = populator.populate(competition, question, data,
+                ApplicationReadOnlySettings.defaultSettings().setAssessmentId(1L));
+
+        assertEquals("Some text", viewModel.getAnswer());
+        assertEquals("Appendix1.pdf", viewModel.getAppendices().get(0).getFilename());
+        assertEquals("Appendix2.pdf", viewModel.getAppendices().get(1).getFilename());
+        assertEquals("Question text?", viewModel.getQuestion());
+        assertEquals("template.pdf", viewModel.getTemplateFile().getFilename());
+        assertEquals("Document Title", viewModel.getTemplateDocumentTitle());
+
+        assertEquals("1. Question", viewModel.getName());
+        assertEquals(application.getId(), (Long) viewModel.getApplicationId());
+        assertEquals(question.getId(), (Long) viewModel.getQuestionId());
+        assertFalse(viewModel.isComplete());
+        assertFalse(viewModel.isLead());
+
+        assertTrue(viewModel.hasAssessorResponse());
+        assertEquals("Feedback", viewModel.getFeedback());
+        assertEquals("1", viewModel.getScores());
     }
 
     @Test
