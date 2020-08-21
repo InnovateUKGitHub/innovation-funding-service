@@ -499,8 +499,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         Organisation organisation1 = newOrganisation().build();
 
-        CostCategory costCategoryLabour = newCostCategory().withName(LABOUR.getName()).build();
-        CostCategory costCategoryMaterials = newCostCategory().withName(MATERIALS.getName()).build();
+        CostCategory costCategoryLabour = newCostCategory().withName(LABOUR.getDisplayName()).build();
+        CostCategory costCategoryMaterials = newCostCategory().withName(MATERIALS.getDisplayName()).build();
 
         CostCategoryType costCategoryType1 =
                 newCostCategoryType()
@@ -1312,8 +1312,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                     build();
 
             // First cost category type and everything that goes with it.
-            type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
-            type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
+            type1Cat1 = newCostCategory().withName(LABOUR.getDisplayName()).build();
+            type1Cat2 = newCostCategory().withName(MATERIALS.getDisplayName()).build();
 
             costCategoryType1 = newCostCategoryType()
                     .withName("Type 1")

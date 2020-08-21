@@ -54,15 +54,15 @@
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                            <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="govuk-table__header govuk-table__header--numeric">
-                                <th:block th:text="${rowType.name}" /> (&pound;)</th>
+                            <th th:unless="${#strings.isEmpty(rowType.displayName)}" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                                <th:block th:text="${rowType.displayName}" /> (&pound;)</th>
                         </th:block>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                            <td th:unless="${#strings.isEmpty(rowType.name)}" class="govuk-table__cell govuk-table__cell--numeric">
+                            <td th:unless="${#strings.isEmpty(rowType.displayName)}" class="govuk-table__cell govuk-table__cell--numeric">
                                 <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'DEFAULT')}"/>
                             </td>
                         </th:block>
@@ -95,7 +95,7 @@
 
                 <th:block th:each="rowType : ${model.changes.keySet()}">
                     <th:block th:if="${rowType.cost}" th:each="changePairLst : ${model.changes.get(rowType)}">
-                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name},workingDays=${model.projectWorkingDaysPerYearCostItem.labourDays}">
+                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.displayName},workingDays=${model.projectWorkingDaysPerYearCostItem.labourDays}">
                             <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
                         </th:block>
                     </th:block>
@@ -107,7 +107,7 @@
 
         <th:block th:each="rowType : ${model.changes.keySet()}">
             <th:block th:unless="${rowType.cost}" th:each="changePairLst : ${model.changes.get(rowType)}">
-                <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
+                <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.displayName}">
                     <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
                 </th:block>
             </th:block>

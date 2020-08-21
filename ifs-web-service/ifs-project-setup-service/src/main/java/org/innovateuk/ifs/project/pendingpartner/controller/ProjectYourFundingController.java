@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.pendingpartner.populator.ProjectYourFundingFormPopulator;
 import org.innovateuk.ifs.project.pendingpartner.populator.ProjectYourFundingViewModelPopulator;
@@ -17,8 +15,6 @@ import org.innovateuk.ifs.project.pendingpartner.saver.ProjectYourFundingSaver;
 import org.innovateuk.ifs.project.pendingpartner.validator.ProjectYourFundingFormValidator;
 import org.innovateuk.ifs.project.pendingpartner.viewmodel.ProjectYourFundingViewModel;
 import org.innovateuk.ifs.project.projectteam.PendingPartnerProgressRestService;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.controller.SetupStatusController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +50,6 @@ public class ProjectYourFundingController {
 
     @Autowired
     private PendingPartnerProgressRestService pendingPartnerProgressRestService;
-
-    @Autowired
-    private ProjectRestService projectRestService;
-
-    @Autowired
-    private CompetitionRestService competitionRestService;
 
     @GetMapping
     @SecuredBySpring(value = "VIEW_YOUR_FUNDING_SECTION", description = "Internal users can access the sections in the 'Your project finances'")
@@ -205,18 +195,14 @@ public class ProjectYourFundingController {
     }
 
     @PostMapping("add-row")
-    public String ajaxAddRow(Model model, @PathVariable long projectId) {
-        ProjectResource projectResource = projectRestService.getProjectById(projectId).getSuccess();
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(projectResource.getCompetition()).getSuccess();
-
+    public String ajaxAddRow(Model model) {
         YourFundingPercentageForm form = new YourFundingPercentageForm();
         form.setOtherFundingRows(new LinkedHashMap<>());
         saver.addOtherFundingRow(form);
-        Map.Entry<String, BaseOtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
+        Map.Entry<String, OtherFundingRowForm> row = form.getOtherFundingRows().entrySet().iterator().next();
         model.addAttribute("form", form);
         model.addAttribute("id", row.getKey());
         model.addAttribute("row", row.getValue());
-        model.addAttribute("fundingType", competitionResource.getFundingType());
         return "application/your-funding-fragments :: ajax_other_funding_row";
     }
 

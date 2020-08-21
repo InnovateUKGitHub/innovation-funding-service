@@ -70,6 +70,8 @@
                   novalidate="novalidate"
                   method="POST">
 
+                <input th:if="${model.ktpFundingType}" type="hidden" name="previous" value="previous" />
+
                 <th:block th:insert="application/your-funding-fragments :: form(
                                 form=${form},
                                readOnly=${model.readOnly},

@@ -72,11 +72,6 @@ public abstract class BaseOtherFundingCostCategory implements FinanceRowCostCate
         return true;
     }
 
-    @Override
-    public void setCosts(List<FinanceRowItem> costItems) {
-        costs = costItems;
-    }
-
     @JsonIgnore
     public boolean otherFundingSet() {
         return "Yes".equals(getOtherPublicFunding());

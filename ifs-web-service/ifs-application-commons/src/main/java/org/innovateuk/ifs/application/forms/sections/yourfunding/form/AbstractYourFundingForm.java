@@ -8,11 +8,11 @@ import java.util.*;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FINANCE;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.GRANT_CLAIM_AMOUNT;
 
-public abstract class AbstractYourFundingForm {
+public abstract class AbstractYourFundingForm<T extends BaseOtherFundingRowForm> {
 
     private Boolean otherFunding;
 
-    private Map<String, BaseOtherFundingRowForm> otherFundingRows = Collections.emptyMap();
+    private Map<String, T> otherFundingRows = new LinkedHashMap<>();
 
     public Boolean getOtherFunding() {
         return otherFunding;
@@ -22,19 +22,19 @@ public abstract class AbstractYourFundingForm {
         this.otherFunding = otherFunding;
     }
 
-    public Map<String, BaseOtherFundingRowForm> getOtherFundingRows() {
+    public Map<String, T> getOtherFundingRows() {
         return otherFundingRows;
     }
 
-    public void setOtherFundingRows(Map<String, BaseOtherFundingRowForm> otherFundingRows) {
+    public void setOtherFundingRows(Map<String, T> otherFundingRows) {
         this.otherFundingRows = otherFundingRows;
     }
 
-    public Map<String, BaseOtherFundingRowForm> getPreviousFundingRows() {
+    public Map<String, T> getPreviousFundingRows() {
         return otherFundingRows;
     }
 
-    public void setPreviousFundingRows(Map<String, BaseOtherFundingRowForm> otherFundingRows) {
+    public void setPreviousFundingRows(Map<String, T> otherFundingRows) {
         this.otherFundingRows = otherFundingRows;
     }
 
@@ -55,4 +55,7 @@ public abstract class AbstractYourFundingForm {
     public boolean isFundingAmount() {
         return GRANT_CLAIM_AMOUNT.equals(financeType());
     }
+
+    public abstract FinanceRowType otherFundingType();
+
 }
