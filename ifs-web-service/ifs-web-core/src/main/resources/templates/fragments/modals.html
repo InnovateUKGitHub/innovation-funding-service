@@ -618,6 +618,25 @@
     </div>
 </th:block>
 
+<!-- Confirmation of resending external user invite -->
+<th:block th:fragment="modal-resend-external-user">
+    <div class="modal-resend-external-user" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="govuk-heading-m">Resend invite to external user</h2>
+            <p class="govuk-body">They will be reminded to accept their allocated role.</p>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <input type="hidden" id="invite-id" name="inviteId" value="" />
+                <button class="govuk-button" type="submit">Resend</button>
+                <button class="button-clear js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
 <!-- Confirmation of withdrawing a project -->
 <th:block th:fragment="modal-withdraw-project">
     <div class="modal-withdraw-project" role="dialog" aria-hidden="true">

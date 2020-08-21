@@ -50,8 +50,9 @@
                     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post">
                         <button type="submit"
                                 class="govuk-button govuk-button--secondary"
-                                data-js-modal="modal-resend-internal-user"
-                                th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},data-modal-input-invite-id=${invite.id}">Resend invite</button>
+                                th:attr="data-modal-form-action=@{/admin/users/pending/resend-invite},
+                                data-modal-input-invite-id=${invite.id},
+                                data-js-modal=${invite.externalInvite ? 'modal-resend-external-user' : 'modal-resend-internal-user'}">Resend invite</button>
                     </form>
                 </td>
             </tr>
