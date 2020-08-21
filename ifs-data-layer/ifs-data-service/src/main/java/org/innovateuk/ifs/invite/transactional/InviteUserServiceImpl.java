@@ -298,8 +298,17 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     @Override
-    public ServiceResult<Void> resendInternalUserInvite(long inviteId) {
-        return findRoleInvite(inviteId).andOnSuccess(this::inviteInternalUser);
+    public ServiceResult<Void> resendInvite(long inviteId) {
+        return findRoleInvite(inviteId)
+                .andOnSuccess(invite -> {
+                    if (externalRolesToInvite().contains(invite.getTarget())) {
+                        return inviteExternalUser(invite);
+                    } else if (internalRoles().contains(invite.getTarget())) {
+                        return inviteInternalUser(invite);
+                    } else {
+                        return serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+                    }
+                });
     }
 
     private ServiceResult<RoleInvite> findRoleInvite(long inviteId) {

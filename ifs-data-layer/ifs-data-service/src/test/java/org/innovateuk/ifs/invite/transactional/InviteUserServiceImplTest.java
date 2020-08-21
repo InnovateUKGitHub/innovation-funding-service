@@ -552,7 +552,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         User loggedInUser = newUser().build();
         when(loggedInUserSupplierMock.get()).thenReturn(loggedInUser);
 
-        ServiceResult<Void> result = service.resendInternalUserInvite(123L);
+        ServiceResult<Void> result = service.resendInvite(123L);
         assertTrue(result.isSuccess());
 
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
@@ -571,7 +571,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(roleInviteRepositoryMock.findById(123L)).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.resendInternalUserInvite(123L);
+        ServiceResult<Void> result = service.resendInvite(123L);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(RoleInvite.class, 123L)));
