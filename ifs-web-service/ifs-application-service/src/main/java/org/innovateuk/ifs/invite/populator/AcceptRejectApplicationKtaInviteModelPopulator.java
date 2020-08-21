@@ -12,7 +12,7 @@ public class AcceptRejectApplicationKtaInviteModelPopulator {
         return new AcceptRejectApplicationKtaInviteViewModel(invite.getApplication(),
                 invite.getApplicationName(),
                 invite.getCompetitionName(),
-                invite.getLeadOrganisation().toString(),
+                invite.getLeadOrganisationName(),
                 invite.getLeadApplicant());
     }
 }

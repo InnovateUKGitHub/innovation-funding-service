@@ -54,6 +54,7 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
             if (loggedInAsNonKtaInviteUser(invite.getSuccess(), loggedInUser)) {
                 return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
             }
+            ktaInviteRestService.acceptInvite(hash).toServiceResult();
             model.addAttribute("model", acceptRejectApplicationKtaInviteModelPopulator.populateModel(invite.getSuccess()));
             return "registration/accept-invite-kta-user";
         } else {

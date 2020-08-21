@@ -13,7 +13,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
     private String applicationName;
     private String competitionName;
     private String leadApplicant;
-    private Long leadOrganisation;
+    private String leadOrganisationName;
     private Long application;
     private InviteStatus status;
     private ZonedDateTime sentOn;
@@ -99,12 +99,12 @@ public class ApplicationKtaInviteResource extends InviteResource {
         this.leadApplicant = leadApplicant;
     }
 
-    public Long getLeadOrganisation() {
-        return leadOrganisation;
+    public String getLeadOrganisationName() {
+        return leadOrganisationName;
     }
 
-    public void setLeadOrganisation(Long leadOrganisation) {
-        this.leadOrganisation = leadOrganisation;
+    public void setLeadOrganisationName(String leadOrganisationName) {
+        this.leadOrganisationName = leadOrganisationName;
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
                 .append(applicationName, that.applicationName)
                 .append(competitionName, that. competitionName)
                 .append(leadApplicant, that.leadApplicant)
-                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadOrganisationName, that.leadOrganisationName)
                 .append(application, that.application)
                 .append(status, that.status)
                 .append(sentOn, that.sentOn)
@@ -142,7 +142,7 @@ public class ApplicationKtaInviteResource extends InviteResource {
                 .append(applicationName)
                 .append(competitionName)
                 .append(leadApplicant)
-                .append(leadOrganisation)
+                .append(leadOrganisationName)
                 .append(application)
                 .append(status)
                 .append(sentOn)
