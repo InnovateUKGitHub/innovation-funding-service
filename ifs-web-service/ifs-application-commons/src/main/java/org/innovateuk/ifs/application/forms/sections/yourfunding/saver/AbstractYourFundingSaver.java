@@ -94,7 +94,7 @@ public abstract class AbstractYourFundingSaver {
     }
 
     private void saveOtherFunding(BaseFinanceResource finance, AbstractYourFundingForm<OtherFundingRowForm> form, ValidationMessages messages) {
-        BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(form.financeType());
+        BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(form.otherFundingType());
         otherFundingCategory.getOtherFunding().setOtherPublicFunding(form.getOtherFunding() ? "Yes" : "No");
         messages.addAll(getFinanceRowService().update(otherFundingCategory.getOtherFunding()).getSuccess());
         if (form.getOtherFunding()) {
