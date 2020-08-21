@@ -277,10 +277,11 @@
                                 </thead>
                                 <tbody class="govuk-table__body">
                                     <tr th:if="${#fields.hasErrors('ktaEmail')}">
-                                        <td colspan="2">
+                                        <td>
                                             <span class="govuk-error-message govuk-!-margin-bottom-0" th:each="err : ${#fields.errors('ktaEmail')}"
                                                   th:text="${err}"/>
                                         </td>
+                                        <td></td>
                                     </tr>
                                     <tr class="govuk-table__row">
                                         <td class="govuk-table__cell govuk-form-group">
@@ -309,10 +310,11 @@
                                 </thead>
                                 <tbody class="govuk-table__body">
                                 <tr th:if="${#fields.hasErrors('ktaEmail')}">
-                                    <td colspan="3">
+                                    <td colspan="2">
                                                     <span class="govuk-error-message govuk-!-margin-bottom-0" th:each="err : ${#fields.errors('ktaEmail')}"
                                                           th:text="${err}"/>
                                     </td>
+                                    <td></td>
                                 </tr>
                                 <tr class="govuk-table__row">
 
@@ -325,7 +327,7 @@
                                     <td id="ktaEmail" class="govuk-table__cell" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
                                         <th:block th:text="${model.ktaEmail}">email of kta</th:block>
                                     </td>
-                                    <td class="govuk-table__cell alignright buttoncolumn">
+                                    <td class="govuk-table__cell alignright buttoncolumn" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
                                         <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button><span>|</span></th:block>
                                         <button class="button-clear" type="submit" name="remove-kta" value="${model.applicationId}">Remove</button>
                                     </td>
