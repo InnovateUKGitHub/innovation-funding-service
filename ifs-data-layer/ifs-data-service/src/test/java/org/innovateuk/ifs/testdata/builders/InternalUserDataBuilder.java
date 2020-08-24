@@ -19,7 +19,7 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
 
     @Override
     public InternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber) {
-        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, emailAddress, phoneNumber, data.getRoles(), data)));
+        return with(data -> doAs(systemRegistrar(), () -> registerUser(firstName, lastName, emailAddress, phoneNumber, data.getRole(), data)));
     }
 
     public static InternalUserDataBuilder newInternalUserData(ServiceLocator serviceLocator) {
@@ -43,8 +43,8 @@ public class InternalUserDataBuilder extends BaseUserDataBuilder<InternalUserDat
         return new InternalUserData();
     }
 
-    public InternalUserDataBuilder withRoles(List<Role> roles) {
-        return with(data -> data.setRoles(roles));
+    public InternalUserDataBuilder withRole(Role role) {
+        return with(data -> data.setRole(role));
     }
 
     @Override

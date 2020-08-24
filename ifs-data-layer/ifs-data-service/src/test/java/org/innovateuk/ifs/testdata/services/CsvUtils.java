@@ -760,7 +760,7 @@ public class CsvUtils {
 
     public static class InternalUserLine extends UserLine {
 
-        public List<String> roles;
+        public String role;
 
         private InternalUserLine(List<String> line) {
             super(line);
@@ -768,7 +768,7 @@ public class CsvUtils {
 
         @Override
         protected void processLine(List<String> line, int i) {
-            this.roles = simpleMap(line.get(i++).split("&"), s -> s.trim());
+            this.role = nullable(line.get(i++));
         }
     }
 
