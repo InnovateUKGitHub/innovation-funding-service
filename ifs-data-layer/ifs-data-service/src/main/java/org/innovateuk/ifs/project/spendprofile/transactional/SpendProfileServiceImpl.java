@@ -34,6 +34,7 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepos
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -156,14 +157,33 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                         .andOnSuccess(() ->
                                 getCurrentlyLoggedInUser().andOnSuccess(user -> {
                                     if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
-                                        return serviceSuccess();
+                                        return serviceSuccess(project);
                                     } else {
                                         LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
                                         return serviceFailure(GENERAL_UNEXPECTED_ERROR);
                                     }
                                 })
                         )
-                );
+                )
+                .andOnSuccess(project -> {
+                    if (!competitionHasSpendProfileStage(project)) {
+                        List<ServiceResult<Void>> markAsCompleteResults = project.getPartnerOrganisations()
+                                .stream()
+                                .map(po -> markSpendProfileComplete(ProjectOrganisationCompositeId.id(project.getId(), po.getOrganisation().getId())))
+                                .collect(toList());
+                        return aggregate(markAsCompleteResults)
+                                .andOnSuccess(() -> completeSpendProfilesReview(projectId))
+                                .andOnSuccess(() -> approveOrRejectSpendProfile(projectId, APPROVED));
+                    }
+                    return serviceSuccess();
+                });
+    }
+
+    private boolean competitionHasSpendProfileStage(Project project) {
+        return project.getApplication()
+                .getCompetition()
+                .getProjectSetupStages()
+                .contains(ProjectSetupStage.SPEND_PROFILE);
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
