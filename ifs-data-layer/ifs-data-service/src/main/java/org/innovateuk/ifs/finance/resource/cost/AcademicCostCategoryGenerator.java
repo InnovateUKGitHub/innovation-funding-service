@@ -64,7 +64,7 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
     }
 
     @Override
-    public String getName() {
+    public String getDisplayName() {
         return name;
     }
 
@@ -97,7 +97,7 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
 
     private static Optional<AcademicCostCategoryGenerator> from(CostCategory academicCostCategory){
         for (AcademicCostCategoryGenerator value: AcademicCostCategoryGenerator.values()){
-            if (value.getLabel().equals(academicCostCategory.getLabel()) && value.getName().equals(academicCostCategory.getName())){
+            if (value.getLabel().equals(academicCostCategory.getLabel()) && value.getDisplayName().equals(academicCostCategory.getName())){
                 return Optional.of(value);
             }
         }

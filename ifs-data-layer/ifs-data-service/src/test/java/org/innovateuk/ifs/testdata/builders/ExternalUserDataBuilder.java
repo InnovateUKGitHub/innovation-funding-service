@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 
 /**
@@ -19,7 +18,7 @@ public class ExternalUserDataBuilder extends BaseUserDataBuilder<ExternalUserDat
     private static final Logger LOG = LoggerFactory.getLogger(ExternalUserDataBuilder.class);
 
     public ExternalUserDataBuilder registerUser(String firstName, String lastName, String emailAddress, String phoneNumber) {
-        return with(data -> registerUser(firstName, lastName, emailAddress, phoneNumber, singletonList(APPLICANT), data));
+        return with(data -> registerUser(firstName, lastName, emailAddress, phoneNumber, APPLICANT, data));
     }
 
     public static ExternalUserDataBuilder newExternalUserData(ServiceLocator serviceLocator) {

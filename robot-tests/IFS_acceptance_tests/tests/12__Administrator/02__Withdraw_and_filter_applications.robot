@@ -71,8 +71,7 @@ The IFS admin checks for compeleted projects on previous tab
 #withdrawn projects count as competed projects
     [Documentation]  IFS-6053
     [Tags]
-    [Setup]  the user navigates to the page    ${server}/management/dashboard/previous
-    Given the user clicks the button/link   jQuery = button:contains("Next")
+    Given the user navigates the the previous page
     Then the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
     And the user should see applications and withdrawn projects
 
@@ -194,3 +193,10 @@ the user should see the all projects and navigate back to completed projects
     the user navigates to the page      ${server}/project-setup-management/competition/${WITHDRAWN_PROJECT_COMPETITION}/status/all
     the user clicks the button/link     link = View only completed projects for this competition
     the user navigates to the page      ${server}/management/competition/${WITHDRAWN_PROJECT_COMPETITION}/previous
+
+the user navigates the the previous page
+    the user navigates to the page    ${server}/management/dashboard/previous
+    the user clicks the button/link   jQuery = button:contains("Next")
+    ${STATUS}    ${VALUE} =     Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery = tr td:contains("${WITHDRAWN_PROJECT_COMPETITION_NAME}") ~ td:contains("2 of 2")
+    Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link     jQuery = button:contains("Next")
+

@@ -2,10 +2,13 @@ package org.innovateuk.ifs.registration.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import javax.validation.constraints.NotBlank;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.Title;
+import org.innovateuk.ifs.user.resource.UserProfileBaseResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,7 @@ import java.util.List;
 /**
  * DTO for registering a User.
  */
-public class UserRegistrationResource extends UserProfileBaseResource{
+public class UserRegistrationResource extends UserProfileBaseResource {
 
     @NotBlank(message = "{validation.standard.password.required}")
     @Size.List({
@@ -81,7 +84,6 @@ public class UserRegistrationResource extends UserProfileBaseResource{
         userResource.setFirstName(this.getFirstName());
         userResource.setLastName(this.getLastName());
         userResource.setPhoneNumber(this.getPhoneNumber());
-        userResource.setPassword(this.getPassword());
         userResource.setEmail(this.getEmail());
         userResource.setRoles(this.getRoles());
 

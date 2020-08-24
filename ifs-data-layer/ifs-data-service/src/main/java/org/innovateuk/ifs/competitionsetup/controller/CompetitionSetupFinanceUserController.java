@@ -5,12 +5,15 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupFinance
 import org.innovateuk.ifs.invite.resource.CompetitionFinanceInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.registration.resource.CompetitionFinanceRegistrationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 
 @RestController
 @RequestMapping("/competition/setup")
@@ -39,7 +42,15 @@ public class CompetitionSetupFinanceUserController {
 
     @PostMapping("/finance-users/create/{inviteHash}")
     public RestResult<Void> createCompetitionFinanceUser(@PathVariable("inviteHash") String inviteHash, @RequestBody CompetitionFinanceRegistrationResource competitionFinanceRegistrationResource) {
-        return registrationService.createCompetitionFinanceUser(inviteHash, competitionFinanceRegistrationResource).toPostCreateResponse();
+        return registrationService.createUser(anUserCreationResource()
+                .withFirstName(competitionFinanceRegistrationResource.getFirstName())
+                .withLastName(competitionFinanceRegistrationResource.getLastName())
+                .withPassword(competitionFinanceRegistrationResource.getPassword())
+                .withInviteHash(inviteHash)
+                .withRole(Role.EXTERNAL_FINANCE)
+                .build())
+                .andOnSuccessReturnVoid()
+                .toPostCreateResponse();
     }
 
     @PostMapping("/{competitionId}/finance-users/{userId}/add")

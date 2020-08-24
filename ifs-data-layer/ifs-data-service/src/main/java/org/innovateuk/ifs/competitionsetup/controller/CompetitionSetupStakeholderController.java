@@ -5,12 +5,15 @@ import org.innovateuk.ifs.competitionsetup.transactional.CompetitionSetupStakeho
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.StakeholderInviteResource;
 import org.innovateuk.ifs.registration.resource.StakeholderRegistrationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 
 /**
  * Stakeholder controller to handle RESTful services related to stakeholders
@@ -42,7 +45,15 @@ public class CompetitionSetupStakeholderController {
 
     @PostMapping("/stakeholder/create/{inviteHash}")
     public RestResult<Void> createStakeholder(@PathVariable("inviteHash") String inviteHash, @RequestBody StakeholderRegistrationResource stakeholderRegistrationResource) {
-        return registrationService.createStakeholder(inviteHash, stakeholderRegistrationResource).toPostCreateResponse();
+        return registrationService.createUser(anUserCreationResource()
+            .withFirstName(stakeholderRegistrationResource.getFirstName())
+            .withLastName(stakeholderRegistrationResource.getLastName())
+            .withPassword(stakeholderRegistrationResource.getPassword())
+            .withInviteHash(inviteHash)
+            .withRole(Role.STAKEHOLDER)
+            .build())
+            .andOnSuccessReturnVoid()
+            .toPostCreateResponse();
     }
 
     @PostMapping("/{competitionId}/stakeholder/{stakeholderUserId}/add")

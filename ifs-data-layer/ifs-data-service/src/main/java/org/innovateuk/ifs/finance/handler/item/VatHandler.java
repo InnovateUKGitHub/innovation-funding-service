@@ -11,7 +11,10 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @Component
 public class VatHandler extends FinanceRowHandler<Vat> {
@@ -43,7 +46,7 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     @Override
-    protected Optional<Vat> intialiseCost(Finance finance) {
-        return Optional.of(new Vat(null, null, new BigDecimal("0.2"), finance.getId()));
+    protected List<Vat> intialiseCosts(Finance finance) {
+        return newArrayList(new Vat(null, null, new BigDecimal("0.2"), finance.getId()));
     }
 }
