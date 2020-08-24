@@ -27,11 +27,11 @@ public class SbriPilotSpendProfileFigureDistributer implements SpendProfileFigur
             CostCategory cc = costCategoryRepository.findById(summary.getCategory().getId()).orElse(null);
             BigDecimal durationInMonths = BigDecimal.valueOf(summary.getProjectDurationInMonths());
 
-            BigDecimal twentyFivePercent = new BigDecimal("0.25");
-            BigDecimal remainder = summary.getTotal().remainder(twentyFivePercent);
+            BigDecimal quarter = new BigDecimal("4");
+            BigDecimal remainder = summary.getTotal().remainder(quarter);
 
             BigDecimal perfectlyDivisibleTotal = summary.getTotal().subtract(remainder);
-            BigDecimal twentyFivePercentWithoutRemainder = perfectlyDivisibleTotal.multiply(durationInMonths).setScale(0, RoundingMode.HALF_EVEN);
+            BigDecimal twentyFivePercentWithoutRemainder = perfectlyDivisibleTotal.divide(quarter,0, RoundingMode.HALF_EVEN);
             BigDecimal firstMonthSpend = twentyFivePercentWithoutRemainder.add(remainder);
             BigDecimal lastMonthSpend = twentyFivePercentWithoutRemainder.multiply(BigDecimal.valueOf(3)); // to get 75%
 

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -118,17 +119,13 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         Map<CostCategory, BigDecimal> valuesPerCostCategory = new HashMap<>();
         costCategoryType.getCostCategories().forEach(cc -> valuesPerCostCategory.put(cc, BigDecimal.ZERO));
 
-        for (FinanceRowCostCategory costCategoryDetails : spendRows.values()) {
-            List<FinanceRowItem> costs = costCategoryDetails.getCosts();
-
-            for (FinanceRowItem cost : costs) {
-                SbriPilotCostCategoryGenerator academicCostCategoryMatch = SbriPilotCostCategoryGenerator.fromFinanceRowType(cost.getCostType());
-                if(academicCostCategoryMatch != null) {
-                    CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, academicCostCategoryMatch);
-                    BigDecimal value = cost.getTotal();
-                    BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
-                    valuesPerCostCategory.put(costCategory, currentValue.add(value));
-                }
+        for (Entry<FinanceRowType, FinanceRowCostCategory> entry : spendRows.entrySet()) {
+            SbriPilotCostCategoryGenerator academicCostCategoryMatch = SbriPilotCostCategoryGenerator.fromFinanceRowType(entry.getKey());
+            if(academicCostCategoryMatch != null) {
+                CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, academicCostCategoryMatch);
+                BigDecimal value = entry.getValue().getTotal();
+                BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
+                valuesPerCostCategory.put(costCategory, currentValue.add(value));
             }
         }
         return valuesPerCostCategory;

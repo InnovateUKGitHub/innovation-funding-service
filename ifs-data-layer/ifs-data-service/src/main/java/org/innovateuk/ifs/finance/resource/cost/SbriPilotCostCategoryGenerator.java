@@ -1,12 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-
-/**
- * TODO INFUND-5192
- * There is not currently a good way of generating {@link CostCategory} for academic partners in an extendable way.
- * This will need to be addressed, but in the meantime this enum hard codes the information.
- */
 public enum SbriPilotCostCategoryGenerator implements CostCategoryGenerator<SbriPilotCostCategoryGenerator> {
 
     OTHER_COSTS("other_costs", "Other costs"),
