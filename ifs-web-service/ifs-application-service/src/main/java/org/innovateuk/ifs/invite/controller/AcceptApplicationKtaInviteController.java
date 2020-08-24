@@ -67,10 +67,14 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
             if (loggedInAsNonKtaInviteUser(invite.getSuccess(), loggedInUser)) {
                 return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
             }
-            ktaInviteRestService.acceptInvite(hash).toServiceResult();
+            ktaInviteRestService.acceptInvite(hash).getSuccess();
             return "redirect:/";
         } else {
             return URL_HASH_INVALID_TEMPLATE;
         }
+    }
+
+    private boolean loggedInAsNonKtaInviteUser(ApplicationKtaInviteResource invite, UserResource loggedInUser) {
+        return loggedInUser != null && !invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail());
     }
 }

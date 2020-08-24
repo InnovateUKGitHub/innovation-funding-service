@@ -152,10 +152,9 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     public ServiceResult<Void> acceptInvite(String hash) {
         return getByHash(hash)
                 .andOnSuccess(invite -> {
-                    invite.open();
+                    applicationKtaInviteRepository.save(invite.open());
                     ProcessRole ktaProcessRole = new ProcessRole(invite.getUser(), invite.getTarget().getId(), Role.KNOWLEDGE_TRANSFER_ADVISER);
                     processRoleRepository.save(ktaProcessRole);
-                    applicationKtaInviteRepository.save(invite);
                     return serviceSuccess();
 
                 });
