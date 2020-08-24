@@ -54,6 +54,7 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
     }
 
     @GetMapping("/kta/accept-invite/{hash}/accept")
+    @PreAuthorize("hasAuthority('knowledge_transfer_adviser')")
     public String acceptKtaPage(
             @PathVariable("hash") final String hash,
             UserResource loggedInUser,
