@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.knowledgebase.resourse;
 
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class KnowledgeBaseResource {
     private Long id;
@@ -11,12 +10,12 @@ public class KnowledgeBaseResource {
     private Long organisationType;
     private String organisationTypeName;
     private String registrationNumber;
-    private OrganisationAddressResource address;
+    private AddressResource address;
 
     public KnowledgeBaseResource() {
     }
 
-    public KnowledgeBaseResource(Long id, String name, Long organisationType, String organisationTypeName, String registrationNumber, OrganisationAddressResource address) {
+    public KnowledgeBaseResource(Long id, String name, Long organisationType, String organisationTypeName, String registrationNumber, AddressResource address) {
         this.id = id;
         this.name = name;
         this.organisationType = organisationType;
@@ -66,11 +65,11 @@ public class KnowledgeBaseResource {
     }
 
 
-    public OrganisationAddressResource getAddress() {
+    public AddressResource getAddress() {
         return address;
     }
 
-    public void setAddress(OrganisationAddressResource address) {
+    public void setAddress(AddressResource address) {
         this.address = address;
     }
 }

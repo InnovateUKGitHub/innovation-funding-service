@@ -21,7 +21,8 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.KNOWLE
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                OrganisationTypeMapper.class
+                OrganisationTypeMapper.class,
+                AddressMapper.class
         }
 )
 public abstract class KnowledgeBaseMapper extends BaseMapper<KnowledgeBase, KnowledgeBaseResource, Long> {
@@ -30,8 +31,7 @@ public abstract class KnowledgeBaseMapper extends BaseMapper<KnowledgeBase, Know
     private AddressMapper addressMapper;
 
     @Mappings({
-            @Mapping(source = "organisationType.name", target = "organisationTypeName"),
-            @Mapping(target = "address", ignore = true)
+            @Mapping(source = "organisationType.name", target = "organisationTypeName")
     })
     @Override
     public abstract KnowledgeBaseResource mapToResource(KnowledgeBase domain);
@@ -43,8 +43,4 @@ public abstract class KnowledgeBaseMapper extends BaseMapper<KnowledgeBase, Know
         return object.getId();
     }
 
-    @AfterMapping
-    public void setAddressOnResource(@MappingTarget KnowledgeBaseResource resource, KnowledgeBase domain) {
-        resource.setAddress(new OrganisationAddressResource(addressMapper.mapToResource(domain.getAddress()), new AddressTypeResource(KNOWLEDGE_BASE.getId(), KNOWLEDGE_BASE.name())));
-    }
 }

@@ -170,7 +170,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         form.setName(knowledgeBaseResource.getName());
         form.setOrganisationType(knowledgeBaseResource.getOrganisationType());
         form.setIdentification(knowledgeBaseResource.getRegistrationNumber());
-        AddressResource addressResource = knowledgeBaseResource.getAddress().getAddress();
+        AddressResource addressResource = knowledgeBaseResource.getAddress();
         form.getAddressForm().setPostcodeResults(singletonList(addressResource));
         form.getAddressForm().setSelectedPostcodeIndex(0);
         return form;
