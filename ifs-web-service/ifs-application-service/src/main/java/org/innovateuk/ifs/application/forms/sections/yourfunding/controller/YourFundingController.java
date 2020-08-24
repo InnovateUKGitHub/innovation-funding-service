@@ -141,7 +141,7 @@ public class YourFundingController {
                            @PathVariable long applicationId,
                            @PathVariable long sectionId,
                            @PathVariable long organisationId,
-                           YourFundingPercentageForm form,
+                           @ModelAttribute("form") YourFundingPercentageForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler
     ) {
@@ -163,7 +163,7 @@ public class YourFundingController {
                            @PathVariable long applicationId,
                            @PathVariable long sectionId,
                            @PathVariable long organisationId,
-                           YourPreviousFundingPercentageForm form,
+                           @ModelAttribute("form") YourPreviousFundingPercentageForm form,
                            BindingResult bindingResult,
                            ValidationHandler validationHandler
     ) {
