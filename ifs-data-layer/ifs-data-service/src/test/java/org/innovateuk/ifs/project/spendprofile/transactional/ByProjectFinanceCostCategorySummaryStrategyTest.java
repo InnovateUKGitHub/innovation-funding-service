@@ -1,33 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.transactional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
-import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
-import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
-import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
-import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
-import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.DIRECTLY_INCURRED_OTHER_COSTS;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.INDIRECT_COSTS_OTHER_COSTS;
-import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF;
-import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
-import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
-import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -47,6 +19,31 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.AcademicCostBuilder.newAcademicCost;
+import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
+import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
+import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
+import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
+import static org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator.*;
+import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
+import static org.innovateuk.ifs.project.financecheck.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategorySummaryStrategy> {
 
@@ -131,12 +128,8 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
 
         assertEquals(new BigDecimal("6448"), summary1.getTotal());
-        assertEquals(new BigDecimal("652"), summary1.getFirstMonthSpend());
-        assertEquals(new BigDecimal("644"), summary1.getOtherMonthsSpend());
 
         assertEquals(new BigDecimal("229"), summary2.getTotal());
-        assertEquals(new BigDecimal("31"), summary2.getFirstMonthSpend());
-        assertEquals(new BigDecimal("22"), summary2.getOtherMonthsSpend());
     }
 
     @Test
@@ -216,20 +209,12 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 s -> s.getCategory().equals(costCategories.get(3))).get();
 
         assertEquals(new BigDecimal("6448"), summary1.getTotal());
-        assertEquals(new BigDecimal("652"), summary1.getFirstMonthSpend());
-        assertEquals(new BigDecimal("644"), summary1.getOtherMonthsSpend());
 
         assertEquals(new BigDecimal("288"), summary2.getTotal());
-        assertEquals(new BigDecimal("36"), summary2.getFirstMonthSpend());
-        assertEquals(new BigDecimal("28"), summary2.getOtherMonthsSpend());
 
         assertEquals(new BigDecimal("33"), summary3.getTotal());
-        assertEquals(new BigDecimal("6"), summary3.getFirstMonthSpend());
-        assertEquals(new BigDecimal("3"), summary3.getOtherMonthsSpend());
 
         assertEquals(new BigDecimal("98"), summary4.getTotal());
-        assertEquals(new BigDecimal("17"), summary4.getFirstMonthSpend());
-        assertEquals(new BigDecimal("9"), summary4.getOtherMonthsSpend());
     }
 
     @Override
