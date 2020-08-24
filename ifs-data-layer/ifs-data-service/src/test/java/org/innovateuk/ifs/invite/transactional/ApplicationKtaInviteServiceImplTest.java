@@ -6,6 +6,8 @@ import org.innovateuk.ifs.invite.domain.ApplicationKtaInvite;
 import org.innovateuk.ifs.invite.mapper.ApplicationKtaInviteMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
@@ -24,6 +26,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteBuilder.newApplicationKtaInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationKtaInviteResourceBuilder.newApplicationKtaInviteResource;
+import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -51,6 +54,9 @@ public class ApplicationKtaInviteServiceImplTest {
 
     @Mock
     private ProcessRoleRepository processRoleRepository;
+
+    @Mock
+    private OrganisationRepository organisationRepository;
 
     @InjectMocks
     private ApplicationKtaInviteServiceImpl inviteKtaService;
@@ -120,12 +126,13 @@ public class ApplicationKtaInviteServiceImplTest {
     public void getKtaInviteByHash() {
         // given
         String hash = "hash";
+        long leadOrganisationId = 31L;
+        Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").withId(leadOrganisationId).build();
         ApplicationKtaInviteResource inviteResource = newApplicationKtaInviteResource().build();
         ApplicationKtaInvite invite = new ApplicationKtaInvite();
         when(applicationKtaInviteRepository.getByHash(hash)).thenReturn(invite);
         when(applicationKtaInviteMapper.mapToResource(invite)).thenReturn(inviteResource);
-
-
+        when(organisationRepository.findById(inviteResource.getLeadOrganisationId())).thenReturn(Optional.of(leadOrganisation));
         // when
         ServiceResult<ApplicationKtaInviteResource> result = inviteKtaService.getKtaInviteByHash(hash);
 
@@ -149,8 +156,7 @@ public class ApplicationKtaInviteServiceImplTest {
         // then
         assertTrue(result.isSuccess());
 
-        verify(invite).open();
         verify(processRoleRepository).save(any(ProcessRole.class));
-        verify(applicationKtaInviteRepository).save(invite);
+        verify(applicationKtaInviteRepository).save(invite.open());
     }
 }
