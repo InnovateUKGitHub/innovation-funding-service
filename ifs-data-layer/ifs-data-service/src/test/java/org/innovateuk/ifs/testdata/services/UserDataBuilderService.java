@@ -10,14 +10,12 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 import java.util.function.UnaryOperator;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate User data.  While
@@ -60,9 +58,9 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
             setDefaultSystemRegistrar();
 
-            List<Role> roles = simpleMap(line.roles, Role::getByName);
+            Role role = Role.getByName(line.role);
 
-            InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
+            InternalUserDataBuilder baseBuilder = internalUserBuilder.withRole(role);
 
             createUser(baseBuilder, line);
         });
