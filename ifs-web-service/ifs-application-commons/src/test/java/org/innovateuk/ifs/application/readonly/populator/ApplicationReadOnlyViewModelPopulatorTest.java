@@ -13,6 +13,9 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder;
+import org.innovateuk.ifs.assessment.builder.ApplicationAssessmentResourceBuilder;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
@@ -49,6 +52,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentResourceBuilder.newApplicationAssessmentResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
@@ -148,10 +152,14 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withChildSections(Collections.emptyList(), Collections.singletonList(1L))
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
-        List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().withQuestion(1L).build(1);
+//        List<AssessorFormInputResponseResource> assessorFormInputResponseResources = newAssessorFormInputResponseResource().withQuestion(1L).build(1);
         ProcessRoleResource processRole = newProcessRoleResource().build();
 
-        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, Optional.of(processRole), questions, formInputs, responses, questionStatuses, assessorFormInputResponseResources);
+//        List<ApplicationAssessmentResource> assessorResponseFuture = newApplicationAssessmentResource().withApplicationId(application.getId()).build(1);
+
+        List<ApplicationAssessmentResource> assessorResponseFuture = (List<ApplicationAssessmentResource>) assessorFormInputResponseRestService.getApplicationAssessment(application.getId(), 1L).getSuccess();
+
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, Optional.of(processRole), questions, formInputs, responses, questionStatuses, assessorResponseFuture);
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
@@ -165,7 +173,9 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
         when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
-        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessmentId)).thenReturn(restSuccess(assessorFormInputResponseResources));
+
+//        TODO: replace below with assessorResponseFuture rest service?
+//        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessmentId)).thenReturn(restSuccess(assessorFormInputResponseResources));
         when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
 
         ApplicationReadOnlyViewModel viewModel = populator.populate(applicationId, user, settings);
