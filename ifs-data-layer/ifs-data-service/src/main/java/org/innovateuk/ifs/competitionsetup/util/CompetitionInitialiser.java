@@ -32,8 +32,6 @@ public class CompetitionInitialiser {
                 addLoanProjectSetupColumns(competition);
                 break;
             case PROCUREMENT:
-                addProcurementProjectSetupColumns(competition);
-                break;
             case GRANT:
             case KTP:
             case INVESTOR_PARTNERSHIPS:
@@ -102,21 +100,6 @@ public class CompetitionInitialiser {
                 createProjectSetupStage(competition, FINANCE_CHECKS),
                 createProjectSetupStage(competition, SPEND_PROFILE),
                 createProjectSetupStage(competition, PROJECT_SETUP_COMPLETE)
-        );
-
-        competition.setProjectStages(stages);
-    }
-
-    private void addProcurementProjectSetupColumns(Competition competition) {
-
-        List<ProjectStages> stages = asList(
-                createProjectSetupStage(competition, PROJECT_DETAILS),
-                createProjectSetupStage(competition, PROJECT_TEAM),
-                createProjectSetupStage(competition, MONITORING_OFFICER),
-                createProjectSetupStage(competition, BANK_DETAILS),
-                createProjectSetupStage(competition, FINANCE_CHECKS),
-                createProjectSetupStage(competition, SPEND_PROFILE),
-                createProjectSetupStage(competition, GRANT_OFFER_LETTER)
         );
 
         competition.setProjectStages(stages);
