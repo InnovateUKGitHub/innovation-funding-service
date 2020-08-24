@@ -87,6 +87,7 @@ public class RoleInviteResource extends InviteResource {
         return Role.getById(roleId).getDisplayName();
     }
 
+    @JsonIgnore
     public boolean isExternalInvite() {
         return externalRolesToInvite().contains(role);
     }
