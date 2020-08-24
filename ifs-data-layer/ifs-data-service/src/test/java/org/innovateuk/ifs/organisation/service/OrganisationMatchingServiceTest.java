@@ -14,7 +14,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.innovateuk.ifs.organisation.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertFalse;
@@ -50,6 +52,10 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
     private String internationalName;
     private OrganisationResource internationalOrganisation;
 
+    private String knowledgeBaseName;
+    private Organisation knowledgeBaseOrganisation;
+    private OrganisationResource knowledgeBaseOrganisationResource;
+
     @Before
     public void setUp() {
         companiesHouseNumber = "1234";
@@ -79,10 +85,33 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
                 .withInternationalRegistrationNumber(internationalIdentifier)
                 .withIsInternational(true)
                 .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build();
+
+        knowledgeBaseName = "knowledge";
+        knowledgeBaseOrganisation = newOrganisation()
+                .withName(knowledgeBaseName)
+                .withOrganisationType(OrganisationTypeEnum.CATAPULT).build();
+
+        knowledgeBaseOrganisationResource = newOrganisationResource()
+                .withName(knowledgeBaseName)
+                .withOrganisationType(OrganisationTypeEnum.CATAPULT.getId()).build();
+
     }
 
     @Test
     public void findOrganisationMatch_academicOrganisationShouldMatchByNameAndCallsPatternMatchers() {
+        when(organisationRepositoryMock.findByNameOrderById(eq(academicName))).thenReturn(singletonList(matchingResearchOrganisation));
+        when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(true);
+
+        Optional<Organisation> result = service.findOrganisationMatch(submittedResearchOrganisation);
+
+        assertTrue(result.isPresent());
+
+        verify(organisationPatternMatcher, times(0)).organisationTypeMatches(any(), any());
+        verify(organisationPatternMatcher, times(1)).organisationTypeIsResearch(any());
+    }
+
+    @Test
+    public void findOrganisationMatch_knowledgeBase() {
         when(organisationRepositoryMock.findByNameOrderById(eq(academicName))).thenReturn(singletonList(matchingResearchOrganisation));
         when(organisationPatternMatcher.organisationTypeIsResearch(any())).thenReturn(true);
 
@@ -172,6 +201,26 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
         when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
 
         Optional<Organisation> result = service.findOrganisationMatch(internationalOrganisation);
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void findOrganisationMatch_knowledgeBaseOrganisationShouldMatchWhenMatchingOrganisationIsFound() {
+        when(organisationRepositoryMock.findByNameOrderById(eq(knowledgeBaseName))).thenReturn(asList(knowledgeBaseOrganisation));
+        when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
+
+        Optional<Organisation> result = service.findOrganisationMatch(knowledgeBaseOrganisationResource);
+
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void findOrganisationMatch_knowledgeBaseOrganisationShouldNotMatchNoMatchingOrganisationIsFound() {
+        when(organisationRepositoryMock.findByNameOrderById(eq(knowledgeBaseName))).thenReturn(emptyList());
+        when(organisationPatternMatcher.organisationTypeMatches(any(), any())).thenReturn(true);
+
+        Optional<Organisation> result = service.findOrganisationMatch(knowledgeBaseOrganisationResource);
 
         assertFalse(result.isPresent());
     }

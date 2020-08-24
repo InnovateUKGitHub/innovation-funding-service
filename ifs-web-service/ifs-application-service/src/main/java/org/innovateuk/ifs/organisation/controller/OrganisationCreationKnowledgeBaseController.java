@@ -179,8 +179,8 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
 
     @GetMapping("/confirm")
     public String confirmKnowledgeBaseDetails(Model model,
-                                                          UserResource user,
-                                                          HttpServletRequest request) {
+                                              UserResource user,
+                                              HttpServletRequest request) {
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
         Optional<KnowledgeBaseCreateForm> knowledgeBaseCreateForm = registrationCookieService.getKnowledgeBaseDetailsValue(request);
         model.addAttribute("knowledgeBaseType", organisationTypeForm.isPresent() ? organisationTypeRestService.findOne(organisationTypeForm.get().getOrganisationType()).getSuccess() : null);
