@@ -120,9 +120,9 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         costCategoryType.getCostCategories().forEach(cc -> valuesPerCostCategory.put(cc, BigDecimal.ZERO));
 
         for (Entry<FinanceRowType, FinanceRowCostCategory> entry : spendRows.entrySet()) {
-            SbriPilotCostCategoryGenerator academicCostCategoryMatch = SbriPilotCostCategoryGenerator.fromFinanceRowType(entry.getKey());
-            if(academicCostCategoryMatch != null) {
-                CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, academicCostCategoryMatch);
+            SbriPilotCostCategoryGenerator generator = SbriPilotCostCategoryGenerator.fromFinanceRowType(entry.getKey());
+            if (generator != null) {
+                CostCategory costCategory = findCostCategoryFromGenerator(costCategoryType, generator);
                 BigDecimal value = entry.getValue().getTotal();
                 BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
                 valuesPerCostCategory.put(costCategory, currentValue.add(value));
