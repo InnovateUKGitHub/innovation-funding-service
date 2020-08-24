@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.GrantTermsAndConditions;
-import org.innovateuk.ifs.competition.domain.InnovationLead;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
-import org.innovateuk.ifs.competition.repository.InnovationLeadRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyApplicationStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -20,10 +19,8 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.project.core.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,16 +47,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
 
     @Autowired
-    private InnovationLeadRepository innovationLeadRepository;
-
-    @Autowired
     private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
     @Autowired
     private CompetitionMapper competitionMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
@@ -80,6 +71,34 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<Competition> findCompetitionById(long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id));
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> getCompetitionByApplicationId(long applicationId) {
+        return findCompetitionByApplicationId(applicationId).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    private ServiceResult<Competition> findCompetitionByApplicationId(long applicationId) {
+        Optional<Application> application = applicationRepository.findById(applicationId);
+        if (application.isPresent()) {
+            return serviceSuccess(application.get().getCompetition());
+        } else {
+            return find(Optional.empty(), notFoundError(Application.class, applicationId));
+        }
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> getCompetitionByProjectId(long projectId) {
+        return findCompetitionByProjectId(projectId).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
+    }
+
+    private ServiceResult<Competition> findCompetitionByProjectId(long projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (project.isPresent()) {
+            return serviceSuccess(project.get().getApplication().getCompetition());
+        } else {
+            return find(Optional.empty(), notFoundError(Project.class, projectId));
+        }
     }
 
     @Override

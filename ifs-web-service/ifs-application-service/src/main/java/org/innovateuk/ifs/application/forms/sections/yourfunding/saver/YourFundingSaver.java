@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -45,8 +43,6 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @Autowired
-    private ApplicationRestService applicationRestService;
 
     @Override
     protected FinanceRowRestService getFinanceRowService() {
@@ -76,8 +72,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                 grantClaim.setAmount(new BigDecimal(value));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("otherFunding")) {
-                ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-                CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+                CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
                 FinanceRowType type = competition.isKtp() ? FinanceRowType.PREVIOUS_FUNDING : FinanceRowType.OTHER_FUNDING;
                 BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(type);
                 BaseOtherFunding otherFunding = otherFundingCategory.getOtherFunding();
@@ -89,8 +84,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                 BaseOtherFunding cost;
 
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
-                    ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-                    CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+                    CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
                     if (competition.isKtp()) {
                         cost = (PreviousFunding) getFinanceRowService().create(new PreviousFunding(finance.getId())).getSuccess();
                     } else {
