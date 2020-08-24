@@ -14,11 +14,11 @@ public interface KnowledgeBaseService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_KNOWLEDGE_BASE", description = "The System Registration user can get all Knowledge base organisations.")
-    ServiceResult<List<String>> getKnowledegeBases();
+    ServiceResult<List<String>> getKnowledgeBaseNames();
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_KNOWLEDGE_BASE", description = "The System Registration user can get a Knowledge base organisation searched by id")
-    ServiceResult<String> getKnowledgeBase(long id);
+    ServiceResult<String> getKnowledgeBaseName(long id);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_KNOWLEDGE_BASE", description = "The System Registration user can get a Knowledge base organisation searched by name")

@@ -29,14 +29,14 @@ public class KnowledgeBaseServiceImpl extends RootTransactionalService implement
     private KnowledgeBaseMapper knowledgeBaseMapper;
 
     @Override
-    public ServiceResult<List<String>> getKnowledegeBases() {
+    public ServiceResult<List<String>> getKnowledgeBaseNames() {
         return serviceSuccess(stream(knowledgeBaseRepository.findAll().spliterator(), false)
                 .map(KnowledgeBase::getName)
                 .collect(toList()));
     }
 
     @Override
-    public ServiceResult<String> getKnowledgeBase(long id) {
+    public ServiceResult<String> getKnowledgeBaseName(long id) {
         return find(knowledgeBaseRepository.findById(id), notFoundError(KnowledgeBase.class, singletonList(id)))
                 .andOnSuccessReturn(KnowledgeBase::getName);
     }

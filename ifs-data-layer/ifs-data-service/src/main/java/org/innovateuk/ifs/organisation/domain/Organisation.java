@@ -36,7 +36,7 @@ public class Organisation {
     private String internationalRegistrationNumber;
 
     @Column
-    private String registrationNumber;
+    private String knowledgeBaseRegistrationNumber;
 
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.ALL)
@@ -122,11 +122,11 @@ public class Organisation {
         this.internationalRegistrationNumber = internationalRegistrationNumber;
     }
 
-    public String getRegistrationNumber() {
-        return registrationNumber;
+    public String getKnowledgeBaseRegistrationNumber() {
+        return knowledgeBaseRegistrationNumber;
     }
 
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
+    public void setKnowledgeBaseRegistrationNumber(String knowledgeBaseRegistrationNumber) {
+        this.knowledgeBaseRegistrationNumber = knowledgeBaseRegistrationNumber;
     }
 }

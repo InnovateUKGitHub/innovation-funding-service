@@ -16,7 +16,7 @@ public class KnowledgeBase {
 
     private String name;
 
-    private String identifier;
+    private String registrationNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
@@ -28,10 +28,10 @@ public class KnowledgeBase {
         // for ORM
     }
 
-    public KnowledgeBase(Long id, String name, String identifier, OrganisationType organisationType, Address address) {
+    public KnowledgeBase(Long id, String name, String registrationNumber, OrganisationType organisationType, Address address) {
         this.id = id;
         this.name = name;
-        this.identifier = identifier;
+        this.registrationNumber = registrationNumber;
         this.organisationType = organisationType;
         this.address = address;
     }
@@ -52,12 +52,12 @@ public class KnowledgeBase {
         this.name = name;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public String getRegistrationNumber() {
+        return registrationNumber;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     public OrganisationType getOrganisationType() {

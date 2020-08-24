@@ -31,7 +31,6 @@ public abstract class KnowledgeBaseMapper extends BaseMapper<KnowledgeBase, Know
 
     @Mappings({
             @Mapping(source = "organisationType.name", target = "organisationTypeName"),
-            @Mapping(source = "identifier", target = "registrationNumber"),
             @Mapping(target = "address", ignore = true)
     })
     @Override

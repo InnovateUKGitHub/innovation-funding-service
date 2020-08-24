@@ -9,7 +9,7 @@ public enum OrganisationAddressType {
     @Deprecated
     OPERATING(2L),                         // No longer capturing operating address as part of organisation creation
     INTERNATIONAL(5L),                     // Used for international organisations as part of organisation creation
-    KNOWLEDGE_BASE(5L);                    // Used for knowledge base organisations as part of organisation creation
+    KNOWLEDGE_BASE(6L);                    // Used for knowledge base organisations as part of organisation creation
 
     private final long id;
 
