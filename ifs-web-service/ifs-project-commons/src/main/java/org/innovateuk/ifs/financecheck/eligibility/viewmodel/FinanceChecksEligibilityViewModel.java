@@ -228,7 +228,11 @@ public class FinanceChecksEligibilityViewModel {
     }
 
     public boolean isShowChangesLink() {
-        return eligibilityOverview.isHasApplicationFinances();
+        if(isProcurement()) {
+            return false;
+        } else {
+            return eligibilityOverview.isHasApplicationFinances();
+        }
     }
 
     public boolean isEligibilityReadyToConfirm() {

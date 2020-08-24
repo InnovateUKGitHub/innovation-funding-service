@@ -181,11 +181,13 @@
                             application stage. They include all changes made during the eligibility checks.</p>
                     </th:block>
                 </th:block>
-                <p class="govuk-body"><a
-                    th:if="${summaryModel.showChangesLink}"
-                    th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
-                    class="govuk-link"
-                    th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
+                <!--<th:block th:unless="${summaryModel.isProcurement()}">-->
+                    <p class="govuk-body" th:unless="${summaryModel.isProcurement()}"><a
+                        th:if="${summaryModel.showChangesLink}"
+                        th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}"
+                        class="govuk-link"
+                        th:text="${summaryModel.isApproved() ? 'View changes to finances' : 'Review all changes to project finances'}">Review all changes to project finances</a></p>
+                <!--</th:block>-->
             </th:block>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
