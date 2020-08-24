@@ -61,7 +61,7 @@ public class Vat extends AbstractFinanceRowItem {
 
     @Override
     public String getName(){
-        return getCostType().getName();
+        return getCostType().getDisplayName();
     }
 
     public BigDecimal getRate() {

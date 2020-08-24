@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -49,6 +50,10 @@ public class FormInputResponseBuilder extends BaseBuilder<FormInputResponse, For
 
     public FormInputResponseBuilder withUpdatedBy(ProcessRole updatedBy) {
         return with(response -> response.setUpdatedBy(updatedBy));
+    }
+
+    public FormInputResponseBuilder withApplication(Application application) {
+        return with(response -> response.setApplication(application));
     }
 
     public FormInputResponseBuilder withValue(String value) {

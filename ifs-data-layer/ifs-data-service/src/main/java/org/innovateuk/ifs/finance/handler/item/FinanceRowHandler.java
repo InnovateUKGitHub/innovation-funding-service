@@ -7,12 +7,17 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.springframework.validation.BindingResult;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 public abstract class FinanceRowHandler<T extends FinanceRowItem> {
 
@@ -39,19 +44,24 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
     }
 
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        return intialiseCost(applicationFinance)
+        return intialiseCosts(applicationFinance)
+                .stream()
                 .map(this::toApplicationDomain)
-                .map(Arrays::asList)
-                .orElse(emptyList());
-    }
-    public List<ProjectFinanceRow> initializeCost(ProjectFinance projectFinance) {
-        return intialiseCost(projectFinance)
-                .map(this::toProjectDomain)
-                .map(Arrays::asList)
-                .orElse(emptyList());
+                .collect(Collectors.toList());
     }
 
-    protected Optional<T> intialiseCost(Finance finance) {
-        return empty();
+    public List<ProjectFinanceRow> initializeCost(ProjectFinance projectFinance) {
+        return intialiseCosts(projectFinance)
+                .stream()
+                .map(this::toProjectDomain)
+                .collect(Collectors.toList());
+    }
+
+    protected List<T> intialiseCosts(Finance finance) {
+        return emptyList();
+    }
+
+    protected BigInteger bigIntegerOrNull(BigDecimal cost) {
+        return ofNullable(cost).map(BigDecimal::toBigInteger).orElse(null);
     }
 }
