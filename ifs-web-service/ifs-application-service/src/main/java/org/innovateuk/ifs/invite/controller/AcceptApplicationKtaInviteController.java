@@ -4,11 +4,9 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.populator.AcceptRejectApplicationKtaInviteModelPopulator;
-import org.innovateuk.ifs.invite.populator.ConfirmOrganisationInviteModelPopulator;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,12 +27,6 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
 
     @Autowired
     private ApplicationKtaInviteRestService ktaInviteRestService;
-
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private ConfirmOrganisationInviteModelPopulator confirmOrganisationInviteModelPopulator;
 
     @Autowired
     private AcceptRejectApplicationKtaInviteModelPopulator acceptRejectApplicationKtaInviteModelPopulator;

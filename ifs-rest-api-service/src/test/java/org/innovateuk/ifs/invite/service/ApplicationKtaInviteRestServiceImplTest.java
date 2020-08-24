@@ -67,7 +67,7 @@ public class ApplicationKtaInviteRestServiceImplTest extends BaseRestServiceUnit
         String hash = "hash";
         ApplicationKtaInviteResource expected = newApplicationKtaInviteResource().build();
         String url = inviteKtaRestURL + "/hash/" + hash;
-        setupGetWithRestResultExpectations(url, ApplicationKtaInviteResource.class, expected, OK);
+        setupGetWithRestResultAnonymousExpectations(url, ApplicationKtaInviteResource.class, expected, OK);
         RestResult<ApplicationKtaInviteResource> response = service.getKtaInviteByHash(hash);
 
         assertTrue(response.isSuccess());

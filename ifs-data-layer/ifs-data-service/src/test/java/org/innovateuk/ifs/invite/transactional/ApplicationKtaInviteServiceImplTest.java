@@ -151,5 +151,6 @@ public class ApplicationKtaInviteServiceImplTest {
 
         verify(invite).open();
         verify(processRoleRepository).save(any(ProcessRole.class));
+        verify(applicationKtaInviteRepository).save(invite);
     }
 }
