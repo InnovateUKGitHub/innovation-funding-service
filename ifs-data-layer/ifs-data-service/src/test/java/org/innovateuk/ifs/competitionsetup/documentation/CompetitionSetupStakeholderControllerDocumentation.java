@@ -22,7 +22,9 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.stakeholder.builder.StakeholderInviteResourceBuilder.newStakeholderInviteResource;
 import static org.innovateuk.ifs.stakeholder.builder.StakeholderRegistrationResourceBuilder.newStakeholderRegistrationResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -144,7 +146,7 @@ public class CompetitionSetupStakeholderControllerDocumentation extends BaseCont
                 .withPassword("superSecurePassword")
                 .build();
 
-        when(registrationService.createStakeholder(TEST_HASH, resource)).thenReturn(serviceSuccess());
+        when(registrationService.createUser(any())).thenReturn(serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/competition/setup/stakeholder/create/{inviteHash}", TEST_HASH)
                                 .contentType(APPLICATION_JSON)

@@ -26,6 +26,7 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 
 /**
@@ -73,8 +74,8 @@ public class UserController {
     }
 
     @PostMapping
-    public RestResult<UserResource> createUser(@RequestBody UserResource userResource) {
-        return registrationService.createUser(userResource).toPostCreateResponse();
+    public RestResult<UserResource> createUser(@RequestBody UserCreationResource userCreationResource) {
+        return registrationService.createUser(userCreationResource).toPostCreateResponse();
     }
 
     @GetMapping("/find-by-role/{userRole}")
@@ -117,7 +118,14 @@ public class UserController {
 
     @PostMapping("/internal/create/{inviteHash}")
     public RestResult<Void> createInternalUser(@PathVariable("inviteHash") String inviteHash, @Valid @RequestBody InternalUserRegistrationResource internalUserRegistrationResource){
-        return registrationService.createInternalUser(inviteHash, internalUserRegistrationResource).toPostCreateResponse();
+        return registrationService.createUser(anUserCreationResource()
+                .withFirstName(internalUserRegistrationResource.getFirstName())
+                .withLastName(internalUserRegistrationResource.getLastName())
+                .withPassword(internalUserRegistrationResource.getPassword())
+                .withInviteHash(inviteHash)
+                .build())
+                .andOnSuccessReturnVoid()
+                .toPostCreateResponse();
     }
 
     @PostMapping("/internal/edit")
@@ -203,16 +211,6 @@ public class UserController {
         return userService.findInactiveByEmail(emailAddress)
                 .andOnSuccessReturn(user -> registrationService.resendUserVerificationEmail(user))
                 .toPutResponse();
-    }
-
-    @PostMapping("/create-lead-applicant-for-organisation/{organisationId}")
-    public RestResult<UserResource> createUser(@PathVariable long organisationId, @RequestBody UserResource userResource) {
-        return registrationService.createUser(userResource).toPostCreateResponse();
-    }
-
-    @PostMapping("/create-lead-applicant-for-organisation/{organisationId}/{competitionId}")
-    public RestResult<UserResource> createUser(@PathVariable long organisationId, @PathVariable long competitionId, @RequestBody UserResource userResource) {
-        return registrationService.createUserWithCompetitionContext(competitionId, organisationId, userResource).toPostCreateResponse();
     }
 
     @PostMapping("/id/{userId}/agree-new-site-terms-and-conditions")
