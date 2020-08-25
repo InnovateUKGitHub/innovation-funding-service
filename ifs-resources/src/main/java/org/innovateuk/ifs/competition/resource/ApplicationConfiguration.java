@@ -41,9 +41,9 @@ public interface ApplicationConfiguration {
     }
 
     default boolean applicantShouldSeeYourOrganisationSection(OrganisationTypeEnum organisationType) {
-        return !isKtp() && (RESEARCH != organisationType ||
+        return RESEARCH != organisationType ||
                 Boolean.TRUE.equals(getIncludeYourOrganisationSection())
-                && getFundingType() == GRANT);
+                && getFundingType() == GRANT;
     }
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {

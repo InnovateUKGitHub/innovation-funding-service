@@ -79,12 +79,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Competition> findCompetitionByApplicationId(long applicationId) {
-        Optional<Application> application = applicationRepository.findById(applicationId);
-        if (application.isPresent()) {
-            return serviceSuccess(application.get().getCompetition());
-        } else {
-            return find(Optional.empty(), notFoundError(Application.class, applicationId));
-        }
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)) .andOnSuccessReturn(app -> app.getCompetition());
     }
 
     @Override
