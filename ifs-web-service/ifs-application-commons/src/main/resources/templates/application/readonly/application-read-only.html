@@ -26,9 +26,8 @@
                             <span class="govuk-accordion__section-button" th:id="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
-                            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                                <th:block
-                                    th:insert="application/readonly/score-overview :: ${question.fragment} (${question})"/>
+                            <th:block th:if="${model.settings.includeAllAssessorFeedback && question.fragment == 'generic'}">
+                                <th:block th:insert="application/readonly/score-overview :: score_detail (${question})"/>
                             </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>
