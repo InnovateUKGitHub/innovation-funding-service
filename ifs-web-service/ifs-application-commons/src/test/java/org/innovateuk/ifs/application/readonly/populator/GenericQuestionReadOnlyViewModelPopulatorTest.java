@@ -144,8 +144,6 @@ public class GenericQuestionReadOnlyViewModelPopulatorTest {
                 .withFeedback(feedbackStrings)
                 .build();
 
-        when(assessorFormInputResponseRestService.getApplicationAssessment(application.getId(), 3L)).thenReturn(restSuccess(assessorResponseFuture));
-
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, newUserResource().build(), empty(), emptyList(),
                 asList(textarea, appendix, templateDocument, feedback, score), asList(textareaResponse, appendixResponse,
                 templateDocumentResponse), emptyList(), singletonList(assessorResponseFuture));
