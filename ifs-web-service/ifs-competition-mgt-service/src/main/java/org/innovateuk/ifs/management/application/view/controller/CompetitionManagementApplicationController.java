@@ -67,8 +67,7 @@ public class CompetitionManagementApplicationController {
                                         BindingResult bindingResult,
                                         UserResource user,
                                         Model model) {
-        ManagementApplicationViewModel populate = managementApplicationPopulator.populate(applicationId, user);
-        ManagementApplicationViewModel viewModel = populate;
+        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user);
         model.addAttribute("model", viewModel);
         return "competition-mgt-application-overview";
     }
