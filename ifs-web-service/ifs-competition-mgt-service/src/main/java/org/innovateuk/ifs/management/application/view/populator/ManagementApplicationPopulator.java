@@ -84,7 +84,7 @@ public class ManagementApplicationPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ApplicationReadOnlySettings settings = defaultSettings()
-                .setIncludeAllAssessorFeedback(true);
+                .setIncludeAllAssessorFeedback(user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement());
 
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {

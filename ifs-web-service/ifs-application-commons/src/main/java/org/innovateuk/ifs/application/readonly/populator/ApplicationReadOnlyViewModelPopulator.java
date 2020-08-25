@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -108,7 +109,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationReadOnlyViewModel(settings, sectionViews, data.getApplicationScore());
+        return new ApplicationReadOnlyViewModel(settings, sectionViews, settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO);
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
