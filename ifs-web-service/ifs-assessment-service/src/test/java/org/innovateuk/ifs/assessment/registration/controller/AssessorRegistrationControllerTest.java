@@ -1,18 +1,17 @@
 package org.innovateuk.ifs.assessment.registration.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationBecomeAnAssessorModelPopulator;
-import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationModelPopulator;
 import org.innovateuk.ifs.assessment.registration.registration.AssessorRegistrationBecomeAnAssessorViewModel;
-import org.innovateuk.ifs.assessment.registration.registration.AssessorRegistrationViewModel;
 import org.innovateuk.ifs.assessment.registration.service.AssessorService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
 import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -41,6 +40,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -57,10 +57,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     @Spy
     @InjectMocks
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
     @Mock
     private AssessorService assessorService;
@@ -102,11 +98,11 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        AssessorRegistrationViewModel expectedViewModel = new AssessorRegistrationViewModel("hash", "test@test.com");
+        RegistrationViewModel expectedViewModel = aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).build();
 
         mockMvc.perform(get("/registration/{inviteHash}/register", "hash"))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("model", refEq(expectedViewModel)))
                 .andExpect(view().name("registration/register"));
     }
 
@@ -122,7 +118,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String town = "town";
         String postcode = "postcode";
 
-        AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
+        RegistrationForm expectedForm = new RegistrationForm();
         expectedForm.setFirstName(firstName);
         expectedForm.setLastName(lastName);
         expectedForm.setPhoneNumber(phoneNumber);
@@ -177,7 +173,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String town = "town";
         String postcode = "postcode";
 
-        AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
+        RegistrationForm expectedForm = new RegistrationForm();
         expectedForm.setFirstName(firstName);
         expectedForm.setLastName(lastName);
         expectedForm.setPhoneNumber(phoneNumber);
@@ -248,7 +244,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("registration/register"))
                 .andReturn();
 
-        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+        RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(phoneNumber, form.getPhoneNumber());
         assertEquals(password, form.getPassword());
@@ -295,7 +291,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("registration/register"))
                 .andReturn();
 
-        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+        RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(phoneNumber, form.getPhoneNumber());
         assertEquals(password, form.getPassword());
@@ -331,7 +327,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("registration/register"))
                 .andReturn();
 
-        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+        RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(form.getAddressForm().isManualAddressEntry(), true);
     }
@@ -358,7 +354,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("registration/register"))
                 .andReturn();
 
-        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+        RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
 
         assertEquals(postcodeInput, form.getAddressForm().getPostcodeInput());
         assertEquals(addressResourceList.get(0), form.getAddressForm().getPostcodeResults().get(0));
@@ -386,7 +382,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("registration/register"))
                 .andReturn();
 
-        AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
+        RegistrationForm form = (RegistrationForm) result.getModelAndView().getModel().get("form");
         assertEquals(postcodeInput, form.getAddressForm().getPostcodeInput());
 
         verifyZeroInteractions(addressRestService);

@@ -2,18 +2,19 @@ package org.innovateuk.ifs.assessment.registration.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationBecomeAnAssessorModelPopulator;
-import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationModelPopulator;
 import org.innovateuk.ifs.assessment.registration.service.AssessorService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.address.form.AddressForm;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,15 +24,17 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 
 /**
  * Controller to manage Assessor Registration.
@@ -55,9 +58,6 @@ public class AssessorRegistrationController {
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
-    private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
-
-    @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
@@ -67,7 +67,6 @@ public class AssessorRegistrationController {
     @GetMapping("/{inviteHash}/start")
     public String becomeAnAssessor(Model model,
                                    @PathVariable("inviteHash") String inviteHash) {
-
         model.addAttribute("model", becomeAnAssessorModelPopulator.populateModel(inviteHash));
         return "registration/become-assessor";
     }
@@ -75,14 +74,15 @@ public class AssessorRegistrationController {
     @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
-                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorRegistrationForm form) {
+                              @ModelAttribute(name = FORM_ATTR_NAME, binding = false) RegistrationForm form) {
+        form.setEmail(getAssociatedEmailFromInvite(inviteHash));
         return doViewYourDetails(model, inviteHash);
     }
 
     @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
-                                    @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
+                                    @Validated({Default.class, PhoneNumberValidationGroup.class}) @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> doViewYourDetails(model, inviteHash);
@@ -128,7 +128,7 @@ public class AssessorRegistrationController {
 
     @PostMapping(value = "/{inviteHash}/register", params = FORM_ACTION_PARAMETER)
     public String addressFormAction(Model model,
-                                @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
+                                @ModelAttribute(FORM_ATTR_NAME) RegistrationForm registrationForm,
                                 BindingResult bindingResult,
                                 ValidationHandler validationHandler,
                                 @PathVariable("inviteHash") String inviteHash) {
@@ -154,7 +154,12 @@ public class AssessorRegistrationController {
     }
 
     private String doViewYourDetails(Model model, String inviteHash) {
-        model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
+        model.addAttribute("model", aRegistrationViewModel().withButtonText("Continue").withAddressRequired(true).withPhoneRequired(true).withInvitee(true).build());
         return "registration/register";
+    }
+
+    private String getAssociatedEmailFromInvite(String inviteHash) {
+        RestResult<CompetitionInviteResource> invite = competitionInviteRestService.getInvite(inviteHash);
+        return invite.getSuccess().getEmail();
     }
 }
