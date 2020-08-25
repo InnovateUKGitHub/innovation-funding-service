@@ -29,8 +29,10 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7975 KTP Invite new KTA
 ...
-...               IFS-7934 KTA Account creation journey
+...               IFS-7976 IFS Admin can add a role profile of KTA to an external user
 ...
+...               IFS-7934 KTA Account creation journey
+
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -56,7 +58,8 @@ ${lastNameInvalidCharacterMessage}       Your last name should have at least 2 c
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
-${invalidKTNDomainValidationMessage}     Users cannot be registered without a Knowledge Transfer Network email address.
+${invalidKTNDomainValidationMessage}     Users cannot be registered without a knowledge transfer network email address.
+${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
 
@@ -163,14 +166,6 @@ Admin cannot change email to an email when there is a pending team member invita
     When log in as a different user                            &{ifs_admin_user_credentials}
     Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
     And the external user removes the pending parter invitation  ${server}/project-setup/project/1/team
-
-Admin cannot change email to an email which is a pending invitation to an organisation in the application
-    [Documentation]   IFS-7160
-    [Setup]  log in as a different user                                                      &{ifs_admin_user_credentials}
-    Given the user adds an organisation                                                      ${server}/project-setup-management/competition/${ConnectedCompId}/project/${MobileProjectId}/team
-    Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
-    And log in as a different user                                                           &{ifs_admin_user_credentials}
-    [Teardown]  the user removes the pending organisation invitation in projet setup         ${server}/project-setup-management/competition/${ConnectedCompId}/project/${MobileProjectId}/team
 
 Support can change email address
     [Documentation]  IFS-6380  IFS-6928
@@ -402,7 +397,45 @@ IFS Admin can see the new KTA user in the system
     When the user clicks the button/link         css = input[type="submit"]
     Then the user should see the element         link = ${validKTNDomainEmail}
 
+IFS Admin cannot add a role profile of KTA to a non-KT Network user
+    [Documentation]  IFS-7976
+    Given the user navigates to the page                     ${server}/management/admin/users/active
+    When the user selects a user to edit details             Simon  simon.bates@gmail.com
+    And the user adds a new external role profile of KTA
+    Then the user should see a field and summary error       ${summaryError}
+
+IFS Admin can add a role profile of KTA to a user in KT Network
+    [Documentation]  IFS-7976
+    Given the user navigates to the page                     ${server}/management/admin/users/active
+    When the user selects a user to edit details             Alyssa  alyssa.smith@ktn-uk.test
+    And the user adds a new external role profile of KTA
+    Then the user should see the element                     jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
+    And the user should not see the element                  link = Add a new external role profile
+
+Comp Admin should be able to see the details of assessor with new role profile of KTA
+    [Documentation]  IFS-7976
+    [Setup]  log in as a different user         &{Comp_admin1_credentials}
+    Given the user clicks the button/link       link = Assessor status
+    And the user search for a user              Alyssa
+    When the user clicks the button/link        link = View details
+    Then the user should see the element        jQuery = td:contains("Knowledge transfer adviser") ~ td:contains("Active")
+    And the user should not see the element     jQuery = button:contains("Save and return")
+
 *** Keywords ***
+the user search for a user
+    [Arguments]  ${name}
+    the user enters text to a text field     id = filter  ${name}
+    the user clicks the button/link          css = input[type="submit"]
+
+the user selects a user to edit details
+    [Arguments]  ${name}  ${email}
+    the user search for a user          ${name}
+    the user clicks the button/link     jQuery = .user-profile:contains("${email}") a:contains("Edit")
+
+the user adds a new external role profile of KTA
+    the user clicks the button/link     link = Add a new external role profile
+    the user clicks the button/link     css = button[type="submit"]
+
 the KTA user enters the details to create account
     [Arguments]  ${firstName}  ${lastName}  ${email}
     the KTA user checks for all validations
