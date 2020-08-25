@@ -32,5 +32,4 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     public String getFragment() {
         return "application-team";
     }
-
 }

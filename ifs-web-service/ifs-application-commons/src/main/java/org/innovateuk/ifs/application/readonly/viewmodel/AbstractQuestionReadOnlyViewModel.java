@@ -73,6 +73,9 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     }
 
     @Override
+    public boolean hasScore() { return false; }
+
+    @Override
     public boolean shouldDisplayActions() {
         return displayActions;
     }
