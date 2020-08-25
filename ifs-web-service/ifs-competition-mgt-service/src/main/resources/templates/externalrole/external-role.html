@@ -44,7 +44,7 @@
                     Email address
                 </label>
                 <th:block th:if="${#fields.hasErrors('email')}">
-                    <span class="govuk-error-message" th:each="err : ${#fields.errors('email')}"
+                    <span class="govuk-error-message govuk-!-margin-top-3" th:each="err : ${#fields.errors('email')}"
                           th:text="${err}"></span>
                 </th:block>
                 <p class="govuk-body" id="email" th:text="${model.email}">Email address</p>
