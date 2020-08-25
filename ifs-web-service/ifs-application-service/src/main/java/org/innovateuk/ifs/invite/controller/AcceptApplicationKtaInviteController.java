@@ -22,7 +22,6 @@ import static org.innovateuk.ifs.exception.ErrorControllerAdvice.URL_HASH_INVALI
 @SecuredBySpring(value = "Controller",
         description = "All KTA users with a valid invite hash are able to view and accept the corresponding invite",
         securedType = AcceptApplicationKtaInviteController.class)
-@PreAuthorize("permitAll")
 public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteController {
 
     @Autowired
@@ -32,7 +31,7 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
     private AcceptRejectApplicationKtaInviteModelPopulator acceptRejectApplicationKtaInviteModelPopulator;
 
     @GetMapping("/kta/accept-invite/{hash}")
-    @SecuredBySpring(value = "READ", description = "KTA users can accept invite to join an application.")
+    @SecuredBySpring(value = "READ", description = "All users can view the invite to join an application.")
     @PreAuthorize("permitAll")
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
