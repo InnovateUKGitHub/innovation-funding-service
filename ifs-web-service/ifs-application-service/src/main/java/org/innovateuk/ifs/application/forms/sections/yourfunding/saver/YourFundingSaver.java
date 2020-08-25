@@ -73,7 +73,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("otherFunding")) {
                 CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
-                FinanceRowType type = competition.isKtp() ? FinanceRowType.PREVIOUS_FUNDING : FinanceRowType.OTHER_FUNDING;
+                FinanceRowType type = competition.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING) ? FinanceRowType.PREVIOUS_FUNDING : FinanceRowType.OTHER_FUNDING;
                 BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(type);
                 BaseOtherFunding otherFunding = otherFundingCategory.getOtherFunding();
                 otherFunding.setOtherPublicFunding(Boolean.parseBoolean(value) ? "Yes" : "No");
@@ -85,7 +85,7 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
 
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
                     CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
-                    if (competition.isKtp()) {
+                    if (competition.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING)) {
                         cost = (PreviousFunding) getFinanceRowService().create(new PreviousFunding(finance.getId())).getSuccess();
                     } else {
                         cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();

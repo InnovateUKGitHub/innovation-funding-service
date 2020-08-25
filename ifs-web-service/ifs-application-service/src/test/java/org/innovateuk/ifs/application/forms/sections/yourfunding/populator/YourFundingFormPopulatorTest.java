@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.collections.ListUtils.union;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -92,7 +93,7 @@ public class YourFundingFormPopulatorTest extends BaseServiceUnitTest<YourFundin
                         FinanceRowType.OTHER_FUNDING, otherFundingCategory
                 ))
                 .build();
-        competition = newCompetitionResource().build();
+        competition = newCompetitionResource().withFinanceRowTypes(emptyList()).build();
 
         when(competitionRestService.getCompetitionForApplication(APPLICATION_ID)).thenReturn(restSuccess(competition));
         when(applicationFinanceRestService.getFinanceDetails(APPLICATION_ID, organisation.getId())).thenReturn(restSuccess(finance));
