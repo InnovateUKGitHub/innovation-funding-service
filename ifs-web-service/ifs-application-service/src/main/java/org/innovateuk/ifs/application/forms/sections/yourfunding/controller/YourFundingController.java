@@ -143,8 +143,7 @@ public class YourFundingController {
                            @PathVariable long organisationId,
                            @ModelAttribute("form") YourFundingPercentageForm form,
                            BindingResult bindingResult,
-                           ValidationHandler validationHandler
-    ) {
+                           ValidationHandler validationHandler) {
 
         return complete(model,
                 user,
@@ -165,8 +164,7 @@ public class YourFundingController {
                            @PathVariable long organisationId,
                            @ModelAttribute("form") YourPreviousFundingPercentageForm form,
                            BindingResult bindingResult,
-                           ValidationHandler validationHandler
-    ) {
+                           ValidationHandler validationHandler) {
 
         return complete(model,
                 user,
