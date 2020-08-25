@@ -32,6 +32,8 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
     private AcceptRejectApplicationKtaInviteModelPopulator acceptRejectApplicationKtaInviteModelPopulator;
 
     @GetMapping("/kta/accept-invite/{hash}")
+    @SecuredBySpring(value = "READ", description = "KTA users can accept invite to join an application.")
+    @PreAuthorize("permitAll")
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
             UserResource loggedInUser,
@@ -55,6 +57,7 @@ public class AcceptApplicationKtaInviteController extends AbstractAcceptInviteCo
 
     @GetMapping("/kta/accept-invite/{hash}/accept")
     @PreAuthorize("hasAuthority('knowledge_transfer_adviser')")
+    @SecuredBySpring(value = "ACCEPT", description = "KTA users can accept invite to join an application.")
     public String acceptKtaPage(
             @PathVariable("hash") final String hash,
             UserResource loggedInUser,
