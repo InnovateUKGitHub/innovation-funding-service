@@ -187,6 +187,7 @@
             </tr>
             </tbody>
         </table>
+        </th:block>
         <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge Transfer Adviser</h2>
             <table class="govuk-table">
@@ -206,10 +207,7 @@
                 </tbody>
             </table>
         </th:block>
-    </th:block>
 </th:block>
-
-
 <th:block th:fragment="grant-transfer-details(model)">
     <dl class="govuk-list">
         <dt>Project name</dt>
