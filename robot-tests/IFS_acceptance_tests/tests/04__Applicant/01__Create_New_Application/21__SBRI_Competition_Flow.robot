@@ -22,6 +22,15 @@ ${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]
 &{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
 ${sbriProjectName}               Procurement application 1
 ${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
+${yourProjFinanceLink}           your project finances
+${viewFinanceChangesLink}        View changes to finances
+${inclusiveOfVATHeading}         Total project costs inclusive of VAT
+${totalProjCosts}                Total project cost
+${vatRegistered}                 Are you VAT registered
+${totalWithVAT}                  £265,084
+${totalWithoutVAT}               £220,903
+${initialFunding}                £77,057
+${revisedFunding}                £63,803
 
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
@@ -124,29 +133,29 @@ Internal users can see SBRI application in previous tab with submitted status
 
 Internal user finance checks page
     [Documentation]    IFS-8127
-    [Setup]  Log in as a different user           &{internal_finance_credentials}
-    Given the user navigates to the page          ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    [Setup]  Log in as a different user                                 &{internal_finance_credentials}
+    When the user navigates to the page                                 ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     Then the user should see the correct data on finance check page
 
 Internal user eligibility page
     [Documentation]    IFS-8127
-     Given the user clicks the button/link        css = .eligibility-0
-     Then the user should not see the element     jQuery = h2:contains("Finances overview")
-     And the user should not see the element      link = Review all changes to project finances
+    When the user clicks the button/link         css = .eligibility-0
+    Then the user should not see the element     css = .table-overview
+    And the user should not see the element      link = Review all changes to project finances
 
 Internal user can set VAT to no
-     [Documentation]    IFS-8126
-     Given The user clicks the button/link        jQuery = div:contains("Are you VAT registered") ~ div a:contains("Edit")
-     When the user selects the radio button        vatForm.registered  false
-     And The user clicks the button/link          jQuery = div:contains("Total project costs inclusive of VAT") ~ div button:contains("Save")
-     Then the user should see calculations without VAT
+    [Documentation]    IFS-8126
+    Given The user clicks the button/link                 jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
+    When the user selects the radio button                vatForm.registered  false
+    And The user clicks the button/link                   jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
+    Then the user should see calculations without VAT
 
 Internal user can set VAT to yes
-     [Documentation]    IFS-8126
-     Given the user clicks the button/link        jQuery = div:contains("Are you VAT registered") ~ div a:contains("Edit")
-     When the user selects the radio button        vatForm.registered  true
-     And The user clicks the button/link          jQuery = div:contains("Total project costs inclusive of VAT") ~ div button:contains("Save")
-     Then the user should see calculations with VAT
+    [Documentation]    IFS-8126
+    Given the user clicks the button/link              jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
+    When the user selects the radio button             vatForm.registered  true
+    And The user clicks the button/link                jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
+    Then the user should see calculations with VAT
 
 Internal user viability page
     [Documentation]    IFS-8127
@@ -162,9 +171,9 @@ External user finance overview link is not show
 
 External user finances
     [Documentation]    IFS-8127   IFS-8126
-    Given the user clicks the button/link        link = your project finances
-    Then the user should not see the element     link = View changes to finances
-    And the user should not see the element       css = table-overview
+    Given the user clicks the button/link                            link = ${yourProjFinanceLink}
+    Then the user should not see the element                         link = ${viewFinanceChangesLink}
+    And the user should not see the element                          css = table-overview
     And the external user should see the correct VAT information
 
 *** Keywords ***
@@ -254,24 +263,24 @@ the user should only see application related key statistics in applications page
     the user should see the element         jQuery = small:contains("Ineligible applications")
 
 the user should see the correct data on finance check page
-    the user should see the element         jQuery = dt:contains("Total project cost") ~ dd:contains("£265,084") ~dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£77,057")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("Funding applied for") ~ dd:contains("${initialFunding}") ~ dt:contains("Current amount") ~ dd:contains("${initialFunding}")
     the user should not see the element     jQuery = dt:contains("Other public sector funding")
     the user should not see the element     jQuery = dt:contains("Total percentage grant")
     the user should not see the element     jQuery = a:contains("View"):contains("finances")
 
 the user should see calculations without VAT
-    the user should not see the element     jQuery = label:contains("Total project costs inclusive of VAT")
+    the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
     the user clicks the button/link         link = Finance checks
-    the user should see the element         jQuery = dt:contains("Total project cost") ~ dd:contains("£220,903") ~ dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£63,803")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("Funding applied for") ~ dd:contains("${initialFunding}") ~ dt:contains("Current amount") ~ dd:contains("${revisedFunding}")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
-    the user should see the element     jQuery = div:contains("Total project costs inclusive of VAT") ~ div:contains("£265,084")
+    the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
     the user clicks the button/link     link = Finance checks
-    the user should see the element     jQuery = dt:contains("Total project cost") ~ dd:contains("£265,084") ~dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£77,057")
+    the user should see the element     jQuery = dt:contains(${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("Funding applied for") ~ dd:contains("${initialFunding}") ~ dt:contains("Current amount") ~ dd:contains("${initialFunding}")
     the user clicks the button/link     css = .eligibility-0
 
 the external user should see the correct VAT information
-    the user should see the element     jQuery = legend:contains("Are you VAT registered") ~ span:contains("Yes")
+    the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
     the user should see the element     jQuery = div:contains("Total VAT") ~ div:contains("£44,181")
-    the user should see the element     jQuery = div:contains("Total project costs inclusive of VAT") ~ div:contains("£265,084")
+    the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
