@@ -13,8 +13,6 @@ import static java.util.Collections.singleton;
  */
 public class IfsThymeleafExpressionObjectFactory implements IExpressionObjectFactory {
 
-    public static final ThymeleafUtil THYMELEAF_UTIL = new ThymeleafUtil();
-
     @Override
     public Set<String> getAllExpressionObjectNames() {
         return singleton("ifsUtil");
@@ -23,7 +21,7 @@ public class IfsThymeleafExpressionObjectFactory implements IExpressionObjectFac
     @Override
     public Object buildObject(IExpressionContext context, String expressionObjectName) {
         switch (expressionObjectName) {
-            case "ifsUtil": return THYMELEAF_UTIL;
+            case "ifsUtil": return new ThymeleafUtil(context);
             default: throw new IllegalArgumentException("Unable to build an expression object of name " + expressionObjectName);
         }
     }

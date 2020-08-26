@@ -58,7 +58,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
 
     @Test
     public void testResendPendingInternalUserInvites() {
-        assertRolesCanPerform(() -> classUnderTest.resendInternalUserInvite(123L),
+        assertRolesCanPerform(() -> classUnderTest.resendInvite(123L),
                 IFS_ADMINISTRATOR);
     }
 

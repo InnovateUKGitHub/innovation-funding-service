@@ -166,7 +166,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void resendInternalUserInvite() throws Exception {
 
-        when(inviteUserServiceMock.resendInternalUserInvite(123L)).thenReturn(serviceSuccess());
+        when(inviteUserServiceMock.resendInvite(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/invite-user/internal/pending/{inviteId}/resend", 123L)
                 .header("IFS_AUTH_TOKEN", "123abc"))
@@ -176,7 +176,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("inviteId").description("The id of the pre-existing invite to resend")
                         )));
 
-        verify(inviteUserServiceMock).resendInternalUserInvite(123L);
+        verify(inviteUserServiceMock).resendInvite(123L);
     }
 
     private RoleInvitePageResource buildRoleInvitePageResource() {
