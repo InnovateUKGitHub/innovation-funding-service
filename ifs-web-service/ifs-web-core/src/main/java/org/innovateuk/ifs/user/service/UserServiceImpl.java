@@ -66,23 +66,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails) {
-        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId, allowMarketingEmails).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
-                                                                                           String title, String phoneNumber,
-                                                                                           Long organisationId, Long competitionId, Boolean allowMarketingEmails) {
-        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, organisationId, competitionId, allowMarketingEmails).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId, Boolean allowMarketingEmails) {
-        return createUserForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId, allowMarketingEmails);
-    }
-
-    @Override
     public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, boolean allowMarketingEmails) {
         return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, allowMarketingEmails).toServiceResult();
     }

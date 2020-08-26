@@ -3,6 +3,8 @@ package org.innovateuk.ifs.invite.resource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.resource.Role;
 
+import static org.innovateuk.ifs.user.resource.Role.externalRolesToInvite;
+
 public class RoleInviteResource extends InviteResource {
     private Long id;
     private String name;
@@ -10,6 +12,7 @@ public class RoleInviteResource extends InviteResource {
     private Long roleId;
     private String roleName;
     private String hash;
+    private Role role;
 
     public RoleInviteResource() {
     }
@@ -71,8 +74,21 @@ public class RoleInviteResource extends InviteResource {
         this.roleName = roleName;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @JsonIgnore
     public String getRoleDisplayName() {
         return Role.getById(roleId).getDisplayName();
+    }
+
+    @JsonIgnore
+    public boolean isExternalInvite() {
+        return externalRolesToInvite().contains(role);
     }
 }

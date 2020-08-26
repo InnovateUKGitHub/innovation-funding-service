@@ -92,7 +92,7 @@ public enum Role implements Identifiable {
 
     public boolean isAssessor() {return this == ASSESSOR; }
 
-    public boolean isKta() {
+    public boolean isKTA() {
         return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
@@ -106,6 +106,10 @@ public enum Role implements Identifiable {
 
     public static Set<Role> internalRoles(){
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
+    }
+
+    public static Set<Role> inviteExternalRoles(){
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     public static Set<Role> externalApplicantRoles(){

@@ -55,7 +55,7 @@ public class InviteUserController {
 
     @PutMapping("/internal/pending/{inviteId}/resend")
     public RestResult<Void> resendPendingInternalUserInvite(@PathVariable("inviteId") long inviteId) {
-        return inviteUserService.resendInternalUserInvite(inviteId).toPutResponse();
+        return inviteUserService.resendInvite(inviteId).toPutResponse();
     }
 
     @GetMapping("/find-external-invites")

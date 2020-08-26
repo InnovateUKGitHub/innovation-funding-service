@@ -6,7 +6,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.grants.service.GrantsInviteRestService;
 import org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
-import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.util.EncryptedCookieService;
@@ -15,13 +17,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.grantsinvite.resource.GrantsInviteResource.GrantsInviteRole.GRANTS_MONITORING_OFFICER;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
+import static org.innovateuk.ifs.user.resource.Role.MONITORING_OFFICER;
 
 @Controller
 @SecuredBySpring(value = "Controller",
@@ -55,19 +61,25 @@ public class GrantsRegistrationController {
             if (errors.hasErrors()) {
                 return AcceptGrantsInviteController.populateModelWithErrorsAndReturnErrorView(errors, model);
             }
-            model.addAttribute("model", new RegistrationViewModel(true,
-                    invite.getGrantsInviteRole().getDisplayName(),
-                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
-                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
+            model.addAttribute("model",
+                    aRegistrationViewModel()
+                    .withInvitee(true)
+                    .withPhoneRequired(true)
+                    .withTermsRequired(true)
+                    .withRole(invite.getGrantsInviteRole().getDisplayName())
+                    .withProject(String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()))
+                    .withPhoneGuidance(invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null)
+                    .build());
 
-            model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
+
+            model.addAttribute("form", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
         ).getSuccess();
     }
 
     @PostMapping
-    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      @PathVariable long projectId,
                                      HttpServletRequest request,
@@ -76,11 +88,14 @@ public class GrantsRegistrationController {
         String hash = cookieUtil.getCookieValue(request, AcceptGrantsInviteController.INVITE_HASH);
         return grantsInviteRestService.getInviteByHash(projectId, hash).andOnSuccess(invite -> {
             registrationForm.setEmail(invite.getEmail());
-            model.addAttribute("model", new RegistrationViewModel(true,
-                    invite.getGrantsInviteRole().getDisplayName(),
-                    String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()),
-                    invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null));
-
+            model.addAttribute("model",  aRegistrationViewModel()
+                    .withInvitee(true)
+                    .withPhoneRequired(true)
+                    .withTermsRequired(true)
+                    .withRole(invite.getGrantsInviteRole().getDisplayName())
+                    .withProject(String.format("%d: %s", invite.getApplicationId(), invite.getProjectName()))
+                    .withPhoneGuidance(invite.getGrantsInviteRole() == GrantsInviteRole.GRANTS_MONITORING_OFFICER ? "The project manager or partners can use this to contact you about their project." : null)
+                    .build());
             if (bindingResult.hasErrors()) {
                 model.addAttribute("failureMessageKeys", bindingResult.getAllErrors());
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
@@ -96,7 +111,11 @@ public class GrantsRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-            ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserResource()).toServiceResult()
+            ServiceResult<String> result = userRestService.createUser(registrationForm.constructUserCreationResource()
+                    .withRole(invite.getGrantsInviteRole() == GRANTS_MONITORING_OFFICER ? MONITORING_OFFICER : Role.APPLICANT)
+                    .withAddLiveProjectUserRole(true)
+                    .build())
+                .toServiceResult()
                     .andOnSuccess(newUser -> {
                         grantsInviteRestService.acceptInvite(projectId, invite.getId());
                         return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
