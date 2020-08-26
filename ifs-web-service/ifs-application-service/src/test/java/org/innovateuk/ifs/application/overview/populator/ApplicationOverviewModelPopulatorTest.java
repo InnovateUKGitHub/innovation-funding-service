@@ -147,6 +147,7 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewSectionViewModel sectionWithQuestions = sectionIterator.next();
         assertEquals("Section with questions", sectionWithQuestions.getTitle());
+        assertNull(sectionWithQuestions.getSubTitle());
         assertEquals((long) sections.get(0).getId(), sectionWithQuestions.getId());
         assertEquals(1, sectionWithQuestions.getRows().size());
 
@@ -159,6 +160,7 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewSectionViewModel sectionWithChildSections = sectionIterator.next();
         assertEquals("Finances", sectionWithChildSections.getTitle());
+        assertEquals("Finance description", sectionWithChildSections.getSubTitle());
         assertEquals((long) sections.get(1).getId(), sectionWithChildSections.getId());
 
         ApplicationOverviewRowViewModel childSectionRow = sectionWithChildSections.getRows().iterator().next();
@@ -169,4 +171,5 @@ public class ApplicationOverviewModelPopulatorTest {
 
         verify(questionService).removeNotifications(questionStatuses);
     }
+
 }

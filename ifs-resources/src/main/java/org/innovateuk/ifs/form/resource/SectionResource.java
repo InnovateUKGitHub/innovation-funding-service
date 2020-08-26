@@ -12,7 +12,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class SectionResource implements CacheableWhenCompetitionOpen {
     private Long id;
     private String name;
-    private String description;
     private String assessorGuidanceDescription;
     private Integer priority;
     private Boolean questionGroup;
@@ -24,6 +23,7 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
     //Used by @Cacheable
     @JsonIgnore
     private boolean competitionOpen;
+
 
     public SectionResource() {
     }
@@ -72,10 +72,6 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
         this.name = name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setAssessorGuidanceDescription(String assessorGuidanceDescription) {
         this.assessorGuidanceDescription = assessorGuidanceDescription;
     }
@@ -94,10 +90,6 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
 
     public void setChildSections(List<Long> childSections) {
         this.childSections = childSections;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public String getAssessorGuidanceDescription() {

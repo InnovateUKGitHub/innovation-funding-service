@@ -30,6 +30,7 @@ import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
+import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
@@ -121,7 +122,27 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
-        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), rows);
+
+        String subtitle = subtitle(data.getCompetition(), section);
+
+        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), subtitle, rows);
+    }
+
+    private String subtitle(CompetitionResource competition, SectionResource section) {
+        switch (section.getName()) {
+            case "Finances":
+                return getFinanceSectionSubTitle(competition);
+            case "Project details":
+                return messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault());
+            case "Terms and conditions":
+                if (competition.isExpressionOfInterest()) {
+                    return messageSource.getMessage("ifs.section.termsAndConditionsEoi.description", null, Locale.getDefault());
+                } else {
+                    return messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault());
+                }
+            default:
+                return null;
+        }
     }
 
     private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
@@ -195,6 +216,16 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return question.getQuestionSetupType() == ASSESSED_QUESTION ?
                 format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
                 question.getShortName();
+    }
+
+    private String getFinanceSectionSubTitle(CompetitionResource competition) {
+        if (competition.isFullyFunded()) {
+            return "Submit your organisation's project finances.";
+        } else if (competition.getCollaborationLevel() == SINGLE) {
+            return messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault());
+        } else {
+            return messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault());
+        }
     }
 
 }
