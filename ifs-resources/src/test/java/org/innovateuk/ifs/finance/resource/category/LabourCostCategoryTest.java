@@ -24,6 +24,7 @@ public class LabourCostCategoryTest {
     private LabourCost labourCost;
     private LabourCost workingDays;
     private LabourCostCategory labourCostCategory;
+    private static final BigDecimal GROSS_EMPLOYEE_COST = new BigDecimal("20000.00");
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +35,7 @@ public class LabourCostCategoryTest {
                 .build();
         labourCost = newLabourCost()
                 .withLabourDays(100)
-                .withGrossEmployeeCost(BigDecimal.valueOf(20000))
+                .withGrossEmployeeCost(GROSS_EMPLOYEE_COST)
                 .withRole("Developer")
                 .build();
 
@@ -53,20 +54,18 @@ public class LabourCostCategoryTest {
     @Test
     public void getTotalWithWorkingDays() {
 
-        BigDecimal result = labourCost.getGrossEmployeeCost();
         labourCostCategory.calculateTotal();
 
-        assertEquals(result.setScale(5, RoundingMode.HALF_EVEN), labourCostCategory.getTotal());
+        assertEquals(GROSS_EMPLOYEE_COST, labourCostCategory.getTotal());
     }
 
     @Test
     public void getTotalWithNullWorkingDays() {
 
-        int result = 0;
         workingDays.setLabourDays(0);
         labourCostCategory.calculateTotal();
 
-        assertEquals(BigDecimal.valueOf(result), labourCostCategory.getTotal());
+        assertEquals(new BigDecimal("0.00"), labourCostCategory.getTotal());
     }
 
     @Test
@@ -103,6 +102,15 @@ public class LabourCostCategoryTest {
         labourCostCategory.addCost(testerCost);
 
         assertEquals(costs, labourCostCategory.getCosts());
+    }
+
+    @Test
+    public void getTotalWithRounding() {
+
+        labourCost.setGrossEmployeeCost(new BigDecimal("20000.00080"));
+        labourCostCategory.calculateTotal();
+
+        assertEquals(new BigDecimal("20000.00"), labourCostCategory.getTotal());
     }
 
     @Test
