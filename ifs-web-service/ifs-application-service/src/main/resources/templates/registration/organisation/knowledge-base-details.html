@@ -74,7 +74,7 @@
                             </div>
 
                             <div th:with="fieldName=|${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).getFromId(type.id).toString().toLowerCase()}Number|"
-                                 th:id="|item-${type.id}|" class="panel">
+                                 th:id="|item-${type.id}|" class="panel govuk-!-padding-top-0">
                                 <div class="govuk-form-group">
                                     <div class="govuk-grid-column">
                                         <label th:for="${type.name}" class="govuk-heading-s"
