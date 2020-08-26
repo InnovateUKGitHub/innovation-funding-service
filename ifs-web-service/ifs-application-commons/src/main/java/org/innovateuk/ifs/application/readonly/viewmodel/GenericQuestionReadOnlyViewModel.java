@@ -20,8 +20,9 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final QuestionResource questionResource;
     private final int inScope;
     private final int totalScope;
+    private final boolean hasScope;
 
-    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle, List<String> feedback, List<BigDecimal> scores, int inScope, int totalScope) {
+    public GenericQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource questionResource, String displayName, String question, String answer, List<GenericQuestionFileViewModel> appendices, GenericQuestionFileViewModel templateFile, String templateDocumentTitle, List<String> feedback, List<BigDecimal> scores, int inScope, int totalScope, boolean hasScope) {
         super(data, questionResource);
         this.displayName = displayName;
         this.question = question;
@@ -35,6 +36,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         this.questionResource = questionResource;
         this.inScope = inScope;
         this.totalScope = totalScope;
+        this.hasScope = hasScope;
     }
 
     public int getInScope() { return inScope; }
@@ -93,6 +95,10 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     @Override
     public boolean hasScore() { return !scores.isEmpty(); }
+
+    public boolean isHasScope() {
+        return hasScope;
+    }
 
     public boolean hasAssessorResponse() {
         return hasFeedback() && hasScore();

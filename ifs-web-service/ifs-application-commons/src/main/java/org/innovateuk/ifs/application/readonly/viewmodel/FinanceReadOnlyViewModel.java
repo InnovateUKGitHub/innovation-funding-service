@@ -4,6 +4,7 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceSummaryViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFundingBreakdownViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationResearchParticipationViewModel;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 
 public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyViewModel, BaseAnalyticsViewModel {
 
@@ -93,6 +94,11 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     @Override
     public boolean isLead() {
         return false; // not required
+    }
+
+    @Override
+    public QuestionSetupType getQuestionSetupType() {
+        return null;
     }
 
 }

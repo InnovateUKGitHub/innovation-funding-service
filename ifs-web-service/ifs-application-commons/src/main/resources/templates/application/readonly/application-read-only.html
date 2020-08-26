@@ -27,8 +27,7 @@
                                 <th:block th:text="${question.name}"></th:block>
                             </span>
                             <th:block th:if="${model.settings.includeAllAssessorFeedback}">
-                                <th:block th:if="${question.fragment == 'generic' && question.questionSetupTypeName != 'Scope'}" th:insert="application/readonly/score-overview :: generic (${question})"/>
-                                <th:block th:if="${question.questionSetupTypeName == 'Scope'}" th:insert="application/readonly/score-overview :: scope (${question})"/>
+                                <th:block th:if="${question.fragment == 'generic'" th:insert="application/readonly/score-overview :: generic (${question})"/>
                             </th:block>
                             <th:block th:if="${model.settings.includeStatuses}">
                                 <div th:if="${question.isComplete() and question.displayCompleteStatus}" class="section-status section-complete">Complete</div>

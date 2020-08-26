@@ -52,7 +52,13 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         List<BigDecimal> scores = new ArrayList<>();
         int inScope = 0;
         int totalScope = 0;
+        boolean hasScope =  false;
         if (settings.isIncludeAssessment()) {
+            hasScope = data.getFormInputIdToAssessorFormInput().values().stream().anyMatch(
+                    fi -> fi.getQuestion().equals(question.getId())
+                            && fi.getType().equals(ASSESSOR_APPLICATION_IN_SCOPE)
+            );
+
             if (settings.getAssessmentId() != null) {
                 ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
                         .map(ApplicationAssessmentResource::getFeedback)
@@ -107,7 +113,8 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 feedback,
                 scores,
                 inScope,
-                totalScope
+                totalScope,
+                hasScope
             );
     }
 

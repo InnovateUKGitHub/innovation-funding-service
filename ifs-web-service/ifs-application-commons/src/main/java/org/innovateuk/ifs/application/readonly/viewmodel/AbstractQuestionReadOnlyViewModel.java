@@ -79,7 +79,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     public boolean hasScore() { return false; }
 
     @Override
-    public String getQuestionSetupTypeName() { return questionSetupType.getShortName(); }
+    public QuestionSetupType getQuestionSetupType() { return questionSetupType; }
 
     @Override
     public boolean shouldDisplayActions() {
