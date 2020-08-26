@@ -274,14 +274,18 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {
-        Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
-        if (financeContact.isPresent() && financeContact.get().getUser() != null) {
-            NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
-            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
-            Notification notification = new Notification(systemNotificationSource, financeContactTarget, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments);
-            return notificationService.sendNotificationWithFlush(notification, EMAIL);
+        if (competitionHasSpendProfileStage(project)) {
+            Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
+            if (financeContact.isPresent() && financeContact.get().getUser() != null) {
+                NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
+                Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
+                Notification notification = new Notification(systemNotificationSource, financeContactTarget, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments);
+                return notificationService.sendNotificationWithFlush(notification, EMAIL);
+            }
+            return serviceFailure(SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
+        } else {
+            return serviceSuccess();
         }
-        return serviceFailure(SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
 
     private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail(Project project) {

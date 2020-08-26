@@ -195,14 +195,14 @@ import static org.mockito.Mockito.*;
                             .toArray(SbriPilotCostCategoryGenerator[]::new);
 
             CostCategoryType expectedCct = newCostCategoryType().
-                    withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(AcademicCostCategoryGenerator.values(),
-                            AcademicCostCategoryGenerator::isIncludedInSpendProfile),
-                            AcademicCostCategoryGenerator::getDisplayName,
+                    withName(DESCRIPTION_PREFIX + simpleJoiner(simpleFilter(SbriPilotCostCategoryGenerator.values(),
+                            SbriPilotCostCategoryGenerator::isIncludedInSpendProfile),
+                            SbriPilotCostCategoryGenerator::getDisplayName,
                             ", ")).
                     withCostCategoryGroup(newCostCategoryGroup().
                             withCostCategories(newCostCategory().
-                                    withName(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getDisplayName, String.class)).
-                                    withLabel(simpleMapArray(spendProfileGenerators, AcademicCostCategoryGenerator::getLabel, String.class)).
+                                    withName(simpleMapArray(spendProfileGenerators, SbriPilotCostCategoryGenerator::getDisplayName, String.class)).
+                                    withLabel(simpleMapArray(spendProfileGenerators, SbriPilotCostCategoryGenerator::getLabel, String.class)).
                                     build(spendProfileGenerators.length)).
                             
                             build()).

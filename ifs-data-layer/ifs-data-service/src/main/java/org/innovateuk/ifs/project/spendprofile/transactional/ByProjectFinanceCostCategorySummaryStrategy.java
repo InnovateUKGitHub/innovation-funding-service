@@ -18,10 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -154,10 +151,10 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
         return valuesPerCostCategory;
     }
 
-    private CostCategory findCostCategoryFromGenerator(CostCategoryType costCategoryType, CostCategoryGenerator academicCostCategoryMatch) {
+    private CostCategory findCostCategoryFromGenerator(CostCategoryType costCategoryType, CostCategoryGenerator costCategoryGenerator) {
         return simpleFindFirst(costCategoryType.getCostCategories(), cat ->
-                        cat.getName().equals(academicCostCategoryMatch.getDisplayName()) &&
-                        cat.getLabel().equals(academicCostCategoryMatch.getLabel()))
+                        cat.getName().equals(costCategoryGenerator.getDisplayName()) &&
+                        Objects.equals(cat.getLabel(), costCategoryGenerator.getLabel()))
                 .orElse(null);
     }
 

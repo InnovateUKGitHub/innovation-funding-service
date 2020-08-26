@@ -2,14 +2,12 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 public enum SbriPilotCostCategoryGenerator implements CostCategoryGenerator<SbriPilotCostCategoryGenerator> {
 
-    OTHER_COSTS("other_costs", "Other costs"),
-    VAT("vat", "VAT");
+    OTHER_COSTS( "Other costs"),
+    VAT( "VAT");
 
-    private final String label;
     private final String name;
 
-    SbriPilotCostCategoryGenerator(String label, String name) {
-        this.label = label;
+    SbriPilotCostCategoryGenerator(String name) {
         this.name = name;
     }
 
@@ -33,7 +31,7 @@ public enum SbriPilotCostCategoryGenerator implements CostCategoryGenerator<Sbri
 
     @Override
     public String getLabel() {
-        return label;
+        return null;
     }
 
 }
