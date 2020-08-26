@@ -135,12 +135,14 @@ Internal user eligibility page
      And the user should not see the element      link = Review all changes to project finances
 
 Internal user can set VAT to no
+     [Documentation]    IFS-8126
      Given The user clicks the button/link        jQuery = div:contains("Are you VAT registered") ~ div a:contains("Edit")
      When the user selects the radio button        vatForm.registered  false
      And The user clicks the button/link          jQuery = div:contains("Total project costs inclusive of VAT") ~ div button:contains("Save")
      Then the user should see calculations without VAT
 
 Internal user can set VAT to yes
+     [Documentation]    IFS-8126
      Given the user clicks the button/link        jQuery = div:contains("Are you VAT registered") ~ div a:contains("Edit")
      When the user selects the radio button        vatForm.registered  true
      And The user clicks the button/link          jQuery = div:contains("Total project costs inclusive of VAT") ~ div button:contains("Save")
@@ -159,7 +161,7 @@ External user finance overview link is not show
     Then the user should not see the element     jQuery = project finance overview
 
 External user finances
-    [Documentation]    IFS-8127
+    [Documentation]    IFS-8127   IFS-8126
     Given the user clicks the button/link        link = your project finances
     Then the user should not see the element     link = View changes to finances
     And the user should not see the element       css = table-overview
