@@ -96,7 +96,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     @Override
     public boolean hasScore() { return !scores.isEmpty(); }
 
-    public boolean isHasScope() {
+    public boolean hasScope() {
         return hasScope;
     }
 
