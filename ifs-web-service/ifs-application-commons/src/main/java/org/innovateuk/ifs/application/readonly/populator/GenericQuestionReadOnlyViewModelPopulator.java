@@ -48,60 +48,6 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
         Optional<FormInputResponseResource> templateDocumentResponse = templateDocument
                 .map(input -> data.getFormInputIdToFormInputResponses().get(input.getId()));
 
-        List<String> feedback = new ArrayList<>();
-        List<BigDecimal> scores = new ArrayList<>();
-        int inScope = 0;
-        int totalScope = 0;
-        boolean hasScope =  false;
-        if (settings.isIncludeAssessment()) {
-            hasScope = data.getFormInputIdToAssessorFormInput().values().stream().anyMatch(
-                    fi -> fi.getQuestion().equals(question.getId())
-                            && fi.getType().equals(ASSESSOR_APPLICATION_IN_SCOPE)
-            );
-
-            if (settings.getAssessmentId() != null) {
-                ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
-                        .map(ApplicationAssessmentResource::getFeedback)
-                        .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
-                        .map(feedbackMap -> feedbackMap.get(question.getId()))
-                        .ifPresent(feedback::add);
-
-                ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
-                        .map(ApplicationAssessmentResource::getScores)
-                        .filter(scoresMap -> scoresMap.containsKey(question.getId()))
-                        .map(scoresMap -> scoresMap.get(question.getId()))
-                        .ifPresent(scores::add);
-
-                inScope = ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
-                        .map((ApplicationAssessmentResource::isInScope)).orElse(false) ? 1 : 0;
-
-                totalScope = ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
-                        .map((ApplicationAssessmentResource::isInScope)).orElse(false) ? 1 : 0;
-            } else {
-                data.getAssessmentToApplicationAssessment().values()
-                        .stream()
-                        .map(ApplicationAssessmentResource::getFeedback)
-                        .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
-                        .map(feedbackMap -> feedbackMap.get(question.getId()))
-                        .forEach(feedback::add);
-
-                data.getAssessmentToApplicationAssessment().values()
-                        .stream()
-                        .map(ApplicationAssessmentResource::getScores)
-                        .filter(scoresMap -> scoresMap.containsKey(question.getId()))
-                        .map(scoresMap -> scoresMap.get(question.getId()))
-                        .forEach(scores::add);
-
-                inScope = (int) data.getAssessmentToApplicationAssessment().values()
-                        .stream()
-                        .map(ApplicationAssessmentResource::isInScope).filter(is -> is).count();
-
-                totalScope = (int) data.getAssessmentToApplicationAssessment().values()
-                        .stream()
-                        .map(ApplicationAssessmentResource::isInScope).count();
-            }
-        }
-
         return new GenericQuestionReadOnlyViewModel(data, question, questionName(question),
                 question.getName(),
                 answerInput.map(input -> input.getType().equals(FormInputType.MULTIPLE_CHOICE)
@@ -110,12 +56,97 @@ public class GenericQuestionReadOnlyViewModelPopulator implements QuestionReadOn
                 appendixResponse.map(resp -> files(resp, question, data, settings)).orElse(Collections.emptyList()),
                 templateDocumentResponse.flatMap(resp -> files(resp, question, data, settings).stream().findFirst()).orElse(null),
                 templateDocument.map(FormInputResource::getDescription).orElse(null),
-                feedback,
-                scores,
-                inScope,
-                totalScope,
-                hasScope
+                allFeedback(data, question, settings),
+                allScores(data, question, settings),
+                inScope(data, settings),
+                totalScope(data, settings),
+                hasScope(data, question)
             );
+    }
+
+    private List<String> allFeedback(ApplicationReadOnlyData data, QuestionResource question, ApplicationReadOnlySettings settings) {
+        List<String> feedbackList = new ArrayList<>();
+        if (settings.isIncludeAssessment()) {
+            if (settings.getAssessmentId() != null) {
+                ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map(ApplicationAssessmentResource::getFeedback)
+                        .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
+                        .map(feedbackMap -> feedbackMap.get(question.getId()))
+                        .ifPresent(feedbackList::add);
+            } else {
+                data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::getFeedback)
+                        .filter(feedbackMap -> feedbackMap.containsKey(question.getId()))
+                        .map(feedbackMap -> feedbackMap.get(question.getId()))
+                        .forEach(feedbackList::add);
+            }
+        }
+
+        return feedbackList;
+    }
+
+    private List<BigDecimal> allScores(ApplicationReadOnlyData data, QuestionResource question, ApplicationReadOnlySettings settings) {
+        List<BigDecimal> scoresList = new ArrayList<>();
+
+        if (settings.isIncludeAssessment()) {
+            if (settings.getAssessmentId() != null) {
+                ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map(ApplicationAssessmentResource::getScores)
+                        .filter(scoresMap -> scoresMap.containsKey(question.getId()))
+                        .map(scoresMap -> scoresMap.get(question.getId()))
+                        .ifPresent(scoresList::add);
+            } else {
+                data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::getScores)
+                        .filter(scoresMap -> scoresMap.containsKey(question.getId()))
+                        .map(scoresMap -> scoresMap.get(question.getId()))
+                        .forEach(scoresList::add);
+            }
+        }
+
+        return scoresList;
+    }
+
+    private Boolean hasScope(ApplicationReadOnlyData data, QuestionResource question) {
+        return data.getFormInputIdToAssessorFormInput().values().stream().anyMatch(
+                fi -> fi.getQuestion().equals(question.getId())
+                        && fi.getType().equals(ASSESSOR_APPLICATION_IN_SCOPE)
+        );
+    }
+
+    private int inScope(ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+        int inScopeCount = 0;
+        if (settings.isIncludeAssessment()) {
+            if (settings.getAssessmentId() != null) {
+                inScopeCount = ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map((ApplicationAssessmentResource::isInScope)).orElse(false) ? 1 : 0;
+            } else {
+                inScopeCount = (int) data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::isInScope).filter(is -> is).count();
+            }
+        }
+
+        return inScopeCount;
+    }
+
+    private int totalScope(ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
+        int totalScope = 0;
+
+        if (settings.isIncludeAssessment()) {
+            if (settings.getAssessmentId() != null) {
+                totalScope = ofNullable(data.getAssessmentToApplicationAssessment().get(settings.getAssessmentId()))
+                        .map((ApplicationAssessmentResource::isInScope)).orElse(false) ? 1 : 0;
+            } else {
+                totalScope = (int) data.getAssessmentToApplicationAssessment().values()
+                        .stream()
+                        .map(ApplicationAssessmentResource::isInScope).count();
+            }
+        }
+
+        return totalScope;
     }
 
     private List<GenericQuestionFileViewModel> files(FormInputResponseResource response, QuestionResource question, ApplicationReadOnlyData data, ApplicationReadOnlySettings settings) {
