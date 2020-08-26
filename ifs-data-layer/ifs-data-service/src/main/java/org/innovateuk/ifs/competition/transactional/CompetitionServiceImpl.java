@@ -79,7 +79,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Competition> findCompetitionByApplicationId(long applicationId) {
-        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId)) .andOnSuccessReturn(app -> app.getCompetition());
+        return find(applicationRepository.findById(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturn(app -> app.getCompetition());
     }
 
     @Override
@@ -88,12 +89,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private ServiceResult<Competition> findCompetitionByProjectId(long projectId) {
-        Optional<Project> project = projectRepository.findById(projectId);
-        if (project.isPresent()) {
-            return serviceSuccess(project.get().getApplication().getCompetition());
-        } else {
-            return find(Optional.empty(), notFoundError(Project.class, projectId));
-        }
+        return find(projectRepository.findById(projectId), notFoundError(Project.class, projectId))
+                .andOnSuccessReturn(proj -> proj.getApplication().getCompetition());
     }
 
     @Override
