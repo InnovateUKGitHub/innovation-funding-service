@@ -108,6 +108,10 @@ public enum Role implements Identifiable {
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
     }
 
+    public static Set<Role> inviteExternalRoles(){
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
+    }
+
     public static Set<Role> externalApplicantRoles(){
         return EnumSet.of(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER);
     }
