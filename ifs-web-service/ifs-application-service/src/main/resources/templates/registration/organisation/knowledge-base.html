@@ -41,7 +41,7 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('*{knowledgeBase}')}"
                               th:text="${err}"></span>
                     </th:block>
-                    <div class="govuk-input--width-30">
+                    <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
                         <select class="govuk-select"
                                 id="knowledgeBase"
                                 th:field="*{knowledgeBase}"
@@ -54,11 +54,11 @@
                                     th:text="${knowledgeBase}"></option>
                         </select>
                     </div>
-                </div>
-                <div class="govuk-form-group">
-                    <button type="submit"
-                            class="govuk-button">Confirm
-                    </button>
+                    <div class="govuk-grid-column-one-half">
+                        <button type="submit"
+                                class="govuk-button">Confirm
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

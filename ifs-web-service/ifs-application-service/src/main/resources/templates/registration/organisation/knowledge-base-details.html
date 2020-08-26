@@ -58,7 +58,7 @@
                           th:errors="*{organisationType}"></span>
                     <div class="govuk-radios" id="organisationType">
                         <th:block th:each="type : ${types}">
-                            <div class="govuk-radios__item" th:attr="data-target=|item-${type.id}|"
+                            <div class="govuk-radios__item govuk-!-margin-bottom-0" th:attr="data-target=|item-${type.id}|"
                                  data-target-clear-validation="true" data-target-clear-form="true">
                                 <input th:id="'radio-'+ ${type.id}" type="radio"
                                        class="govuk-radios__input"
