@@ -236,6 +236,7 @@ ${enter_a_valid_date}                              Please enter a valid date.
 ${enter_a_phone_number}                            Please enter a phone number.
 ${enter_a_valid_phone_number}                      Please enter a valid phone number.
 ${enter_a_phone_number_between_8_and_20_digits}    Please enter a valid phone number between 8 and 20 digits.
+${search_a_valid_postcode}                         Search using a valid postcode or enter the address manually.
 ${only_accept_whole_numbers_message}               This field can only accept whole numbers.
 ${field_should_be_1_or_higher}                     This field should be 1 or higher.
 ${estate_Error_Message}                            You should enter less than £10,000 for estate costs

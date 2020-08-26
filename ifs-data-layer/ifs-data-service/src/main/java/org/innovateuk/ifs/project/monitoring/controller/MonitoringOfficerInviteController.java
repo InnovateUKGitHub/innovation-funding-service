@@ -6,11 +6,13 @@ import org.innovateuk.ifs.invite.resource.MonitoringOfficerCreateResource;
 import org.innovateuk.ifs.invite.resource.MonitoringOfficerInviteResource;
 import org.innovateuk.ifs.project.monitoring.transactional.MonitoringOfficerInviteService;
 import org.innovateuk.ifs.registration.resource.MonitoringOfficerRegistrationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 
 /**
  * Controller to handle RESTful services related to inviting project monitoring officers
@@ -51,8 +53,14 @@ public class MonitoringOfficerInviteController {
         if (userAlreadyExists) {
             return restSuccess();
         }
-
-        return registrationService.createPendingMonitoringOfficer(resource).toPostResponse();
+        return registrationService.createUser(anUserCreationResource()
+                .withFirstName(resource.getFirstName())
+                .withLastName(resource.getLastName())
+                .withEmail(resource.getEmailAddress())
+                .withRole(Role.MONITORING_OFFICER)
+                .build())
+                .andOnSuccessReturnVoid()
+                .toPostCreateResponse();
     }
 
     @PostMapping("/monitoring-officer/create/{inviteHash}")

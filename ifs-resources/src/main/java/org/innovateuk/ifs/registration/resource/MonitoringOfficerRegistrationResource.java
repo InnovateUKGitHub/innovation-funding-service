@@ -50,7 +50,6 @@ public class MonitoringOfficerRegistrationResource {
         userResource.setFirstName(this.getFirstName());
         userResource.setLastName(this.getLastName());
         userResource.setPhoneNumber(this.getPhoneNumber());
-        userResource.setPassword(this.getPassword());
         return userResource;
     }
 

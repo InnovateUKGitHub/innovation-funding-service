@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCreationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.mockito.Mockito.*;
 
 /**
@@ -30,21 +30,11 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
     @Test
     public void createUser() {
-        UserRegistrationResource userToCreate = newUserRegistrationResource().build();
+        UserCreationResource userToCreate = anUserCreationResource().build();
 
         assertAccessDenied(() -> classUnderTest.createUser(userToCreate), () -> {
             verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
-    public void createOrganisationUser() {
-
-        UserResource userToCreate = newUserResource().build();
-
-        assertAccessDenied(() -> classUnderTest.createUser(userToCreate), () -> {
-            verify(rules).systemRegistrationUserCanCreateUsers(userToCreate, getLoggedInUser());
+            verify(rules).compAdminProjectFinanceCanCreateMonitoringOfficer(userToCreate, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
     }
