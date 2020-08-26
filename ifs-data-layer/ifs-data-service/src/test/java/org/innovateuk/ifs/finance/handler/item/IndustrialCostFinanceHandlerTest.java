@@ -262,19 +262,19 @@ public class IndustrialCostFinanceHandlerTest {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
 
         assertEquals("Testing equality for: " + MATERIALS.getType(),
-                new BigDecimal(500), organisationFinances.get(MATERIALS).getTotal());
+                new BigDecimal("500.00"), organisationFinances.get(MATERIALS).getTotal());
     }
 
     @Test
     public void getOrganisationFinancesOtherCosts() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
-        assertEquals("Testing equality for; " + OTHER_COSTS.getType(), new BigDecimal(0), organisationFinances.get(OTHER_COSTS).getTotal());
+        assertEquals("Testing equality for; " + OTHER_COSTS.getType(), new BigDecimal("0.00"), organisationFinances.get(OTHER_COSTS).getTotal());
     }
 
     @Test
     public void getOrganisationFinancesVat() {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = industrialCostFinanceHandler.getOrganisationFinances(applicationFinance.getId());
-        assertEquals("Testing equality for; " + VAT.getType(), new BigDecimal(0), organisationFinances.get(VAT).getTotal());
+        assertEquals("Testing equality for; " + VAT.getType(), new BigDecimal("0.00"), organisationFinances.get(VAT).getTotal());
     }
 
     @Test

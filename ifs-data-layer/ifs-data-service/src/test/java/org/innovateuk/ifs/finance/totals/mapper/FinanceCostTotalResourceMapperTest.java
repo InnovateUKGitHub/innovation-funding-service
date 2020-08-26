@@ -63,13 +63,13 @@ public class FinanceCostTotalResourceMapperTest {
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
                 .withFinanceType(FinanceType.APPLICATION)
                 .withFinanceRowType(FinanceRowType.OTHER_COSTS)
-                .withTotal(BigDecimal.valueOf(1000))
+                .withTotal(new BigDecimal("1000.00"))
                 .withFinanceId(financeId).build();
 
         FinanceCostTotalResource expectedMaterialCostTotalResource = newFinanceCostTotalResource()
                 .withFinanceType(FinanceType.APPLICATION)
                 .withFinanceRowType(FinanceRowType.MATERIALS)
-                .withTotal(BigDecimal.valueOf(5000))
+                .withTotal(new BigDecimal("5000.00"))
                 .withFinanceId(financeId).build();
 
         assertThat(actualResult)
@@ -108,13 +108,13 @@ public class FinanceCostTotalResourceMapperTest {
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
                 .withFinanceType(FinanceType.APPLICATION)
                 .withFinanceRowType(FinanceRowType.OTHER_COSTS)
-                .withTotal(BigDecimal.valueOf(1000))
+                .withTotal(new BigDecimal("1000.00"))
                 .withFinanceId(financeId).build();
 
         FinanceCostTotalResource expectedMaterialCostTotalResource = newFinanceCostTotalResource()
                 .withFinanceType(FinanceType.APPLICATION)
                 .withFinanceRowType(FinanceRowType.MATERIALS)
-                .withTotal(BigDecimal.valueOf(5000))
+                .withTotal(new BigDecimal("5000.00"))
                 .withFinanceId(financeId).build();
 
         assertThat(actualResult).usingFieldByFieldElementComparator().contains(expectedOtherCostTotalResource,
