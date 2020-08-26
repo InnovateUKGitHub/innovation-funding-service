@@ -31,6 +31,10 @@ ${totalWithVAT}                  £265,084
 ${totalWithoutVAT}               £220,903
 ${initialFunding}                £77,057
 ${revisedFunding}                £63,803
+${vatTotal}                      £44,181
+${currentAmount}                 Current Amount
+${fundingAppliedFor}             Funding applied for
+${totalVAT}                      Total VAT
 
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
@@ -263,7 +267,7 @@ the user should only see application related key statistics in applications page
     the user should see the element         jQuery = small:contains("Ineligible applications")
 
 the user should see the correct data on finance check page
-    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("Funding applied for") ~ dd:contains("${initialFunding}") ~ dt:contains("Current amount") ~ dd:contains("${initialFunding}")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor} ") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
     the user should not see the element     jQuery = dt:contains("Other public sector funding")
     the user should not see the element     jQuery = dt:contains("Total percentage grant")
     the user should not see the element     jQuery = a:contains("View"):contains("finances")
@@ -271,16 +275,16 @@ the user should see the correct data on finance check page
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("${inclusiveOfVATHeading}")
     the user clicks the button/link         link = Finance checks
-    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("Funding applied for") ~ dd:contains("${initialFunding}") ~ dt:contains("Current amount") ~ dd:contains("${revisedFunding}")
+    the user should see the element         jQuery = dt:contains("${totalProjCosts}") ~ dd:contains("${totalWithoutVAT}") ~ dt:contains("${fundingAppliedFor} ") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${revisedFunding}")
     the user clicks the button/link         css = .eligibility-0
 
 the user should see calculations with VAT
     the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
     the user clicks the button/link     link = Finance checks
-    the user should see the element     jQuery = dt:contains(${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("Funding applied for") ~ dd:contains("${initialFunding}") ~ dt:contains("Current amount") ~ dd:contains("${initialFunding}")
+    the user should see the element     jQuery = dt:contains(${totalProjCosts}") ~ dd:contains("${totalWithVAT}") ~dt:contains("${fundingAppliedFor} ") ~ dd:contains("${initialFunding}") ~ dt:contains("${currentAmount}") ~ dd:contains("${initialFunding}")
     the user clicks the button/link     css = .eligibility-0
 
 the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
-    the user should see the element     jQuery = div:contains("Total VAT") ~ div:contains("£44,181")
+    the user should see the element     jQuery = div:contains("${totalVAT}") ~ div:contains("${vatTotal}")
     the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
