@@ -102,7 +102,7 @@ public class CompetitionInitialiser {
                 createProjectSetupStage(competition, PROJECT_SETUP_COMPLETE)
         );
 
-        competition.setProjectStages(stages);
+        competition.getProjectStages().addAll(stages);
     }
 
     private void addDefaultProjectSetupColumns(Competition competition) {
@@ -118,7 +118,7 @@ public class CompetitionInitialiser {
                 createProjectSetupStage(competition, GRANT_OFFER_LETTER)
         );
 
-        competition.setProjectStages(stages);
+        competition.getProjectStages().addAll(stages);
 
     }
 

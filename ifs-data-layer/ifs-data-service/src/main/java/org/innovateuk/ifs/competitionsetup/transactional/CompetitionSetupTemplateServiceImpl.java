@@ -7,6 +7,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.repository.*;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.ProgrammeTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
 import org.innovateuk.ifs.competitionsetup.repository.AssessorCountOptionRepository;
@@ -14,7 +16,11 @@ import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigR
 import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
+import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.repository.*;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
@@ -66,6 +73,21 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Autowired
     private CompetitionInitialiser competitionInitialiser;
 
+    @Autowired
+    private SectionRepository sectionRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private FormInputRepository formInputRepository;
+
+    @Autowired
+    private GuidanceRowRepository guidanceRowRepository;
+
+    @Autowired
+    private MultipleChoiceOptionRepository multipleChoiceOptionRepository;
+
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
@@ -91,8 +113,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         setDefaultOrganisationConfig(competition);
         setDefaultApplicationConfig(competition);
 
-        competitionTemplatePersistor.cleanByEntityId(competitionId);
 
+        if (!competitionType.get().getId().equals(1L)) {
+            competitionTemplatePersistor.cleanByEntityId(competitionId);
+        }
         copyTemplatePropertiesToCompetition(template, competition);
 
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
@@ -104,7 +128,53 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionInitialiser.initialiseFinanceTypes(competition);
         competitionInitialiser.initialiseProjectSetupColumns(competition);
 
-        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+        if (!competitionType.get().getId().equals(1L)) {
+            return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+        } else {
+            competition.setSections(ProgrammeTemplate.sections().stream().map(SectionBuilder::build).collect(Collectors.toList()));
+            setCompetitionOnSections(competition, competition.getSections());
+            return serviceSuccess(competition);
+        }
+    }
+
+    void setCompetitionOnSections(Competition competition, List<Section> sections) {
+        int si = 0;
+        for (Section section : sections) {
+            setCompetitionOnSections(competition, section.getChildSections());
+            section.setCompetition(competition);
+            section.setPriority(si);
+            si++;
+            Section savedSection = sectionRepository.save(section);
+            int qi = 0;
+            for (Question question : section.getQuestions()) {
+                question.setSection(savedSection);
+                question.setCompetition(competition);
+                question.setPriority(qi);
+                qi++;
+                if (section.getName().equals("Application questions")) {
+                    question.setQuestionNumber(String.valueOf(qi));
+                }
+                Question savedQuestion = questionRepository.save(question);
+                int fii = 0;
+                for (FormInput fi : question.getFormInputs()) {
+                    fi.setQuestion(savedQuestion);
+                    fi.setCompetition(competition);
+                    fi.setPriority(fii);
+                    fii++;
+                    fi.getMultipleChoiceOptions().forEach(mc -> {
+                        mc.setFormInput(fi);
+                    });
+                    int gri = 0;
+                    for (GuidanceRow gr : fi.getGuidanceRows()) {
+                        gr.setFormInput(fi);
+                        gr.setPriority(gri);
+                        gri++;
+                    }
+                    formInputRepository.save(fi);
+                    //TODO validators
+                }
+            }
+        }
     }
 
     private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(Competition competition) {
