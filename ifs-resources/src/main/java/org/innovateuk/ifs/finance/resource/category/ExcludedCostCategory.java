@@ -14,6 +14,6 @@ public class ExcludedCostCategory extends DefaultCostCategory {
 
     @Override
     public BigDecimal getTotal() {
-        return BigDecimal.ZERO;
+        return ZERO_COST;
     }
 }

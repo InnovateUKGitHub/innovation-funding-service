@@ -49,7 +49,7 @@ public class DefaultCostCategoryTest {
     public void getTotal() {
 
         defaultCostCategory.calculateTotal();
-        assertEquals(new BigDecimal(3000), defaultCostCategory.getTotal());
+        assertEquals(new BigDecimal("3000.00"), defaultCostCategory.getTotal());
     }
 
     @Test

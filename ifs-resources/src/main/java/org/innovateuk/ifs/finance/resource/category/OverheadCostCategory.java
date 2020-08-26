@@ -4,6 +4,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Overhead;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,8 @@ import java.util.List;
 public class OverheadCostCategory implements FinanceRowCostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
-    private BigDecimal labourCostTotal = BigDecimal.ZERO;
+    private BigDecimal total = ZERO_COST;
+    private BigDecimal labourCostTotal = ZERO_COST;
 
 
     @Override
@@ -38,9 +39,9 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
 
     private void setTotalCost(Overhead overhead) {
         if (overhead.getRateType().getRate() != null) {
-            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100)));
+            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100))).setScale(2, RoundingMode.HALF_UP);
         } else {
-            total = new BigDecimal(overhead.getRate());
+            total = new BigDecimal(overhead.getRate()).setScale(2, RoundingMode.HALF_UP);
         }
     }
 

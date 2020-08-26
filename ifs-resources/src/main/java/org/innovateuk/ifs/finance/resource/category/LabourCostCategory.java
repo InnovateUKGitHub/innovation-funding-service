@@ -4,7 +4,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class LabourCostCategory implements FinanceRowCostCategory {
     public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
     public static final String WORKING_DAYS_KEY = "working-days-per-year";
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal total = ZERO_COST;
     private LabourCost workingDaysPerYearCostItem;
 
     @Override
@@ -39,10 +38,10 @@ public class LabourCostCategory implements FinanceRowCostCategory {
         if (workingDaysPerYearCostItem != null) {
             total = costs.stream()
                     .map(c -> ((LabourCost) c).getTotal(workingDaysPerYearCostItem.getLabourDays()))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .reduce(ZERO_COST, BigDecimal::add)
                     .setScale(2, RoundingMode.HALF_UP);
         } else {
-            total = BigDecimal.ZERO;
+            total = ZERO_COST;
         }
     }
 

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.resource.category;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class DefaultCostCategory implements FinanceRowCostCategory {
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal total = ZERO_COST;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -27,8 +28,9 @@ public class DefaultCostCategory implements FinanceRowCostCategory {
     @Override
     public void calculateTotal() {
         total = costs.stream()
-                .map(c -> c.getTotal() == null ? BigDecimal.ZERO : c.getTotal())
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(c -> c.getTotal() == null ? ZERO_COST : c.getTotal())
+                .reduce(ZERO_COST, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     @Override

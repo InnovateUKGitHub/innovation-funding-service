@@ -6,25 +6,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
+import static org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory.ZERO_COST;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class LabourCostCategoryTest {
 
+    private static final BigDecimal GROSS_EMPLOYEE_COST = new BigDecimal("20000.00");
+
     private List<FinanceRowItem> costs = new ArrayList<>();
 
     private LabourCost labourCost;
     private LabourCost workingDays;
     private LabourCostCategory labourCostCategory;
-    private static final BigDecimal GROSS_EMPLOYEE_COST = new BigDecimal("20000.00");
 
     @Before
     public void setUp() throws Exception {
@@ -65,7 +66,7 @@ public class LabourCostCategoryTest {
         workingDays.setLabourDays(0);
         labourCostCategory.calculateTotal();
 
-        assertEquals(new BigDecimal("0.00"), labourCostCategory.getTotal());
+        assertEquals(ZERO_COST, labourCostCategory.getTotal());
     }
 
     @Test

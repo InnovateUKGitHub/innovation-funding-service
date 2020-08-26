@@ -12,11 +12,14 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostBuilder.newOtherFunding;
 import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder.newOtherFundingCostCategory;
+import static org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory.ZERO_COST;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class OtherFundingCostCategoryTest {
+
+    private static final BigDecimal OTHER_FUNDING_AMOUNT = new BigDecimal("30000.00");
 
     private List<FinanceRowItem> costs = new ArrayList<>();
 
@@ -34,7 +37,7 @@ public class OtherFundingCostCategoryTest {
                 .build();
 
         otherPublicFunding = newOtherFunding()
-                .withFundingAmount(BigDecimal.valueOf(30000))
+                .withFundingAmount(OTHER_FUNDING_AMOUNT)
                 .build();
 
         costs.add(otherPublicFunding);
@@ -53,7 +56,7 @@ public class OtherFundingCostCategoryTest {
     public void getTotalWithYesOtherPublicFunding() {
 
         otherFundingCostCategory.calculateTotal();
-        assertEquals(otherPublicFunding.getFundingAmount(), otherFundingCostCategory.getTotal());
+        assertEquals(OTHER_FUNDING_AMOUNT, otherFundingCostCategory.getTotal());
     }
 
     @Test
@@ -62,7 +65,7 @@ public class OtherFundingCostCategoryTest {
         otherFunding.setOtherPublicFunding("");
         otherFundingCostCategory.calculateTotal();
 
-        assertEquals(BigDecimal.ZERO, otherFundingCostCategory.getTotal());
+        assertEquals(ZERO_COST, otherFundingCostCategory.getTotal());
     }
 
     @Test

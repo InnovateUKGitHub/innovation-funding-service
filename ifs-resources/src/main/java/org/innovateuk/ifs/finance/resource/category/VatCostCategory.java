@@ -4,6 +4,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Vat;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +12,8 @@ import java.util.Optional;
 public class VatCostCategory implements FinanceRowCostCategory {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
-    private BigDecimal totalCostsWithoutVat = BigDecimal.ZERO;
+    private BigDecimal total = ZERO_COST;
+    private BigDecimal totalCostsWithoutVat = ZERO_COST;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -28,9 +29,9 @@ public class VatCostCategory implements FinanceRowCostCategory {
     public void calculateTotal() {
         Optional<Vat> vat = costs.stream().findAny().map(Vat.class::cast);
         if (vat.map(Vat::getRegistered).orElse(false)) {
-            total = totalCostsWithoutVat.multiply(vat.get().getRate());
+            total = totalCostsWithoutVat.multiply(vat.get().getRate()).setScale(2, RoundingMode.HALF_UP);
         } else {
-            total = BigDecimal.ZERO;
+            total = ZERO_COST;
         }
     }
 
