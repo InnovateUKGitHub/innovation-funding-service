@@ -217,7 +217,7 @@ The KTA can see application name, organisation and lead applicant details and ac
     [Documentation]  IFS-7806  IFS-8001
     When the user reads his email and clicks the link                                 ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
     Then KTA should see application name, organisation and lead applicant details
-    And user clicks the button/link                                                   jQuery = a:contains("Continue")
+    And the user clicks the button/link                                               jQuery = a:contains("Continue")
     And logging in and error checking                                                 ${ktaEmail}   ${short_password}
 
 Lead applicant verifies the inviation is accepted.
