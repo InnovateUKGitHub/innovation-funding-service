@@ -57,8 +57,7 @@ ${invitedEmailPattern}                You have been invited to be the Knowledge 
 ${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
 ${invitationEmailSubject}             Invitation to be Knowledge Transfer Adviser
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
-
-
+${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
 
 *** Test Cases ***
 Comp Admin creates an KTP competition
@@ -207,19 +206,29 @@ The applicant can remove pending KTA from the application and send a notificatio
     Then the user should not see the element     name = remove-kta
     And The user reads his email                 ${ktaEmail}   ${removedEmailSubject}   ${removedEmailPattern}
 
-#require 8001 to be completed to pass the test
-The KTA has accepted the invitation
+The applicant invites the KTA again
     [Documentation]  IFS-7806  IFS-8001
-    Given the user enters text to a text field                                       id = ktaEmail   ${ktaEmail}
-    When the user clicks the button/link                                             name = invite-kta
-    And Logout as user
-    Then the user reads his email and clicks the link                                ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
-    And KTA should see application name, organisation and lead applicant details
+    Given the user enters text to a text field      id = ktaEmail   ${ktaEmail}
+    When the user clicks the button/link            name = invite-kta
+    Then the user should see the element            jQuery = td:contains("pending for 0 days")
+    [Teardown]  Logout as user
+
+The KTA can see application name, organisation and lead applicant details and accepted the invitation
+    [Documentation]  IFS-7806  IFS-8001
+    When the user reads his email and clicks the link                                 ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    Then KTA should see application name, organisation and lead applicant details
+    And user clicks the button/link                                                   jQuery = a:contains("Continue")
+    And logging in and error checking                                                 ${ktaEmail}   ${short_password}
+
+Lead applicant verifies the inviation is accepted.
+    [Documentation]  IFS-7806  IFS-8001
+    When log in as a different user              &{ktpLeadApplicantCredentials}
+    And the user navigates to the page           ${server}/application/${ApplicationID}/form/question/1994/team
+    Then the user should not see the element     name = resend-kta
 
 New lead applicant submits the application
    [Documentation]  IFS-7812  IFS-7814
-   Given Log in as a different user                 &{ktpLeadApplicantCredentials}
-   When the user clicks the button/link             link = ${ktpApplicationTitle}
+   When the user clicks the button/link             link = Application overview
    And the applicant completes Application Team
    Then the applicant submits the application
 
@@ -460,7 +469,6 @@ Internal user is able to approve documents
 The user completes the KTP application except application team
     the user clicks the button/link                                                 link = Application details
     the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
-    #the applicant completes Application Team
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                        ${ktpApplicationTitle}
@@ -493,6 +501,8 @@ Custom Suite Setup
 Requesting IDs of this Project
     ${ProjectID} =  get project id by name    ${ktpApplicationTitle}
     Set suite variable    ${ProjectID}
+
+Requesting IDs of this application
     ${ApplicationID} =  get application id by name    ${ktpApplicationTitle}
     Set suite variable    ${ApplicationID}
 
@@ -556,10 +566,11 @@ the user slectes non profitable organisation type
     the user search for organisation name on Companies house    worth   ${existingAcademicPartnerOrgName}
 
 KTA should see application name, organisation and lead applicant details
-    the user should see the element     jQuery = h1:contains("${invitationEmailSubject}")
+    Requesting IDs of this application
+    the user should see the element     jQuery = h1:contains("${acceptInvitationTitle}")
     the user should see the element     jQuery = dt:contains("Lead organisation")+dd:contains("${ktpOrgName}")
     the user should see the element     jQuery = dt:contains("Lead applicant")+dd:contains("Indi Gardiner")
-    the user should see the element     link = ${ktpApplicationTitle}
+    the user should see the element     jQuery = dt:contains("Application")+dd:contains("${ApplicationID}: ${ktpApplicationTitle}")
 
 Assign the KTA role to the user
     log in as a different user               &{ifs_admin_user_credentials}
@@ -579,6 +590,5 @@ the user invites a KTA to application
     the user clicks the button/link          name = invite-kta
 
 
-
-
-
+    Given the user enters text to a text field    id = ktaEmail   ${ktaEmail}
+    And the user clicks the button/link           name = invite-kta

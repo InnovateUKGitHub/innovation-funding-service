@@ -14,7 +14,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.invite.service.KtaInviteRestService;
+import org.innovateuk.ifs.invite.service.ApplicationKtaInviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -31,7 +31,6 @@ import org.springframework.http.HttpStatus;
 import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
@@ -55,7 +54,7 @@ public class ApplicationTeamPopulatorTest {
     private InviteRestService inviteRestService;
 
     @Mock
-    private KtaInviteRestService ktaInviteRestService;
+    private ApplicationKtaInviteRestService applicationKtaInviteRestService;
 
     @Mock
     private ApplicationService applicationService;
@@ -134,7 +133,7 @@ public class ApplicationTeamPopulatorTest {
         when(competitionRestService.getCompetitionById(application.getCompetition())).thenReturn(restSuccess(competition));
         when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(asList(leadRole, collaboratorRole)));
         when(inviteRestService.getInvitesByApplication(application.getId())).thenReturn(restSuccess(asList(collaboratorOrganisationInvite, invitedOrganisation)));
-        when(ktaInviteRestService.getKtaInviteByApplication(application.getId())).thenReturn(restSuccess(null, HttpStatus.OK));
+        when(applicationKtaInviteRestService.getKtaInviteByApplication(application.getId())).thenReturn(restSuccess(null, HttpStatus.OK));
         when(organisationRestService.getOrganisationsByApplicationId(application.getId())).thenReturn(restSuccess(asList(collboratorOrganisation, leadOrganisation)));
         when(questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, application.getId())).thenReturn(restSuccess(singletonList(status)));
 

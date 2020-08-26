@@ -187,7 +187,6 @@ class ApplicationInviteNotificationService {
             notificationArguments.put("applicationName", "-");
         }
         notificationArguments.put("applicationId", invite.getTarget().getId());
-        notificationArguments.put("inviteUrl", getInviteUrl(webBaseUrl, invite.getHash()));
 
         Notification notification = new Notification(from, singletonList(to), Notifications.REMOVE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -204,7 +203,7 @@ class ApplicationInviteNotificationService {
             notificationArguments.put("applicationName", "-");
         }
         notificationArguments.put("applicationId", invite.getTarget().getId());
-        notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite.getHash()));
+        notificationArguments.put("inviteUrl", getKtaInviteUrl(baseUrl, invite.getHash()));
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_KTA, notificationArguments);
         return notificationService.sendNotificationWithFlush(notification, EMAIL);
@@ -219,6 +218,10 @@ class ApplicationInviteNotificationService {
 
     private String getInviteUrl(String baseUrl, String hash) {
         return format("%s/accept-invite/%s", baseUrl, hash);
+    }
+
+    private String getKtaInviteUrl(String baseUrl, String hash) {
+        return format("%s/kta/accept-invite/%s", baseUrl, hash);
     }
 
     private String getCompetitionDetailsUrl(String baseUrl, Application inviteTarget) {

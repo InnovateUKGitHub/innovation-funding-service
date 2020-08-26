@@ -20,6 +20,10 @@ public abstract class ApplicationKtaInviteMapper extends BaseMapper<ApplicationK
 
     @Mappings({
             @Mapping(source = "target.id", target = "application"),
+            @Mapping(source = "target.competition.name", target = "competitionName"),
+            @Mapping(source = "target.leadOrganisationId", target = "leadOrganisationId"),
+            @Mapping(source = "target.leadApplicant.name", target = "leadApplicant"),
+            @Mapping(source = "target.name", target = "applicationName")
     })
     @Override
     public abstract ApplicationKtaInviteResource mapToResource(ApplicationKtaInvite domain);

@@ -10,6 +10,8 @@ import org.innovateuk.ifs.invite.mapper.ApplicationKtaInviteMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationKtaInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.organisation.domain.Organisation;
+import org.innovateuk.ifs.organisation.repository.OrganisationRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -56,8 +58,11 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
     @Override
-    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(Long applicationId) {
+    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByApplication(long applicationId) {
         return serviceSuccess(
                     applicationKtaInviteMapper.mapToResource(applicationKtaInviteRepository.findByApplicationId(applicationId).orElse(null))
             );
@@ -126,6 +131,33 @@ public class ApplicationKtaInviteServiceImpl extends InviteService<ApplicationKt
         }
         inviteResource.setName(userResult.getSuccess().getName());
         return serviceSuccess(inviteResource);
+    }
+
+    @Override
+    public ServiceResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash) {
+        return getByHash(hash)
+                .andOnSuccessReturn(this::mapInviteToKtaInviteResource);
+    }
+
+    private ApplicationKtaInviteResource mapInviteToKtaInviteResource(ApplicationKtaInvite applicationKtaInvite) {
+        ApplicationKtaInviteResource ktaInviteResource = applicationKtaInviteMapper.mapToResource(applicationKtaInvite);
+        Organisation leadOrganisation = organisationRepository.findById(ktaInviteResource.getLeadOrganisationId()).get();
+        ktaInviteResource.setLeadOrganisationName(leadOrganisation.getName());
+        ktaInviteResource.setHash(applicationKtaInvite.getHash());
+        return ktaInviteResource;
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> acceptInvite(String hash) {
+        return getByHash(hash)
+                .andOnSuccess(invite -> {
+                    applicationKtaInviteRepository.save(invite.open());
+                    ProcessRole ktaProcessRole = new ProcessRole(invite.getUser(), invite.getTarget().getId(), Role.KNOWLEDGE_TRANSFER_ADVISER);
+                    processRoleRepository.save(ktaProcessRole);
+                    return serviceSuccess();
+
+                });
     }
 
     @Override

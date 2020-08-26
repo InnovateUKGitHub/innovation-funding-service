@@ -55,6 +55,26 @@ public class ApplicationKtaInviteResourceBuilder  extends BaseBuilder<Applicatio
         return withArraySetFieldByReflection("name", names);
     }
 
+    public ApplicationKtaInviteResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArraySetFieldByReflection("competitionName", competitionNames);
+    }
+
+    public ApplicationKtaInviteResourceBuilder withApplicationName(String... applicationNames) {
+        return withArraySetFieldByReflection("applicationName", applicationNames);
+    }
+
+    public ApplicationKtaInviteResourceBuilder withLeadOrganisationName(String... leadOrganisationNames) {
+        return withArraySetFieldByReflection("leadOrganisationName", leadOrganisationNames);
+    }
+
+    public ApplicationKtaInviteResourceBuilder withLeadApplicant(String... leadApplicants) {
+        return withArraySetFieldByReflection("leadApplicant", leadApplicants);
+    }
+
+    public ApplicationKtaInviteResourceBuilder withHash(String... hashes) {
+        return withArraySetFieldByReflection("hash", hashes);
+    }
+
     @Override
     protected void postProcess(int index, ApplicationKtaInviteResource instance) {
         super.postProcess(index, instance);

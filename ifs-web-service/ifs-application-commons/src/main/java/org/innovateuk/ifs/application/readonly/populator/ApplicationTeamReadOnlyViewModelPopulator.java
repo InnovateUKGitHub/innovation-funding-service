@@ -61,9 +61,19 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
         if (showInvites(data)) {
             inviteOrganisationResources = inviteRestService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
         }
-        Optional<ProcessRoleResource> ktaProcessRole = applicationProcessRoles.stream()
-                .filter(role -> KNOWLEDGE_TRANSFER_ADVISER == role.getRole())
-                .findAny();
+
+        Optional<ProcessRoleResource> ktaProcessRole = Optional.empty();
+        String ktaPhoneNumber = null;
+
+        if (competition.isKtp()) {
+            ktaProcessRole = applicationProcessRoles.stream()
+                    .filter(role -> KNOWLEDGE_TRANSFER_ADVISER == role.getRole())
+                    .findAny();
+
+            if(internalUser && ktaProcessRole.isPresent()) {
+               ktaPhoneNumber = getPhoneNumber(ktaProcessRole.get().getUserEmail());
+            }
+        }
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisationsByApplicationId(data.getApplication().getId()).getSuccess();
 
@@ -81,7 +91,7 @@ public class ApplicationTeamReadOnlyViewModelPopulator implements QuestionReadOn
                 .map(this::toInviteOrganisationTeamViewModel)
                 .collect(toList()));
 
-        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, internalUser);
+        return new ApplicationTeamReadOnlyViewModel(data, question, organisationViewModels, ktaProcessRole, ktaPhoneNumber, internalUser);
     }
 
     private boolean showInvites(ApplicationReadOnlyData data) {

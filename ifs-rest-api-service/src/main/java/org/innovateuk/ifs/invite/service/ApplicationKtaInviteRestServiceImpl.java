@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInviteRestService {
+public class ApplicationKtaInviteRestServiceImpl extends BaseRestService implements ApplicationKtaInviteRestService {
 
     private final static String KTA_INVITE_REST_URL = "/kta-invite";
 
@@ -32,5 +32,17 @@ public class KtaInviteRestServiceImpl extends BaseRestService implements KtaInvi
     public RestResult<Void> resendKtaInvite(ApplicationKtaInviteResource inviteResource) {
         String url = KTA_INVITE_REST_URL + "/resend-kta-invite";
         return postWithRestResult(url, inviteResource, Void.class);
+    }
+
+    @Override
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByHash(String hash) {
+        String url = KTA_INVITE_REST_URL + "/hash/" + hash;
+        return getWithRestResultAnonymous(url, ApplicationKtaInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String hash) {
+        String url = KTA_INVITE_REST_URL + "/hash/" + hash;
+        return postWithRestResult(url, Void.class);
     }
 }

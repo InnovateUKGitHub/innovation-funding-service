@@ -261,10 +261,9 @@
                 </p>
 
                 <th:block th:if="${model.ktpCompetition} ">
-                    <h3 class="govuk-heading-s">Knowledge Transfer Adviser</h3>
-                    <p class="govuk-body">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
-                    <p class="govuk-body">The lead applicant cannot mark the page as complete until a Knowledge Transfer Adviser has accepted their invitation.</p>
-
+                    <h2 class="govuk-heading-m">Knowledge transfer adviser</h2>
+                    <p class="govuk-body" th:unless="${model.readOnly}">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
+                    <p class="govuk-body" th:unless="${model.readOnly}">The lead applicant cannot mark the page as complete until a Knowledge Transfer Adviser has accepted their invitation.</p>
 
                     <div th:if="${model.hasNoKta()}" class="govuk-form-group">
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
@@ -332,7 +331,9 @@
                                     </td>
                                     <td class="govuk-table__cell alignright buttoncolumn" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
                                         <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button><span>|</span></th:block>
+                                        <th:block th:unless="${model.complete}">
                                         <button class="button-clear" type="submit" name="remove-kta" value="${model.applicationId}">Remove</button>
+                                        </th:block>
                                     </td>
                                 </tr>
                                 </tbody>

@@ -22,4 +22,9 @@ public class ApplicationKtaInviteLookupStrategy {
     public ApplicationKtaInviteResource getApplicationInviteResource(final Long id){
         return applicationKtaInviteMapper.mapToResource(applicationKtaInviteRepository.findById(id).orElse(null));
     }
+
+    @PermissionEntityLookupStrategy
+    public ApplicationKtaInviteResource getKtaInviteByHash(final String hash){
+        return applicationKtaInviteMapper.mapToResource(applicationKtaInviteRepository.getByHash(hash));
+    }
 }

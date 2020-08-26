@@ -15,13 +15,15 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
     private final Optional<ProcessRoleResource> ktaProcessRole;
     private final boolean internal;
     private final boolean ktpCompetition;
+    private final String ktaPhoneNumber;
 
     public ApplicationTeamReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question, List<ApplicationTeamOrganisationReadOnlyViewModel> organisations,
-                                            Optional<ProcessRoleResource> ktaProcessRole, boolean internal) {
+                                            Optional<ProcessRoleResource> ktaProcessRole, String ktaPhoneNumber, boolean internal) {
         super(data, question);
         this.organisations = organisations;
         this.ktpCompetition = data.getCompetition().isKtp();
         this.ktaProcessRole = ktaProcessRole;
+        this.ktaPhoneNumber = ktaPhoneNumber;
         this.internal = internal;
     }
 
@@ -37,6 +39,10 @@ public class ApplicationTeamReadOnlyViewModel extends AbstractQuestionReadOnlyVi
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public String getKtaPhoneNumber() {
+        return ktaPhoneNumber;
     }
 
     public Optional<ProcessRoleResource> getKtaProcessRole() {

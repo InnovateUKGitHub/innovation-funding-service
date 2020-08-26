@@ -6,8 +6,6 @@ import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/kta-invite")
 public class ApplicationKtaInviteController {
@@ -16,7 +14,7 @@ public class ApplicationKtaInviteController {
     private ApplicationKtaInviteService applicationKtaInviteService;
 
     @GetMapping("/get-kta-invite-by-application-id/{applicationId}")
-    public RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(@PathVariable("applicationId") Long applicationId) {
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByApplication(@PathVariable long applicationId) {
         return applicationKtaInviteService.getKtaInviteByApplication(applicationId).toGetResponse();
     }
 
@@ -33,5 +31,15 @@ public class ApplicationKtaInviteController {
     @DeleteMapping("/remove-kta-invite-by-application/{applicationId}")
     public RestResult<Void> removeKtaInvite(@PathVariable("applicationId") long applicationId) {
         return applicationKtaInviteService.removeKtaInviteByApplication(applicationId).toDeleteResponse();
+    }
+
+    @GetMapping("/hash/{hash}")
+    public RestResult<ApplicationKtaInviteResource> getKtaInviteByHash(@PathVariable String hash) {
+        return applicationKtaInviteService.getKtaInviteByHash(hash).toGetResponse();
+    }
+
+    @PostMapping("/hash/{hash}")
+    public RestResult<Void> acceptInvite(@PathVariable String hash) {
+        return applicationKtaInviteService.acceptInvite(hash).toGetResponse();
     }
 }
