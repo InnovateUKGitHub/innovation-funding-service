@@ -92,7 +92,7 @@ public enum Role implements Identifiable {
 
     public boolean isAssessor() {return this == ASSESSOR; }
 
-    public boolean isKTA() {
+    public boolean isKta() {
         return this == KNOWLEDGE_TRANSFER_ADVISER;
     }
 
