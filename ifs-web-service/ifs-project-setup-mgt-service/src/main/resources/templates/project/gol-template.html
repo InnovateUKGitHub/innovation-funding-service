@@ -265,7 +265,9 @@
                         <td style="text-align:right;"
                             th:each="(organisation : ${model.industrialFinanceTable.organisations})"
                             th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
-                            &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
+                            &pound;<th:block th:with="category = ${model.isProcurement() ?
+                            organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).PROCUREMENT_OVERHEADS) :
+                            organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).OVERHEADS)}"
                                       th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                         <td style="text-align:right;"

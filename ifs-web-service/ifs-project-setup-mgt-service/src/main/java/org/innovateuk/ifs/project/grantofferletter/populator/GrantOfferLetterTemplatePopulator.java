@@ -99,7 +99,7 @@ public class GrantOfferLetterTemplatePopulator {
         AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
         SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
 
-        return new GrantOfferLetterTemplateViewModel(applicationId,
+        return new GrantOfferLetterTemplateViewModel(competitionResource.getId(), applicationId,
                                                      projectManagerFirstName,
                                                      projectManagerLastName,
                                                      getAddressLines(projectResource),
@@ -110,7 +110,7 @@ public class GrantOfferLetterTemplatePopulator {
                                                      competitionResource.getTermsAndConditions().getTemplate(),
                                                      industrialFinanceTableModel,
                                                      academicFinanceTableModel,
-                                                     summaryFinanceTableModel);
+                                                     summaryFinanceTableModel, competitionResource.isProcurement());
     }
 
     private List<String> getAddressLines(ProjectResource project) {

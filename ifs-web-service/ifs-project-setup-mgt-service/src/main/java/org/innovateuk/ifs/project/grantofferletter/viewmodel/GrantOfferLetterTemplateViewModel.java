@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class GrantOfferLetterTemplateViewModel {
 
+    private final long competitionId;
     private final long applicationId;
     private final String projectManagerFirstName;
     private final String projectManagerLastName;
@@ -22,8 +23,9 @@ public class GrantOfferLetterTemplateViewModel {
     private final IndustrialFinanceTableModel industrialFinanceTable;
     private final AcademicFinanceTableModel academicFinanceTable;
     private final SummaryFinanceTableModel summaryFinanceTable;
+    private final boolean isProcurement;
 
-    public GrantOfferLetterTemplateViewModel(long applicationId,
+    public GrantOfferLetterTemplateViewModel(long competitionId, long applicationId,
                                              String projectManagerFirstName,
                                              String projectManagerLastName,
                                              List<String> projectAddress,
@@ -34,7 +36,8 @@ public class GrantOfferLetterTemplateViewModel {
                                              String termsAndConditionsTemplate,
                                              IndustrialFinanceTableModel industrialFinanceTable,
                                              AcademicFinanceTableModel academicFinanceTable,
-                                             SummaryFinanceTableModel summaryFinanceTable) {
+                                             SummaryFinanceTableModel summaryFinanceTable, boolean isProcurement) {
+        this.competitionId = competitionId;
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
@@ -47,6 +50,11 @@ public class GrantOfferLetterTemplateViewModel {
         this.industrialFinanceTable = industrialFinanceTable;
         this.academicFinanceTable = academicFinanceTable;
         this.summaryFinanceTable = summaryFinanceTable;
+        this.isProcurement = isProcurement;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public long getApplicationId() {
@@ -99,6 +107,11 @@ public class GrantOfferLetterTemplateViewModel {
 
     public SummaryFinanceTableModel getSummaryFinanceTable() {
         return summaryFinanceTable;
+    }
+
+
+    public boolean isProcurement() {
+        return isProcurement;
     }
 }
 
