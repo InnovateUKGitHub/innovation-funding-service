@@ -102,6 +102,25 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void applicationOverviewForKtaWhenCompetitionClosedApplicationSubmitted() throws Exception {
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
+        when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(
+                restSuccess(Collections.singletonList(newProcessRoleResource()
+                        .withUser(loggedInUser)
+                        .withRole(KNOWLEDGE_TRANSFER_ADVISER).build())));
+        when(applicationRestService.updateApplicationState(application.getId(), ApplicationState.OPENED)).thenReturn(restSuccess());
+
+        mockMvc.perform(get("/application/" + application.getId()))
+                .andExpect(redirectedUrl("/application/1/summary"));
+    }
+
+    @Test
     public void teesAndCees() throws Exception {
         mockMvc.perform(get("/application/terms-and-conditions"))
                 .andExpect(view().name("application-terms-and-conditions"));
