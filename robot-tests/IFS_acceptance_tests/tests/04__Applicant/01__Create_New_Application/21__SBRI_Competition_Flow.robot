@@ -20,6 +20,8 @@ ${openSBRICompetitionName}       SBRI type one competition
 ${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]}
 &{sbriLeadCredentials}           email=troy.ward@gmail.com     password=${short_password}
 &{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
+${sbriProjectName}               Procurement application 1
+${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
 
 *** Test Cases ***
 Comp admin saves the completition stage with competition close option
@@ -120,6 +122,49 @@ Internal users can see SBRI application in previous tab with submitted status
     When the user clicks the button/link      id = accordion-previous-heading-2
     Then the user should see the element      jQuery = td:contains("Submitted")
 
+Internal user finance checks page
+    [Documentation]    IFS-8127
+    [Setup]  Log in as a different user           &{internal_finance_credentials}
+    Given the user navigates to the page          ${server}/project-setup-management/project/${sbriProjectId}/finance-check
+    Then the user should see the correct data on finance check page
+
+Internal user eligibility page
+    [Documentation]    IFS-8127
+     Given the user clicks the button/link        css = .eligibility-0
+     Then the user should not see the element     jQuery = h2:contains("Finances overview")
+     And the user should not see the element      link = Review all changes to project finances
+
+Internal user can set VAT to no
+     Given The user clicks the button/link        jQuery = div:contains("Are you VAT registered") ~ div a:contains("Edit")
+     When the user selects the radio button        vatForm.registered  false
+     And The user clicks the button/link          jQuery = div:contains("Total project costs inclusive of VAT") ~ div button:contains("Save")
+     Then the user should see calculations without VAT
+
+Internal user can set VAT to yes
+     Given the user clicks the button/link        jQuery = div:contains("Are you VAT registered") ~ div a:contains("Edit")
+     When the user selects the radio button        vatForm.registered  true
+     And The user clicks the button/link          jQuery = div:contains("Total project costs inclusive of VAT") ~ div button:contains("Save")
+     Then the user should see calculations with VAT
+
+Internal user viability page
+    [Documentation]    IFS-8127
+    Given the user clicks the button/link        link = Finance checks
+    When the user clicks the button/link         css = .viability-0
+    Then the user should not see the element     css = .table-overview
+
+External user finance overview link is not show
+    [Documentation]    IFS-8127
+    Given log in as a different user             &{becky_mason_credentials}
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    Then the user should not see the element     jQuery = project finance overview
+
+External user finances
+    [Documentation]    IFS-8127
+    Given the user clicks the button/link        link = your project finances
+    Then the user should not see the element     link = View changes to finances
+    And the user should not see the element       css = table-overview
+    And the external user should see the correct VAT information
+
 *** Keywords ***
 Custom Suite Setup
     Connect to Database  @{database}
@@ -205,3 +250,26 @@ the user should only see application related key statistics in applications page
     the user should see the element         jQuery = small:contains("Applications beyond 50%")
     the user should see the element         jQuery = small:contains("Applications submitted")
     the user should see the element         jQuery = small:contains("Ineligible applications")
+
+the user should see the correct data on finance check page
+    the user should see the element       jQuery = dt:contains("Total project cost") ~ dd:contains("£265,084") ~dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£77,057")
+    the user should not see the element       jQuery = dt:contains("Other public sector funding")
+    the user should not see the element       jQuery = dt:contains("Total percentage grant")
+    the user should not see the element       jQuery = a:contains("View"):contains("finances")
+
+the user should see calculations without VAT
+    the user should not see the element     jQuery = label:contains("Total project costs inclusive of VAT")
+    the user clicks the button/link         link = Finance checks
+    the user should see the element         jQuery = dt:contains("Total project cost") ~ dd:contains("£220,903") ~ dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£63,803")
+    the user clicks the button/link         css = .eligibility-0
+
+the user should see calculations with VAT
+    the user should see the element     jQuery = div:contains("Total project costs inclusive of VAT") ~ div:contains("£265,084")
+    the user clicks the button/link     link = Finance checks
+    the user should see the element     jQuery = dt:contains("Total project cost") ~ dd:contains("£265,084") ~dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£77,057")
+    the user clicks the button/link     css = .eligibility-0
+
+the external user should see the correct VAT information
+    the user should see the element     jQuery = legend:contains("Are you VAT registered") ~ span:contains("Yes")
+    the user should see the element     jQuery = div:contains("Total VAT") ~ div:contains("£44,181")
+    the user should see the element     jQuery = div:contains("Total project costs inclusive of VAT") ~ div:contains("£265,084")
