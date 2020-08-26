@@ -36,8 +36,10 @@
             <dd>
                 <div th:text="${address.addressLine1}"></div>
                 <div th:text="${address.addressLine2}"></div>
+                <div th:text="${address.addressLine3}"></div>
                 <div th:text="${address.town}"></div>
-                <div th:text="${address?.country}"></div>
+                <div th:text="${address.county}"></div>
+                <div th:text="${address.country}"></div>
                 <div th:text="${address.postcode}"></div>
             </dd>
         </dl>
