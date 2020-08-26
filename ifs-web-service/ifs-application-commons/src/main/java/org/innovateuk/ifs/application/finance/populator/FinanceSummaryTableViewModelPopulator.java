@@ -76,14 +76,14 @@ public class FinanceSummaryTableViewModelPopulator {
     public FinanceSummaryTableViewModel populateSingleOrganisation(ApplicationResource application, CompetitionResource competition, OrganisationResource organisation) {
         List<OrganisationResource> organisations;
         boolean includeOrganisationNames;
-        List<ApplicationFinanceResource> finances;
+        //We have to call this endpoint to initialise finances. Maybe the getApplicationFinances(long applicationId) should initialise finances also.
+        List<ApplicationFinanceResource> finances = newArrayList(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId()).getSuccess());
         if (competition.isKtp()) {
             organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
             finances = applicationFinanceRestService.getApplicationFinances(application.getId()).getSuccess();
             includeOrganisationNames = true;
         } else {
             organisations = newArrayList(organisation);
-            finances = newArrayList(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId()).getSuccess());
             includeOrganisationNames = false;
         }
         SectionResource financeSection = getFinanceSection(competition.getId());

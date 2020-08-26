@@ -48,7 +48,9 @@
         <table class="govuk-table">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th th:if="${table.includeOrganisationNames}" class="govuk-table__header govuk-visually-hidden">Organisation name</th>
+                <th th:if="${table.includeOrganisationNames}" class="govuk-table__header">
+                    <span class="govuk-visually-hidden">Organisation name</span>
+                </th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col"
                     th:classappend="${table.includeOrganisationNames} ? null : 'width-80'">Total costs</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric "
