@@ -254,10 +254,10 @@ the user should only see application related key statistics in applications page
     the user should see the element         jQuery = small:contains("Ineligible applications")
 
 the user should see the correct data on finance check page
-    the user should see the element       jQuery = dt:contains("Total project cost") ~ dd:contains("£265,084") ~dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£77,057")
-    the user should not see the element       jQuery = dt:contains("Other public sector funding")
-    the user should not see the element       jQuery = dt:contains("Total percentage grant")
-    the user should not see the element       jQuery = a:contains("View"):contains("finances")
+    the user should see the element         jQuery = dt:contains("Total project cost") ~ dd:contains("£265,084") ~dt:contains("Funding applied for") ~ dd:contains("£77,057") ~ dt:contains("Current amount") ~ dd:contains("£77,057")
+    the user should not see the element     jQuery = dt:contains("Other public sector funding")
+    the user should not see the element     jQuery = dt:contains("Total percentage grant")
+    the user should not see the element     jQuery = a:contains("View"):contains("finances")
 
 the user should see calculations without VAT
     the user should not see the element     jQuery = label:contains("Total project costs inclusive of VAT")
