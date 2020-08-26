@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
@@ -34,6 +33,7 @@ import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.UserCreationResource.UserCreationResourceBuilder.anUserCreationResource;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
@@ -91,41 +91,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
         mockMvc.perform(put("/user/resend-email-verification-notification/{emailAddress}/", emailAddress))
                 .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void createUser() throws Exception {
-        final Long organisationId = 9999L;
-
-        final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createUser(userResource)).thenReturn(serviceSuccess(userResource));
-
-        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}", organisationId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userResource)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
-
-        verify(registrationServiceMock, times(1)).createUser(userResource);
-        verifyNoMoreInteractions(registrationServiceMock);
-    }
-
-    @Test
-    public void createUserWithCompetitionId() throws Exception {
-        final long organisationId = 9999L;
-        final long competitionId = 8888L;
-
-        final UserResource userResource = newUserResource().build();
-        when(registrationServiceMock.createUserWithCompetitionContext(competitionId, organisationId, userResource)).thenReturn(serviceSuccess(userResource));
-
-        mockMvc.perform(post("/user/create-lead-applicant-for-organisation/{organisationId}/{competitionId}", organisationId, competitionId)
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userResource)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string(objectMapper.writeValueAsString(userResource)));
-
-        verify(registrationServiceMock, times(1)).createUserWithCompetitionContext(competitionId, organisationId, userResource);
-        verifyNoMoreInteractions(registrationServiceMock);
     }
 
     @Test
@@ -311,12 +276,15 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
-                .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
-                .withRoles(singletonList(Role.PROJECT_FINANCE))
                 .build();
 
-        when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());
+        when(registrationServiceMock.createUser(refEq(anUserCreationResource()
+                .withFirstName(internalUserRegistrationResource.getFirstName())
+                .withLastName(internalUserRegistrationResource.getLastName())
+                .withPassword(internalUserRegistrationResource.getPassword())
+                .withInviteHash("SomeHashString")
+                .build()))).thenReturn(serviceSuccess(new UserResource()));
         mockMvc.perform(
                 post("/user/internal/create/SomeHashString")
                         .contentType(APPLICATION_JSON)
