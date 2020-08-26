@@ -91,6 +91,7 @@ public class GenericQuestionReadOnlyViewModel extends AbstractQuestionReadOnlyVi
         return !feedback.isEmpty();
     }
 
+    @Override
     public boolean hasScore() { return !scores.isEmpty(); }
 
     public boolean hasAssessorResponse() {
