@@ -206,26 +206,29 @@ The applicant can remove pending KTA from the application and send a notificatio
     Then the user should not see the element     name = remove-kta
     And The user reads his email                 ${ktaEmail}   ${removedEmailSubject}   ${removedEmailPattern}
 
-The KTA can see application name, organisation and lead applicant details in the invitation
+The applicant invites the KTA again
     [Documentation]  IFS-7806  IFS-8001
-    Given the user enters text to a text field                                       id = ktaEmail   ${ktaEmail}
-    When the user clicks the button/link                                             name = invite-kta
-    And Logout as user
-    And the user reads his email and clicks the link                                 ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
-    Then KTA should see application name, organisation and lead applicant details
+    Given the user enters text to a text field      id = ktaEmail   ${ktaEmail}
+    When the user clicks the button/link            name = invite-kta
+    Then the user should see the element            jQuery = td:contains("pending for 0 days")
+    [Teardown]  Logout as user
 
-KTA accepted the invitation to the application
+The KTA can see application name, organisation and lead applicant details and accepted the invitation
     [Documentation]  IFS-7806  IFS-8001
-    Given the user clicks the button/link        jQuery = a:contains("Continue")
-    When logging in and error checking           ${ktaEmail}   ${short_password}
-    And log in as a different user               &{ktpLeadApplicantCredentials}
+    When the user reads his email and clicks the link                                 ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
+    Then KTA should see application name, organisation and lead applicant details
+    And user clicks the button/link                                                   jQuery = a:contains("Continue")
+    And logging in and error checking                                                 ${ktaEmail}   ${short_password}
+
+Lead applicant verifies the inviation is accepted.
+    [Documentation]  IFS-7806  IFS-8001
+    When log in as a different user              &{ktpLeadApplicantCredentials}
     And the user navigates to the page           ${server}/application/${ApplicationID}/form/question/1994/team
     Then the user should not see the element     name = resend-kta
 
 New lead applicant submits the application
    [Documentation]  IFS-7812  IFS-7814
-   Given Log in as a different user                 &{ktpLeadApplicantCredentials}
-   When the user clicks the button/link             link = ${ktpApplicationTitle}
+   When the user clicks the button/link             link = Application overview
    And the applicant completes Application Team
    Then the applicant submits the application
 
@@ -585,3 +588,7 @@ the user invites a KTA to application
     the user clicks the button/link          link = Application team
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
+
+
+    Given the user enters text to a text field    id = ktaEmail   ${ktaEmail}
+    And the user clicks the button/link           name = invite-kta
