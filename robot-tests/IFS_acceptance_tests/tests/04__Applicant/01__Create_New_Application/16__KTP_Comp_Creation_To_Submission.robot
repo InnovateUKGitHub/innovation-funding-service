@@ -588,7 +588,3 @@ the user invites a KTA to application
     the user clicks the button/link          link = Application team
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
-
-
-    Given the user enters text to a text field    id = ktaEmail   ${ktaEmail}
-    And the user clicks the button/link           name = invite-kta
