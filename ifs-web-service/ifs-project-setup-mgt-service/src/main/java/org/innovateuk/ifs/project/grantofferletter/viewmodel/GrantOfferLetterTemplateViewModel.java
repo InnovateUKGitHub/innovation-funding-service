@@ -25,7 +25,8 @@ public class GrantOfferLetterTemplateViewModel {
     private final SummaryFinanceTableModel summaryFinanceTable;
     private final boolean isProcurement;
 
-    public GrantOfferLetterTemplateViewModel(long competitionId, long applicationId,
+    public GrantOfferLetterTemplateViewModel(long competitionId,
+                                             long applicationId,
                                              String projectManagerFirstName,
                                              String projectManagerLastName,
                                              List<String> projectAddress,
@@ -36,7 +37,8 @@ public class GrantOfferLetterTemplateViewModel {
                                              String termsAndConditionsTemplate,
                                              IndustrialFinanceTableModel industrialFinanceTable,
                                              AcademicFinanceTableModel academicFinanceTable,
-                                             SummaryFinanceTableModel summaryFinanceTable, boolean isProcurement) {
+                                             SummaryFinanceTableModel summaryFinanceTable,
+                                             boolean isProcurement) {
         this.competitionId = competitionId;
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
