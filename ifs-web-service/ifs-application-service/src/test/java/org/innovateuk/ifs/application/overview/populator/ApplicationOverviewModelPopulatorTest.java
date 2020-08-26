@@ -112,7 +112,6 @@ public class ApplicationOverviewModelPopulatorTest {
         List<SectionResource> sections = newSectionResource()
                 .withPriority(1, 2)
                 .withName("Section with questions", "Finances")
-                .withDescription("Section with questions description", "")
                 .withChildSections(Collections.emptyList(), Collections.singletonList(childSection.getId()))
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
@@ -148,7 +147,6 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewSectionViewModel sectionWithQuestions = sectionIterator.next();
         assertEquals("Section with questions", sectionWithQuestions.getTitle());
-        assertEquals("Section with questions description", sectionWithQuestions.getSubTitle());
         assertEquals((long) sections.get(0).getId(), sectionWithQuestions.getId());
         assertEquals(1, sectionWithQuestions.getRows().size());
 
@@ -161,7 +159,6 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewSectionViewModel sectionWithChildSections = sectionIterator.next();
         assertEquals("Finances", sectionWithChildSections.getTitle());
-        assertEquals("Finance description", sectionWithChildSections.getSubTitle());
         assertEquals((long) sections.get(1).getId(), sectionWithChildSections.getId());
 
         ApplicationOverviewRowViewModel childSectionRow = sectionWithChildSections.getRows().iterator().next();

@@ -30,7 +30,6 @@ import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toCollection;
 import static org.innovateuk.ifs.application.ApplicationUrlHelper.getQuestionUrl;
-import static org.innovateuk.ifs.competition.resource.CollaborationLevel.SINGLE;
 import static org.innovateuk.ifs.form.resource.SectionType.OVERVIEW_FINANCES;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.ASSESSED_QUESTION;
 
@@ -122,9 +121,7 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
                     .map(question -> getApplicationOverviewRowViewModel(data, question, section))
                     .collect(toCollection(LinkedHashSet::new));
         }
-        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(),
-                section.getName().equals("Finances") ? getFinanceSectionSubTitle(data.getCompetition()) : section.getDescription(),
-                rows);
+        return new ApplicationOverviewSectionViewModel(section.getId(), section.getName(), rows);
     }
 
     private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
@@ -198,16 +195,6 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
         return question.getQuestionSetupType() == ASSESSED_QUESTION ?
                 format("%s. %s", question.getQuestionNumber(), question.getShortName()) :
                 question.getShortName();
-    }
-
-    private String getFinanceSectionSubTitle(CompetitionResource competition) {
-        if (competition.isFullyFunded()) {
-            return "Submit your organisation's project finances.";
-        } else if (competition.getCollaborationLevel() == SINGLE) {
-            return messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault());
-        } else {
-            return messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault());
-        }
     }
 
 }

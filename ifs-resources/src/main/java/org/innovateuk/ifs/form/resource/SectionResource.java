@@ -25,7 +25,6 @@ public class SectionResource implements CacheableWhenCompetitionOpen {
     @JsonIgnore
     private boolean competitionOpen;
 
-
     public SectionResource() {
     }
 

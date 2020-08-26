@@ -73,7 +73,10 @@
             <th:block th:each="section : ${model.sections}">
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.title}" />
-                    <p class="govuk-body" th:text="${section.subTitle}" />
+
+                    <p class="govuk-body" th:if="${section.title == 'Project details'}">This section contains the background information we need for your project.</p>
+                    <p class="govuk-body" th:if="${section.title == 'Finances'}">Each organisation is required to submit its own project finances. The project costs for all participants can be seen in the 'Finances overview'.</p>
+                    <p class="govuk-body" th:if="${section.title == 'Terms and conditions'}">You must agree to these before you submit your application.</p>
                     <ul class="task-list">
                         <li th:each="row : ${section.rows}">
                             <div class="task">
