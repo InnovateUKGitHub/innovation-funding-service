@@ -15,8 +15,13 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
     private final ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel;
     private final boolean collaborativeProject;
     private final boolean open;
+    private final boolean ktpCompetition;
 
-    public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId, ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel, ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel, ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel, boolean collaborativeProject) {
+    public FinanceReadOnlyViewModel(long applicationId, boolean fullyFunded, long financeSectionId,
+                                    ApplicationFinanceSummaryViewModel applicationFinanceSummaryViewModel,
+                                    ApplicationResearchParticipationViewModel applicationResearchParticipationViewModel,
+                                    ApplicationFundingBreakdownViewModel applicationFundingBreakdownViewModel,
+                                    boolean collaborativeProject, boolean ktpCompetition) {
         this.applicationId = applicationId;
         this.fullyFunded = fullyFunded;
         this.financeSectionId = financeSectionId;
@@ -25,6 +30,7 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
         this.applicationFundingBreakdownViewModel = applicationFundingBreakdownViewModel;
         this.collaborativeProject = collaborativeProject;
         this.open = !applicationFinanceSummaryViewModel.isReadOnly();
+        this.ktpCompetition = ktpCompetition;
     }
 
     @Override
@@ -63,6 +69,10 @@ public class FinanceReadOnlyViewModel implements ApplicationQuestionReadOnlyView
 
     public boolean isOpen() {
         return open;
+    }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
     }
 
     @Override

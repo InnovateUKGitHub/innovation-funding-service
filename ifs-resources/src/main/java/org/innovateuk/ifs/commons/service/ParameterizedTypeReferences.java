@@ -199,6 +199,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<InviteOrganisationResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<ApplicationKtaInviteResource>> applicationKtaInviteResourceListType() {
+        return new ParameterizedTypeReference<List<ApplicationKtaInviteResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<ProjectUserInviteResource>> projectInviteResourceListType() {
         return new ParameterizedTypeReference<List<ProjectUserInviteResource>>() {};
     }
