@@ -4,7 +4,6 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.readonly.ApplicationReadOnlyData;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 
@@ -20,14 +19,12 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     private final boolean complete;
     private final boolean displayActions;
     private final boolean lead;
-    private final QuestionSetupType questionSetupType;
 
     public AbstractQuestionReadOnlyViewModel(ApplicationReadOnlyData data, QuestionResource question) {
         this.competitionName = data.getCompetition().getName();
         this.name = question.getShortName();
         this.applicationId = data.getApplication().getId();
         this.questionId = question.getId();
-        this.questionSetupType = question.getQuestionSetupType();
         this.lead = data.getApplicantProcessRole().map(role -> Role.LEADAPPLICANT == role.getRole()).orElse(false);
         Optional<QuestionStatusResource> completeStatus = data.getQuestionToQuestionStatus()
                 .get(question.getId())
