@@ -6,25 +6,23 @@
         <th:block th:unless="${summary.readOnly}">
 
             <th:block th:if="${summary.showFinancesIncompleteWarning()}">
-                <div th:if="${summary.collaborativeProject}" class="warning-alert">
-                    <h2 class="govuk-heading-s govuk-!-margin-0">The following organisations have not marked their finances as complete:</h2>
-                    <ul class="govuk-list govuk-list--bullet">
-                        <th:block th:each="incompleteOrganisation : ${summary.incompleteOrganisations}">
-                            <li th:text="${incompleteOrganisation.organisationName}" />
-                        </th:block>
-                    </ul>
-                    <p class="govuk-body"
+                <div class="warning-alert">
+                    <th:block th:if="${summary.collaborativeProject}" class="warning-alert">
+                        <h2 class="govuk-heading-s govuk-!-margin-0">These organisations have not marked their finances as complete:</h2>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <th:block th:each="incompleteOrganisation : ${summary.incompleteOrganisations}">
+                                <li th:text="${incompleteOrganisation.organisationName}" />
+                            </th:block>
+                        </ul>
+                    </th:block>
+                    <th:block th:unless="${summary.collaborativeProject}" class="warning-alert">
+                        <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your project finances as complete.</h2>
+                    </th:block>
+                    <p class="govuk-body standard-color"
                        th:if="${summary.isUsersFinancesIncomplete()}">
                         <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                           class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
-                    <p class="govuk-body">This application cannot be submitted unless your project finances have been marked as complete by all partners.</p>
-                </div>
-                <div th:unless="${summary.collaborativeProject}" class="warning-alert">
-                    <h2 class="govuk-heading-s govuk-!-margin-0">You have not marked your project finances as complete.</h2>
-                    <p class="govuk-body">
-                        <a th:href="@{/application/{id}/form/{sectionType}(id=${summary.applicationId},sectionType=${T(org.innovateuk.ifs.form.resource.SectionType).FINANCE})}"
-                           class="govuk-body govuk-link">Return to the finances section</a> to complete your finances.</p>
-                    <p class="govuk-body">This application cannot be submitted unless your project finances have been marked as complete.</p>
+                           class="govuk-body govuk-link standard-color">Return to your project finances</a> to complete the finance section.</p>
+                    <p class="govuk-body standard-color">This application cannot be submitted until all items in the finances section have been marked as complete by all partners.</p>
                 </div>
             </th:block>
 
