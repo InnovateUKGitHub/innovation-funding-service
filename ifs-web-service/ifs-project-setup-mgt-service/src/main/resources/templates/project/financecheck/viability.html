@@ -20,7 +20,7 @@
         </div>
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Viability check for ${model.organisationName}|,subTitle=|${model.applicationId}: ${model.projectName}|,size='govuk-heading-xl',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+        <hr th:unless="${model.procurementCompetition}" class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
 
         <th:block th:if="${model.isShowApprovalMessage()}">
             <div class="success-alert">
@@ -28,7 +28,7 @@
             </div>
         </th:block>
 
-        <table class="govuk-table table-overview">
+        <table th:unless="${model.procurementCompetition}" class="govuk-table table-overview">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">Total costs</th>
