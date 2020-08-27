@@ -200,7 +200,7 @@ Internal user should not see spend profile section
     [Documentation]  IFS-8048
     Given the user navigates to the page         ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should not see the element     jQuery = th:contains("Spend profile")
-   # And the data is in the database correctly
+    And the data is in the database correctly
 
 *** Keywords ***
 Custom Suite Setup
@@ -310,3 +310,17 @@ the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
     the user should see the element     jQuery = div:contains("${totalVAT}") ~ div:contains("${vatTotal}")
     the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
+
+the data is in the database correctly
+     ${month1Costs} =  get spend profile value     other costs   ${sbriProjectId}  0
+     ${month2Costs} =  get spend profile value     other costs   ${sbriProjectId}  1
+     ${month3Costs} =  get spend profile value     other costs   ${sbriProjectId}  2
+     ${month1VAT} =    get spend profile value     VAT   ${sbriProjectId}  0
+     ${month2VAT} =    get spend profile value     VAT   ${sbriProjectId}  1
+     ${month3VAT} =    get spend profile value     VAT   ${sbriProjectId}  2
+     Should Be Equal As Integers   ${month1Costs}   55228
+     Should Be Equal As Integers   ${month2Costs}   0
+     Should Be Equal As Integers   ${month3Costs}   165675
+     Should Be Equal As Integers   ${month1VAT}     11046
+     Should Be Equal As Integers   ${month2VAT}     0
+     Should Be Equal As Integers   ${month3VAT}     33135
