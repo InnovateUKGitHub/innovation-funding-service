@@ -404,7 +404,7 @@ The KTA creates a new account
 The KTA can sign in and see the assessments dashboard with various links
     [Documentation]  IFS-7960
     When the user clicks the button/link                                   link = Sign into your account
-    And logging in and error checking                                      validKTNDomainEmail  ${short_password}
+    And logging in and error checking                                      ${validKTNDomainEmail}  ${short_password}
     Then the KTA should see all relevant links on assessment dashboard
 
 IFS Admin can see the new KTA user in the system
