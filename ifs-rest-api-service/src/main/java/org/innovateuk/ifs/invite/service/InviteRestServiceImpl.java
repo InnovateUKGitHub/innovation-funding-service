@@ -3,12 +3,14 @@ package org.innovateuk.ifs.invite.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationKtaInviteResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.inviteOrganisationResourceListType;
 import static org.innovateuk.ifs.invite.resource.ProjectInviteConstants.GET_USER_BY_HASH_MAPPING;
 
