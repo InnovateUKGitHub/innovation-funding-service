@@ -108,6 +108,7 @@ public class CommonBuilders {
 
     public static QuestionBuilder applicationTeam() {
         return aQuestion()
+                .withShortName("Application team")
                 .withName("Application team")
                 .withAssignEnabled(false)
                 .withMarkAsCompletedEnabled(true)
@@ -118,6 +119,7 @@ public class CommonBuilders {
 
     public static QuestionBuilder applicationDetails() {
         return aQuestion()
+                .withShortName("Application details")
                 .withName("Application details")
                 .withAssignEnabled(false)
                 .withMarkAsCompletedEnabled(true)
@@ -128,6 +130,7 @@ public class CommonBuilders {
 
     public static QuestionBuilder researchCategory() {
         return aQuestion()
+                .withShortName("Research category")
                 .withName("Research category")
                 .withAssignEnabled(false)
                 .withMarkAsCompletedEnabled(true)
