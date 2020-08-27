@@ -20,6 +20,8 @@ ${openSBRICompetitionName}       SBRI type one competition
 ${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]}
 &{sbriLeadCredentials}           email=troy.ward@gmail.com     password=${short_password}
 &{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
+${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
+${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}               Procurement application 1
 ${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
 ${yourProjFinanceLink}           your project finances
@@ -135,6 +137,24 @@ Internal users can see SBRI application in previous tab with submitted status
     When the user clicks the button/link      id = accordion-previous-heading-2
     Then the user should see the element      jQuery = td:contains("Submitted")
 
+External user finance overview link is not show
+    [Documentation]    IFS-8127
+    Given log in as a different user             &{becky_mason_credentials}
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    Then the user should not see the element     jQuery = project finance overview
+
+External user finances
+    [Documentation]    IFS-8127   IFS-8126
+    Given the user clicks the button/link                            link = ${yourProjFinanceLink}
+    Then the user should not see the element                         link = ${viewFinanceChangesLink}
+    And the user should not see the element                          css = table-overview
+    And the external user should see the correct VAT information
+
+External user should not see the spend profile section
+    [Documentation]  IFS-8048
+    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}
+    Then the user should not see the element     jQuery = h2:contains("Spend profile")
+
 Internal user finance checks page
     [Documentation]    IFS-8127
     [Setup]  Log in as a different user                                 &{internal_finance_credentials}
@@ -163,22 +183,24 @@ Internal user can set VAT to yes
 
 Internal user viability page
     [Documentation]    IFS-8127
-    Given the user clicks the button/link        link = Finance checks
-    When the user clicks the button/link         css = .viability-0
-    Then the user should not see the element     css = .table-overview
+    Given the user clicks the button/link           link = Finance checks
+    When the user clicks the button/link            css = .viability-0
+    Then the user should not see the element        css = .table-overview
+    [Teardown]  The user clicks the button/link     link = Finance checks
 
-External user finance overview link is not show
-    [Documentation]    IFS-8127
-    Given log in as a different user             &{becky_mason_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
-    Then the user should not see the element     jQuery = project finance overview
+Internal user can generate spend profile
+    [Documentation]   IFS-8048
+    Given confirm viability                   0
+    And confirm eligibility                   0
+    When the user clicks the button/link      css = .generate-spend-profile-main-button
+    And the user clicks the button/link       id = generate-spend-profile-modal-button
+    Then the user should see the element      css = .success-alert
 
-External user finances
-    [Documentation]    IFS-8127   IFS-8126
-    Given the user clicks the button/link                            link = ${yourProjFinanceLink}
-    Then the user should not see the element                         link = ${viewFinanceChangesLink}
-    And the user should not see the element                          css = table-overview
-    And the external user should see the correct VAT information
+Internal user should not see spend profile section
+    [Documentation]  IFS-8048
+    Given the user navigates to the page         ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should not see the element     jQuery = th:contains("Spend profile")
+   # And the data is in the database correctly
 
 *** Keywords ***
 Custom Suite Setup
