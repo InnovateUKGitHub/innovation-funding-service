@@ -135,9 +135,9 @@ Existing/new partner can apply to KTP competition with non profit organisations
 Enter knowledge base organisation details manually field validations
     [Documentation]  IFS-7807
     Given the user creates a new application with a different organisation
-    When the user clicks the button/link                                     link = enter its details manually
-    And the user clicks the button/link                                      jQuery = button:contains("Save and continue")
-    Then the user should see enter details manually validations
+    When the user clicks the button/link                                       link = enter its details manually
+    And the user clicks the button/link                                        jQuery = button:contains("Save and continue")
+    Then the user is able to see validation messages
 
 Existing lead applicant can enter catapult knowledge base organisation details manually
     [Documentation]  IFS-7807
@@ -148,18 +148,18 @@ Existing lead applicant can enter catapult knowledge base organisation details m
 Existing lead applicant can enter RTO knowledge base organisation details manually
     [Documentation]  IFS-7807
     Given the user clicks the button/link                            link = Back to enter details manually
-    And the user enters kb organisation details manually             KB RTO Org   3   RGRTO123   rtoNumber
-    When the user clicks the button/link                             jQuery = button:contains("Save and continue")
+    When the user enters kb organisation details manually            KB RTO Org   3   RGRTO123   rtoNumber
+    And the user clicks the button/link                              jQuery = button:contains("Save and continue")
     Then the user should see knowledge base organisation details     Knowledge base   Research and technology organisation (RTO)   KB RTO Org   RGRTO123   Montrose House 1   Registration number
 
 Existing lead applicant can enter university knowledge base organisation details manually
     [Documentation]  IFS-7807
     Given the user clicks the button/link                            link = Back to enter details manually
-    And the user enters kb organisation details manually             KB University Org   5   UKPRN123   universityNumber
-    When the user clicks the button/link                             jQuery = button:contains("Save and continue")
+    When the user enters kb organisation details manually            KB University Org   5   UKPRN123   universityNumber
+    And the user clicks the button/link                              jQuery = button:contains("Save and continue")
     Then the user should see knowledge base organisation details     Knowledge base   University   KB University Org   UKPRN123   Montrose House 1   UKPRN number
 
-Existing lead applicant can confirm the details details entered manually
+Existing lead applicant verifies the organisation details entered manually
     [Documentation]  IFS-7807
     When the user clicks the button/link     id = knowledge-base-confirm-organisation-cta
     And the user clicks the button/link      link = Application team
@@ -628,7 +628,7 @@ the user should see knowledge base organisation details
     the user should see the element     jQuery = dt:contains("${regOrUKPRNNumber}")+dd:contains("${orgNumber}")
     the user should see the element     jQuery = dt:contains("Address")+dd:contains("${orgAddress}")
 
-the user should see enter details manually validations
+the user is able to see validation messages
     the user should see a field and summary error     ${kbOrgNameTextBoxValidation}
     the user should see a field and summary error     ${kbOrgTypeValidation}
     the user should see a field and summary error     ${postcodeValidation}
