@@ -101,7 +101,7 @@ public class CommonBuilders {
                         .withName("Award terms and conditions")
                         .withDescription("Award terms and conditions")
                         .withMarkAsCompletedEnabled(true)
-                        .withMultipleStatuses(false)
+                        .withMultipleStatuses(true)
                         .withAssignEnabled(false)
                         .withQuestionSetupType(QuestionSetupType.TERMS_AND_CONDITIONS)));
     }
