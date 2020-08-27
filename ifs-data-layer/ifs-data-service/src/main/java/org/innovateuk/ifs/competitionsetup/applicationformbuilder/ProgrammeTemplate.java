@@ -250,6 +250,7 @@ public class ProgrammeTemplate {
                                                 .withActive(true)
                                                 .withWordCount(1)
                                                 .withAllowedFileTypes(newHashSet(FileTypeCategory.PDF))
+                                                .withGuidanceAnswer("<p>You can include an appendix of additional information to support the technical approach the project will undertake.</p><p>This can include for example, a Gantt chart or project management structure.</p><p>The appendix should:</p><ul><li>contain your application number and project title at the top</li><li>not be any longer than 6 sides of A4. Longer appendices will only have the first 6 pages assessed</li></ul>")
 
                         )
                 );
@@ -288,7 +289,14 @@ public class ProgrammeTemplate {
                                                         aGuidanceRow()
                                                                 .withSubject("1,2")
                                                                 .withJustification("The project is either not innovative or there is no exploitable route due to previous IP.")
-                                                ))
+                                                )),
+                                appendixBuilder ->
+                                        appendixBuilder
+                                                .withActive(true)
+                                                .withWordCount(1)
+                                                .withAllowedFileTypes(newHashSet(FileTypeCategory.PDF))
+                                                .withGuidanceAnswer("<p>You can include an appendix of additional information to support your answer. This appendix can include graphics describing the innovation or the nature of the problem. You can include evidence of freedom to operate, patent searches or competitor analysis as supporting information.</p><p>The appendix should:</p><ul><li>contain your application number and project title at the top</li><li>not be any longer than 5 sides of A4. Longer appendices will only have the first 5 pages assessed</li></ul>")
+
                         )
                 );
     }
@@ -370,6 +378,7 @@ public class ProgrammeTemplate {
                                                 .withActive(true)
                                                 .withWordCount(1)
                                                 .withAllowedFileTypes(newHashSet(FileTypeCategory.PDF))
+                                                .withGuidanceAnswer("<p>You can include an appendix of additional information to detail the specific expertise and track record of each project partner and subcontractor. Academic collaborators can refer to their research standing.</p><p>The appendix should:</p><ul><li>contain your application number and project title at the top</li><li>include up to half an A4 page per partner describing the skills and experience of the main people who will be working on the project</li></ul>")
 
                         )
                 );
