@@ -37,13 +37,12 @@ public class SbriPilotSpendProfileFigureDistributer implements SpendProfileFigur
 
             return IntStream.range(0, durationInMonths.intValue()).mapToObj(i -> {
 
-                BigDecimal costValueForThisMonth;
+                BigDecimal costValueForThisMonth = BigDecimal.ZERO;
                 if (i == 0) {
-                    costValueForThisMonth = firstMonthSpend;
-                } else if (i == durationInMonths.intValue() - 1) {
-                    costValueForThisMonth = lastMonthSpend;
-                } else {
-                    costValueForThisMonth = BigDecimal.ZERO;
+                    costValueForThisMonth = costValueForThisMonth.add(firstMonthSpend);
+                }
+                if (i == durationInMonths.intValue() - 1) {
+                    costValueForThisMonth = costValueForThisMonth.add(lastMonthSpend);
                 }
 
                 return new Cost(costValueForThisMonth).
