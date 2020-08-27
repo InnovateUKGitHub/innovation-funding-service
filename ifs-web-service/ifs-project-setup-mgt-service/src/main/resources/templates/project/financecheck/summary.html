@@ -52,17 +52,18 @@
                         <dd>&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}"/>
                         </dd>
-                        <dt th:unless="${model.financeCheckSummaryResource.loan}">Other public sector funding:</dt>
+                        <dt th:unless="${model.financeCheckSummaryResource.loan OR model.financeCheckSummaryResource.procurement}">Other public sector funding:</dt>
                         <dt th:if="${model.financeCheckSummaryResource.loan}">Other funding:</dt>
-                        <dd>&pound;<th:block
+                        <dd th:unless="${model.financeCheckSummaryResource.procurement}">&pound;<th:block
                             th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}"/>
                         </dd>
                     </th:block>
-                    <dt th:unless="${model.financeCheckSummaryResource.loan}">Total percentage grant:</dt>
+                    <dt th:unless="${model.financeCheckSummaryResource.loan  OR model.financeCheckSummaryResource.procurement}">Total percentage grant:</dt>
                     <dt th:if="${model.financeCheckSummaryResource.loan}">Total percentage loan:</dt>
-                    <dd th:text="${#numbers.formatDecimal(model.financeCheckSummaryResource.totalPercentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}"></dd>
+                    <dd th:unless="${model.financeCheckSummaryResource.procurement}" th:text="${#numbers.formatDecimal(model.financeCheckSummaryResource.totalPercentageGrant,1,'DEFAULT',2,'DEFAULT')+'%'}"></dd>
                 </dl>
-                <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View
+                <a th:unless="${model.financeCheckSummaryResource.procurement}"
+                   th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}" class="govuk-body govuk-link">View
                     finances</a>
             </div>
             <div class="govuk-grid-column-one-half">
