@@ -5,6 +5,11 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-7315  New completion stage- comp transfers to 'previous'
 ...
+...               IFS-8127  SBRI Type 4: Finance check design improvements
+...
+...               IFS-8126  SBRI Type 4: Project setup VAT
+...
+...               IFS-8048  SBRI Type 4: Spend profile for pilot SBRI competition into project setup
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -137,22 +142,22 @@ Internal users can see SBRI application in previous tab with submitted status
     When the user clicks the button/link      id = accordion-previous-heading-2
     Then the user should see the element      jQuery = td:contains("Submitted")
 
-External user finance overview link is not show
+External user finance overview link is not shown
     [Documentation]    IFS-8127
     Given log in as a different user             &{becky_mason_credentials}
     When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
     Then the user should not see the element     jQuery = project finance overview
 
-External user finances
+External user finances details are correct
     [Documentation]    IFS-8127   IFS-8126
-    Given the user clicks the button/link                            link = ${yourProjFinanceLink}
+    When the user clicks the button/link                             link = ${yourProjFinanceLink}
     Then the user should not see the element                         link = ${viewFinanceChangesLink}
     And the user should not see the element                          css = table-overview
     And the external user should see the correct VAT information
 
 External user should not see the spend profile section
     [Documentation]  IFS-8048
-    Given the user navigates to the page         ${server}/project-setup/project/${sbriProjectId}
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}
     Then the user should not see the element     jQuery = h2:contains("Spend profile")
 
 Internal user finance checks page
@@ -198,7 +203,7 @@ Internal user can generate spend profile
 
 Internal user should not see spend profile section
     [Documentation]  IFS-8048
-    Given the user navigates to the page         ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should not see the element     jQuery = th:contains("Spend profile")
     And the data is in the database correctly
 
