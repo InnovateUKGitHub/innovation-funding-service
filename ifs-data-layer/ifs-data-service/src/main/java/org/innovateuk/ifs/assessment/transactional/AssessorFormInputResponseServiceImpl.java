@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import com.uwyn.jhighlight.fastutil.chars.Char2ObjectFunctions;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
@@ -184,37 +183,42 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<ApplicationAssessmentResource> getApplicationAssessment(long applicationId, long assessmentId) {
-        List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentId(assessmentId);
+        return find(assessmentRepository.findById(assessmentId), notFoundError(Assessment.class, assessmentId)).andOnSuccessReturn(assessment -> {
 
-        boolean inScope = false;
-        Map<Long, BigDecimal> scores = new HashMap<>();
-        Map<Long, String> feedback = new HashMap<>();
+            List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentId(assessmentId);
 
-        for (AssessorFormInputResponse resp : responses.stream()
-                .filter(resp -> resp.getValue() != null)
-                .collect(toList())) {
-            FormInput formInput = resp.getFormInput();
+            boolean inScope = false;
+            Map<Long, BigDecimal> scores = new HashMap<>();
+            Map<Long, String> feedback = new HashMap<>();
 
-            if (formInput.getType() == TEXTAREA) {
-                feedback.put(formInput.getQuestion().getId(), resp.getValue());
+            for (AssessorFormInputResponse resp : responses.stream()
+                    .filter(resp -> resp.getValue() != null)
+                    .collect(toList())) {
+                FormInput formInput = resp.getFormInput();
+
+                if (formInput.getType() == TEXTAREA) {
+                    feedback.put(formInput.getQuestion().getId(), resp.getValue());
+                }
+
+                if (formInput.getType() == ASSESSOR_SCORE) {
+                    scores.put(formInput.getQuestion().getId(), new BigDecimal(resp.getValue()));
+                }
+
+                if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE) {
+                    inScope = "true".equals(resp.getValue());
+                }
             }
+            return new ApplicationAssessmentResource(
+                    assessmentId,
+                    applicationId,
+                    inScope,
+                    scores,
+                    feedback,
+                    getAveragePercentage(responses),
+                    assessment.getFundingDecision().getFeedback()
+            );
 
-            if (formInput.getType() == ASSESSOR_SCORE) {
-                scores.put(formInput.getQuestion().getId(), new BigDecimal(resp.getValue()));
-            }
-
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE) {
-                inScope = "true".equals(resp.getValue());
-            }
-        }
-        return serviceSuccess(new ApplicationAssessmentResource(
-                assessmentId,
-                applicationId,
-                inScope,
-                scores,
-                feedback,
-                getAveragePercentage(responses)
-        ));
+        });
     }
 
     private Map<Long, List<FormInputResource>> getAssessmentFormInputs(long competitionId) {

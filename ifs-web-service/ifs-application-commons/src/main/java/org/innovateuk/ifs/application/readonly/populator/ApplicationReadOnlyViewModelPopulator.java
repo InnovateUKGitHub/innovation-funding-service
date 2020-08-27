@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -102,6 +103,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
         Future<List<ApplicationAssessmentResource>> assessorResponseFuture = async(() -> getAssessmentResponses(application, settings));
         ApplicationReadOnlyData data = new ApplicationReadOnlyData(application, competition, user, resolve(processRoleFuture), resolve(questionsFuture), resolve(formInputsFuture), resolve(formInputResponsesFuture), resolve(questionStatusesFuture), resolve(assessorResponseFuture));
 
+
         Set<ApplicationSectionReadOnlyViewModel> sectionViews = resolve(sectionsFuture)
                 .stream()
                 .filter(section -> section.getParentSection() == null)
@@ -109,7 +111,7 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationReadOnlyViewModel(settings, sectionViews, settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO);
+        return new ApplicationReadOnlyViewModel(settings, sectionViews, settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO, settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {

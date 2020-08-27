@@ -79,13 +79,15 @@
             </th:block>
         </section>
     </th:block>
+
+    <th:block th:insert="application/readonly/application-read-only :: assessor_feedback (${model})" ></th:block>
 </th:block>
 
 <th:block th:fragment="assessor_feedback(model)">
-    <div th:if="!${#lists.isEmpty(model.feedback)}">
+    <div th:if="!${#lists.isEmpty(model.overallFeedbacks)}">
         <h2 class="govuk-heading-m govuk-!-margin-top-9">Assessor feedback</h2>
         <ul class="govuk-list boxed-list">
-            <li th:each="item, iterStat : ${model.feedback}">
+            <li th:each="item, iterStat : ${model.overallFeedbacks}">
                 <h3 class="govuk-heading-s" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
                 <div th:text="${item}" data-text-to-html="" class="govuk-body wysiwyg-styles">Feedback text</div>
             </li>

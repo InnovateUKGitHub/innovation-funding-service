@@ -14,16 +14,22 @@ public class ApplicationAssessmentResource {
     private Map<Long, BigDecimal> scores;
     private Map<Long, String> feedback;
     private BigDecimal averagePercentage;
+    private String overallFeedback;
 
     public ApplicationAssessmentResource() {}
 
-    public ApplicationAssessmentResource(long assessmentId, long applicationId, boolean inScope, Map<Long, BigDecimal> scores, Map<Long, String> feedback, BigDecimal averagePercentage) {
+    public ApplicationAssessmentResource(long assessmentId, long applicationId, boolean inScope, Map<Long, BigDecimal> scores, Map<Long, String> feedback, BigDecimal averagePercentage, String overallFeedback) {
         this.assessmentId = assessmentId;
         this.applicationId = applicationId;
         this.inScope = inScope;
         this.scores = scores;
         this.feedback = feedback;
         this.averagePercentage = averagePercentage;
+        this.overallFeedback = overallFeedback;
+    }
+
+    public String getOverallFeedback() {
+        return overallFeedback;
     }
 
     public long getAssessmentId() {
