@@ -206,7 +206,7 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "UPDATE", description = "An admin user can update user details to assign monitoring officers")
     public boolean adminsCanUpdateUserDetails(UserResource userToUpdate, UserResource user) {
-        return hasPermissionToGrantMonitoringOfficerRole(user);
+        return hasPermissionToGrantRole(user);
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own profile skills")
@@ -316,7 +316,12 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant monitoring officer role")
     public boolean isGrantingMonitoringOfficerRoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
-        return hasPermissionToGrantMonitoringOfficerRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(MONITORING_OFFICER);
+    }
+
+    @PermissionRule(value = "GRANT_ROLE", description = "An admin user can grant a KTA role")
+    public boolean isGrantingKTARoleAndHasPermission(GrantRoleCommand roleCommand, UserResource user) {
+        return hasPermissionToGrantRole(user) && roleCommand.getTargetRole().equals(KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @PermissionRule(value = "GRANT_ROLE", description = "An stakeholder can request applicant role")
@@ -338,7 +343,7 @@ public class UserPermissionRules {
         return userToView.getId().equals(user.getId());
     }
 
-    private boolean hasPermissionToGrantMonitoringOfficerRole(UserResource user) {
+    private boolean hasPermissionToGrantRole(UserResource user) {
         return user.hasAnyRoles(COMP_ADMIN, PROJECT_FINANCE, IFS_ADMINISTRATOR);
     }
 

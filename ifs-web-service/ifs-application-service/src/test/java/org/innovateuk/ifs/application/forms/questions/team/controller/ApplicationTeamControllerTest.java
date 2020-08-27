@@ -104,6 +104,48 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void markAsCompleteFailDueToPendingKta() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        ProcessRoleResource role = newProcessRoleResource().build();
+        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(singletonList(new ValidationMessages(globalError("validation.kta.pending.invite")))));
+        when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
+        MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
+                .param("complete", String.valueOf(true)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application/questions/application-team"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrorCode("form", "ktaEmail", "validation.kta.pending.invite"))
+                .andReturn();
+
+        verify(questionStatusRestService).markAsComplete(questionId, applicationId, role.getId());
+        verify(questionStatusRestService).markAsInComplete(questionId, applicationId, role.getId());
+    }
+
+    @Test
+    public void markAsCompleteFailDueToMissingKta() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        ProcessRoleResource role = newProcessRoleResource().build();
+        when(userRestService.findProcessRole(applicationId, loggedInUser.getId())).thenReturn(restSuccess(role));
+        when(questionStatusRestService.markAsComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess(singletonList(new ValidationMessages(globalError("validation.kta.missing.invite")))));
+        when(questionStatusRestService.markAsInComplete(questionId, applicationId, role.getId())).thenReturn(restSuccess());
+        MvcResult result = mockMvc.perform(post("/application/{applicationId}/form/question/{questionId}/team", applicationId, questionId)
+                .param("complete", String.valueOf(true)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application/questions/application-team"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrorCode("form", "ktaEmail", "validation.kta.missing.invite"))
+                .andReturn();
+
+        verify(questionStatusRestService).markAsComplete(questionId, applicationId, role.getId());
+        verify(questionStatusRestService).markAsInComplete(questionId, applicationId, role.getId());
+    }
+
+    @Test
     public void showErrors() throws Exception {
         long applicationId = 1L;
         long questionId = 2L;
