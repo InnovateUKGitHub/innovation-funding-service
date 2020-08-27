@@ -130,7 +130,7 @@
                       th:if="${model.open}"/>
         </th:block>
 
-        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}">Funding breakdown</h2>
+        <h2 class="govuk-heading-s" th:unless="${model.fullyFunded}" th:text="${model.ktpCompetition} ? 'Project costs summary' : 'Funding breakdown'">Funding breakdown</h2>
         <th:block th:insert="finance/finance-summary :: finance-breakdown-table (${model.applicationFundingBreakdownViewModel})"/>
     </div>
 </th:block>
@@ -203,6 +203,7 @@
                     <td class="govuk-table__cell"
                         th:text="${model.ktaProcessRole.get().userName}"></td>
                     <td class="govuk-table__cell"
+                        th:if="${model.internal}"
                         th:text="${model.ktaPhoneNumber}"></td>
                     <td class="govuk-table__cell ifs-table__email"
                         th:text="${model.ktaProcessRole.get().userEmail}"></td>
