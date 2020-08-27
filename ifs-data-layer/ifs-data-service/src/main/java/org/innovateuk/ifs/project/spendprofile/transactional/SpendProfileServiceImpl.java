@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -33,6 +34,7 @@ import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepos
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.internal.ProjectSetupStage;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -74,7 +76,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
 import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -134,6 +135,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+    @Autowired
+    private DefaultSpendProfileFigureDistributer defaultSpendProfileFigureDistributer;
+    @Autowired
+    private SbriPilotSpendProfileFigureDistributer sbriPilotSpendProfileFigureDistributer;
+    @Autowired
+    private CompetitionService competitionService;
 
     private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
@@ -150,14 +157,33 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                         .andOnSuccess(() ->
                                 getCurrentlyLoggedInUser().andOnSuccess(user -> {
                                     if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
-                                        return serviceSuccess();
+                                        return serviceSuccess(project);
                                     } else {
                                         LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
                                         return serviceFailure(GENERAL_UNEXPECTED_ERROR);
                                     }
                                 })
                         )
-                );
+                )
+                .andOnSuccess(project -> {
+                    if (!competitionHasSpendProfileStage(project)) {
+                        List<ServiceResult<Void>> markAsCompleteResults = project.getPartnerOrganisations()
+                                .stream()
+                                .map(po -> markSpendProfileComplete(ProjectOrganisationCompositeId.id(project.getId(), po.getOrganisation().getId())))
+                                .collect(toList());
+                        return aggregate(markAsCompleteResults)
+                                .andOnSuccess(() -> completeSpendProfilesReview(projectId))
+                                .andOnSuccess(() -> approveOrRejectSpendProfile(projectId, APPROVED));
+                    }
+                    return serviceSuccess();
+                });
+    }
+
+    private boolean competitionHasSpendProfileStage(Project project) {
+        return project.getApplication()
+                .getCompetition()
+                .getProjectSetupStages()
+                .contains(ProjectSetupStage.SPEND_PROFILE);
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
@@ -248,14 +274,18 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {
-        Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
-        if (financeContact.isPresent() && financeContact.get().getUser() != null) {
-            NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
-            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
-            Notification notification = new Notification(systemNotificationSource, financeContactTarget, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments);
-            return notificationService.sendNotificationWithFlush(notification, EMAIL);
+        if (competitionHasSpendProfileStage(project)) {
+            Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
+            if (financeContact.isPresent() && financeContact.get().getUser() != null) {
+                NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
+                Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail(project);
+                Notification notification = new Notification(systemNotificationSource, financeContactTarget, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments);
+                return notificationService.sendNotificationWithFlush(notification, EMAIL);
+            }
+            return serviceFailure(SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
+        } else {
+            return serviceSuccess();
         }
-        return serviceFailure(SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
 
     private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail(Project project) {
@@ -275,32 +305,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
-
-        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
-            CostCategory cc = costCategoryRepository.findById(summary.getCategory().getId()).orElse(null);
-
-            return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
-
-                BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
-
-                return new Cost(costValueForThisMonth).
-                        withCategory(cc).
-                        withTimePeriod(i, MONTH, 1, MONTH);
-
-            }).collect(toList());
-        });
-
-        return flattenLists(spendProfileCostsPerCategory);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
-                andOnSuccess(spendProfileCostCategorySummaries ->
-                        generateSpendProfileForOrganisation(projectId, organisationId, spendProfileCostCategorySummaries, user, Calendar.getInstance()));
+        List<List<Cost>> costs;
+        if (project.getApplication().getCompetition().isSbriPilot()) {
+            costs = sbriPilotSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
+        } else {
+            costs = defaultSpendProfileFigureDistributer.distributeCosts(summaryPerCategory);
+        }
+        return flattenLists(costs);
     }
 
     @Override
