@@ -129,20 +129,37 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
     }
 
     private String subtitle(CompetitionResource competition, SectionResource section) {
+
+        String messageCode;
+
         switch (section.getName()) {
             case "Finances":
-                return getFinanceSectionSubTitle(competition);
+                messageCode = getFinanceSectionSubTitle(competition);
+                break;
             case "Project details":
-                return messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault());
+                if (competition.isKtp()) {
+                    messageCode = "ifs.section.projectDetails.ktp.description";
+                } else {
+                    messageCode = "ifs.section.projectDetails.description";
+                }
+                break;
             case "Terms and conditions":
                 if (competition.isExpressionOfInterest()) {
-                    return messageSource.getMessage("ifs.section.termsAndConditionsEoi.description", null, Locale.getDefault());
+                    messageCode = "ifs.section.termsAndConditionsEoi.description";
                 } else {
-                    return messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault());
+                    messageCode = "ifs.section.termsAndConditions.description";
+                }
+                break;
+            case "Application questions":
+                if (!competition.isKtp()) {
+                    messageCode = "ifs.section.applicationQuestions.description";
+                    break;
                 }
             default:
                 return null;
         }
+
+        return messageSource.getMessage(messageCode, null, Locale.getDefault());
     }
 
     private static ApplicationOverviewRowViewModel getApplicationOverviewRowViewModel(ApplicationOverviewData data, QuestionResource question, SectionResource section) {
@@ -220,11 +237,11 @@ public class ApplicationOverviewModelPopulator extends AsyncAdaptor {
 
     private String getFinanceSectionSubTitle(CompetitionResource competition) {
         if (competition.isFullyFunded()) {
-            return "Submit your organisation's project finances.";
+            return "ifs.section.finances.fullyFunded.description";
         } else if (competition.getCollaborationLevel() == SINGLE) {
-            return messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault());
+            return "ifs.section.finances.description";
         } else {
-            return messageSource.getMessage("ifs.section.finances.collaborative.description", null, Locale.getDefault());
+            return "ifs.section.finances.collaborative.description";
         }
     }
 
