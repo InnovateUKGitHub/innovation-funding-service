@@ -43,6 +43,10 @@ public class ApplicationOverviewController {
     private UserRestService userRestService;
     private ApplicationRestService applicationRestService;
 
+    public ApplicationOverviewController() {
+
+    }
+
     public ApplicationOverviewController(ApplicationOverviewModelPopulator applicationOverviewModelPopulator,
                                  UserRestService userRestService,
                                  ApplicationRestService applicationRestService) {
