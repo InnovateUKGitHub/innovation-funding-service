@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.newHashSet;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aDefaultAssessedQuestion;
@@ -46,16 +44,6 @@ public class EoiTemplate {
 
     private static List<QuestionBuilder> eoiDefaultQuestions() {
         return newArrayList(
-                needOrChallenge(),
-                approachAndInnovation(),
-                teamAndResources(),
-                marketAwareness(),
-                outcomes(),
-                widerImpacts(),
-                projectManagement(),
-                risks(),
-                additionality(),
-                costsAndValueForMoney()
         );
     }
 

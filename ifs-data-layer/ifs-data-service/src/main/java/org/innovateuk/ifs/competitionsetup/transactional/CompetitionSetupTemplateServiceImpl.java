@@ -132,19 +132,20 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
         } else {
             competition.setSections(ProgrammeTemplate.sections().stream().map(SectionBuilder::build).collect(Collectors.toList()));
-            setCompetitionOnSections(competition, competition.getSections());
+            setCompetitionOnSections(competition, competition.getSections(), null);
             return serviceSuccess(competition);
         }
     }
 
-    void setCompetitionOnSections(Competition competition, List<Section> sections) {
+    void setCompetitionOnSections(Competition competition, List<Section> sections, Section parent) {
         int si = 0;
         for (Section section : sections) {
-            setCompetitionOnSections(competition, section.getChildSections());
             section.setCompetition(competition);
+            section.setParentSection(parent);
             section.setPriority(si);
             si++;
             Section savedSection = sectionRepository.save(section);
+            setCompetitionOnSections(competition, section.getChildSections(), savedSection);
             int qi = 0;
             for (Question question : section.getQuestions()) {
                 question.setSection(savedSection);
