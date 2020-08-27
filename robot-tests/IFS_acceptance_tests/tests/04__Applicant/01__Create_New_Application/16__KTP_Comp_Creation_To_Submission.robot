@@ -19,6 +19,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
+...            IFS-7960  KTA Deashboard
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -52,7 +54,7 @@ ${associateDevelopmentTable}          associate-development-costs-table
 ${noKTAInApplicationValidation}       You cannot mark as complete until a Knowledge Transfer Adviser has been added to the application.
 ${nonRegisteredUserValidation}        You cannot invite the Knowledge Transfer Adviser as their email address is not registered.
 ${acceptInvitationValidation}         You cannot mark as complete until the Knowledge Transfer Adviser has accepted the invitation.
-${ktaEmail}                           john.fenton@ktn-uk.test
+${ktaEmail}                           simon.smith@ktn-uk.test
 ${nonKTAEmail}                        James.Smith@ktn-uk.test
 ${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
 ${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
@@ -217,12 +219,17 @@ The applicant invites the KTA again
     Then the user should see the element            jQuery = td:contains("pending for 0 days")
     [Teardown]  Logout as user
 
-The KTA can see application name, organisation and lead applicant details and accepted the invitation
+The KTA can see application name, organisation and lead applicant details in the invite
     [Documentation]  IFS-7806  IFS-8001
     When the user reads his email and clicks the link                                 ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
     Then KTA should see application name, organisation and lead applicant details
-    And the user clicks the button/link                                               jQuery = a:contains("Continue")
-    And logging in and error checking                                                 ${ktaEmail}   ${short_password}
+
+The KTA can see the dashboard with assesments and applications tiles after accepting the invite and logging in
+    [Documentation]  IFS-7960
+    Given the user clicks the button/link     jQuery = a:contains("Continue")
+    When logging in and error checking        ${ktaEmail}   ${short_password}
+    Then the user should see the element      jQuery = h2:contains("Assessments")
+    And the user should see the element       jQuery = h2:contains("Applications")
 
 Lead applicant verifies the inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
@@ -366,40 +373,6 @@ Internal user is able to approve the GOL and the project is now Live
     When log in as a different user                                            &{ktpLeadApplicantCredentials}
     And the user navigates to the page                                         ${server}/project-setup/project/${ProjectID}
     Then the user should see project is live with review its progress link
-
-The KTA looks at dashboard - Remove?
-    [Documentation]  IFS-7960
-     Given Log in as a different user                     &{ktpLeadApplicantCredentials}
-     Then the user should see the element                 jQuery = p:contains("Live project")
-     And the user clicks the button/link                  jQuery = a:contains(${KTPapplicationTitle})
-     And the user should see the element                  jQuery = span:contains(${KTPapplicationTitle})
-
-The KTA is added as an assessor
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    Given log in as a different user                        &{Comp_admin1_credentials}
-    When the user clicks the button/link                    link = Dashboard
-    Then the user clicks the button/link                    link = ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link                     link = Invite assessors to assess the competition
-    Then the user clicks the button/link                    jQuery = a:contains("Invite")
-    And the internal user invites a user as an assessor     Indi  ${lead_ktp_email}
-
-Internal user is able to assign a KTA as an MO
-    [Documentation]  IFS-7146  IFS-7147  IFS-7148
-    [Setup]  log in as a different user                   &{Comp_admin1_credentials}
-    Given the user navigates to the page                  ${server}/project-setup-management/monitoring-officer/view-all
-    When the user clicks the button/link                  link = Add a monitoring officer
-    Then the user enters text to a text field             id = emailAddress  ${lead_ktp_email}
-    And the user clicks the button/link                   jQuery = button[type="submit"]
-    Then the user clicks the button/link                  jQuery = button[type="submit"]
-    And The internal user assign project to MO            116   High-speed rail and its effects on soil compaction
-    
-The KTA confirms that they have application, assessment and PS on dashboard
-    [Documentation]  IFS-7960
-     Given Log in as a different user                       &{ktpLeadApplicantCredentials}
-     Then the user should see the element                   jQuery = h2:contains("Applications")
-     And the user should see the element                    jQuery = h2:contains("Project setup")
-     And the user should see the element                    jQuery = h2:contains("Assessments")
-
 
 *** Keywords ***
 the user marks the KTP finances as complete
