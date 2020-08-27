@@ -84,7 +84,7 @@ public class ManagementApplicationPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ApplicationReadOnlySettings settings = defaultSettings()
-                .setIncludeAllAssessorFeedback(user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement());
+                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition));
 
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {
@@ -111,7 +111,10 @@ public class ManagementApplicationPopulator {
                 projectId,
                 user.hasRole(Role.EXTERNAL_FINANCE)
         );
+    }
 
+    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition) {
+        return user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement();
     }
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {
