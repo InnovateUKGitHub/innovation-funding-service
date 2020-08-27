@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
 import org.junit.Test;
-import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +39,7 @@ public class KnowledgeBaseRestServiceImplTest extends BaseRestServiceUnitTest<Kn
         KnowledgeBaseResource knowledgeBaseResource = new KnowledgeBaseResource();
         knowledgeBaseResource.setName(expected);
 
-        setupGetWithRestResultAnonymousExpectations(ORGANISATION_BASE_URL + "/find-by-name/", KnowledgeBaseResource.class, knowledgeBaseResource, OK);
+        setupGetWithRestResultAnonymousExpectations(ORGANISATION_BASE_URL + "/find-by-name/" + expected, KnowledgeBaseResource.class, knowledgeBaseResource, OK);
         RestResult<KnowledgeBaseResource> result = service.getKnowledgeBaseByName(expected);
 
         assertEquals(expected, result.getSuccess().getName());
