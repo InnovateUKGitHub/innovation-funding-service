@@ -260,6 +260,10 @@ public class CommonBuilders {
                 ));
     }
 
+    public static List<FormInputBuilder> defaultAssessedQuestionFormInputs() {
+        return defaultAssessedQuestionFormInputs(Function.identity(), Function.identity());
+    }
+
     public static List<FormInputBuilder> defaultAssessedQuestionFormInputs(Function<FormInputBuilder, FormInputBuilder> applicationTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> assessorTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> appendixFormInputModifier) {
         return newArrayList(
                 applicationTextAreaModifier.apply(aFormInput()

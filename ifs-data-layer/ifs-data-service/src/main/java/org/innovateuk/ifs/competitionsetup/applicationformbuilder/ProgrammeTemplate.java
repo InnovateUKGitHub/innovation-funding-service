@@ -14,8 +14,6 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.Questio
 
 public class ProgrammeTemplate {
 
-    //todo remove escaped escape chars
-
     public static Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
         //todo remove dependency on template comp.
         competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
