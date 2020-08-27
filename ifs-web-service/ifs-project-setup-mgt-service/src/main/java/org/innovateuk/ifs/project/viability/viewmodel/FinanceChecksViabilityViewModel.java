@@ -38,6 +38,7 @@ public class FinanceChecksViabilityViewModel {
     private final boolean projectIsActive;
     private final boolean collaborativeProject;
     private final boolean loanCompetition;
+    private final boolean procurementCompetition;
     private final boolean viabilityReadyToConfirm;
     private final boolean hasGrantClaimPercentage;
 
@@ -85,6 +86,7 @@ public class FinanceChecksViabilityViewModel {
         this.projectIsActive = project.getProjectState().isActive();
         this.collaborativeProject = project.isCollaborativeProject();
         this.loanCompetition = competition.isLoan();
+        this.procurementCompetition  = competition.isProcurement();
         this.viabilityReadyToConfirm = hasAllFundingLevelsWithinMaximum(projectFinances);
         this.hasGrantClaimPercentage = competition.getFinanceRowTypes().contains(FinanceRowType.FINANCE);
     }
@@ -196,6 +198,10 @@ public class FinanceChecksViabilityViewModel {
 
     public boolean isLoanCompetition() {
         return loanCompetition;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 
     public boolean isViabilityReadyToConfirm() {
