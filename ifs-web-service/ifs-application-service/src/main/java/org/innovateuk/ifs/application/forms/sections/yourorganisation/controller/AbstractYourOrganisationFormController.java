@@ -13,7 +13,6 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
+                getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser));
 
         Future<YourOrganisationViewModel> viewModelRequest = async(() ->
                 getViewModel(applicationId, competitionId, organisationId));
@@ -115,7 +114,7 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
             Model model) {
 
         Supplier<String> failureHandler = () -> {
-            CommonYourProjectFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourProjectFinancesViewModel commonViewModel = getCommonFinancesViewModel(applicationId, sectionId, organisationId, loggedInUser);
             YourOrganisationViewModel viewModel = getViewModel(applicationId, competitionId, organisationId);
             model.addAttribute("commonFinancesModel", commonViewModel);
             model.addAttribute("model", viewModel);
@@ -157,8 +156,8 @@ public abstract class AbstractYourOrganisationFormController<F> extends AsyncAda
         return viewModelPopulator.populate(applicationId, competitionId, organisationId);
     }
 
-    private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
-        return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
+    private CommonYourProjectFinancesViewModel getCommonFinancesViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
+        return commonFinancesViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
     }
 
     private String redirectToYourFinances(long applicationId) {

@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectlocation.contro
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourFinancesViewModelPopulator;
+import org.innovateuk.ifs.application.forms.sections.common.viewmodel.CommonYourProjectFinancesViewModel;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationForm;
 import org.innovateuk.ifs.application.forms.sections.yourprojectlocation.form.YourProjectLocationFormPopulator;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -18,7 +18,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -91,7 +90,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
             Model model) {
 
         Future<CommonYourProjectFinancesViewModel> commonViewModelRequest = async(() ->
-                getViewModel(applicationId, sectionId, organisationId, loggedInUser.isInternalUser() || loggedInUser.hasRole(Role.EXTERNAL_FINANCE)));
+                getViewModel(applicationId, sectionId, organisationId, loggedInUser));
 
         Future<YourProjectLocationForm> formRequest = async(() ->
                 formPopulator.populate(applicationId, organisationId));
@@ -142,7 +141,7 @@ public class YourProjectLocationController extends AsyncAdaptor {
         formatLocationInForm(form);
 
         Supplier<String> failureHandler = () -> {
-            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, false);
+            CommonYourProjectFinancesViewModel viewModel = getViewModel(applicationId, sectionId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
             return VIEW_PAGE;
@@ -233,8 +232,8 @@ public class YourProjectLocationController extends AsyncAdaptor {
         }
     }
 
-    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, boolean internalUser) {
-        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, internalUser);
+    private CommonYourProjectFinancesViewModel getViewModel(long applicationId, long sectionId, long organisationId, UserResource user) {
+        return commonViewModelPopulator.populate(organisationId, applicationId, sectionId, user);
     }
 
     private String redirectToViewPage(long applicationId, long organisationId, long sectionId) {

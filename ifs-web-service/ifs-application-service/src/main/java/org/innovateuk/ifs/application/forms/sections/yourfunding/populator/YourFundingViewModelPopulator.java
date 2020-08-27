@@ -67,12 +67,15 @@ public class YourFundingViewModelPopulator {
         if (user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE)) {
             return populateManagement(applicationId, sectionId, organisationId, user);
         }
-        return populate(applicationId, sectionId, user);
+        return populateApplicant(applicationId, sectionId, organisationId, user);
     }
 
-    private YourFundingViewModel populate(long applicationId, long sectionId, UserResource user) {
+    private YourFundingViewModel populateApplicant(long applicationId, long sectionId, long organisationId, UserResource user) {
 
         ApplicantSectionResource section = applicantRestService.getSection(user.getId(), applicationId, sectionId);
+        if (!section.getCurrentApplicant().getOrganisation().getId().equals(organisationId)) {
+            return populateManagement(applicationId, sectionId, organisationId, user);
+        }
         List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section
                 .getCurrentApplicant().getOrganisation().getId());
         ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getApplicationFinance(applicationId, section.getCurrentApplicant().getOrganisation().getId()).getSuccess();
@@ -105,7 +108,7 @@ public class YourFundingViewModelPopulator {
                 researchCategoryQuestionId,
                 yourOrganisationSectionId,
                 applicationFinance.getMaximumFundingLevel(),
-                format("/application/%d/form/FINANCE", applicationId),
+                format("/application/%d/form/FINANCE/%d", applicationId, section.getCurrentApplicant().getOrganisation().getId()),
                 overridingFundingRules,
                 section.getCompetition().getFundingType(),
                 section.getCurrentApplicant().getOrganisation().getOrganisationTypeEnum());

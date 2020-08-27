@@ -6,7 +6,10 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,25 +23,18 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
 @Component
 public class CommonYourFinancesViewModelPopulator {
 
-    private ApplicationRestService applicationRestService;
-    private CompetitionRestService competitionRestService;
-    private SectionService sectionService;
-    private OrganisationRestService organisationRestService;
-
     @Autowired
-    public CommonYourFinancesViewModelPopulator(
-            ApplicationRestService applicationRestService,
-            CompetitionRestService competitionRestService,
-            SectionService sectionService,
-            OrganisationRestService organisationRestService) {
+    private ApplicationRestService applicationRestService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
+    @Autowired
+    private SectionService sectionService;
+    @Autowired
+    private OrganisationRestService organisationRestService;
+    @Autowired
+    private UserRestService userRestService;
 
-        this.applicationRestService = applicationRestService;
-        this.competitionRestService = competitionRestService;
-        this.sectionService = sectionService;
-        this.organisationRestService = organisationRestService;
-    }
-
-    public CommonYourProjectFinancesViewModel populate(long organisationId, long applicationId, long sectionId, boolean internalUser) {
+    public CommonYourProjectFinancesViewModel populate(long organisationId, long applicationId, long sectionId, UserResource user) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -50,10 +46,13 @@ public class CommonYourFinancesViewModelPopulator {
 
         boolean sectionMarkedAsComplete = completedSectionIds.contains(sectionId);
 
-        boolean open = !internalUser && application.isOpen() && competition.isOpen();
+        boolean userCanEdit = !user.isInternalUser() || !user.hasRole(Role.EXTERNAL_FINANCE) || userRestService.findProcessRole(user.getId(), applicationId).getOptionalSuccessObject()
+                .map(role -> role.getOrganisationId() == null || role.getOrganisationId().equals(organisationId))
+                .orElse(false);
+        boolean open = userCanEdit && application.isOpen() && competition.isOpen();
 
         return new CommonYourProjectFinancesViewModel(
-                getYourFinancesUrl(applicationId, organisationId, internalUser),
+                getYourFinancesUrl(applicationId, organisationId),
                 application.getCompetitionName(),
                 application.getName(),
                 applicationId,
@@ -65,10 +64,7 @@ public class CommonYourFinancesViewModelPopulator {
                 organisation.isInternational());
     }
 
-    private String getYourFinancesUrl(long applicationId, long organisationId, boolean internalUser) {
-        // IFS-4848 - we're constructing this URL in a few places - maybe a NavigationUtil?
-        return internalUser ?
-                String.format("%s%d/form/FINANCE/%d", APPLICATION_BASE_URL, applicationId, organisationId) :
-                String.format("%s%d/form/FINANCE", APPLICATION_BASE_URL, applicationId);
+    private String getYourFinancesUrl(long applicationId, long organisationId) {
+        return String.format("%s%d/form/FINANCE/%d", APPLICATION_BASE_URL, applicationId, organisationId);
     }
 }

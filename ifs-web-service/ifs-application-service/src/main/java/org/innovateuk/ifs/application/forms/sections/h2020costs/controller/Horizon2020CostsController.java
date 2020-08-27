@@ -110,7 +110,7 @@ public class Horizon2020CostsController extends AsyncAdaptor {
     }
 
     private String viewHorizon2020Costs(UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser());
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user);
         model.addAttribute("model", viewModel);
         return VIEW;
     }
