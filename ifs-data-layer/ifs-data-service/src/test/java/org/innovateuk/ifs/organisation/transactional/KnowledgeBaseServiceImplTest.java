@@ -6,8 +6,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
 import org.innovateuk.ifs.organisation.domain.KnowledgeBase;
 import org.innovateuk.ifs.organisation.domain.OrganisationType;
+import org.innovateuk.ifs.organisation.mapper.KnowledgeBaseMapper;
 import org.innovateuk.ifs.organisation.repository.KnowledgeBaseRepository;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,10 +19,8 @@ import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.CATAPULT;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class KnowledgeBaseServiceImplTest extends BaseServiceUnitTest<KnowledgeBaseService> {
@@ -32,9 +30,14 @@ public class KnowledgeBaseServiceImplTest extends BaseServiceUnitTest<KnowledgeB
 
     private KnowledgeBase knowledgeBase;
 
+    private KnowledgeBaseResource knowledgeBaseResource;
+
     private OrganisationType organisationType;
 
     private Address address;
+
+    @Mock
+    private KnowledgeBaseMapper KnowledgeBaseMapper;
 
     protected KnowledgeBaseService supplyServiceUnderTest() {
         return new KnowledgeBaseServiceImpl();
@@ -45,10 +48,11 @@ public class KnowledgeBaseServiceImplTest extends BaseServiceUnitTest<KnowledgeB
         address = newAddress().build();
         organisationType = newOrganisationType().withOrganisationType(CATAPULT).build();
         knowledgeBase = new KnowledgeBase(1l, "KnowledgeBase 1", "123456789", organisationType, address);
+        knowledgeBaseResource = new KnowledgeBaseResource(1l, "KnowledgeBase 1",6l, "Catapult", "12345678", null);
     }
 
     @Test
-    public void getKnowldegeBaseName() {
+    public void getKnowledgeBaseName() {
         when(knowledgeBaseRepository.findById(1L)).thenReturn(Optional.of(knowledgeBase));
 
         ServiceResult<String> result = service.getKnowledgeBaseName(1L);
@@ -69,9 +73,11 @@ public class KnowledgeBaseServiceImplTest extends BaseServiceUnitTest<KnowledgeB
 
     @Test
     public void getKnowledgeBaseByName() {
-        when(knowledgeBaseRepository.findAll()).thenReturn(singleton(knowledgeBase));
+        String name = "KnowledgeBase 1";
+        when(knowledgeBaseRepository.findByName(name)).thenReturn(Optional.of(knowledgeBase));
+        when(KnowledgeBaseMapper.mapToResource(knowledgeBase)).thenReturn(knowledgeBaseResource);
 
-        ServiceResult<KnowledgeBaseResource> result = service.getKnowledgeBaseByName("KnowledgeBase 1");
+        ServiceResult<KnowledgeBaseResource> result = service.getKnowledgeBaseByName(name);
 
         assertTrue(result.isSuccess());
         assertEquals(knowledgeBase.getName(), result.getSuccess().getName());
