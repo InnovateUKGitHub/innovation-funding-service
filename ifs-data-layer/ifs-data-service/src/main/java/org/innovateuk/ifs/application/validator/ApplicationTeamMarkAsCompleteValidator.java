@@ -3,10 +3,13 @@ package org.innovateuk.ifs.application.validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationKtaInviteService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -30,6 +33,9 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
     @Autowired
     private ApplicationInviteService applicationInviteService;
 
+    @Autowired
+    private ApplicationKtaInviteService applicationKtaInviteService;
+
     @Override
     public boolean supports(Class<?> clazz) {
         //Check subclasses for in case we receive hibernate proxy class.
@@ -43,18 +49,31 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 
         Application application = (Application) target;
 
-        ServiceResult<List<InviteOrganisationResource>> invitesResult = applicationInviteService.getInvitesByApplication(application.getId());
-        List<InviteOrganisationResource> invites = invitesResult.getSuccess();
+        List<InviteOrganisationResource> invites = applicationInviteService.getInvitesByApplication(application.getId()).getSuccess();
         for (InviteOrganisationResource organisation : invites) {
             Optional<ApplicationInviteResource> maybeInvite = organisation.getInviteResources()
                     .stream()
                     .filter(invite -> invite.getStatus() != OPENED)
                     .findFirst();
             if (maybeInvite.isPresent()) {
-                LOG.debug("MarkAsComplete application team validation message for invite organisation: " + organisation.getOrganisationName());
                 reject(errors, "validation.applicationteam.pending.invites", maybeInvite.get().getName(), organisation.getId());
             }
         }
+
+        if (application.getCompetition().isKtp() &&
+            application.getProcessRoles().stream().noneMatch(pr -> Role.KNOWLEDGE_TRANSFER_ADVISER == pr.getRole())) {
+
+            ApplicationKtaInviteResource ktaInvite = applicationKtaInviteService.getKtaInviteByApplication(application.getId()).getSuccess();
+            if (ktaInvite == null) {
+                reject(errors, "validation.kta.missing.invite");
+            } else {
+                if (ktaInvite.getStatus() != InviteStatus.OPENED) {
+                    reject(errors, "validation.kta.pending.invite");
+                }
+            }
+        }
+
+
     }
 
 }
