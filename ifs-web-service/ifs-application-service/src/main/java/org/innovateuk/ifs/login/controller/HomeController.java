@@ -100,8 +100,6 @@ public class HomeController {
         boolean isMonitoringOfficer = monitoringOfficerRestService.isMonitoringOfficer(user.getId()).getSuccess();
         boolean isApplicant = processRoleResources.stream().map(ProcessRoleResource::getRole)
                 .anyMatch(Role::isKta);
-        boolean isAssessor = processRoleResources.stream().map(ProcessRoleResource::getRole)
-                .anyMatch(Role::isAssessor);
 
         if (isMonitoringOfficer) {
             dashboardRoles.add(MONITORING_OFFICER);
@@ -109,9 +107,8 @@ public class HomeController {
         if (isApplicant) {
             dashboardRoles.add(APPLICANT);
         }
-        if (isAssessor) {
-            dashboardRoles.add(ASSESSOR);
-        }
+
+        dashboardRoles.add(ASSESSOR);
     }
 
     private String viewDashboardSelection(HttpServletRequest request, Model model, Set<Role> roles) {
