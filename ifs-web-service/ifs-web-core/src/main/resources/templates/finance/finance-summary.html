@@ -50,7 +50,7 @@
                     <span class="govuk-visually-hidden">Organisation name</span>
                 </th>
                 <th class="govuk-table__header govuk-table__header--numeric" scope="col"
-                    th:classappend="${table.includeOrganisationNames} ? null : 'width-80'">Total costs</th>
+                    th:classappend="${table.includeOrganisationNames} ? null : 'width-80'">Total costs (&pound;)</th>
                 <th scope="col" class="govuk-table__header govuk-table__header--numeric "
                     th:classappend="${table.fundingLevelFirst} ? 'width-80' : 'width-100'"
                     th:text="${table.fundingLevelFirst} ? 'Funding level (%)' : 'Funding sought (£)'">Funding level (%)</th>
@@ -92,7 +92,7 @@
                     </div>
                 </th>
                 <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <strong>&pound;<th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
+                    <strong><th:block th:text="${#numbers.formatInteger(row.costs, 0, 'DEFAULT')}" /></strong>
                 </td>
                 <th:block th:with="fundingLevel=|${#numbers.formatDecimal(row.claimPercentage,1,'DEFAULT',2,'DEFAULT')}%|, fundingSought=${#numbers.formatInteger(row.fundingSought, 0, 'DEFAULT')}">
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${table.fundingLevelFirst} ? ${fundingLevel} : ${fundingSought}"/>

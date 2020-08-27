@@ -50,9 +50,9 @@ public class FinanceLinksUtil {
                 if (competition.isKtp()) {
                     //All KTP users can see each others finances.
                     return Optional.of(organisationIdInLink(application.getId(), organisation));
+                } else if (currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
+                    return Optional.of(applicantsOrganisationLink(application.getId()));
                 }
-            } else if (currentUserRole.get().getOrganisationId().equals(organisation.getId())) {
-                return Optional.of(applicantsOrganisationLink(application.getId()));
             }
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
