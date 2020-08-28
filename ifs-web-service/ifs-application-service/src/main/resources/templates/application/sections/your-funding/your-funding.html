@@ -72,7 +72,7 @@
 
                 <input th:if="${model.ktpFundingType}" type="hidden" name="previous" value="previous" />
 
-                <th:block th:insert="application/your-funding-fragments :: form(
+                <th:block th:unless="${model.ktpFundingType}" th:insert="application/your-funding-fragments :: form(
                                 form=${form},
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
