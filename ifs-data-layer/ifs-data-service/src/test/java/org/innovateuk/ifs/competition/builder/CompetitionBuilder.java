@@ -10,6 +10,7 @@ import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.project.core.domain.ProjectStages;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
@@ -350,4 +351,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withFundingType(FundingType... fundingTypes) {
         return withArray((fundingType, competition) -> competition.setFundingType(fundingType), fundingTypes);
     }
+
+    @SafeVarargs
+    public final CompetitionBuilder withProjectStages(List<ProjectStages>... projectStages) {
+        return withArray((projectStage, competition) -> competition.setProjectStages(projectStage), projectStages);
+    }
+
+
 }
