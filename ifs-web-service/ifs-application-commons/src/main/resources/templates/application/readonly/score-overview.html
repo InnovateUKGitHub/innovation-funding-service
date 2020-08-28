@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="generic(question)">
+<th:block th:fragment="generic(question, assessmentId)">
     <th:block th:unless="${question.hasScope()}">
         <th:block th:if="${question.hasScore()}">
-            <span class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
+            <span th:unless="${assessmentId}" class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
+            <span th:if="${assessmentId}" class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
         </th:block>
 
         <th:block th:if="${!question.hasScore()}">
