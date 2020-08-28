@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -28,7 +28,8 @@
                         </div>
                         <th:block th:insert="application/your-funding-fragments :: requesting_funding(
                                 guidanceFragment=${guidanceFragment},
-                                maximumFundingLevel=${maximumFundingLevel}
+                                maximumFundingLevel=${maximumFundingLevel},
+                                ktpFundingType=${ktpFundingType}
                             )"/>
                         <div class="govuk-radios__item">
                             <input type="radio"
@@ -163,13 +164,13 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="requesting_funding(guidanceFragment, maximumFundingLevel)">
+<th:block th:fragment="requesting_funding(guidanceFragment, maximumFundingLevel, ktpFundingType)">
     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="request-funding">
         <div th:class="govuk-form-group"
              th:classappend="${#fields.hasErrors('grantClaimPercentage')} ? 'govuk-form-group--error'">
             <label class="govuk-label" for="grantClaimPercentage">
                 Select a funding level
-                <span class="govuk-hint">
+                <span class="govuk-hint" th:unless="${ktpFundingType}">
                     <th:block th:insert="application/your-funding-fragments :: ${guidanceFragment}"/>
                 </span>
             </label>
