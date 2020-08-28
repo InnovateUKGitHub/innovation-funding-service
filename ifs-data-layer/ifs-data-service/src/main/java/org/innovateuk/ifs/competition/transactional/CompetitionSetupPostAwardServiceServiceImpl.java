@@ -58,17 +58,12 @@ public class CompetitionSetupPostAwardServiceServiceImpl extends BaseTransaction
 
                     Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(competitionId);
 
-					PostAwardService postAwardService;
-					if (!config.isPresent()) {
-						// Set the default post award service to IFSPA
-						postAwardService = PostAwardService.IFS_POST_AWARD;
-					} else {
-						if (config.get().isSendByDefault()) {
-							postAwardService = PostAwardService.IFS_POST_AWARD;
-						} else {
-							postAwardService = PostAwardService.CONNECT;
-						}
-					}
+                    PostAwardService postAwardService;
+                    if (!config.isPresent() || config.get().isSendByDefault()) {
+                        postAwardService = PostAwardService.IFS_POST_AWARD;
+                    } else {
+                        postAwardService = PostAwardService.CONNECT;
+                    }
 
                     CompetitionPostAwardServiceResource resource = new CompetitionPostAwardServiceResource();
                     resource.setCompetitionId(competitionId);

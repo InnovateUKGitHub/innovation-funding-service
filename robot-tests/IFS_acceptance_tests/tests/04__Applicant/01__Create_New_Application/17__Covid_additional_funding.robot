@@ -258,24 +258,6 @@ the project finance approves all steps before finance
     the user clicks the button/link              jQuery = td.action:nth-of-type(5)
     approve bank account details
 
-confirm viability
-    [Arguments]  ${viability}
-    the user clicks the button/link   css = .viability-${viability}
-    the user selects the checkbox                        project-viable
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link                      id = confirm-button      #Page confirmation button
-    the user clicks the button/link                      name = confirm-viability   #Pop-up confirmation button
-    the user clicks the button/link                      link = Return to finance checks
-
-confirm eligibility
-    [Arguments]  ${eligibility}
-    the user clicks the button/link                     css = .eligibility-${eligibility}
-    the user selects the checkbox                        project-eligible
-    the user selects the option from the drop-down menu  Green  id = rag-rating
-    the user clicks the button/link                      css = #confirm-button        #Page confirmation button
-    the user clicks the button/link                      name = confirm-eligibility   #Pop-up confirmation button
-    the user clicks the button/link                      link = Return to finance checks
-
 approve bank account details
     the user clicks the button/link    jQuery = button:contains("Approve bank account details")
     the user clicks the button/link    jQuery = button:contains("Approve account")

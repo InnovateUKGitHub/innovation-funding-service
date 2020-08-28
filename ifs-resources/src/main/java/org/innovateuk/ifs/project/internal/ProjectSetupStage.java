@@ -7,7 +7,7 @@ public enum ProjectSetupStage {
     MONITORING_OFFICER("MO", 4),
     BANK_DETAILS("Bank details", 5),
     FINANCE_CHECKS("Finance checks", 6),
-    SPEND_PROFILE("Spend profile", 7),
+    SPEND_PROFILE("Spend profile", 7), //Some competitions don't have this stage. They automatically approve the spend profile.
     GRANT_OFFER_LETTER("GOL", 8),
     PROJECT_SETUP_COMPLETE("Project setup complete", 9);
 
