@@ -50,6 +50,7 @@ public class QuestionSetupTemplateServiceImpl implements QuestionSetupTemplateSe
 
     @Override
     public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
+        //todo replace without template
         if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }

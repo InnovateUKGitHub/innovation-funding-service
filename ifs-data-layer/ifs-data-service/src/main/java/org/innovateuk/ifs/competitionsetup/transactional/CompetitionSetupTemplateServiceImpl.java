@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
+import org.innovateuk.ifs.assessment.validator.*;
+import org.innovateuk.ifs.application.validator.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
@@ -16,10 +18,7 @@ import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigR
 import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.domain.*;
 import org.innovateuk.ifs.form.repository.*;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +87,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Autowired
     private MultipleChoiceOptionRepository multipleChoiceOptionRepository;
 
+    @Autowired
+    private FormValidatorRepository formValidatorRepository;
+
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
@@ -138,6 +140,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     void setCompetitionOnSections(Competition competition, List<Section> sections, Section parent) {
+        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
+        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
+        FormValidator researchCategoryValidator = formValidatorRepository.findByClazzName(ResearchCategoryValidator.class.getName());
+        FormValidator assessorScopeValidator = formValidatorRepository.findByClazzName(AssessorScopeValidator.class.getName());
+        FormValidator assessorScoreValidator = formValidatorRepository.findByClazzName(AssessorScoreValidator.class.getName());
+        FormValidator requiredFileValidator = formValidatorRepository.findByClazzName(RequiredFileValidator.class.getName());
+        FormValidator requiredMultipleChoiceValidator = formValidatorRepository.findByClazzName(RequiredMultipleChoiceValidator.class.getName());
+
         int si = 0;
         for (Section section : sections) {
             section.setCompetition(competition);
@@ -171,8 +181,33 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                         gr.setPriority(gri);
                         gri++;
                     }
+                    switch (fi.getType()) {
+                        case TEXTAREA:
+                            fi.addFormValidator(notEmptyValidator);
+                            fi.addFormValidator(wordCountValidator);
+                            break;
+                        case FILEUPLOAD:
+                            break;
+                        case ASSESSOR_RESEARCH_CATEGORY:
+                            fi.addFormValidator(notEmptyValidator);
+                            fi.addFormValidator(researchCategoryValidator);
+                            break;
+                        case ASSESSOR_APPLICATION_IN_SCOPE:
+                            fi.addFormValidator(notEmptyValidator);
+                            fi.addFormValidator(assessorScopeValidator);
+                            break;
+                        case ASSESSOR_SCORE:
+                            fi.addFormValidator(notEmptyValidator);
+                            fi.addFormValidator(assessorScoreValidator);
+                            break;
+                        case TEMPLATE_DOCUMENT:
+                            fi.addFormValidator(requiredFileValidator);
+                            break;
+                        case MULTIPLE_CHOICE:
+                            fi.addFormValidator(requiredMultipleChoiceValidator);
+                            break;
+                    }
                     formInputRepository.save(fi);
-                    //TODO validators
                 }
             }
         }
