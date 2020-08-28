@@ -19,7 +19,6 @@ import org.innovateuk.ifs.project.grantofferletter.populator.GrantOfferLetterTem
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterTemplateViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -271,8 +270,7 @@ public class GrantOfferLetterController {
     @GetMapping("/template")
     public String viewGrantOfferLetterTemplatePage(@PathVariable("projectId") long projectId,
                                                    Model model) {
-        GrantOfferLetterTemplateViewModel populate = grantOfferLetterTemplatePopulator.populate(projectId);
-        model.addAttribute("model", populate);
+        model.addAttribute("model", grantOfferLetterTemplatePopulator.populate(projectId));
         return "project/gol-template";
     }
 
