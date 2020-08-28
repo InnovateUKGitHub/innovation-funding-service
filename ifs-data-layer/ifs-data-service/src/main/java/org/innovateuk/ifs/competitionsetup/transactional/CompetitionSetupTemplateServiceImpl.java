@@ -133,7 +133,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         } else {
             competition.setSections(ProgrammeTemplate.sections().stream().map(SectionBuilder::build).collect(Collectors.toList()));
             setCompetitionOnSections(competition, competition.getSections(), null);
-            return serviceSuccess(competition);
+            return serviceSuccess(competitionRepository.save(competition));
         }
     }
 
