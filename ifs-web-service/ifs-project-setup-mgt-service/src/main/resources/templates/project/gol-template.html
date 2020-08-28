@@ -278,22 +278,6 @@
                             &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
-                    <th:block th:if="${model.isProcurement()}">
-                        <tr>
-                            <td>VAT</td>
-                            <td style="text-align:right;"
-                                th:each="(organisation : ${model.industrialFinanceTable.organisations})"
-                                th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
-                                &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
-                                                 th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
-                            </td>
-                            <td style="text-align:right;"
-                                th:if="${model.industrialFinanceTable.showTotalsColumn}"
-                                th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}">
-                                &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
-                            </td>
-                        </tr>
-                    </th:block>
                     <tr>
                         <td>Materials</td>
                         <td style="text-align:right;"
@@ -419,6 +403,22 @@
                             &pound;<th:block th:text="${#numbers.formatInteger(0, 0, 'DEFAULT')}">£0</th:block>
                         </td>
                     </tr>
+                    <th:block th:if="${model.isProcurement()}">
+                        <tr>
+                            <td>VAT</td>
+                            <td style="text-align:right;"
+                                th:each="(organisation : ${model.industrialFinanceTable.organisations})"
+                                th:with="organisationFinance=${model.industrialFinanceTable.finances.get(organisation)}">
+                                &pound;<th:block th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}"
+                                                 th:text="${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                            <td style="text-align:right;"
+                                th:if="${model.industrialFinanceTable.showTotalsColumn}"
+                                th:with="total=${model.industrialFinanceTable.getTotalForType(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).VAT)}">
+                                &pound;<th:block th:text="${#numbers.formatInteger(total, 0, 'DEFAULT')}">£0</th:block>
+                            </td>
+                        </tr>
+                    </th:block>
                     <tr>
                         <th>Total eligible costs</th>
                         <td style="text-align:right;"

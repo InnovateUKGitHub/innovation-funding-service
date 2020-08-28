@@ -667,7 +667,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(populator.populate(projectId))
                 .thenReturn(new GrantOfferLetterTemplateViewModel(1L,
-                                                                   123L,
+                                                                  123L,
                                                                   "firstName",
                                                                   "lastName",
                                                                   singletonList("address"),
@@ -679,7 +679,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   industrialTable,
                                                                   academicTable,
                                                                   summaryTable,
-                                                     false));
+                                                                 false));
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));
