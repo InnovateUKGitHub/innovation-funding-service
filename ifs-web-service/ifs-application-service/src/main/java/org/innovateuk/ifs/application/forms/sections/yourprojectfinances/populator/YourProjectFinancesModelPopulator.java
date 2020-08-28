@@ -57,13 +57,21 @@ public class YourProjectFinancesModelPopulator {
                 .stream()
                 .filter(subSection -> !isSectionExcluded(subSection, competition, organisation))
                 .map(subSection ->
-                        new YourFinancesRowViewModel(subSection.getName(),
+                        new YourFinancesRowViewModel(sectionName(competition, application, organisation, subSection),
                                 applicationUrlHelper.getSectionUrl(subSection.getType(), subSection.getId(), applicationId, organisationId, application.getCompetition()).get(),
                                 completedSections.contains(subSection.getId()))
                 ).collect(toList());
         return new YourProjectFinancesViewModel(applicationId, application.getName(), competition,
                 applicationFinanceResource,
                 rows);
+    }
+
+    private String sectionName(CompetitionResource competition, ApplicationResource application, OrganisationResource organisation, SectionResource subSection) {
+
+        if ("Your funding".equals(subSection.getName()) && competition.isKtp() && (application.getLeadOrganisationId() != organisation.getId())) {
+            return "Other funding";
+        }
+        return subSection.getName();
     }
 
     private boolean isSectionExcluded(SectionResource section, CompetitionResource competition, OrganisationResource organisation) {
