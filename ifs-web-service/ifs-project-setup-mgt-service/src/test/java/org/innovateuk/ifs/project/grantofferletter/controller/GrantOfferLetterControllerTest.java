@@ -666,8 +666,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                              BigDecimal.ZERO);
 
         when(populator.populate(projectId))
-                .thenReturn(new GrantOfferLetterTemplateViewModel(1L,
-                                                                  123L,
+                .thenReturn(new GrantOfferLetterTemplateViewModel(123L,
                                                                   "firstName",
                                                                   "lastName",
                                                                   singletonList("address"),

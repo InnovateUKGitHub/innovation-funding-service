@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class GrantOfferLetterTemplateViewModel {
 
-    private final long competitionId;
     private final long applicationId;
     private final String projectManagerFirstName;
     private final String projectManagerLastName;
@@ -25,8 +24,7 @@ public class GrantOfferLetterTemplateViewModel {
     private final SummaryFinanceTableModel summaryFinanceTable;
     private final boolean isProcurement;
 
-    public GrantOfferLetterTemplateViewModel(long competitionId,
-                                             long applicationId,
+    public GrantOfferLetterTemplateViewModel(long applicationId,
                                              String projectManagerFirstName,
                                              String projectManagerLastName,
                                              List<String> projectAddress,
@@ -39,7 +37,6 @@ public class GrantOfferLetterTemplateViewModel {
                                              AcademicFinanceTableModel academicFinanceTable,
                                              SummaryFinanceTableModel summaryFinanceTable,
                                              boolean isProcurement) {
-        this.competitionId = competitionId;
         this.applicationId = applicationId;
         this.projectManagerFirstName = projectManagerFirstName;
         this.projectManagerLastName = projectManagerLastName;
@@ -53,10 +50,6 @@ public class GrantOfferLetterTemplateViewModel {
         this.academicFinanceTable = academicFinanceTable;
         this.summaryFinanceTable = summaryFinanceTable;
         this.isProcurement = isProcurement;
-    }
-
-    public long getCompetitionId() {
-        return competitionId;
     }
 
     public long getApplicationId() {

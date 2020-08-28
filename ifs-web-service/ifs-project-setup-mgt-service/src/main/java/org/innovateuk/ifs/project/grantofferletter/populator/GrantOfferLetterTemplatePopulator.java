@@ -99,8 +99,7 @@ public class GrantOfferLetterTemplatePopulator {
         AcademicFinanceTableModel academicFinanceTableModel = academicFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
         SummaryFinanceTableModel summaryFinanceTableModel = summaryFinanceTableModelPopulator.createTable(financesForOrgs, competitionResource);
 
-        return new GrantOfferLetterTemplateViewModel(competitionResource.getId(),
-                                                     applicationId,
+        return new GrantOfferLetterTemplateViewModel(applicationId,
                                                      projectManagerFirstName,
                                                      projectManagerLastName,
                                                      getAddressLines(projectResource),
