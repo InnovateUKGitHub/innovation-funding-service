@@ -681,3 +681,7 @@ Existing user starts a new application
 the user clicks the application tile if displayed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-APPLICANT
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-APPLICANT
+
+the user clicks the project setup tile if displayed
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  id = dashboard-link-MONITORING_OFFICER
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  id = dashboard-link-MONITORING_OFFICER
