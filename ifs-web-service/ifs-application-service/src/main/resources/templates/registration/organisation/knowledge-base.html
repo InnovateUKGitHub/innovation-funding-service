@@ -41,7 +41,7 @@
                         <span class="govuk-error-message" th:each="err : ${#fields.errors('*{knowledgeBase}')}"
                               th:text="${err}"></span>
                     </th:block>
-                    <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+                    <div class="govuk-grid-column-one-half govuk-!-padding-left-0 govuk-!-padding-right-0">
                         <select class="govuk-select"
                                 id="knowledgeBase"
                                 th:field="*{knowledgeBase}"
@@ -54,7 +54,7 @@
                                     th:text="${knowledgeBase}"></option>
                         </select>
                     </div>
-                    <div class="govuk-grid-column-one-half">
+                    <div class="govuk-grid-column-one-half govuk-!-padding-left-1">
                         <button type="submit"
                                 class="govuk-button">Confirm
                         </button>
@@ -63,7 +63,7 @@
             </form>
         </div>
 
-        <h2 class="govuk-heading-m">Unable to find your organisation</h2>
+        <h2 class="govuk-heading-s">Unable to find your organisation</h2>
         <p class="govuk-body">If you are unable to find your organisation in the list above, please try
             <a href="https://www.officeforstudents.org.uk/advice-and-guidance/the-register/the-ofs-register/">checking
                 your organisation's alternative name</a>.</p>

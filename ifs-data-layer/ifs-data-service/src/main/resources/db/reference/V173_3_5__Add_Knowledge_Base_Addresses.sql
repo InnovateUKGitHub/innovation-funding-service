@@ -1226,7 +1226,7 @@ INSERT INTO address (address_line1, address_line2, address_line3, town, postcode
 SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'HVMC Catapult - NCC');
 UPDATE knowledge_base SET address_id = LAST_INSERT_ID() WHERE (id = @knowledge_base_id);
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('International Manufacturing Centre', 'University of Warwick', '', 'Coventry', 'CV4 7AL', '', 'United Kingdom');
-SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'HVMC Catapult - WMG)');
+SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'HVMC Catapult - WMG');
 UPDATE knowledge_base SET address_id = LAST_INSERT_ID() WHERE (id = @knowledge_base_id);
 INSERT INTO address (address_line1, address_line2, address_line3, town, postcode, county, country) VALUES ('Peter Jost Building', 'Liverpool John Moores University', 'Byrom Street', 'Liverpool', 'L3 3AF', '', 'United Kingdom');
 SET @knowledge_base_id = (SELECT id FROM knowledge_base WHERE name = 'HVMC Catapult - MTC (Liverpool)');
