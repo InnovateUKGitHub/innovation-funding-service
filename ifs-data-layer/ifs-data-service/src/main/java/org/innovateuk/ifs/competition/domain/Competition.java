@@ -29,6 +29,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.resource.CompetitionResource.H2020_TYPE_NAME;
@@ -177,7 +178,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     private List<CompetitionFinanceRowTypes> competitionFinanceRowTypes = new ArrayList<>();
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("priority")
     private List<ProjectStages> projectStages = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -269,7 +269,9 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public List<ProjectStages> getProjectStages() {
-        return projectStages;
+        return projectStages.stream()
+                .sorted(comparing(stage -> stage.getProjectSetupStage().getPriority()))
+                .collect(toList());
     }
 
     public void setProjectStages(List<ProjectStages> projectStages) {
