@@ -316,6 +316,7 @@ the user accepts invitation
     the user selects his organisation in Companies House  Nomensa  NOMENSA LTD
 
 the user still sees pending user
-    the user clicks the button/link    link = Invite robot test application
-    the user clicks the button/link    link = Application team
-    the user should see the element    jQuery = td:contains("Adrian Booth (pending for")
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = Invite robot test application
+    the user clicks the button/link                       link = Application team
+    the user should see the element                       jQuery = td:contains("Adrian Booth (pending for")

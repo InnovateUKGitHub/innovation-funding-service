@@ -221,18 +221,19 @@ Custom Suite teardown
     Disconnect from database
 
 the applicant adds contributor to Application Team
-    the user clicks the button/link  link = Application team
-    then the user clicks the button/link  jQuery = button:contains("Add person to Empire Ltd")
-    the user invites a person to the same organisation   Collaborator  collaborator@example.com
+    the user clicks the button/link                        link = Application team
+    the user clicks the button/link                        jQuery = button:contains("Add person to Empire Ltd")
+    the user invites a person to the same organisation     Collaborator  collaborator@example.com
     logout as user
-    When the user reads his email and clicks the link      collaborator@example.com    Invitation to contribute in ${COVIDcompetitionTitle}     You will be joining as part of the organisation    2
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
-    And the invited user fills the create account form     Collaborator  Axe
-    And the user reads his email and clicks the link       collaborator@example.com    Please verify your email address    Once verified you can sign into your account
-    the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
-    Logging in and Error Checking           &{lead_applicant_credentials}
-    then the user clicks the button/link    link = ${COVIDapplicationTitle1}
+    the user reads his email and clicks the link           collaborator@example.com    Invitation to contribute in ${COVIDcompetitionTitle}     You will be joining as part of the organisation    2
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Confirm and continue")
+    the invited user fills the create account form         Collaborator  Axe
+    the user reads his email and clicks the link           collaborator@example.com    Please verify your email address    Once verified you can sign into your account
+    the user clicks the button/link                        jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    Logging in and Error Checking                          &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                        link = ${COVIDapplicationTitle1}
     the applicant completes Application Team
 
 the user fills in bank details
