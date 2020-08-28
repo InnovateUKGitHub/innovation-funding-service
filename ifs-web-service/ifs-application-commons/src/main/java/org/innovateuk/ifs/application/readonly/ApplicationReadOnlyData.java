@@ -75,6 +75,8 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .map(v -> v.getAveragePercentage())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        if (assessmentToApplicationAssessment.size() == 0) return BigDecimal.ZERO;
+
         BigDecimal average = totalAssessmentScore.divide(BigDecimal.valueOf(assessmentToApplicationAssessment.size()), 1, BigDecimal.ROUND_HALF_UP);
 
         return average;
