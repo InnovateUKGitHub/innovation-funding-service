@@ -1,7 +1,12 @@
 package org.innovateuk.ifs.application.forms.questions.team.viewmodel;
 
 import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.resource.ApplicationKtaInviteResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
@@ -16,6 +21,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
     private final boolean collaborationLevelSingle;
     private final boolean open;
     private final boolean complete;
+    private final boolean ktpCompetition;
+    private final ApplicationKtaInviteResource ktaInvite;
+    private final ProcessRoleResource ktaProcessRole;
 
     public ApplicationTeamViewModel(long applicationId,
                                     String applicationName,
@@ -26,7 +34,11 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                                     boolean leadApplicant,
                                     boolean collaborationLevelSingle,
                                     boolean open,
-                                    boolean complete) {
+                                    boolean complete,
+                                    boolean ktpCompetition,
+                                    ApplicationKtaInviteResource ktaInvite,
+                                    ProcessRoleResource ktaProcessRole
+                                    ) {
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.applicationName = applicationName;
@@ -37,6 +49,9 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         this.collaborationLevelSingle = collaborationLevelSingle;
         this.open = open;
         this.complete = complete;
+        this.ktpCompetition = ktpCompetition;
+        this.ktaInvite = ktaInvite;
+        this.ktaProcessRole = ktaProcessRole;
     }
 
     @Override
@@ -81,6 +96,10 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
         return collaborationLevelSingle;
     }
 
+    public ApplicationKtaInviteResource getKtaInvite() {
+        return ktaInvite;
+    }
+
     public ApplicationTeamViewModel openAddTeamMemberForm(long organisationId) {
         organisations.stream()
                 .filter(partner -> partner.getId() == organisationId)
@@ -98,4 +117,49 @@ public class ApplicationTeamViewModel implements BaseAnalyticsViewModel {
                 .flatMap(org -> org.getRows().stream())
                 .anyMatch(ApplicationTeamRowViewModel::isInvite);
     }
+
+    public boolean isKtpCompetition() {
+        return ktpCompetition;
+    }
+
+    public Long getKtaInvitePendingDays() {
+        if (ktaInvite == null || InviteStatus.SENT != ktaInvite.getStatus()) {
+            return null;
+        }
+
+        return Duration.between(ktaInvite.getSentOn().toInstant(), Instant.now()).toDays();
+    }
+
+    public boolean hasAssignedKta() {
+        return ktaProcessRole != null || (ktaInvite != null && ktaInvite.getStatus() == InviteStatus.OPENED);
+    }
+
+    public boolean hasPendingKta() {
+        return ktaProcessRole == null && (ktaInvite != null && ktaInvite.getStatus() != InviteStatus.OPENED);
+    }
+
+    public boolean hasNoKta() {
+        return ktaProcessRole == null && ktaInvite == null;
+    }
+
+    public String getKtaEmail() {
+        if (ktaProcessRole != null) {
+            return ktaProcessRole.getUserEmail();
+        }
+        if (ktaInvite != null) {
+            return ktaInvite.getEmail();
+        }
+        return null;
+    }
+
+    public String getKtaName() {
+        if (ktaProcessRole != null) {
+            return ktaProcessRole.getUserName();
+        }
+        if (ktaInvite != null) {
+            return ktaInvite.getName();
+        }
+        return null;
+    }
+
 }
