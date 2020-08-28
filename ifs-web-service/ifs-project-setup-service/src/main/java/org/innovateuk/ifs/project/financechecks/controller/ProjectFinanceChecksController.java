@@ -381,7 +381,8 @@ public class ProjectFinanceChecksController {
                 FinanceChecksQueryConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
                 PROJECT_FINANCE_CHECKS_BASE_URL, competition.applicantShouldUseJesFinances(organisationResource.getOrganisationTypeEnum()),
-                competition.isLoan());
+                competition.isLoan(),
+                competition.isProcurement());
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {

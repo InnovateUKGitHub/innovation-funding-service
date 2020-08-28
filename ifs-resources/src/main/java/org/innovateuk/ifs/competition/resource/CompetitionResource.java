@@ -36,6 +36,7 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
     private static final int CLOSING_SOON_AMOUNT = 3;
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy");
 
+
     private Long id;
     private List<Long> milestones = new ArrayList<>();
     private List<CompetitionFunderResource> funders = new ArrayList<>();
@@ -984,6 +985,12 @@ public class CompetitionResource implements ApplicationConfiguration, ProjectCon
                 covidType == CovidType.DE_MINIMIS ||
                         covidType == CovidType.DE_MINIMIS_ROUND_2
                 );
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isSbriPilot() {
+        return SBRI_PILOT.equals(name);
     }
 
 }
