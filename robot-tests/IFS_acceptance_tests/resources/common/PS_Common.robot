@@ -776,3 +776,21 @@ Internal user assigns MO to application
     the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all
     Search for MO                                     ${MO_name}  ${MO_fullname}
     The internal user assign project to MO            ${applicationID}  ${applicationTitle}
+
+confirm viability
+    [Arguments]  ${viability}
+    the user clicks the button/link                         css = .viability-${viability}
+    the user selects the checkbox                           project-viable
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         id = confirm-button      #Page confirmation button
+    the user clicks the button/link                         name = confirm-viability   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks
+
+confirm eligibility
+    [Arguments]  ${eligibility}
+    the user clicks the button/link                         css = .eligibility-${eligibility}
+    the user selects the checkbox                           project-eligible
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         css = #confirm-button        #Page confirmation button
+    the user clicks the button/link                         name = confirm-eligibility   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks
