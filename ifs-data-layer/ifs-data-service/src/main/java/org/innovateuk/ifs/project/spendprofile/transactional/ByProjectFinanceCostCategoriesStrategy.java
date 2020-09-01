@@ -8,6 +8,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.CostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.SbriPilotCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -53,7 +54,6 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     private ProjectFinanceService projectFinanceService;
 
     public final static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
-
     @Override
     public ServiceResult<CostCategoryType> getOrCreateCostCategoryTypeForSpendProfile(Long projectId, Long organisationId) {
         return find(project(projectId), organisation(organisationId)).
@@ -62,7 +62,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                                 andOnSuccess((finances) -> {
                                     CompetitionResource competition = competitionService.getCompetitionById(project.getCompetition()).getSuccess();
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
+                                    if (competition.isSbriPilot()) {
+                                        costCategoryGenerators = sort(allOf(SbriPilotCostCategoryGenerator.class));
+                                    } else if (!competition.applicantShouldUseJesFinances(organisation.getOrganisationTypeEnum())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());
                                     } else {
