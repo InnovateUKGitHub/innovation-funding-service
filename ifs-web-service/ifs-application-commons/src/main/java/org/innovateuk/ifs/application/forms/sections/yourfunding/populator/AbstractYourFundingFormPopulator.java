@@ -29,7 +29,7 @@ public abstract class AbstractYourFundingFormPopulator {
     private void populateOtherFunding(AbstractYourFundingForm form, BaseFinanceResource finance, CompetitionResource competitionResource) {
         BaseOtherFundingCostCategory otherFundingCategory;
         Map<String, BaseOtherFundingRowForm> rows;
-        if (competitionResource.isKtp()) {
+        if (competitionResource.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING)) {
             otherFundingCategory = (PreviousFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.PREVIOUS_FUNDING);
             rows = otherFundingCategory.getCosts().stream().map(cost -> {
                 PreviousFunding previousFunding = (PreviousFunding) cost;

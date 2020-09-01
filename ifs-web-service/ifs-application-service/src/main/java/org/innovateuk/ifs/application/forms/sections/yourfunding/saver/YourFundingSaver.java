@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
@@ -42,17 +43,18 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+
     @Override
     protected FinanceRowRestService getFinanceRowService() {
         return financeRowRestService;
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm<? extends BaseOtherFundingRowForm> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm<? extends BaseOtherFundingRowForm> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
@@ -70,46 +72,26 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                 grantClaim.setAmount(new BigDecimal(value));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("otherFunding")) {
-                BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
+                CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
+                FinanceRowType type = competition.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING) ? FinanceRowType.PREVIOUS_FUNDING : FinanceRowType.OTHER_FUNDING;
+                BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(type);
                 BaseOtherFunding otherFunding = otherFundingCategory.getOtherFunding();
                 otherFunding.setOtherPublicFunding(Boolean.parseBoolean(value) ? "Yes" : "No");
                 getFinanceRowService().update(otherFunding).getSuccess();
             } else if (field.startsWith("otherFundingRows")) {
                 String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
                 String rowField = field.substring(field.indexOf("].") + 2);
-                OtherFunding cost;
+                BaseOtherFunding cost;
 
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
-                    cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();
+                    CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
+                    if (competition.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING)) {
+                        cost = (PreviousFunding) getFinanceRowService().create(new PreviousFunding(finance.getId())).getSuccess();
+                    } else {
+                        cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();
+                    }
                 } else {
-                    cost = (OtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
-                }
-
-                switch (rowField) {
-                    case "source":
-                        cost.setFundingSource(value);
-                        break;
-                    case "date":
-                        cost.setSecuredDate(value);
-                        break;
-                    case "fundingAmount":
-                        cost.setFundingAmount(new BigDecimal(value));
-                        break;
-                    default:
-                        throw new IFSRuntimeException(String.format("Auto save other funding field not handled %s", rowField), Collections.emptyList());
-                }
-                getFinanceRowService().update(cost);
-                return Optional.of(cost.getId());
-//                tidy up diplication
-            } else if (field.startsWith("previousFundingRows")) {
-                String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
-                String rowField = field.substring(field.indexOf("].") + 2);
-                PreviousFunding cost;
-
-                if (id.startsWith(UNSAVED_ROW_PREFIX)) {
-                    cost = (PreviousFunding) getFinanceRowService().create(new PreviousFunding(finance.getId())).getSuccess();
-                } else {
-                    cost = (PreviousFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
+                    cost = (BaseOtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
                 }
 
                 switch (rowField) {

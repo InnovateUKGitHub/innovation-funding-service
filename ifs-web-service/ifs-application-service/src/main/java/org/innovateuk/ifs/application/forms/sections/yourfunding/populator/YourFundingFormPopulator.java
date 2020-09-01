@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.populator;
 
 import org.innovateuk.ifs.application.forms.sections.yourfunding.form.AbstractYourFundingForm;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -17,14 +15,10 @@ public class YourFundingFormPopulator extends AbstractYourFundingFormPopulator {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    private ApplicationRestService applicationRestService;
-
-    @Autowired
     private CompetitionRestService competitionRestService;
 
     public AbstractYourFundingForm populateForm(long applicationId, long organisationId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competitionResource = competitionRestService.getCompetitionById(applicationResource.getCompetition()).getSuccess();
+        CompetitionResource competitionResource = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.populateForm(finance, competitionResource);
     }

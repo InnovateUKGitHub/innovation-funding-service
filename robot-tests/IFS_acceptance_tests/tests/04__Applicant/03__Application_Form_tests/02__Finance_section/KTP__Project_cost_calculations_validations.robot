@@ -180,7 +180,7 @@ the user should see the read only view of KTP
 
 the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")
-    the user should see the element       jQuery = td:contains("Associate development costs") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Associate development") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Travel and subsistence") ~ td:contains("2,000")
     the user should see the element       jQuery = td:contains("Consumables") ~ td:contains("2,000")
     the user should see the element       jQuery = td:contains("Knowledge base supervisor") ~ td:contains("123")

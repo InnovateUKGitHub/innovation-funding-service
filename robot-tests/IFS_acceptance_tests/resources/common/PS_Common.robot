@@ -594,10 +594,13 @@ internal user approve uploaded documents
     the user should see the element        jQuery = p:contains("You have approved this document.")
 
 the user enter the Correspondence address
-    the user enters text to a text field                id = addressForm.postcodeInput  BS1 4NT
-    the user clicks the button/link                     id = postcode-lookup
-    the user selects the index from the drop-down menu  1  id=addressForm.selectedPostcodeIndex
-    the user clicks the button/link                     jQuery = .govuk-button:contains("Save address")
+    the user looks for address using postcode
+    the user clicks the button/link               jQuery = .govuk-button:contains("Save address")
+
+the user looks for address using postcode
+    the user enters text to a text field                   id = addressForm.postcodeInput  BS1 4NT
+    the user clicks the button/link                        id = postcode-lookup
+    the user selects the index from the drop-down menu     1  id=addressForm.selectedPostcodeIndex
 
 the user uploads to the collaboration agreement/exploitation plan
     [Arguments]   ${file_name}
@@ -773,3 +776,21 @@ Internal user assigns MO to application
     the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all
     Search for MO                                     ${MO_name}  ${MO_fullname}
     The internal user assign project to MO            ${applicationID}  ${applicationTitle}
+
+confirm viability
+    [Arguments]  ${viability}
+    the user clicks the button/link                         css = .viability-${viability}
+    the user selects the checkbox                           project-viable
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         id = confirm-button      #Page confirmation button
+    the user clicks the button/link                         name = confirm-viability   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks
+
+confirm eligibility
+    [Arguments]  ${eligibility}
+    the user clicks the button/link                         css = .eligibility-${eligibility}
+    the user selects the checkbox                           project-eligible
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         css = #confirm-button        #Page confirmation button
+    the user clicks the button/link                         name = confirm-eligibility   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks

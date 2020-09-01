@@ -5,7 +5,8 @@ import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.*;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.GRANT;
+import static org.innovateuk.ifs.competition.publiccontent.resource.FundingType.LOAN;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESEARCH;
 
@@ -14,6 +15,8 @@ import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.RESE
  * of an application form.
  */
 public interface ApplicationConfiguration {
+
+    String SBRI_PILOT = "The Sustainable Innovation Fund: SBRI phase 1";
 
     boolean isFullyFunded();
 
@@ -26,6 +29,8 @@ public interface ApplicationConfiguration {
     Boolean getIncludeJesForm();
 
     Boolean getIncludeYourOrganisationSection();
+
+    boolean isSbriPilot();
 
     default boolean isMaximumFundingLevelConstant(Supplier<OrganisationTypeEnum> organisationType, Supplier<Boolean> maximumFundingLevelOverridden) {
         return LOAN == getFundingType() ||
@@ -43,9 +48,9 @@ public interface ApplicationConfiguration {
     }
 
     default boolean applicantShouldSeeYourOrganisationSection(OrganisationTypeEnum organisationType) {
-        return !isKtp() && (RESEARCH != organisationType ||
+        return RESEARCH != organisationType ||
                 Boolean.TRUE.equals(getIncludeYourOrganisationSection())
-                && getFundingType() == GRANT);
+                && getFundingType() == GRANT;
     }
 
     default boolean applicantNotRequiredForViabilityChecks(OrganisationTypeEnum organisationType) {

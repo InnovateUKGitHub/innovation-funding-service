@@ -766,28 +766,25 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     @Override
-    public boolean isKtp() {
-        return ofNullable(fundingType)
-                .map(type -> FundingType.KTP.equals(type))
-                .orElse(false);
-    }
-
-    @Override
     public boolean isFullyFunded() {
         // Competitions which always have 100% funding level
         return isH2020() || isProcurement();
     }
 
     public boolean isLoan() {
-        return FundingType.LOAN.equals(fundingType);
+        return FundingType.LOAN == fundingType;
     }
 
     public boolean isGrant() {
-        return FundingType.GRANT.equals(fundingType);
+        return FundingType.GRANT == fundingType;
     }
 
     public boolean isProcurement() {
-        return FundingType.PROCUREMENT.equals(fundingType);
+        return FundingType.PROCUREMENT == fundingType;
+    }
+
+    public boolean isKtp() {
+        return FundingType.KTP == fundingType;
     }
 
     public void releaseFeedback(ZonedDateTime date) {
@@ -1006,6 +1003,11 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @Override
     public boolean isExpressionOfInterest() {
         return competitionType.isExpressionOfInterest();
+    }
+
+    @Override
+    public boolean isSbriPilot() {
+        return SBRI_PILOT.equals(name);
     }
 
     @Override
