@@ -103,7 +103,7 @@ public class AcademicCostsController {
             validationHandler.addAnyErrors(saver.save(form, applicationId, organisationId));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()),
+                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()).getSuccess(),
                         mappingErrorKeyToField("validation.application.jes.upload.required", "jesFile"), defaultConverters());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });

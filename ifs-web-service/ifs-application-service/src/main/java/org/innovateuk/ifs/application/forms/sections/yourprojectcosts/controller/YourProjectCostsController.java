@@ -115,7 +115,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
             validationHandler.addAnyErrors(saver.save(form, applicationId, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {
                 validationHandler.addAnyErrors(
-                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()));
+                        sectionStatusRestService.markAsComplete(sectionId, applicationId, getProcessRole(applicationId, user.getId()).getId()).getSuccess());
                 return validationHandler.failNowOrSucceedWith(failureView, successView);
             });
         });

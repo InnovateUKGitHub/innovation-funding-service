@@ -77,7 +77,7 @@ public class FinanceSummaryTableViewModelPopulator {
         List<OrganisationResource> organisations;
         boolean includeOrganisationNames;
         //We have to call this endpoint to initialise finances. Maybe the getApplicationFinances(long applicationId) should initialise finances also.
-        List<ApplicationFinanceResource> finances = newArrayList(applicationFinanceRestService.getApplicationFinance(application.getId(), organisation.getId()).getSuccess());
+        List<ApplicationFinanceResource> finances = newArrayList(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId()).getSuccess());
         if (competition.isKtp()) {
             organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
             finances = applicationFinanceRestService.getApplicationFinances(application.getId()).getSuccess();
