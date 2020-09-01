@@ -15,6 +15,8 @@ public class FinanceSummaryTableRow {
     private final BigDecimal contribution;
 
     private final boolean complete;
+    private final boolean showViewFinancesLink;
+    private final String url;
 
     public FinanceSummaryTableRow(Long organisationId,
                                   String organisationName,
@@ -24,7 +26,9 @@ public class FinanceSummaryTableRow {
                                   BigDecimal fundingSought,
                                   BigDecimal otherFunding,
                                   BigDecimal contribution,
-                                  boolean complete) {
+                                  boolean complete,
+                                  boolean showViewFinancesLink,
+                                  String url) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.status = status;
@@ -34,6 +38,8 @@ public class FinanceSummaryTableRow {
         this.otherFunding = otherFunding;
         this.contribution = contribution;
         this.complete = complete;
+        this.showViewFinancesLink = showViewFinancesLink;
+        this.url = url;
     }
 
     public Long getOrganisationId() {
@@ -72,6 +78,14 @@ public class FinanceSummaryTableRow {
         return complete;
     }
 
+    public boolean isShowViewFinancesLink() {
+        return showViewFinancesLink;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
     /* view logic */
     public boolean isPendingOrganisation() {
         return organisationId == null;
@@ -87,7 +101,9 @@ public class FinanceSummaryTableRow {
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                false
+                false,
+                false,
+                null
         );
     }
 }

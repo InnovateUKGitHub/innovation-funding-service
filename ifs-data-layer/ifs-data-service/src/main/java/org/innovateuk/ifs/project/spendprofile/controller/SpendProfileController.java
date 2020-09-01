@@ -21,18 +21,6 @@ public class SpendProfileController {
         return spendProfileService.generateSpendProfile(projectId).toPostCreateResponse();
     }
 
-    /**
-     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
-     * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
-     * Eligibility is approved, if the Spend Profile is already generated or if the Spend Profile process is in a valid state.
-     */
-    @PostMapping("/partner-organisation/{organisationId}/user/{userId}/spend-profile/generate")
-    public RestResult<Void> generateSpendProfileForPartnerOrganisation(@PathVariable("projectId") final Long projectId,
-                                                                       @PathVariable("organisationId") final Long organisationId,
-                                                                       @PathVariable("userId") final Long userId) {
-        return spendProfileService.generateSpendProfileForPartnerOrganisation(projectId, organisationId, userId).toPostCreateResponse();
-    }
-
     @PostMapping("/spend-profile/approval/{approvalType}")
     public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
                                                         @PathVariable("approvalType") final ApprovalType approvalType) {
