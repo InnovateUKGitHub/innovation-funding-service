@@ -141,21 +141,21 @@ Enter knowledge base organisation details manually field validations
 
 Existing lead applicant can enter catapult knowledge base organisation details manually
     [Documentation]  IFS-7807
-    Given the user enters kb organisation details manually           KB Catapult Org   6   RGCATAPULT123   catapultNumber
+    Given the user enters kb organisation details manually           KB Catapult Org   radio-rto   RTO   RGCATAPULT123   catapultNumber
     When the user clicks the button/link                             jQuery = button:contains("Save and continue")
     Then the user should see knowledge base organisation details     Knowledge base   Catapult   KB Catapult Org   RGCATAPULT123   Montrose House 1   Registration number
 
 Existing lead applicant can enter RTO knowledge base organisation details manually
     [Documentation]  IFS-7807
     Given the user clicks the button/link                            link = Back to enter details manually
-    When the user enters kb organisation details manually            KB RTO Org   3   RGRTO123   rtoNumber
+    When the user enters kb organisation details manually            KB RTO Org   radio-university   UNIVERSITY   RGRTO123   rtoNumber
     And the user clicks the button/link                              jQuery = button:contains("Save and continue")
     Then the user should see knowledge base organisation details     Knowledge base   Research and technology organisation (RTO)   KB RTO Org   RGRTO123   Montrose House 1   Registration number
 
 Existing lead applicant can enter university knowledge base organisation details manually
     [Documentation]  IFS-7807
     Given the user clicks the button/link                            link = Back to enter details manually
-    When the user enters kb organisation details manually            KB University Org   5   UKPRN123   universityNumber
+    When the user enters kb organisation details manually            KB University Org   radio-catapult   CATAPULT   UKPRN123   universityNumber
     And the user clicks the button/link                              jQuery = button:contains("Save and continue")
     Then the user should see knowledge base organisation details     Knowledge base   University   KB University Org   UKPRN123   Montrose House 1   UKPRN number
 
@@ -634,9 +634,9 @@ the user is able to see validation messages
     the user should see a field and summary error     ${postcodeValidation}
 
 the user enters kb organisation details manually
-    [Arguments]  ${orgName}  ${kbType}  ${orgNumber}  ${regOrUKPRNNumber}
+    [Arguments]  ${orgName}  ${orgType}  ${kbType}  ${orgNumber}  ${regOrUKPRNNumber}
     the user enters text to a text field     id = name   ${orgName}
-    the user selects the radio button        organisationType   ${kbType}
+    the user selects the radio button        ${orgType}   ${kbType}
     the user enters text to a text field     id = ${regOrUKPRNNumber}   ${orgNumber}
     the user looks for address using postcode
 
