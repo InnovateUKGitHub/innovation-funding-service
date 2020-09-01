@@ -105,14 +105,4 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(restResult.isFailure());
         assertEquals(notFoundError(User.class, 1000L), restResult.getErrors().get(0));
     }
-
-    @Test
-    public void getAssessorProfile_wrongRole() throws Exception {
-        loginCompAdmin();
-
-        RestResult<AssessorProfileResource> restResult = controller.getAssessorProfile(1L);
-
-        assertTrue(restResult.isFailure());
-        assertEquals(notFoundError(User.class, 1L), restResult.getErrors().get(0));
-    }
 }
