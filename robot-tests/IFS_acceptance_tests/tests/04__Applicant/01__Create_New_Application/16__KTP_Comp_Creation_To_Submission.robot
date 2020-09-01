@@ -106,7 +106,7 @@ KTP application shows the correct guidance text
     Given the user clicks the button/link                      link = Application overview
     When the user should see the element                       jQuery = h1:contains("Application overview")
     Then the user should see the element                       jQuery = p:contains("This section contains the background information we need for your project.")
-    And the user should not see the element                    jQuery = p:contains("Application overviewThese are the questions which will be marked by the assessors.")
+    And the user should not see the element                    jQuery = p:contains("These are the questions which will be marked by the assessors.")
     
 Existing/new partner can only see business Or non profit organisation types
     [Documentation]  IFS-7841    
