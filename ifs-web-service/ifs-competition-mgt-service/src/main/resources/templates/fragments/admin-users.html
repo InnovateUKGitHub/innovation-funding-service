@@ -2,8 +2,8 @@
     <h2 class="govuk-heading-m">Active</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">38</span>
-        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s">active users</span>
-        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">active external users</span>
+        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'active user' : 'active users'">active users</span>
+        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'active external user' : 'active external users'">active external users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=true)" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
@@ -13,8 +13,8 @@
     <h2 class="govuk-heading-m">Inactive</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
-        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s">inactive users</span>
-        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s">inactive external users</span>
+        <span th:if="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'inactive user' : 'inactive users'">inactive users</span>
+        <span th:unless="${model.includeInternalUsers}" class="govuk-heading-s" th:text="${count == 1} ? 'inactive external user' : 'inactive external users'">inactive external users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: users-table(users=${users},active=false)" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
@@ -24,7 +24,7 @@
     <h2 class="govuk-heading-m">Pending</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
-        <span class="govuk-heading-s">pending internal users</span>
+        <span class="govuk-heading-s" th:text="${count == 1} ? 'pending internal user' : 'pending internal users'">pending internal users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
