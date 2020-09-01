@@ -119,8 +119,8 @@ public enum Role implements Identifiable {
         return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR));
     }
 
-    public static Set<Role> multiDashboardRoles() {
-        return EnumSet.of(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
+    public static List<Role> multiDashboardRoles() {
+        return newArrayList(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
     }
 
     public List<String> getAuthorities() {

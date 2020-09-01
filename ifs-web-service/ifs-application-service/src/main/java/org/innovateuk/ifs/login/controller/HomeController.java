@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingInt;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -118,7 +117,7 @@ public class HomeController {
 
         List<DashboardPanel> dashboardPanels = simpleMap(roles, role -> createDashboardPanelForRole(request, role));
         List<DashboardPanel> orderedPanels = sort(dashboardPanels,
-                comparingInt(panel -> asList(multiDashboardRoles()).indexOf(panel.getRole())));
+                comparingInt(panel -> multiDashboardRoles().indexOf(panel.getRole())));
 
         model.addAttribute("model", new DashboardSelectionViewModel(orderedPanels));
         return "login/multiple-dashboard-choice";

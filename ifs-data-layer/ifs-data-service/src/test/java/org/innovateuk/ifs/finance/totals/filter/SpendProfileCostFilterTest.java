@@ -32,12 +32,13 @@ public class SpendProfileCostFilterTest {
                 .withFinanceRowType(
                         FinanceRowType.LABOUR,
                         FinanceRowType.OVERHEADS,
-                        FinanceRowType.PROCUREMENT_OVERHEADS,
                         FinanceRowType.MATERIALS,
                         FinanceRowType.CAPITAL_USAGE,
                         FinanceRowType.SUBCONTRACTING_COSTS,
                         FinanceRowType.TRAVEL,
                         FinanceRowType.OTHER_COSTS,
+                        FinanceRowType.PROCUREMENT_OVERHEADS,
+                        FinanceRowType.VAT,
                         FinanceRowType.ASSOCIATE_SALARY_COSTS,
                         FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS,
                         FinanceRowType.CONSUMABLES,
@@ -45,7 +46,7 @@ public class SpendProfileCostFilterTest {
                         FinanceRowType.KNOWLEDGE_BASE,
                         FinanceRowType.ESTATE_COSTS
                 )
-                .build(14);
+                .build(15);
 
         assertThat(financeCostTotalResourceResult)
                 .usingRecursiveFieldByFieldElementComparator()

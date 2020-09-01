@@ -5,6 +5,11 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...
 ...               IFS-7315  New completion stage- comp transfers to 'previous'
 ...
+...               IFS-8127  SBRI Type 4: Finance check design improvements
+...
+...               IFS-8126  SBRI Type 4: Project setup VAT
+...
+...               IFS-8048  SBRI Type 4: Spend profile for pilot SBRI competition into project setup
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -20,6 +25,8 @@ ${openSBRICompetitionName}       SBRI type one competition
 ${openSBRICompetitionId}         ${competition_ids["${openSBRICompetitionName}"]}
 &{sbriLeadCredentials}           email=troy.ward@gmail.com     password=${short_password}
 &{sbriPartnerCredentials}        email=eve.smith@gmail.com     password=${short_password}
+${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
+${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}               Procurement application 1
 ${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
 ${yourProjFinanceLink}           your project finances
@@ -135,6 +142,24 @@ Internal users can see SBRI application in previous tab with submitted status
     When the user clicks the button/link      id = accordion-previous-heading-2
     Then the user should see the element      jQuery = td:contains("Submitted")
 
+External user finance overview link is not shown
+    [Documentation]    IFS-8127
+    Given log in as a different user             &{becky_mason_credentials}
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
+    Then the user should not see the element     jQuery = project finance overview
+
+External user finances details are correct
+    [Documentation]    IFS-8127   IFS-8126
+    When the user clicks the button/link                             link = ${yourProjFinanceLink}
+    Then the user should not see the element                         link = ${viewFinanceChangesLink}
+    And the user should not see the element                          css = table-overview
+    And the external user should see the correct VAT information
+
+External user should not see the spend profile section
+    [Documentation]  IFS-8048
+    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}
+    Then the user should not see the element     jQuery = h2:contains("Spend profile")
+
 Internal user finance checks page
     [Documentation]    IFS-8127
     [Setup]  Log in as a different user                                 &{internal_finance_credentials}
@@ -163,22 +188,24 @@ Internal user can set VAT to yes
 
 Internal user viability page
     [Documentation]    IFS-8127
-    Given the user clicks the button/link        link = Finance checks
-    When the user clicks the button/link         css = .viability-0
-    Then the user should not see the element     css = .table-overview
+    Given the user clicks the button/link           link = Finance checks
+    When the user clicks the button/link            css = .viability-0
+    Then the user should not see the element        css = .table-overview
+    [Teardown]  The user clicks the button/link     link = Finance checks
 
-External user finance overview link is not show
-    [Documentation]    IFS-8127
-    Given log in as a different user             &{becky_mason_credentials}
-    When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}/finance-checks
-    Then the user should not see the element     jQuery = project finance overview
+Internal user can generate spend profile
+    [Documentation]   IFS-8048
+    Given confirm viability                   0
+    And confirm eligibility                   0
+    When the user clicks the button/link      css = .generate-spend-profile-main-button
+    And the user clicks the button/link       id = generate-spend-profile-modal-button
+    Then the user should see the element      css = .success-alert
 
-External user finances
-    [Documentation]    IFS-8127   IFS-8126
-    Given the user clicks the button/link                            link = ${yourProjFinanceLink}
-    Then the user should not see the element                         link = ${viewFinanceChangesLink}
-    And the user should not see the element                          css = table-overview
-    And the external user should see the correct VAT information
+Internal user should not see spend profile section
+    [Documentation]  IFS-8048
+    When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should not see the element     jQuery = th:contains("Spend profile")
+    And the data is in the database correctly
 
 *** Keywords ***
 Custom Suite Setup
@@ -288,3 +315,17 @@ the external user should see the correct VAT information
     the user should see the element     jQuery = legend:contains("${vatRegistered}") ~ span:contains("Yes")
     the user should see the element     jQuery = div:contains("${totalVAT}") ~ div:contains("${vatTotal}")
     the user should see the element     jQuery = div:contains("${inclusiveOfVATHeading}") ~ div:contains("${totalWithVAT}")
+
+the data is in the database correctly
+     ${month1Costs} =  get spend profile value     other costs   ${sbriProjectId}  0
+     ${month2Costs} =  get spend profile value     other costs   ${sbriProjectId}  1
+     ${month3Costs} =  get spend profile value     other costs   ${sbriProjectId}  2
+     ${month1VAT} =    get spend profile value     VAT   ${sbriProjectId}  0
+     ${month2VAT} =    get spend profile value     VAT   ${sbriProjectId}  1
+     ${month3VAT} =    get spend profile value     VAT   ${sbriProjectId}  2
+     Should Be Equal As Integers   ${month1Costs}   55228
+     Should Be Equal As Integers   ${month2Costs}   0
+     Should Be Equal As Integers   ${month3Costs}   165675
+     Should Be Equal As Integers   ${month1VAT}     11046
+     Should Be Equal As Integers   ${month2VAT}     0
+     Should Be Equal As Integers   ${month3VAT}     33135
