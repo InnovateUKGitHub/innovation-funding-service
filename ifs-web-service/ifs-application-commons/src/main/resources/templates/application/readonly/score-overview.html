@@ -4,22 +4,22 @@
 <th:block th:fragment="generic(question, assessmentId)">
     <th:block th:unless="${question.hasScope()}">
         <th:block th:if="${question.hasScore()}">
-            <span th:unless="${assessmentId}" class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
-            <span th:if="${assessmentId}" class="section-status govuk-hint govuk-!-margin-0 float-right" th:text="|Score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
+            <span th:unless="${assessmentId}" class="section-status govuk-hint float-right" th:text="|Average score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
+            <span th:if="${assessmentId}" class="section-status govuk-hint float-right" th:text="|Score ${question.getAverageScore()} / ${question.getAssessorMaximumScore()}|">No feedback provided</span>
         </th:block>
 
         <th:block th:if="${!question.hasScore()}">
-            <span class="section-status govuk-hint govuk-!-margin-0 float-right">No feedback provided</span>
+            <span class="section-status govuk-hint float-right">No feedback provided</span>
         </th:block>
     </th:block>
 
     <th:block th:if="${question.hasScope()}">
         <th:block th:if="${question.totalScope == 0}">
-            <span class="section-status govuk-body govuk-!-margin-0 float-right" th:if="${question.totalScope != 0}">
+            <span class="section-status govuk-body float-right" th:if="${question.totalScope != 0}">
                 In scope 0/<span th:text="${question.totalScope}">5</span>
             </span>
         </th:block>
-        <span class="section-status govuk-body govuk-!-margin-0 float-right" th:if="${question.totalScope != 0}">
+        <span class="section-status govuk-body float-right" th:if="${question.totalScope != 0}">
                 In scope <span th:text="${question.inScope}">4</span>/<span th:text="${question.totalScope}">5</span>
         </span>
     </th:block>
