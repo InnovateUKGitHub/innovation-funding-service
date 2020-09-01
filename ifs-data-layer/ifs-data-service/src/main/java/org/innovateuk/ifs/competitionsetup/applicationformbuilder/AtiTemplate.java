@@ -8,10 +8,14 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aDefaultAssessedQuestion;
 
 @Component
-public class GenericTemplate implements CompetitionTemplate {
+public class AtiTemplate implements CompetitionTemplate {
+
+    @Override
+    public CompetitionTypeEnum type() {
+        return CompetitionTypeEnum.AEROSPACE_TECHNOLOGY_INSTITUTE;
+    }
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         //todo remove dependency on template comp.
@@ -22,11 +26,6 @@ public class GenericTemplate implements CompetitionTemplate {
 //        competition.setMaxProjectDuration(template.getMaxProjectDuration());
 //        competition.setApplicationFinanceType(template.getApplicationFinanceType());
         return competition;
-    }
-
-    @Override
-    public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.GENERIC;
     }
 
     @Override
@@ -43,15 +42,13 @@ public class GenericTemplate implements CompetitionTemplate {
                                 scope()
                         )),
                 applicationQuestions()
-                        .withQuestions(newArrayList(
-                            aDefaultAssessedQuestion()
-                                .withFormInputs(
-                                    defaultAssessedQuestionFormInputs()
-                                )
-                        )),
+                        .withQuestions(atiDefaultQuestions()),
                 finances(),
                 termsAndConditions()
         );
+    }
 
+    private static List<QuestionBuilder> atiDefaultQuestions() {
+        return ApcTemplate.apcDefaultQuestions();
     }
 }

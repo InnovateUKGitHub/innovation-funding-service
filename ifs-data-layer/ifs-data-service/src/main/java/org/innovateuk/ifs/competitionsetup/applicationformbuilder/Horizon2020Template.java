@@ -8,10 +8,10 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aDefaultAssessedQuestion;
 
 @Component
-public class GenericTemplate implements CompetitionTemplate {
+public class Horizon2020Template implements CompetitionTemplate {
+
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         //todo remove dependency on template comp.
@@ -24,9 +24,10 @@ public class GenericTemplate implements CompetitionTemplate {
         return competition;
     }
 
+
     @Override
     public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.GENERIC;
+        return CompetitionTypeEnum.HORIZON_2020;
     }
 
     @Override
@@ -42,16 +43,9 @@ public class GenericTemplate implements CompetitionTemplate {
                                 publicDescription(),
                                 scope()
                         )),
-                applicationQuestions()
-                        .withQuestions(newArrayList(
-                            aDefaultAssessedQuestion()
-                                .withFormInputs(
-                                    defaultAssessedQuestionFormInputs()
-                                )
-                        )),
                 finances(),
                 termsAndConditions()
         );
-
     }
+
 }

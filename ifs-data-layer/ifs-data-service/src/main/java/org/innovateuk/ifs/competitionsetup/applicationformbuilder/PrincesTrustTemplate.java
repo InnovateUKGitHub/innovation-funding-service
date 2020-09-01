@@ -8,10 +8,15 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aDefaultAssessedQuestion;
 
 @Component
-public class GenericTemplate implements CompetitionTemplate {
+public class PrincesTrustTemplate implements CompetitionTemplate {
+
+    @Override
+    public CompetitionTypeEnum type() {
+        return CompetitionTypeEnum.THE_PRINCES_TRUST;
+    }
+
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         //todo remove dependency on template comp.
@@ -25,11 +30,6 @@ public class GenericTemplate implements CompetitionTemplate {
     }
 
     @Override
-    public CompetitionTypeEnum type() {
-        return CompetitionTypeEnum.GENERIC;
-    }
-
-    @Override
     public List<SectionBuilder> sections() {
         return newArrayList(
                 projectDetails()
@@ -37,21 +37,16 @@ public class GenericTemplate implements CompetitionTemplate {
                                 applicationTeam(),
                                 applicationDetails(),
                                 researchCategory(),
-                                equalityDiversityAndInclusion(),
-                                projectSummary(),
-                                publicDescription(),
-                                scope()
+                                equalityDiversityAndInclusion()
                         )),
                 applicationQuestions()
-                        .withQuestions(newArrayList(
-                            aDefaultAssessedQuestion()
-                                .withFormInputs(
-                                    defaultAssessedQuestionFormInputs()
-                                )
-                        )),
-                finances(),
+                        .withQuestions(princesTrustDefaultQuestions()),
                 termsAndConditions()
         );
 
+    }
+
+    private static List<QuestionBuilder> princesTrustDefaultQuestions() {
+        return EoiTemplate.eoiDefaultQuestions();
     }
 }

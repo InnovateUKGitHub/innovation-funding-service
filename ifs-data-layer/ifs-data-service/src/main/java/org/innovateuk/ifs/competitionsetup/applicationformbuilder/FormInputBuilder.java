@@ -46,6 +46,10 @@ public final class FormInputBuilder {
         return this;
     }
 
+    public FormInputType getType() {
+        return type;
+    }
+
     public FormInputBuilder withQuestion(Question question) {
         this.question = question;
         return this;
@@ -84,6 +88,10 @@ public final class FormInputBuilder {
     public FormInputBuilder withScope(FormInputScope scope) {
         this.scope = scope;
         return this;
+    }
+
+    public FormInputScope getScope() {
+        return scope;
     }
 
     public FormInputBuilder withGuidanceRows(List<GuidanceRowBuilder> guidanceRows) {

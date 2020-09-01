@@ -49,6 +49,10 @@ public final class QuestionBuilder {
         return this;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public QuestionBuilder withShortName(String shortName) {
         this.shortName = shortName;
         return this;
@@ -77,6 +81,10 @@ public final class QuestionBuilder {
     public QuestionBuilder withFormInputs(List<FormInputBuilder> formInputs) {
         this.formInputs = formInputs;
         return this;
+    }
+
+    public List<FormInputBuilder> getFormInputs() {
+        return formInputs;
     }
 
     public QuestionBuilder withQuestionNumber(String questionNumber) {

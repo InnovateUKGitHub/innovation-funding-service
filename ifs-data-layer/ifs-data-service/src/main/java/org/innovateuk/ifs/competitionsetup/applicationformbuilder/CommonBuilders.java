@@ -241,7 +241,7 @@ public class CommonBuilders {
                                 .withActive(true)
                                 .withGuidanceTitle("Guidance for assessing scope")
                                 .withGuidanceAnswer("You should still assess this application even if you think that it is not in scope. Your answer should be based upon the following:")
-                                .withWordCount(400)
+                                .withWordCount(100)
                                 .withGuidanceRows(newArrayList(
                                         aGuidanceRow()
                                                 .withSubject("Yes")

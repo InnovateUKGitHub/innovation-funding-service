@@ -151,7 +151,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinTable(name = "grant_claim_maximum_competition",
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
-    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
+        private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;
 
@@ -994,6 +994,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionAssessmentConfig(CompetitionAssessmentConfig competitionAssessmentConfig) {
         this.competitionAssessmentConfig = competitionAssessmentConfig;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return CompetitionTypeEnum.valueOf(getCompetitionType().getName());
     }
 
     @Override

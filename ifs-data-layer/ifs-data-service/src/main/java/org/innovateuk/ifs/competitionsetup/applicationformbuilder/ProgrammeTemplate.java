@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -12,20 +13,27 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonB
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aDefaultAssessedQuestion;
 
-public class ProgrammeTemplate {
+@Component
+public class ProgrammeTemplate implements CompetitionTemplate {
 
-    public static Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
+    @Override
+    public CompetitionTypeEnum type() {
+        return CompetitionTypeEnum.PROGRAMME;
+    }
+
+    @Override
+    public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         //todo remove dependency on template comp.
-        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
-        competition.setTermsAndConditions(template.getTermsAndConditions());
-        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-        competition.setMinProjectDuration(template.getMinProjectDuration());
-        competition.setMaxProjectDuration(template.getMaxProjectDuration());
-        competition.setApplicationFinanceType(template.getApplicationFinanceType());
+//        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
+//        competition.setTermsAndConditions(template.getTermsAndConditions());
+//        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
+//        competition.setMinProjectDuration(template.getMinProjectDuration());
+//        competition.setMaxProjectDuration(template.getMaxProjectDuration());
+//        competition.setApplicationFinanceType(template.getApplicationFinanceType());
         return competition;
     }
-    
-    public static List<SectionBuilder> sections() {
+
+    public List<SectionBuilder> sections() {
         return newArrayList(
                 projectDetails()
                         .withQuestions(newArrayList(
@@ -45,7 +53,7 @@ public class ProgrammeTemplate {
 
     }
 
-    private static List<QuestionBuilder> programmeDefaultQuestions() {
+    public static List<QuestionBuilder> programmeDefaultQuestions() {
         return newArrayList(
                 businessOpportunity(),
                 potentialMarket(),

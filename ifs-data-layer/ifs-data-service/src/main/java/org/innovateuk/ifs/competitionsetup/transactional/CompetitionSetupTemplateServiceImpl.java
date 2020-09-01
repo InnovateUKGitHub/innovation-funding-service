@@ -1,15 +1,24 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
-import org.innovateuk.ifs.assessment.validator.*;
-import org.innovateuk.ifs.application.validator.*;
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
+import org.innovateuk.ifs.application.validator.RequiredFileValidator;
+import org.innovateuk.ifs.application.validator.RequiredMultipleChoiceValidator;
+import org.innovateuk.ifs.application.validator.WordCountValidator;
+import org.innovateuk.ifs.assessment.validator.AssessorScopeValidator;
+import org.innovateuk.ifs.assessment.validator.AssessorScoreValidator;
+import org.innovateuk.ifs.assessment.validator.ResearchCategoryValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.repository.*;
+import org.innovateuk.ifs.competition.repository.CompetitionAssessmentConfigRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
-import org.innovateuk.ifs.competitionsetup.applicationformbuilder.ProgrammeTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -26,10 +35,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -90,6 +102,15 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Autowired
     private FormValidatorRepository formValidatorRepository;
 
+    private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
+
+    @Autowired
+    public void setCompetitionTemplates(List<CompetitionTemplate> templateBeans) {
+        templates = templateBeans.stream()
+                .collect(toMap(CompetitionTemplate::type, Function.identity()));
+    }
+
+
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
@@ -115,10 +136,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         setDefaultOrganisationConfig(competition);
         setDefaultApplicationConfig(competition);
 
+        CompetitionTemplate competitionTemplate = templates.get(competition.getCompetitionTypeEnum());
 
-        if (!competitionType.get().getId().equals(1L)) {
-            competitionTemplatePersistor.cleanByEntityId(competitionId);
-        }
         copyTemplatePropertiesToCompetition(template, competition);
 
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
@@ -130,13 +149,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionInitialiser.initialiseFinanceTypes(competition);
         competitionInitialiser.initialiseProjectSetupColumns(competition);
 
-        if (!competitionType.get().getId().equals(1L)) {
-            return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
-        } else {
-            competition.setSections(ProgrammeTemplate.sections().stream().map(SectionBuilder::build).collect(Collectors.toList()));
-            setCompetitionOnSections(competition, competition.getSections(), null);
-            return serviceSuccess(competitionRepository.save(competition));
-        }
+        competition.setSections(competitionTemplate.sections().stream().map(SectionBuilder::build).collect(Collectors.toList()));
+        setCompetitionOnSections(competition, competition.getSections(), null);
+        return serviceSuccess(competitionRepository.save(competition));
     }
 
     void setCompetitionOnSections(Competition competition, List<Section> sections, Section parent) {
@@ -296,7 +311,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
-        competition.setSections(new ArrayList<>(template.getSections()));
         competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
         competition.setTermsAndConditions(template.getTermsAndConditions());
         competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
