@@ -23,13 +23,13 @@
             <dd>Knowledge base</dd>
 
             <dt>Knowledge base type</dt>
-            <dd th:text="${knowledgeBaseType.name}">type</dd>
+            <dd th:text="${type.text}">type</dd>
 
             <dt>Organisation name</dt>
             <dd th:text="${organisationName}">name</dd>
 
             <th:block th:if="${identification != null}">
-                <dt th:text="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).UNIVERSITY.id == knowledgeBaseType.id ? 'UKPRN number' : 'Registration number'}">Registration number</dt>
+                <dt th:text="${T(org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType).UNIVERSITY == type ? 'UKPRN number' : 'Registration number'}">Registration number</dt>
                 <dd th:text="${identification}">1234</dd>
             </th:block>
             <dt>Address</dt>

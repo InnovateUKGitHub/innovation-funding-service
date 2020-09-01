@@ -6,43 +6,38 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
-import org.innovateuk.ifs.organisation.viewmodel.OrganisationCreationSelectTypeViewModel;
-import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.registration.form.*;
+import org.innovateuk.ifs.registration.form.KnowledgeBaseCreateForm;
+import org.innovateuk.ifs.registration.form.KnowledgeBaseForm;
+import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.KnowledgeBaseRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.form.AddressForm.FORM_ACTION_PARAMETER;
-import static org.innovateuk.ifs.address.resource.OrganisationAddressType.INTERNATIONAL;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.KNOWLEDGE_BASE;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.UNIVERSITY;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Provides methods for both:
@@ -86,23 +81,8 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         }
 
         model.addAttribute("form", organisationForm);
-        model.addAttribute("types", getOrganisationTypes());
+        model.addAttribute("types", KnowledgeBaseType.values());
         return "registration/organisation/knowledge-base-details";
-    }
-
-    private List<OrganisationTypeResource> getOrganisationTypes() {
-
-        EnumSet<OrganisationTypeEnum> allowedTypes = knowledgeBaseTypes;
-
-        List<OrganisationTypeResource> organisationTypeResourceList = organisationTypeRestService.getAll().getSuccess()
-                .stream()
-                .filter(resource -> allowedTypes.contains(OrganisationTypeEnum.getFromId(resource.getId())))
-                .sorted(Comparator.comparing(OrganisationTypeResource::getName))
-                .collect(Collectors.toList());
-
-        return simpleFilter(organisationTypeResourceList,
-                        o -> OrganisationTypeEnum.getFromId(o.getId()) != null);
-
     }
 
     @PostMapping("/details")
@@ -118,7 +98,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
             OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-            organisationTypeForm.setOrganisationType(organisationForm.getOrganisationType());
+            organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
             registrationCookieService.saveToKnowledgeBaseDetailsCookie(organisationForm, response);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
             return "redirect:" + AbstractOrganisationCreationController.BASE_URL + "/knowledge-base/confirm";
@@ -157,7 +137,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
             KnowledgeBaseCreateForm knowledgeBaseCreateForm = processCreationForm(knowledgeBaseResource);
 
             OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
-            organisationTypeForm.setOrganisationType(knowledgeBaseResource.getOrganisationType());
+            organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
 
             registrationCookieService.saveToKnowledgeBaseDetailsCookie(knowledgeBaseCreateForm, response);
             registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
@@ -168,7 +148,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
     private KnowledgeBaseCreateForm processCreationForm(KnowledgeBaseResource knowledgeBaseResource) {
         KnowledgeBaseCreateForm form = new KnowledgeBaseCreateForm();
         form.setName(knowledgeBaseResource.getName());
-        form.setOrganisationType(knowledgeBaseResource.getOrganisationType());
+        form.setType(knowledgeBaseResource.getType());
         form.setIdentification(knowledgeBaseResource.getRegistrationNumber());
         AddressResource addressResource = knowledgeBaseResource.getAddress();
         form.getAddressForm().setPostcodeResults(singletonList(addressResource));
@@ -183,7 +163,7 @@ public class OrganisationCreationKnowledgeBaseController extends AbstractOrganis
                                               HttpServletRequest request) {
         Optional<OrganisationTypeForm> organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request);
         Optional<KnowledgeBaseCreateForm> knowledgeBaseCreateForm = registrationCookieService.getKnowledgeBaseDetailsValue(request);
-        model.addAttribute("knowledgeBaseType", organisationTypeForm.isPresent() ? organisationTypeRestService.findOne(organisationTypeForm.get().getOrganisationType()).getSuccess() : null);
+        model.addAttribute("type", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getType() : null);
         model.addAttribute("organisationName", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getName() : null);
         model.addAttribute("identification", knowledgeBaseCreateForm.isPresent() ? knowledgeBaseCreateForm.get().getIdentification() : null);
         model.addAttribute("address", createAddressResource(knowledgeBaseCreateForm));

@@ -9,17 +9,13 @@ public enum OrganisationTypeEnum {
     RESEARCH(2),
     RTO(3),
     PUBLIC_SECTOR_OR_CHARITY(4),
-    UNIVERSITY(5),
-    CATAPULT(6);
+    KNOWLEDGE_BASE(5);
 
     private static final EnumSet<OrganisationTypeEnum> researchParticipationTypes =
             EnumSet.of(RESEARCH, RTO, PUBLIC_SECTOR_OR_CHARITY);
 
     private static final EnumSet<OrganisationTypeEnum> ktpCollaboratorTypes =
             EnumSet.of(BUSINESS, PUBLIC_SECTOR_OR_CHARITY);
-
-    public static final EnumSet<OrganisationTypeEnum> knowledgeBaseTypes =
-            EnumSet.of(CATAPULT, RTO, UNIVERSITY);
 
     private final long id;
 
@@ -43,12 +39,16 @@ public enum OrganisationTypeEnum {
         return isResearch(getFromId(organisationTypeId));
     }
 
-    public static boolean isResearchParticipationType(OrganisationTypeEnum organisationType) {
-        return researchParticipationTypes.contains(organisationType);
+    public static boolean isKnowledgeBase(OrganisationTypeEnum organisationType) {
+        return organisationType.equals(KNOWLEDGE_BASE);
     }
 
-    public static boolean isKnowledgeBaseType(OrganisationTypeEnum organisationType) {
-        return knowledgeBaseTypes.contains(organisationType);
+    public static boolean isKnowledgeBase(long organisationTypeId) {
+        return isResearch(getFromId(organisationTypeId));
+    }
+
+    public static boolean isResearchParticipationType(OrganisationTypeEnum organisationType) {
+        return researchParticipationTypes.contains(organisationType);
     }
 
     public static boolean isResearchParticipationOrganisation(long organisationTypeId) {

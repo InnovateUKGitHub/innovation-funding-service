@@ -48,37 +48,37 @@
             </div>
 
 
-            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'govuk-form-group--error'">
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{type}')} ? 'govuk-form-group--error'">
                 <fieldset class="govuk-fieldset">
                     <legend id="org-type" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                         What type of knowledge base is your organisation?
                     </legend>
                     <span class="govuk-error-message"
-                          th:if="${#fields.hasErrors('*{organisationType}')}"
-                          th:errors="*{organisationType}"></span>
+                          th:if="${#fields.hasErrors('*{type}')}"
+                          th:errors="*{type}"></span>
                     <div class="govuk-radios" id="organisationType">
                         <th:block th:each="type : ${types}">
-                            <div class="govuk-radios__item govuk-!-margin-bottom-0" th:attr="data-target=|item-${type.id}|"
+                            <div class="govuk-radios__item govuk-!-margin-bottom-0" th:attr="data-target=|item-${type.name().toLowerCase()}|"
                                  data-target-clear-validation="true" data-target-clear-form="true">
-                                <input th:id="'radio-'+ ${type.id}" type="radio"
+                                <input th:id="'radio-'+ ${type.name().toLowerCase()}" type="radio"
                                        class="govuk-radios__input"
-                                       th:field="*{organisationType}"
+                                       th:field="*{type}"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
-                                       th:value="${type.id}"/>
-                                <label th:for="'radio-'+ ${type.id}"
+                                       th:value="${type.name()}"/>
+                                <label th:for="'radio-'+ ${type.name().toLowerCase()}"
                                        class="govuk-label govuk-radios__label">
-                                    <span th:text="${type.name}"></span>
+                                    <span th:text="${type.text}"></span>
                                     <span class="govuk-hint" th:text="${type.description}"></span>
                                 </label>
                             </div>
 
-                            <div th:with="fieldName=|${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).getFromId(type.id).toString().toLowerCase()}Number|"
-                                 th:id="|item-${type.id}|" class="panel govuk-!-padding-top-0">
+                            <div th:with="fieldName=|${type.name().toLowerCase()}Number|"
+                                 th:id="|item-${type.name().toLowerCase()}|" class="panel govuk-!-padding-top-0">
                                 <div class="govuk-form-group">
                                     <div class="govuk-grid-column">
-                                        <label th:for="${type.name}" class="govuk-heading-s"
-                                               th:text="${T(org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum).UNIVERSITY.id == type.id ? 'UKPRN number' : 'Registration number'}">Registration number</label>
+                                        <label th:for="${fieldName}" class="govuk-heading-s"
+                                               th:text="${T(org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType).UNIVERSITY == type ? 'UKPRN number' : 'Registration number'}">Registration number</label>
                                     </div>
                                     <input class="govuk-input govuk-input--width-10"
                                            th:field="*{__${fieldName}__}"

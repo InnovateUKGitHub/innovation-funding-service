@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.registration.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.Length;
 import org.innovateuk.ifs.address.form.AddressForm;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -19,7 +17,7 @@ public class KnowledgeBaseCreateForm implements Serializable {
     private String name;
 
     @NotNull(message = "{validation.standard.knowledgebasetype.required}")
-    private Long organisationType;
+    private KnowledgeBaseType type;
 
     private String rtoNumber;
 
@@ -33,9 +31,9 @@ public class KnowledgeBaseCreateForm implements Serializable {
     public KnowledgeBaseCreateForm() {
     }
 
-    public KnowledgeBaseCreateForm(String name, Long organisationType, String rtoNumber, String catapultNumber, String universityNumber, AddressForm addressForm) {
+    public KnowledgeBaseCreateForm(String name, KnowledgeBaseType type, String rtoNumber, String catapultNumber, String universityNumber, AddressForm addressForm) {
         this.name = name;
-        this.organisationType = organisationType;
+        this.type = type;
         this.rtoNumber = rtoNumber;
         this.catapultNumber = catapultNumber;
         this.universityNumber = universityNumber;
@@ -74,12 +72,12 @@ public class KnowledgeBaseCreateForm implements Serializable {
         this.name = name;
     }
 
-    public Long getOrganisationType() {
-        return organisationType;
+    public KnowledgeBaseType getType() {
+        return type;
     }
 
-    public void setOrganisationType(Long organisationType) {
-        this.organisationType = organisationType;
+    public void setType(KnowledgeBaseType type) {
+        this.type = type;
     }
 
     public AddressForm getAddressForm() {
@@ -106,7 +104,7 @@ public class KnowledgeBaseCreateForm implements Serializable {
 
     @JsonIgnore
     public void setIdentification(String identification) {
-        switch (OrganisationTypeEnum.getFromId(organisationType)) {
+        switch (type) {
             case RTO:
                 setRtoNumber(identification);
                 break;

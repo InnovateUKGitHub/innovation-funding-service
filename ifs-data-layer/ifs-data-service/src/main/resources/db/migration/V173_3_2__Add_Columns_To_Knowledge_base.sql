@@ -1,6 +1,9 @@
 ALTER table knowledge_base
-    ADD COLUMN organisation_type_id BIGINT(20),
-    ADD CONSTRAINT fk_organisation_type_id FOREIGN KEY (organisation_type_id) REFERENCES organisation_type(id);
+    ADD COLUMN type enum(
+    'RTO',
+    'UNIVERSITY',
+    'CATAPULT'
+    );
 
 ALTER table knowledge_base
     ADD COLUMN registration_number VARCHAR(10);

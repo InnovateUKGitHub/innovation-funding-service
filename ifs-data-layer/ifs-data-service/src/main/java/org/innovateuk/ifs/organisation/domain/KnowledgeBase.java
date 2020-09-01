@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.organisation.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class KnowledgeBase {
@@ -18,8 +16,8 @@ public class KnowledgeBase {
 
     private String registrationNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private OrganisationType organisationType;
+    @Enumerated(EnumType.STRING)
+    private KnowledgeBaseType type;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Address address;
@@ -28,11 +26,11 @@ public class KnowledgeBase {
         // for ORM
     }
 
-    public KnowledgeBase(Long id, String name, String registrationNumber, OrganisationType organisationType, Address address) {
+    public KnowledgeBase(Long id, String name, String registrationNumber, KnowledgeBaseType type, Address address) {
         this.id = id;
         this.name = name;
         this.registrationNumber = registrationNumber;
-        this.organisationType = organisationType;
+        this.type = type;
         this.address = address;
     }
 
@@ -60,16 +58,12 @@ public class KnowledgeBase {
         this.registrationNumber = registrationNumber;
     }
 
-    public OrganisationType getOrganisationType() {
-        return organisationType;
+    public KnowledgeBaseType getType() {
+        return type;
     }
 
-    public OrganisationTypeEnum getOrganisationTypeEnum() {
-        return OrganisationTypeEnum.getFromId(getOrganisationType().getId());
-    }
-
-    public void setOrganisationType(OrganisationType organisationType) {
-        this.organisationType = organisationType;
+    public void setType(KnowledgeBaseType type) {
+        this.type = type;
     }
 
     public Address getAddress() {

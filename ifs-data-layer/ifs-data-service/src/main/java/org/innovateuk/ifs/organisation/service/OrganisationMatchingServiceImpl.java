@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.knowledgeBaseTypes;
 
 /**
  * Determines if a registering user has to become part of an already existing organisation
@@ -32,7 +31,7 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
         } else {
             if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
                 return findFirstResearchMatch(submittedOrganisationResource);
-            } else if (OrganisationTypeEnum.isKnowledgeBaseType(submittedOrganisationResource.getOrganisationTypeEnum())) {
+            } else if (OrganisationTypeEnum.isKnowledgeBase(submittedOrganisationResource.getOrganisationTypeEnum())) {
                 return findFirstKnowledgeBaseMatch(submittedOrganisationResource);
             } else {
                 return findFirstCompaniesHouseMatch(submittedOrganisationResource);

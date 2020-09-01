@@ -1,25 +1,21 @@
 package org.innovateuk.ifs.knowledgebase.resourse;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 
 
 public class KnowledgeBaseResource {
     private Long id;
     private String name;
-    private Long organisationType;
-    private String organisationTypeName;
+    private KnowledgeBaseType type;
     private String registrationNumber;
     private AddressResource address;
 
     public KnowledgeBaseResource() {
     }
 
-    public KnowledgeBaseResource(Long id, String name, Long organisationType, String organisationTypeName, String registrationNumber, AddressResource address) {
+    public KnowledgeBaseResource(Long id, String name, KnowledgeBaseType type, String registrationNumber, AddressResource address) {
         this.id = id;
         this.name = name;
-        this.organisationType = organisationType;
-        this.organisationTypeName = organisationTypeName;
         this.registrationNumber = registrationNumber;
         this.address = address;
     }
@@ -40,20 +36,12 @@ public class KnowledgeBaseResource {
         this.name = name;
     }
 
-    public Long getOrganisationType() {
-        return organisationType;
+    public KnowledgeBaseType getType() {
+        return type;
     }
 
-    public void setOrganisationType(Long organisationType) {
-        this.organisationType = organisationType;
-    }
-
-    public String getOrganisationTypeName() {
-        return organisationTypeName;
-    }
-
-    public void setOrganisationTypeName(String organisationTypeName) {
-        this.organisationTypeName = organisationTypeName;
+    public void setType(KnowledgeBaseType type) {
+        this.type = type;
     }
 
     public String getRegistrationNumber() {
