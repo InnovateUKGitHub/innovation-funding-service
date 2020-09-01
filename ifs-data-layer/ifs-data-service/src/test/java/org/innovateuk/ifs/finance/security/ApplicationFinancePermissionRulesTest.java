@@ -124,6 +124,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(otherKta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(true);
+
+            when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(kta.getId(), otherApplicationId, KNOWLEDGE_TRANSFER_ADVISER)).thenReturn(false);
         }
     }
 
@@ -145,7 +147,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     @Test
     public void ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess() {
         assertTrue(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, kta));
-        assertTrue(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(applicationFinance, compAdmin));
         assertFalse(rules.ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(otherApplicationFinance, kta));
     }
 
