@@ -56,7 +56,7 @@ public class InterviewAllocationServiceSecurityTest extends BaseServiceSecurityT
     @Test
     public void getAllocatedApplicationsByAssessorId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllocatedApplicationsByAssessorId(1L, 2L),
-                COMP_ADMIN, PROJECT_FINANCE, ASSESSOR);
+                COMP_ADMIN, PROJECT_FINANCE, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER);
     }
 
     @Test
