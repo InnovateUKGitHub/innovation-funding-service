@@ -19,6 +19,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
+...            IFS-8147 Partners have the visibility of KTA on application
+...
 ...            IFS-7960  KTA Deashboard
 ...
 Suite Setup       Custom Suite Setup
@@ -217,7 +219,14 @@ The applicant invites the KTA again
     Given the user enters text to a text field      id = ktaEmail   ${ktaEmail}
     When the user clicks the button/link            name = invite-kta
     Then the user should see the element            jQuery = td:contains("pending for 0 days")
-    [Teardown]  Logout as user
+
+Partner can see the invited KTA in Application team
+    [Documentation]  IFS-8147
+    [Setup]  log in as a different user       &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link     link = ${ktpApplicationTitle}
+    When the user clicks the button/link      link = Application team
+    Then the user should see the element      jQuery = td:contains("pending for 0 days")
+    [Teardown]  logout as user
 
 The KTA can see application name, organisation and lead applicant details in the invite
     [Documentation]  IFS-7806  IFS-8001
@@ -236,12 +245,22 @@ Lead applicant verifies the inviation is accepted.
     When log in as a different user              &{ktpLeadApplicantCredentials}
     And the user navigates to the page           ${server}/application/${ApplicationID}/form/question/1994/team
     Then the user should not see the element     name = resend-kta
+    And the user should see the element          name = remove-kta
+
+Partner can also see the KTA in Application team
+    [Documentation]  IFS-8147
+    [Setup]  log in as a different user          &{ktpNewPartnerCredentials}
+    Given the user clicks the button/link        link = ${ktpApplicationTitle}
+    When the user clicks the button/link         link = Application team
+    Then the user should not see the element     name = resend-kta
+    And the user should see the element          jQuery = td:contains("${ktaEmail}")
 
 New lead applicant submits the application
-   [Documentation]  IFS-7812  IFS-7814
-   When the user clicks the button/link             link = Application overview
-   And the applicant completes Application Team
-   Then the applicant submits the application
+    [Documentation]  IFS-7812  IFS-7814
+    [Setup]  log in as a different user               &{ktpLeadApplicantCredentials}
+    Given the user clicks the button/link             link = ${ktpApplicationTitle}
+    When the applicant completes Application Team
+    Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
