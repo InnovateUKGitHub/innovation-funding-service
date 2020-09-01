@@ -72,11 +72,12 @@ Non lead cannot reopen competition
 
 Lead can reopen application
    [Documentation]  IFS-7440
-   [Setup]  log in as a different user      &{lead_applicant_credentials}
-   Given the user clicks the button/link    link = Dashboard
-   When the user can reopen application     ${COVIDapplicationTitle1}
-   Then the user reads his email            collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
-   And the user reads his email             steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+   [Setup]  log in as a different user                         &{lead_applicant_credentials}
+   Given the user clicks the application tile if displayed
+   And the user clicks the button/link                         link = Dashboard
+   When the user can reopen application                        ${COVIDapplicationTitle1}
+   Then the user reads his email                               collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+   And the user reads his email                                steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
     [Documentation]  IFS-7440  IFS-7552
@@ -98,9 +99,10 @@ Internal user can send funding notification
 
 Applicant can no longer reopen the competition
     [Documentation]  IFS-7440
-    Given Log in as a different user           &{lead_applicant_credentials}
-    When The user should see the element       link = ${COVIDapplicationTitle1}
-    Then the user should not see the element   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
+    Given Log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When The user should see the element                      link = ${COVIDapplicationTitle1}
+    Then the user should not see the element                  jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
 
 Competition is in Live and PS tabs
     [Documentation]   IFS-7441
@@ -142,8 +144,9 @@ External finance can access appendix
 
 External project finance cannot access documents or MO
     [Documentation]  IFS-7357
-    Given the user clicks the button/link     link = Dashboard
-    When the user clicks the button/link      link = ${COVIDcompetitionTitle}
+    Given the user clicks the button/link                                    link = Dashboard
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                                     link = ${COVIDcompetitionTitle}
     Then the user should not have access to documents MO or bank details
     [Teardown]  the project finance approves all steps before finance
 
@@ -321,25 +324,26 @@ the user can send successful funding notification
     the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email")
 
 Complete all PS steps before finance
-    Log in as a different user           &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDapplicationTitle1}
-    the user clicks the button/link    link = Project details
-    the user clicks the button/link    link = Correspondence address
+    Log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDapplicationTitle1}
+    the user clicks the button/link                       link = Project details
+    the user clicks the button/link                       link = Correspondence address
     the user enter the Correspondence address
-    the user clicks the button/link    id = return-to-set-up-your-project-button
-    the user clicks the button/link    link = Project team
-    the user clicks the button/link    link = Project manager
-    the user selects the radio button  projectManager    projectManager1
-    the user clicks the button/link    id = save-project-manager-button
-    The user selects their finance contact  financeContact1
-    the user clicks the button/link    link = Set up your project
-    the user clicks the button/link      link = Documents
-    the user clicks the button/link        link = Exploitation plan
-    the user uploads the file              css = .inputfile  ${valid_pdf}
-    the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
-    the user clicks the button/link     id = submit-document-button
-    the user clicks the button/link     id = submitDocumentButtonConfirm
-    the user clicks the button/link    link = Back to document overview
+    the user clicks the button/link                       id = return-to-set-up-your-project-button
+    the user clicks the button/link                       link = Project team
+    the user clicks the button/link                       link = Project manager
+    the user selects the radio button                     projectManager    projectManager1
+    the user clicks the button/link                       id = save-project-manager-button
+    The user selects their finance contact                financeContact1
+    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Documents
+    the user clicks the button/link                       link = Exploitation plan
+    the user uploads the file                             css = .inputfile  ${valid_pdf}
+    the user should see the element                       jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
+    the user clicks the button/link                       id = submit-document-button
+    the user clicks the button/link                       id = submitDocumentButtonConfirm
+    the user clicks the button/link                       link = Back to document overview
     the user fills in bank details
 
 the user should not have access to documents MO or bank details

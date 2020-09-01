@@ -15,9 +15,10 @@ the user should see all the Your-Finances Sections
 
 the user navigates to Your-finances page
     [Arguments]  ${Application}
-    the user navigates to the page  ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  jQuery = h3:contains("${Application}") a
-    the user clicks the button/link  link = Your project finances
+    the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       jQuery = h3:contains("${Application}") a
+    the user clicks the button/link                       link = Your project finances
 
 Applicant navigates to the finances of the Robot application
     the user navigates to Your-finances page  Robot test application
@@ -34,12 +35,13 @@ Mark application details as incomplete and the user closes the browser
 
 Mark application details as incomplete
     [Arguments]  ${applicationTitle}
-    the user navigates to the page   ${APPLICANT_DASHBOARD_URL}
-    the user clicks the button/link  link = ${applicationTitle}
-    the user clicks the button/link  link = Application details
-    the user clicks the button/link  jQuery = button:contains("Edit")
-    the user clicks the button/link  jQuery = button:contains("Save and return to application overview")
-    the user should see the element  jQuery = li:contains("Application details") > .task-status-incomplete
+    the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${applicationTitle}
+    the user clicks the button/link                       link = Application details
+    the user clicks the button/link                       jQuery = button:contains("Edit")
+    the user clicks the button/link                       jQuery = button:contains("Save and return to application overview")
+    the user should see the element                       jQuery = li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element  css = li:contains("Application details") > .task-status-complete

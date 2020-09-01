@@ -233,12 +233,13 @@ Registered partner should not create new org but should follow the create accoun
 Lead should not see pending status or resend invite for accepted invite
     [Documentation]    IFS-68  IFS-5960
     [Tags]
-    Given the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
-    And Logging in and Error Checking           &{lead_applicant_credentials}
-    When the user clicks the button/link        link = Invite robot test application
-    And the user clicks the button/link         link = Application team
-    Then the user should see the element        jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
-    And The user should not see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link                     jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    And Logging in and Error Checking                         &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = Invite robot test application
+    And the user clicks the button/link                       link = Application team
+    Then the user should see the element                      jQuery = td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    And The user should not see the element                   jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
     [Teardown]  logout as user
 
 The guest user applies to a competition and creates account
