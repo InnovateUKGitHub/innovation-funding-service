@@ -143,12 +143,19 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         mockMvc.perform(get("/dashboard-selection"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:http://localhost:80"));
+                .andExpect(view().name("redirect:/applicant/dashboard"));
     }
 
     @Test
     public void redirectToDashboardSelectionForKnowledgeTransferAdvisor() throws Exception {
         setLoggedInUser(knowledgeTransferAdvisor);
+
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
+
+        when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
+        when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(true));
+
 
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
@@ -172,7 +179,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         setLoggedInUser(knowledgeTransferAdvisor);
 
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
-                .withRole(Role.ASSESSOR).build(2);
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER).build(1);
 
         when(userRestService.findProcessRoleByUserId(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(processRoleResources));
         when(monitoringOfficerRestService.isMonitoringOfficer(knowledgeTransferAdvisor.getId())).thenReturn(restSuccess(true));
