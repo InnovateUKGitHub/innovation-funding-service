@@ -70,18 +70,15 @@ public class EoiTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Business opportunity and potential market")
                 .withName("What is the business opportunity and potential market for your project?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the business opportunity and potential market section?")
                                                 .withGuidanceAnswer("<p>Describe:</p><ul class=\"list-bullet\"><li>the main motivation for your project: the business need or market opportunity</li><li>the domestic and international markets you will target, and the other markets you are considering targeting</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing market opportunity")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -108,18 +105,15 @@ public class EoiTemplate implements CompetitionTemplate {
                 .withShortName("Innovation")
                 .withName("What is innovative about your project?")
                 .withDescription("Explain how your project is innovative in both a commercial and technical sense.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project innovation section?")
                                                 .withGuidanceAnswer("<p>Describe:</p><ul class=\"list-bullet\">         <li>what the innovation will focus on</li><li>whether your project will apply existing technologies to new areas, develop new technologies for existing areas or use a totally disruptive approach</li><li>the freedom you have to operate</li></ul></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing innovation")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -146,18 +140,15 @@ public class EoiTemplate implements CompetitionTemplate {
                 .withShortName("Project team")
                 .withName("Who is in the project team and what are their roles?")
                 .withDescription("Describe your ability to develop and exploit this technology. Include details of your team's track record in managing research and development projects.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project team section?")
                                                 .withGuidanceAnswer("<p>Describe or give:</p><ul class=\"list-bullet\">         <li>the roles, skills and relevant experience of all members of the project team</li><li>the resources, equipment and facilities needed for your project, and how you will access them</li><li>details of any external parties, including sub-contractors, you will need</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing team skills")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -184,18 +175,15 @@ public class EoiTemplate implements CompetitionTemplate {
                 .withShortName("Funding and adding value")
                 .withName("How much will your project cost, and how does it represent value for money for your team and the taxpayer?")
                 .withDescription("Estimate the total costs of the project and tell us how much funding you need from Innovate UK and why.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the funding and adding value section?")
                                                 .withGuidanceAnswer("<p>Tell us:</p><ul class=\"list-bullet\"><li>the estimated total cost of your project</li><li>how your project’s goals justify the total project cost and the grant you are requesting</li><li>how your project represents value for money for you, and for the taxpayer</li><li>what you would spend your money on otherwise</li><li>whether your project could go ahead in any form without public funding, and if so, what difference the funding would make, such as speeding up the route to market, attracting more partners or reducing risk</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing funding and adding value")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")

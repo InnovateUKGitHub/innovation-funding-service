@@ -47,47 +47,48 @@ public class CommonBuilders {
                 .withDescription("These are the questions which will be marked by the assessors.")
                 .withAssessorGuidanceDescription("Each question should be given a score out of 10. Written feedback should also be given.");
     }
+
     public static SectionBuilder finances() {
         return aSection()
                 .withName("Finances")
                 .withType(SectionType.GENERAL)
                 .withAssessorGuidanceDescription("Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the Finances overview section")
                 .withChildSections(newArrayList(
-                    aSubSection()
-                        .withName("Finances overview")
-                        .withType(SectionType.OVERVIEW_FINANCES)
-                        .withQuestions(newArrayList(
-                                aQuestion()
-                        )),
-                    aSubSection()
-                        .withName("Your project finances")
-                        .withType(SectionType.FINANCE)
-                        .withChildSections(newArrayList(
-                            aSubSection()
-                                    .withName("Your project costs")
-                                    .withType(SectionType.PROJECT_COST_FINANCES)
-                                    .withQuestions(newArrayList(
-                                            aQuestionWithMultipleStatuses()
-                                    )),
-                            aSubSection()
-                                    .withName("Your project location")
-                                    .withType(SectionType.PROJECT_LOCATION)
-                                    .withQuestions(newArrayList(
-                                            aQuestionWithMultipleStatuses()
-                                    )),
-                            aSubSection()
-                                    .withName("Your organisation")
-                                    .withType(SectionType.ORGANISATION_FINANCES)
-                                    .withQuestions(newArrayList(
-                                            aQuestionWithMultipleStatuses()
-                                    )),
-                            aSubSection()
-                                    .withName("Your funding")
-                                    .withType(SectionType.FUNDING_FINANCES)
-                                    .withQuestions(newArrayList(
-                                            aQuestionWithMultipleStatuses()
-                                    ))
-                        ))
+                        aSubSection()
+                                .withName("Finances overview")
+                                .withType(SectionType.OVERVIEW_FINANCES)
+                                .withQuestions(newArrayList(
+                                        aQuestion()
+                                )),
+                        aSubSection()
+                                .withName("Your project finances")
+                                .withType(SectionType.FINANCE)
+                                .withChildSections(newArrayList(
+                                        aSubSection()
+                                                .withName("Your project costs")
+                                                .withType(SectionType.PROJECT_COST_FINANCES)
+                                                .withQuestions(newArrayList(
+                                                        aQuestionWithMultipleStatuses()
+                                                )),
+                                        aSubSection()
+                                                .withName("Your project location")
+                                                .withType(SectionType.PROJECT_LOCATION)
+                                                .withQuestions(newArrayList(
+                                                        aQuestionWithMultipleStatuses()
+                                                )),
+                                        aSubSection()
+                                                .withName("Your organisation")
+                                                .withType(SectionType.ORGANISATION_FINANCES)
+                                                .withQuestions(newArrayList(
+                                                        aQuestionWithMultipleStatuses()
+                                                )),
+                                        aSubSection()
+                                                .withName("Your funding")
+                                                .withType(SectionType.FUNDING_FINANCES)
+                                                .withQuestions(newArrayList(
+                                                        aQuestionWithMultipleStatuses()
+                                                ))
+                                ))
                 ));
     }
 
@@ -150,16 +151,16 @@ public class CommonBuilders {
                 .withType(QuestionType.GENERAL)
                 .withQuestionSetupType(QuestionSetupType.EQUALITY_DIVERSITY_INCLUSION)
                 .withFormInputs(newArrayList(
-                    aFormInput()
-                        .withType(FormInputType.MULTIPLE_CHOICE)
-                        .withActive(true)
-                        .withScope(FormInputScope.APPLICATION)
-                        .withMultipleChoiceOptions(newArrayList(
-                                aMultipleChoiceOption()
-                                    .withText("Yes"),
-                                aMultipleChoiceOption()
-                                    .withText("No")
-                        ))
+                        aFormInput()
+                                .withType(FormInputType.MULTIPLE_CHOICE)
+                                .withActive(true)
+                                .withScope(FormInputScope.APPLICATION)
+                                .withMultipleChoiceOptions(newArrayList(
+                                        aMultipleChoiceOption()
+                                                .withText("Yes"),
+                                        aMultipleChoiceOption()
+                                                .withText("No")
+                                ))
                 ));
     }
 
@@ -230,8 +231,7 @@ public class CommonBuilders {
                                 .withActive(true)
                                 .withGuidanceTitle("What should I include in the project scope?")
                                 .withGuidanceAnswer("<p>It is important that you read the following guidance.</p><p>To show how your project aligns with the scope of this competition, you need to:</p><ul class=\"list-bullet\">         <li>read the competition brief in full</li><li>understand the background, challenge and scope of the competition</li><li>address the research objectives in your application</li><li>match your project's objectives and activities to these</li></ul> <p>Once you have submitted your application, you should not change this section unless:</p><ul class=\"list-bullet\">         <li>we ask you to provide more information</li><li>we ask you to make it clearer</li></ul>")
-                                .withWordCount(400),
-                        aFormInput()
+                        , aFormInput()
                                 .withType(FormInputType.MULTIPLE_CHOICE)
                                 .withScope(FormInputScope.APPLICATION)
                                 .withActive(false),
@@ -241,7 +241,6 @@ public class CommonBuilders {
                                 .withActive(true)
                                 .withGuidanceTitle("Guidance for assessing scope")
                                 .withGuidanceAnswer("You should still assess this application even if you think that it is not in scope. Your answer should be based upon the following:")
-                                .withWordCount(100)
                                 .withGuidanceRows(newArrayList(
                                         aGuidanceRow()
                                                 .withSubject("Yes")
@@ -263,16 +262,13 @@ public class CommonBuilders {
                 ));
     }
 
-    public static List<FormInputBuilder> defaultAssessedQuestionFormInputs() {
-        return defaultAssessedQuestionFormInputs(Function.identity(), Function.identity());
-    }
-
     public static List<FormInputBuilder> defaultAssessedQuestionFormInputs(Function<FormInputBuilder, FormInputBuilder> applicationTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> assessorTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> appendixFormInputModifier) {
         return newArrayList(
                 applicationTextAreaModifier.apply(aFormInput()
                         .withType(FormInputType.TEXTAREA)
                         .withScope(FormInputScope.APPLICATION)
-                        .withActive(true)),
+                        .withActive(true)
+                        .withWordCount(400)),
                 aFormInput()
                         .withType(FormInputType.MULTIPLE_CHOICE)
                         .withScope(FormInputScope.APPLICATION)
@@ -288,7 +284,8 @@ public class CommonBuilders {
                 assessorTextAreaModifier.apply(aFormInput()
                         .withType(FormInputType.TEXTAREA)
                         .withScope(FormInputScope.ASSESSMENT)
-                        .withActive(true)),
+                        .withActive(true)
+                        .withWordCount(100)),
                 aFormInput()
                         .withType(FormInputType.ASSESSOR_SCORE)
                         .withScope(FormInputScope.ASSESSMENT)
@@ -297,8 +294,8 @@ public class CommonBuilders {
     }
 
     public static List<FormInputBuilder> defaultAssessedQuestionFormInputs(Function<FormInputBuilder, FormInputBuilder> applicationTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> assessorTextAreaModifier) {
-            return defaultAssessedQuestionFormInputs(applicationTextAreaModifier,
-                    assessorTextAreaModifier,
-                    Function.identity());
+        return defaultAssessedQuestionFormInputs(applicationTextAreaModifier,
+                assessorTextAreaModifier,
+                Function.identity());
     }
 }

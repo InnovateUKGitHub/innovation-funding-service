@@ -57,7 +57,7 @@ public class ApcTemplate implements CompetitionTemplate {
                 .filter(question -> question.getName().equals("Funding"))
                 .findFirst()
                 .flatMap(question -> question.getFormInputs().stream()
-                    .filter(formInput -> formInput.getScope() == FormInputScope.ASSESSMENT && formInput.getType() == FormInputType.TEXTAREA)
+                        .filter(formInput -> formInput.getScope() == FormInputScope.ASSESSMENT && formInput.getType() == FormInputType.TEXTAREA)
                         .findFirst()
                 )
                 .ifPresent(formInput -> formInput.withGuidanceAnswer("Guidance for assessing financial commitment"));

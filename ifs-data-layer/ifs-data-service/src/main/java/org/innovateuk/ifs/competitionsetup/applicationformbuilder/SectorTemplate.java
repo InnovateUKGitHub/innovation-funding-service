@@ -73,18 +73,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Need or challenge")
                 .withName("What is the business need, technological challenge or market opportunity behind your innovation?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the need or challenge section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">the main motivation for the project; the business need, technological challenge or market opportunity</li><li class=\"li2\">the nearest current state-of-the-art (including those near-market/in development) and its limitations</li><li class=\"li2\">any work you have already done to respond to this need, for example is the project focused on developing an existing capability or building a new one?</li><li class=\"li2\">the wider economic, social, environmental, cultural and/or political challenges which are influential in creating the opportunity (for example, incoming regulations). Our <a href=\"http://www.slideshare.net/WebadminTSB/innovate-uk-horizons-sustainable-economy-framework\">Horizons tool</a> can help.</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing need or challenge")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -110,18 +107,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Approach and innovation")
                 .withName("What approach will you take and where will the focus of the innovation be?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the approach and innovation section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">how you will respond to the need, challenge or opportunity identified</li><li class=\"li2\">how you will improve on the nearest current state-of-the-art identified</li><li class=\"li2\">where the focus of the innovation will be in the project (application of existing technologies in new areas, development of new technologies for existing areas or a totally disruptive approach) and the freedom you have to operate</li><li class=\"li2\">how this project fits with your current product or service lines or offerings</li><li class=\"li2\">how it will make you more competitive</li><li class=\"li2\">the nature of the outputs you expect from the project (for example, report, demonstrator, know-how, new process, product or service design) and how these will help you to target the need, challenge or opportunity identified</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing approach and innovation")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -154,18 +148,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Team and resources")
                 .withName("Who is in the project team and what are their roles?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the team and resources section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">the roles, skills and relevant experience of all members of the project team in relation to the approach you will be taking</li><li class=\"li2\">the resources, equipment and facilities needed for the project and how you will access them</li><li class=\"li2\">details of any vital external parties, including sub-contractors, who you will need to work with to successfully carry out the project</li><li class=\"li2\">(if collaborative) the current relationships between project partners and how these will change as a result of the project</li><li class=\"li2\">highlight any gaps in the team that will need to be filled</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing team and resources")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -198,18 +189,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Market awareness")
                 .withName("What does the market you are targeting look like?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the market awareness section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">the markets (domestic and/or international) you will be targeting in the project and any other potential markets</li><li class=\"li2\">for the target markets, describe:</li><ul><li class=\"li2\">the size of the target markets for the project outcomes, backed up by references where available</li><li class=\"li2\">the structure and dynamics of the market (such as customer segmentation), together with predicted growth rates within clear timeframes</li><li class=\"li2\">the main supply or value chains and business models in operation (and any barriers to entry)</li><li class=\"li2\">the current UK position in targeting this market</li></ul><li class=\"li2\">for highly innovative projects, where the market may be unexplored, explain:</li><ul><li class=\"li2\">what the route to market could or might be</li><li class=\"li2\">what its size might be</li><li class=\"li2\">how the project will look to explore the market potential</li></ul><li class=\"li2\">briefly describe the size and main features of any other markets not already listed</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing market awareness")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -235,18 +223,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Outcomes and route to market")
                 .withName("How are you going to grow your business and increase your productivity into the long term as a result of the project?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the outcomes and route to market section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">your current position in the markets and supply or value chains outlined (will you be extending or establishing your market position?)</li><li class=\"li2\">your target customers and/or end users, and the value to them (why would they use or buy it?)</li><li class=\"li2\">your route to market</li><li class=\"li2\">how you are going to profit from the innovation (increased revenues or cost reduction)</li><li class=\"li2\">how the innovation will impact your productivity and growth (in the short and long-term)</li><li class=\"li2\">how you will protect and exploit the outputs of the project, for example through know-how, patenting, designs, changes to business model</li><li class=\"li2\">your strategy for targeting the other markets identified during or after the project</li><li class=\"li2\">for any research organisation activity in the project, describe your plans to spread project research outputs over a reasonable timescale</li><li class=\"li2\">if you expect to use the results generated from the project in further research activities, describe how</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing outcomes and route to market")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -272,18 +257,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Wider impacts")
                 .withName("What impact might this project have outside the project team?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the wider impacts section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe and where possible measure:</p><ul><li class=\"li2\">the economic benefits from the project to external parties (customers, others in the supply chain, broader industry and the UK economy) such as productivity increases and import substitution</li><li class=\"li2\">any expected social impacts, either positive or negative on, for example:</li><ul><li class=\"li2\">quality of life</li><li class=\"li2\">social inclusion or exclusion</li><li class=\"li2\">jobs (safeguarded, created, changed, displaced)</li><li class=\"li2\">education</li><li class=\"li2\">public empowerment</li><li class=\"li2\">health and safety</li><li class=\"li2\">regulations</li><li class=\"li2\">diversity</li></ul><li class=\"li2\">any expected impact on government priorities</li><li class=\"li2\">any expected environmental impacts, either positive or negative</li><li class=\"li2\">identify any expected regional impacts of the project</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing wider impacts")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -309,18 +291,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Project management")
                 .withName("How will you manage the project effectively?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project management section?")
                                                 .withGuidanceAnswer("<p>You should describe or explain:</p>\r\n<ul>\r\n <li class=\"li2\">the main work packages of the project, indicating the relevant research category, the lead partner assigned to each and the total cost of each one</li>\r\n <li class=\"li2\">your approach to project management, identifying any major tools and mechanisms that will be used for a successful and innovative project outcome.</li>\r\n <li class=\"li2\">the management reporting lines</li>\r\n <li class=\"li2\">your project plan in enough detail to identify any links or dependencies between work packages or milestones</li>\r\n</ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing project management")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -353,18 +332,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Risks")
                 .withName("What are the main risks for this project?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the risks section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">the main risks and uncertainties of the project, including the technical, commercial, managerial and environmental risks, (providing a risk register if appropriate)</li><li class=\"li2\">how will these risks be mitigated</li><li class=\"li2\">any project inputs that are critical to completion (such as resources, expertise, data sets)</li><li class=\"li2\">any output likely to be subject to regulatory requirements, certification, ethical issues, etc, and how will you manage this?</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing risks")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -397,18 +373,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Additionality")
                 .withName("Describe the impact that an injection of public funding would have on this project.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the additionality section?")
                                                 .withGuidanceAnswer("<p class=\"p1\">You should describe or explain:</p><ul><li class=\"li2\">if this project could go ahead in any form without public funding and if so, the difference the public funding would make (such as faster to market, more partners and reduced risk)</li><li class=\"li2\">the likely impact of the project on the business of the partners involved</li><li class=\"li2\">why you are not able to wholly fund the project from your own resources or other forms of private-sector funding (what would happen if the application is unsuccessful)</li><li class=\"li2\">how this project would change the nature of R&amp;D activity the partners would undertake (and related spend)</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing additionality")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -434,18 +407,15 @@ public class SectorTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Costs and value for money")
                 .withName("How much will the project cost and how does it represent value for money for the team and the taxpayer?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the costs and value for money section?")
                                                 .withGuidanceAnswer("<p>You should describe or explain:</p>\r\n<ul>\r\n <li class=\"li2\">the total project cost and the grant being requested in terms of the project goals</li>\r\n <li class=\"li2\">how the partners will finance their contributions to the project</li>\r\n <li class=\"li2\">how this project represents value for money for you and the taxpayer and how it compares to what you would spend your money on otherwise?</li>\r\n <li class=\"li2\">the balance of costs and grant across the project partners</li>\r\n <li class=\"li2\">any sub-contractor costs and why they are critical to the project</li>\r\n</ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing costs and value for money")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")

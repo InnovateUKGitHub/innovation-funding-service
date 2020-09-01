@@ -34,7 +34,8 @@ public final class QuestionBuilder {
                 .withMarkAsCompletedEnabled(true)
                 .withMultipleStatuses(false)
                 .withType(QuestionType.GENERAL)
-                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION);
+                .withQuestionSetupType(QuestionSetupType.ASSESSED_QUESTION)
+                .withAssessorMaximumScore(10);
     }
 
     public static QuestionBuilder aQuestionWithMultipleStatuses() {

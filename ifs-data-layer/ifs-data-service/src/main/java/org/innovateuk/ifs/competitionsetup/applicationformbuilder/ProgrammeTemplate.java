@@ -72,18 +72,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Business opportunity")
                 .withName("What is the business opportunity that your project addresses?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the business opportunity section?")
                                                 .withGuidanceAnswer("<p>You should describe:</p><ul class=\"list-bullet\">         <li>the business opportunity you have identified and how you plan to take advantage of it</li><li>the customer needs you have identified and how your project will meet them</li><li>the challenges you expect to face and how you will overcome them</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing business opportunity")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -104,23 +101,20 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                         )
                 );
     }
-    
+
     private static QuestionBuilder potentialMarket() {
         return aDefaultAssessedQuestion()
                 .withShortName("Potential market")
                 .withName("What is the size of the potential market for your project?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the market opportunity section?")
                                                 .withGuidanceAnswer("<p>Describe the size of the potential market for your project including:</p><ul class=\"list-bullet\">         <li>details of your target market for instance how competitive and profitable it is</li><li>the current size of the market with actual and predicted growth rates</li><li>the market share you expect to achieve and the reasons for this estimate</li><li>the wider economic value you expect your project to add to the UK and/or the EEA (European Economic Area)</li></ul><p>Tell us what return on investment you expect your project to achieve. You should base this estimate on relevant industry data and tell us how you have calculated this.</p><p>If you are targeting an undeveloped market you should also:</p><ul class=\"list-bullet\">         <li>describe how you plan to access this market</li><li>estimate its potential size</li><li>explain how you will explore its potential</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing market opportunity")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -147,18 +141,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Project exploitation")
                 .withName("How will you exploit and market your project?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project exploitation section?")
                                                 .withGuidanceAnswer("<p>Describe the potential outputs of the project, such as:</p><ul class=\"list-bullet\">         <li>products or services</li><li>processes</li><li>applications</li></ul><p>Describe how you will exploit these outputs, such as:</p><ul class=\"list-bullet\">         <li>the route to market</li><li>protection of intellectual property rights</li><li>reconfiguration of your organisation's value system</li><li>changes to business models and processes</li><li>any other methods of exploitation and protection</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing project exploitation")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -184,18 +175,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Economic benefit")
                 .withName("What economic, social and environmental benefits do you expect your project to deliver and when?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the benefits section?")
                                                 .withGuidanceAnswer("<p>Describe all the benefits you expect your project to deliver, including:</p><p><strong>Economic</strong> : this is the real impact the project will have on its economic environment. This is not traditional corporate accounting profit and can include cost avoidance. You should identify and quantify any expected benefits to:</p><ul class=\"list-bullet\"><li>users (intermediaries and end users)</li><li>suppliers</li><li>broader industrial markets</li><li>the UK economy</li></ul><p><strong>Social</strong> : quantify any expected social impacts either positive or negative on, for example:</p><ul class=\"list-bullet\"><li>quality of life</li><li>social inclusion or exclusion</li><li>education</li><li>public empowerment</li><li>health and safety</li><li>regulation</li><li>diversity</li><li>government priorities</li></ul><p><strong>Environmental</strong> : show how your project will benefit or have a low impact on the environment. For example, this could include:<p><ul class=\"list-bullet\"><li>careful management of energy consumption</li><li>reductions in carbon emissions</li><li>reducing manufacturing and materials waste</li><li>rendering waste less toxic before disposing of it in a safe and legal manner</li><li>re-manufacturing (cradle to cradle)</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing economic benefits")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -222,18 +210,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 .withShortName("Technical approach")
                 .withName("What technical approach will you use and how will you manage your project?")
                 .withDescription("Describe the areas of work and your objectives. List all resource and management needs. Provide an overview of your technical approach.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the technical approach section?")
                                                 .withGuidanceAnswer("<p>You should:</p><ul class=\"list-bullet\">         <li>describe your technical approach including the main objectives of the work</li><li>explain how and why your approach is appropriate</li><li>tell us how you will make sure that the innovative steps in your project are achievable</li><li>describe rival technologies and alternative R&D strategies</li><li>explain why your proposed approach will offer a better outcome</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing technical approach")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -267,18 +252,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 .withShortName("Innovation")
                 .withName("What is innovative about your project?")
                 .withDescription("Explain how your project is innovative in both a commercial and technical sense.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project innovation section?")
                                                 .withGuidanceAnswer("<p>You should show how your project will:</p><ul class=\"list-bullet\">         <li>push boundaries beyond current leading-edge science and technology</li><li>apply existing technologies in new areas</li></ul><p>Explain the novelty of the research in an industrial and/or academic context.</p><p>You should provide evidence that your proposed work is innovative. This could include patent search results, competitor analyses or literature surveys. If relevant, you should also outline your own intellectual property rights.</p>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing innovation")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -312,18 +294,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 .withShortName("Risks")
                 .withName("What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?")
                 .withDescription("We recognise that many of the projects we fund are risky. This is why we need to be sure that you have an adequate plan for managing this risk.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project risks section?")
                                                 .withGuidanceAnswer("<p>Please describe your plans for limiting and managing risk. You need to:</p><ul class=\"list-bullet\">         <li>identify the project's main risks and uncertainties</li><li>detail specific technical, commercial, managerial and environmental risks</li><li>list any other uncertainties such as ethical issues associated with the project</li><li>provide a detailed risk analysis</li><li>rate the main risks as high, medium or low</li><li>show how you'll limit the main risks</li><li>identify the project management resources you'll use to minimise operational risk</li><li>include arrangements for managing the project team and its partners</li></ul>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing risks")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -350,18 +329,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 .withShortName("Project team")
                 .withName("Does your project team have the skills, experience and facilities to deliver this project?")
                 .withDescription("Describe your capability to develop and exploit this technology. Include details of your team's track record in managing research and development projects.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project skills section?")
                                                 .withGuidanceAnswer("<p>You should show your project team:</p><ul class=\"list-bullet\"><li>has the right mix of skills and experience to complete the project</li><li>has clear objectives</li><li>would have been formed even without Innovate UK investment</li></ul><p>If you are part of a consortium, describe the benefits of the collaboration, for example, increased knowledge transfer.</p>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing team skills")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -395,18 +371,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
                 .withShortName("Funding")
                 .withName("What will your project cost?")
                 .withDescription("Tell us the total costs of the project and how much funding you need from Innovate UK. Please provide details of your expected project costs along with any supporting information. Please justify any large expenditure in your project.")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the project cost section?")
                                                 .withGuidanceAnswer("<p>You must:</p><ul class=\"list-bullet\"><li>show how your budget is realistic for the scale and complexity of the project</li><li>make sure the funding you need from Innovate UK is within the limit set by this competition</li><li>justify any significant costs in the project, such as subcontractors</li><li>show how much funding there will be from other sources</li><li>provide a realistic budget breakdown</li><li>describe and justify individual work packages</li></ul><p>Find out which <a href=\"https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance\">project costs are eligible.</a></p><p>If your project spans more than one type of research category, you must break down the costs as separate 'work packages'. For example, industrial research or experimental development. </p><p>You can find more information in the  <a href=\"https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules\">funding rules section</a> of this website.</p>")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing project costs")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")
@@ -432,18 +405,15 @@ public class ProgrammeTemplate implements CompetitionTemplate {
         return aDefaultAssessedQuestion()
                 .withShortName("Adding value")
                 .withName("How does financial support from Innovate UK and its funding partners add value?")
-                .withAssessorMaximumScore(10)
                 .withFormInputs(
                         defaultAssessedQuestionFormInputs(applicationTextAreaBuilder ->
                                         applicationTextAreaBuilder
                                                 .withGuidanceTitle("What should I include in the financial support from Innovate UK section?")
                                                 .withGuidanceAnswer("Justify why you're unable to fund the project yourself from commercial resources. Explain the difference this funding will make to your project. For example, will it lower the risk for you or speed up the process of getting your product to market? Tell us why this will benefit the UK.")
-                                                .withWordCount(400),
-                                assessorTextAreaBuilder ->
+                                , assessorTextAreaBuilder ->
                                         assessorTextAreaBuilder
                                                 .withGuidanceTitle("Guidance for assessing added value")
                                                 .withGuidanceAnswer("Your score should be based upon the following:")
-                                                .withWordCount(100)
                                                 .withGuidanceRows(newArrayList(
                                                         aGuidanceRow()
                                                                 .withSubject("9,10")

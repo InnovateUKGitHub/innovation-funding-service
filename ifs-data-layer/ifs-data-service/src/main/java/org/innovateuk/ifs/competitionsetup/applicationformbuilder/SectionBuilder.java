@@ -33,6 +33,7 @@ public final class SectionBuilder {
         sb.displayInAssessmentApplicationSummary = false;
         return sb;
     }
+
     public SectionBuilder withName(String name) {
         this.name = name;
         return this;

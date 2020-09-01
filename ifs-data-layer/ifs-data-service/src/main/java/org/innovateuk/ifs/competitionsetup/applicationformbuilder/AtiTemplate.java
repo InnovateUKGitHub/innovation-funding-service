@@ -16,6 +16,7 @@ public class AtiTemplate implements CompetitionTemplate {
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.AEROSPACE_TECHNOLOGY_INSTITUTE;
     }
+
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
         //todo remove dependency on template comp.
