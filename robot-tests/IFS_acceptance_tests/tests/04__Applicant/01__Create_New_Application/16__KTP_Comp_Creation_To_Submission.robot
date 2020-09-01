@@ -19,6 +19,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
+...            IFS-8104  KTP application overview content review 
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -96,8 +98,11 @@ Existing lead applicant can apply to KTP competition with knowledge base organis
 Existing/new partner can only see business Or non profit organisation types
     [Documentation]  IFS-7841
     Given the user clicks the button/link                      link = Application overview
-    And the lead invites already registered user               ${existing_partner_ktp_email}  ${ktpCompetitionName}
-    When logging in and error checking                         &{ktpExistingPartnerCredentials}
+    When the user should see the element                       jQuery = h1:contains("Application overview")
+    Then the user should see the element                       jQuery = p:contains("This section contains the background information we need for your project.")
+    And the user should not see the element                    jQuery = p:contains("Application overviewThese are the questions which will be marked by the assessors.")
+    Then the lead invites already registered user              ${existing_partner_ktp_email}  ${ktpCompetitionName}
+    Then logging in and error checking                         &{ktpExistingPartnerCredentials}
     And the user clicks the button/link                        link = Join with a different organisation
     Then the user should only see KB partner organisations
 
