@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -26,12 +27,17 @@ import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -566,6 +572,16 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withValue("5", "9", "Feedback 1","Feedback 2", "true")
                 .build(5);
 
+        String expectedFundingFeedback = "Feedback";
+
+        AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome()
+                .withFundingConfirmation(true)
+                .withFeedback(expectedFundingFeedback)
+                .build();
+
+        Assessment assessment = newAssessment().withId(6L).withFundingDecision(assessmentFundingDecisionOutcome).build();
+
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
         when(assessorFormInputResponseRepositoryMock.findByAssessmentId(assessmentId)).thenReturn(assessorFormInputResponses);
 
         ApplicationAssessmentResource applicationAssessmentResource = assessorFormInputResponseService.getApplicationAssessment(applicationId, assessmentId).getSuccess();
