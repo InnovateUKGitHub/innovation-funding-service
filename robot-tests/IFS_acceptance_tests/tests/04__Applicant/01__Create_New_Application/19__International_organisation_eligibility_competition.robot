@@ -1223,15 +1223,16 @@ lead applicant assigns technical approach section to partner applicant
     the user clicks the button/link                       jQuery = button:contains("Save and return")
 
 partner uploads the appendix file
-    Log in as a different user          &{internationalPartnerOrganisationCredentials}
-    the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link     jQuery = a:contains("Technical approach")
-    the user uploads the file           css = input[name="appendix"]    ${ods_file}
-    the user uploads the file           css = input[name="appendix"]    ${excel_file}
-    the user clicks the button/link     jQuery = button:contains("Assign to lead for review")
-    Log in as a different user           &{ukLeadOrganisationCredentials}
-    the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link     jQuery = a:contains("Technical approach")
+    Log in as a different user                            &{internationalPartnerOrganisationCredentials}
+    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       jQuery = a:contains("Technical approach")
+    the user uploads the file                             css = input[name="appendix"]    ${ods_file}
+    the user uploads the file                             css = input[name="appendix"]    ${excel_file}
+    the user clicks the button/link                       jQuery = button:contains("Assign to lead for review")
+    Log in as a different user                            &{ukLeadOrganisationCredentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       jQuery = a:contains("Technical approach")
 
 the lead can see multiple appendices uploaded to the technical approach question
     the user should see the element     jQuery = a:contains("${valid_pdf}")

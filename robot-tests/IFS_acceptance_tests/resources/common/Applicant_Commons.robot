@@ -39,7 +39,9 @@ Mark application details as incomplete
     the user clicks the application tile if displayed
     the user clicks the button/link                       link = ${applicationTitle}
     the user clicks the button/link                       link = Application details
-    the user clicks the button/link                       jQuery = button:contains("Edit")
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  page should contain element   jQuery = button:contains("Edit")
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link   jQuery = button:contains("Edit")
+    #the user clicks the button/link                       jQuery = button:contains("Edit")
     the user clicks the button/link                       jQuery = button:contains("Save and return to application overview")
     the user should see the element                       jQuery = li:contains("Application details") > .task-status-incomplete
 

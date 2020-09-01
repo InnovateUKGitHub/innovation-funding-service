@@ -74,7 +74,7 @@ Lead can reopen application
    [Documentation]  IFS-7440
    [Setup]  log in as a different user                         &{lead_applicant_credentials}
    Given the user clicks the application tile if displayed
-   And the user clicks the button/link                         link = Dashboard
+   #And the user clicks the button/link                         link = Dashboard
    When the user can reopen application                        ${COVIDapplicationTitle1}
    Then the user reads his email                               collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
    And the user reads his email                                steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
@@ -368,16 +368,17 @@ the user raises a note
     the user clicks the button/link         jQuery = .govuk-button:contains("Save note")
 
 the internal user can complete PS
-    log in as a different user         &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDapplicationTitle1}
-    the user clicks the button/link    link = Spend profile
-    the user clicks the button/link    link = Empire Ltd
-    the user clicks the button/link    id = spend-profile-mark-as-complete-button
-    the user clicks the button/link    jQuery = a:contains("Review and submit project spend profile")
-    the user clicks the button/link    jQuery = a:contains("Submit project spend profile")
-    the user clicks the button/link    id = submit-send-all-spend-profiles
+    log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDapplicationTitle1}
+    the user clicks the button/link                       link = Spend profile
+    the user clicks the button/link                       link = Empire Ltd
+    the user clicks the button/link                       id = spend-profile-mark-as-complete-button
+    the user clicks the button/link                       jQuery = a:contains("Review and submit project spend profile")
+    the user clicks the button/link                       jQuery = a:contains("Submit project spend profile")
+    the user clicks the button/link                       id = submit-send-all-spend-profiles
     the external finance cannot access spend profile
-    log in as a different user         &{ifs_admin_user_credentials}
+    log in as a different user                            &{ifs_admin_user_credentials}
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}

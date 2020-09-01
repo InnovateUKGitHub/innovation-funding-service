@@ -82,8 +82,8 @@ Non lead does not see reopen on submitted page
 Lead can reopen application
     [Documentation]  IFS-7440
     [Setup]  log in as a different user                       &{lead_applicant_credentials}
-    Given the user clicks the button/link                     link = Dashboard
-    And the user clicks the application tile if displayed
+    #Given the user clicks the button/link                     link = Dashboard
+    Given the user clicks the application tile if displayed
     When the user can reopen application                      ${COVIDdeminimusapplicationTitle1}
     Then the user reads his email                             collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
     And the user reads his email                              steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
@@ -345,14 +345,15 @@ the user completes assessment and moves to PS
     moving competition to Project Setup            ${COVIDdeminimuscompetitionId}
 
 the internal user can complete PS
-    log in as a different user         &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDdeminimusapplicationTitle1}
-    the user clicks the button/link    link = Spend profile
-    the user clicks the button/link    link = Empire Ltd
-    the user clicks the button/link    id = spend-profile-mark-as-complete-button
-    the user clicks the button/link    jQuery = a:contains("Review and submit project spend profile")
-    the user clicks the button/link    jQuery = a:contains("Submit project spend profile")
-    the user clicks the button/link    id = submit-send-all-spend-profiles
+    log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDdeminimusapplicationTitle1}
+    the user clicks the button/link                       link = Spend profile
+    the user clicks the button/link                       link = Empire Ltd
+    the user clicks the button/link                       id = spend-profile-mark-as-complete-button
+    the user clicks the button/link                       jQuery = a:contains("Review and submit project spend profile")
+    the user clicks the button/link                       jQuery = a:contains("Submit project spend profile")
+    the user clicks the button/link                       id = submit-send-all-spend-profiles
     the external finance cannot access spend profile
 
 the user can change funding sought
