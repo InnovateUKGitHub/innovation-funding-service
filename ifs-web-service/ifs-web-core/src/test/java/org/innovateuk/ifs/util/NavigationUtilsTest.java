@@ -72,7 +72,7 @@ public class NavigationUtilsTest {
 
     @Test
     public void getDirectDashboardUrlForKnowledgeTransferAdvisor() throws Exception {
-        assertEquals("https://site:8080/assessment/assessor/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, KNOWLEDGE_TRANSFER_ADVISOR));
+        assertEquals("https://site:8080/assessment/assessor/dashboard", navigationUtils.getDirectDashboardUrlForRole(request, KNOWLEDGE_TRANSFER_ADVISER));
     }
 
     @Test

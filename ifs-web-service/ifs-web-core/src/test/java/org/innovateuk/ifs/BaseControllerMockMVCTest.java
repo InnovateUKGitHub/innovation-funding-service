@@ -84,7 +84,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             .withFirstName("Itsame")
             .withLastName("Mario")
             .withEmail("Itsame@gmail.com")
-            .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISOR))
+            .withRolesGlobal(singletonList(Role.KNOWLEDGE_TRANSFER_ADVISER))
             .withUID("2522-34y34ah-hrt4420").build();
 
     protected UserResource assessorAndApplicant = newUserResource().withId(4L)
