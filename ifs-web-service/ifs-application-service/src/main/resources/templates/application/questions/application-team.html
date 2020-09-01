@@ -122,7 +122,7 @@
                                     <th:block th:if="${organisation.editable and !model.readOnly and !row.lead}">
                                         <th:block th:if="${row.invite}">
                                             <button class="button-clear govuk-!-margin-right-1" id="resent-invite-button"
-                                                    type="submit" name="resend-invite" th:value="${row.id}">Resend invite
+                                                    type="submit" name="resend-invite" th:value="${row.id}">Resend invitation
                                             </button>
                                             <span>|</span>
                                         </th:block>
@@ -149,7 +149,7 @@
                                             <a th:attr="data-js-modal=${'modal-application-team-remove-organisation-' + organisation.id}"
                                                href="/"
                                                th:id="${'remove-organisation-' + organisation.id}"
-                                               class="govuk-link">Remove organisation
+                                               class="govuk-link">Remove
                                                <span class="govuk-visually-hidden" th:text="${organisation.name}"></span>
                                             </a>
                                         </th:block>
@@ -262,8 +262,8 @@
 
                 <th:block th:if="${model.ktpCompetition} ">
                     <h2 class="govuk-heading-m">Knowledge transfer adviser</h2>
-                    <p class="govuk-body" th:unless="${model.readOnly}">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
-                    <p class="govuk-body" th:unless="${model.readOnly}">The lead applicant cannot mark the page as complete until a Knowledge Transfer Adviser has accepted their invitation.</p>
+                    <p class="govuk-body" th:unless="${model.readOnly}">Enter the Knowledge transfer adviser's details below to invite them to the application. They will only be able to view the application after accepting their invitation.</p>
+                    <p class="govuk-body" th:unless="${model.readOnly}">The lead applicant cannot mark the page as complete until a Knowledge transfer adviser has accepted their invitation.</p>
 
                     <div th:if="${model.hasNoKta()}" class="govuk-form-group">
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post">
@@ -292,7 +292,7 @@
                                                    th:errorclass="govuk-input--error" />
                                         </td>
                                         <td class="govuk-table__cell alignright buttoncolumn">
-                                            <button class="govuk-button" type="submit" name="invite-kta">Invite to application</button>
+                                            <button class="govuk-button" type="submit" name="invite-kta">Send invitation</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -330,7 +330,7 @@
                                         <th:block th:text="${model.ktaEmail}">email of kta</th:block>
                                     </td>
                                     <td class="govuk-table__cell alignright buttoncolumn" th:classappend="${model.hasPendingKta() ? 'hint' : ''}">
-                                        <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invite</button><span>|</span></th:block>
+                                        <th:block th:if="${model.hasPendingKta()}"><button class="button-clear govuk-!-margin-right-1" type="submit" name="resend-kta" th:value="${model.ktaInvite.id}">Resend invitation</button><span>|</span></th:block>
                                         <th:block th:unless="${model.complete}">
                                         <button class="button-clear" type="submit" name="remove-kta" value="${model.applicationId}">Remove</button>
                                         </th:block>
