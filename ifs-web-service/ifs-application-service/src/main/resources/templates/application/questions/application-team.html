@@ -262,7 +262,7 @@
             </th:block>
 
                 <th:block th:if="${model.ktpCompetition}">
-                    <th:block th:unless="${model.leadApplicant} && ${model.hasAssignedKta() || model.hasPendingKta()}">
+                    <th:block th:unless="${model.leadApplicant} AND ${model.hasAssignedKta() || model.hasPendingKta()}">
                     <th:block th:if="${model.leadApplicant}">
                     <h2 class="govuk-heading-m">Knowledge transfer adviser</h2>
                         <p class="govuk-body" th:unless="${model.readOnly}">Enter the Knowledge Transfer Adviser details below to invite them to the application. The Knowledge Transfer Adviser will then be able to view the application.</p>
