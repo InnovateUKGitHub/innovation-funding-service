@@ -623,10 +623,22 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withValue("4", "8", "Feedback 3","Feedback 4", "false")
                 .build(5);
 
-        List<Assessment> assessmentList = new ArrayList<Assessment>();
-        assessmentList.add(newAssessment().withId(6L).build());
-        assessmentList.add(newAssessment().withId(8L).build());
+        Long[] expectedIds = {1L, 2L};
+        Boolean[] expectedFundingConfirmations = {TRUE, TRUE};
+        String[] expectedFundingFeedbacks = {"Feedback 1", "Feedback 2"};
 
+        List<AssessmentFundingDecisionOutcome> assessmentFundingDecisionOutcomes = newAssessmentFundingDecisionOutcome()
+                .withId(expectedIds)
+                .withFundingConfirmation(expectedFundingConfirmations)
+                .withFeedback(expectedFundingFeedbacks)
+                .build(2);
+
+        List<Assessment> assessmentList = new ArrayList<Assessment>();
+        assessmentList.add(newAssessment().withId(6L).withFundingDecision(assessmentFundingDecisionOutcomes.get(0)).build());
+        assessmentList.add(newAssessment().withId(8L).withFundingDecision(assessmentFundingDecisionOutcomes.get(1)).build());
+
+        when(assessmentRepositoryMock.findById(6L)).thenReturn(Optional.of(assessmentList.get(0)));
+        when(assessmentRepositoryMock.findById(8L)).thenReturn(Optional.of(assessmentList.get(1)));
         when(assessmentRepositoryMock.findByTargetIdAndActivityStateIn(applicationId, Collections.singleton(AssessmentState.SUBMITTED))).thenReturn(assessmentList);
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentId(6L)).thenReturn(assessorForm1InputResponses);
