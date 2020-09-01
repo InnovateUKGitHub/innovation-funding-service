@@ -45,10 +45,18 @@ public class EoiTemplate implements CompetitionTemplate {
                         )),
                 applicationQuestions()
                         .withQuestions(eoiDefaultQuestions()),
-                termsAndConditions()
+                eoiTermsAndConditions()
         );
 
     }
+
+    private SectionBuilder eoiTermsAndConditions() {
+        SectionBuilder termsSection = termsAndConditions();
+        termsSection.getQuestions().get(0)
+                .withMultipleStatuses(false);
+        return termsSection;
+    }
+
     public static List<QuestionBuilder> eoiDefaultQuestions() {
         return newArrayList(
                 businessOpportunity(),

@@ -73,6 +73,10 @@ public final class SectionBuilder {
         return this;
     }
 
+    public List<QuestionBuilder> getQuestions() {
+        return questions;
+    }
+
     public Section build() {
         Section section = new Section();
         section.setName(name);
