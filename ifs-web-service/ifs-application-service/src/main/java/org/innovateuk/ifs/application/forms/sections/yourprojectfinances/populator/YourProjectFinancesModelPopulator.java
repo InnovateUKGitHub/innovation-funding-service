@@ -67,9 +67,10 @@ public class YourProjectFinancesModelPopulator {
     }
 
     private String sectionName(CompetitionResource competition, ApplicationResource application, OrganisationResource organisation, SectionResource subSection) {
-
-        if ("Your funding".equals(subSection.getName()) && competition.isKtp() && (application.getLeadOrganisationId() != organisation.getId())) {
-            return "Other funding";
+        if (!application.getLeadOrganisationId().equals(organisation.getId())) {
+            if ("Your funding".equals(subSection.getName()) && competition.isKtp() && (application.getLeadOrganisationId() != organisation.getId())) {
+                return "Other funding";
+            }
         }
         return subSection.getName();
     }
