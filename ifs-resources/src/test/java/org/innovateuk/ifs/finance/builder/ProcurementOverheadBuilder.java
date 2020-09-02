@@ -16,19 +16,16 @@ public class ProcurementOverheadBuilder extends BaseBuilder<ProcurementOverhead,
         return withArraySetFieldByReflection("id", id);
     }
 
-    /*
-
-    private Integer companyCost;
-    private BigDecimal projectCost;
-    private String item;
-    private String name;
-     */
-    public ProcurementOverheadBuilder withRegistered(Boolean... value) {
-        return withArraySetFieldByReflection("registered", value);
+    public ProcurementOverheadBuilder withCompanyCost(Integer... value) {
+        return withArraySetFieldByReflection("companyCost", value);
     }
 
-    public ProcurementOverheadBuilder withRate(BigDecimal... value) {
-        return withArraySetFieldByReflection("rate", value);
+    public ProcurementOverheadBuilder withProjectCost(BigDecimal... value) {
+        return withArraySetFieldByReflection("projectCost", value);
+    }
+
+    public ProcurementOverheadBuilder withItem(String... value) {
+        return withArraySetFieldByReflection("item", value);
     }
 
     public ProcurementOverheadBuilder withName(String... value) {
@@ -39,7 +36,7 @@ public class ProcurementOverheadBuilder extends BaseBuilder<ProcurementOverhead,
         return withArraySetFieldByReflection("targetId", value);
     }
 
-    public static ProcurementOverheadBuilder newVATCost() {
+    public static ProcurementOverheadBuilder newProcurementOverhead() {
         return new ProcurementOverheadBuilder(emptyList()).with(uniqueIds());
     }
 
