@@ -73,7 +73,7 @@ public class KtpTravelCost extends AbstractFinanceRowItem {
 
     @Override
     public FinanceRowType getCostType() {
-        return FinanceRowType.TRAVEL;
+        return FinanceRowType.KTP_TRAVEL;
     }
 
     @Override

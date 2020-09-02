@@ -2859,6 +2859,211 @@
 
 <!--/***************************
 
+            KTP TRAVEL COSTS
+
+*********************************/-->
+
+<!--/*<editor-fold defaultstate="collapsed">*/-->
+<th:block th:fragment="ktp_travel"
+          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).KTP_TRAVEL}">
+    <div class="govuk-accordion__section" th:if="${model.financeRowTypes.contains(financeRowType)}">
+        <div class="govuk-accordion__section-header">
+            <h3 class="govuk-accordion__section-heading">
+                <span class="govuk-accordion__section-button" id="accordion-finances-heading-9" th:text="${financeRowType.displayName}">
+                    Travel
+                </span>
+                <span class="finance-total" data-mirror="#section-total-ktp-travel"></span>
+                <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
+                      data-calculation-operations="/,*"
+                      data-calculation-fields="100, #total-cost, #section-total-ktp-travel"
+                      th:text="${#ifsUtil.calculatePercentage(form.totalKtpTravelCosts, form.organisationFinanceTotal) + '%'}"></span>
+                <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'ktpTravelCostRows')}"
+                     class="section-status section-incomplete icon-only error-marker"></div>
+            </h3>
+        </div>
+        <div id="accordion-finances-content-9" class="govuk-accordion__section-content"
+             aria-labelledby="accordion-finances-heading-9">
+            <th:block
+                th:if="${model.isReadOnly(financeRowType)}">
+                <th:block th:insert="application/your-project-costs-fragments :: ktp_travel_read_only"/>
+            </th:block>
+            <th:block
+                th:unless="${model.isReadOnly(financeRowType)}">
+                <div class="govuk-form-group table-overflow" id="ktpTravelCostRows">
+                    <table class="govuk-table" id="ktp-travel-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header table-header-width-20-percent" id="ktp-travel-type" scope="col">Type of cost</th>
+                            <th class="govuk-table__header table-header-width-40-percent" id="ktp-travel-description" scope="col">Purpose of journey or description of subsistence cost.</th>
+                            <th id="ktp-travel-quantity" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric table-header-width-20-percent">
+                                Number of trips
+                            </th><th id="ktp-travel-cost" scope="col"
+                                class="govuk-table__header govuk-table__header--numeric table-header-width-20-percent">
+                                Cost (&pound;)
+                            </th>
+                            <th class="govuk-table__header table-header-width-10-percent alignright" scope="col"><span
+                                class="govuk-visually-hidden">Actions</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <th:block th:each="entry : *{ktpTravelCostRows}">
+                            <th:block
+                                th:insert="application/your-project-costs-fragments :: ktp_travel_row (${entry.key}, ${entry.value})"/>
+                        </th:block>
+                        </tbody>
+                    </table>
+                    <p class="alignright">
+                        <button type="submit"
+                                name="add_cost"
+                                th:value="${financeRowType}"
+                                class="button-clear"
+                                data-repeatable-rowcontainer="#ktp-travel-table tbody">Add another cost
+                        </button>
+                    </p>
+                </div>
+                <h4 class="govuk-heading-s alignright section-total-summary">
+                    Total estates costs
+                    <span class="govuk-heading-s"
+                          data-mirror="#section-total-ktp-travel"
+                          th:text="'£' + ${#numbers.formatInteger(form.totalKtpTravelCosts, 0,'DEFAULT')}"></span>
+                </h4>
+                <input type="hidden"
+                       data-calculation-fields=".ktp-travel-totals"
+                       data-calculation-operations="+"
+                       id="section-total-ktp-travel"
+                       th:attr="data-calculation-rawvalue=${form.totalKtpTravelCosts}"
+                       th:value="'£' + ${#numbers.formatInteger(form.totalKtpTravelCosts, 0,'DEFAULT')}"/>
+            </th:block>
+            <th:block th:if="${model.internal}"
+                      th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="ajax_ktp_travel_row">
+    <th:block th:object="${form}">
+        <th:block th:insert="application/your-project-costs-fragments :: ktp_travel_row (${id}, ${row})"/>
+    </th:block>
+</th:block>
+
+<th:block th:fragment="ktp_travel_row (id, row)">
+    <tr class="form-group-row-validated" th:with="path=${'ktpTravelCostRows[__${id}__]'}"
+        th:attr="data-repeatable-row=${path}"
+        th:id="${path}"
+        th:classappend="((${#ifsUtil.hasErrorsStartingWith('form', path)}) or (${#fields.hasErrors('ktpTravelCostRows')})) ? 'govuk-form-group--error'">
+        <input type="hidden" th:field="*{__${path}__.costId}"/>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.type">
+                <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost.</span>
+            </label>
+            <select class="govuk-select"
+                    required="required"
+                    th:field="*{__${path}__.type}">
+                <option
+                    th:each="type : ${T(org.innovateuk.ifs.finance.resource.cost.KtpTravelCost.KtpTravelCostType).values()}"
+                    th:text="${type.text}" th:value="${type}" th:selected="${row.type == type}"></option>
+            </select>
+        </td>
+        <td class="govuk-table__cell govuk-form-group">
+            <label th:for="__${path}__.description">
+                <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost.</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.description)"/>
+            <textarea
+                class="govuk-textarea"
+                th:id="__${path}__.description"
+                th:field="*{__${path}__.description}"
+                th:errorclass="govuk-input--error"
+                maxlength="255"
+                rows="4"
+                required="required">
+                            </textarea>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric govuk-form-group">
+            <label th:for="__${path}__.eachCost">
+                <span class="govuk-visually-hidden">Cost each (&pound;)</span>
+            </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.eachCost)"/>
+            <input th:id="__${path}__.eachCost"
+                   th:field="*{__${path}__.eachCost}"
+                   th:errorclass="govuk-input--error"
+                   type="number"
+                   class="govuk-input"
+                   placeholder="0"
+                   min="1"
+                   max="9999999999999999999"
+                   step="1"
+                   required="required"
+                   th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"/>
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric">
+            <label th:for="__${path}__.cost">
+                <span class="govuk-visually-hidden">Total</span>
+            </label>
+            <input type="text"
+                   th:id="__${path}__.cost"
+                   class="alignright govuk-input travel-totals"
+                   readonly="readonly"
+                   th:attr="data-calculation-fields=|[id='__${path}__.times'],[id='__${path}__.eachCost']|,
+                                                    data-calculation-rawValue=${row.total}"
+                   data-calculation-operations="*"
+                   th:value="'£' + ${#numbers.formatInteger(row.total, 0, 'DEFAULT')}"/>
+        </td>
+        <td class="govuk-table__cell alignright">
+            <button type="submit"
+                    th:name="remove_cost"
+                    th:value="${id}"
+                    class="button-clear js-remove-row">Remove <span class="govuk-visually-hidden">item</span>
+            </button>
+        </td>
+    </tr>
+</th:block>
+
+<th:block th:fragment="ktp_travel_read_only">
+    <div class="table-overflow">
+        <table class="govuk-table" id="ktp-travel-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th id="ktp-travel-description" class="govuk-table__header" scope="col">Description
+                </th>
+                <th id="ktp-travel-cost" scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Cost (&pound;)
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <th:block th:each="entry : *{ktpTravelCostRows}" th:with="cost=${entry.value}">
+                <tr class="govuk-table__row" th:unless="${cost.blank}">
+                    <td class="govuk-table__cell" th:text="${cost.description}"></td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <th:block
+                            th:text="${cost.cost != null ? #numbers.formatInteger(cost.cost,0,'DEFAULT') : '0'}">
+                            1500
+                        </th:block>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">Total estates costs</th>
+                <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-ktp-travel"
+                    th:attr="data-calculation-rawvalue=${form.totalKtpTravelCosts}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</th:block>
+<!--/*</editor-fold>*/-->
+
+<!--/***************************
+
             CONSUMABLES
 
 *********************************/-->
