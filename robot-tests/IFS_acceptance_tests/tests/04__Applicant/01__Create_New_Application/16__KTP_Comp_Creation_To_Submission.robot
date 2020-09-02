@@ -21,6 +21,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7960  KTA Deashboard
 ...
+...            IFS-7983  KTP Your Project Finances - KTA view
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -230,6 +232,27 @@ The KTA can see the dashboard with assesments and applications tiles after accep
     When logging in and error checking        ${ktaEmail}   ${short_password}
     Then the user should see the element      jQuery = h2:contains("Assessments")
     And the user should see the element       jQuery = h2:contains("Applications")
+
+The KTA can see the read only view of the application/s
+    [Documentation]  IFS-7983
+    Given the user clicks the button/link     jQuery = h2:contains("Applications")
+    When the user clicks the button/link      link = ${ktpApplicationTitle}
+    Then the user should see the element      jQuery = h1:contains("Application overview")
+    And the user should see the element       jQuery = h2:contains("Project details")
+
+The KTA is able to see lead applicant's project finances
+    #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
+    [Documentation]  IFS-7983
+    Given the user clicks the button/link     id = accordion-questions-heading-3-1
+    When the user clicks the button/link      jQuery = div:contains("A Knowledge Base") ~ a:contains("View finances")
+    Then the user should see the element      jQuery = h2:contains("Finance summary")
+
+The KTA is able to see non-lead applicant's project finances
+     #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
+     [Documentation]  IFS-7983
+     Given the user clicks the button/link     link = Back to application overview
+     When the user clicks the button/link      jQuery = div:contains("INNOVATE LTD") ~ a:contains("View finances")
+     Then the user should see the element      jQuery = h2:contains("Finance summary")
 
 Lead applicant verifies the inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
