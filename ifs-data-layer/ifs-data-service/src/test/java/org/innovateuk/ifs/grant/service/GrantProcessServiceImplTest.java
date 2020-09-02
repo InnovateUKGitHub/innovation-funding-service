@@ -110,6 +110,31 @@ public class GrantProcessServiceImplTest extends BaseServiceUnitTest<GrantProces
     }
 
     @Test
+    public void createGrantProcessWhenNoConfig() {
+        long applicationId = 7L;
+        long competitionId = 1L;
+        Competition competition = CompetitionBuilder.newCompetition().withId(competitionId).build();
+        Application application = ApplicationBuilder.newApplication().withId(applicationId).withCompetition(competition).build();
+
+        GrantProcess grantProcess = new GrantProcess(applicationId);
+
+        when(grantProcessRepository.save(grantProcess)).thenReturn(grantProcess);
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(application));
+
+        service.createGrantProcess(applicationId);
+
+        verify(grantProcessRepository)
+                .save(createLambdaMatcher(g -> {
+                    assertEquals(applicationId, g.getApplicationId());
+                    assertTrue(g.isPending());
+                    assertNull(g.getMessage());
+                    assertNull(g.getSentRequested());
+                    assertNull(g.getSentSucceeded());
+                    assertNull(g.getLastProcessed());
+                }));
+    }
+
+    @Test
     public void sendSucceeded() {
         ZonedDateTime now = ZonedDateTime.now();
         long applicationId = 7L;
