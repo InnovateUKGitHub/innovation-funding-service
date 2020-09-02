@@ -24,7 +24,7 @@
     <h2 class="govuk-heading-m">Pending</h2>
     <p class="govuk-body">
         <span class="govuk-heading-xl govuk-!-margin-0" th:text="${count}">10</span>
-        <span class="govuk-heading-s" th:text="${count == 1} ? 'pending internal user' : 'pending internal users'">pending internal users</span>
+        <span class="govuk-heading-s" th:text="${count == 1} ? 'pending user' : 'pending users'">pending users</span>
     </p>
     <th:block th:insert="fragments/admin-users :: invites-table(invites=${invites})" />
     <th:block th:insert="fragments/elements :: pagination(pagination=${pagination})" />
