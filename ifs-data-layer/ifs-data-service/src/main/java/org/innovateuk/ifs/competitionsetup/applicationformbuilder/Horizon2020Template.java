@@ -39,9 +39,7 @@ public class Horizon2020Template implements CompetitionTemplate {
                                 applicationDetails(),
                                 researchCategory(),
                                 equalityDiversityAndInclusion(),
-                                projectSummary(),
-                                publicDescription(),
-                                scope()
+                                publicDescription()
                         )),
                 finances(),
                 termsAndConditions()

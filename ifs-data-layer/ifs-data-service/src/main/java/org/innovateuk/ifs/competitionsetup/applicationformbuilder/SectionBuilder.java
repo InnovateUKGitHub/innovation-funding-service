@@ -78,6 +78,10 @@ public final class SectionBuilder {
         return questions;
     }
 
+    public SectionType getType() {
+        return type;
+    }
+
     public Section build() {
         Section section = new Section();
         section.setName(name);

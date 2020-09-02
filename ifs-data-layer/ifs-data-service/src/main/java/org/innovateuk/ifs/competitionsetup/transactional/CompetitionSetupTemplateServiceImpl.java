@@ -142,14 +142,17 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
-        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition);
-
         setDefaultProjectDocuments(competition);
 
         competitionInitialiser.initialiseFinanceTypes(competition);
         competitionInitialiser.initialiseProjectSetupColumns(competition);
 
-        competition.setSections(competitionTemplate.sections().stream().map(SectionBuilder::build).collect(Collectors.toList()));
+        List<SectionBuilder> sectionBuilders = competitionTemplate.sections();
+
+        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition.getFundingType(), sectionBuilders);
+
+        competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
+
         setCompetitionOnSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
     }
@@ -228,22 +231,18 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         }
     }
 
-    private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(Competition competition) {
+    private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(FundingType fundingType, List<SectionBuilder> sections) {
+        if (FundingType.INVESTOR_PARTNERSHIPS == fundingType) {
+            Optional<SectionBuilder> termsSection = sections.stream()
+                    .filter(sectionBuilder -> sectionBuilder.getType() == SectionType.TERMS_AND_CONDITIONS)
+                    .findFirst();
 
-        Optional<Section> termsSection = competition.getSections().stream().filter(s -> s.isType(SectionType.TERMS_AND_CONDITIONS)).findAny();
-        if (termsSection.isPresent()) {
-            String termsToUse;
-            if (FundingType.INVESTOR_PARTNERSHIPS == competition.getFundingType()) {
-                termsToUse = TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-            } else {
-                termsToUse = TERMS_AND_CONDITIONS_OTHER;
-            }
+            termsSection.ifPresent(sectionBuilder -> sectionBuilder.getQuestions().forEach(questionBuilder -> {
+                questionBuilder.withDescription(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS)
+                        .withName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS)
+                        .withShortName(TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS);
+            }));
 
-            termsSection.get().getQuestions().forEach(q -> {
-                q.setDescription(termsToUse);
-                q.setName(termsToUse);
-                q.setShortName(termsToUse);
-            });
         }
     }
 

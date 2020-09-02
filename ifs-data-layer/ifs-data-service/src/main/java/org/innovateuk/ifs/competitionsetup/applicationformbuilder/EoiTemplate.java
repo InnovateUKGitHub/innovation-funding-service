@@ -54,7 +54,8 @@ public class EoiTemplate implements CompetitionTemplate {
         SectionBuilder termsSection = termsAndConditions();
         termsSection.getQuestions().get(0)
                 .withMultipleStatuses(false);
-        return termsSection;
+        return termsSection
+                .withDescription("You are agreeing to these by submitting your application.");
     }
 
     public static List<QuestionBuilder> eoiDefaultQuestions() {
