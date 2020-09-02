@@ -19,6 +19,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-8001  KTP KTA Accepting invite
 ...
+...            IFS-8104  KTP application overview content review 
+...
 ...            IFS-7960  KTA Deashboard
 ...
 Suite Setup       Custom Suite Setup
@@ -99,13 +101,19 @@ Existing lead applicant can apply to KTP competition with knowledge base organis
     When the user clicks the button/link                    link = Application team
     Then the user should see the element                    jQuery = h2:contains("${secondKTPOrgName}")
 
-Existing/new partner can only see business Or non profit organisation types
-    [Documentation]  IFS-7841
+KTP application shows the correct guidance text
+    [Documentation]  IFS-8104
     Given the user clicks the button/link                      link = Application overview
-    And the lead invites already registered user               ${existing_partner_ktp_email}  ${ktpCompetitionName}
+    When the user should see the element                       jQuery = h1:contains("Application overview")
+    Then the user should see the element                       jQuery = p:contains("This section contains the background information we need for your project.")
+    And the user should not see the element                    jQuery = p:contains("These are the questions which will be marked by the assessors.")
+    
+Existing/new partner can only see business Or non profit organisation types
+    [Documentation]  IFS-7841    
+    Given the lead invites already registered user             ${existing_partner_ktp_email}  ${ktpCompetitionName}
     When logging in and error checking                         &{ktpExistingPartnerCredentials}
-    And the user clicks the button/link                        link = Join with a different organisation
-    Then the user should only see KB partner organisations
+    Then the user clicks the button/link                       link = Join with a different organisation
+    And the user should only see KB partner organisations
 
 Existing/new partner can apply to KTP competition with business organisation
     [Documentation]  IFS-7812  IFS-7841
