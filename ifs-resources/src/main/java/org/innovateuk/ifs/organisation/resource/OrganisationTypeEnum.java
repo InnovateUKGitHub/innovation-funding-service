@@ -44,7 +44,7 @@ public enum OrganisationTypeEnum {
     }
 
     public static boolean isKnowledgeBase(long organisationTypeId) {
-        return isResearch(getFromId(organisationTypeId));
+        return isKnowledgeBase(getFromId(organisationTypeId));
     }
 
     public static boolean isResearchParticipationType(OrganisationTypeEnum organisationType) {

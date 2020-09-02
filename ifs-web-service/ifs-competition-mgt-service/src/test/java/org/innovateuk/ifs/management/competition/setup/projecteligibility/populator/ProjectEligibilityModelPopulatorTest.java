@@ -155,8 +155,8 @@ public class ProjectEligibilityModelPopulatorTest {
         assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
         assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
         assertEquals(researchCategories, viewModel.getResearchCategories());
-        assertEquals(2, viewModel.getLeadApplicantTypes().size());
-        assertEquals(ktpOrganisationType, viewModel.getLeadApplicantTypes().get(1));
+        assertEquals(1, viewModel.getLeadApplicantTypes().size());
+        assertEquals(ktpOrganisationType, viewModel.getLeadApplicantTypes().get(0));
         assertEquals("Knowledge Base", viewModel.getLeadApplicantTypesText());
         assertEquals("formattedcategories", viewModel.getResearchCategoriesFormatted());
         assertEquals(CompetitionSetupSection.PROJECT_ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
