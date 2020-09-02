@@ -82,7 +82,6 @@ Non lead does not see reopen on submitted page
 Lead can reopen application
     [Documentation]  IFS-7440
     [Setup]  log in as a different user                       &{lead_applicant_credentials}
-    #Given the user clicks the button/link                     link = Dashboard
     Given the user clicks the application tile if displayed
     When the user can reopen application                      ${COVIDdeminimusapplicationTitle1}
     Then the user reads his email                             collaborator1@example.com     	An Innovation Funding Service funding application has been reopened   The application was reopened by
