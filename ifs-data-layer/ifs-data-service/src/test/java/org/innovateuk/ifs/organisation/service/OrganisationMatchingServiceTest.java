@@ -89,11 +89,11 @@ public class OrganisationMatchingServiceTest extends BaseServiceUnitTest<Organis
         knowledgeBaseName = "knowledge";
         knowledgeBaseOrganisation = newOrganisation()
                 .withName(knowledgeBaseName)
-                .withOrganisationType(OrganisationTypeEnum.CATAPULT).build();
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build();
 
         knowledgeBaseOrganisationResource = newOrganisationResource()
                 .withName(knowledgeBaseName)
-                .withOrganisationType(OrganisationTypeEnum.CATAPULT.getId()).build();
+                .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId()).build();
 
     }
 
