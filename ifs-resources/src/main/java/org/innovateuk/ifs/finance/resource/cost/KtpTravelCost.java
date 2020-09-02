@@ -10,8 +10,18 @@ import java.math.BigDecimal;
  */
 public class KtpTravelCost extends AbstractFinanceRowItem {
     public enum KtpTravelCostType {
-        ASSOCIATE,
-        SUPERVISOR
+        ASSOCIATE("Associate"),
+        SUPERVISOR("Supervisor");
+
+        private String text;
+
+        KtpTravelCostType(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
     }
 
     private Long id;

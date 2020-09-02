@@ -30,6 +30,7 @@ import java.math.BigDecimal;
         @JsonSubTypes.Type(value = KnowledgeBaseCost.class, name = "knowledgeBaseCost"),
         @JsonSubTypes.Type(value = EstateCost.class, name = "estateCost"),
         @JsonSubTypes.Type(value = Consumable.class, name = "consumable"),
+        @JsonSubTypes.Type(value = KtpTravelCost.class, name = "KtpTravelCost"),
         @JsonSubTypes.Type(value = AdditionalCompanyCost.class, name = "additionalCompanyCost")
 })
 public interface FinanceRowItem {

@@ -52,6 +52,8 @@ public abstract class AbstractYourProjectCostsFormPopulator {
                 AssociateSupportCostRowForm.class, AssociateSupportCost.class));
         form.setEstateCostRows(toRows(finance, FinanceRowType.ESTATE_COSTS,
                 EstateCostRowForm.class, EstateCost.class));
+        form.setKtpTravelCostRows(toRows(finance, FinanceRowType.KTP_TRAVEL,
+                KtpTravelRowForm.class, KtpTravelCost.class));
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
 
         return form;
