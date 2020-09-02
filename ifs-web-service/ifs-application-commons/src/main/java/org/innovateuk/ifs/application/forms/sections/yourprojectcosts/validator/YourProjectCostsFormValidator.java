@@ -97,6 +97,9 @@ public class YourProjectCostsFormValidator {
             case ESTATE_COSTS:
                 validateEstateCosts(form.getEstateCostRows(), validationHandler);
                 break;
+            case KTP_TRAVEL:
+                validateRows(form.getKtpTravelCostRows(), "ktpTravelCostRows[%s].", validationHandler);
+                break;
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;

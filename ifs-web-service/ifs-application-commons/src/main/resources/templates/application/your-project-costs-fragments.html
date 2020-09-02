@@ -2889,6 +2889,10 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <p class="govuk-body">
+                    Please enter separate costs for the associate and the knowledge base supervisor. Include all travel
+                    and subsistence costs needed for the proposed projects. Be specific and add each item separately.
+                </p>
                 <div class="govuk-form-group table-overflow" id="ktpTravelCostRows">
                     <table class="govuk-table" id="ktp-travel-table">
                         <thead class="govuk-table__head">
@@ -2928,34 +2932,9 @@
                     </p>
                 </div>
 
-                <div class="table-overflow">
-                    <table class="govuk-table">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header table-header-width-20-percent" scope="col">Travel and subsistence summary</th>
-                            <th class="govuk-table__header govuk-table__header--numeric table-header-width-80-percent" scope="col">Total</th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">Total knowledge base supervisor costs</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric"
-                                    data-calculation-fields="#ktp-travel-table tr:has(select option[value='SUPERVISOR']:selected) .ktp-travel-totals"
-                                    data-calculation-operations="+"
-                                    data-calculation-triggers="#ktp-travel-table select"
-                                    th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0,'DEFAULT')}"></td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">Total associate costs</td>
-                                <td class="govuk-table__cell govuk-table__cell--numeric"
-                                    data-calculation-fields="#ktp-travel-table tr:has(select option[value='ASSOCIATE']:selected) .ktp-travel-totals"
-                                    data-calculation-operations="+"
-                                    data-calculation-triggers="#ktp-travel-table select"
-                                    th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0,'DEFAULT')}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <th:block
+                    th:insert="application/your-project-costs-fragments :: ktp_travel_sub_totals"/>
+
                 <h4 class="govuk-heading-s alignright section-total-summary">
                     Total estates costs
                     <span class="govuk-heading-s"
@@ -2979,6 +2958,37 @@
     <th:block th:object="${form}">
         <th:block th:insert="application/your-project-costs-fragments :: ktp_travel_row (${id}, ${row})"/>
     </th:block>
+</th:block>
+
+<th:block th:fragment="ktp_travel_sub_totals">
+    <div class="table-overflow">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header table-header-width-20-percent" scope="col">Travel and subsistence summary</th>
+                <th class="govuk-table__header govuk-table__header--numeric table-header-width-80-percent" scope="col">Total</th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Total knowledge base supervisor costs</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"
+                    data-calculation-fields="#ktp-travel-table tr:has(select option[value='SUPERVISOR']:selected) .ktp-travel-totals"
+                    data-calculation-operations="+"
+                    data-calculation-triggers="#ktp-travel-table select"
+                    th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0,'DEFAULT')}"></td>
+            </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">Total associate costs</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric"
+                    data-calculation-fields="#ktp-travel-table tr:has(select option[value='ASSOCIATE']:selected) .ktp-travel-totals"
+                    data-calculation-operations="+"
+                    data-calculation-triggers="#ktp-travel-table select"
+                    th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0,'DEFAULT')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </th:block>
 
 <th:block th:fragment="ktp_travel_row (id, row)">
@@ -3122,6 +3132,9 @@
             </tr>
             </tfoot>
         </table>
+
+        <th:block
+            th:insert="application/your-project-costs-fragments :: ktp_travel_sub_totals"/>
     </div>
 </th:block>
 <!--/*</editor-fold>*/-->
