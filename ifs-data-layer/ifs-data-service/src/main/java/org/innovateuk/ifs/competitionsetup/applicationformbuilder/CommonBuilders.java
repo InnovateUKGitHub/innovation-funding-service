@@ -231,7 +231,8 @@ public class CommonBuilders {
                                 .withActive(true)
                                 .withGuidanceTitle("What should I include in the project scope?")
                                 .withGuidanceAnswer("<p>It is important that you read the following guidance.</p><p>To show how your project aligns with the scope of this competition, you need to:</p><ul class=\"list-bullet\">         <li>read the competition brief in full</li><li>understand the background, challenge and scope of the competition</li><li>address the research objectives in your application</li><li>match your project's objectives and activities to these</li></ul> <p>Once you have submitted your application, you should not change this section unless:</p><ul class=\"list-bullet\">         <li>we ask you to provide more information</li><li>we ask you to make it clearer</li></ul>")
-                        , aFormInput()
+                                .withWordCount(400),
+                        aFormInput()
                                 .withType(FormInputType.MULTIPLE_CHOICE)
                                 .withScope(FormInputScope.APPLICATION)
                                 .withActive(false),
@@ -241,6 +242,7 @@ public class CommonBuilders {
                                 .withActive(true)
                                 .withGuidanceTitle("Guidance for assessing scope")
                                 .withGuidanceAnswer("You should still assess this application even if you think that it is not in scope. Your answer should be based upon the following:")
+                                .withWordCount(100)
                                 .withGuidanceRows(newArrayList(
                                         aGuidanceRow()
                                                 .withSubject("Yes")
