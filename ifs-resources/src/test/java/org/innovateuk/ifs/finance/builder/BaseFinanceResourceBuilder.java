@@ -146,10 +146,54 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
                         .build(),
                 FinanceRowType.VAT, newVATCategory().withCosts(
                         newVATCost().
+                                withId(1L).
+                                withRegistered(false)
+                        .build(1)),
+                FinanceRowType.PROCUREMENT_OVERHEADS, newDefaultCostCategory().withCosts(
+                        newProcurementOverhead().
                                 withId(1L, 2L).
                                 withRegistered(false, false)
-                        .build(2))
-                        .build())
+                                .build(2)),
+                FinanceRowType.ASSOCIATE_SALARY_COSTS, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.CONSUMABLES, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.ASSOCIATE_SUPPORT, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.KNOWLEDGE_BASE, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.ESTATE_COSTS, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.KTP_TRAVEL, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2)),
+                FinanceRowType.ADDITIONAL_COMPANY_COSTS, newVATCategory().withCosts(
+                        newVATCost().
+                                withId(1L, 2L).
+                                withRegistered(false, false)
+                                .build(2))
         );
     }
 
