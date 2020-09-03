@@ -763,7 +763,7 @@
     <!-- terms start -->
     <div class="terms-and-conditions letter-size letter-size--terms">
         <h2 style="font-size: 24px">Terms and conditions</h2>
-        <th:block th:insert="competition/info/__${model.termsAndConditionsTemplate}__ :: terms-and-conditions-content" />
+        <th:block th:insert="competition/info/__${model.termsAndConditionsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${false}"/>
     </div>
     <!-- terms end  -->
 </main>
