@@ -135,7 +135,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     @Override
     public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
-        return getAssessor(assessorId)
+        return getUser(assessorId)
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(
                                 profile -> {
@@ -237,10 +237,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     private ServiceResult<Profile> getProfile(Long profileId) {
         return find(profileRepository.findById(profileId), notFoundError(Profile.class, profileId));
-    }
-
-    private ServiceResult<User> getAssessor(long assessorId) {
-        return find(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR), notFoundError(User.class, assessorId));
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {

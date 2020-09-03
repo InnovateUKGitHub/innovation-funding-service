@@ -145,7 +145,8 @@ Internal user can mark project as unsuccessful
 
 Applicant checks successful and unsuccessful project status
     [Documentation]  IFS-6294
-    Given log in as a different user    &{lead_applicant_credentials}
+    Given log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
     Then the applicant checks for project status
 
 *** Keywords ***

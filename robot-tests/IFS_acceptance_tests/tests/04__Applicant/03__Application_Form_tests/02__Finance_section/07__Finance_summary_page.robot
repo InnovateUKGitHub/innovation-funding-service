@@ -41,8 +41,9 @@ ${allApplicationsForRTOComp}  ${SERVER}/management/competition/${openCompetition
 Calculations for Lead applicant
     [Documentation]    INFUND-524
     [Tags]
-    Given the user clicks the button/link    link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    When the user clicks the button/link     link = Finances overview
+    Given the user clicks the application tile if displayed
+    And the user clicks the button/link                                  link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    When the user clicks the button/link                                 link = Finances overview
     Then the finance summary calculations should be correct
     And the finance Funding breakdown calculations should be correct
 
@@ -116,9 +117,10 @@ Collaborator marks finances as complete
 Finances overview shows as complete once all collaborators have marked as complete
     [Documentation]  IFS-3820
     Given the academic user marks finances as complete
-    And log in as a different user          &{lead_applicant_credentials}
-    When the user clicks the button/link    link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the user should see the element    jQuery = li:contains("Finances overview") .task-status-complete
+    And log in as a different user                            &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    Then the user should see the element                      jQuery = li:contains("Finances overview") .task-status-complete
 
 Finance summary has total marked as complete
     [Documentation]  IFS-3821
@@ -128,21 +130,22 @@ Finance summary has total marked as complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]
-    Given Log in as a different user               &{collaborator2_credentials}
-    And the user navigates to Your-finances page   ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    And The user clicks the button/link            link = Your project costs
-    And the user clicks the button/link            jQuery = button:contains("Open all")
-    And The user clicks the button/link            css = button[name="edit"]
-    When the user enters text to a text field      css = [name$="incurredStaff"]  1000000
-    And log in as a different user                 &{lead_applicant_credentials}
-    And the user clicks the button/link            link=${OPEN_COMPETITION_APPLICATION_2_NAME}
-    And the user clicks the button/link            link=Finances overview
-    Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
-    And the user navigates to the page             ${APPLICANT_DASHBOARD_URL}
-    And the user clicks the button/link            link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    And the user clicks the button/link            link = Review and submit
-    And the user expands the section               Finances summary
-    Then the user should see the element           jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
+    Given Log in as a different user                          &{collaborator2_credentials}
+    And the user navigates to Your-finances page              ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And The user clicks the button/link                       link = Your project costs
+    And the user clicks the button/link                       jQuery = button:contains("Open all")
+    And The user clicks the button/link                       css = button[name="edit"]
+    When the user enters text to a text field                 css = [name$="incurredStaff"]  1000000
+    And log in as a different user                            &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    And the user clicks the button/link                       link=${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user clicks the button/link                       link=Finances overview
+    Then the user should see the element                      jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
+    And the user navigates to the page                        ${APPLICANT_DASHBOARD_URL}
+    And the user clicks the button/link                       link = ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user clicks the button/link                       link = Review and submit
+    And the user expands the section                          Finances summary
+    Then the user should see the element                      jQuery = .warning-alert h2:contains("The participation levels of this project are not within the required range")
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436

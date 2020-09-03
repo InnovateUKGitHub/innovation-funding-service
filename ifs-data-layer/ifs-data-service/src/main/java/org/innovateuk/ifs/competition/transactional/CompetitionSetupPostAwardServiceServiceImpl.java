@@ -59,7 +59,7 @@ public class CompetitionSetupPostAwardServiceServiceImpl extends BaseTransaction
                     Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(competitionId);
 
                     PostAwardService postAwardService;
-                    if (config.isPresent() && config.get().isSendByDefault()) {
+                    if (!config.isPresent() || config.get().isSendByDefault()) {
                         postAwardService = PostAwardService.IFS_POST_AWARD;
                     } else {
                         postAwardService = PostAwardService.CONNECT;

@@ -31,16 +31,16 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedR
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
     @Mock
-    private ApplicationFundingService applicationFundingServiceMock;
+    private ApplicationFundingService applicationFundingService;
 
     @Mock
-    private ApplicationService applicationServiceMock;
+    private ApplicationService applicationService;
 
     @Mock
-    private CompetitionService competitionServiceMock;
+    private CompetitionService competitionService;
 
     @Mock
-    private ProjectService projectServiceMock;
+    private ProjectService projectService;
 
     @Override
     protected ApplicationFundingDecisionController supplyControllerUnderTest() {
@@ -52,7 +52,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED);
 
-        when(applicationFundingServiceMock.saveFundingDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
+        when(applicationFundingService.saveFundingDecisionData(competitionId, decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/applicationfunding/1")
                 .header("IFS_AUTH_TOKEN", "123abc")
@@ -70,10 +70,10 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
                 .withCompetitionTypeName("Programme")
                 .build();
 
-        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
-        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
-        when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
+        when(applicationService.getApplicationById(1L)).thenReturn(serviceSuccess(application));
+        when(competitionService.getCompetitionByApplicationId(application.getId())).thenReturn(serviceSuccess(competition));
+        when(projectService.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
+        when(applicationFundingService.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/send-notifications")
                 .header("IFS_AUTH_TOKEN", "123abc")

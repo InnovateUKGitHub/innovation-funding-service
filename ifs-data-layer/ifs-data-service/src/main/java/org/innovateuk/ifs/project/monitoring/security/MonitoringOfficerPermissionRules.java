@@ -31,6 +31,14 @@ public class MonitoringOfficerPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "IS_MONITORING_OFFICER",
+            description = "Users can see if they are moitoring offices on any projects"
+    )
+    public boolean usersCanSeeIfTheyAreMonitoringOfficerOnProjects(UserResource monitoringOfficerUser, UserResource user) {
+        return monitoringOfficerUser.getId().equals(user.getId());
+    }
+
+    @PermissionRule(
             value = "VIEW_MONITORING_OFFICER",
             description = "Internal users can view Monitoring Officers on any Project")
     public boolean internalUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
