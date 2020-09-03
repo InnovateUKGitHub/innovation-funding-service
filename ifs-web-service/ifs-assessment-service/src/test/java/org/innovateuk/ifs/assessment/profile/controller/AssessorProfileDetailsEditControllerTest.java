@@ -193,11 +193,11 @@ public class AssessorProfileDetailsEditControllerTest extends BaseControllerMock
         assertEquals(2, bindingResult.getFieldErrorCount("lastName"));
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your first name should have at least {2} characters.")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Their first name should have at least {2} characters.")));
         assertTrue(bindingResult.getFieldErrors("firstName").stream()
                 .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a first name.")));
         assertTrue(bindingResult.getFieldErrors("lastName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your last name should have at least {2} characters.")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Their last name should have at least {2} characters.")));
         assertTrue(bindingResult.getFieldErrors("lastName").stream()
                 .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a last name.")));
     }
