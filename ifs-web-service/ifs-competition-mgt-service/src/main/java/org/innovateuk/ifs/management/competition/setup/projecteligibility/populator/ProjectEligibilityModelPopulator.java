@@ -55,7 +55,8 @@ public class ProjectEligibilityModelPopulator implements CompetitionSetupSection
         List<OrganisationTypeResource> leadApplicantTypes;
         if (competitionResource.isKtp()) {
             leadApplicantTypes = simpleFilter(organisationTypes,
-                    organisationType -> OrganisationTypeEnum.getFromId(organisationType.getId()).equals(OrganisationTypeEnum.KNOWLEDGE_BASE));
+                    organisationType ->
+                            OrganisationTypeEnum.isKnowledgeBase(organisationType.getId()));
         } else {
             leadApplicantTypes = simpleFilter(organisationTypes, OrganisationTypeResource::getVisibleInSetup);
         }

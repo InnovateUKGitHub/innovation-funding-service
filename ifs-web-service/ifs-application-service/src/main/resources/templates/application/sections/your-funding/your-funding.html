@@ -86,7 +86,7 @@
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel},
-                               hideAreYouRequestingFunding=${model.ktpFundingType && !model.knowledgeBaseOrganisation},
+                               hideAreYouRequestingFunding=${${model.hideAreYouRequestingFunding()},
                                ktpFundingType=${model.ktpFundingType}
                                                )"/>
 

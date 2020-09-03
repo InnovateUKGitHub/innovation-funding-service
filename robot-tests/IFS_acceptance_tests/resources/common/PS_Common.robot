@@ -207,6 +207,7 @@ Applicant uploads the GOL using Docusign
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           jquery = a:contains("Grant offer letter")
     the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           css=.page.page-loaded
     the user should see the element           jQuery = span:contains("Please review the documents below.")
     the user selects the checkbox             disclosureAccepted
     the user clicks the button/link           jQuery = button:contains("Continue")
@@ -370,7 +371,8 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    The user logs-in in new browser  &{lead_applicant_credentials}
+    The user logs-in in new browser                       &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
     ${update_comp}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
