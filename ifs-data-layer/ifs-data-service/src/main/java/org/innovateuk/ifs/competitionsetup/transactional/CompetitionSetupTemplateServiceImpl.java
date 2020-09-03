@@ -33,7 +33,6 @@ import org.innovateuk.ifs.form.resource.SectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -43,7 +42,6 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
@@ -110,7 +108,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                 .collect(toMap(CompetitionTemplate::type, Function.identity()));
     }
 
-
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         Optional<CompetitionType> competitionType = competitionTypeRepository.findById(competitionTypeId);
@@ -119,10 +116,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        Competition template = competitionType.get().getTemplate();
-        if (template == null) {
-            return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
-        }
 
         Optional<Competition> competitionOptional = competitionRepository.findById(competitionId);
         if (!competitionOptional.isPresent() || competitionIsNotInSetupState(competitionOptional.get())) {
@@ -136,9 +129,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         setDefaultOrganisationConfig(competition);
         setDefaultApplicationConfig(competition);
 
-        CompetitionTemplate competitionTemplate = templates.get(competition.getCompetitionTypeEnum());
-
-        copyTemplatePropertiesToCompetition(template, competition);
+        CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
 
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
@@ -147,11 +138,13 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionInitialiser.initialiseFinanceTypes(competition);
         competitionInitialiser.initialiseProjectSetupColumns(competition);
 
-        List<SectionBuilder> sectionBuilders = competitionTemplate.sections();
+        List<SectionBuilder> sectionBuilders = template.sections();
 
         overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition.getFundingType(), sectionBuilders);
 
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
+
+        template.copyTemplatePropertiesToCompetition(competition);
 
         setCompetitionOnSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
@@ -307,16 +300,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
                     grantTermsAndConditionsRepository.getLatestForFundingType(populatedCompetition.getFundingType());
             populatedCompetition.setTermsAndConditions(grantTermsAndConditions);
         }
-    }
-
-    private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
-        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
-        competition.setTermsAndConditions(template.getTermsAndConditions());
-        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-        competition.setMinProjectDuration(template.getMinProjectDuration());
-        competition.setMaxProjectDuration(template.getMaxProjectDuration());
-        competition.setApplicationFinanceType(template.getApplicationFinanceType());
-        return competition;
     }
 
     private Competition setDefaultAssessorPayAndCountAndAverageAssessorScore(Competition competition) {

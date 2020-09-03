@@ -33,6 +33,12 @@ public class GrantClaimMaximum {
 
     private Integer maximum;
 
+    public GrantClaimMaximum(ResearchCategory researchCategory, OrganisationSize organisationSize, Integer maximum) {
+        this.researchCategory = researchCategory;
+        this.organisationSize = organisationSize;
+        this.maximum = maximum;
+    }
+
     public Long getId() {
         return id;
     }

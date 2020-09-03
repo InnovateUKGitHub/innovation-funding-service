@@ -1,10 +1,16 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
+import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
+import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
+import org.innovateuk.ifs.finance.resource.OrganisationSize;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,8 +24,11 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.Questio
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder.aSection;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder.aSubSection;
 
+@Component
 public class CommonBuilders {
 
+    @Autowired
+    private ResearchCategoryRepository categoryRepository;
 
     /*
     Tech debt.
@@ -299,5 +308,22 @@ public class CommonBuilders {
         return defaultAssessedQuestionFormInputs(applicationTextAreaModifier,
                 assessorTextAreaModifier,
                 Function.identity());
+    }
+
+    public List<GrantClaimMaximum> getDefaultGrantClaimMaximums() {
+        ResearchCategory feasibilityStudies = categoryRepository.findById(33L).get();
+        ResearchCategory industrialResearch = categoryRepository.findById(34L).get();
+        ResearchCategory experimentalDevelopment = categoryRepository.findById(35L).get();
+        return newArrayList(
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.SMALL, 70),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.MEDIUM, 60),
+                new GrantClaimMaximum(feasibilityStudies, OrganisationSize.LARGE, 50),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.SMALL, 70),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.MEDIUM, 60),
+                new GrantClaimMaximum(industrialResearch, OrganisationSize.LARGE, 50),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.SMALL, 45),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.MEDIUM, 35),
+                new GrantClaimMaximum(experimentalDevelopment, OrganisationSize.LARGE, 25)
+        );
     }
 }
