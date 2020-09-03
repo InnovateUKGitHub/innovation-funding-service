@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,6 +14,9 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonB
 @Component
 public class PrincesTrustTemplate implements CompetitionTemplate {
 
+    @Autowired
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.THE_PRINCES_TRUST;
@@ -19,13 +24,10 @@ public class PrincesTrustTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        //todo remove dependency on template comp.
-//        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
-//        competition.setTermsAndConditions(template.getTermsAndConditions());
-//        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-//        competition.setMinProjectDuration(template.getMinProjectDuration());
-//        competition.setMaxProjectDuration(template.getMaxProjectDuration());
-//        competition.setApplicationFinanceType(template.getApplicationFinanceType());
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("The Prince's Trust"));
+        competition.setAcademicGrantPercentage(100);
+        competition.setMinProjectDuration(1);
+        competition.setMaxProjectDuration(36);
         return competition;
     }
 

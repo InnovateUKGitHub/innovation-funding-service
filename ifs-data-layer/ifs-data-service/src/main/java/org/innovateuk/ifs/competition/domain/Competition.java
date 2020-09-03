@@ -997,7 +997,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     }
 
     public CompetitionTypeEnum getCompetitionTypeEnum() {
-        return CompetitionTypeEnum.fromText(getCompetitionType().getName());
+        return getCompetitionType().getCompetitionTypeEnum();
     }
 
     @Override

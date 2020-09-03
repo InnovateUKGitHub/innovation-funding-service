@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,6 +14,12 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonB
 @Component
 public class AtiTemplate implements CompetitionTemplate {
 
+    @Autowired
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
+
+    @Autowired
+    private CommonBuilders commonBuilders;
+
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.AEROSPACE_TECHNOLOGY_INSTITUTE;
@@ -19,13 +27,11 @@ public class AtiTemplate implements CompetitionTemplate {
 
     @Override
     public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        //todo remove dependency on template comp.
-//        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
-//        competition.setTermsAndConditions(template.getTermsAndConditions());
-//        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-//        competition.setMinProjectDuration(template.getMinProjectDuration());
-//        competition.setMaxProjectDuration(template.getMaxProjectDuration());
-//        competition.setApplicationFinanceType(template.getApplicationFinanceType());
+        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Aerospace Technology Institute (ATI)"));
+        competition.setAcademicGrantPercentage(100);
+        competition.setMinProjectDuration(1);
+        competition.setMaxProjectDuration(36);
         return competition;
     }
 

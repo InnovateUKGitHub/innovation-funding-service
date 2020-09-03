@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,22 +17,25 @@ import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.Questio
 @Component
 public class Horizon2020Template implements CompetitionTemplate {
 
-    @Override
-    public Competition copyTemplatePropertiesToCompetition(Competition competition) {
-        //todo remove dependency on template comp.
-//        competition.setGrantClaimMaximums(new ArrayList<>(template.getGrantClaimMaximums()));
-//        competition.setTermsAndConditions(template.getTermsAndConditions());
-//        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-//        competition.setMinProjectDuration(template.getMinProjectDuration());
-//        competition.setMaxProjectDuration(template.getMaxProjectDuration());
-//        competition.setApplicationFinanceType(template.getApplicationFinanceType());
-        return competition;
-    }
+    @Autowired
+    private GrantTermsAndConditionsRepository grantTermsAndConditionsRepository;
 
+    @Autowired
+    private CommonBuilders commonBuilders;
 
     @Override
     public CompetitionTypeEnum type() {
         return CompetitionTypeEnum.HORIZON_2020;
+    }
+
+    @Override
+    public Competition copyTemplatePropertiesToCompetition(Competition competition) {
+        competition.setGrantClaimMaximums(commonBuilders.getDefaultGrantClaimMaximums());
+        competition.setTermsAndConditions(grantTermsAndConditionsRepository.findFirstByNameOrderByVersionDesc("Horizon 2020"));
+        competition.setAcademicGrantPercentage(100);
+        competition.setMinProjectDuration(1);
+        competition.setMaxProjectDuration(36);
+        return competition;
     }
 
     @Override
