@@ -1433,6 +1433,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block th:unless="${model.internal}">
+                    <th:block th:if="${model.isKtpCompetition()}"
+                              th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
+                    </th:block>
+                </th:block>
                 <p class="govuk-body" th:unless="${model.internal}">Please provide details of any work that you
                     expect
                     to subcontract for your
@@ -1465,36 +1470,43 @@
                        th:value="'£' + ${#numbers.formatInteger(form.totalSubcontractingCosts, 0,'DEFAULT')}"/>
 
                 <th:block th:unless="${model.internal}">
-                    <div class="govuk-body"><p>You can subcontract work if you don’t have the expertise in your
-                        project
-                        team.
-                        You can also subcontract if it is cheaper than developing your skills in-house.</p></div>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>Subcontracting costs relate to work carried out by third party organisations. These
-                                organisations are not part of your project.</p>
-                            <p>Subcontracting is eligible providing it is justified<span
-                                th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
-                            </p>
-                            <p>Subcontracting associate companies should be charged at cost.</p>
-                            <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                                should name the subcontractor (<span
-                                    th:if="${!model.isProcurementCompetition()}">where</span><span
-                                    th:if="${model.isProcurementCompetition()}">if</span> known) and describe what
-                                they
-                                will be doing. You should also state where the work will be undertaken.<span
-                                    th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
-                            </p>
-                        </div>
-                    </details>
-                </th:block>
+                    <th:block th:unless="${model.isKtpCompetition()}"
+                              th:insert="application/your-project-costs-fragments :: subcontracting_guidance">
+                    </th:block>                </th:block>
             </th:block>
             <th:block th:if="${model.internal}"
                       th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
         </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="subcontracting_guidance">
+    <div class="govuk-body">
+        <p>You can subcontract work if you don’t have the expertise in your
+            project
+            team.
+            You can also subcontract if it is cheaper than developing your skills in-house.</p>
+        <details class="govuk-details" role="group">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">Subcontracting costs guidance</span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>Subcontracting costs relate to work carried out by third party organisations. These
+                    organisations are not part of your project.</p>
+                <p>Subcontracting is eligible providing it is justified<span
+                    th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
+                </p>
+                <p>Subcontracting associate companies should be charged at cost.</p>
+                <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
+                    should name the subcontractor (<span
+                        th:if="${!model.isProcurementCompetition()}">where</span><span
+                        th:if="${model.isProcurementCompetition()}">if</span> known) and describe what
+                    they
+                    will be doing. You should also state where the work will be undertaken.<span
+                        th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                </p>
+            </div>
+        </details>
     </div>
 </th:block>
 
@@ -1654,29 +1666,47 @@
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
                 <th:block th:unless="${model.internal}">
-                    <p class="govuk-body">
-                        Include all travel and subsistence costs that relate to this project. Be specific and add
-                        each
-                        item separately.
-                    </p>
-                    <details class="govuk-details" role="group">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p class="govuk-body">You can claim reasonable travel and subsistence costs for those
-                                individuals identified in the labour table. Costs must be necessary and be solely
-                                for
-                                the progression of your project.</p>
-                            <p class="govuk-body">Travel costs must be at economy travel only. State the reason for
-                                travel, number of people travelling, mode of transport, cost per trip and number of
-                                trips.</p>
-                            <p class="govuk-body">Provide full details and the purpose for any subsistence
-                                expenditure,
-                                including the number of staff involved.</p>
-                        </div>
-                    </details>
+                    <th:block th:unless="${model.isKtpCompetition()}">
+                        <p class="govuk-body">
+                            Include all travel and subsistence costs that relate to this project. Be specific and add
+                            each
+                            item separately.
+                        </p>
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">You can claim reasonable travel and subsistence costs for those
+                                    individuals identified in the labour table. Costs must be necessary and be solely
+                                    for
+                                    the progression of your project.</p>
+                                <p class="govuk-body">Travel costs must be at economy travel only. State the reason for
+                                    travel, number of people travelling, mode of transport, cost per trip and number of
+                                    trips.</p>
+                                <p class="govuk-body">Provide full details and the purpose for any subsistence
+                                    expenditure,
+                                    including the number of staff involved.</p>
+                            </div>
+                        </details>
+                    </th:block>
+                    <th:block th:if="${model.isKtpCompetition()}">
+                        <p class="govuk-body">Please enter separate costs for the associate and the knowledge base supervisor. Include all travel and subsistence costs needed for the proposed projects. Be specific and add each item separately.</p>
+                        <details class="govuk-details" role="group">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">You can claim reasonable travel and subsistence costs for the associate and knowledge base supervisor only. Costs must be necessary and only for the proposed projects.</p>
+                                <p class="govuk-body">Travel costs should be at economy or pre-agreed rates only. Please consider the environmental impact of your choices.</p>
+                                <p class="govuk-body">State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
+                                <p class="govuk-body">Provide the full details and purpose of any subsistence expenses, including the number of people.</p>
+                                <p class="govuk-body">The business partner’s travel and subsistence costs are not eligible costs.</p>
+                            </div>
+                        </details>
+                    </th:block>
                 </th:block>
+
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="travel-costs-table">
                         <thead class="govuk-table__head">
@@ -1899,11 +1929,12 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body" th:unless="${model.internal || model.isProcurementCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
+                <p class="govuk-body" th:unless="${model.internal || model.isProcurementCompetition() || model.isKtpCompetition()}">Please note that legal or project audit and accountancy fees are not eligible and
                     should not be included as an 'other cost’. Patent filing costs of new IP relating to the project are
                     limited to £7,500 for SME applicants only. Please provide estimates of other costs that do not fit
                     within any other cost headings.</p>
                 <p class="govuk-body" th:if="${model.isProcurementCompetition()}">Provide estimates of other costs that do not fall under our standard cost headings.</p>
+                <p class="govuk-body" th:if="${model.isKtpCompetition()}">Do not complete this section unless your request has been approved by the programme manager.</p>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="other-costs-table">
                         <thead class="govuk-table__head">
@@ -2544,6 +2575,9 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These are the costs of managing the associate, such as computing, personnel admin, learning resources and secretariat support to the local management committee (LMC).</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-support-table">
                         <thead class="govuk-table__head">
@@ -2700,7 +2734,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Estates
+                    Associate estates cost
                 </span>
                 <span class="finance-total" data-mirror="#section-total-estate-costs"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2719,6 +2753,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">This is usually zero because the associate is normally located at the knowledge base partner’s premises.</p>
+                    <p class="govuk-body">A knowledge base partner may request additional funding, which is capped at £10,000 per project.</p>
+                    <p class="govuk-body">We rarely allow the allowable limit to be exceeded, but if you have an exceptional reason for doing so, please provide a detailed explanation.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow" id="estateCostRows">
                     <table class="govuk-table" id="estate-costs-table">
                         <thead class="govuk-table__head">
@@ -2897,27 +2936,28 @@
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
                 <th:block  th:unless="${model.internal}">
-                <p class="govuk-body">Please provide a breakdown of the consumables you
-                    expect to use during the
-                    project</p>
-                <p class="govuk-body">You can claim the costs of consumables used on your project
-                    providing:</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>they are not already purchased or included in the overheads</li>
-                    <li>they are purchased from third parties</li>
-                    <li>they won’t have a residual/resale value at the end of your project. If they do you
-                        can
-                        claim
-                        the
-                        costs minus this value
-                    </li>
-                </ul>
+                <p class="govuk-body">Please provide a breakdown of the consumables you expect to use for the proposed projects.</p>
+                <details class="govuk-details" role="group">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">Consumables costs guidance</span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p class="govuk-body">The consumables budget is a standard contribution towards the consumable items needed to complete these projects.</p>
+                        <p class="govuk-body">They can include the associate’s personal computer, but not capital items that the business partner will use after the project has been completed.</p>
+                        <p class="govuk-body">You also need to allocate each item to the relevant section in the project plan in the ‘Item description and project plan section’ boxes below.</p>
+                        <p class="govuk-body govuk-!-margin-0">You can claim the costs of materials used on the projects providing:</p>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>they are not already purchased or included in the overheads</li>
+                            <li>they are purchased from third parties</li>
+                        </ul>
+                    </div>
+                </details>
                 </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="material-costs-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
-                            <th id="consumables-item" scope="col" class="govuk-table__header">Item</th>
+                            <th id="consumables-item" scope="col" class="govuk-table__header">Item description and project plan section</th>
                             <th id="consumables-quantity" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric width-150">Quantity
                             </th>
@@ -3128,6 +3168,9 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">This is the cost of the knowledge base supervisor in the partnership and their indirect cost element.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="knowledge-base-table">
                         <thead class="govuk-table__head">
@@ -3283,13 +3326,13 @@
           th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).ADDITIONAL_COMPANY_COSTS}">
     <th:block th:if="${model.financeRowTypes.contains(financeRowType)}">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Additional costs</h2>
-        <p class="govuk-body">These costs are not part of your overall project costs.</p>
+        <p class="govuk-body">These are not part of the proposed projects’ eligible costs.</p>
         <div class="govuk-accordion" data-module="govuk-accordion">
             <div class="govuk-accordion__section">
                 <div class="govuk-accordion__section-header">
                     <h3 class="govuk-accordion__section-heading">
                         <span class="govuk-accordion__section-button" id="accordion-finances-heading-additional-company-costs">
-                            Additional company cost estimation
+                            Additional company cost estimates
                         </span>
                         <span class="finance-total" data-mirror="#additional-company-costs-total"></span>
                         <div th:if="${#ifsUtil.hasErrorsStartingWith('form', 'additionalCompanyCostForm')}"
@@ -3345,23 +3388,28 @@
 <th:block th:fragment="additional_cost_rows">
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.associateSalary',
-                      label=${'Associate salary ''top up'''})"/>
+                      label=${'Associate salary ''top up'''},
+                      guidance=${'<p>The business partner is responsible for all employment costs that exceed the set limit.</p><p>These ''top-ups'' may be useful to the business partner to attract an associate with specific qualifications and experience.</p>'})"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.managementSupervision',
-                      label='Management supervision')"/>
+                      label='Management supervision',
+                      guidance=${'<p>The business partner is responsible for the full cost of any supervision and support it gives the associate.</p>'})"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.otherStaff',
-                      label='Other staff (incl. training)')"/>
+                      label='Other staff (incl. training)',
+                      guidance='')"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.capitalEquipment',
-                      label='Capital equipment')"/>
+                      label='Capital equipment',
+                      guidance='')"/>
     <th:block th:ref="row" th:insert="application/your-project-costs-fragments :: additional_cost_field (
                       fieldName='additionalCompanyCostForm.otherCosts',
-                      label='Other costs')"/>
+                      label='Other costs',
+                      guidance='')"/>
 </th:block>
 <!--/*@thymesVar id="fieldName" type="java.lang.String"*/-->
 <!--/*@thymesVar id="label" type="java.lang.String"*/-->
-<th:block th:fragment="additional_cost_field (fieldName, label)">
+<th:block th:fragment="additional_cost_field (fieldName, label, guidance)">
     <th:block th:if="${model.isReadOnly(financeRowType)}"
               th:with="value = *{__${fieldName}__.cost}">
         <tr class="govuk-table__row">
@@ -3372,6 +3420,11 @@
     </th:block>
     <th:block th:unless="${model.isReadOnly(financeRowType)}">
         <h2 class="govuk-heading-s" th:text="${label}"></h2>
+        <th:block  th:unless="${model.internal}">
+            <div th:unless="${#strings.isEmpty(guidance)}" class="govuk-body"
+                 ifs:utext="${guidance}">Guidance
+            </div>
+        </th:block>
         <div class="govuk-form-group table-overflow">
             <table class="govuk-table">
                 <thead class="govuk-table__head">
