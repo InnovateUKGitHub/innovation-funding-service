@@ -219,8 +219,8 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
-    Given the user clicks the button/link                                   jQuery = button:contains("Save and continue")
-    And the user creates an account and verifies email                      Indi  Gardiner  ${lead_ktp_email}  ${short_password}
+#    Given the user clicks the button/link                                   jQuery = button:contains("Save and continue")
+#    And the user creates an account and verifies email                      Indi  Gardiner  ${lead_ktp_email}  ${short_password}
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then The user completes the KTP application except application team and your funding
@@ -229,12 +229,14 @@ New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Your funding
-    Then the user should see the readonly view of other funding received
+    Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
+    And the user should see the readonly view of other funding received
     And The user should see KTP finance sections are complete
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
-    Given the lead invites a non-registered user         ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
+    Given the user clicks the button/link                link = Back to application overview
+    And the lead invites a non-registered user           ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
     When the user clicks the button/link                 link = Sign in
     And Logging in and Error Checking                    &{ktpNewPartnerCredentials}
     And the user clicks the button/link                  link = ${ktpApplicationTitle}
@@ -243,7 +245,7 @@ New lead applicant invites a new partner organisation user and fills in project 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
-    And the user clicks the button/link                                      link = Your funding
+    And the user clicks the button/link                                      link = Other funding
     Then the user should see the readonly view of other funding received
     And The user should see KTP finance sections are complete
 
@@ -454,7 +456,7 @@ Internal user is able to approve the GOL and the project is now Live
     Then the user should see project is live with review its progress link
 
 *** Keywords ***
-the user marks the KTP finances as complete
+the user marks the KTP project costs, location and organisation information as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
     the user fills in ktp project costs
     the user enters the project location
@@ -462,7 +464,7 @@ the user marks the KTP finances as complete
     #the user checks Your Funding section                     ${Application}
     #the user should see all finance subsections complete
     the user clicks the button/link                          link = Back to application overview
-    the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
+    #the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills in the KTP organisation information
     [Arguments]  ${Application}  ${org_size}
@@ -558,13 +560,13 @@ Internal user is able to approve documents
     the user clicks the button/link              link = Return to documents
 
 The user completes the KTP application except application team and your funding
-    the user clicks the button/link                                                 link = Application details
-    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+    the user clicks the button/link                                                             link = Application details
+    the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                                        ${ktpApplicationTitle}
-    the user marks the KTP finances as complete                                     ${ktpApplicationTitle}   Calculate  52,214
-    the user accept the competition terms and conditions                            Return to application overview
+    the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
+    the user marks the KTP project costs, location and organisation information as complete     ${ktpApplicationTitle}   Calculate  52,214
+    the user accept the competition terms and conditions                                        Return to application overview
 
 the user fills in the KTP Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -707,14 +709,14 @@ the user invites a KTA to application
     the user clicks the button/link          name = invite-kta
 
 the user should see the readonly view of other funding received
-    the user should see the element     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
     the user should see the element     jQuery = th:contains("Lottery funding")
     the user should see the element     jQuery = td:contains("12-${nextyear}")
     the user should see the element     jQuery = th:contains("Total other funding") ~ td:contains("£20,000")
-    the user should see the element     jQuery = th:contains("Test") ~ td:contains("£20,000")
+    the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
 The user should see KTP finance sections are complete
-    the user should see the element  css = li:nth-of-type(1) .task-status-complete
-    the user should see the element  css = li:nth-of-type(2) .task-status-complete
-    the user should see the element  css = li:nth-of-type(3) .task-status-complete
-    the user should see the element  css = li:nth-of-type(4) .task-status-complete
+    the user clicks the button/link     link = Return to finances
+    the user should see the element     css = li:nth-of-type(1) .task-status-complete
+    the user should see the element     css = li:nth-of-type(2) .task-status-complete
+    the user should see the element     css = li:nth-of-type(3) .task-status-complete
+    the user should see the element     css = li:nth-of-type(4) .task-status-complete
