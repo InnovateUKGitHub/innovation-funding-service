@@ -323,18 +323,24 @@ the user checks for funding level guidance at PS level
 the user selects research area
     [Arguments]  ${Application}
     the user selects Research category from funding  Feasibility studies
-    the user fills in the funding information        ${Application}
+    the user fills in the funding information        ${Application}   no
 
 the user fills in the funding information
-    [Arguments]  ${Application}
+    [Arguments]  ${Application}   ${isKTP}
     the user navigates to Your-finances page                        ${Application}
-    the user clicks the button/link                                 link = Your funding
+    ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  link = Other funding
+    Run Keyword If  '${status}' == 'PASS'     the user clicks the button/link     link = Other funding
+    ...         ELSE                          the user clicks the button/link     link = Your funding
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots   page should contain element  jQuery = legend:contains("${yourFundingSubTitle}")
     Run Keyword If  '${status}' == 'PASS' and "${Application}" == "KTP New Application"    run keywords   the user selects the radio button     requestingFunding   true
     ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  10
     ...         ELSE IF   "${Application}" != "KTP New Application"     run keywords   the user selects the radio button     requestingFunding   true
     ...                                                      AND    the user enters text to a text field       css = [name^="grantClaimPercentage"]  42.34
-    the user selects the radio button                               otherFunding   false
+    run keyword if  ${isKTP} = 'yes'   run keywords    the user selects the radio button     otherFunding   true
+    ...                                                AND     the user enters text to a text field     css = [name*=source]  Lottery funding
+    ...                                                AND     the user enters text to a text field     css = [name*=date]  12-${nextyear}
+    ...                                                AND     the user enters text to a text field     css = [name*=fundingAmount]  20000
+    ...              ELSE              run keywords    the user selects the radio button     otherFunding   false
     the user clicks the button/link                                 jQuery = button:contains("Mark as complete")
     the user clicks the button/link                                 link = Your funding
     the user should see the element                                 jQuery = button:contains("Edit")

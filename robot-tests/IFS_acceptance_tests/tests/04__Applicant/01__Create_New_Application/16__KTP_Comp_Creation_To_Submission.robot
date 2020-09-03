@@ -152,7 +152,14 @@ New lead applicant creates an account and completes the KTP application
     And the user creates an account and verifies email                      Indi  Gardiner  ${lead_ktp_email}  ${short_password}
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then The user completes the KTP application except application team
+    Then The user completes the KTP application except application team and your funding
+
+New lead applicant can declare any other government funding received
+    [Documentation]  IFS-7956
+    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
+    And the user clicks the button/link                                      link = Your funding
+    Then the user should see the readonly view of other funding received
+    And The user should see KTP finance sections are complete
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
@@ -162,6 +169,13 @@ New lead applicant invites a new partner organisation user and fills in project 
     And the user clicks the button/link                  link = ${ktpApplicationTitle}
     Then the user completes partner project finances     ${ktpApplicationTitle}  yes
 
+Partner applicant can declare any other government funding received
+    [Documentation]  IFS-7956
+    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
+    And the user clicks the button/link                                      link = Your funding
+    Then the user should see the readonly view of other funding received
+    And The user should see KTP finance sections are complete
+
 System should display a validation if no email address entered while inviting the KTA
     [Documentation]  IFS-7806
     Given Log in as a different user                       &{ktpLeadApplicantCredentials}
@@ -170,7 +184,7 @@ System should display a validation if no email address entered while inviting th
     And the user clicks the button/link                    name = invite-kta
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
-The applicant should not be able to mark the application team section as complete until they add a KTA to the application
+The applicant should not be able to mark the application team section as complete until lead applicant adds a KTA to the application
     [Documentation]  IFS-7806
     When the user clicks the button/link                   id = application-question-complete
     Then the user should see a field and summary error     ${noKTAInApplicationValidation}
@@ -368,8 +382,8 @@ the user marks the KTP finances as complete
     the user fills in ktp project costs
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section                     ${Application}
-    the user should see all finance subsections complete
+    #the user checks Your Funding section                     ${Application}
+    #the user should see all finance subsections complete
     the user clicks the button/link                          link = Back to application overview
     the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
@@ -466,7 +480,7 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-The user completes the KTP application except application team
+The user completes the KTP application except application team and your funding
     the user clicks the button/link                                                 link = Application details
     the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
@@ -588,3 +602,16 @@ the user invites a KTA to application
     the user clicks the button/link          link = Application team
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
+
+the user should see the readonly view of other funding received
+    the user should see the element     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
+    the user should see the element     jQuery = th:contains("Lottery funding")
+    the user should see the element     jQuery = td:contains("12-${nextyear}")
+    the user should see the element     jQuery = th:contains("Total other funding") ~ td:contains("£20,000")
+    the user should see the element     jQuery = th:contains("Test") ~ td:contains("£20,000")
+
+The user should see KTP finance sections are complete
+    the user should see the element  css = li:nth-of-type(1) .task-status-complete
+    the user should see the element  css = li:nth-of-type(2) .task-status-complete
+    the user should see the element  css = li:nth-of-type(3) .task-status-complete
+    the user should see the element  css = li:nth-of-type(4) .task-status-complete
