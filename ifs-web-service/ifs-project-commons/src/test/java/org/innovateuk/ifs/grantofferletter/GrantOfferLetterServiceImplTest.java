@@ -98,6 +98,17 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
+    public void testRemoveAdditionalContractFile() {
+        long projectId = 123L;
+
+        when(grantOfferLetterRestService.removeAdditionalContractFile(projectId)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = grantOfferLetterService.removeAdditionalContractFile(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testRemoveSignedGrantOfferLetter() {
         long projectId = 123L;
 

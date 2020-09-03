@@ -213,15 +213,16 @@ Timestamp approval verification for viability and eligibility
 External users can view finance checks status on dashboard
     [Documentation]    INFUND-4843, INFUND-8787
     [Tags]  HappyPath
-    [Setup]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Given log in as a different user                &{lead_applicant_credentials}  #Non finance contact
-    Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user                 &{collaborator2_credentials}   #Academic user
-    Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user                 &{collaborator1_credentials}   #Non Lead Partner
-    Then check finance checks status on dashboard   waiting  Awaiting review
-    When log in as a different user                 &{successful_applicant_credentials}  #finance contact
-    Then check finance checks status on dashboard   waiting  Awaiting review
+    [Setup]    the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Given log in as a different user                          &{lead_applicant_credentials}  #Non finance contact
+    And the user clicks the application tile if displayed
+    Then check finance checks status on dashboard             waiting  Awaiting review
+    When log in as a different user                           &{collaborator2_credentials}   #Academic user
+    Then check finance checks status on dashboard             waiting  Awaiting review
+    When log in as a different user                           &{collaborator1_credentials}   #Non Lead Partner
+    Then check finance checks status on dashboard             waiting  Awaiting review
+    When log in as a different user                           &{successful_applicant_credentials}  #finance contact
+    Then check finance checks status on dashboard             waiting  Awaiting review
 
 Project finance user can view finance overview for the consortium
     [Documentation]    INFUND-4846
@@ -300,14 +301,15 @@ IFS Admin user can review partner's finances before the revisions made
 Lead Partner can review the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-    Given log in as a different user        &{lead_applicant_credentials}
-    When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user clicks the button/link    link = Finance checks
-    When the user clicks the button/link    link = your project finances
-    Then the user should see the element    jQuery = h2:contains("Detailed finances")
+    Given log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    Then the user clicks the button/link                      link = Finance checks
+    When the user clicks the button/link                      link = your project finances
+    Then the user should see the element                      jQuery = h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
-    Then the user should see the element    css = input[id = "total-cost"][value = "£200,903"]
-    And the user clicks the button/link     link = Finance checks
+    Then the user should see the element                      css = input[id = "total-cost"][value = "£200,903"]
+    And the user clicks the button/link                       link = Finance checks
 
 Partner can review only the external version of Finance Checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
@@ -1031,11 +1033,12 @@ Finance contact can access the external view of the finance checks page
 Lead Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
-    Given log in as a different user        &{lead_applicant_credentials}
-    When the user clicks the button/link    jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery = li.complete:contains("Finance")
-    When the user clicks the button/link    link = Finance checks
-    Then the user should see the element    jQuery = .success-alert:contains("your project finances approved.")
+    Given log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      jQuery = .projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
+    Then the user should see the element                      jQuery = li.complete:contains("Finance")
+    When the user clicks the button/link                      link = Finance checks
+    Then the user should see the element                      jQuery = .success-alert:contains("your project finances approved.")
 
 Lead partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880

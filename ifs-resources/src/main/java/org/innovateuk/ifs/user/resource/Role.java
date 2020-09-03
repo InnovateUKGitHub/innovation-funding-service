@@ -4,8 +4,11 @@ import com.google.common.collect.Sets;
 import org.innovateuk.ifs.identity.Identifiable;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Role defines database relations and a model to use client side and server side.
@@ -89,6 +92,10 @@ public enum Role implements Identifiable {
 
     public boolean isAssessor() {return this == ASSESSOR; }
 
+    public boolean isKta() {
+        return this == KNOWLEDGE_TRANSFER_ADVISER;
+    }
+
     public static Set<Role> applicantProcessRoles() {
         return EnumSet.of(LEADAPPLICANT, COLLABORATOR);
     }
@@ -101,6 +108,10 @@ public enum Role implements Identifiable {
         return EnumSet.of(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
     }
 
+    public static Set<Role> inviteExternalRoles(){
+        return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
+    }
+
     public static Set<Role> externalApplicantRoles(){
         return EnumSet.of(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER);
     }
@@ -108,11 +119,18 @@ public enum Role implements Identifiable {
         return Sets.union(externalApplicantRoles(), EnumSet.of(ASSESSOR));
     }
 
-    public static Set<Role> multiDashboardRoles() {
-        return EnumSet.of(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
+    public static List<Role> multiDashboardRoles() {
+        return newArrayList(APPLICANT,ASSESSOR,STAKEHOLDER,MONITORING_OFFICER,LIVE_PROJECTS_USER);
     }
 
-    public static Set<Role> externalRolesToInvite(){
+    public List<String> getAuthorities() {
+        if (this == KNOWLEDGE_TRANSFER_ADVISER) {
+            return newArrayList(this.name, ASSESSOR.name);
+        }
+        return newArrayList(this.name);
+    }
+
+    public static Set<Role> externalRolesToInvite() {
         return EnumSet.of(KNOWLEDGE_TRANSFER_ADVISER);
     }
 }

@@ -18,9 +18,11 @@ import org.innovateuk.ifs.project.invite.resource.SentProjectPartnerInviteResour
 import org.innovateuk.ifs.project.invite.service.ProjectPartnerInviteRestService;
 import org.innovateuk.ifs.registration.form.InviteAndIdCookie;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
+import org.innovateuk.ifs.registration.form.RegistrationForm.PhoneNumberValidationGroup;
+import org.innovateuk.ifs.registration.form.RegistrationForm.TermsValidationGroup;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
-import org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -36,18 +38,21 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ORGANISATION_ALREADY_EXISTS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
+import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.RegistrationViewModelBuilder.aRegistrationViewModel;
 import static org.innovateuk.ifs.registration.viewmodel.RegistrationViewModel.anInvitedUserViewModel;
 
 @Controller
@@ -126,7 +131,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String registerForm(@ModelAttribute("registrationForm") RegistrationForm registrationForm,
+    public String registerForm(@ModelAttribute("form") RegistrationForm registrationForm,
                                Model model,
                                UserResource user,
                                HttpServletRequest request,
@@ -157,7 +162,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
+    public String registerFormSubmit(@Validated({Default.class, PhoneNumberValidationGroup.class, TermsValidationGroup.class}) @ModelAttribute("form") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
                                      UserResource user,
@@ -166,7 +171,7 @@ public class RegistrationController {
 
         try {
             if (setInviteeEmailAddress(registrationForm, request, model)) {
-                bindingResult = new BeanPropertyBindingResult(registrationForm, "registrationForm");
+                bindingResult = new BeanPropertyBindingResult(registrationForm, "form");
                 validator.validate(registrationForm, bindingResult);
             }
         } catch (InviteAlreadyAcceptedException e) {
@@ -177,7 +182,7 @@ public class RegistrationController {
         }
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
-        model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "registrationForm", bindingResult);
+        model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "form", bindingResult);
         ValidationHandler validationHandler = ValidationHandler.newBindingResultHandler(bindingResult);
 
         return validationHandler.failNowOrSucceedWith(
@@ -239,7 +244,7 @@ public class RegistrationController {
     private void addRegistrationFormToModel(RegistrationForm registrationForm, Model model, HttpServletRequest request, HttpServletResponse response) {
         setOrganisationIdCookie(request, response);
         setInviteeEmailAddress(registrationForm, request, model);
-        model.addAttribute("registrationForm", registrationForm);
+        model.addAttribute("form", registrationForm);
     }
 
     /**
@@ -272,11 +277,15 @@ public class RegistrationController {
                 throw new InviteAlreadyAcceptedException();
             }
         }
-        model.addAttribute("model", new RegistrationViewModel(false));
+        model.addAttribute("model", aRegistrationViewModel()
+                .withInvitee(false)
+                .withTermsRequired(true)
+                .withPhoneRequired(true)
+                .build());
         return false;
     }
 
-    private String handleAcceptInviteFailure(@ModelAttribute("registrationForm") @Valid RegistrationForm registrationForm, HttpServletResponse response, UserResource user, HttpServletRequest request, Model model, ValidationHandler validationHandler, ServiceFailure failure) {
+    private String handleAcceptInviteFailure(@ModelAttribute("form") @Valid RegistrationForm registrationForm, HttpServletResponse response, UserResource user, HttpServletRequest request, Model model, ValidationHandler validationHandler, ServiceFailure failure) {
         if (failure.getErrors().stream().anyMatch(
                 error -> error.getErrorKey().equals(ORGANISATION_ALREADY_EXISTS_FOR_PROJECT.name()))) {
             return "redirect:/registration/duplicate-project-organisation";
@@ -330,16 +339,13 @@ public class RegistrationController {
     }
 
     private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
-        return userService.createLeadApplicantForOrganisationWithCompetitionId(
-                registrationForm.getFirstName(),
-                registrationForm.getLastName(),
-                registrationForm.getPassword(),
-                registrationForm.getEmail(),
-                registrationForm.getTitle(),
-                registrationForm.getPhoneNumber(),
-                organisationId,
-                competitionId,
-                registrationForm.getAllowMarketingEmails());
+        return userRestService.createUser(
+                registrationForm.constructUserCreationResource()
+                .withOrganisationId(organisationId)
+                .withCompetitionId(competitionId)
+                .withRole(Role.APPLICANT)
+                .build())
+                .toServiceResult();
     }
 
     private void addOrganisationNameToModel(Model model, OrganisationResource organisation) {

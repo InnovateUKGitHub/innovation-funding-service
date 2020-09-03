@@ -80,7 +80,7 @@ The new external user(as FC) signs in and can see multiple dashboard
     [Documentation]  IFS-7317
     Given the user clicks the button/link             link = Sign in
     When logging in and error checking                ${newExternalUserFCEmail}  ${short_password}
-    Then the user can see multiple user dashboard
+    Then the applicant user can see multiple user dashboard
 
 IFS Admin is able to invite an existing user as an external project manager to a live project
     [Documentation]  IFS-7316, IFS-7318
@@ -116,7 +116,7 @@ The existing user can accept the email invite
     Given the user reads his email and clicks the link     ${existingUser}  ${externalUserEmailInviteSubject}  ${emailInviteContentPattern}  1
     And the user clicks the button/link                    link = Sign in to your account
     When logging in and error checking                     ${existingUser}  ${short_password}
-    Then the user can see multiple user dashboard
+    Then the applicant user can see multiple user dashboard
 
 Project Finance is able to invite new external user as monitoring officer to a live project
     [Documentation]  IFS-7316, IFS-7318
@@ -138,7 +138,7 @@ The new external user(as MO) signs in and can see multiple dashboard
     [Documentation]  IFS-7317
     Given the user clicks the button/link             link = Sign in
     When logging in and error checking                ${newExternalUserMOEmail}  ${short_password}
-    Then the user can see multiple user dashboard
+    Then the monitoring officer user can see multiple user dashboard
 
 The internal user can see the external users invited in activity log but not in project team
     [Documentation]  IFS-7316
@@ -190,9 +190,13 @@ ifs admin invites a new external user
     the user selects the value from the drop-down menu     ${user_role}  id = role
     the user clicks the button/link                        jquery = button:contains("Send invitation")
 
-the user can see multiple user dashboard
+the applicant user can see multiple user dashboard
      the user should see the element     jQuery = h2:contains("Projects")
      the user should see the element     jQuery = h2:contains("Applications")
+
+the monitoring officer user can see multiple user dashboard
+     the user should see the element     jQuery = h2:contains("Projects")
+     the user should see the element     jQuery = h2:contains("Project setup")
 
 the user provides details and creates an account
      [Arguments]  ${firstName}  ${lastname}

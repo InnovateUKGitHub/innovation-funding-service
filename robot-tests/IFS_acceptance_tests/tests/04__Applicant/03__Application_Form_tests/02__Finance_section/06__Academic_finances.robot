@@ -164,18 +164,19 @@ the finance table should be correct
     Element Should Contain                           css = .project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)  10,895
 
 Lead applicant marks the finances as complete
-    Log in as a different user                         &{lead_applicant_credentials}
-    the user clicks the button/link                    link = Academic robot test application
-    the applicant completes the application details    Academic robot test application  ${tomorrowday}  ${month}  ${nextyear}
-    then the user selects research category            Feasibility studies
-    the user navigates to Your-finances page           Academic robot test application
-    the user marks the finances as complete            Academic robot test application  labour costs  n/a  no
+    Log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = Academic robot test application
+    the applicant completes the application details       Academic robot test application  ${tomorrowday}  ${month}  ${nextyear}
+    then the user selects research category               Feasibility studies
+    the user navigates to Your-finances page              Academic robot test application
+    the user marks the finances as complete               Academic robot test application  labour costs  n/a  no
 
 Lead applicant marks the finances as incomplete
-    log in as a different user                  &{lead_applicant_credentials}
-    the user navigates to Your-finances page    Academic robot test application
-    the user clicks the button/link             link = Your funding
-    the user clicks the button/link             jQuery = button:contains("Edit")
+    log in as a different user                            &{lead_applicant_credentials}
+    the user navigates to Your-finances page              Academic robot test application
+    the user clicks the button/link                       link = Your funding
+    the user clicks the button/link                       jQuery = button:contains("Edit")
 
 the user can see JeS details
     the user should see the element  link = Je-S website

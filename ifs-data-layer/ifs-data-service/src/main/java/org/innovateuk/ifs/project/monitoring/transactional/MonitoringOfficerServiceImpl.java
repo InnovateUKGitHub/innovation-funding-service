@@ -121,6 +121,10 @@ public class MonitoringOfficerServiceImpl extends RootTransactionalService imple
         return serviceSuccess(monitoringOfficerRepository.existsByProjectIdAndUserId(projectId, userId));
     }
 
+    @Override
+    public ServiceResult<Boolean> isMonitoringOfficer(long userId) {
+        return serviceSuccess(monitoringOfficerRepository.existsByUserId(userId));
+    }
 
     private ServiceResult<MonitoringOfficerResource> toMonitoringOfficerResource(MonitoringOfficer monitoringOfficer, long projectId) {
         return serviceSuccess(new MonitoringOfficerResource(monitoringOfficer.getId(),
