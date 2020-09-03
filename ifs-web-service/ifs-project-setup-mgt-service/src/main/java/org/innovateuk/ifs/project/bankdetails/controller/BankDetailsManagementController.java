@@ -8,10 +8,12 @@ import org.innovateuk.ifs.project.bankdetails.form.ApproveBankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.form.ChangeBankDetailsForm;
 import org.innovateuk.ifs.project.bankdetails.populator.BankDetailsReviewModelPopulator;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
+import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -24,7 +26,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -62,9 +66,12 @@ public class BankDetailsManagementController {
 
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccess();
-        if (bankDetailsStatusSummary.getBankDetailsStatusResources().size() == 1) {
+        List<BankDetailsStatusResource> requiredBankDetailsOrgs = bankDetailsStatusSummary.getBankDetailsStatusResources().stream()
+                .filter(status -> !status.getBankDetailsStatus().equals(ProjectActivityStates.NOT_REQUIRED))
+                .collect(Collectors.toList());
+        if (requiredBankDetailsOrgs.size() == 1) {
             //Only one partner
-            return format("redirect:/project/%d/organisation/%d/review-bank-details", projectId, bankDetailsStatusSummary.getBankDetailsStatusResources().get(0).getOrganisationId());
+            return format("redirect:/project/%d/organisation/%d/review-bank-details", projectId, requiredBankDetailsOrgs.get(0).getOrganisationId());
         }
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
