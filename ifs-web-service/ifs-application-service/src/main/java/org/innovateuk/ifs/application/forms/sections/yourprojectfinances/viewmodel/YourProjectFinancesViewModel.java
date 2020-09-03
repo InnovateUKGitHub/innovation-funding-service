@@ -14,6 +14,7 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
     private final boolean h2020;
     private final boolean collaborativeProject;
     private final boolean fullyFunded;
+    private final boolean ktp;
 
     private FinanceSummaryTableViewModel financeSummaryTableViewModel;
 
@@ -26,6 +27,7 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
         this.h2020 = competition.isH2020();
         this.collaborativeProject = !CollaborationLevel.SINGLE.equals(competition.getCollaborationLevel());
         this.fullyFunded = competition.isFullyFunded();
+        this.ktp = competition.isKtp();
         this.financeSummaryTableViewModel = financeSummaryTableViewModel;
         this.rows = rows;
     }
@@ -62,5 +64,9 @@ public class YourProjectFinancesViewModel implements BaseAnalyticsViewModel {
 
     public List<YourFinancesRowViewModel> getRows() {
         return rows;
+    }
+
+    public boolean isKtp() {
+        return ktp;
     }
 }

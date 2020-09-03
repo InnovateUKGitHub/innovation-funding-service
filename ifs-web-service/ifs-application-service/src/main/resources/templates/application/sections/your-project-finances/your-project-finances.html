@@ -29,7 +29,7 @@
             <h2 th:unless="${model.h2020}"
                 class="govuk-heading-m govuk-!-margin-bottom-0">Finances</h2>
             <div class="message-alert"
-                 th:if="${model.collaborativeProject}">
+                 th:if="${model.collaborativeProject and !model.ktp}">
                 <p class="govuk-body">Only members from your organisation will be able to see a breakdown of your
                     finances.</p>
             </div>
