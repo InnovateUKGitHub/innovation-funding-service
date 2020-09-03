@@ -35,6 +35,9 @@ public class Organisation {
     @Column(name = "international_registration_number")
     private String internationalRegistrationNumber;
 
+    @Column
+    private String knowledgeBaseRegistrationNumber;
+
     @OneToMany(mappedBy = "organisation",
             cascade = CascadeType.ALL)
     private List<OrganisationAddress> addresses = new ArrayList<>();
@@ -117,5 +120,13 @@ public class Organisation {
 
     public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
         this.internationalRegistrationNumber = internationalRegistrationNumber;
+    }
+
+    public String getKnowledgeBaseRegistrationNumber() {
+        return knowledgeBaseRegistrationNumber;
+    }
+
+    public void setKnowledgeBaseRegistrationNumber(String knowledgeBaseRegistrationNumber) {
+        this.knowledgeBaseRegistrationNumber = knowledgeBaseRegistrationNumber;
     }
 }
