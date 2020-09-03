@@ -1,18 +1,22 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType;
 import org.innovateuk.ifs.organisation.domain.KnowledgeBase;
+import org.innovateuk.ifs.organisation.domain.OrganisationType;
 import org.innovateuk.ifs.organisation.repository.KnowledgeBaseRepository;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.organisation.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -23,9 +27,15 @@ public class KnowledgeBaseControllerIntegrationTest extends BaseControllerIntegr
 
     private KnowledgeBase knowledgeBase;
 
+    private OrganisationType organisationType;
+
+    private Address address;
+
     @Before
     public void setUp() throws Exception {
-        knowledgeBase = new KnowledgeBase("Knowledge Base 1");
+        address = newAddress().build();
+        organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE).build();
+        knowledgeBase = new KnowledgeBase(1l, "KnowledgeBase 1", "123456789", KnowledgeBaseType.CATAPULT, address);
         knowledgeBaseRepository.save(knowledgeBase);
 
         loginSystemRegistrationUser();
@@ -38,30 +48,21 @@ public class KnowledgeBaseControllerIntegrationTest extends BaseControllerIntegr
     }
 
     @Test
-    public void getKnowledgeBases() {
-        RestResult<List<String>> result = controller.getKnowledgeBases();
-        assertEquals(1, result.getSuccess().size());
+    public void getKnowledgeBaseNames() {
+        RestResult<List<String>> result = controller.getKnowledgeBaseNames();
+        assertTrue(result.isSuccess());
+        assertEquals(445, result.getSuccess().size());
     }
 
     @Test
-    public void getKnowledgeBase() {
-        RestResult<String> result = controller.getKnowledgeBase(knowledgeBase.getId());
+    public void getKnowledgeBaseName() {
+        RestResult<String> result = controller.getKnowledgeBaseName(knowledgeBase.getId());
         assertEquals(knowledgeBase.getName(), result.getSuccess());
     }
 
     @Test
-    public void createKnowledgeBase() {
-        UserResource systemMaintainer = newUserResource().withRoleGlobal(Role.SYSTEM_MAINTAINER).build();
-        setLoggedInUser(systemMaintainer);
-        RestResult<Long> result = controller.createKnowledgeBase("Knowledge Base 2");
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void deleteKnowledgeBase() {
-        UserResource systemMaintainer = newUserResource().withRoleGlobal(Role.SYSTEM_MAINTAINER).build();
-        setLoggedInUser(systemMaintainer);
-        RestResult<Void> result = controller.deleteKnowledgeBase(knowledgeBase.getId());
-        assertTrue(result.isSuccess());
+    public void getKnowledgeBaseByName() {
+        RestResult<KnowledgeBaseResource> result = controller.getKnowledgeBaseByName("KnowledgeBase 1");
+        assertEquals(knowledgeBase.getName(), result.getSuccess().getName());
     }
 }

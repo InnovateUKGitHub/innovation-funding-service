@@ -19,6 +19,7 @@ public class  OrganisationResource {
     private String organisationTypeDescription;
     private boolean isInternational;
     private String internationalRegistrationNumber;
+    private String registrationNumber;
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
 
     public static final Comparator<OrganisationResource> normalOrgComparator = comparingLong(OrganisationResource::getId);
@@ -85,6 +86,14 @@ public class  OrganisationResource {
 
     public void setInternationalRegistrationNumber(String internationalRegistrationNumber) {
         this.internationalRegistrationNumber = internationalRegistrationNumber;
+    }
+
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
     public List<OrganisationAddressResource> getAddresses() {

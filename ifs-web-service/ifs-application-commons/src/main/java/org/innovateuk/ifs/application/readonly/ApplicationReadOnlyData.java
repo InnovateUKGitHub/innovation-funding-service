@@ -8,13 +8,14 @@ import org.innovateuk.ifs.analytics.BaseAnalyticsViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,8 +39,8 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
     private final Map<Long, FormInputResponseResource> formInputIdToFormInputResponses;
     /* only included if ApplicationReadOnlySettings for isIncludeStatuses is set. */
     private final Multimap<Long, QuestionStatusResource> questionToQuestionStatus;
-    /* only included if ApplicationReadOnlySettings for assessmentId is set. */
-    private final Multimap<Long, AssessorFormInputResponseResource> questionToAssessorResponse;
+    /* only included if ApplicationReadOnlySettings.includeAssessment is set. */
+    private final Map<Long, ApplicationAssessmentResource> assessmentToApplicationAssessment;
 
 
     public ApplicationReadOnlyData(ApplicationResource application, CompetitionResource competition,
@@ -47,7 +48,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                                    List<QuestionResource> questions, List<FormInputResource> formInputs,
                                    List<FormInputResponseResource> formInputResponses,
                                    List<QuestionStatusResource> questionStatuses,
-                                   List<AssessorFormInputResponseResource> assessorResponses) {
+                                   List<ApplicationAssessmentResource> assessments) {
         this.application = application;
         this.competition = competition;
         this.user = user;
@@ -64,7 +65,21 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         this.formInputIdToFormInputResponses = formInputResponses.stream()
                 .collect(toMap(FormInputResponseResource::getFormInput, Function.identity(), (m1, m2) -> m1));
         this.questionToQuestionStatus = Multimaps.index(questionStatuses, QuestionStatusResource::getQuestion);
-        this.questionToAssessorResponse = Multimaps.index(assessorResponses, AssessorFormInputResponseResource::getQuestion);
+        this.assessmentToApplicationAssessment = assessments.stream()
+                .collect(toMap(ApplicationAssessmentResource::getAssessmentId, Function.identity()));
+    }
+
+    public BigDecimal getApplicationScore() {
+        BigDecimal totalAssessmentScore = assessmentToApplicationAssessment.values()
+                .stream()
+                .map(v -> v.getAveragePercentage())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (assessmentToApplicationAssessment.size() == 0) return BigDecimal.ZERO;
+
+        BigDecimal average = totalAssessmentScore.divide(BigDecimal.valueOf(assessmentToApplicationAssessment.size()), 1, BigDecimal.ROUND_HALF_UP);
+
+        return average;
     }
 
     @Override
@@ -113,8 +128,8 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
         return applicantProcessRole;
     }
 
-    public Multimap<Long, AssessorFormInputResponseResource> getQuestionToAssessorResponse() {
-        return questionToAssessorResponse;
+    public Map<Long, ApplicationAssessmentResource> getAssessmentToApplicationAssessment() {
+        return assessmentToApplicationAssessment;
     }
 
     @Override
@@ -134,7 +149,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(questionIdToApplicationFormInputs, that.questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses, that.formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus, that.questionToQuestionStatus)
-                .append(questionToAssessorResponse, that.questionToAssessorResponse)
+                .append(assessmentToApplicationAssessment, that.assessmentToApplicationAssessment)
                 .isEquals();
     }
 
@@ -149,7 +164,7 @@ public class ApplicationReadOnlyData implements BaseAnalyticsViewModel {
                 .append(questionIdToApplicationFormInputs)
                 .append(formInputIdToFormInputResponses)
                 .append(questionToQuestionStatus)
-                .append(questionToAssessorResponse)
+                .append(assessmentToApplicationAssessment)
                 .toHashCode();
     }
 }

@@ -219,12 +219,12 @@ Grant offer letter section is read-only for academic partner
 
 PM should see project tab on dashboard once GOL is approved
     [Documentation]  IFS-4959
-    Given the user clicks the button/link    link = Dashboard
-    And the user should not see the element  id = dashboard-link-LIVE_PROJECTS_USER
+    Given the user clicks the button/link                    link = Dashboard
+    And the user clicks the application tile if displayed
     When the project is sent to acc
-    And log in as a different user           ${PS_LP_Application_Academic_Email}  ${short_password}
-    Then the user should see the element     id = dashboard-link-LIVE_PROJECTS_USER
-    And the user should see the element      jQuery = h2:contains("Projects")
+    And log in as a different user                           ${PS_LP_Application_Academic_Email}  ${short_password}
+    Then the user should see the element                     id = dashboard-link-LIVE_PROJECTS_USER
+    And the user should see the element                      jQuery = h2:contains("Projects")
 
 MO sould see project tab on dashboard once GOL is approved
     [Documentation]
