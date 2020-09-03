@@ -677,8 +677,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                                                                   "templateName",
                                                                   industrialTable,
                                                                   academicTable,
-                                                                  summaryTable,
-                                                                 false));
+                                                                  summaryTable));
         mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/template"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/gol-template"));
