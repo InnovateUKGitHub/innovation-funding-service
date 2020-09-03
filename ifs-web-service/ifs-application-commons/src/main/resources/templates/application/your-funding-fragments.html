@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, hideOtherFunding, otherFundingFragment)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -79,12 +79,23 @@
         <div class="govuk-form-group govuk-!-margin-bottom-9"
              th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    <h1 class="govuk-fieldset__heading">Other funding</h1>
-                </legend>
+                <th:block th:unless="${hideOtherFunding}">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h1 class="govuk-fieldset__heading">Other funding</h1>
+                    </legend>
+                </th:block>
+                <th:block th:if="${hideOtherFunding}">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h1 class="govuk-fieldset__heading">Have you received any funding for a similar project?</h1>
+                    </legend>
+                </th:block>
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
-                <span class="govuk-hint">Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.</span>
+                <th:block th:unless="${hideOtherFunding}">
+                    <span class="govuk-hint">
+                        <th:block th:insert="application/your-funding-fragments :: ${otherFundingFragment}"/>
+                    </span>
+                </th:block>
                 <div id="otherFunding" class="govuk-radios">
                     <div class="govuk-radios__item" data-target="other-funding-table">
                         <input type="radio"
@@ -192,6 +203,14 @@
             <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
         </div>
     </div>
+</th:block>
+
+<th:block th:fragment="other-funding-guidance-ktp">
+    Have you received any other public sector funding for this project?
+</th:block>
+
+<th:block th:fragment="other-funding-guidance-default">
+    Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.
 </th:block>
 
 <th:block th:fragment="other_funding_table">
