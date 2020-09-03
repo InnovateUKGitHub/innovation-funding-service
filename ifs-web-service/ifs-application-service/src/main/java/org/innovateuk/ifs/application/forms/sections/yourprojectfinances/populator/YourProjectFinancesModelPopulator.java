@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +68,11 @@ public class YourProjectFinancesModelPopulator {
     }
 
     private String sectionName(CompetitionResource competition, ApplicationResource application, OrganisationResource organisation, SectionResource subSection) {
-        if ("Your funding".equals(subSection.getName()) && competition.isKtp() && (application.getLeadOrganisationId() != organisation.getId())) {
+        if (competition.isKtp()
+                && !application.getLeadOrganisationId().equals(organisation.getId())
+                && subSection.getType().equals(SectionType.FUNDING_FINANCES)) {
             return "Other funding";
         }
         return subSection.getName();
     }
-
 }

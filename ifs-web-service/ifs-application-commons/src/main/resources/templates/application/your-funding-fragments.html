@@ -81,11 +81,13 @@
              th:classappend="${#fields.hasErrors('otherFunding')} ? 'govuk-form-group--error'">
             <fieldset class="govuk-fieldset" id="otherFundingShowHideToggle">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                    <h1 class="govuk-fieldset__heading"><th:block th:unless="${ktpFundingType}">Other funding</th:block><th:block th:if="${ktpFundingType}">Have you received any other public sector funding?</th:block></h1>
+                    <h1 class="govuk-fieldset__heading"><th:block th:unless="${ktpFundingType}">Other funding</th:block><th:block th:if="${ktpFundingType}">Have you ever received other public sector funding?</th:block></h1>
                 </legend>
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
-                <span class="govuk-hint"><th:block th:unless="${ktpFundingType}">Have you received any other public sector funding for this project? </th:block>This is important as other public sector support counts as part of the funding you can receive.</span>
+                <span class="govuk-hint"><th:block th:unless="${ktpFundingType}">Have you received any other public sector funding for this project? Have you received any other public sector funding for this project?</th:block>
+                    <th:block th:if="${ktpFundingType}">This is important because we need to ensure our projects are not funded by the public sector more than once. </th:block>
+                </span>
                 <div id="otherFunding" class="govuk-radios">
                     <div class="govuk-radios__item" data-target="other-funding-table">
                         <input type="radio"

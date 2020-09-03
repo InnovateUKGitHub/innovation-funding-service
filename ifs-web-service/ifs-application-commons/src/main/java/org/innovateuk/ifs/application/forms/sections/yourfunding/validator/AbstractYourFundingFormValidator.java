@@ -21,11 +21,11 @@ public class AbstractYourFundingFormValidator {
 
     protected void validate(AbstractYourFundingForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought) {
 
-        if (form instanceof YourFundingPercentageForm) {
-            validateYourFundingPercentageForm((YourFundingPercentageForm) form, errors, financeSupplier, maximumFundingSought);
+        if (form instanceof AbstractYourFundingPercentageForm) {
+            validateYourFundingPercentageForm((AbstractYourFundingPercentageForm) form, errors, financeSupplier, maximumFundingSought);
         }
-        if (form instanceof YourFundingAmountForm) {
-            validateYourFundingAmountForm((YourFundingAmountForm) form, errors, financeSupplier, maximumFundingSought);
+        if (form instanceof AbstractYourFundingAmountForm) {
+            validateYourFundingAmountForm((AbstractYourFundingAmountForm) form, errors, financeSupplier, maximumFundingSought);
         }
 
         ValidationUtils.rejectIfEmpty(errors, "otherFunding", "validation.finance.other.funding.required");
@@ -83,7 +83,7 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateYourFundingAmountForm(YourFundingAmountForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought) {
+    private void validateYourFundingAmountForm(AbstractYourFundingAmountForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought) {
         ValidationUtils.rejectIfEmpty(errors, "amount", "validation.finance.funding.sought.required");
         if (form.getAmount() != null) {
             if (form.getAmount().compareTo(BigDecimal.ONE) < 0) {
@@ -97,7 +97,7 @@ public class AbstractYourFundingFormValidator {
         }
     }
 
-    private void validateYourFundingPercentageForm(YourFundingPercentageForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought) {
+    private void validateYourFundingPercentageForm(AbstractYourFundingPercentageForm form, Errors errors, Supplier<BaseFinanceResource> financeSupplier, BigDecimal maximumFundingSought) {
         ValidationUtils.rejectIfEmpty(errors, "requestingFunding", "validation.finance.funding.requesting.blank");
         if (TRUE.equals(form.getRequestingFunding())) {
             ValidationUtils.rejectIfEmpty(errors, "grantClaimPercentage", "validation.field.must.not.be.blank");
