@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,11 @@ public class SectorTemplate implements CompetitionTemplate {
 
     @Override
     public List<SectionBuilder> sections() {
+        QuestionBuilder scopeQuestion = scope();
+            scopeQuestion.getFormInputs().stream()
+                    .filter(fi -> fi.getType().equals(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE))
+                    .findFirst()
+                    .ifPresent(fi -> fi.withActive(false));
         return newArrayList(
                 projectDetails()
                         .withQuestions(newArrayList(
@@ -50,7 +56,7 @@ public class SectorTemplate implements CompetitionTemplate {
                                 equalityDiversityAndInclusion(),
                                 projectSummary(),
                                 publicDescription(),
-                                scope()
+                                scopeQuestion
                         )),
                 applicationQuestions()
                         .withQuestions(sectorDefaultQuestions()),

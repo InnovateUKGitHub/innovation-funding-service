@@ -20,8 +20,8 @@ public class GrantClaimMaximumRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Set<Long>> getGrantClaimMaximumsForCompetitionType(long competititionTypeId) {
-        return getWithRestResult(grantClaimMaximumRestURL + "/get-for-competition-type/" + competititionTypeId, longsSetType());
+    public RestResult<Set<Long>> revertToDefaultForCompetitionType(long competitionId) {
+        return getWithRestResult(grantClaimMaximumRestURL + "/revert-to-default/" + competitionId, longsSetType());
     }
 
     @Override

@@ -8,11 +8,8 @@ import org.innovateuk.ifs.organisation.domain.Organisation;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 
 import javax.persistence.*;
-
 import java.math.BigDecimal;
-import java.util.Set;
 
-import static java.util.stream.Collectors.toSet;
 import static javax.persistence.CascadeType.REMOVE;
 
 /**
@@ -140,11 +137,6 @@ public abstract class Finance {
             return FundingLevel.HUNDRED.getPercentage();
         }
 
-        if (isMaximumFundingLevelOverridden()) {
-            // The same maximum funding level is set for all GrantClaimMaximums when overriding
-            return getCompetition().getGrantClaimMaximums().stream().findAny().map(GrantClaimMaximum::getMaximum).get();
-        }
-
         return getCompetition().getGrantClaimMaximums()
                 .stream()
                 .filter(this::isMatchingGrantClaimMaximum)
@@ -177,14 +169,4 @@ public abstract class Finance {
     private boolean isBusinessOrganisationType() {
         return getOrganisation().getOrganisationType().getId().equals(OrganisationTypeEnum.BUSINESS.getId());
     }
-
-    private boolean isMaximumFundingLevelOverridden() {
-        Set<Long> competitionGrantClaimMaximumIds = getCompetition().getGrantClaimMaximums().stream()
-                .map(GrantClaimMaximum::getId)
-                .collect(toSet());
-        Set<Long> templateGrantClaimMaximumIds = getCompetition().getCompetitionType().getTemplate()
-                .getGrantClaimMaximums().stream().map(GrantClaimMaximum::getId).collect(toSet());
-        return !competitionGrantClaimMaximumIds.equals(templateGrantClaimMaximumIds);
-    }
-
 }

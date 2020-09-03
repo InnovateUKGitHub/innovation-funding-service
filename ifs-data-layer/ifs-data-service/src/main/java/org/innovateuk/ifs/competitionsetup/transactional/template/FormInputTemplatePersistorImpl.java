@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.transactional.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competition.transactional.template.BaseChainedTemplatePersistor;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.*;
@@ -97,7 +98,7 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     }
 
     private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        return competition.getCompetitionType().isSector() &&
+        return competition.getCompetitionType().getCompetitionTypeEnum() == CompetitionTypeEnum.SECTOR &&
                 question.isScope() &&
                 formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE;
     }

@@ -46,7 +46,7 @@ public class GrantClaimMaximumRestServiceMocksTest extends BaseRestServiceUnitTe
         setupGetWithRestResultExpectations(format("%s/get-for-competition-type/%s", grantClaimMaximumRestURL,
                 competitionTypeId), longsSetType(), expected);
 
-        Set<Long> result = service.getGrantClaimMaximumsForCompetitionType(competitionTypeId)
+        Set<Long> result = service.revertToDefaultForCompetitionType(competitionTypeId)
                 .getSuccess();
 
         assertEquals(expected, result);
