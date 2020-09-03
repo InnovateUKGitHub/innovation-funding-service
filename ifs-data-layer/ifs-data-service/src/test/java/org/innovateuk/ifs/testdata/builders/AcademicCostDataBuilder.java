@@ -110,19 +110,23 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
         });
     }
 
-    public AcademicCostDataBuilder withWorkPostcode(String workPostcode) {
+    public AcademicCostDataBuilder withLocation() {
         return with(data -> {
 
             ApplicationFinanceResource applicationFinance =
                     financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
                             getSuccess();
+            OrganisationResource org = organisationService.findById(applicationFinance.getOrganisation()).getSuccess();
 
-            applicationFinance.setWorkPostcode(workPostcode);
+            if (org.isInternational()) {
+                applicationFinance.setInternationalLocation("France");
+            } else {
+                applicationFinance.setWorkPostcode("AB12 3CD");
+            }
 
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
-
 
     private AcademicCostDataBuilder addCostItem(String financeRowName, Function<ApplicationFinanceResource, FinanceRowItem> cost) {
         return with(data -> {

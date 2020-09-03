@@ -172,14 +172,19 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         });
     }
 
-    public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
+    public IndustrialCostDataBuilder withLocation() {
         return with(data -> {
 
             ApplicationFinanceResource applicationFinance =
                     financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
                             getSuccess();
+            OrganisationResource org = organisationService.findById(applicationFinance.getOrganisation()).getSuccess();
 
-            applicationFinance.setWorkPostcode(workPostcode);
+            if (org.isInternational()) {
+                applicationFinance.setInternationalLocation("France");
+            } else {
+                applicationFinance.setWorkPostcode("AB12 3CD");
+            }
 
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
