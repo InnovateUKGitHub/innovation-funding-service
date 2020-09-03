@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.form.AddressForm;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
-import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.registration.form.*;
 import org.innovateuk.ifs.registration.service.OrganisationJourneyEnd;
@@ -25,7 +25,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
-import static org.innovateuk.ifs.organisation.controller.AbstractOrganisationCreationController.CONFIRM_ORGANISATION;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -78,7 +77,7 @@ public class OrganisationCreationKnowledgeBaseControllerTest extends BaseControl
         KnowledgeBaseResource knowledgeBaseResource = new KnowledgeBaseResource();
         knowledgeBaseResource.setName(name);
         knowledgeBaseResource.setRegistrationNumber("123456789");
-        knowledgeBaseResource.setOrganisationType(6l);
+        knowledgeBaseResource.setType(KnowledgeBaseType.CATAPULT);
 
         KnowledgeBaseForm knowledgeBaseForm = new KnowledgeBaseForm();
         knowledgeBaseForm.setKnowledgeBase(name);
@@ -126,7 +125,7 @@ public class OrganisationCreationKnowledgeBaseControllerTest extends BaseControl
 
         mockMvc.perform(post(BASE_URL + "/knowledge-base/details")
                 .param("name", "knowledgeBase")
-                .param("organisationType", "5")
+                .param("type", "CATAPULT")
                 .param("addressForm.addressType", AddressForm.AddressType.MANUAL_ENTRY.name()).
                         param("addressForm.manualAddress.addressLine1", "Montrose House 1").
                         param("addressForm.manualAddress.addressLine2", "Clayhill Park").
@@ -187,7 +186,7 @@ public class OrganisationCreationKnowledgeBaseControllerTest extends BaseControl
 
         KnowledgeBaseCreateForm knowledgeBaseCreateForm = new KnowledgeBaseCreateForm();
         knowledgeBaseCreateForm.setCatapultNumber("123456789");
-        knowledgeBaseCreateForm.setOrganisationType(6L);
+        knowledgeBaseCreateForm.setType(KnowledgeBaseType.CATAPULT);
         knowledgeBaseCreateForm.setName("knowledge");
         knowledgeBaseCreateForm.setAddressForm(addressForm);
 
@@ -202,7 +201,7 @@ public class OrganisationCreationKnowledgeBaseControllerTest extends BaseControl
         mockMvc.perform(post(BASE_URL + "/knowledge-base/save-organisation")
                 .param("addressForm.action", "true")
                 .param("name", "knowledgeBase")
-                .param("organisationType", "5"))
+                .param("type", "CATAPULT"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(view));
     }
