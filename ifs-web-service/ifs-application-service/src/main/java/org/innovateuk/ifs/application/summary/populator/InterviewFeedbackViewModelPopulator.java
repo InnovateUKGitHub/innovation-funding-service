@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application.summary.controller;
+package org.innovateuk.ifs.application.summary.populator;
 
 import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
