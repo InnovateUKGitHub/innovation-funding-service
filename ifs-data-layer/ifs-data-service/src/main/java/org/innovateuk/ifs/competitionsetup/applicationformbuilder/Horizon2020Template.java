@@ -2,12 +2,15 @@ package org.innovateuk.ifs.competitionsetup.applicationformbuilder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders.*;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aQuestion;
 
 @Component
 public class Horizon2020Template implements CompetitionTemplate {
@@ -35,11 +38,16 @@ public class Horizon2020Template implements CompetitionTemplate {
         return newArrayList(
                 projectDetails()
                         .withQuestions(newArrayList(
+                                applicationDetails()
+                                        .withQuestionSetupType(QuestionSetupType.GRANT_TRANSFER_DETAILS),
                                 applicationTeam(),
-                                applicationDetails(),
-                                researchCategory(),
-                                equalityDiversityAndInclusion(),
-                                publicDescription()
+                                aQuestion()
+                                    .withShortName("Horizon 2020 grant agreement")
+                                    .withName("Horizon 2020 grant agreement")
+                                    .withType(QuestionType.LEAD_ONLY)
+                                    .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
+                                publicDescription(),
+                                equalityDiversityAndInclusion()
                         )),
                 finances(),
                 termsAndConditions()
