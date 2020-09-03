@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 
 import java.util.List;
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface KnowledgeBaseRestService {
     RestResult<List<String>> getKnowledgeBases();
+
+    RestResult<KnowledgeBaseResource> getKnowledgeBaseByName(String knowledgeBaseName);
 }

@@ -110,8 +110,7 @@ public class GrantOfferLetterTemplatePopulator {
                                                      competitionResource.getTermsAndConditions().getTemplate(),
                                                      industrialFinanceTableModel,
                                                      academicFinanceTableModel,
-                                                     summaryFinanceTableModel,
-                                                     competitionResource.isProcurement());
+                                                     summaryFinanceTableModel);
     }
 
     private List<String> getAddressLines(ProjectResource project) {
