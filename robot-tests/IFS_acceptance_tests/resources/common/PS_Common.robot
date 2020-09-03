@@ -207,6 +207,7 @@ Applicant uploads the GOL using Docusign
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           jquery = a:contains("Grant offer letter")
     the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           css=.page.page-loaded
     the user should see the element           jQuery = span:contains("Please review the documents below.")
     the user selects the checkbox             disclosureAccepted
     the user clicks the button/link           jQuery = button:contains("Continue")
