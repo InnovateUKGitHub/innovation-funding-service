@@ -61,6 +61,8 @@ ${nonKTAEmail}                        James.Smith@ktn-uk.test
 ${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
 ${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
 ${invitationEmailSubject}             Invitation to be Knowledge Transfer Adviser
+${applicationQuestion}                What is the business opportunity that your project addresses?
+${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
 ${fname}                              Indi
@@ -240,18 +242,24 @@ The KTA can see the read only view of the application/s
     Then the user should see the element      jQuery = h1:contains("Application overview")
     And the user should see the element       jQuery = h2:contains("Project details")
 
+The KTA cannot edit any application section
+    [Documentation]  IFS-7983
+    When the user clicks the button/link        id = accordion-questions-heading-2-1
+    Then the user should see the element        jQuery = span:contains("${applicationQuestion}")
+    And the user should not see the element     jQuery = p:contains("${questionTextGuidance}")
+
 The KTA is able to see lead applicant's project finances
     #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
     [Documentation]  IFS-7983
     Given the user clicks the button/link     id = accordion-questions-heading-3-1
-    When the user clicks the button/link      jQuery = div:contains("A Knowledge Base") ~ a:contains("View finances")
+    When the user clicks the button/link      jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
     Then the user should see the element      jQuery = h2:contains("Finance summary")
 
 The KTA is able to see non-lead applicant's project finances
      #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
      [Documentation]  IFS-7983
      Given the user clicks the button/link     link = Back to application overview
-     When the user clicks the button/link      jQuery = div:contains("INNOVATE LTD") ~ a:contains("View finances")
+     When the user clicks the button/link      jQuery = div:contains("${newPartnerOrgName}") ~ a:contains("View finances")
      Then the user should see the element      jQuery = h2:contains("Finance summary")
 
 Lead applicant verifies the inviation is accepted.
