@@ -57,6 +57,7 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
         return competitionName;
     }
 
+    @Override
     public long getQuestionId() {
         return questionId;
     }
@@ -70,6 +71,9 @@ public abstract class AbstractQuestionReadOnlyViewModel implements ApplicationQu
     public boolean isComplete() {
         return complete;
     }
+
+    @Override
+    public boolean hasScore() { return false; }
 
     @Override
     public boolean shouldDisplayActions() {
