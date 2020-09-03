@@ -171,6 +171,17 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
+    public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
+        return with(data -> {
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+
+            applicationFinance.setWorkPostcode(workPostcode);
+
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
 
     public IndustrialCostDataBuilder withLocation() {
         return with(data -> {
