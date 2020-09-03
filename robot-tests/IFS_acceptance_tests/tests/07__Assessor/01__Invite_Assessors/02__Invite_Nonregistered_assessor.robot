@@ -138,8 +138,8 @@ the user should see the validation error in the create assessor form
     the user should see a field and summary error      ${enter_a_phone_number}
     the user should see a field and summary error      Please enter your password.
     the user should see a field and summary error      ${enter_a_phone_number_between_8_and_20_digits}
-    the user should see a field and summary error      Your last name should have at least 2 characters.
-    the user should see a field and summary error      Your first name should have at least 2 characters.
+    the user should see a field and summary error      Their last name should have at least 2 characters.
+    the user should see a field and summary error      Their first name should have at least 2 characters.
     the user should see a field and summary error      Password must be at least 8 characters.
 
 the user enters the postcode and password to create account

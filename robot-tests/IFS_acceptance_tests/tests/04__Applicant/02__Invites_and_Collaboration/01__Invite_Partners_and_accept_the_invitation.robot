@@ -90,7 +90,7 @@ Lead Adds/Removes partner organisation
     Given the user clicks the button/link              link = Add a partner organisation
     And the user adds a partner organisation           Fannie May  Collaborator 2  ewan+10@hiveit.co.uk
     And the user clicks the button/link                jQuery = button:contains("Invite partner organisation")
-    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove organisation")
+    When the user clicks the button/link               jQuery = td:contains("ewan") ~ td a:contains("Remove")
     Then the user clicks the button/link               jQuery = tr:contains("ewan") .warning-modal button:contains("Remove organisation")
     And the user should not see the element            jQuery = td:contains("Fannie May")
     And the user should see the element                jQuery = h1:contains("Application team")
@@ -122,7 +122,7 @@ Cannot mark as complete with pending invites
     [Documentation]  IFS-3088
     [Tags]  HappyPath
     Given the user clicks the button/link                 id = application-question-complete
-    Then The user should see a field and summary error    You cannot mark as complete until Adrian Booth has either accepted the invitation or is removed
+    Then The user should see a field and summary error    You cannot mark this page as complete until this invitation has either been accepted or removed.
 
 Partner is still marked as pending after accepting invitation but not completing
     [Documentation]  IFS-6589

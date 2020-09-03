@@ -53,8 +53,8 @@ ${newPendingEmail}                       gintare@tester.com
 ${emailToChange}                         steve.smith@empire.com
 ${validKTNDomainEmail}                   jake.Rayan@ktn-uk.test
 ${inviteExternalUserText}                Invite a new external user
-${firstNameInvalidCharacterMessage}      Your first name should have at least 2 characters.
-${lastNameInvalidCharacterMessage}       Your last name should have at least 2 characters.
+${firstNameInvalidCharacterMessage}      Their first name should have at least 2 characters.
+${lastNameInvalidCharacterMessage}       Their last name should have at least 2 characters.
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
@@ -198,7 +198,7 @@ Server side validation for invite new internal user
     [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/management/admin/users/active
     When the user clicks the button/link                    link = Invite a new internal user
-    And the user clicks the button/link                     jQuery = button:contains("Send invite")
+    And the user clicks the button/link                     jQuery = button:contains("Send invitation")
     Then the use should see the validation error summary    Please enter an email address.
 
 The user must use an Innovate UK email
@@ -363,13 +363,13 @@ Invite a new external user field validations
     [Documentation]  IFS-7975
     Given the user clicks the button/link                                            link = Manage users
     When the user clicks the button/link                                             link = Invite a new external user
-    And the user clicks the button/link                                              jQuery = button:contains("Save and return")
+    And the user clicks the button/link                                              jQuery = button:contains("Send invitation")
     Then the user should see invite a new external user field validation message
 
 KTN email domain validations
     [Documentation]  IFS-7975
     Given the user fills invite a new external user fields     Jake  Rayan  ${invalidEmail}
-    When the user clicks the button/link                       jQuery = button:contains("Save and return")
+    When the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see a field and summary error         ${invalidKTNDomainValidationMessage}
 
 Administrator can cancel the new external user details entered
@@ -382,7 +382,7 @@ Administrator can sucessfully save and return to the manage users page
     [Documentation]  IFS-7975
     Given the user clicks the button/link                     link = Invite a new external user
     When the user fills invite a new external user fields     Jake  Rayan  ${validKTNDomainEmail}
-    And the user clicks the button/link                       jQuery = button:contains("Save and return")
+    And the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see the element                      link = Invite a new external user
     [Teardown]  Logout as user
 
@@ -498,7 +498,7 @@ the external user removes the pending parter invitation
 the user removes the pending organisation invitation
     [Arguments]  ${pageToRemoveFrom}
     the user navigates to the page      ${pageToRemoveFrom}
-    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove organisation")
+    the user clicks the button/link     jQuery = td:contains("(pending for 0 days)")~ td a:contains("Remove")
     the user clicks the button/link     jQuery = .warning-modal[aria-hidden=false] button:contains("Remove organisation")
 
 the user removes the pending organisation invitation in projet setup

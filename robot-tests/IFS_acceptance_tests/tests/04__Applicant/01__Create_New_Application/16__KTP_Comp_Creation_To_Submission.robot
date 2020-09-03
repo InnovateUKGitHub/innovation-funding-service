@@ -48,9 +48,9 @@ ${costsValue}                         123
 @{employees}                          2000    1500    1200
 ${associateSalaryTable}               associate-salary-costs-table
 ${associateDevelopmentTable}          associate-development-costs-table
-${noKTAInApplicationValidation}       You cannot mark as complete until a Knowledge Transfer Adviser has been added to the application.
-${nonRegisteredUserValidation}        You cannot invite the Knowledge Transfer Adviser as their email address is not registered.
-${acceptInvitationValidation}         You cannot mark as complete until the Knowledge Transfer Adviser has accepted the invitation.
+${noKTAInApplicationValidation}       You cannot mark this page as complete until a knowledge transfer adviser has been invited and they have accepted their invitation.
+${nonRegisteredUserValidation}        You cannot invite the knowledge transfer adviser as their email address is not registered.
+${acceptInvitationValidation}         You cannot mark this page as complete until this invitation has either been accepted or removed.
 ${ktaEmail}                           john.fenton@ktn-uk.test
 ${nonKTAEmail}                        James.Smith@ktn-uk.test
 ${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
