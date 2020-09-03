@@ -3,6 +3,8 @@ Documentation     IFS-6454  Ability to push projects through to ACC
 ...
 ...               IFS- 7017  Update notifications & IFS when a project is live to point them to ACC instead of _Connect
 ...
+...               IFS-8108  Default post award service to IFS PA
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../resources/defaultResources.robot
@@ -45,12 +47,12 @@ Competition Setup - Post award service link should not display for any other fun
      Then the user should not see the element              link = ${postAwardServiceLink}
 
 Competition Setup - Ifs admin can access post award service form details for grant funding type competition
-     [Documentation]   IFS-6454
+     [Documentation]   IFS-6454   IFS-8108
      Given the user clicks create a competition button
      When the user fills in the CS Initial details           ${postAwardServiceCompetitionName}  ${month}  ${nextyear}  ${compType_Programme}  2  GRANT
      And the user clicks the button/link                     link = ${postAwardServiceLink}
      Then the user check for post award service fields
-     And the user sees that the radio button is selected     postAwardService  CONNECT
+     And the user sees that the radio button is selected     postAwardService  IFS_POST_AWARD
 
 Competition Setup - Ifs admin can save the post award service selection
      [Documentation]   IFS-6454
@@ -77,7 +79,7 @@ Project Setup - IFS admin can edit the post award service options
      Given log in as a different user                           &{ifs_admin_user_credentials}
      And the user navigates to the page                         ${grantFundProjectSetupDashboard}
      When the user clicks the button/link                       link = ${viewAndUpdateCompetitionDetailsLink}
-     And the user edits form with post award service option
+     And the user edits form with post award service option     IFS_POST_AWARD
      Then the user check for selected value                     IFS_POST_AWARD
 
 Project Setup - view and update competition details link should not display for comp admin
@@ -142,10 +144,11 @@ Applicant - User should be redirected to IFS post award service on click review 
 Applicant - User should be redirected to grant application service on click review its progress for connect applications
      [Documentation]  IFS-7017
      [Setup]  Request a project id of connect service application
-     Given the user navigates to the page               ${server}/dashboard-selection
-     And the internal user approve the GOL              ${connectServiceProjectID}
-     When applicant clicks review its progress link     ${connectServiceProjectID}
-     Then the user should see the element               link = _connect
+     Given the user navigates to the page                          ${server}/dashboard-selection
+     When the internal user edits the form with connect option     CONNECT
+     And the internal user approve the GOL                         ${connectServiceProjectID}
+     And applicant clicks review its progress link                 ${connectServiceProjectID}
+     Then the user should see the element                          link = _connect
 
 Applicant - User should be redirected to IFS post award service on click projects tile in dashboard for post award service applications
      [Documentation]  IFS-7017
@@ -185,9 +188,17 @@ the user check for selected value
     the user sees that the radio button is selected     postAwardService  ${postAwardLabel}
 
 the user edits form with post award service option
-     And the user clicks the button/link      link = ${postAwardServiceLink}
-     And the user selects the radio button    postAwardService  IFS_POST_AWARD
-     And the user clicks the button/link      css = [value="Save and return to competition"]
+    [Arguments]  ${postAwardServiceOption}
+    the user clicks the button/link      link = ${postAwardServiceLink}
+    the user selects the radio button    postAwardService  ${postAwardServiceOption}
+    the user clicks the button/link      css = [value="Save and return to competition"]
+
+the internal user edits the form with connect option
+    [Arguments]  ${postawardServiceValue}
+    log in as a different user                             &{ifs_admin_user_credentials}
+    the user navigates to the page                         ${server}/project-setup-management/competition/${projectSetupConnectCompetitionId}/status/all
+    the user clicks the button/link                        link = View and update competition details
+    the user edits form with post award service option     ${postawardServiceValue}
 
 Request a project id of post award service application
      ${postAwardServiceProjectID} =      get project id by name             ${projectSetupPostAwardApplicationName}

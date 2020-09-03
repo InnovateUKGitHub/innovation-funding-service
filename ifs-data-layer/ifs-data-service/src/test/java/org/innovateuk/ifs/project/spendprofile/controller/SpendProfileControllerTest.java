@@ -56,17 +56,6 @@ public class SpendProfileControllerTest extends BaseControllerMockMVCTest<SpendP
     }
 
     @Test
-    public void generateSpendProfileForPartnerOrganisation() throws Exception {
-        when(spendProfileService.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L))
-                .thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/1/partner-organisation/2/user/7/spend-profile/generate"))
-                .andExpect(status().isCreated());
-
-        verify(spendProfileService).generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
-    }
-
-    @Test
     public void deleteSpendProfile() throws Exception {
         long projectId = 123L;
         when(spendProfileService.deleteSpendProfile(projectId)).thenReturn(serviceSuccess());

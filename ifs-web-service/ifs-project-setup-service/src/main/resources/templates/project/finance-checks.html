@@ -62,7 +62,7 @@
             <p class="govuk-body">Innovate UK is reviewing
                 <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                    class="govuk-link">your project finances</a>.
-                <th:block th:unless="${model.loanCompetition}">
+                <th:block th:unless="${model.loanCompetition OR model.procurementCompetition}">
                 You can also view the <a
                     th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                     class="govuk-link">project finance overview</a>.

@@ -16,8 +16,9 @@ ${application_not_submitted_message}    This application has not been entered in
 Application shows as not submitted on the dashboard
     [Documentation]    INFUND-2741
     [Tags]  HappyPath
+    Given the user clicks the application tile if displayed
     Then the user should see that the application is not submitted
-    And the user clicks the button/link    link = ${IN_ASSESSMENT_APPLICATION_1_TITLE}
+    And the user clicks the button/link                                 link = ${IN_ASSESSMENT_APPLICATION_1_TITLE}
 
 Application shows as not submitted on the overview
     [Documentation]    INFUND-2742

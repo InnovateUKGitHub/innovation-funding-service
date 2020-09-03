@@ -1,5 +1,7 @@
 *** Settings ***
-Documentation     IFS-7790 KTP: Your finances - Edit
+Documentation     IFS-7790  KTP: Your finances - Edit
+...
+...               IFS-7959  KTP Your Project Finances - Links for Detailed Finances
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -49,7 +51,7 @@ Calculation for associate employment and development
 Knowledge base supervisor can only add two rows
     [Documentation]  IFS-7790
     Given the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
-    Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
+    Then the user should see the element          css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
 
 Knowledge base supervisor validations
     [Documentation]  IFS-7790
@@ -133,13 +135,13 @@ Mark as complete and check read only view
     Then the user should see the read only view of KTP
 
 Finance overview values
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790 IFS-7959
     Given the user navigates to the page     ${server}/application/${KTPapplicationId}
     And The user clicks the button/link      link = Finances overview
     Then the user should see the correct data in the finance tables
 
 Internal user views values
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790 IFS-7959
     Given log in as a different user       &{Comp_admin1_credentials}
     When the user navigates to the page    ${server}/management/competition/${KTPcompetitonId}/application/${KTPapplicationId}
     And The user clicks the button/link    jQuery = button:contains("Finances summary")
@@ -177,13 +179,16 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£500")
 
 the user should see the correct data in the finance tables
-    the user should see the element       jQuery = th:contains("Total") ~ th:contains("Associate salary costs") ~ th:contains("Associate development costs") ~ th:contains("Travel and subsistence")
-    the user should see the element       jQuery = th:contains("Total") ~ th:contains("Consumables") ~ th:contains("Knowledge base advisor") ~ th:contains("Estate")
-    the user should see the element       jQuery = th:contains("Total") ~ th:contains("Associate support costs") ~th:contains("Subcontracting") ~ th:contains("Other costs")
-    the user should see the element       jQuery = th:contains("Total") ~ th:contains("Associate salary costs") ~ th:contains("Associate development costs") ~ th:contains("Travel and subsistence")
-    the user should see the element       jQuery = th:contains("Total") ~ th:contains("Consumables") ~ th:contains("Knowledge base advisor") ~ th:contains("Estate")
-    the user should see the element       jQuery = th:contains("Total") ~ th:contains("Associate support costs") ~th:contains("Subcontracting") ~ th:contains("Other costs")
-    the user should see the element       jQuery = td:contains("£8,369") ~ td:contains("123") ~ td:contains("123") ~ td:contains(2,000) ~ td:contains(2,000) ~ td:contains("123") ~ td:contains("1,000") ~ td:contains(1,000) ~ td:contains(1,000) ~ td:contains("1,000")
+    the user should see the element       jQuery = td:contains("Associate Employment") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Associate development") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Travel and subsistence") ~ td:contains("2,000")
+    the user should see the element       jQuery = td:contains("Consumables") ~ td:contains("2,000")
+    the user should see the element       jQuery = td:contains("Knowledge base supervisor") ~ td:contains("123")
+    the user should see the element       jQuery = td:contains("Estate") ~ td:contains("1,000")
+    the user should see the element       jQuery = td:contains("Additional associate support") ~ td:contains("1,000")
+    the user should see the element       jQuery = td:contains("Subcontracting") ~ td:contains("1,000")
+    the user should see the element       jQuery = td:contains("Other costs") ~ td:contains("1,000")
+    the user should see the element       jQuery = th:contains("Total") ~ td:contains("£8,369")
 
 the user fills in consumables
     the user enters text to a text field     css = input[id^="consumableCost"][id$="item"]  consumable

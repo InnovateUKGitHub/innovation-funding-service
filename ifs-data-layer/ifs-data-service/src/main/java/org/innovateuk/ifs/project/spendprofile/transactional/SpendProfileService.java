@@ -29,10 +29,6 @@ public interface SpendProfileService {
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", description = "A member of the internal Finance Team can generate a Spend Profile for a given Project and Organisation" )
-    ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
     @Activity(projectId = "projectId", dynamicType = "approveOrRejectActivityType")
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);

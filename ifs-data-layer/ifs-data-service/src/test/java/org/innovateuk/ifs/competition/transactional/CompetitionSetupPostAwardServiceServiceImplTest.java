@@ -142,6 +142,6 @@ public class CompetitionSetupPostAwardServiceServiceImplTest extends BaseService
         // then
         assertTrue(result.isSuccess());
         assertEquals(competitionId, result.getSuccess().getCompetitionId());
-        assertEquals(PostAwardService.CONNECT, result.getSuccess().getPostAwardService());
+        assertEquals(PostAwardService.IFS_POST_AWARD, result.getSuccess().getPostAwardService());
     }
 }
