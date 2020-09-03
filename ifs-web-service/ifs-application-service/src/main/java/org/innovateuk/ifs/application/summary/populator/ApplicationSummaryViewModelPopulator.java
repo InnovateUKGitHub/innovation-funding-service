@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyView
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.summary.viewmodel.ApplicationSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -21,15 +22,25 @@ public class ApplicationSummaryViewModelPopulator {
     private ApplicationReadOnlyViewModelPopulator applicationReadOnlyViewModelPopulator;
 
     @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Autowired
     private ProjectService projectService;
 
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
-        ApplicationReadOnlySettings settings = defaultSettings();
+        ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
         return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
                                                application,
                                                competition,
                                                isProjectWithdrawn(application.getId()));
+    }
+
+    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
+        return application.isSubmitted()
+                && feedbackAvailable;
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {

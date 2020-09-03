@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
@@ -62,19 +61,9 @@ public class ApplicationSummaryController {
                                      UserResource user) {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        if (shouldDisplayFeedback(competition, application)) {
-            return redirectToFeedback(applicationId);
-        }
 
         model.addAttribute("model", applicationSummaryViewModelPopulator.populate(application, competition, user));
         return "application-summary";
-    }
-
-    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
-        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
-        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
-        return application.isSubmitted()
-                && feedbackAvailable;
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads and stakeholders have permission to view the horizon 2020 grant agreement")
@@ -84,12 +73,5 @@ public class ApplicationSummaryController {
     ResponseEntity<ByteArrayResource> downloadGrantAgreement(@PathVariable long applicationId) {
         return getFileResponseEntity(euGrantTransferRestService.downloadGrantAgreement(applicationId).getSuccess(),
                 euGrantTransferRestService.findGrantAgreement(applicationId).getSuccess());
-    }
-
-    private String redirectToFeedback(long applicationId) {
-        return UriComponentsBuilder.fromPath(String.format("redirect:/application/%s/feedback", applicationId))
-                .build()
-                .encode()
-                .toUriString();
     }
 }
