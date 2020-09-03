@@ -2199,6 +2199,11 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These are the associate's total employment costs for all projects listed in the partnership proposal, for example: salary, redundancy payments, NI and pension contributions.</p>
+                    <p class="govuk-body">The business partner is solely responsible for any salary and additional employment costs that exceed the amounts recorded in this section.</p>
+                    <p class="govuk-body">The only reason you may exceed this limit is if you have added a London weighting allowance.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-salary-costs-table">
                         <thead class="govuk-table__head">
@@ -2371,6 +2376,10 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
+                <th:block  th:unless="${model.internal}">
+                    <p class="govuk-body">These costs are for any development training the associate needs for this project and for their all-round development.</p>
+                    <p class="govuk-body">You cannot exceed the allowable limit.</p>
+                </th:block>
                 <div class="govuk-form-group table-overflow">
                     <table class="govuk-table" id="associate-development-costs-table">
                         <thead class="govuk-table__head">
