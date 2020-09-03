@@ -44,7 +44,7 @@
             </div>
         </th:block>
 
-        <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content" th:with="hideProcurementLink=${true}"/>
+        <th:block th:replace="competition/info/__${model.competitionTermsTemplate}__ :: terms-and-conditions-content"/>
 
         <th:block th:if="${model.showHeaderAndFooter}">
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
