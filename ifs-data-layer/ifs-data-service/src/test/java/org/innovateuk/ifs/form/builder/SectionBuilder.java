@@ -88,10 +88,6 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
         return with(section -> setField("type", sectionType, section));
     }
 
-    public SectionBuilder withDescription(String description) {
-        return with(section -> setField("description", description, section));
-    }
-
     public SectionBuilder withCompetition(Competition... competitions) {
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }

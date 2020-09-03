@@ -12,10 +12,7 @@ import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
-import org.innovateuk.ifs.user.resource.RoleProfileState;
-import org.innovateuk.ifs.user.resource.RoleProfileStatusResource;
-import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.RoleProfileStatusRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,7 +89,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Before
     public void setUp() {
-        UserResource user = newUserResource().withId(3L).withFirstName("test").withLastName("name").build();
+        UserResource user = newUserResource().withId(3L).withFirstName("test").withLastName("name").withRoleGlobal(Role.ASSESSOR).build();
         setLoggedInUser(user);
     }
 
