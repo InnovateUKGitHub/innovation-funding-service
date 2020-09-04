@@ -639,7 +639,6 @@ the user completes partner project finances
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                         ${application_title}   Calculate  52,214  yes
     ...                                             AND    the user accept the competition terms and conditions                                            Return to application overview
-
 the user apply with a different organisation
     [Arguments]  ${OrganisationType}
     the user clicks the button/link       link = Apply with a different organisation

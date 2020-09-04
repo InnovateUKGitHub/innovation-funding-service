@@ -27,6 +27,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7958  KTP Your Project Finances - Funding Breakdown
 ...
+...            IFS-7956 KTP Your Project Finances - Other Funding
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -224,7 +226,7 @@ New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then The user completes the KTP application except application team and your funding
+    Then the user completes the KTP application except application team and your funding
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
@@ -232,7 +234,7 @@ New lead applicant can declare any other government funding received
     And the user clicks the button/link                                      link = Your funding
     Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
     And the user should see the readonly view of other funding received
-    And The user should see KTP finance sections are complete
+    And the user should see KTP finance sections are complete
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
@@ -248,7 +250,7 @@ Partner applicant can declare any other government funding received
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Other funding
     Then the user should see the readonly view of other funding received
-    And The user should see KTP finance sections are complete
+    And the user should see KTP finance sections are complete
 
 Partner organisation can see each other finance summary calculations in project finances page
     [Documentation]  IFS-7958
@@ -587,7 +589,7 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-The user completes the KTP application except application team and your funding
+the user completes the KTP application except application team and your funding
     the user clicks the button/link                                                             link = Application details
     the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
@@ -742,7 +744,7 @@ the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Total other funding") ~ td:contains("£20,000")
     the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
-The user should see KTP finance sections are complete
+the user should see KTP finance sections are complete
     the user clicks the button/link     link = Return to finances
     the user should see the element     css = li:nth-of-type(1) .task-status-complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
