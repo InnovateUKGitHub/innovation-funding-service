@@ -327,7 +327,7 @@
                                 <dd th:text="${model.application.innovationArea.name} ?: 'Not listed'"></dd>
                             </th:block>
                             <th:block th:unless="${model.application.resubmission == null}">
-                                <dt>Is this application a resubmission?</dt>
+                                <dt>Has this application been previously submitted to Innovate UK?</dt>
                                 <dd th:text="${model.application.resubmission ? 'Yes' : 'No'}"></dd>
                                 <th:block th:if="${model.application.resubmission == true}">
                                     <dt>Previous application number</dt>
