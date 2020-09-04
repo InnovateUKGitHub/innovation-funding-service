@@ -1,1 +1,1 @@
-${competitionName}: Your grant offer letter is available for project ${applicationId?c}
+${competitionName}: Your ${title} is available for project ${applicationId?c}
