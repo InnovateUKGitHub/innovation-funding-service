@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="empty (model)">
+<th:block th:fragment="empty">
     Empty
 </th:block>
 
-<th:block th:fragment="generic (model)">
+<th:block th:fragment="generic">
     <div class="govuk-form-group">
         <label th:if="${model.question != null}" class="govuk-label">
             <span th:text="${model.question}" class="govuk-heading-s"></span>
@@ -50,7 +50,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="application-details (model)">
+<th:block th:fragment="application-details">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <dl class="govuk-list govuk-!-font-size-16">
@@ -99,7 +99,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="research-category (model)">
+<th:block th:fragment="research-category">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             <dl class="govuk-list govuk-!-font-size-16">
@@ -110,7 +110,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="finance-summary (model)">
+<th:block th:fragment="finance-summary">
     <p class="govuk-body" th:unless="${model.fullyFunded}">This is the overview of the finances
         provided by all partners in this project.</p>
 
@@ -132,7 +132,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="application-team (model)">
+<th:block th:fragment="application-team">
     <th:block th:each="organisation: ${model.organisations}">
         <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
             <th:block th:text="${organisation.name}"></th:block>
@@ -209,7 +209,7 @@
             </table>
         </th:block>
 </th:block>
-<th:block th:fragment="grant-transfer-details(model)">
+<th:block th:fragment="grant-transfer-details">
     <dl class="govuk-list">
         <dt>Project name</dt>
         <dd th:text="${model.projectName}">My EU project name</dd>
@@ -243,7 +243,7 @@
     </dl>
 </th:block>
 
-<th:block th:fragment="grant-agreement(model)">
+<th:block th:fragment="grant-agreement">
     <th:block th:if="${model.filename != null}">
         <!--/* don't use @{...} so that URL is always pointing to application service */-->
         <a th:href="${'/application/' + model.applicationId +'/grant-agreement'}" th:text="${model.filename}"
@@ -255,7 +255,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions(model)">
+<th:block th:fragment="terms-and-conditions">
     <th:block th:unless="${model.complete}">
         <div class="warning-alert">
             <p class="govuk-body">The following organisations have not yet accepted:</p>
@@ -274,12 +274,12 @@
     </p>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions-assessment(model)">
+<th:block th:fragment="terms-and-conditions-assessment">
     <h2 class="govuk-heading-m govuk-!-margin-top-6">Terms and conditions</h2>
     <p class="govuk-body">
         <a class="govuk-link"
            th:href="@{~/application/{apId}/form/question/{qId}(apId=${model.applicationId},qId=${model.questionId})}"
-           th:text="${model.termsAndConditionsTerminology}"></a>
+           th:text="${termsAndConditionsTerminology}"></a>
     </p>
 </th:block>
 

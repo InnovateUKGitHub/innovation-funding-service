@@ -15,8 +15,7 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.TERMS_AND_CONDITIONS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
-import static org.innovateuk.ifs.util.TermsAndConditionsUtil.VIEW_TERMS_AND_CONDITIONS_OTHER;
+import static org.innovateuk.ifs.util.TermsAndConditionsUtil.*;
 
 @Component
 public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyViewModelPopulator<TermsAndConditionsReadOnlyViewModel> {
@@ -44,7 +43,7 @@ public class TermsAndConditionsReadOnlyPopulator implements QuestionReadOnlyView
 
     private String termsAndConditionsTerminology(CompetitionResource competitionResource) {
         if(FundingType.INVESTOR_PARTNERSHIPS == competitionResource.getFundingType()) {
-            return TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
+            return VIEW_TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS;
         }
         return VIEW_TERMS_AND_CONDITIONS_OTHER;
     }
