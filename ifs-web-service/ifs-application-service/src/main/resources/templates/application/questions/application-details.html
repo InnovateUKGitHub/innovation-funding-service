@@ -113,9 +113,8 @@
                 <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{__resubmission__}')} ? 'govuk-form-group--error'">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="resubmission">
-                            <h2 class="govuk-fieldset__heading">Is this application a resubmission?</h2>
+                            <h2 class="govuk-fieldset__heading">Has this application been previously submitted to Innovate UK?</h2>
                         </legend>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='resubmission')" />
                         <div class="govuk-radios">
                             <div class="govuk-radios__item" data-target="resubmission-details">
