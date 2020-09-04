@@ -80,9 +80,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
 
-    @OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
-    private CompetitionType templateForType;
-
     private String pafCode;
     private String budgetCode;
     private String code;

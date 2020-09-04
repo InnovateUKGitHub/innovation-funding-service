@@ -1,12 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.transactional;
 
-import org.innovateuk.ifs.application.validator.NotEmptyValidator;
-import org.innovateuk.ifs.application.validator.RequiredFileValidator;
-import org.innovateuk.ifs.application.validator.RequiredMultipleChoiceValidator;
-import org.innovateuk.ifs.application.validator.WordCountValidator;
-import org.innovateuk.ifs.assessment.validator.AssessorScopeValidator;
-import org.innovateuk.ifs.assessment.validator.AssessorScoreValidator;
-import org.innovateuk.ifs.assessment.validator.ResearchCategoryValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.*;
@@ -17,7 +10,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
-import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CompetitionTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
@@ -27,9 +19,8 @@ import org.innovateuk.ifs.competitionsetup.repository.CompetitionDocumentConfigR
 import org.innovateuk.ifs.competitionsetup.util.CompetitionInitialiser;
 import org.innovateuk.ifs.file.domain.FileType;
 import org.innovateuk.ifs.file.repository.FileTypeRepository;
-import org.innovateuk.ifs.form.domain.*;
-import org.innovateuk.ifs.form.repository.*;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,9 +47,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     @Autowired
-    private CompetitionTemplatePersistorImpl competitionTemplatePersistor;
-
-    @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
 
     @Autowired
@@ -83,22 +71,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private CompetitionInitialiser competitionInitialiser;
 
     @Autowired
-    private SectionRepository sectionRepository;
-
-    @Autowired
-    private QuestionRepository questionRepository;
-
-    @Autowired
-    private FormInputRepository formInputRepository;
-
-    @Autowired
-    private GuidanceRowRepository guidanceRowRepository;
-
-    @Autowired
-    private MultipleChoiceOptionRepository multipleChoiceOptionRepository;
-
-    @Autowired
-    private FormValidatorRepository formValidatorRepository;
+    private QuestionPriorityOrderService questionPriorityOrderService;
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
 
@@ -146,83 +119,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         template.copyTemplatePropertiesToCompetition(competition);
 
-        setCompetitionOnSections(competition, competition.getSections(), null);
+        questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
     }
 
-    void setCompetitionOnSections(Competition competition, List<Section> sections, Section parent) {
-        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
-        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
-        FormValidator researchCategoryValidator = formValidatorRepository.findByClazzName(ResearchCategoryValidator.class.getName());
-        FormValidator assessorScopeValidator = formValidatorRepository.findByClazzName(AssessorScopeValidator.class.getName());
-        FormValidator assessorScoreValidator = formValidatorRepository.findByClazzName(AssessorScoreValidator.class.getName());
-        FormValidator requiredFileValidator = formValidatorRepository.findByClazzName(RequiredFileValidator.class.getName());
-        FormValidator requiredMultipleChoiceValidator = formValidatorRepository.findByClazzName(RequiredMultipleChoiceValidator.class.getName());
-
-        int si = 0;
-        for (Section section : sections) {
-            section.setCompetition(competition);
-            section.setParentSection(parent);
-            section.setPriority(si);
-            si++;
-            Section savedSection = sectionRepository.save(section);
-            setCompetitionOnSections(competition, section.getChildSections(), savedSection);
-            int qi = 0;
-            for (Question question : section.getQuestions()) {
-                question.setSection(savedSection);
-                question.setCompetition(competition);
-                question.setPriority(qi);
-                qi++;
-                if (section.getName().equals("Application questions")) {
-                    question.setQuestionNumber(String.valueOf(qi));
-                }
-                Question savedQuestion = questionRepository.save(question);
-                int fii = 0;
-                for (FormInput fi : question.getFormInputs()) {
-                    fi.setQuestion(savedQuestion);
-                    fi.setCompetition(competition);
-                    fi.setPriority(fii);
-                    fii++;
-                    fi.getMultipleChoiceOptions().forEach(mc -> {
-                        mc.setFormInput(fi);
-                    });
-                    int gri = 0;
-                    for (GuidanceRow gr : fi.getGuidanceRows()) {
-                        gr.setFormInput(fi);
-                        gr.setPriority(gri);
-                        gri++;
-                    }
-                    switch (fi.getType()) {
-                        case TEXTAREA:
-                            fi.addFormValidator(notEmptyValidator);
-                            fi.addFormValidator(wordCountValidator);
-                            break;
-                        case FILEUPLOAD:
-                            break;
-                        case ASSESSOR_RESEARCH_CATEGORY:
-                            fi.addFormValidator(notEmptyValidator);
-                            fi.addFormValidator(researchCategoryValidator);
-                            break;
-                        case ASSESSOR_APPLICATION_IN_SCOPE:
-                            fi.addFormValidator(notEmptyValidator);
-                            fi.addFormValidator(assessorScopeValidator);
-                            break;
-                        case ASSESSOR_SCORE:
-                            fi.addFormValidator(notEmptyValidator);
-                            fi.addFormValidator(assessorScoreValidator);
-                            break;
-                        case TEMPLATE_DOCUMENT:
-                            fi.addFormValidator(requiredFileValidator);
-                            break;
-                        case MULTIPLE_CHOICE:
-                            fi.addFormValidator(requiredMultipleChoiceValidator);
-                            break;
-                    }
-                    formInputRepository.save(fi);
-                }
-            }
-        }
-    }
 
     private void overrideTermsAndConditionsTerminologyForInvestorPartnerships(FundingType fundingType, List<SectionBuilder> sections) {
         if (FundingType.INVESTOR_PARTNERSHIPS == fundingType) {

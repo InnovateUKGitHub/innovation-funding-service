@@ -19,8 +19,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.FormInputBuilder.aFormInput;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.GuidanceRowBuilder.aGuidanceRow;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.MultipleChoiceOptionBuilder.aMultipleChoiceOption;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aQuestion;
-import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.aQuestionWithMultipleStatuses;
+import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.QuestionBuilder.*;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder.aSection;
 import static org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder.aSubSection;
 
@@ -271,6 +270,27 @@ public class CommonBuilders {
                                 .withActive(true)
                                 .withDescription("Please select the research category for this project")
                 ));
+    }
+
+    public static QuestionBuilder genericQuestion() {
+        return aDefaultAssessedQuestion()
+                .withFormInputs(
+                        defaultAssessedQuestionFormInputs(Function.identity(),
+                                assessorInputBuilder ->
+                                        assessorInputBuilder.withGuidanceRows(newArrayList(
+                                                aGuidanceRow()
+                                                        .withSubject("9,10"),
+                                                aGuidanceRow()
+                                                        .withSubject("7,8"),
+                                                aGuidanceRow()
+                                                        .withSubject("5,6"),
+                                                aGuidanceRow()
+                                                        .withSubject("3,4"),
+                                                aGuidanceRow()
+                                                        .withSubject("1,2")
+                                        ))
+                        )
+                );
     }
 
     public static List<FormInputBuilder> defaultAssessedQuestionFormInputs(Function<FormInputBuilder, FormInputBuilder> applicationTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> assessorTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> appendixFormInputModifier) {
