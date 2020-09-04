@@ -66,14 +66,17 @@ public class BankDetailsManagementController {
 
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
                 .getSuccess();
-        List<BankDetailsStatusResource> requiredBankDetailsOrgs = bankDetailsStatusSummary.getBankDetailsStatusResources().stream()
-                .filter(status -> !status.getBankDetailsStatus().equals(ProjectActivityStates.NOT_REQUIRED))
-                .collect(Collectors.toList());
-        if (requiredBankDetailsOrgs.size() == 1) {
-            //Only one partner
-            return format("redirect:/project/%d/organisation/%d/review-bank-details", projectId, requiredBankDetailsOrgs.get(0).getOrganisationId());
+        if (onlyOneOrganisationAndTheirBankDetailsAreRequired(bankDetailsStatusSummary)) {
+            return format("redirect:/project/%d/organisation/%d/review-bank-details", projectId, bankDetailsStatusSummary.getBankDetailsStatusResources().get(0).getOrganisationId());
         }
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
+    }
+
+    private boolean onlyOneOrganisationAndTheirBankDetailsAreRequired(ProjectBankDetailsStatusSummary summary) {
+        List<BankDetailsStatusResource> requiredBankDetailsOrgs = summary.getBankDetailsStatusResources().stream()
+                .filter(status -> !status.getBankDetailsStatus().equals(ProjectActivityStates.NOT_REQUIRED))
+                .collect(Collectors.toList());
+        return requiredBankDetailsOrgs.size() == 1 && summary.getBankDetailsStatusResources().size() == 1;
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
