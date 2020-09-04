@@ -80,7 +80,7 @@ public class FinanceSummaryTableViewModelPopulator {
         List<ApplicationFinanceResource> finances = newArrayList(applicationFinanceRestService.getFinanceDetails(application.getId(), organisation.getId()).getSuccess());
         if (competition.isKtp()) {
             organisations = organisationRestService.getOrganisationsByApplicationId(application.getId()).getSuccess();
-            finances = applicationFinanceRestService.getFinanceDetails(application.getId()).getSuccess();
+            finances = applicationFinanceRestService.getFinanceTotals(application.getId()).getSuccess();
             includeOrganisationNames = true;
         } else {
             organisations = newArrayList(organisation);
