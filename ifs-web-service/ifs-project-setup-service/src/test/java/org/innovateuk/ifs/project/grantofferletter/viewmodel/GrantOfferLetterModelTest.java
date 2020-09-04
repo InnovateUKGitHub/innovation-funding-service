@@ -457,7 +457,7 @@ public class GrantOfferLetterModelTest {
                 new FileDetailsViewModel("grant-offer", 1000L) :
                 null;
         
-        return new GrantOfferLetterModel("Grant offer letter" 123L, "Project name", leadPartner,
-                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false);
+        return new GrantOfferLetterModel("Grant offer letter", 123L, "Project name", leadPartner,
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile, projectManager, state, false, false);
     }
 }
