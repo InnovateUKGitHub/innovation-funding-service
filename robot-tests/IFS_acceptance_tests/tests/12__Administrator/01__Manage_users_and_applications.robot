@@ -62,7 +62,7 @@ ${lastNameInvalidCharacterMessage}       Their last name should have at least 2 
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
-${invalidKTNDomainValidationMessage}     Users cannot be registered without a knowledge transfer network email address.
+${invalidKTNDomainValidationMessage}     You must enter a valid Knowledge Transfer Network email address.
 ${summaryError}                          Role profile cannot be created without a knowledge transfer network email address.
 ${KTAEmailInviteText}                    You've been invited to become a knowledge transfer adviser for the Innovation Funding Service
 ${emailInviteSubject}                    Invitation to Innovation Funding Service
@@ -557,7 +557,7 @@ the user navigates to the View internal user details
     the user clicks the button/link        jQuery = .user-profile:contains("${user}") a:contains("Edit")
 
 the user resends the invite
-    the user clicks the button/link    jQuery = button:contains("Resend invite")     #Resend invite
+    the user clicks the button/link    jQuery = button:contains("Resend invitation")     #Resend invite
     the user clicks the button/link    jQuery = button:contains("Resend")
     the user reads his email           ${email}  Invitation to Innovation Funding  Your Innovation Funding Service
 
@@ -578,7 +578,7 @@ the IFS admin invites a new internal user
     the user enters text to a text field        id = firstName  Support
     the user enters text to a text field        id = lastName  User
     the user enters text to a text field        id = emailAddress  ${invalidEmail}
-    the user clicks the button/link             jQuery = button:contains("Send invite")
+    the user clicks the button/link             jQuery = button:contains("Send invitation")
 
 the user enters the text and checks for validation message
     [Arguments]  ${field_id}  ${text}  ${error_message1}  ${error_message2}
