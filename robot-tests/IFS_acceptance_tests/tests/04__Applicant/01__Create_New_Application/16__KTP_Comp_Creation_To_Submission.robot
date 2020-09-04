@@ -219,8 +219,6 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
-#    Given the user clicks the button/link                                   jQuery = button:contains("Save and continue")
-#    And the user creates an account and verifies email                      Indi  Gardiner  ${lead_ktp_email}  ${short_password}
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then The user completes the KTP application except application team and your funding
@@ -461,10 +459,7 @@ the user marks the KTP project costs, location and organisation information as c
     the user fills in ktp project costs
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
-    #the user checks Your Funding section                     ${Application}
-    #the user should see all finance subsections complete
     the user clicks the button/link                          link = Back to application overview
-    #the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills in the KTP organisation information
     [Arguments]  ${Application}  ${org_size}
