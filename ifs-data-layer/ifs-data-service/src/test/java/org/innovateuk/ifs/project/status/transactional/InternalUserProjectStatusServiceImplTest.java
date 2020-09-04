@@ -539,7 +539,7 @@ public class InternalUserProjectStatusServiceImplTest extends BaseServiceUnitTes
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
