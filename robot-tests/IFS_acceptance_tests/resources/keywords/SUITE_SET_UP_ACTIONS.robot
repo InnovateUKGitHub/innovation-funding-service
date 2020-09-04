@@ -12,7 +12,8 @@ log in and create new application if there is not one already
 Login new application invite academic
     [Arguments]  ${recipient}  ${subject}  ${pattern}
     [Tags]  Email
-    Logging in and Error Checking  &{lead_applicant_credentials}
+    Logging in and Error Checking                         &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
     ${STATUS}  ${VALUE} =  Run Keyword And Ignore Error Without Screenshots  Page Should Contain  Academic robot test application
     Run Keyword If  '${status}' == 'FAIL'  Run keywords  Create new application with the same user  Academic robot test application  1
     ...                                            AND   Invite and accept the invitation  ${recipient}  ${subject}  ${pattern}

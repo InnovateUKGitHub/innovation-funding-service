@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 public class KnowledgeBaseForm {
 
-    @NotBlank(message = "{validation.standard.organisation.required}")
+    @NotBlank(message = "{validation.standard.knowledgebase.organisation.required}")
     private String knowledgeBase;
 
     public String getKnowledgeBase() {

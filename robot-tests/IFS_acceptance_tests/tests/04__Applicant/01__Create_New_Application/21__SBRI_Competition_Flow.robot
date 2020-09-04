@@ -10,6 +10,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...               IFS-8126  SBRI Type 4: Project setup VAT
 ...
 ...               IFS-8048  SBRI Type 4: Spend profile for pilot SBRI competition into project setup
+...
+...               IFS-8012  SBRI Type 4: Project finance view of assessor feedback
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -29,6 +31,7 @@ ${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
 ${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}               Procurement application 1
 ${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
+${sbriApplicationId}             ${application_ids["${sbriProjectName}"]}
 ${yourProjFinanceLink}           your project finances
 ${viewFinanceChangesLink}        View changes to finances
 ${inclusiveOfVATHeading}         Total project costs inclusive of VAT
@@ -160,9 +163,22 @@ External user should not see the spend profile section
     When the user navigates to the page          ${server}/project-setup/project/${sbriProjectId}
     Then the user should not see the element     jQuery = h2:contains("Spend profile")
 
+Comp admin should not see feedback on the application
+    [Documentation]  IFS-8012
+    Given Log in as a different user             &{Comp_admin1_credentials}
+    When the user navigates to the page          ${server}/management/competition/${sbriComp654Id}/application/${sbriApplicationId}
+    Then the user should not see the element     jQuery = span:contains("Average score 7.0") ~ button:contains("Business opportunity")
+    And the user should not see the element      jQuery = h2:contains("Assessor feedback") ~ ul li:contains("Assessor 1") p:contains("Perfect application")
+
+Project finance should see the feedback on the application
+    [Documentation]  IFS-8012
+    Given Log in as a different user         &{internal_finance_credentials}
+    When the user navigates to the page      ${server}/management/competition/${sbriComp654Id}/application/${sbriApplicationId}
+    Then the user should see the element     jQuery = span:contains("Average score 7.0") ~ button:contains("Business opportunity")
+    And the user should see the element      jQuery = h2:contains("Assessor feedback") ~ ul li:contains("Assessor 1") p:contains("Perfect application")
+
 Internal user finance checks page
     [Documentation]    IFS-8127
-    [Setup]  Log in as a different user                                 &{internal_finance_credentials}
     When the user navigates to the page                                 ${server}/project-setup-management/project/${sbriProjectId}/finance-check
     Then the user should see the correct data on finance check page
 
