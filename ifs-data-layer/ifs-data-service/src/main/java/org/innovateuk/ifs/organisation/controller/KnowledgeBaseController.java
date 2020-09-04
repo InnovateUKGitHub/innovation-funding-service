@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.organisation.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseResource;
 import org.innovateuk.ifs.organisation.transactional.KnowledgeBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +16,17 @@ public class KnowledgeBaseController {
     private KnowledgeBaseService knowledgeBaseService;
 
     @GetMapping
-    public RestResult<List<String>> getKnowledgeBases() {
-        return knowledgeBaseService.getKnowledegeBases().toGetResponse();
+    public RestResult<List<String>> getKnowledgeBaseNames() {
+        return knowledgeBaseService.getKnowledgeBaseNames().toGetResponse();
     }
 
     @GetMapping("/{id}")
-    public RestResult<String> getKnowledgeBase(@PathVariable long id) {
-        return knowledgeBaseService.getKnowledegeBase(id).toGetResponse();
+    public RestResult<String> getKnowledgeBaseName(@PathVariable long id) {
+        return knowledgeBaseService.getKnowledgeBaseName(id).toGetResponse();
     }
 
-    @PostMapping
-    public RestResult<Long> createKnowledgeBase(@RequestParam String name) {
-        return knowledgeBaseService.createKnowledgeBase(name).toPostCreateResponse();
-    }
-
-    @DeleteMapping("/{id}")
-    public RestResult<Void> deleteKnowledgeBase(@PathVariable long id) {
-        return knowledgeBaseService.deleteKnowledgeBase(id).toDeleteResponse();
+    @GetMapping("/find-by-name/{name}")
+    public RestResult<KnowledgeBaseResource> getKnowledgeBaseByName(@PathVariable String name) {
+        return knowledgeBaseService.getKnowledgeBaseByName(name).toGetResponse();
     }
 }

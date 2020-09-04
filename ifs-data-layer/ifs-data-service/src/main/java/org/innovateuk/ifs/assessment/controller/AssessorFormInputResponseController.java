@@ -34,6 +34,16 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.updateFormInputResponses(responses).toPostWithBodyResponse();
     }
 
+    @GetMapping("/application/{applicationId}")
+    public RestResult<ApplicationAssessmentsResource> getApplicationAssessments(@PathVariable long applicationId) {
+        return assessorFormInputResponseService.getApplicationAssessments(applicationId).toGetResponse();
+    }
+
+    @GetMapping("/application/{applicationId}/assessment/{assessmentId}")
+    public RestResult<ApplicationAssessmentResource> getApplicationAssessment(@PathVariable long applicationId, @PathVariable long assessmentId) {
+        return assessorFormInputResponseService.getApplicationAssessment(applicationId, assessmentId).toGetResponse();
+    }
+
     @GetMapping("/application/{applicationId}/scores")
     public RestResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(@PathVariable("applicationId") long applicationId) {
         return assessorFormInputResponseService.getApplicationAggregateScores(applicationId).toGetResponse();

@@ -125,12 +125,14 @@ the user should see application not submitted messages
     the user should not see the element     id = submit-application-form
 
 the user submitted application 1 second late to the competition closing time
+    the user clicks the application tile if displayed
     the user clicks the button/link                                                  link = ${applicationClosedAfterCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
     Update the competition closing time to 1 second after to the current time        ${closedCompetitionID}  1s
     the user clicks the button/link                                                  id = submit-application-button
 
 the user submitted application 800ms before the competition closing time
+    the user clicks the application tile if displayed
     the user clicks the button/link                                                  link = ${applicationSubmitedBeforeCompetitionClosed}
     the user clicks the button/link                                                  id = application-overview-submit-cta
     Update the competition closing time to 1 second after to the current time        ${closedCompetitionID}  200ms

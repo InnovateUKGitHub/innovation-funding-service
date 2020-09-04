@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="fragments/layout :: head"
+              th:with="pageTitle='Start new application',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
+</head>
+<body class="govuk-template__body create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<div class="govuk-width-container">
+    <th:block th:insert="fragments/layout :: phase-banner"/>
+    <th:block th:insert="fragments/layout :: header-sub"
+              th:with="linkTitle='Back',linkUrl='/organisation/create/knowledge-base',currentApplication=${currentApplication},dynamicBackLink=${true}"/>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary"
+             aria-labelledby="error-summary-title"
+             role="alert"
+             tabindex="-1"
+             data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)"/>
+        </div>
+        <th:block th:insert="fragments/layout :: page-title"
+                  th:with="pageTitle='Enter details manually',subTitle=${subtitle},size='govuk-heading-xl'"/>
+
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
+              method="POST"
+              th:object="${form}"
+              novalidate="novalidate">
+
+            <div class="govuk-form-group"
+                 th:classappend="${#fields.hasErrors('*{name}')} ? 'govuk-form-group--error'">
+                <label class="govuk-label govuk-label--s"
+                       for="name">
+                    Knowledge base organisation name
+                </label>
+                <span class="govuk-error-message"
+                      th:if="${#fields.hasErrors('*{name}')}"
+                      th:errors="*{name}"></span>
+                <input class="govuk-input govuk-!-width-one-half"
+                       id="name"
+                       th:field="*{name}"
+                       th:attr="data-required-errormessage=#{validation.standard.knowledgebasename.required}"
+                       type="text" required="required"/>
+            </div>
+
+
+            <div class="govuk-form-group" th:classappend="${#fields.hasErrors('*{type}')} ? 'govuk-form-group--error'">
+                <fieldset class="govuk-fieldset">
+                    <legend id="org-type" class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                        What type of knowledge base is your organisation?
+                    </legend>
+                    <span class="govuk-error-message"
+                          th:if="${#fields.hasErrors('*{type}')}"
+                          th:errors="*{type}"></span>
+                    <div class="govuk-radios" id="organisationType">
+                        <th:block th:each="type : ${types}">
+                            <div class="govuk-radios__item govuk-!-margin-bottom-0" th:attr="data-target=|item-${type.name().toLowerCase()}|"
+                                 data-target-clear-validation="true" data-target-clear-form="true">
+                                <input th:id="'radio-'+ ${type.name().toLowerCase()}" type="radio"
+                                       class="govuk-radios__input"
+                                       th:field="*{type}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.standard.organisationtype.required}"
+                                       th:value="${type.name()}"/>
+                                <label th:for="'radio-'+ ${type.name().toLowerCase()}"
+                                       class="govuk-label govuk-radios__label">
+                                    <span th:text="${type.text}"></span>
+                                    <span class="govuk-hint" th:text="${type.description}"></span>
+                                </label>
+                            </div>
+
+                            <div th:with="fieldName=|${type.name().toLowerCase()}Number|"
+                                 th:id="|item-${type.name().toLowerCase()}|" class="panel govuk-!-padding-top-0">
+                                <div class="govuk-form-group">
+                                    <div class="govuk-grid-column">
+                                        <label th:for="${fieldName}" class="govuk-heading-s"
+                                               th:text="${T(org.innovateuk.ifs.knowledgebase.resourse.KnowledgeBaseType).UNIVERSITY == type ? 'UKPRN number' : 'Registration number'}">Registration number</label>
+                                    </div>
+                                    <input class="govuk-input govuk-input--width-10"
+                                           th:field="*{__${fieldName}__}"
+                                           type="text" required="required"/>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="custom-postcode" class="govuk-body">
+                <th:block th:insert="fragments/addresses :: address-details"
+                          th:with="form=${form},legend=${'Find UK address'}"/>
+            </div>
+
+            <div class="govuk-form-group">
+                <button type="submit"
+                        class="govuk-button">Save and continue
+                </button>
+            </div>
+        </form>
+
+        <th:block th:insert="fragments/layout :: main-content-end"/>
+    </main>
+
+</div>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end"/>
+</body>
+</html>

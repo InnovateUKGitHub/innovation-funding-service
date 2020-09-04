@@ -51,7 +51,7 @@ Calculation for associate employment and development
 Knowledge base supervisor can only add two rows
     [Documentation]  IFS-7790
     Given the user clicks the button/link         css = button[value="KNOWLEDGE_BASE"]
-    Then the user should see the element         css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
+    Then the user should see the element          css = button[value="KNOWLEDGE_BASE"].govuk-visually-hidden
 
 Knowledge base supervisor validations
     [Documentation]  IFS-7790

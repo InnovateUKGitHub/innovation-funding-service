@@ -7,6 +7,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.application.service.QuestionRestService;
+import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -32,6 +36,7 @@ import static org.innovateuk.ifs.application.readonly.ApplicationReadOnlySetting
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
 import static org.innovateuk.ifs.form.resource.FormInputType.TEMPLATE_DOCUMENT;
+
 
 @Component
 public class ManagementApplicationPopulator {
@@ -60,11 +65,27 @@ public class ManagementApplicationPopulator {
     @Autowired
     private ProjectRestService projectRestService;
 
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    @Autowired
+    private QuestionRestService questionRestService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+
     public ManagementApplicationViewModel populate(long applicationId,
                                                    UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
-        ApplicationReadOnlySettings settings = defaultSettings();
+
+        ApplicationReadOnlySettings settings = defaultSettings()
+                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition));
+
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {
             settings.setIncludeStatuses(true);
@@ -90,7 +111,10 @@ public class ManagementApplicationPopulator {
                 projectId,
                 user.hasRole(Role.EXTERNAL_FINANCE)
         );
+    }
 
+    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition) {
+        return user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement();
     }
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {
