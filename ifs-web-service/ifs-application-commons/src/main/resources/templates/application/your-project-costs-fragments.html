@@ -2898,7 +2898,7 @@
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header table-header-width-15-percent" id="ktp-travel-type" scope="col">Type of cost</th>
-                            <th class="govuk-table__header table-header-width-40-percent" id="ktp-travel-description" scope="col">Purpose of journey or description of subsistence cost.</th>
+                            <th class="govuk-table__header table-header-width-40-percent" id="ktp-travel-description" scope="col">Purpose of journey or description of subsistence cost</th>
                             <th id="ktp-travel-quantity" scope="col"
                                 class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
                                 Number of trips
@@ -2932,11 +2932,37 @@
                     </p>
                 </div>
 
-                <th:block
-                    th:insert="application/your-project-costs-fragments :: ktp_travel_sub_totals"/>
+                <div class="table-overflow">
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header table-header-width-80-percent" scope="col">Travel and subsistence summary</th>
+                            <th class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric table-header-width-80-percent" scope="col">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Total knowledge base supervisor costs</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                data-calculation-fields="#ktp-travel-table tr:has(select option[value='SUPERVISOR']:selected) .ktp-travel-totals"
+                                data-calculation-operations="+"
+                                data-calculation-triggers="#ktp-travel-table select"
+                                th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0,'DEFAULT')}"></td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">Total associate travel costs</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric"
+                                data-calculation-fields="#ktp-travel-table tr:has(select option[value='ASSOCIATE']:selected) .ktp-travel-totals"
+                                data-calculation-operations="+"
+                                data-calculation-triggers="#ktp-travel-table select"
+                                th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0,'DEFAULT')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total estates costs
+                    Total travel and subsistence costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-ktp-travel"
                           th:text="'£' + ${#numbers.formatInteger(form.totalKtpTravelCosts, 0,'DEFAULT')}"></span>
@@ -2960,37 +2986,6 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="ktp_travel_sub_totals">
-    <div class="table-overflow">
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header table-header-width-20-percent" scope="col">Travel and subsistence summary</th>
-                <th class="govuk-table__header govuk-table__header--numeric table-header-width-80-percent" scope="col">Total</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">Total knowledge base supervisor costs</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"
-                    data-calculation-fields="#ktp-travel-table tr:has(select option[value='SUPERVISOR']:selected) .ktp-travel-totals"
-                    data-calculation-operations="+"
-                    data-calculation-triggers="#ktp-travel-table select"
-                    th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0,'DEFAULT')}"></td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">Total associate costs</td>
-                <td class="govuk-table__cell govuk-table__cell--numeric"
-                    data-calculation-fields="#ktp-travel-table tr:has(select option[value='ASSOCIATE']:selected) .ktp-travel-totals"
-                    data-calculation-operations="+"
-                    data-calculation-triggers="#ktp-travel-table select"
-                    th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0,'DEFAULT')}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</th:block>
-
 <th:block th:fragment="ktp_travel_row (id, row)">
     <tr class="form-group-row-validated" th:with="path=${'ktpTravelCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
@@ -2999,7 +2994,7 @@
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.type">
-                <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost.</span>
+                <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
             </label>
             <select class="govuk-select"
                     required="required"
@@ -3091,7 +3086,7 @@
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header table-header-width-15-percent" scope="col">Type of cost</th>
-                <th class="govuk-table__header table-header-width-40-percent" scope="col">Purpose of journey or description of subsistence cost.</th>
+                <th class="govuk-table__header table-header-width-40-percent" scope="col">Purpose of journey or description of subsistence cost</th>
                 <th scope="col"
                     class="govuk-table__header govuk-table__header--numeric table-header-width-15-percent">
                     Number of trips
@@ -3124,7 +3119,19 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row" colspan="4">Total estates costs</th>
+                <td class="govuk-table__cell" scope="row" colspan="4">Total knowledge base supervisor costs</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelSupervisorCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            <tr class="govuk-table__row standard-border">
+                <td class="govuk-table__cell" scope="row" colspan="4">Total associate travel costs</td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelAssociateCosts, 0, 'DEFAULT')}"/>
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row" colspan="4">Total travel and subsistence costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-ktp-travel"
                     th:attr="data-calculation-rawvalue=${form.totalKtpTravelCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalKtpTravelCosts, 0, 'DEFAULT')}"/>
@@ -3132,9 +3139,6 @@
             </tr>
             </tfoot>
         </table>
-
-        <th:block
-            th:insert="application/your-project-costs-fragments :: ktp_travel_sub_totals"/>
     </div>
 </th:block>
 <!--/*</editor-fold>*/-->

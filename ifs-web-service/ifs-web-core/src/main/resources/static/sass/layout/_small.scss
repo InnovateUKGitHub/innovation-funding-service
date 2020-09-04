@@ -79,10 +79,19 @@ table {
 }
 
 tfoot {
-  td,
-  th {
-    border-top:3px solid #000;
-    border-bottom:none;
+  tr {
+    &:not(.standard-border) {
+      td,
+      th {
+        border-top: 3px solid #000;
+      }
+    }
+    &:last-of-type {
+      td,
+      th {
+        border-bottom: none;
+      }
+    }
   }
 }
 
