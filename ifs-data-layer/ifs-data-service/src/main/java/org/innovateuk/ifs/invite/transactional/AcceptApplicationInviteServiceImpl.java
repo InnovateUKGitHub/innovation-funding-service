@@ -139,6 +139,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
 
         boolean firstOfOrganisation =
                 application.getProcessRoles().stream()
+                    .filter(pr -> pr.getOrganisationId() != null)
                     .noneMatch(pr -> pr.getOrganisationId().equals(organisation.getId()));
 
         ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
