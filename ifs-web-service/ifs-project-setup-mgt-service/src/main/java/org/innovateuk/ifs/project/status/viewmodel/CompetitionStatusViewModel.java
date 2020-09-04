@@ -13,6 +13,7 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
     private long openQueryCount;
     private long pendingSpendProfilesCount;
     private String applicationSearchString;
+    private boolean procurement;
     private PaginationViewModel paginationViewModel;
 
     public CompetitionStatusViewModel(CompetitionResource competition,
@@ -29,6 +30,7 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         this.openQueryCount = openQueryCount;
         this.pendingSpendProfilesCount = pendingSpendProfilesCount;
         this.applicationSearchString = applicationSearchString;
+        this.procurement = competition.isProcurement();
         this.paginationViewModel = paginationViewModel;
     }
 
@@ -51,4 +53,7 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
         return paginationViewModel;
     }
 
+    public boolean isProcurement() {
+        return procurement;
+    }
 }

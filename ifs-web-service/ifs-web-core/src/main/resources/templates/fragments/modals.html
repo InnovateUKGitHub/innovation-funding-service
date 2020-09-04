@@ -305,7 +305,7 @@
     <div class="modal-confirm-grant-offer-letter" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="govuk-heading-m">Send to Innovate UK</h2>
-        <p class="govuk-body">Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
+        <p class="govuk-body" th:text="|Once you send the signed ${model.title.toLowerCase()} we will review it and will contact you if we need further information.|"></p>
         <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
         <div>
             <button class="govuk-button" id="submit-gol-for-review" name="confirmSubmit">Send to Innovate UK</button>

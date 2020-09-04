@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Grant offer letter - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|${model.title} - ${model.projectName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="govuk-template__body project-detail gol">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -13,47 +13,53 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <div th:if="${#fields.hasErrors('${form.*}')}" class="govuk-error-summary" role="alert" aria-labelledby="error-summary-title" tabindex="-1" data-module="govuk-error-summary">
-            <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to submit grant offer letter</h2>
+            <h2 class="govuk-error-summary__title" id="error-summary-title" th:text="|Unable to submit ${model.title.toLowerCase()}|"></h2>
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Grant offer letter',subTitle=${model.projectName},size='govuk-heading-xl'" />
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.title},subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <form id="grant-offer-letter-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
             <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
-                <p class="govuk-body">The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
-                <p class="govuk-body">The unsigned grant offer letter is available for your records.</p>
+                <p class="govuk-body" th:text="|The signed ${model.title.toLowerCase()} has been received by Innovate UK and is awaiting review.|"></p>
+                <p class="govuk-body" th:text="|The unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
             </th:block>
 
             <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert govuk-!-margin-bottom-6">
-                <p class="govuk-body">Your signed grant offer letter has been received and accepted by Innovate UK.</p>
+                <p class="govuk-body" th:text="|Your signed ${model.title.toLowerCase()} has been received and accepted by Innovate UK.|"></p>
             </div>
 
             <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
                 <div class="fail-alert govuk-!-margin-bottom-6">
-                    <h2 class="govuk-heading-s">Your grant offer letter has been rejected by Innovate UK</h2>
+                    <h2 class="govuk-heading-s" th:text="|Your ${model.title.toLowerCase()} has been rejected by Innovate UK|"></h2>
                     <p class="govuk-body">Someone will be in touch with you soon.</p>
                 </div>
             </th:block>
 
             <th:block th:if="${model.leadPartner}">
-                <p class="govuk-body" th:unless="${model.submitted}">The grant offer letter has been provided by Innovate UK. It has been
-                    created using the information provided during project setup.</p>
+                <p class="govuk-body" th:unless="${model.submitted}" th:text="|The ${model.title.toLowerCase()} has been provided by Innovate UK. It has been
+                    created using the information provided during project setup.|"></p>
 
                 <th:block th:unless="${model.submitted}">
                     <h2 class="govuk-heading-m">Next steps</h2>
                     <ul class="govuk-list govuk-list--number">
-                        <li>All partners can review grant offer letter and annex (if provided).</li>
-                        <li>The Project Manager must review and sign the letter.</li>
-                        <li>The signed letter is sent to Innovate UK.</li>
+                        <th:block th:unless="${model.procurement}">
+                            <li>All partners can review grant offer letter and annex (if provided).</li>
+                            <li>The Project Manager must review and sign the letter.</li>
+                            <li>The signed letter is sent to Innovate UK.</li>
+                        </th:block>
+                        <th:block th:if="${model.procurement}">
+                            <li>The Project Manager must review and sign the contract.</li>
+                            <li>The signed contract is sent to Innovate UK.</li>
+                        </th:block>
                     </ul>
-                    <p class="govuk-body">Project setup will be complete after the signed grant offer letter has been received and approved by Innovate UK.</p>
+                    <p class="govuk-body" th:text="|Project setup will be complete after the signed ${model.title.toLowerCase()} has been received and approved by Innovate UK.|"></p>
                 </th:block>
 
 
                 <th:block th:if="${!model.useDocusign or model.showGrantOfferLetterReceivedByInnovateMessage}">
-                    <h2 class="govuk-heading-m">Grant offer letter</h2>
+                    <h2 class="govuk-heading-m" th:text="${model.title}"></h2>
                     <p class="govuk-body" th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
 
                     <th:block th:if="${model.grantOfferLetterSent}">
@@ -67,8 +73,8 @@
                 </th:block>
 
                 <th:block th:if="${model.useDocusign and !model.submitted}">
-                    <h2 class="govuk-heading-m">Grant offer letter</h2>
-                    <p class="govuk-body">The project manager must <a th:if="${model.projectManager}" class="govuk-link" th:href="@{/project/{projectId}/offer/docusign(projectId=${model.projectId})}">review and sign the grant offer letter</a><th:block th:unless="${model.projectManager}">review and sign the grant offer letter</th:block> on DocuSign, our secure electronic signature partner.</p>
+                    <h2 class="govuk-heading-m" th:text="${model.title}"></h2>
+                    <p class="govuk-body">The project manager must <a th:if="${model.projectManager}" class="govuk-link" th:href="@{/project/{projectId}/offer/docusign(projectId=${model.projectId})}" th:text="|review and sign the ${model.title.toLowerCase()}|"></a><th:block th:unless="${model.projectManager}" th:text="|review and sign the ${model.title.toLowerCase()}|"></th:block> on DocuSign, our secure electronic signature partner.</p>
                     <p class="govuk-body">Please <a href="/info/contact">contact us</a> if you have any accessibility issues with the DocSign process.</p>
                     <details class="govuk-details">
                         <summary class="govuk-details__summary">
@@ -78,14 +84,14 @@
                             <ul class="govuk-list govuk-list--number">
                                 <li>Click the DocuSign link on this screen or in the email you received.</li>
                                 <li>Follow the simple instructions on DocuSign's website to guide you through the signing process.</li>
-                                <li>Click 'Finish' and the signed letter will be sent to us.</li>
+                                <li th:text="|Click 'Finish' and the signed ${model.title.toLowerCase()} will be sent to us.|"></li>
                             </ul>
                         </div>
                     </details>
                 </th:block>
 
                 <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
-                    <h2 class="govuk-heading-m">Signed grant offer letter</h2>
+                    <h2 class="govuk-heading-m" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}"
                            th:text="|${model.signedGrantOfferLetterFile.filename} (opens in a new window)|"
@@ -97,7 +103,7 @@
 
                 <th:block th:if="${model.additionalContractFile != null}">
                     <h2 class="govuk-heading-m">Annex</h2>
-                    <p class="govuk-body">The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+                    <p class="govuk-body" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.title.toLowerCase()} you also agree to any conditions set out in the annex.|"></p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
@@ -109,15 +115,15 @@
 
                 <th:block th:unless="${model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
-                        <h2 class="govuk-heading-m">Sending your signed grant offer letter to Innovate UK</h2>
-                        <h2 class="govuk-heading-s govuk-!-margin-0">Upload signed grant offer letter</h2>
-                        <p class="govuk-body">The Project Manager is required to provide a signed copy of the grant offer letter.</p>
+                        <h2 class="govuk-heading-m" th:text="|Sending your signed ${model.title.toLowerCase()} to Innovate UK|"></h2>
+                        <h2 class="govuk-heading-s govuk-!-margin-0" th:text="|Upload signed ${model.title.toLowerCase()}|"></h2>
+                        <p class="govuk-body" th:text="|The Project Manager is required to provide a signed copy of the ${model.title.toLowerCase()}.|"></p>
                         <details class="govuk-details">
                             <summary class="govuk-details__summary">
                                 <span class="govuk-details__summary-text">What are the requirements for upload?</span>
                             </summary>
                             <div class="govuk-details__text">
-                                <p class="govuk-body">The uploaded signed grant offer letter agreement must:</p>
+                                <p class="govuk-body" th:text="|The uploaded signed ${model.title.toLowerCase()} agreement must:|"></p>
                                 <ul class="govuk-list govuk-list--bullet">
                                     <li>contain signed pages</li>
                                     <li>be in a portable document format (.pdf)</li>
@@ -159,11 +165,11 @@
 
             <th:block th:if="${!model.leadPartner}">
                 <th:block th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">
-                    <p class="govuk-body">The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
-                    <p class="govuk-body">A copy of the unsigned grant offer letter is available for your records.</p>
+                    <p class="govuk-body" th:text="|The ${model.title.toLowerCase()} has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.|"></p>
+                    <p class="govuk-body" th:text="|A copy of the unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
                 </th:block>
 
-                <h2 class="govuk-heading-m">Grant offer letter</h2>
+                <h2 class="govuk-heading-m" th:text="|${model.title}|"></h2>
                 <p class="govuk-body">
                     <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
                        th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
@@ -173,12 +179,12 @@
 
                 <th:block th:if="${model.additionalContractFile}">
                     <h2 class="govuk-heading-m">Annex</h2>
-                    <p class="govuk-body">The annex contains any additional contracts agreed upon during the application process. In signing the grant offer letter you also agree to any conditions set out in the annex.</p>
+                    <p class="govuk-body" th:text="|The annex contains any additional contracts agreed upon during the application process. In signing the ${model.title.toLowerCase()} you also agree to any conditions set out in the annex.|"></p>
                     <p class="govuk-body">
                         <a th:href="@{/project/{id}/offer/additional-contract(id=${model.projectId})}"
                            th:text="|${model.additionalContractFile?.filename} (opens in a new window)|"
                            class="govuk-link"
-                           target="_blank">Grant offer letter 2016-07-28a.PDF</a>
+                           target="_blank">${model.title} 2016-07-28a.PDF</a>
                     </p>
                 </th:block>
             </th:block>

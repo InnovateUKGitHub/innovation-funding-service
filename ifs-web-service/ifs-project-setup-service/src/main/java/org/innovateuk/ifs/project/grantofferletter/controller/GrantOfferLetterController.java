@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.commons.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
@@ -43,6 +44,9 @@ public class GrantOfferLetterController {
     @Autowired
     private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
@@ -66,6 +70,7 @@ public class GrantOfferLetterController {
     @GetMapping("/confirmation")
     public String confirmation(@P("projectId")@PathVariable("projectId") Long projectId, Model model) {
         model.addAttribute("projectId", projectId);
+        //TODO add title.
         return BASE_DIR + "/grant-offer-letter-confirmation";
     }
 
