@@ -75,10 +75,10 @@
                                readOnly=${model.readOnly},
                                guidanceFragment=${model.business ? 'applicant-business' : 'applicant-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel},
-                               hideAreYouRequestingFunding=${model.ktpFundingType && !model.knowledgeBaseOrganisation},
+                               hideAreYouRequestingFunding=${model.hideAreYouRequestingFunding()},
                                hideOtherFunding=${model.ktpFundingType && model.knowledgeBaseOrganisation},
                                otherFundingFragment=${model.ktpFundingType && !model.knowledgeBaseOrganisation ? 'other-funding-guidance-ktp' : 'other-funding-guidance-default'}
-                                               )"/>
+                )"/>
 
                 <div class="form-footer" th:if="${model.open}">
                     <div class="form-footer__actions">
