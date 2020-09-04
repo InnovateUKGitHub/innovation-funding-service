@@ -194,9 +194,9 @@ Internal user eligibility page
 
 Internal user can set VAT to no
     [Documentation]    IFS-8126
-    Given The user clicks the button/link                 jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
+    Given the user clicks the button/link                 jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
     When the user selects the radio button                vatForm.registered  false
-    And The user clicks the button/link                   jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
+    And the user clicks the button/link                   jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
     Then the user should see calculations without VAT
 
 Internal user can set VAT to yes
@@ -227,25 +227,25 @@ Internal user should not see spend profile section
 Internal user should see bank details complete for an international applicant
     [Documentation]  IFS-8202
     Given the user navigates to the page     ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    When The user clicks the button/link     jQuery = tr:contains("Procurement application 2") td:nth-of-type(5).status.ok
+    When the user clicks the button/link     jQuery = tr:contains("Procurement application 2") td:nth-of-type(5).status.ok
     Then the user should see the element     jQuery = span:contains("No action required")
 
 GOL section is enabled without bank details
     [Documentation]  IFS-8202
-    Given The user navigates to the page     ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    Given the user navigates to the page     ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
     When generate spend profile
-    And The user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    And the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
 Internal user can send the GOL
     [Documentation]  IFS-8202
     Given internal user generates the GOL     ${sbriProjectId2}
-    When The user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    When the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element      jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
 
 External user of international org should not see bank details
     [Documentation]  IFS-8202
-    Given Log in as a different user             ${lead_international_email}	${short_password}
+    Given log in as a different user             ${lead_international_email}	${short_password}
     When the user clicks the button/link         link = ${sbriProjectName2}
     Then the user should not see the element     jQuery = li:contains("Bank details")
 
