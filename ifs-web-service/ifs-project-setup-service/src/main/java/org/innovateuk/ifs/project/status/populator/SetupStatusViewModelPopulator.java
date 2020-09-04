@@ -143,6 +143,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                                                        CompletableFuture<ProjectTeamStatusResource> teamStatusRequest, CompletableFuture<OrganisationResource> organisationRequest) {
 
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(resolve(teamStatusRequest));
+        boolean competitionIsProcurement = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isProcurement();
         boolean projectComplete = project.getProjectState().isLive();
         boolean isLeadPartner = isLeadPartner(resolve(teamStatusRequest), resolve(organisationRequest));
         boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
@@ -157,7 +158,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         partnerProjectLocationRequired);
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
                         projectComplete ? "Confirm the proposed start date and location of the project."
-                                : "The proposed start date and location of the project.",
+                                : competitionIsProcurement ? "The start date and location of the project." : "The proposed start date and location of the project.",
                         projectComplete ? format("/project/%d/details/readonly", project.getId())
                                 : format("/project/%d/details", project.getId()),
                         sectionStatus.projectDetailsSectionStatus(
@@ -207,7 +208,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
             case BANK_DETAILS:
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        "We need bank details for those partners eligible for funding.",
+                        competitionIsProcurement ? "We need your organisation's bank details." : "We need bank details for those partners eligible for funding.",
                         projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
                                 : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
@@ -236,7 +237,8 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
                 );
             case GRANT_OFFER_LETTER:
-                return new SetupStatusStageViewModel(stage, "Grant offer letter",
+                String title = competitionIsProcurement ? "Contract" : "Grant offer letter";
+                return new SetupStatusStageViewModel(stage, title,
                         "Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.",
                         format("/project/%d/offer", project.getId()),
                         sectionStatus.grantOfferLetterSectionStatus(

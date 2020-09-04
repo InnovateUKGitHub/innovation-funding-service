@@ -56,7 +56,9 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId));
+        boolean competitionIsProcurment = competitionRestService.getCompetitionById(project.getCompetition()).getSuccess().isProcurement();
+
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competitionIsProcurment);
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
