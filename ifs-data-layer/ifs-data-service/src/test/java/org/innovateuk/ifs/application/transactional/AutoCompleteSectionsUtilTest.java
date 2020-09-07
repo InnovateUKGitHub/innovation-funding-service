@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.form.resource.SectionType;
@@ -52,8 +51,7 @@ public class AutoCompleteSectionsUtilTest {
                 .build();
         long processRoleId = 2L;
         when(type.isSectionTypeNotRequiredForOrganisationAndCompetition(competition, OrganisationTypeEnum.BUSINESS, true)).thenReturn(true);
-        when(sectionStatusService.markSectionAsComplete(section.getId(), application.getId(), processRoleId)).thenReturn(serviceSuccess(new ValidationMessages()));
-
+        when(sectionStatusService.markSectionAsNotRequired(section.getId(), application.getId(), processRoleId)).thenReturn(serviceSuccess());
         when(organisationService.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
 
         util.intitialiseCompleteSectionsForOrganisation(application, organisation.getId(), processRoleId);
