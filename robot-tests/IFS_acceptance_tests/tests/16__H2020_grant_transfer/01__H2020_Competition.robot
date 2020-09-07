@@ -155,7 +155,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Documentation]  IFS-5700
     Given proj finance approves the spend profiles  ${HProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             NO  ${HProjectID}
+    And internal user generates the GOL             ${HProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-5700

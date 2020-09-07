@@ -11,6 +11,7 @@ import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusS
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsReviewViewModel;
 import org.innovateuk.ifs.project.bankdetails.viewmodel.ChangeBankDetailsViewModel;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -283,7 +284,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testViewPartnerBankDetails() throws  Exception {
         Long projectId = 123L;
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withBankDetailsStatusResources(newBankDetailsStatusResource().build(2)).build();
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withBankDetailsStatusResources(newBankDetailsStatusResource().withBankDetailsStatus(ProjectActivityStates.NOT_REQUIRED).build(1)).build();
         when(bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)).thenReturn(restSuccess(bankDetailsStatusSummary));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/review-all-bank-details")).andExpect(status().isOk()).andExpect(view().name("project/bank-details-status")).andReturn();
         assertEquals(bankDetailsStatusSummary, result.getModelAndView().getModel().get("model"));
@@ -293,7 +294,7 @@ public class BankDetailsManagementControllerTest extends BaseControllerMockMVCTe
     public void testViewPartnerBankDetails_redirect() throws  Exception {
         long projectId = 123L;
         long orgId = 7L;
-        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withBankDetailsStatusResources(newBankDetailsStatusResource().withOrganisationId(orgId).build(1)).build();
+        final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = newProjectBankDetailsStatusSummary().withBankDetailsStatusResources(newBankDetailsStatusResource().withBankDetailsStatus(ProjectActivityStates.ACTION_REQUIRED).withOrganisationId(orgId).build(1)).build();
         when(bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)).thenReturn(restSuccess(bankDetailsStatusSummary));
         mockMvc.perform(get("/project/" + projectId + "/review-all-bank-details"))
                 .andExpect(redirectedUrl("/project/123/organisation/7/review-bank-details?isCompAdminUser=false"));
