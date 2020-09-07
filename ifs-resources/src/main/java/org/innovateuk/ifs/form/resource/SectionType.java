@@ -13,7 +13,8 @@ public enum SectionType {
 	FUNDING_FINANCES(FINANCE),
     OVERVIEW_FINANCES,
 	GENERAL,
-    TERMS_AND_CONDITIONS;
+    TERMS_AND_CONDITIONS,
+    KTP_ASSESSMENT;
 
     private final SectionType parent;
 

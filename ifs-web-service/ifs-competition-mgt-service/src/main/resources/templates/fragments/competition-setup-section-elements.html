@@ -147,6 +147,7 @@
     </th:block>
     <th:block th:if="${editable}">
 
+
         <h2 class="govuk-heading-m govuk-!-margin-top-6">Application question</h2>
 
         <input type="hidden"
@@ -603,11 +604,15 @@
             </th:block>
 
             <!--/* ASSESSMENT */-->
+             <!--move to viewmodel-->
             <th:block
-                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE)}">
+                th:if="${model.displayAssessmentOptions AND (competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT or competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).SCOPE)}">
 
-                <input type="hidden" name="competitionSetupForm.question.type"
+                <input th:if="competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION" type="hidden" name="competitionSetupForm.question.type"
                        th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).ASSESSED_QUESTION}"/>
+
+                <input th:if="competitionSetupForm.question.type == T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT" type="hidden" name="competitionSetupForm.question.type"
+                       th:value="${T(org.innovateuk.ifs.question.resource.QuestionSetupType).KTP_ASSESSMENT}"/>
 
                 <h2 class="govuk-heading-m govuk-!-margin-top-6">Assessment of this question</h2>
 

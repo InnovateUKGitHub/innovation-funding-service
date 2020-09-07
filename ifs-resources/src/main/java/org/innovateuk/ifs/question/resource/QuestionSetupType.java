@@ -13,7 +13,9 @@ public enum QuestionSetupType {
     EQUALITY_DIVERSITY_INCLUSION("Equality, diversity & inclusion", true),
     /* h2020 */
     GRANT_TRANSFER_DETAILS("Application details"),
-    GRANT_AGREEMENT("Horizon 2020 grant agreement");
+    GRANT_AGREEMENT("Horizon 2020 grant agreement"),
+    /* KTP */
+    KTP_ASSESSMENT("Ktp Assessment");
 
     private String shortName;
     private boolean formInputResponses;

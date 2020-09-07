@@ -1,7 +1,7 @@
-
 <!-- =================== Comp setup section - Application questions (5) ============================== -->
 <th:block th:fragment="section-content">
-    <div class="govuk-error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
+    <div class="govuk-error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}"
+         aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
         <h2 class="govuk-error-summary__title" id="error-summary-title">Unable to mark as complete.</h2>
         <div class="govuk-error-summary__body">
             <ul class="govuk-list govuk-error-summary__list">
@@ -9,34 +9,43 @@
             </ul>
         </div>
     </div>
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='govuk-heading-xl'" />
+    <th:block th:insert="fragments/layout :: page-title"
+              th:with="pageTitle='Application process',size='govuk-heading-xl'"/>
 
-    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <h2 class="govuk-heading-m govuk-!-margin-top-6" th:text="${model.general.competition.competitionTypeName+' competition questions'}" />
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}"
+          novalidate="novalidate">
+        <h2 class="govuk-heading-m govuk-!-margin-top-6"
+            th:text="${model.general.competition.competitionTypeName+' competition questions'}"/>
 
-        <p class="govuk-body">You can review and amend the application and assessment questions and guidance for this competition. You can also edit the finances section to update funding rules. Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
+        <p class="govuk-body">You can review and amend the application and assessment questions and guidance for this
+            competition. You can also edit the finances section to update funding rules. Any changes you make will be
+            applied to this competition, but will not affect the default template for this competition type.</p>
 
         <h3 class="govuk-heading-s">Project details</h3>
         <ul class="task-list">
             <li>
-                <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                <th:block
+                    th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}" class="govuk-link">Application details</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}"
+                               class="govuk-link">Application details</a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
                 </th:block>
-                <th:block th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                <th:block
+                    th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}" class="govuk-link">Application details</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}"
+                               class="govuk-link">Application details</a>
                         </h4>
                     </div>
                 </th:block>
             </li>
             <li th:each="question : ${model.projectDetails}">
-                 <th:block th:if="${model.questionStatuses.get(question.id)}">
+                <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
                             <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
@@ -56,7 +65,9 @@
                     </div>
                     <div class="task-status">
                         <th class="govuk-table__header width-80" scope="col">
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion"
+                                    class="button-clear govuk-!-margin-0">Remove
+                            </button>
                         </th>
                     </div>
                 </th:block>
@@ -69,9 +80,11 @@
                 <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}" class="govuk-link">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
+                               class="govuk-link">
                                 <th:block th:text="${question.questionNumber} + '. '"></th:block>
-                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                                <th:block
+                                    th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
                             </a>
                         </h4>
                     </div>
@@ -80,15 +93,19 @@
                 <th:block th:unless="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}" class="govuk-link">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}"
+                               class="govuk-link">
                                 <th:block th:text="${question.questionNumber} + '. '"></th:block>
-                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                                <th:block
+                                    th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
                             </a>
                         </h4>
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
                         <th class="govuk-table__header width-80" scope="col">
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="button-clear govuk-!-margin-0">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion"
+                                    class="button-clear govuk-!-margin-0">Remove
+                            </button>
                         </th>
                     </div>
                 </th:block>
@@ -103,27 +120,62 @@
         <h3 class="govuk-heading-s">Finances</h3>
         <ul class="task-list">
             <li>
-                <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
+                <th:block
+                    th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${model.general.competition.id})}" class="govuk-link">Finances</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${model.general.competition.id})}"
+                               class="govuk-link">Finances</a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
                 </th:block>
-                <th:block th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
+                <th:block
+                    th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
                     <div class="task">
                         <h4 class="govuk-heading-s">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}" class="govuk-link">Finances</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}"
+                               class="govuk-link">Finances</a>
                         </h4>
                     </div>
                 </th:block>
             </li>
         </ul>
 
+        <th:block th:if="${model.general.competition.isKtp()}">
+            <h3 class="govuk-heading-s">Score Guidance</h3>
+            <ul class="task-list">
+                <li th:each="question : ${model.ktpAssessorQuestions}">
+                    <th:block th:if="${model.questionStatuses.get(question.id)}">
+                        <div class="task">
+                            <h4 class="govuk-heading-s">
+                                <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
+                                   class="govuk-link">
+                                    <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="task-status-complete"><span>Complete</span></div>
+                    </th:block>
+                    <th:block th:unless="${model.questionStatuses.get(question.id)}">
+                        <div class="task">
+                            <h4 class="govuk-heading-s">
+                                <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}"
+                                   class="govuk-link">
+                                    <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                                </a>
+                            </h4>
+                        </div>
+                    </th:block>
+                </li>
+            </ul>
+        </th:block>
+
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full govuk-!-margin-top-6">
-                <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="govuk-button">Done</button>
+                <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="govuk-button">
+                    Done
+                </button>
             </div>
         </div>
 
