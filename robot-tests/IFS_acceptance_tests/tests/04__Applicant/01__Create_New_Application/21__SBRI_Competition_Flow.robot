@@ -12,6 +12,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...               IFS-8048  SBRI Type 4: Spend profile for pilot SBRI competition into project setup
 ...
 ...               IFS-8012  SBRI Type 4: Project finance view of assessor feedback
+...
+...               IFS-8202  SBRI - Ability to generate a contract for an international applicant
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -31,6 +33,8 @@ ${sbriComp654Name}               The Sustainable Innovation Fund: SBRI phase 1
 ${sbriComp654Id}                 ${competition_ids["${sbriComp654Name}"]}
 ${sbriProjectName}               Procurement application 1
 ${sbriProjectId}                 ${project_ids["${sbriProjectName}"]}
+${sbriProjectName2}              Procurement application 2
+${sbriProjectId2}                ${project_ids["${sbriProjectName2}"]}
 ${sbriApplicationId}             ${application_ids["${sbriProjectName}"]}
 ${yourProjFinanceLink}           your project finances
 ${viewFinanceChangesLink}        View changes to finances
@@ -190,16 +194,16 @@ Internal user eligibility page
 
 Internal user can set VAT to no
     [Documentation]    IFS-8126
-    Given The user clicks the button/link                 jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
+    Given the user clicks the button/link                 jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
     When the user selects the radio button                vatForm.registered  false
-    And The user clicks the button/link                   jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
+    And the user clicks the button/link                   jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
     Then the user should see calculations without VAT
 
 Internal user can set VAT to yes
     [Documentation]    IFS-8126
     Given the user clicks the button/link              jQuery = div:contains("${vatRegistered}") ~ div a:contains("Edit")
     When the user selects the radio button             vatForm.registered  true
-    And The user clicks the button/link                jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
+    And the user clicks the button/link                jQuery = div:contains("${inclusiveOfVATHeading}") ~ div button:contains("Save")
     Then the user should see calculations with VAT
 
 Internal user viability page
@@ -211,10 +215,7 @@ Internal user viability page
 
 Internal user can generate spend profile
     [Documentation]   IFS-8048
-    Given confirm viability                   0
-    And confirm eligibility                   0
-    When the user clicks the button/link      css = .generate-spend-profile-main-button
-    And the user clicks the button/link       id = generate-spend-profile-modal-button
+    Given generate spend profile
     Then the user should see the element      css = .success-alert
 
 Internal user should not see spend profile section
@@ -222,6 +223,31 @@ Internal user should not see spend profile section
     When the user navigates to the page          ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should not see the element     jQuery = th:contains("Spend profile")
     And the data is in the database correctly
+
+Internal user should see bank details complete for an international applicant
+    [Documentation]  IFS-8202
+    Given the user navigates to the page     ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    When the user clicks the button/link     jQuery = tr:contains("Procurement application 2") td:nth-of-type(5).status.ok
+    Then the user should see the element     jQuery = span:contains("No action required")
+
+GOL section is enabled without bank details
+    [Documentation]  IFS-8202
+    Given the user navigates to the page     ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
+    When generate spend profile
+    And the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
+
+Internal user can send the GOL
+    [Documentation]  IFS-8202
+    Given internal user generates the GOL     ${sbriProjectId2}
+    When the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element      jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
+
+External user of international org should not see bank details
+    [Documentation]  IFS-8202
+    Given log in as a different user             ${lead_international_email}	${short_password}
+    When the user clicks the button/link         link = ${sbriProjectName2}
+    Then the user should not see the element     jQuery = li:contains("Bank details")
 
 *** Keywords ***
 Custom Suite Setup
@@ -345,3 +371,9 @@ the data is in the database correctly
      Should Be Equal As Integers   ${month1VAT}     11046
      Should Be Equal As Integers   ${month2VAT}     0
      Should Be Equal As Integers   ${month3VAT}     33135
+
+Generate spend profile
+    confirm viability                   0
+    confirm eligibility                 0
+    the user clicks the button/link     css = .generate-spend-profile-main-button
+    the user clicks the button/link     id = generate-spend-profile-modal-button
