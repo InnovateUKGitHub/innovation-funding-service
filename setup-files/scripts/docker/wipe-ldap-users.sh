@@ -30,8 +30,16 @@ wipeLdapUsersByDatabase() {
   for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
   do
     uid=$(executeMySQLCommand "select uid from user where email='$(escaped $u)';")
-    first_result=$(ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD)
-    second_result=$(ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD)
+    if ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN uid=$uid -D "cn=admin,dc=int,dc=g2g3digital,dc=net" -w $LDAP_PASSWORD
+    then
+      ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+    fi
+
+    if ldapsearch -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -b $LDAP_DOMAIN uid=$uid -D "cn=admin,dc=int,dc=g2g3digital,dc=net" -w $LDAP_PASSWORD
+    then
+      ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+    fi
+
   done
 }
 
