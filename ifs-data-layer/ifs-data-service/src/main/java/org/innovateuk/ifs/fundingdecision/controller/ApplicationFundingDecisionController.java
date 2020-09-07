@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.fundingdecision.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingDecisionToSendApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCompletionStage;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -29,9 +27,6 @@ public class ApplicationFundingDecisionController {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private ApplicationService applicationService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -61,8 +56,7 @@ public class ApplicationFundingDecisionController {
 
     private boolean isReleaseFeedbackCompletionStage(Map<Long, FundingDecision> fundingDecisions) {
         return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
-            ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
-            CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
+            CompetitionResource competition = competitionService.getCompetitionByApplicationId(applicationId).getSuccess();
             return CompetitionCompletionStage.RELEASE_FEEDBACK.equals(competition.getCompletionStage());
         }).orElse(false);
     }

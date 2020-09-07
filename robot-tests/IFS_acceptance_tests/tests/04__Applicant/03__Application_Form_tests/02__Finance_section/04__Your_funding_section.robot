@@ -87,7 +87,7 @@ Funding level can be re-entered, and this saves correctly
     Then the user enters text to a text field       css = [name*=date]  12-${nextyear}
     And the user enters text to a text field        css = [name*=fundingAmount]  20000
 
-Adding more funding rows
+The user can remove and add more funding rows
     [Documentation]    INFUND-6895, INFUND-8044
     [Tags]
     When remove previous rows  css = tr:first-of-type .js-remove-row:not([value=""])

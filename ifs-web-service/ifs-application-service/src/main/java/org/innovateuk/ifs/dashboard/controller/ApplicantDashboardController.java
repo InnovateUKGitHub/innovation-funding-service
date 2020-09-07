@@ -30,6 +30,8 @@ public class ApplicantDashboardController {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @SecuredBySpring(value = "ApplicantDashboardController", description = "applicant and kta has permission to view their own dashboard")
+    @PreAuthorize("hasAnyAuthority('applicant', 'knowledge_transfer_adviser')")
     @GetMapping
     @NavigationRoot
     public String dashboard(Model model,

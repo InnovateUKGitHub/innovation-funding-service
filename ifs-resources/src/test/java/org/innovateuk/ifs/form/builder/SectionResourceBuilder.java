@@ -58,10 +58,6 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
         return withArray((name, object) -> setField("name", name, object), names);
     }
 
-    public SectionResourceBuilder withDescription(String... descriptions) {
-        return withArray((description, object) -> setField("description", description, object), descriptions);
-    }
-
     public SectionResourceBuilder withAssessorGuidanceDescription(String... assessorGuidanceDescriptions) {
         return withArray((assessorGuidanceDescription, object) -> setField("assessorGuidanceDescription", assessorGuidanceDescription, object), assessorGuidanceDescriptions);
     }
