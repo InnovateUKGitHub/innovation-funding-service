@@ -58,4 +58,8 @@ public final class SecurityRuleUtil {
     public static boolean isIFSAdmin(UserResource user) {
         return user.hasRole(IFS_ADMINISTRATOR);
     }
+
+    public static boolean isKta(UserResource user) {
+        return user.hasRole(KNOWLEDGE_TRANSFER_ADVISER);
+    }
 }

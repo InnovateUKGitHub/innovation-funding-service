@@ -22,6 +22,8 @@ public interface ApplicationConfiguration {
 
     boolean isH2020();
 
+    boolean isKtp();
+
     Boolean getIncludeJesForm();
 
     Boolean getIncludeYourOrganisationSection();

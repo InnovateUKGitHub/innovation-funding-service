@@ -184,7 +184,7 @@ The user adds a new team member
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
-    [Arguments]  ${setDocusign}  ${projectID}
+    [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
