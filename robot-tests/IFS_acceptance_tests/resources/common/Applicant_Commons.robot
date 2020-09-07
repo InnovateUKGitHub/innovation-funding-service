@@ -637,7 +637,6 @@ the user completes partner project finances
     the user clicks the button/link                        link = Your project finances
     Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP project costs, location and organisation information as complete     ${application_title}   Calculate  52,214
     ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
-   # ...                                             AND    Log in as a different user                                                                  &{ktpLeadApplicantCredentials}
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                     ${application_title}   Calculate  52,214  yes
     ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
 
