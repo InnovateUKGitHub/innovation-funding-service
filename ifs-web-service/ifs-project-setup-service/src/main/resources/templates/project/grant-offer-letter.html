@@ -111,7 +111,7 @@
                     </p>
                 </th:block>
 
-                <th:block th:unless="${model.useDocusign}">
+                <th:block th:if="${model.projectManager and !model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
                         <h2 class="govuk-heading-m" th:text="|Sending your signed ${model.title.toLowerCase()} to Innovate UK|"></h2>
                         <h2 class="govuk-heading-s govuk-!-margin-0" th:text="|Upload signed ${model.title.toLowerCase()}|"></h2>
@@ -147,11 +147,6 @@
                            data-js-toggle-on-file-upload=""
                            th:href="@{${#ifsUtil.formPostUri(#httpServletRequest)} + '/confirmation'}"
                            data-js-modal="modal-confirm-grant-offer-letter" class="govuk-button">Send to Innovate UK</a>
-                        <button th:attr="aria-hidden=${!model.showDisabledSubmitButton}"
-                                data-js-toggle-on-file-upload=""
-                                id="send-grant-offer-letter-button"
-                                disabled="disabled" class="govuk-button">Send to Innovate UK
-                        </button>
                     </th:block>
                 </th:block>
 

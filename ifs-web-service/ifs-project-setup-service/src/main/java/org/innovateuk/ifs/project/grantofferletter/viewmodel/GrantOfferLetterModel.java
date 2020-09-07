@@ -96,19 +96,6 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
     }
 
-    public boolean isShowDisabledSubmitButton() {
-
-        if (!projectManager) {
-            return false;
-        }
-
-        if (isSubmitted()) {
-            return false;
-        }
-
-        return !isOfferSigned();
-    }
-
     public boolean isProjectManager() {
         return projectManager;
     }
