@@ -44,20 +44,20 @@ public abstract class FinanceRowHandler<T extends FinanceRowItem> {
     }
 
     public List<ApplicationFinanceRow> initializeCost(ApplicationFinance applicationFinance) {
-        return intialiseCosts(applicationFinance)
+        return initialiseCosts(applicationFinance)
                 .stream()
                 .map(this::toApplicationDomain)
                 .collect(Collectors.toList());
     }
 
     public List<ProjectFinanceRow> initializeCost(ProjectFinance projectFinance) {
-        return intialiseCosts(projectFinance)
+        return initialiseCosts(projectFinance)
                 .stream()
                 .map(this::toProjectDomain)
                 .collect(Collectors.toList());
     }
 
-    protected List<T> intialiseCosts(Finance finance) {
+    protected List<T> initialiseCosts(Finance finance) {
         return emptyList();
     }
 

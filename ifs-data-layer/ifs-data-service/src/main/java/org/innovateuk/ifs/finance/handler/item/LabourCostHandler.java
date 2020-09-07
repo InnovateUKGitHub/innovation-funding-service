@@ -70,7 +70,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     }
 
     @Override
-    protected List<LabourCost> intialiseCosts(Finance finance) {
+    protected List<LabourCost> initialiseCosts(Finance finance) {
         String description = LabourCostCategory.WORKING_DAYS_PER_YEAR;
         Integer labourDays = DEFAULT_WORKING_DAYS;
         return newArrayList(new LabourCost(null, LabourCostCategory.WORKING_DAYS_KEY, null, null, labourDays, description, finance.getId()));
