@@ -195,24 +195,29 @@ public class InternalUserProjectStatusServiceImpl extends AbstractProjectService
     }
 
     private ProjectActivityStates getBankDetailsStatus(Project project) {
+        List<Organisation> organisationsRequiringBankDetails = project.getOrganisations()
+                .stream()
+                .filter(org -> areBankDetailsRequired(project, org))
+                .collect(toList());
+        if (organisationsRequiringBankDetails.isEmpty()) {
+            return COMPLETE;
+        }
 
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
         boolean started = false;
-        for (Organisation organisation : project.getOrganisations()) {
-            if (areBankDetailsRequired(project, organisation)) {
-                Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-                ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
-                ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
-                if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
-                    incomplete = true;
-                }
-                if (bankDetails.isPresent()) {
-                    started = true;
-                    if (organisationBankDetailsStatus.equals(PENDING)) {
-                        return project.getProjectState().isActive() ?
-                                ACTION_REQUIRED : PENDING;
-                    }
+        for (Organisation organisation : organisationsRequiringBankDetails) {
+            Optional<BankDetails> bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId());
+            ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, organisation);
+            ProjectActivityStates organisationBankDetailsStatus = createBankDetailStatus(bankDetails, financeContactStatus);
+            if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
+                incomplete = true;
+            }
+            if (bankDetails.isPresent()) {
+                started = true;
+                if (organisationBankDetailsStatus.equals(PENDING)) {
+                    return project.getProjectState().isActive() ?
+                            ACTION_REQUIRED : PENDING;
                 }
             }
         }

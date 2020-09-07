@@ -51,8 +51,9 @@ public class ApplicationSummaryController {
     @Autowired
     private EuGrantTransferRestService euGrantTransferRestService;
 
-    @SecuredBySpring(value = "READ", description = "Applicants and monitoring officers have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'monitoring_officer')")
+
+    @SecuredBySpring(value = "READ", description = "Applicants, monitoring officers and kta have permission to view the application summary page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer', 'knowledge_transfer_adviser')")
     @GetMapping("/{applicationId}/summary")
     @AsyncMethod
     public String applicationSummary(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,

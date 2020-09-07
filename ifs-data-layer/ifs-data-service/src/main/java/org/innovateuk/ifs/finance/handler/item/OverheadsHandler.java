@@ -91,7 +91,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
         }
     }
 
-    protected List<Overhead> intialiseCosts(Finance finance) {
+    protected List<Overhead> initialiseCosts(Finance finance) {
         return newArrayList(new Overhead(finance.getId()));
     }
 

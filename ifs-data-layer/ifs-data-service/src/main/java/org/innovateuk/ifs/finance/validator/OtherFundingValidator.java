@@ -4,8 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
+import org.innovateuk.ifs.finance.resource.cost.BaseOtherFunding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -35,12 +34,12 @@ public class OtherFundingValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return OtherFunding.class.equals(clazz);
+        return clazz.isAssignableFrom(BaseOtherFunding.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        OtherFunding otherFunding = (OtherFunding) target;
+        BaseOtherFunding otherFunding = (BaseOtherFunding) target;
 
         String otherFundingSelection = otherFunding.getOtherPublicFunding();
         validateOtherPublicFunding(otherFundingSelection, errors);
@@ -72,7 +71,7 @@ public class OtherFundingValidator implements Validator {
         }
     }
 
-    private void validateDate(OtherFunding otherFunding, Errors errors){
+    private void validateDate(BaseOtherFunding otherFunding, Errors errors){
         String securedDate = otherFunding.getSecuredDate();
         if(StringUtils.isBlank(securedDate)){
             rejectValue(errors, "securedDate", "validation.finance.funding.date.invalid");
@@ -87,20 +86,20 @@ public class OtherFundingValidator implements Validator {
         }
     }
 
-    private boolean userHasSelectedYes(final OtherFunding otherFunding) {
+    private boolean userHasSelectedYes(final BaseOtherFunding otherFunding) {
         List<? extends FinanceRow> otherFundingRows = getRows(otherFunding);
         return !otherFundingRows.isEmpty() && "Yes".equals(otherFundingRows.get(0).getItem());
     }
 
-    private List<? extends FinanceRow> getRows(OtherFunding otherFunding) {
+    private List<? extends FinanceRow> getRows(BaseOtherFunding otherFunding) {
         Optional<ApplicationFinanceRow> applicationCost = applicationFinanceRowRepository.findById(otherFunding.getId());
         if (applicationCost.isPresent()) {
             ApplicationFinance applicationFinance = applicationCost.get().getTarget();
-            return applicationFinanceRowRepository.findByTargetIdAndType(applicationFinance.getId(), FinanceRowType.OTHER_FUNDING);
+            return applicationFinanceRowRepository.findByTargetIdAndType(applicationFinance.getId(), otherFunding.getCostType());
         } else {
             ProjectFinanceRow projectCost = projectFinanceRowRepository.findById(otherFunding.getId()).get();
             ProjectFinance projectFinance = projectCost.getTarget();
-            return projectFinanceRowRepository.findByTargetIdAndType(projectFinance.getId(), FinanceRowType.OTHER_FUNDING);
+            return projectFinanceRowRepository.findByTargetIdAndType(projectFinance.getId(), otherFunding.getCostType());
         }
     }
 

@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -23,6 +24,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QU
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.resource.Role.KNOWLEDGE_TRANSFER_ADVISER;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -60,9 +62,15 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
         when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
         ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
         when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
-        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(newProcessRoleResource().withRole(LEADAPPLICANT).build()));
+        when(userRestService.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(
+                restSuccess(newProcessRoleResource()
+                        .withUser(loggedInUser)
+                        .withRole(LEADAPPLICANT).build()));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(
+                restSuccess(Collections.singletonList(newProcessRoleResource()
+                        .withUser(loggedInUser)
+                        .withRole(LEADAPPLICANT).build())));
         when(applicationRestService.updateApplicationState(application.getId(), ApplicationState.OPENED)).thenReturn(restSuccess());
-
         MvcResult result = mockMvc.perform(get("/application/" + application.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-overview"))
@@ -72,6 +80,44 @@ public class ApplicationOverviewControllerTest extends BaseControllerMockMVCTest
 
         assertSame(expectedModel, viewModel);
         verify(applicationRestService).updateApplicationState(application.getId(), ApplicationState.OPENED);
+    }
+
+    @Test
+    public void applicationOverviewForKtaWhenCompetitionOpenApplicationNotSubmitted() throws Exception {
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withApplicationState(ApplicationState.CREATED)
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
+        when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(
+                restSuccess(Collections.singletonList(newProcessRoleResource()
+                        .withUser(loggedInUser)
+                        .withRole(KNOWLEDGE_TRANSFER_ADVISER).build())));
+        when(applicationRestService.updateApplicationState(application.getId(), ApplicationState.OPENED)).thenReturn(restSuccess());
+
+        mockMvc.perform(get("/application/" + application.getId()))
+                .andExpect(redirectedUrl("/application/1/summary"));
+    }
+
+    @Test
+    public void applicationOverviewForKtaWhenCompetitionClosedApplicationSubmitted() throws Exception {
+        ApplicationResource application = newApplicationResource()
+                .withCompetitionStatus(CompetitionStatus.CLOSED)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .build();
+        when(applicationRestService.getApplicationById(application.getId())).thenReturn(restSuccess(application));
+        ApplicationOverviewViewModel expectedModel = mock(ApplicationOverviewViewModel.class);
+        when(applicationOverviewModelPopulator.populateModel(application, loggedInUser)).thenReturn(expectedModel);
+        when(userRestService.findProcessRole(application.getId())).thenReturn(
+                restSuccess(Collections.singletonList(newProcessRoleResource()
+                        .withUser(loggedInUser)
+                        .withRole(KNOWLEDGE_TRANSFER_ADVISER).build())));
+        when(applicationRestService.updateApplicationState(application.getId(), ApplicationState.OPENED)).thenReturn(restSuccess());
+
+        mockMvc.perform(get("/application/" + application.getId()))
+                .andExpect(redirectedUrl("/application/1/summary"));
     }
 
     @Test

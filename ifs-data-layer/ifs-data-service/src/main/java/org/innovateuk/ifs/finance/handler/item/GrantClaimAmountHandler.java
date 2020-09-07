@@ -51,7 +51,7 @@ public class GrantClaimAmountHandler extends FinanceRowHandler<GrantClaimAmount>
     }
 
     @Override
-    protected List<GrantClaimAmount> intialiseCosts(Finance finance) {
+    protected List<GrantClaimAmount> initialiseCosts(Finance finance) {
         return newArrayList(new GrantClaimAmount(finance.getId()));
     }
 }
