@@ -5,8 +5,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -28,6 +27,20 @@ public class RoleProfileStatusPermissionRolesTest extends BasePermissionRulesTes
                 assertTrue(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
             } else {
                 assertFalse(rules.adminsAndSupportCanRetrieveUserRoleProfile(otherUser, user));
+            }
+        });
+    }
+
+    @Test
+    public void ktaCanRetrieveRoleProfiles() {
+
+        UserResource otherUser = newUserResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isKta(user)) {
+                assertTrue(rules.ktaCanRetrieveUserRoleProfile(otherUser, user));
+            } else {
+                assertFalse(rules.ktaCanRetrieveUserRoleProfile(otherUser, user));
             }
         });
     }
