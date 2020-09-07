@@ -1,1 +1,1 @@
-${title} approved for project ${applicationId}
+${titleUpper} approved for project ${applicationId}

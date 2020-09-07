@@ -523,7 +523,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         notificationArguments.put("projectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
         notificationArguments.put("projectSetupUrl", webBaseUrl + "/project-setup/project/" + project.getId());
         String title = project.getApplication().getCompetition().isProcurement() ? "contract" : "grant offer letter";
+        String titleUpper = project.getApplication().getCompetition().isProcurement() ? "Contract" : "Grant offer letter";
         notificationArguments.put("title", title);
+        notificationArguments.put("titleUpper", titleUpper);
 
         Notification notification = new Notification(systemNotificationSource, notificationTargets, NotificationsGol.PROJECT_LIVE, notificationArguments);
 
