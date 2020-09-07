@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter Confirmation'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='|${title} confirmation|'" />
 </head>
 <body class="govuk-template__body gol-confirm-submit">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -12,7 +12,7 @@
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
         <h1 class="govuk-heading-m">Send to Innovate UK</h1>
-        <p class="govuk-body" th:text="|Once you send the signed ${model.title.toLowerCase()} we will review it and will contact you if we need further information.|"></p>
+        <p class="govuk-body" th:text="|Once you send the signed ${title.toLowerCase()} we will review it and will contact you if we need further information.|"></p>
 
         <form th:action="@{/project/{id}/offer(id=${projectId})}" method="post">
             <button class="govuk-button" name="confirmSubmit">Confirm submission</button>
