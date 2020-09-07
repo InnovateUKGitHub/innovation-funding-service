@@ -14,6 +14,8 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...               IFS-8012  SBRI Type 4: Project finance view of assessor feedback
 ...
 ...               IFS-8202  SBRI - Ability to generate a contract for an international applicant
+...
+...               IFS-8199  SBRI Type 4: email notification content changes
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -239,7 +241,7 @@ GOL section is enabled without bank details
     Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
 Internal user can send the contract
-    [Documentation]  IFS-8202
+    [Documentation]  IFS-8202  IFS-8199
     Given internal user generates the GOL     ${sbriProjectId2}
     When the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element      jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
@@ -252,6 +254,7 @@ External user of international org should not see bank details
     Then the user should not see the element     jQuery = li:contains("Bank details")
 
 External user can upload the contract
+     [Documentation]  IFS-8199
      Given applicant uploads the contract
      When the internal user approve the GOL     ${sbriProjectId2}
      Then the user reads his email              ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
