@@ -401,17 +401,18 @@ Non lead partners complete the Project team section
     the user should see the element           jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 Lead partner completes the Project team section
-    log in as a different user               &{lead_applicant_credentials}
-    the user clicks the button/link          link = ${PS_PD_Application_Title}
-    the user should see the element          jQuery = ul li:contains("Project team") span:contains("To be completed")
-    the user clicks the button/link          link = Project team
-    the user selects their finance contact   financeContact2
-    the user clicks the button/link          link = Project manager
+    log in as a different user                                         &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                                    link = ${PS_PD_Application_Title}
+    the user should see the element                                    jQuery = ul li:contains("Project team") span:contains("To be completed")
+    the user clicks the button/link                                    link = Project team
+    the user selects their finance contact                             financeContact2
+    the user clicks the button/link                                    link = Project manager
     the user should see project manager/finance contact validations    Save project manager   You need to select a Project Manager before you can continue.
-    the user selects the radio button        projectManager   projectManager2
-    the user clicks the button/link          jQuery = button:contains("Save project manager")
-    the user clicks the button/link          link = Set up your project
-    the user should see the element          jQuery = .progress-list li:nth-child(2):contains("Completed")
+    the user selects the radio button                                  projectManager   projectManager2
+    the user clicks the button/link                                    jQuery = button:contains("Save project manager")
+    the user clicks the button/link                                    link = Set up your project
+    the user should see the element                                    jQuery = .progress-list li:nth-child(2):contains("Completed")
 
 The Project team status appears as complete for the internal user
     log in as a different user        &{internal_finance_credentials}

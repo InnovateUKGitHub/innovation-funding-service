@@ -22,8 +22,10 @@ public abstract class AbstractCostRowForm<F extends FinanceRowItem> {
     }
 
     public AbstractCostRowForm(F rowItem) {
-        this.costId = rowItem.getId();
-        this.total = rowItem.getTotal();
+        if (rowItem != null) {
+            this.costId = rowItem.getId();
+            this.total = rowItem.getTotal();
+        }
     }
 
     public Long getCostId() {

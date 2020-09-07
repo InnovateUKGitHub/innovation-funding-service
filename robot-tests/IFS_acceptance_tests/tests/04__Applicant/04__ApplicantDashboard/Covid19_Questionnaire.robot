@@ -94,7 +94,8 @@ the user goes to the next query
     the user clicks the button/link     jQuery = button:contains("Next")
 
 Custom suite setup
-    the user logs-in in new browser    &{lead_applicant_credentials}
+    the user logs-in in new browser                       &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
 
 Custom suite teardown
     The user closes the browser

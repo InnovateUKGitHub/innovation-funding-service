@@ -739,9 +739,10 @@ invite partner organisation
     the user clicks the button/link          jQuery = button:contains("Invite partner organisation")
 
 Registered UK based lead user goes to the application team
-    Logging in and Error Checking       ${lead_applicant}  ${short_password}
-    the user clicks the button/link     jQuery = li:contains("${ukLeadInternationalCompetition}") a:contains("Untitled")
-    the user clicks the button/link     link = Application team
+    Logging in and Error Checking                         ${lead_applicant}  ${short_password}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       jQuery = li:contains("${ukLeadInternationalCompetition}") a:contains("Untitled")
+    the user clicks the button/link                       link = Application team
 
 the user should see organisations list according to organisation type selected
     [Arguments]  ${arg}  ${locator}
@@ -1134,6 +1135,7 @@ uk lead applicant completes application form
     Requesting nomensa organisation IDs
     log in as a different user                                      &{ukLeadOrganisationCredentials}
     the user navigates to the page                                  ${APPLICANT_DASHBOARD_URL}
+    the user clicks the application tile if displayed
     the user clicks the button/link                                 link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                                 link = Application details
     the user fills in the Application details                       ${ukLeadInternationalApplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -1145,9 +1147,9 @@ uk lead applicant completes application form
     the user should see the element                                 jQuery = li:contains("Application team") > .task-status-complete
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                 ${ukLeadInternationalApplicationTitle}
-    lead marks the finance as complete                       ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
-    the user accept the competition terms and conditions     Return to application overview
+    the user navigates to Your-finances page                        ${ukLeadInternationalApplicationTitle}
+    lead marks the finance as complete                              ${ukLeadInternationalApplicationTitle}   Calculate  52,214  id = postcode   BS1 4NT
+    the user accept the competition terms and conditions            Return to application overview
 
 international partner submits finance details
     log in as a different user                               &{internationalPartnerOrganisationCredentials}
@@ -1158,6 +1160,7 @@ international partner submits finance details
 Uk lead submits international competition application to assesment
     Requesting uk lead international competition ID
     Log in as a different user                            &{ukLeadOrganisationCredentials}
+    the user clicks the application tile if displayed
     the user clicks the button/link                       link = ${ukLeadInternationalApplicationTitle}
     the applicant submits the application
     Log in as a different user                            &{internal_finance_credentials}
@@ -1210,24 +1213,26 @@ the user completes project team and can see international organisation addresses
     the user should see the element         jQuery = td:contains("${addressLine1}")
 
 lead applicant assigns technical approach section to partner applicant
-    log in as a different user            &{ukLeadOrganisationCredentials}
-    the user clicks the button/link       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link       jQuery = a:contains("Technical approach")
-    the user uploads the file             css = input[name="appendix"]    ${valid_pdf}
-    the user clicks the button/link       link = Assign to someone else.
-    the user selects the radio button     assignee  assignee3
-    the user clicks the button/link       jQuery = button:contains("Save and return")
+    log in as a different user                            &{ukLeadOrganisationCredentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       jQuery = a:contains("Technical approach")
+    the user uploads the file                             css = input[name="appendix"]    ${valid_pdf}
+    the user clicks the button/link                       link = Assign to someone else.
+    the user selects the radio button                     assignee  assignee3
+    the user clicks the button/link                       jQuery = button:contains("Save and return")
 
 partner uploads the appendix file
-    Log in as a different user          &{internationalPartnerOrganisationCredentials}
-    the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link     jQuery = a:contains("Technical approach")
-    the user uploads the file           css = input[name="appendix"]    ${ods_file}
-    the user uploads the file           css = input[name="appendix"]    ${excel_file}
-    the user clicks the button/link     jQuery = button:contains("Assign to lead for review")
-    Log in as a different user           &{ukLeadOrganisationCredentials}
-    the user clicks the button/link     link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link     jQuery = a:contains("Technical approach")
+    Log in as a different user                            &{internationalPartnerOrganisationCredentials}
+    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       jQuery = a:contains("Technical approach")
+    the user uploads the file                             css = input[name="appendix"]    ${ods_file}
+    the user uploads the file                             css = input[name="appendix"]    ${excel_file}
+    the user clicks the button/link                       jQuery = button:contains("Assign to lead for review")
+    Log in as a different user                            &{ukLeadOrganisationCredentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                       jQuery = a:contains("Technical approach")
 
 the lead can see multiple appendices uploaded to the technical approach question
     the user should see the element     jQuery = a:contains("${valid_pdf}")

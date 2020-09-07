@@ -29,9 +29,6 @@ public class Section implements Comparable<Section> {
     private String name;
 
     @Column( length = 5000 )
-    private String description;
-
-    @Column( length = 5000 )
     private String assessorGuidanceDescription;
 
     private Integer priority;
@@ -125,10 +122,6 @@ public class Section implements Comparable<Section> {
         this.parentSection = parentSection;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public int compareTo(Section o) {
         return this.getId().compareTo(o.getId());
@@ -186,10 +179,6 @@ public class Section implements Comparable<Section> {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public void setName(String name) {

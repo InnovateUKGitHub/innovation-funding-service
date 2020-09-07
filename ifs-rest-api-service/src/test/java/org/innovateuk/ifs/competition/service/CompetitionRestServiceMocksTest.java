@@ -47,6 +47,28 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
+    public void getCompetitionForApplication() {
+        CompetitionResource returnedResponse = new CompetitionResource();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%d", COMPETITIONS_REST_URL, "by-application", 123), CompetitionResource.class, returnedResponse);
+
+        CompetitionResource response = service.getCompetitionForApplication(123).getSuccess();
+        assertNotNull(response);
+        assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void getCompetitionForProject() {
+        CompetitionResource returnedResponse = new CompetitionResource();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%d", COMPETITIONS_REST_URL, "by-project", 123), CompetitionResource.class, returnedResponse);
+
+        CompetitionResource response = service.getCompetitionForProject(123).getSuccess();
+        assertNotNull(response);
+        assertEquals(returnedResponse, response);
+    }
+
+    @Test
     public void getCompetitionTypes() {
         List<CompetitionTypeResource> returnedResponse = asList(new CompetitionTypeResource(), new CompetitionTypeResource());
 

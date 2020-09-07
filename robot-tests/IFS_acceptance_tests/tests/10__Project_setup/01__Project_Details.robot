@@ -112,8 +112,9 @@ Lead partner can see the project setup page
 Lead partner can click the Dashboard link
     [Documentation]    INFUND-4426
     [Tags]
-    Given the user clicks the button/link    link = Dashboard
-    Then the user should see the element    jQuery = h2:contains("Set up your project")
+    Given the user clicks the button/link                     link = Dashboard
+    And the user clicks the application tile if displayed
+    Then the user should see the element                      jQuery = h2:contains("Set up your project")
     And the user can see the application overview
 
 Lead partner is able to see finances without an error
