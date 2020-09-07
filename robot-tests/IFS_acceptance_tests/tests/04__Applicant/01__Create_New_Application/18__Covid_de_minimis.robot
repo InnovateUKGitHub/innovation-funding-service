@@ -119,7 +119,7 @@ Internal user is able to approve Spend profile and generates the GOL
     [Setup]  Requesting Project ID of this Project
     Given proj finance approves the spend profiles  ${ProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
-    And internal user generates the GOL             YES  ${ProjectID}
+    And internal user generates the GOL             ${ProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7365
