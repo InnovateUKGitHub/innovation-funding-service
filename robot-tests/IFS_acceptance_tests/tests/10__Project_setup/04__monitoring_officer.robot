@@ -351,9 +351,9 @@ The user should see server side validations
     [Arguments]  ${button}
     the user clicks the button/link                  jQuery = button:contains("${button}")
     the user should see a field and summary error    Please enter a first name.
-    the user should see a field and summary error    Their first name should have at least 2 characters.
+    the user should see a field and summary error    Your first name should have at least 2 characters.
     the user should see a field and summary error    Please enter a last name.
-    the user should see a field and summary error    Their last name should have at least 2 characters.
+    the user should see a field and summary error    Your last name should have at least 2 characters.
     the user should see a field and summary error    Please enter a phone number.
     the user should see a field and summary error    Please enter a valid phone number between 8 and 20 digits.
 

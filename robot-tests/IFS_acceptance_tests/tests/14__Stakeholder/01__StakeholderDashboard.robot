@@ -256,9 +256,9 @@ the user triggers the name validation
 
 the user should see the name validation messages
     the user should see a field and summary error    ${enter_a_first_name}
-    the user should see a field and summary error    Their first name should have at least 2 characters.
+    the user should see a field and summary error    Your first name should have at least 2 characters.
     the user should see a field and summary error    ${enter_a_last_name}
-    the user should see a field and summary error    Their last name should have at least 2 characters.
+    the user should see a field and summary error    Your last name should have at least 2 characters.
 
 the user triggers the email validation
     the user enters text to a text field    id = firstName     Stake
