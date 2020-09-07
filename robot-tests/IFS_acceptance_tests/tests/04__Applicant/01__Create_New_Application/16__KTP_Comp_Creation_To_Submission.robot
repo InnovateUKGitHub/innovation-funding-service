@@ -224,9 +224,14 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
-    When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
-    And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    When Logging in and Error Checking                                                       &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
+
+lead applicant can not view your organisation section of KTP applications
+    [Documentation]  IFS-7958
+     When the user clicks the button/link         link = Your project finances
+     Then the user should not see the element     link = Your organisation
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
@@ -234,49 +239,52 @@ New lead applicant can declare any other government funding received
     And the user clicks the button/link                                      link = Your funding
     Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
     And the user should see the readonly view of other funding received
-    And the user should see KTP finance sections are complete
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
-    Given the user clicks the button/link                link = Back to application overview
-    And the lead invites a non-registered user           ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
-    When the user clicks the button/link                 link = Sign in
-    And Logging in and Error Checking                    &{ktpNewPartnerCredentials}
-    And the user clicks the button/link                  link = ${ktpApplicationTitle}
-    Then the user completes partner project finances     ${ktpApplicationTitle}  yes
+    Given the user clicks the button/link                            link = Return to finances
+    And the user clicks the button/link                              link = Back to application overview
+    When the lead invites a partner and accepeted the invitation
+    Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
+
+Partner applicant can not view your project costs section of KTP applications
+    [Documentation]  IFS-7958
+     When the user clicks the button/link         link = Your project finances
+     Then the user should not see the element     link = Your project costs
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
     And the user clicks the button/link                                      link = Other funding
     Then the user should see the readonly view of other funding received
-    And the user should see KTP finance sections are complete
 
-Partner organisation can see each other finance summary calculations in project finances page
+Organisations(KB plus business) can see each other's finance summary calculation
     [Documentation]  IFS-7958
-    Then lead and partner can see each other finance summary calculations
-    And the user should not see the element                                   jQuery = p:contains("${financeBanerText}")
+    Given the user clicks the button/link                                       link = Return to finances
+    Then the user should see KTP finance sections are complete
+    And lead and partner can see each other's finance summary calculations
+    And the user should not see the element                                     jQuery = p:contains("${financeBanerText}")
 
-Partner organisation can see lead project cost summary and finance summary of each other in finance overview page
+Partner can view finance summary of KB and other businesses in Finance Overview section
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                     link = Back to application overview
     When the user clicks the button/link                                      link = Finances overview
-    Then lead and partner can see each other finance summary calculations
+    Then lead and partner can see each other's finance summary calculations
     And the user can see project cost breakdown of lead organisation
 
-Lead organisation can see each other finance summary calculations in project finances page
+Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
     [Documentation]  IFS-7958
     Given Log in as a different user                                          &{ktpLeadApplicantCredentials}
     When the user clicks the button/link                                      link = ${ktpApplicationTitle}
     And the user clicks the button/link                                       link = Your project finances
-    Then lead and partner can see each other finance summary calculations
+    Then lead and partner can see each other's finance summary calculations
     And the user should not see the element                                   jQuery = p:contains("${financeBanerText}")
 
-Lead organisation can see lead project cost summary and finance summary of each other in finance overview page
+Lead organisation(KB) can view other organisations's finance summary in finance overview section
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                     link = Back to application overview
     When the user clicks the button/link                                      link = Finances overview
-    Then lead and partner can see each other finance summary calculations
+    Then lead and partner can see each other's finance summary calculations
     And the user can see project cost breakdown of lead organisation
 
 System should display a validation if no email address entered while inviting the KTA
@@ -738,6 +746,12 @@ the user invites a KTA to application
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
 
+the lead invites a partner and accepeted the invitation
+    the lead invites a non-registered user     ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
+    the user clicks the button/link            link = Sign in
+    Logging in and Error Checking              &{ktpNewPartnerCredentials}
+    the user clicks the button/link            link = ${ktpApplicationTitle}
+
 the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding")
     the user should see the element     jQuery = td:contains("12-${nextyear}")
@@ -745,12 +759,12 @@ the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
 the user should see KTP finance sections are complete
-    the user clicks the button/link     link = Return to finances
+    #the user clicks the button/link     link = Return to finances
     the user should see the element     css = li:nth-of-type(1) .task-status-complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
 
-lead and partner can see each other finance summary calculations
+lead and partner can see each other's finance summary calculations
     the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("246")
     the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("10.00%")
     the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("25")
