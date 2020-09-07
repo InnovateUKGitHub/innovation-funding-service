@@ -346,7 +346,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 Map<String, Object> notificationArguments = new HashMap<>();
                 notificationArguments.put("dashboardUrl", webBaseUrl);
                 notificationArguments.put("applicationId", project.getApplication().getId());
-                notificationArguments.put("competitionName", project.getApplication().getCompetition().getName());
                 String title = project.getApplication().getCompetition().isProcurement() ? "contract" : "grant offer letter";
                 String shortTitle = project.getApplication().getCompetition().isProcurement() ? "contract" : "letter";
                 notificationArguments.put("title", title);

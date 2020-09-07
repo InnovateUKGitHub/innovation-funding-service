@@ -1,1 +1,1 @@
-${competitionName}: Your ${title} is available for project ${applicationId?c}
+Your ${title} is available for project ${applicationId?c}
