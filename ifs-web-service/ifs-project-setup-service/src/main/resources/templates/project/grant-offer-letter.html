@@ -32,14 +32,13 @@
 
             <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
                 <div class="fail-alert govuk-!-margin-bottom-6">
-                    <h2 class="govuk-heading-s" th:text="|Your ${model.title.toLowerCase()} has been rejected by Innovate UK|"></h2>
+                    <h2 class="govuk-heading-s" th:text="|Your signed ${model.title.toLowerCase()} has been rejected by Innovate UK|"></h2>
                     <p class="govuk-body">Someone will be in touch with you soon.</p>
                 </div>
             </th:block>
 
             <th:block th:if="${model.leadPartner}">
-                <p class="govuk-body" th:unless="${model.submitted}" th:text="|The ${model.title.toLowerCase()} has been provided by Innovate UK. It has been
-                    created using the information provided during project setup.|"></p>
+                <p class="govuk-body" th:unless="${model.submitted}" th:text="|We have provided the ${model.title.toLowerCase()}, which was created using information provided during project setup.|"></p>
 
                 <th:block th:unless="${model.submitted}">
                     <h2 class="govuk-heading-m">Next steps</h2>
@@ -51,20 +50,20 @@
                         </th:block>
                         <th:block th:if="${model.procurement}">
                             <li>The Project Manager must review and sign the contract.</li>
-                            <li>The signed contract is sent to Innovate UK.</li>
+                            <li>The signed contract is sent to us.</li>
                         </th:block>
                     </ul>
-                    <p class="govuk-body" th:text="|Project setup will be complete after the signed ${model.title.toLowerCase()} has been received and approved by Innovate UK.|"></p>
+                    <p class="govuk-body" th:text="|Project setup will be complete after the signed ${model.title.toLowerCase()} has been received and approved by us.|"></p>
                 </th:block>
 
 
                 <th:block th:if="${!model.useDocusign or model.showGrantOfferLetterReceivedByInnovateMessage}">
                     <h2 class="govuk-heading-m" th:text="${model.title}"></h2>
-                    <p class="govuk-body" th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
+                    <p class="govuk-body" th:unless="${model.submitted}">This document is awaiting signature by the project manager.</p>
 
                     <th:block th:if="${model.grantOfferLetterSent}">
                         <p class="govuk-body">
-                            <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
+                            <a th:href="@{/project/{id}/offer/download(id=${model.projectId})}"
                                th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
                                target="_blank"
                                class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>
@@ -93,7 +92,7 @@
                 <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
                     <h2 class="govuk-heading-m" th:text="|Signed ${model.title.toLowerCase()}|"></h2>
                     <p class="govuk-body">
-                        <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}"
+                        <a th:href="@{/project/{id}/offer/signed-download(id=${model.projectId})}"
                            th:text="|${model.signedGrantOfferLetterFile.filename} (opens in a new window)|"
                            class="govuk-link"
                            target="_blank">Signed grant offer letter 2016-07-28a.PDF</a>
@@ -112,18 +111,17 @@
                     </p>
                 </th:block>
 
-
                 <th:block th:unless="${model.useDocusign}">
                     <div th:if="${model.grantOfferLetterSent and !model.submitted and model.grantOfferLetterFile != null}" class="upload-section">
                         <h2 class="govuk-heading-m" th:text="|Sending your signed ${model.title.toLowerCase()} to Innovate UK|"></h2>
                         <h2 class="govuk-heading-s govuk-!-margin-0" th:text="|Upload signed ${model.title.toLowerCase()}|"></h2>
-                        <p class="govuk-body" th:text="|The Project Manager is required to provide a signed copy of the ${model.title.toLowerCase()}.|"></p>
+                        <p class="govuk-body" th:text="|The project manager needs to provide a signed copy of the ${model.title.toLowerCase()}.|"></p>
                         <details class="govuk-details">
                             <summary class="govuk-details__summary">
                                 <span class="govuk-details__summary-text">What are the requirements for upload?</span>
                             </summary>
                             <div class="govuk-details__text">
-                                <p class="govuk-body" th:text="|The uploaded signed ${model.title.toLowerCase()} agreement must:|"></p>
+                                <p class="govuk-body" th:text="|The uploaded signed ${model.title.toLowerCase()} must:|"></p>
                                 <ul class="govuk-list govuk-list--bullet">
                                     <li>contain signed pages</li>
                                     <li>be in a portable document format (.pdf)</li>
@@ -134,7 +132,7 @@
                             </div>
                         </details>
                         <th:block th:with="uploadViewmode='edit',
-                                       downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
+                                       downloadUrl=@{/project/{id}/offer/signed-download(id=${model.projectId})},
                                        filename=${model.signedGrantOfferLetterFile?.filename},
                                        inputField='signedGrantOfferLetter',
                                        validationField=${inputField},
@@ -171,7 +169,7 @@
 
                 <h2 class="govuk-heading-m" th:text="|${model.title}|"></h2>
                 <p class="govuk-body">
-                    <a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"
+                    <a th:href="@{/project/{id}/offer/download(id=${model.projectId})}"
                        th:text="|${model.grantOfferLetterFile?.filename} (opens in a new window)|"
                        target="_blank"
                        class="govuk-link grant-offer-download">Grant offer letter 2016-07-28a.PDF</a>

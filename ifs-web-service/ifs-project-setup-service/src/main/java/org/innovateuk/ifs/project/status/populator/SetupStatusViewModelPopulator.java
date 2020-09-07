@@ -238,7 +238,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
             case GRANT_OFFER_LETTER:
                 String title = competition.isProcurement() ? "Contract" : "Grant offer letter";
                 return new SetupStatusStageViewModel(stage, title,
-                        "Once all tasks are complete the Project Manager can review, sign and submit the " + title.toLowerCase() + " to Innovate UK.",
+                        "Once all tasks are complete the Project Manager can review, sign and submit the " + title.toLowerCase() + " to us.",
                         format("/project/%d/offer", project.getId()),
                         sectionStatus.grantOfferLetterSectionStatus(
                                 ownOrganisation.getGrantOfferLetterStatus(),
