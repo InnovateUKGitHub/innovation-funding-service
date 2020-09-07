@@ -50,6 +50,7 @@
                                guidanceFragment=${model.business ? 'project-business' : 'project-non-business'},
                                maximumFundingLevel=${model.maximumFundingLevel},
                                hideAreYouRequestingFunding=${model.hideAreYouRequestingFunding()},
+                               ktpFundingType=${model.ktpFundingType},
                                hideOtherFunding=${model.ktpFundingType && model.knowledgeBaseOrganisation},
                                otherFundingFragment=${model.ktpFundingType && !model.knowledgeBaseOrganisation ? 'other-funding-guidance-ktp' : 'other-funding-guidance-default'}
                    )" />
