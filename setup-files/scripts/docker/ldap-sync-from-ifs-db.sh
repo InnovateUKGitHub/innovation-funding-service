@@ -65,7 +65,9 @@ addUserToShibboleth() {
 }
 
 addUsers() {
+  echo "adding in $LDAP_HOST"
   ldapadd -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+  echo "adding in $LDAP_HOST_NEW"
   ldapadd -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
 }
 
