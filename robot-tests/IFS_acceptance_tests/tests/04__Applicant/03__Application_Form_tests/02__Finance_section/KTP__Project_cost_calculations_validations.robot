@@ -100,12 +100,12 @@ Subcontracting costs calculations
     Given the user enters text to a text field            css = input[id^="subcontracting"][id$="cost"]        1000
     Then the user fills in the subcontracting values
 
-Travel and subsistence calculations
-    [Documentation]  IFS-7790
-    Given the user enters text to a text field     css = input[id^="travelRows"][id$="item"]    Travel
-    When the user enters text to a text field      css = input[id^="travelRows"][id$="times"]       2
-    Then the user enters text to a text field      css = input[id^="travelRows"][id$="eachCost"]    1000
-    And the user should see the right values       2,000    Travel and subsistence    5369
+Travel and subsistence cost calculations
+    [Documentation]  IFS-7790  IFS-8156
+    When the user enters supervisor's T&S costs                          Knowledge Base biweekly travel  30  185
+    And the user clicks the button/link                                  name = add_cost
+    And the user enters the associate's T&S costs                        3 trips to Glasgow  3  200
+    Then the user should see the right cost summary and total values
 
 Other costs calculations
     [Documentation]  IFS-7790
@@ -148,6 +148,20 @@ Internal user views values
     Then the user should see the correct data in the finance tables
 
 *** Keywords ***
+the user enters supervisor's T&S costs
+    [Arguments]  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
+    the user selects the option from the drop-down menu     Supervisor  css = tr[id^="ktpTravelCostsRow"][1] ~ select[name^="ktpTravelCostsRow"][name$="type"]
+    the user enters text to a text field                    css = select[name^="ktpTravelCostsRow"][name$="description"]  ${travelCostDescription}
+    the user enters text to a text field                    css = select[name^="ktpTravelCostsRow"][name$="times"]  ${numberOfTrips}
+    the user enters text to a text field                    css = select[name^="ktpTravelCostsRow"][name$="eachCost"]  ${costOfEachTrip}
+
+the user enters the associate's T&S costs
+    [Arguments]  ${travelCostDescription}  ${numberOfTrips}  ${costOfEachTrip}
+    the user selects the option from the drop-down menu     Associate  name = ktpTravelCostRows[unsaved-a60b3f87-ddd7-4578-b4a3-05873efa93c8].type
+    the user enters text to a text field                    id = ktpTravelCostRows[unsaved-a60b3f87-ddd7-4578-b4a3-05873efa93c8].description  ${travelCostDescription}
+    the user enters text to a text field                    id = ktpTravelCostRows[unsaved-a60b3f87-ddd7-4578-b4a3-05873efa93c8].times  ${numberOfTrips}
+    the user enters text to a text field                    id = ktpTravelCostRows[unsaved-a60b3f87-ddd7-4578-b4a3-05873efa93c8].eachCost  ${costOfEachTrip}
+
 Custom suite setup
     the user logs-in in new browser   &{KTPLead}
     the user clicks the button/link   link = ${KTPapplication}
@@ -195,10 +209,16 @@ the user fills in consumables
     the user enters text to a text field     css = input[id^="consumableCost"][id$="quantity"]       2
     the user enters text to a text field     css = input[id^="consumableCost"][id$="cost"]       1000
 
+the user should see the right cost summary and total values
+    the user should see the element     jQuery = td:contains("Total knowledge base supervisor costs") td:contains("£5,550")
+    the user should see the element     jQuery = td:contains("Total associate travel costs") td:contains("£600")
+    the user should see the element     jQuery = h4:contains("Total travel and subsistence costs")
+    the user should see the element     jQuery = span:contains("£6,150")
+
 the user should see the right values
-    [Arguments]   ${sectionTotal}    ${section}    ${total}
-    the user should see the element          jQuery = div:contains("${sectionTotal}") button:contains("${section}")
-    the user should see the element           jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="${total}"]
+     [Arguments]   ${sectionTotal}    ${section}    ${total}
+    the user should see the element     jQuery = div:contains("${sectionTotal}") button:contains("${section}")
+    the user should see the element     jQuery = div:contains("Total project costs") input[data-calculation-rawvalue="${total}"]
 
 the user fills in ktp other costs
     [Arguments]   ${description}   ${estimate}
