@@ -8,10 +8,7 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
-import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
-import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
+import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -154,6 +151,9 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
+        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.JUSTIFICATION)) {
+            futures.add(saveJustification(form.getJustificationForm(), finance));
+        }
 
         ValidationMessages messages = new ValidationMessages();
 
@@ -165,6 +165,21 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         } else {
             return serviceFailure(messages.getErrors());
         }
+    }
+
+    private CompletableFuture<ValidationMessages> saveJustification(JustificationForm form, BaseFinanceResource finance) {
+        return async(() -> {
+            ValidationMessages messages = new ValidationMessages();
+//            does it need its own cost category? its not a cost
+            DefaultCostCategory justificationCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.JUSTIFICATION);
+            Justification justification = (Justification) justificationCategory.getCosts().stream().findFirst().get();
+
+            justification.setExceedAllowedLimit(form.getExceedAllowedLimit());
+            justification.setExplanation(form.getExplanation());
+
+            messages.addAll(getFinanceRowService().update(justification).getSuccess());
+            return messages;
+        });
     }
 
     private CompletableFuture<ValidationMessages> saveLabourCosts(LabourForm labourForm, BaseFinanceResource finance) {

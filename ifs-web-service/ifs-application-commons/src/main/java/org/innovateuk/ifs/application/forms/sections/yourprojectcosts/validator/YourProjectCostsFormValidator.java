@@ -100,6 +100,18 @@ public class YourProjectCostsFormValidator {
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
                 break;
+            case JUSTIFICATION:
+                validateJustification(form.getJustificationForm(), validationHandler);
+                break;
+        }
+    }
+
+    private void validateJustification(JustificationForm justificationForm, ValidationHandler validationHandler) {
+        if (justificationForm.getExceedAllowedLimit() == null) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.exceedAllowedLimit", null, "validation.ktp.project.costs.exceeded.required")));
+        }
+        if (justificationForm.getExceedAllowedLimit() == Boolean.TRUE && justificationForm.getExplanation().isEmpty()) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.explanation", null, "validation.ktp.project.costs.explanation.required")));
         }
     }
 

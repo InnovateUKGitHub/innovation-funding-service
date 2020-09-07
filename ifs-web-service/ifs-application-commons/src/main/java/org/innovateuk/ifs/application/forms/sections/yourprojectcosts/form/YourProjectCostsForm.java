@@ -45,6 +45,8 @@ public class YourProjectCostsForm {
 
     private AdditionalCompanyCostForm additionalCompanyCostForm = new AdditionalCompanyCostForm();
 
+    private JustificationForm justificationForm = new JustificationForm();
+
     private Boolean eligibleAgreement;
 
     public VatForm getVatForm() {
@@ -181,6 +183,14 @@ public class YourProjectCostsForm {
 
     public void setKnowledgeBaseCostRows(Map<String, KnowledgeBaseCostRowForm> knowledgeBaseCostRows) {
         this.knowledgeBaseCostRows = knowledgeBaseCostRows;
+    }
+
+    public JustificationForm getJustificationForm() {
+        return justificationForm;
+    }
+
+    public void setJustificationForm(JustificationForm justificationForm) {
+        this.justificationForm = justificationForm;
     }
 
     /* View methods. */

@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 
@@ -78,6 +77,7 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         final Long organisationId = applicationFinance.getOrganisation().getId();
         final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, processRoleRepository);
-        return isLead || isCollaborator;
+        final boolean isKnowledgeTransferAdvisor = checkProcessRole(user, applicationId, organisationId, KNOWLEDGE_TRANSFER_ADVISER, processRoleRepository);
+        return isLead || isCollaborator || isKnowledgeTransferAdvisor;
     }
 }
