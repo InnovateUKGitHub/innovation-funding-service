@@ -64,6 +64,11 @@ items:
                 configMapKeyRef:
                   name: ldap-config
                   key: LDAP_HOST
+            - name: LDAP_HOST_NEW
+                valueFrom:
+                  configMapKeyRef:
+                    name: ldap-config
+                    key: LDAP_HOST_NEW
             - name: LDAP_PORT
               valueFrom:
                 configMapKeyRef:

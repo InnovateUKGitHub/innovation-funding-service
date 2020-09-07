@@ -20,7 +20,8 @@ wipeLdapUsersByLdap() {
   ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD \
    | grep 'dn: ' \
    | cut -c4- \
-   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD \
+   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
 }
 
 wipeLdapUsersByDatabase() {
@@ -30,6 +31,7 @@ wipeLdapUsersByDatabase() {
   do
     uid=$(executeMySQLCommand "select uid from user where email='$(escaped $u)';")
     ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+    ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
   done
 }
 
