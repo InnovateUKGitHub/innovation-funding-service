@@ -15,13 +15,7 @@
                     </th:block>
                 </h2>
 
-                <th:block th:unless="${question.fragment == 'terms-and-conditions'}"
-                          th:insert="application/readonly/question-read-only :: ${question.fragment}"
-                          th:with="model=${question}"/>
-
-                <th:block th:if="${question.fragment == 'terms-and-conditions'}"
-                          th:insert="application/readonly/question-read-only :: ${question.fragment}"
-                          th:with="model=${question}, termsAndConditionsTerminology=${model.termsAndConditionsTerminology}"/>
+                <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
             </div>
 
             <th:block th:if="${model.settings.includeAllAssessorFeedback && section.name == 'Application questions'}">
@@ -61,13 +55,7 @@
                     </div>
                     <div th:id="|accordion-questions-content-${sectionIter.count}-${questionIter.count}|" class="govuk-accordion__section-content" th:aria-labelledby="|accordion-questions-heading-${sectionIter.count}-${questionIter.count}|">
 
-                        <th:block th:unless="${question.fragment == 'terms-and-conditions'}"
-                                  th:insert="application/readonly/question-read-only :: ${question.fragment}"
-                                  th:with="model=${question}"/>
-
-                        <th:block th:if="${question.fragment == 'terms-and-conditions'}"
-                                    th:insert="application/readonly/question-read-only :: ${question.fragment}"
-                                  th:with="model=${question}, termsAndConditionsTerminology=${model.termsAndConditionsTerminology}"/>
+                        <th:block th:insert="application/readonly/question-read-only :: ${question.fragment} (${question})"/>
 
 
                         <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate"
