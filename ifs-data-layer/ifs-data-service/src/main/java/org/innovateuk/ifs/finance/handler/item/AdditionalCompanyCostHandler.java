@@ -44,7 +44,7 @@ public class AdditionalCompanyCostHandler extends FinanceRowHandler<AdditionalCo
     }
 
     @Override
-    protected List<AdditionalCompanyCost> intialiseCosts(Finance finance) {
+    protected List<AdditionalCompanyCost> initialiseCosts(Finance finance) {
         return Arrays.stream(AdditionalCompanyCostType.values())
                 .map(type -> new AdditionalCompanyCost(finance.getId(), type))
                 .collect(Collectors.toList());
