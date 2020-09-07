@@ -1493,17 +1493,14 @@
             <div class="govuk-details__text">
                 <p>Subcontracting costs relate to work carried out by third party organisations. These
                     organisations are not part of your project.</p>
-                <p>Subcontracting is eligible providing it is justified<span
-                    th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
+                <p>Subcontracting is eligible providing it is justified
+                    <span th:if="${!model.isProcurementCompetition()}"> as to why the work cannot be performed by a project partner</span>.
                 </p>
                 <p>Subcontracting associate companies should be charged at cost.</p>
                 <p><span th:if="${!model.isProcurementCompetition()}">Where possible you should select a UK based contractor. </span>You
-                    should name the subcontractor (<span
-                        th:if="${!model.isProcurementCompetition()}">where</span><span
-                        th:if="${model.isProcurementCompetition()}">if</span> known) and describe what
-                    they
-                    will be doing. You should also state where the work will be undertaken.<span
-                        th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
+                    should name the subcontractor (<span th:if="${!model.isProcurementCompetition()}">where</span>
+                    <span th:if="${model.isProcurementCompetition()}">if</span> known) and describe what they will be doing. You should also state where the work will be undertaken.
+                    <span th:if="${!model.isProcurementCompetition()}"> We will look at the size of this contribution when assessing your eligibility and level of support.</span>
                 </p>
             </div>
         </details>
