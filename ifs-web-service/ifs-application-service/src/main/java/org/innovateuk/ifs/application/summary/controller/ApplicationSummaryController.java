@@ -62,7 +62,7 @@ public class ApplicationSummaryController {
     }
 
     @SecuredBySpring(value = "READ", description = "Applicants and monitoring officers have permission to view the application summary page")
-    @PreAuthorize("hasAnyAuthority('applicant', 'monitoring_officer')")
+    @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'monitoring_officer')")
     @GetMapping("/{applicationId}/summary")
     @AsyncMethod
     public String applicationSummary(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
