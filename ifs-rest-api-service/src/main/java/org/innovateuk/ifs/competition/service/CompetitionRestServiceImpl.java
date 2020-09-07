@@ -35,6 +35,16 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     }
 
     @Override
+    public RestResult<CompetitionResource> getCompetitionForApplication(long applicationId) {
+        return getWithRestResult(format("%s/%s/%d", COMPETITION_REST_SERVICE, "by-application", applicationId), CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<CompetitionResource> getCompetitionForProject(long projectId) {
+        return getWithRestResult(format("%s/%s/%d", COMPETITION_REST_SERVICE, "by-project", projectId), CompetitionResource.class);
+    }
+
+    @Override
     public RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long competitionId) {
         return getWithRestResultAnonymous(format("%s/%d/%s", COMPETITION_REST_SERVICE, competitionId, "get-organisation-types"), organisationTypeResourceListType());
     }

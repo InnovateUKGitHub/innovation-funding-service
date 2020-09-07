@@ -55,7 +55,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     public IndustrialCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
         return updateCostCategory(OtherFundingCostCategory.class, FinanceRowType.OTHER_FUNDING,
                 otherFundingCostCategory -> {
-                    OtherFunding otherFunding = otherFundingCostCategory.getOtherFunding();
+                    BaseOtherFunding otherFunding = otherFundingCostCategory.getOtherFunding();
                     otherFunding.setOtherPublicFunding("Yes");
                     financeRowCostsService.update(otherFunding.getId(), otherFunding);
                 }).addCostItem("Other funding", (finance) -> {
