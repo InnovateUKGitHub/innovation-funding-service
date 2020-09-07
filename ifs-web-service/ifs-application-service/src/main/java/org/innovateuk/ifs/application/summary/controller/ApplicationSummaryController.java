@@ -38,28 +38,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @RequestMapping("/application")
 public class ApplicationSummaryController {
 
-    private ApplicationService applicationService;
-    private CompetitionRestService competitionRestService;
-    private InterviewAssignmentRestService interviewAssignmentRestService;
-    private InterviewResponseRestService interviewResponseRestService;
-    private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
-    private EuGrantTransferRestService euGrantTransferRestService;
-
-    public ApplicationSummaryController() {
-    }
-
     @Autowired
-    public ApplicationSummaryController(ApplicationService applicationService,
-                                        CompetitionRestService competitionRestService,
-                                        InterviewAssignmentRestService interviewAssignmentRestService,
-                                        ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator,
-                                        EuGrantTransferRestService euGrantTransferRestService) {
-        this.applicationService = applicationService;
-        this.competitionRestService = competitionRestService;
-        this.interviewAssignmentRestService = interviewAssignmentRestService;
-        this.applicationSummaryViewModelPopulator = applicationSummaryViewModelPopulator;
-        this.euGrantTransferRestService = euGrantTransferRestService;
-    }
+    private ApplicationService applicationService;
+    @Autowired
+    private CompetitionRestService competitionRestService;
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+    @Autowired
+    private InterviewResponseRestService interviewResponseRestService;
+    @Autowired
+    private ApplicationSummaryViewModelPopulator applicationSummaryViewModelPopulator;
+    @Autowired
+    private EuGrantTransferRestService euGrantTransferRestService;
 
     @SecuredBySpring(value = "READ", description = "Applicants and monitoring officers have permission to view the application summary page")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'monitoring_officer')")
@@ -89,14 +79,14 @@ public class ApplicationSummaryController {
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to upload interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(params = "uploadResponse")
+    @PostMapping(value = "/{applicationId}/summary",params = "uploadResponse")
     public String uploadResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
                                  Model model,
                                  @PathVariable("applicationId") long applicationId,
                                  UserResource user) {
-
+        System.out.println("say whaaat?");
         Supplier<String> failureAndSuccessView = () -> applicationSummary(form, bindingResult, validationHandler, model, applicationId, user);
         MultipartFile file = form.getResponse();
 
@@ -106,7 +96,7 @@ public class ApplicationSummaryController {
 
     @SecuredBySpring(value = "READ", description = "Applicants have permission to remove interview feedback.")
     @PreAuthorize("hasAuthority('applicant')")
-    @PostMapping(params = "removeResponse")
+    @PostMapping(value = "/{applicationId}/summary", params = "removeResponse")
     public String removeResponse(@ModelAttribute("interviewResponseForm") InterviewResponseForm interviewResponseForm,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler,
@@ -122,17 +112,18 @@ public class ApplicationSummaryController {
                 .failNowOrSucceedWith(failureAndSuccessView, failureAndSuccessView);
     }
 
-    @GetMapping("/download-response")
+    @GetMapping("/{applicationId}/summary/download-response")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
+        System.out.println("try this?");
         return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
                 interviewResponseRestService.findResponse(applicationId).getSuccess());
     }
 
-    @GetMapping("/download-feedback")
+    @GetMapping("/{applicationId}/summary/download-feedback")
     @SecuredBySpring(value = "READ", description = "Applicants, support staff, innovation leads, stakeholders, comp admins and project finance users have permission to view uploaded interview feedback.")
     @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'comp_admin', 'project_finance', 'innovation_lead', 'stakeholder')")
     public @ResponseBody
