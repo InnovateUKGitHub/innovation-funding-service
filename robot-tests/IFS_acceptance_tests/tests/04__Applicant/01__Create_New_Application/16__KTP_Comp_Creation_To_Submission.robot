@@ -25,6 +25,10 @@ Documentation  IFS-7146  KTP - New funding type
 ...
 ...            IFS-7960  KTA Deashboard
 ...
+...            IFS-7983  KTP Your Project Finances - KTA view
+...
+...            IFS-7956 KTP Your Project Finances - Other Funding
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Resource          ../../../resources/defaultResources.robot
@@ -67,6 +71,8 @@ ${nonKTAEmail}                        James.Smith@ktn-uk.test
 ${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
 ${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
 ${invitationEmailSubject}             Invitation to be Knowledge Transfer Adviser
+${applicationQuestion}                What is the business opportunity that your project addresses?
+${questionTextGuidance}               Entering text to allow valid mark as complete
 ${removedEmailSubject}                Removed as Knowledge Transfer Adviser
 ${acceptInvitationTitle}              You have been invited to be a knowledge transfer adviser
 ${fname}                              Indi
@@ -219,17 +225,33 @@ New lead applicant confirms the knowledge based organisation details and creates
 
 New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
-    Given Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
-    When the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then The user completes the KTP application except application team
+    When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
+    And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
+    Then the user completes the KTP application except application team and your funding
+
+New lead applicant can declare any other government funding received
+    [Documentation]  IFS-7956
+    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
+    And the user clicks the button/link                                      link = Your funding
+    Then the user should see the element                                     jQuery = dt:contains("Funding level")+dd:contains("10.00%")
+    And the user should see the readonly view of other funding received
+    And the user should see KTP finance sections are complete
 
 New lead applicant invites a new partner organisation user and fills in project finances
     [Documentation]  IFS-7812  IFS-7814
-    Given the lead invites a non-registered user         ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
+    Given the user clicks the button/link                link = Back to application overview
+    And the lead invites a non-registered user           ${new_partner_ktp_email}  ${ktpCompetitionName}  ${ktpApplicationTitle}  yes  Emma  Grant
     When the user clicks the button/link                 link = Sign in
     And Logging in and Error Checking                    &{ktpNewPartnerCredentials}
     And the user clicks the button/link                  link = ${ktpApplicationTitle}
     Then the user completes partner project finances     ${ktpApplicationTitle}  yes
+
+Partner applicant can declare any other government funding received
+    [Documentation]  IFS-7956
+    When the user fills in the funding information                           ${KTPapplicationTitle}   yes
+    And the user clicks the button/link                                      link = Other funding
+    Then the user should see the readonly view of other funding received
+    And the user should see KTP finance sections are complete
 
 System should display a validation if no email address entered while inviting the KTA
     [Documentation]  IFS-7806
@@ -239,7 +261,7 @@ System should display a validation if no email address entered while inviting th
     And the user clicks the button/link                    name = invite-kta
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
-The applicant should not be able to mark the application team section as complete until they add a KTA to the application
+The applicant should not be able to mark the application team section as complete until lead applicant adds a KTA to the application
     [Documentation]  IFS-7806
     When the user clicks the button/link                   id = application-question-complete
     Then the user should see a field and summary error     ${noKTAInApplicationValidation}
@@ -293,6 +315,33 @@ The KTA can see the dashboard with assesments and applications tiles after accep
     When logging in and error checking        ${ktaEmail}   ${short_password}
     Then the user should see the element      jQuery = h2:contains("Assessments")
     And the user should see the element       jQuery = h2:contains("Applications")
+
+The KTA can see the read only view of the application/s
+    [Documentation]  IFS-7983
+    Given the user clicks the button/link     jQuery = h2:contains("Applications")
+    When the user clicks the button/link      link = ${ktpApplicationTitle}
+    Then the user should see the element      jQuery = h1:contains("Application overview")
+    And the user should see the element       jQuery = h2:contains("Project details")
+
+The KTA cannot edit any application section
+    [Documentation]  IFS-7983
+    When the user clicks the button/link        id = accordion-questions-heading-2-1
+    Then the user should see the element        jQuery = span:contains("${applicationQuestion}")
+    And the user should not see the element     jQuery = p:contains("${questionTextGuidance}")
+
+The KTA is able to see lead applicant's project finances
+    #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
+    [Documentation]  IFS-7983
+    Given the user clicks the button/link     id = accordion-questions-heading-3-1
+    When the user clicks the button/link      jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    Then the user should see the element      jQuery = h2:contains("Finance summary")
+
+The KTA is able to see non-lead applicant's project finances
+     #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
+     [Documentation]  IFS-7983
+     Given the user clicks the button/link     link = Back to application overview
+     When the user clicks the button/link      jQuery = div:contains("${newPartnerOrgName}") ~ a:contains("View finances")
+     Then the user should see the element      jQuery = h2:contains("Finance summary")
 
 Lead applicant verifies the inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
@@ -438,15 +487,12 @@ Internal user is able to approve the GOL and the project is now Live
     Then the user should see project is live with review its progress link
 
 *** Keywords ***
-the user marks the KTP finances as complete
+the user marks the KTP project costs, location and organisation information as complete
     [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
     the user fills in ktp project costs
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
-    the user checks Your Funding section                     ${Application}
-    the user should see all finance subsections complete
     the user clicks the button/link                          link = Back to application overview
-    the user should see the element                          jQuery = li:contains("Your project finances") > .task-status-complete
 
 the user fills in the KTP organisation information
     [Arguments]  ${Application}  ${org_size}
@@ -541,14 +587,14 @@ Internal user is able to approve documents
     internal user approve uploaded documents
     the user clicks the button/link              link = Return to documents
 
-The user completes the KTP application except application team
-    the user clicks the button/link                                                 link = Application details
-    the user fills in the KTP Application details                                   ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
+the user completes the KTP application except application team and your funding
+    the user clicks the button/link                                                             link = Application details
+    the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
-    the user navigates to Your-finances page                                        ${ktpApplicationTitle}
-    the user marks the KTP finances as complete                                     ${ktpApplicationTitle}   Calculate  52,214
-    the user accept the competition terms and conditions                            Return to application overview
+    the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
+    the user marks the KTP project costs, location and organisation information as complete     ${ktpApplicationTitle}   Calculate  52,214
+    the user accept the competition terms and conditions                                        Return to application overview
 
 the user fills in the KTP Application details
     [Arguments]  ${appTitle}  ${tomorrowday}  ${month}  ${nextyear}
@@ -689,3 +735,16 @@ the user invites a KTA to application
     the user clicks the button/link          link = Application team
     the user enters text to a text field     id = ktaEmail   ${email}
     the user clicks the button/link          name = invite-kta
+
+the user should see the readonly view of other funding received
+    the user should see the element     jQuery = th:contains("Lottery funding")
+    the user should see the element     jQuery = td:contains("12-${nextyear}")
+    the user should see the element     jQuery = th:contains("Total other funding") ~ td:contains("£20,000")
+    the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
+
+the user should see KTP finance sections are complete
+    the user clicks the button/link     link = Return to finances
+    the user should see the element     css = li:nth-of-type(1) .task-status-complete
+    the user should see the element     css = li:nth-of-type(2) .task-status-complete
+    the user should see the element     css = li:nth-of-type(3) .task-status-complete
+    the user should see the element     css = li:nth-of-type(4) .task-status-complete
