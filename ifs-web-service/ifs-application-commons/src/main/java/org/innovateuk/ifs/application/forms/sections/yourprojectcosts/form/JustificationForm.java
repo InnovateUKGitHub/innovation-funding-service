@@ -9,14 +9,14 @@ public class JustificationForm {
     @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean exceedAllowedLimit;
 
-    private String explanation;
+    private String justification;
 
     public JustificationForm() {
     }
 
-    public JustificationForm(Boolean exceedAllowedLimit, String explanation) {
+    public JustificationForm(Boolean exceedAllowedLimit, String justification) {
         this.exceedAllowedLimit = exceedAllowedLimit;
-        this.explanation = explanation;
+        this.justification = justification;
     }
 
     public Boolean getExceedAllowedLimit() {
@@ -27,11 +27,11 @@ public class JustificationForm {
         this.exceedAllowedLimit = exceedAllowedLimit;
     }
 
-    public String getExplanation() {
-        return explanation;
+    public String getJustification() {
+        return justification;
     }
 
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
+    public void setJustification(String justification) {
+        this.justification = justification;
     }
 }
