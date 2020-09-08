@@ -777,7 +777,6 @@ the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
 the user should see KTP finance sections are complete
-    #the user clicks the button/link     link = Return to finances
     the user should see the element     css = li:nth-of-type(1) .task-status-complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
