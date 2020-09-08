@@ -4,14 +4,12 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -29,21 +27,24 @@ import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
-import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.same;
@@ -545,5 +546,123 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         assertEquals(2, feedback.getFeedback().size());
         assertEquals("Feedback 1", feedback.getFeedback().get(0));
         assertEquals("Feedback 2", feedback.getFeedback().get(1));
+    }
+
+    @Test
+    public void getApplicationAssessment() {
+        long applicationId = 1L;
+        long assessmentId = 2L;
+
+        List<FormInput> scoreFormInputs = newFormInput()
+                .withType(ASSESSOR_SCORE)
+                .withQuestion(newQuestion().withId(1L, 2L).withAssessorMaximumScore(5, 10).buildArray(2, Question.class))
+                .build(2);
+
+        List<FormInput> feedbackFormInputs = newFormInput()
+                .withType(TEXTAREA)
+                .withQuestion(newQuestion().withId(1L, 2L).buildArray(2, Question.class))
+                .build(2);
+
+        FormInput scopeInput = newFormInput()
+                .withType(ASSESSOR_APPLICATION_IN_SCOPE)
+                .build();
+
+        List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
+                .withFormInput(scoreFormInputs.get(0), scoreFormInputs.get(1), feedbackFormInputs.get(0), feedbackFormInputs.get(1), scopeInput)
+                .withValue("5", "9", "Feedback 1","Feedback 2", "true")
+                .build(5);
+
+        String expectedFundingFeedback = "Feedback";
+
+        AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome()
+                .withFundingConfirmation(true)
+                .withFeedback(expectedFundingFeedback)
+                .build();
+
+        Assessment assessment = newAssessment().withId(6L).withFundingDecision(assessmentFundingDecisionOutcome).build();
+
+        when(assessmentRepositoryMock.findById(assessmentId)).thenReturn(Optional.of(assessment));
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentId(assessmentId)).thenReturn(assessorFormInputResponses);
+
+        ApplicationAssessmentResource applicationAssessmentResource = assessorFormInputResponseService.getApplicationAssessment(applicationId, assessmentId).getSuccess();
+
+        assertEquals(new BigDecimal("95.0"), applicationAssessmentResource.getAveragePercentage());
+        assertEquals(2, applicationAssessmentResource.getFeedback().size());
+        assertEquals("Feedback 1", applicationAssessmentResource.getFeedback().get(1L));
+        assertEquals("Feedback 2", applicationAssessmentResource.getFeedback().get(2L));
+        assertEquals(new BigDecimal("5"), applicationAssessmentResource.getScores().get(1L));
+        assertEquals(new BigDecimal("9"), applicationAssessmentResource.getScores().get(2L));
+        assertEquals(true, applicationAssessmentResource.isInScope());
+    }
+
+    @Test
+    public void getApplicationAssessments() {
+        long applicationId = 1L;
+
+        List<FormInput> scoreFormInputs = newFormInput()
+                .withType(ASSESSOR_SCORE)
+                .withQuestion(newQuestion().withId(1L, 2L).withAssessorMaximumScore(5, 10).buildArray(2, Question.class))
+                .build(2);
+
+        List<FormInput> feedbackFormInputs = newFormInput()
+                .withType(TEXTAREA)
+                .withQuestion(newQuestion().withId(1L, 2L).buildArray(2, Question.class))
+                .build(2);
+
+        FormInput scopeInput = newFormInput()
+                .withType(ASSESSOR_APPLICATION_IN_SCOPE)
+                .build();
+
+        List<AssessorFormInputResponse> assessorForm1InputResponses = newAssessorFormInputResponse()
+                .withFormInput(scoreFormInputs.get(0), scoreFormInputs.get(1), feedbackFormInputs.get(0), feedbackFormInputs.get(1), scopeInput)
+                .withValue("5", "9", "Feedback 1","Feedback 2", "true")
+                .build(5);
+
+        List<AssessorFormInputResponse> assessorForm2InputResponses = newAssessorFormInputResponse()
+                .withFormInput(scoreFormInputs.get(0), scoreFormInputs.get(1), feedbackFormInputs.get(0), feedbackFormInputs.get(1), scopeInput)
+                .withValue("4", "8", "Feedback 3","Feedback 4", "false")
+                .build(5);
+
+        Long[] expectedIds = {1L, 2L};
+        Boolean[] expectedFundingConfirmations = {TRUE, TRUE};
+        String[] expectedFundingFeedbacks = {"Feedback 1", "Feedback 2"};
+
+        List<AssessmentFundingDecisionOutcome> assessmentFundingDecisionOutcomes = newAssessmentFundingDecisionOutcome()
+                .withId(expectedIds)
+                .withFundingConfirmation(expectedFundingConfirmations)
+                .withFeedback(expectedFundingFeedbacks)
+                .build(2);
+
+        List<Assessment> assessmentList = new ArrayList<Assessment>();
+        assessmentList.add(newAssessment().withId(6L).withFundingDecision(assessmentFundingDecisionOutcomes.get(0)).build());
+        assessmentList.add(newAssessment().withId(8L).withFundingDecision(assessmentFundingDecisionOutcomes.get(1)).build());
+
+        when(assessmentRepositoryMock.findById(6L)).thenReturn(Optional.of(assessmentList.get(0)));
+        when(assessmentRepositoryMock.findById(8L)).thenReturn(Optional.of(assessmentList.get(1)));
+        when(assessmentRepositoryMock.findByTargetIdAndActivityStateIn(applicationId, Collections.singleton(AssessmentState.SUBMITTED))).thenReturn(assessmentList);
+
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentId(6L)).thenReturn(assessorForm1InputResponses);
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentId(8L)).thenReturn(assessorForm2InputResponses);
+
+        ApplicationAssessmentsResource applicationAssessmentsResource = assessorFormInputResponseService.getApplicationAssessments(applicationId).getSuccess();
+
+        ApplicationAssessmentResource form1 = applicationAssessmentsResource.getAssessments().get(0);
+        ApplicationAssessmentResource form2 = applicationAssessmentsResource.getAssessments().get(1);
+
+        assertEquals(new BigDecimal("95.0"), form1.getAveragePercentage());
+        assertEquals(2, form1.getFeedback().size());
+        assertEquals("Feedback 1", form1.getFeedback().get(1L));
+        assertEquals("Feedback 2", form1.getFeedback().get(2L));
+        assertEquals(new BigDecimal("5"), form1.getScores().get(1L));
+        assertEquals(new BigDecimal("9"), form1.getScores().get(2L));
+        assertEquals(true, form1.isInScope());
+
+        assertEquals(new BigDecimal("80.0"), form2.getAveragePercentage());
+        assertEquals(2, form2.getFeedback().size());
+        assertEquals("Feedback 3", form2.getFeedback().get(1L));
+        assertEquals("Feedback 4", form2.getFeedback().get(2L));
+        assertEquals(new BigDecimal("4"), form2.getScores().get(1L));
+        assertEquals(new BigDecimal("8"), form2.getScores().get(2L));
+        assertEquals(false, form2.isInScope());
     }
 }

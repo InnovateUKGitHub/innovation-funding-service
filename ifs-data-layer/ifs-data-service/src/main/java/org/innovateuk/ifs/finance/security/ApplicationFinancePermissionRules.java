@@ -82,6 +82,11 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return userIsStakeholderInCompetition(application.getCompetition().getId(), user.getId());
     }
 
+    @PermissionRule(value = "READ", description = "A kta can see the application finances for organisations in the applications they assess")
+    public boolean ktaCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isKta(applicationFinanceResource.getApplication(), user);
+    }
+
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);

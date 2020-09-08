@@ -4,8 +4,6 @@ import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 
 import java.math.BigDecimal;
 
-import static java.math.RoundingMode.HALF_EVEN;
-
 /**
  * Holder of summary information used to generate Spend Profiles
  */
@@ -13,8 +11,7 @@ public class SpendProfileCostCategorySummary {
 
     private CostCategory category;
     private BigDecimal total;
-    private BigDecimal firstMonthSpend;
-    private BigDecimal otherMonthsSpend;
+    private long projectDurationInMonths;
 
     public SpendProfileCostCategorySummary(CostCategory category, BigDecimal totalWithScale, long projectDurationInMonths) {
 
@@ -23,15 +20,7 @@ public class SpendProfileCostCategorySummary {
 
         this.category = category;
         this.total = roundTotal;
-
-        BigDecimal durationInMonths = BigDecimal.valueOf(projectDurationInMonths);
-        BigDecimal remainder = roundTotal.remainder(durationInMonths);
-
-        BigDecimal perfectlyDivisibleTotal = roundTotal.subtract(remainder);
-        BigDecimal costPerMonth = perfectlyDivisibleTotal.divide(durationInMonths, 0, HALF_EVEN);
-
-        this.firstMonthSpend = costPerMonth.add(remainder);
-        this.otherMonthsSpend = costPerMonth;
+        this.projectDurationInMonths = projectDurationInMonths;
     }
 
     public CostCategory getCategory() {
@@ -42,11 +31,7 @@ public class SpendProfileCostCategorySummary {
         return total;
     }
 
-    public BigDecimal getFirstMonthSpend() {
-        return firstMonthSpend;
-    }
-
-    public BigDecimal getOtherMonthsSpend() {
-        return otherMonthsSpend;
+    public long getProjectDurationInMonths() {
+        return projectDurationInMonths;
     }
 }

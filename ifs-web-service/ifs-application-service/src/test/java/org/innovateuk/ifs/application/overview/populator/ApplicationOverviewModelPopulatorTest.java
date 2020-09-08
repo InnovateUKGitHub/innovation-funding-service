@@ -110,12 +110,11 @@ public class ApplicationOverviewModelPopulatorTest {
                 .withPriority(3)
                 .build();
         List<SectionResource> sections = newSectionResource()
-                .withPriority(1, 2)
-                .withName("Section with questions", "Finances")
-                .withDescription("Section with questions description", "")
-                .withChildSections(Collections.emptyList(), Collections.singletonList(childSection.getId()))
-                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
-                .build(2);
+                .withPriority(1, 2, 3, 4)
+                .withName("Section with questions", "Finances", "Project details", "Terms and conditions")
+                .withChildSections(emptyList(), Collections.singletonList(childSection.getId()), emptyList(), emptyList())
+                .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList(), emptyList(), emptyList())
+                .build(4);
         sections.add(childSection);
         childSection.setParentSection(sections.get(1).getId());
         
@@ -130,6 +129,9 @@ public class ApplicationOverviewModelPopulatorTest {
         when(sectionStatusRestService.getCompletedSectionIds(application.getId(), organisation.getId())).thenReturn(restSuccess(asList(sections.get(1).getId(), childSection.getId())));
         when(questionService.getNotificationsForUser(questionStatuses, user.getId())).thenReturn(questionStatuses);
         when(messageSource.getMessage("ifs.section.finances.description", null, Locale.getDefault())).thenReturn("Finance description");
+        when(messageSource.getMessage("ifs.section.projectDetails.description", null, Locale.getDefault())).thenReturn("Project details description");
+        when(messageSource.getMessage("ifs.section.termsAndConditions.description", null, Locale.getDefault())).thenReturn("T&Cs description");
+
         when(sectionStatusRestService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(restSuccess(completedSectionsByOrganisation));
 
         ApplicationOverviewViewModel viewModel = populator.populateModel(application, user);
@@ -139,7 +141,7 @@ public class ApplicationOverviewModelPopulatorTest {
         assertEquals(processRoles.get(0), viewModel.getProcessRole());
         assertTrue(viewModel.isLead());
 
-        assertEquals(2, viewModel.getSections().size());
+        assertEquals(4, viewModel.getSections().size());
 
         Iterator<ApplicationOverviewSectionViewModel> sectionIterator = viewModel.getSections()
                 .stream()
@@ -148,7 +150,7 @@ public class ApplicationOverviewModelPopulatorTest {
 
         ApplicationOverviewSectionViewModel sectionWithQuestions = sectionIterator.next();
         assertEquals("Section with questions", sectionWithQuestions.getTitle());
-        assertEquals("Section with questions description", sectionWithQuestions.getSubTitle());
+        assertNull(sectionWithQuestions.getSubTitle());
         assertEquals((long) sections.get(0).getId(), sectionWithQuestions.getId());
         assertEquals(1, sectionWithQuestions.getRows().size());
 
@@ -170,6 +172,17 @@ public class ApplicationOverviewModelPopulatorTest {
         assertEquals(true, childSectionRow.isComplete());
         assertFalse(childSectionRow.getAssignButtonsViewModel().isPresent());
 
+        ApplicationOverviewSectionViewModel projectDetailsSection = sectionIterator.next();
+        assertEquals("Project details", projectDetailsSection.getTitle());
+        assertEquals("Project details description", projectDetailsSection.getSubTitle());
+        assertEquals((long) sections.get(2).getId(), projectDetailsSection.getId());
+
+        ApplicationOverviewSectionViewModel termsAndConditionsSection = sectionIterator.next();
+        assertEquals("Terms and conditions", termsAndConditionsSection.getTitle());
+        assertEquals("T&Cs description", termsAndConditionsSection.getSubTitle());
+        assertEquals((long) sections.get(3).getId(), termsAndConditionsSection.getId());
+
         verify(questionService).removeNotifications(questionStatuses);
     }
+
 }

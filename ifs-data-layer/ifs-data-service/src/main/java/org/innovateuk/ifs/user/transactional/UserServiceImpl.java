@@ -9,7 +9,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.transactional.TermsAndConditionsService;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectUserInvite;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.ProjectUserInviteRepository;
@@ -420,7 +419,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     private ServiceResult<User> validateEmail(User user, Role role) {
 
-        if (role.isKTA()) {
+        if (role.isKta()) {
             String domain = StringUtils.substringAfter(user.getEmail(), "@");
 
             if (!externalUserEmailDomain.equalsIgnoreCase(domain)) {

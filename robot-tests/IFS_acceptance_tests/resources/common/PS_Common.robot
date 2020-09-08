@@ -184,7 +184,7 @@ The user adds a new team member
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
-    [Arguments]  ${setDocusign}  ${projectID}
+    [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
@@ -202,11 +202,18 @@ Applicant uploads the GOL
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
 
+Applicant uploads the contract
+    the user clicks the button/link       link = Grant offer letter
+    the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
+    the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    the user clicks the button/link       id = submit-gol-for-review
+
 Applicant uploads the GOL using Docusign
     [Arguments]  ${projectID}  ${date}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           jquery = a:contains("Grant offer letter")
     the user clicks the button/link           jquery = a:contains("review and sign the grant offer letter")
+    the user should see the element           css=.page.page-loaded
     the user should see the element           jQuery = span:contains("Please review the documents below.")
     the user selects the checkbox             disclosureAccepted
     the user clicks the button/link           jQuery = button:contains("Continue")
@@ -370,7 +377,8 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    The user logs-in in new browser  &{lead_applicant_credentials}
+    The user logs-in in new browser                       &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
     ${update_comp}  ${value} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery = h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
@@ -776,3 +784,21 @@ Internal user assigns MO to application
     the user navigates to the page                    ${server}/project-setup-management/monitoring-officer/view-all
     Search for MO                                     ${MO_name}  ${MO_fullname}
     The internal user assign project to MO            ${applicationID}  ${applicationTitle}
+
+confirm viability
+    [Arguments]  ${viability}
+    the user clicks the button/link                         css = .viability-${viability}
+    the user selects the checkbox                           project-viable
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         id = confirm-button      #Page confirmation button
+    the user clicks the button/link                         name = confirm-viability   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks
+
+confirm eligibility
+    [Arguments]  ${eligibility}
+    the user clicks the button/link                         css = .eligibility-${eligibility}
+    the user selects the checkbox                           project-eligible
+    the user selects the option from the drop-down menu     Green  id = rag-rating
+    the user clicks the button/link                         css = #confirm-button        #Page confirmation button
+    the user clicks the button/link                         name = confirm-eligibility   #Pop-up confirmation button
+    the user clicks the button/link                         link = Return to finance checks

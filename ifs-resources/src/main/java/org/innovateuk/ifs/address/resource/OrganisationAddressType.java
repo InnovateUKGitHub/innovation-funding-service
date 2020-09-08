@@ -5,10 +5,11 @@ package org.innovateuk.ifs.address.resource;
  */
 public enum OrganisationAddressType {
     @Deprecated
-    REGISTERED(1L),                         // No longer capturing registered address as part of organisation creation
+    REGISTERED(1L),                        // No longer capturing registered address as part of organisation creation
     @Deprecated
-    OPERATING(2L),                          // No longer capturing operating address as part of organisation creation
-    INTERNATIONAL(5L);                      // Used for international organisations as part of organisation creation
+    OPERATING(2L),                         // No longer capturing operating address as part of organisation creation
+    INTERNATIONAL(5L),                     // Used for international organisations as part of organisation creation
+    KNOWLEDGE_BASE(6L);                    // Used for knowledge base organisations as part of organisation creation
 
     private final long id;
 
