@@ -17,7 +17,7 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:if="${model.projectManager}">
-	       <p class="govuk-body govuk-!-margin-top-6"><th:block th:text="${model.IsProcurement() ? 'Y' : 'As Project Manager, y'}"></th:block>ou can upload and submit additional documents to support your application.</p>
+	       <p class="govuk-body govuk-!-margin-top-6">You can upload and submit additional documents to support your application.</p>
         </th:block>
 
         <th:block th:unless="${model.projectManager}">
