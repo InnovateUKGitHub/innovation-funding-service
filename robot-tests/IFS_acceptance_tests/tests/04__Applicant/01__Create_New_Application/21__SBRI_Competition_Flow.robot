@@ -402,11 +402,11 @@ internal user generates the contract
     the user clicks the button/link    jQuery = button:contains("Send contract to project team")
     the user clicks the button/link    jQuery = button:contains("Send contract")
 
-the internal user approve the contract
-    [Arguments]  ${projectID}
-    log in as a different user          &{internal_finance_credentials}
-    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
-    the user selects the radio button   APPROVED  acceptGOL
-    the user clicks the button/link     id = submit-button
-    the user clicks the button/link     id = accept-signed-gol
-    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
+#the internal user approve the contract
+#    [Arguments]  ${projectID}
+#    log in as a different user          &{internal_finance_credentials}
+#    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+#    the user selects the radio button   APPROVED  acceptGOL
+#    the user clicks the button/link     id = submit-button
+#    the user clicks the button/link     id = accept-signed-gol
+#    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
