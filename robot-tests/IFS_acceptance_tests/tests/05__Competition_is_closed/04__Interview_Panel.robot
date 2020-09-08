@@ -437,7 +437,7 @@ an assessor checks for email and invite on his dashboard
 an applicant can see the feedback given by as assessor
     the user clicks the button/link      link = ${CLOSED_COMPETITION_APPLICATION_TITLE}
     the user should see the element      jQuery = h3:contains("Additional Innovate UK feedback") ~ a:contains("testing_5MB.pdf")
-    the user clicks the button/link      jQuery = a:contains("Business opportunity")
+    the user clicks the button/link      jQuery = button:contains("Business opportunity")
     the user should see the element      jQuery = p:contains("This is the business opportunity feedback")
     the user should see the element      jQuery = h2:contains("Average score: 8.0/ 10")
 
@@ -478,9 +478,9 @@ the comp admin notify remaining applications to an assessor
 an assessor can view feedback overview of an application
     [Arguments]   ${application}  ${message}
     the user clicks the button/link     link = ${application}
-    the user should see the element     jQuery = h1:contains("Feedback overview")
+    the user should see the element     jQuery = h1:contains("Application overview")
     the user should see the element     jQuery = .message-alert p:contains("${message}")
-    assessor should see the competition terms and conditions     Back to feedback overview
+    assessor should see the competition terms and conditions     Back to application overview
 
 Custom suite teardown
     Disconnect from database

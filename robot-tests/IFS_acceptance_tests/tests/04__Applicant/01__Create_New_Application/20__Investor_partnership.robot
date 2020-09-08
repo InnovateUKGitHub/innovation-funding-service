@@ -17,7 +17,7 @@ ${tandcLink}                Investor Partnerships terms and conditions
 ${investorPSApplication}    Investor ps application
 ${investorPSApplicationId}  ${application_ids["${investorPSApplication}"]}
 ${investorApplicationLink}  ${server}/management/competition/${investorCompId}/application/${investorApplicationId}
-${investorFeedbackLink}     ${server}/application/${investorPSApplicationId}/feedback
+${investorFeedbackLink}     ${server}/application/${investorPSApplicationId}/summary
 
 
 *** Test Cases ***
@@ -75,6 +75,7 @@ Application feedback page shows the correct link for t&c's
     [Documentation]  IFS-7235
     Given Log in as a different user         &{troy_ward_crendentials}
     When The user navigates to the page      ${investorFeedbackLink}
+    And the user clicks the button/link      jQuery = button:contains("Investor Partnerships terms and conditions")
     Then the user should see the element     link = View ${tandcLink}
 
 *** Keywords ***

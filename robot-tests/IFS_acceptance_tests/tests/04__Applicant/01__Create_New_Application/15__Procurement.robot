@@ -260,9 +260,8 @@ the user completes the project details
     log in as a different user                   &{RTO_lead_applicant_credentials}
     the user navigates to the page                ${server}/project-setup/project/${ProjectID}
     the user clicks the button/link               link = view application feedback
-    the user clicks the button/link               link = 5. Technical approach
+    the user clicks the button/link               jQuery = button:contains("Technical approach")
     the user should see the element               jQuery = p:contains("${multiple_choice_answer}")
-    the user clicks the button/link               link = Feedback overview
     the user clicks the button/link               link = Back to set up your project
     the user should not see the element           jQuery = h2:contains("Documents")
     the user clicks the button/link               link = Project details

@@ -147,10 +147,10 @@ User can see the Application details along with feedback
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]  HappyPath
-    Given the user clicks the button/link            jQuery = a:contains("6. Innovation")
+    Given the user clicks the button/link            jQuery = button:contains("6. Innovation")
     Then the user should see the element             jQuery = h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
     And the user should see the element              jQuery = h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
-    [Teardown]    the user clicks the button/link    jQuery = .govuk-back-link:contains("Feedback overview")
+    [Teardown]    the user clicks the button/link    jQuery = .govuk-back-link:contains("Application overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
@@ -171,17 +171,17 @@ Custom Suite Setup
     The user clicks the button/link       link = ${INFORM_COMPETITION_NAME}
 
 the application question scores are correct
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 4.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project exploitation") + div .govuk-grid-column-one-third:contains("Average score 5.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Economic benefit") + div .govuk-grid-column-one-third:contains("Average score 4.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Technical approach") + div .govuk-grid-column-one-third:contains("Average score 4.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Innovation") + div .govuk-grid-column-one-third:contains("Average score 4.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Risks") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project team") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Funding") + div .govuk-grid-column-one-third:contains("Average score 3.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Adding value") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = p:contains("Average overall: 53.3%")
+    the user should see the element    jQuery = span:contains("Average score 6.3 / 10") ~ button:contains("Business opportunity")
+    the user should see the element    jQuery = span:contains("Average score 4.7 / 10") ~ button:contains("Potential market")
+    the user should see the element    jQuery = span:contains("Average score 5.7 / 10") ~ button:contains("Project exploitation")
+    the user should see the element    jQuery = span:contains("Average score 4.3 / 10") ~ button:contains("contains("Economic benefit")
+    the user should see the element    jQuery = span:contains("Average score 4.3 / 10") ~ button:contains("Technical approach")
+    the user should see the element    jQuery = span:contains("Average score 4.7 / 10") ~ button:contains("Innovation")
+    the user should see the element    jQuery = span:contains("Average score 6.7 / 10") ~ button:contains("Risks")
+    the user should see the element    jQuery = span:contains("Average score 6.7 / 10") ~ button:contains("Project team")
+    the user should see the element    jQuery = span:contains("Average score 3.3 / 10") ~ button:contains("Funding")
+    the user should see the element    jQuery = span:contains("Average score 6.7 / 10") ~ button:contains("Adding value")
+    the user should see the element    jQuery = h3:contains("Application score: 53.3%")
 
 the application details are correct
     the user should see the element    jQuery = p:contains("High Performance Gasoline Stratified")
