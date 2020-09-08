@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -61,6 +62,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Mock
     private ProjectService projectService;
+
+    @Mock
+    private ProjectRestService projectRestService;
 
     @Mock
     private CompetitionRestService competitionRestService;
@@ -217,7 +221,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/grant-offer-letter", 123L)).
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/download", 123L)).
                 andExpect(status().isOk()).
                 andReturn();
 
@@ -240,7 +244,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(projectService.isUserLeadPartner(123L, 1L)).thenReturn(true);
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/signed-grant-offer-letter", 123L)).
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/signed-download", 123L)).
                 andExpect(status().isOk()).
                 andReturn();
 
@@ -380,6 +384,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void testConfirmationView() throws Exception {
+        ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
+        when(projectRestService.getProjectById(123L)).thenReturn(restSuccess(project));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
         mockMvc.perform(get("/project/123/offer/confirmation")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/grant-offer-letter-confirmation"));
