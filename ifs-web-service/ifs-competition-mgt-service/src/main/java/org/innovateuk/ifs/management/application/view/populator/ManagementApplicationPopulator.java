@@ -18,6 +18,7 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
@@ -63,6 +64,9 @@ public class ManagementApplicationPopulator {
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Autowired
     private ProjectRestService projectRestService;
 
     @Autowired
@@ -84,7 +88,7 @@ public class ManagementApplicationPopulator {
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
 
         ApplicationReadOnlySettings settings = defaultSettings()
-                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition));
+                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, applicationId));
 
         boolean support = user.hasRole(Role.SUPPORT);
         if (support && application.isOpen()) {
@@ -113,8 +117,12 @@ public class ManagementApplicationPopulator {
         );
     }
 
-    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition) {
-        return user.hasRole(Role.PROJECT_FINANCE) && (competition.isProcurement() || competition.isHasInterviewStage());
+    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, Long applicationId) {
+        return user.hasRole(Role.PROJECT_FINANCE) && (competition.isProcurement() || (competition.isHasInterviewStage() && interviewAssigned(applicationId)) );
+    }
+
+    private boolean interviewAssigned(Long applicationId) {
+        return interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
     }
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {
