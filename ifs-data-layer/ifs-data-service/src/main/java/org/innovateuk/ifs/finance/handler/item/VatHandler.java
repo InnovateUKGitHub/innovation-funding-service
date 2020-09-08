@@ -46,7 +46,7 @@ public class VatHandler extends FinanceRowHandler<Vat> {
     }
 
     @Override
-    protected List<Vat> intialiseCosts(Finance finance) {
+    protected List<Vat> initialiseCosts(Finance finance) {
         return newArrayList(new Vat(null, null, new BigDecimal("0.2"), finance.getId()));
     }
 }

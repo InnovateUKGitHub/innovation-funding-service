@@ -7,7 +7,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.project.core.mapper.ProjectMapper;
-import org.innovateuk.ifs.project.core.transactional.ProjectService;
 import org.innovateuk.ifs.project.projectteam.transactional.PendingPartnerProgressService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private ProjectService projectService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -53,8 +49,7 @@ public class ProjectOrganisationFinanceServiceImpl extends AbstractOrganisationF
 
     @Override
     protected ServiceResult<CompetitionResource> getCompetitionFromTargetId(long projectId) {
-        return projectService.getProjectById(projectId)
-                .andOnSuccess(project -> competitionService.getCompetitionById(project.getCompetition()));
+        return competitionService.getCompetitionByProjectId(projectId);
     }
 
     @Override
