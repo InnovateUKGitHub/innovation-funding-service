@@ -30,7 +30,7 @@
         <ol class="govuk-list govuk-list--number">
             <li>You have provided the documents we need.</li>
             <li>We have approved your financial information.</li>
-            <li>You have received, signed and returned the <span th:text="${model.procurementCompetition ? 'contract for this' : ' offer letter on behalf of the'}"></span> project.</li>
+            <li>You have received, signed and returned the <th:block th:text="${model.procurementCompetition ? 'contract for this' : ' offer letter on behalf of the'}"></th:block> project.</li>
         </ol>
 
         <h2 class="govuk-heading-m">Project duration</h2>

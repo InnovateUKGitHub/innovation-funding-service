@@ -17,11 +17,11 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Documents',subTitle=${model.projectName},size='govuk-heading-xl'" />
 
         <th:block th:if="${model.projectManager}">
-	       <p class="govuk-body govuk-!-margin-top-6"><span th:text="${model.IsProcurement() ? 'Y' : 'As Project Manager, y'}"></span>ou can upload and submit additional documents to support your application.</p>
+	       <p class="govuk-body govuk-!-margin-top-6"><th:block th:text="${model.IsProcurement() ? 'Y' : 'As Project Manager, y'}"></th:block>ou can upload and submit additional documents to support your application.</p>
         </th:block>
 
         <th:block th:unless="${model.projectManager}">
-            <p class="govuk-body govuk-!-margin-top-6"> Only the Project Manager can upload and submit additional documents to support your<span th:text="${model.IsProcurement() ? ' ' : ' grant '}"></span>application.</p>
+            <p class="govuk-body govuk-!-margin-top-6"> Only the Project Manager can upload and submit additional documents to support your<th:block th:text="${model.IsProcurement() ? ' ' : ' grant '}"></th:block>application.</p>
         </th:block>
 
         <p class="govuk-body govuk-!-margin-top-6" th:unless="${!model.isCollaborativeProject()}">These documents should be reviewed by all partners in the project team.</p>
