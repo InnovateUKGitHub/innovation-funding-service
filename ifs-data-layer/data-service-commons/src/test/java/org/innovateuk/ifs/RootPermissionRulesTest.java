@@ -84,6 +84,10 @@ public abstract class RootPermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(IFS_ADMINISTRATOR);
     }
 
+    protected UserResource ktaUser() {
+        return getUserWithRole(KNOWLEDGE_TRANSFER_ADVISER);
+    }
+
     @Before
     public void setupSetsOfData() {
         allRoles = asList(Role.values());

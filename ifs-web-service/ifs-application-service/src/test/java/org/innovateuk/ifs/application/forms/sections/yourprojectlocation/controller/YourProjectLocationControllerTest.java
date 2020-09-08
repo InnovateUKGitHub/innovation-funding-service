@@ -83,6 +83,12 @@ public class YourProjectLocationControllerTest extends AbstractAsyncWaitMockMVCT
         assertViewPageSuccessful(true);
     }
 
+    @Test
+    public void viewPageKta() throws Exception {
+        setLoggedInUser(kta);
+        assertViewPageSuccessful(true);
+    }
+
     private void assertViewPageSuccessful(boolean internalUser) throws Exception {
 
         YourProjectLocationForm form = new YourProjectLocationForm("S2 5AB", null);
