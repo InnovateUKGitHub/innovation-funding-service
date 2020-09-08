@@ -83,9 +83,10 @@ tfoot {
     &:not(.standard-border) {
       td,
       th {
-        border-top: 3px solid #000;
+        border-top: 3px solid govuk-colour("black");
       }
     }
+
     &:last-of-type {
       td,
       th {

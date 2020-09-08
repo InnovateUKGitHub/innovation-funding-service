@@ -2889,10 +2889,24 @@
             </th:block>
             <th:block
                 th:unless="${model.isReadOnly(financeRowType)}">
-                <p class="govuk-body">
-                    Please enter separate costs for the associate and the knowledge base supervisor. Include all travel
-                    and subsistence costs needed for the proposed projects. Be specific and add each item separately.
-                </p>
+
+                <th:block th:unless="${model.internal}">
+                <p class="govuk-body">Please enter separate costs for the associate and the knowledge base supervisor.
+                    Include all travel and subsistence costs needed for the proposed projects.
+                    Be specific and add each item separately.</p>
+                    <details class="govuk-details" role="group">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">Travel and subsistence costs guidance</span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">You can claim reasonable travel and subsistence costs for the associate and knowledge base supervisor only. Costs must be necessary and only for the proposed projects.</p>
+                            <p class="govuk-body">Travel costs should be at economy or pre-agreed rates only. Please consider the environmental impact of your choices.</p>
+                            <p class="govuk-body">State the reason for travel, number of people travelling, mode of transport, cost per trip and number of trips.</p>
+                            <p class="govuk-body">Provide the full details and purpose of any subsistence expenses, including the number of people.</p>
+                            <p class="govuk-body">The business partner’s travel and subsistence costs are not eligible costs.</p>
+                        </div>
+                    </details>
+                </th:block>
                 <div class="govuk-form-group table-overflow" id="ktpTravelCostRows">
                     <table class="govuk-table" id="ktp-travel-table">
                         <thead class="govuk-table__head">
@@ -2935,7 +2949,7 @@
                 <div class="table-overflow">
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
+                        <tr class="govuk-table__row strong-border">
                             <th class="govuk-table__header table-header-width-80-percent" scope="col">Travel and subsistence summary</th>
                             <th class="govuk-table__header table-header-width-20-percent govuk-table__header--numeric table-header-width-80-percent" scope="col">Total</th>
                         </tr>

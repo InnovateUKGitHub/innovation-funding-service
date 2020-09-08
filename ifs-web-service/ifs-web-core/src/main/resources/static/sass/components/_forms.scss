@@ -177,6 +177,14 @@ table {
   }
 }
 
+table {
+  .strong-border {
+    .govuk-table__header {
+      border-bottom: 3px solid govuk-colour("black");
+    }
+  }
+}
+
 .govuk-input,
 .govuk-select{
   + button {
