@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, hideOtherFundingLegend, otherFundingGuidanceFragment)">
+<th:block th:fragment="form(form, readOnly, guidanceFragment, maximumFundingLevel, hideAreYouRequestingFunding, ktpFundingType, hideOtherFundingLegend, ktpOtherFundingGuidance)">
     <button class="hidden-save" type="submit" tabindex="-1" aria-hidden="true">Save</button>
     <input type="hidden" id="cacheTest" value=""/>
     <th:block th:unless="${readOnly}">
@@ -93,8 +93,8 @@
                 <span class="govuk-error-message" th:each="err : ${#fields.errors('otherFunding')}"
                       th:text="${err}"></span>
                 <th:block th:unless="${hideOtherFundingLegend}">
-                    <span class="govuk-hint">
-                        <th:block th:insert="application/your-funding-fragments :: ${otherFundingGuidanceFragment}"/>
+                    <span class="govuk-hint">Have you received any other public sector funding for this project?
+                        <th:block th:unless="${ktpOtherFundingGuidance}">This is important as other public sector support counts as part of the funding you can receive.</th:block>
                     </span>
                 </th:block>
                 <div id="otherFunding" class="govuk-radios">
@@ -205,14 +205,6 @@
             <span class="govuk-body govuk-!-padding-left-1">&percnt;</span>
         </div>
     </div>
-</th:block>
-
-<th:block th:fragment="other-funding-guidance-ktp">
-    Have you received any other public sector funding for this project?
-</th:block>
-
-<th:block th:fragment="other-funding-guidance-default">
-    Have you received any other public sector funding for this project? This is important as other public sector support counts as part of the funding you can receive.
 </th:block>
 
 <th:block th:fragment="other_funding_table">
