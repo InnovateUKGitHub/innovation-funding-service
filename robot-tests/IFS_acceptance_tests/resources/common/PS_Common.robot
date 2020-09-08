@@ -203,8 +203,8 @@ Applicant uploads the GOL
     the user clicks the button/link       id = submit-gol-for-review
 
 Applicant uploads the contract
-    the user clicks the button/link       link = Grant offer letter
-    the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
+    the user clicks the button/link       link = Contract
+    the user uploads the file             signedGrantOfferLetter    ${contract_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
 
