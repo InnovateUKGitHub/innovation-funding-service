@@ -59,7 +59,7 @@ public class GrantClaimPercentageHandler extends FinanceRowHandler<GrantClaimPer
     }
 
     @Override
-    protected List<GrantClaimPercentage> intialiseCosts(Finance finance) {
+    protected List<GrantClaimPercentage> initialiseCosts(Finance finance) {
         Competition competition = finance.getCompetition();
         GrantClaimPercentage costItem = new GrantClaimPercentage(finance.getId());
         if (competition.isFullyFunded()) {

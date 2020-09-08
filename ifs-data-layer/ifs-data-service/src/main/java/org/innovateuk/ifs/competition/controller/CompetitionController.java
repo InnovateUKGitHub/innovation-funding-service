@@ -33,6 +33,16 @@ public class CompetitionController {
         return competitionService.getCompetitionOrganisationTypes(id).toGetResponse();
     }
 
+    @GetMapping("/by-application/{applicationId}")
+    public RestResult<CompetitionResource> getCompetitionByApplicationId(@PathVariable("applicationId") final long applicationId) {
+        return competitionService.getCompetitionByApplicationId(applicationId).toGetResponse();
+    }
+
+    @GetMapping("/by-project/{projectId}")
+    public RestResult<CompetitionResource> getCompetitionByProjectId(@PathVariable("projectId") final long projectId) {
+        return competitionService.getCompetitionByProjectId(projectId).toGetResponse();
+    }
+
     @GetMapping("/find-all")
     public RestResult<List<CompetitionResource>> findAll() {
         return competitionService.findAll().toGetResponse();

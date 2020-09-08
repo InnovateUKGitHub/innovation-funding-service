@@ -17,6 +17,10 @@ public interface CompetitionRestService {
 
     RestResult<CompetitionResource> getCompetitionById(long competitionId);
 
+    RestResult<CompetitionResource> getCompetitionForApplication(long applicationId);
+
+    RestResult<CompetitionResource> getCompetitionForProject(long projectId);
+
     RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId);
 
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
