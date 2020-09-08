@@ -181,7 +181,7 @@ public class CompetitionInitialiserTest {
                 TRAVEL,
                 OTHER_COSTS,
                 FINANCE,
-                OTHER_FUNDING,
+                PREVIOUS_FUNDING,
                 YOUR_FINANCE
         )));
     }
