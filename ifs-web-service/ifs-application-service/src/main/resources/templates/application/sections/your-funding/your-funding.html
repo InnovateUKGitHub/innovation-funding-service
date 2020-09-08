@@ -88,8 +88,8 @@
                                maximumFundingLevel=${model.maximumFundingLevel},
                                hideAreYouRequestingFunding=${model.hideAreYouRequestingFunding()},
                                ktpFundingType=${model.ktpFundingType},
-                               hideOtherFundingLegend=${model.ktpFundingType && model.knowledgeBaseOrganisation},
-                               ktpOtherFundingGuidance=${model.ktpFundingType && !model.knowledgeBaseOrganisation}
+                               hideOtherFundingLegend=${model.hideOtherFundingLegend()},
+                               ktpOtherFundingGuidance=${model.ktpOtherFundingGuidance()}
                 )"/>
 
                 <div class="form-footer" th:if="${model.open}">

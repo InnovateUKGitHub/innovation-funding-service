@@ -98,4 +98,19 @@ public class ProjectYourFundingViewModel {
         return isKtpFundingType() && !leadOrganisation;
     }
 
+    /*
+     * Hide other funding legend on a ktp competition for lead organisation (KB)
+     *
+     * */
+    public boolean hideOtherFundingLegend() {
+        return isKtpFundingType() && leadOrganisation;
+    }
+
+    /*
+     * Other funding guidance on a ktp competition for partner (Business)
+     *
+     * */
+    public boolean ktpOtherFundingGuidance() {
+        return isKtpFundingType() && !leadOrganisation;
+    }
 }

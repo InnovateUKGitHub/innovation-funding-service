@@ -7,6 +7,7 @@ import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.forms.sections.yourfunding.viewmodel.YourFundingViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.Collections;
 
 import static java.lang.String.format;
@@ -145,6 +147,8 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
         assertTrue(viewModel.isOverridingFundingRules());
+        assertFalse(viewModel.hideOtherFundingLegend());
+        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
     @Test
@@ -172,6 +176,8 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
+        assertFalse(viewModel.hideOtherFundingLegend());
+        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
     @Test
@@ -202,6 +208,148 @@ public class YourFundingViewModelPopulatorTest extends BaseServiceUnitTest<YourF
         assertFalse(viewModel.isFundingSectionLocked());
         assertFalse(viewModel.isFundingSectionLocked());
         assertEquals(format("/application/%d/form/FINANCE/%d", APPLICATION_ID, organisationId), viewModel.getFinancesUrl());
+        assertFalse(viewModel.hideOtherFundingLegend());
+        assertFalse(viewModel.ktpOtherFundingGuidance());
     }
 
+    @Test
+    public void populateForKtpLead() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP).build();
+        SectionResource sectionResource = newSectionResource()
+                .withId(SECTION_ID)
+                .withChildSections(Collections.emptyList())
+                .withCompetition(competition.getId())
+                .withType(SectionType.FUNDING_FINANCES).build();
+        UserResource user = newUserResource().build();
+
+        ApplicantResource applicant = newApplicantResource()
+                .withProcessRole(newProcessRoleResource()
+                        .withUser(user)
+                        .withRole(Role.LEADAPPLICANT)
+                        .build())
+                .withOrganisation(newOrganisationResource()
+                        .withOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())
+                        .build())
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withCompetition(competition.getId())
+                .withId(APPLICATION_ID)
+                .withName("Name")
+                .build();
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withApplication(application)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicant)
+                .withApplicants(asList(applicant))
+                .withSection(sectionResource)
+                .withCurrentUser(user)
+                .build();
+
+        ApplicationFinanceResource finance = newApplicationFinanceResource()
+                .withMaximumFundingLevel(60)
+                .build();
+
+        QuestionResource researchCategoryQuestion = newQuestionResource().build();
+
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), RESEARCH_CATEGORY))
+                .thenReturn(restSuccess(researchCategoryQuestion));
+
+        when(questionService
+                .getQuestionStatusesForApplicationAndOrganisation(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId()))
+                .thenReturn(asMap(researchCategoryQuestion.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
+
+        SectionResource yourOrgSection = newSectionResource().build();
+        when(sectionService.getOrganisationFinanceSection(section.getCompetition().getId())).thenReturn(yourOrgSection);
+
+        when(applicantRestService.getSection(user.getId(), APPLICATION_ID, SECTION_ID)).thenReturn(section);
+        when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId())).thenReturn(restSuccess(true));
+
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
+
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals("Name", viewModel.getApplicationName());
+        assertEquals(competition.getId().longValue(), viewModel.getCompetitionId());
+        assertEquals(60, viewModel.getMaximumFundingLevel().intValue());
+        assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
+        assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
+        assertTrue(viewModel.isOverridingFundingRules());
+        assertTrue(viewModel.hideOtherFundingLegend());
+        assertFalse(viewModel.ktpOtherFundingGuidance());
+    }
+
+    @Test
+    public void populateForKtpPartner() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFundingType(FundingType.KTP).build();
+        SectionResource sectionResource = newSectionResource()
+                .withId(SECTION_ID)
+                .withChildSections(Collections.emptyList())
+                .withCompetition(competition.getId())
+                .withType(SectionType.FUNDING_FINANCES).build();
+        UserResource user = newUserResource().build();
+
+        ApplicantResource applicant = newApplicantResource()
+                .withProcessRole(newProcessRoleResource()
+                        .withUser(user)
+                        .withRole(Role.PARTNER)
+                        .build())
+                .withOrganisation(newOrganisationResource()
+                        .withOrganisationType(OrganisationTypeEnum.BUSINESS.getId())
+                        .build())
+                .build();
+
+        ApplicationResource application = newApplicationResource()
+                .withId(APPLICATION_ID)
+                .withName("Name")
+                .build();
+        ApplicantSectionResource section = newApplicantSectionResource()
+                .withApplication(application)
+                .withCompetition(competition)
+                .withCurrentApplicant(applicant)
+                .withApplicants(asList(applicant))
+                .withSection(sectionResource)
+                .withCurrentUser(user)
+                .build();
+
+        ApplicationFinanceResource finance = newApplicationFinanceResource()
+                .withMaximumFundingLevel(60)
+                .build();
+
+        QuestionResource researchCategoryQuestion = newQuestionResource().build();
+
+        when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(section.getCompetition().getId(), RESEARCH_CATEGORY))
+                .thenReturn(restSuccess(researchCategoryQuestion));
+
+        when(questionService
+                .getQuestionStatusesForApplicationAndOrganisation(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId()))
+                .thenReturn(asMap(researchCategoryQuestion.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build()));
+
+        SectionResource yourOrgSection = newSectionResource().build();
+        when(sectionService.getOrganisationFinanceSection(section.getCompetition().getId())).thenReturn(yourOrgSection);
+
+        when(applicantRestService.getSection(user.getId(), APPLICATION_ID, SECTION_ID)).thenReturn(section);
+        when(sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId())).thenReturn(asList(yourOrgSection.getId()));
+        when(applicationFinanceRestService.getApplicationFinance(APPLICATION_ID, section.getCurrentApplicant().getOrganisation().getId())).thenReturn(restSuccess(finance));
+        when(grantClaimMaximumRestService.isMaximumFundingLevelOverridden(section.getCompetition().getId())).thenReturn(restSuccess(true));
+
+        YourFundingViewModel viewModel = service.populate(APPLICATION_ID, SECTION_ID, applicant.getOrganisation().getId(), user);
+
+        assertEquals(APPLICATION_ID, viewModel.getApplicationId());
+        assertEquals("Name", viewModel.getApplicationName());
+        assertEquals(competition.getId().longValue(), viewModel.getCompetitionId());
+        assertEquals(60, viewModel.getMaximumFundingLevel().intValue());
+        assertEquals(yourOrgSection.getId().longValue(), viewModel.getYourOrganisationSectionId());
+        assertEquals(researchCategoryQuestion.getId(), viewModel.getResearchCategoryQuestionId());
+        assertFalse(viewModel.isFundingSectionLocked());
+        assertEquals(format("/application/%d/form/FINANCE", APPLICATION_ID), viewModel.getFinancesUrl());
+        assertTrue(viewModel.isOverridingFundingRules());
+        assertFalse(viewModel.hideOtherFundingLegend());
+        assertTrue(viewModel.ktpOtherFundingGuidance());
+    }
 }
