@@ -2,7 +2,7 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-We have accepted your signed grant offer letter for your project:
+We have accepted your signed ${title} for your project:
 ${projectName}
 
 You can start your project on ${projectStartDate}.

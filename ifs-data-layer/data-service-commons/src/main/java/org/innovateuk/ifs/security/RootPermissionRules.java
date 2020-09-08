@@ -42,4 +42,8 @@ public abstract class RootPermissionRules {
     protected boolean isInterviewAssessor(long applicationId, UserResource user) {
         return checkProcessRole(user, applicationId, INTERVIEW_ASSESSOR, processRoleRepository);
     }
+
+    protected boolean isKta(long applicationId, UserResource user) {
+        return checkProcessRole(user, applicationId, KNOWLEDGE_TRANSFER_ADVISER, processRoleRepository);
+    }
 }
