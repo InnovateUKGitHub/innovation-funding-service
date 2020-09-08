@@ -16,6 +16,9 @@ Documentation     IFS-7313  New completion stage for Procurement - Comp setup jo
 ...               IFS-8202  SBRI - Ability to generate a contract for an international applicant
 ...
 ...               IFS-8199  SBRI Type 4: email notification content changes
+...
+...               IFS-8198  SBRI Type 4: Contract section content changes for procurements (replacing GOL)
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -241,11 +244,11 @@ Contract section is enabled without bank details
     Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
 Internal user can send the contract
-    [Documentation]  IFS-8202  IFS-8199
-    Given internal user generates the GOL     ${sbriProjectId2}
-    When the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should see the element      jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
-    And the user reads his email              ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
+    [Documentation]  IFS-8202  IFS-8199  IFS-8198
+    Given internal user generates the contract     ${sbriProjectId2}
+    When the user navigates to the page            ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
+    And the user reads his email                   ${lead_international_email}     Your contract is available for project ${sbriApplicationId2}     We are pleased to inform you that your contract is now ready for you to sign
 
 External user of international org should not see bank details
     [Documentation]  IFS-8202
@@ -254,10 +257,10 @@ External user of international org should not see bank details
     Then the user should not see the element     jQuery = li:contains("Bank details")
 
 External user can upload the contract
-     [Documentation]  IFS-8199
+     [Documentation]  IFS-8199  IFS-8198
      Given applicant uploads the contract
-     When the internal user approve the GOL     ${sbriProjectId2}
-     Then the user reads his email              ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
+     When the internal user approve the contract     ${sbriProjectId2}
+     Then the user reads his email                   ${lead_international_email}     Contract approved for project ${sbriApplicationId2}    We have accepted your signed contract for your project
 
 *** Keywords ***
 Custom Suite Setup
@@ -396,5 +399,14 @@ internal user generates the contract
     #horrible hack but we need to wait for virus scanning
     sleep  5s
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send Contract to project team")
+    the user clicks the button/link    jQuery = button:contains("Send contract to project team")
     the user clicks the button/link    jQuery = button:contains("Send contract")
+
+the internal user approve the contract
+    [Arguments]  ${projectID}
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button   APPROVED  acceptGOL
+    the user clicks the button/link     id = submit-button
+    the user clicks the button/link     id = accept-signed-gol
+    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")
