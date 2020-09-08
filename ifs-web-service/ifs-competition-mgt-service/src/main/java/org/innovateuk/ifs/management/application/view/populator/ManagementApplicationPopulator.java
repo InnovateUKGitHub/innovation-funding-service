@@ -114,7 +114,7 @@ public class ManagementApplicationPopulator {
     }
 
     private boolean userCanViewFeedback(UserResource user, CompetitionResource competition) {
-        return user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement();
+        return user.hasRole(Role.PROJECT_FINANCE) && (competition.isProcurement() || competition.isHasInterviewStage());
     }
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {
