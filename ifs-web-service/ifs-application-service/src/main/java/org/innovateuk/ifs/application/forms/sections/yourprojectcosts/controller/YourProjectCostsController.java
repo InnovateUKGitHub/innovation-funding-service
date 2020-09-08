@@ -84,8 +84,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private YourProjectCostsCompleter completeSectionAction;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance')")
-    @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants and internal users can view the Your project costs page")
+    @PreAuthorize("hasAnyAuthority('applicant', 'support', 'innovation_lead', 'ifs_administrator', 'comp_admin', 'project_finance', 'stakeholder', 'external_finance', 'knowledge_transfer_adviser')")
+    @SecuredBySpring(value = "VIEW_PROJECT_COSTS", description = "Applicants, internal users and kta can view the Your project costs page")
     public String viewYourProjectCosts(Model model,
                                        UserResource user,
                                        @PathVariable long applicationId,
@@ -236,7 +236,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private String viewYourProjectCosts(YourProjectCostsForm form, UserResource user, Model model, long applicationId, long sectionId, long organisationId) {
         form.recalculateTotals();
         orderAssociateCosts(form);
-        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE));
+        YourProjectCostsViewModel viewModel = viewModelPopulator.populate(applicationId, sectionId, organisationId, user.isInternalUser() || user.hasRole(Role.EXTERNAL_FINANCE) || user.hasRole(Role.KNOWLEDGE_TRANSFER_ADVISER));
         model.addAttribute("model", viewModel);
         return VIEW;
     }
