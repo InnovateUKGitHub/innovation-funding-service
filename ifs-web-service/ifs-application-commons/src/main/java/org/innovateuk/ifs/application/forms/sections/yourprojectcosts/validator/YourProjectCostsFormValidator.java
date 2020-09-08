@@ -12,7 +12,10 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -48,6 +51,9 @@ public class YourProjectCostsFormValidator {
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private OrganisationRestService organisationRestService;
 
 
     public void validateType(YourProjectCostsForm form, FinanceRowType type, ValidationHandler validationHandler) {
@@ -99,9 +105,6 @@ public class YourProjectCostsFormValidator {
                 break;
             case ADDITIONAL_COMPANY_COSTS:
                 validateAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), validationHandler);
-                break;
-            case JUSTIFICATION:
-                validateJustification(form.getJustificationForm(), validationHandler);
                 break;
         }
     }
@@ -157,10 +160,14 @@ public class YourProjectCostsFormValidator {
         // both having 1 blank row, or both having 0 blank rows is valid.
     }
 
-    public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
+    public void validate(long applicationId, long organisationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         competition.getFinanceRowTypes().forEach(type -> validateType(form, type, validationHandler));
+        if (organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
+            validateJustification(form.getJustificationForm(), validationHandler);
+        }
     }
 
     private void validateOverhead(OverheadForm overhead, ValidationHandler validationHandler) {

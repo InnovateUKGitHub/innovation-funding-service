@@ -3271,15 +3271,15 @@
 *********************************/-->
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
-<th:block th:fragment="justification"
-          th:with="financeRowType=${T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).JUSTIFICATION}">
-    <div class="govuk-form-group" th:if="${model.financeRowTypes.contains(financeRowType)}"
+<th:block th:fragment="justification">
+<!--    if kb organisation add-->
+    <div class="govuk-form-group"
          th:classappend="${#fields.hasErrors('justificationForm.exceedAllowedLimit')} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
             <legend id="justificationForm.exceedAllowedLimit" class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 Do your project costs exceed the allowed limit?
             </legend>
-            <th:block th:unless="${model.isReadOnly(financeRowType)}">
+            <th:block th:unless="${model.complete}">
                 <span class="govuk-hint">Provide detailed explanations for ll costs that exceed the allowable limits.
                     Please read the specific guidance for justifications in the Associate employment, Associate development and Associate estates cost sections.</span>
 
@@ -3347,11 +3347,13 @@
                     </div>
                 </div>
             </th:block>
+            <th:block th:if="${model.complete}">
+                <div class="govuk-body">
+                    <p th:text="*{justificationForm.exceedAllowedLimit}">yes</p>
+                    <p th:text="*{justificationForm.explanation}">I am very bad with money</p>
+                </div>
+            </th:block>
         </fieldset>
-    </div>
-    <div th:if="${model.internal}" class="govuk-!-margin-bottom-4">
-        <th:block th:insert="application/your-project-costs-fragments :: internal_view_buttons(${financeRowType})"/>
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
     </div>
 </th:block>
 <!--/*</editor-fold>*/-->

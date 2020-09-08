@@ -21,9 +21,11 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.form.resource.SectionType;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,6 +69,9 @@ public class YourProjectCostsController extends AsyncAdaptor {
     private YourProjectCostsFormValidator validator;
 
     @Autowired
+    private OrganisationRestService organisationRestService;
+
+    @Autowired
     private SectionStatusRestService sectionStatusRestService;
 
     @Autowired
@@ -86,7 +91,8 @@ public class YourProjectCostsController extends AsyncAdaptor {
                                        @PathVariable long applicationId,
                                        @PathVariable long organisationId,
                                        @PathVariable long sectionId) {
-        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisationId);
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        YourProjectCostsForm form = formPopulator.populateForm(applicationId, organisation);
         model.addAttribute("form", form);
         return viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
     }
@@ -115,7 +121,7 @@ public class YourProjectCostsController extends AsyncAdaptor {
                            ValidationHandler validationHandler) {
         Supplier<String> successView = () -> redirectToYourFinances(applicationId);
         Supplier<String> failureView = () -> viewYourProjectCosts(form, user, model, applicationId, sectionId, organisationId);
-        validator.validate(applicationId, form, validationHandler);
+        validator.validate(applicationId, organisationId, form, validationHandler);
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             validationHandler.addAnyErrors(saver.save(form, applicationId, user));
             return validationHandler.failNowOrSucceedWith(failureView, () -> {

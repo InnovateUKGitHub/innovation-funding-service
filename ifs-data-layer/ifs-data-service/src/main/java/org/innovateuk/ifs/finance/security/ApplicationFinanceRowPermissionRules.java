@@ -77,7 +77,6 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         final Long organisationId = applicationFinance.getOrganisation().getId();
         final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, processRoleRepository);
-        final boolean isKnowledgeTransferAdvisor = checkProcessRole(user, applicationId, organisationId, KNOWLEDGE_TRANSFER_ADVISER, processRoleRepository);
-        return isLead || isCollaborator || isKnowledgeTransferAdvisor;
+        return isLead || isCollaborator;
     }
 }

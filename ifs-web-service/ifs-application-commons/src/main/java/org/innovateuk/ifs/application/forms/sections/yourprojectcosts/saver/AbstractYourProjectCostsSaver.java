@@ -8,13 +8,13 @@ import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.*;
+import org.innovateuk.ifs.finance.resource.category.AdditionalCompanyCostCategory;
+import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
+import org.innovateuk.ifs.finance.resource.category.OverheadCostCategory;
+import org.innovateuk.ifs.finance.resource.category.VatCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.Overhead;
-import org.innovateuk.ifs.finance.resource.cost.OverheadRateType;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.util.JsonUtil;
 
 import java.util.ArrayList;
@@ -98,8 +98,8 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         }
     }
 
-    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, long organisationId) {
-        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
+    public ServiceResult<Void> save(YourProjectCostsForm form, long targetId, OrganisationResource organisation, ValidationMessages messages) {
+        BaseFinanceResource finance = getFinanceResource(targetId, organisation.getId());
 
         List<CompletableFuture<ValidationMessages>> futures = new ArrayList<>();
 
@@ -151,11 +151,6 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.ADDITIONAL_COMPANY_COSTS)) {
             futures.add(saveAdditionalCompanyCosts(form.getAdditionalCompanyCostForm(), finance));
         }
-        if (finance.getFinanceOrganisationDetails().containsKey(FinanceRowType.JUSTIFICATION)) {
-            futures.add(saveJustification(form.getJustificationForm(), finance));
-        }
-
-        ValidationMessages messages = new ValidationMessages();
 
         awaitAll(futures)
                 .thenAccept(messages::addAll);
@@ -165,21 +160,6 @@ public abstract class AbstractYourProjectCostsSaver extends AsyncAdaptor {
         } else {
             return serviceFailure(messages.getErrors());
         }
-    }
-
-    private CompletableFuture<ValidationMessages> saveJustification(JustificationForm form, BaseFinanceResource finance) {
-        return async(() -> {
-            ValidationMessages messages = new ValidationMessages();
-//            does it need its own cost category? its not a cost
-            DefaultCostCategory justificationCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.JUSTIFICATION);
-            Justification justification = (Justification) justificationCategory.getCosts().stream().findFirst().get();
-
-            justification.setExceedAllowedLimit(form.getExceedAllowedLimit());
-            justification.setExplanation(form.getExplanation());
-
-            messages.addAll(getFinanceRowService().update(justification).getSuccess());
-            return messages;
-        });
     }
 
     private CompletableFuture<ValidationMessages> saveLabourCosts(LabourForm labourForm, BaseFinanceResource finance) {

@@ -146,6 +146,9 @@ public class ApplicationFinanceServiceImpl extends AbstractFinanceService<Applic
                     if (applicationFinance.getInternationalLocation() != null) {
                         dbFinance.setInternationalLocation(applicationFinance.getInternationalLocation());
                     }
+                    if (applicationFinance.getJustification() != null) {
+                        dbFinance.setJustification(applicationFinance.getJustification());
+                    }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);

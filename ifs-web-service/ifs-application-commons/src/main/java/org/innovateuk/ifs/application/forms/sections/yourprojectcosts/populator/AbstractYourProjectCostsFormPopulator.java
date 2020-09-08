@@ -3,9 +3,13 @@ package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.populator
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -20,16 +24,16 @@ import static org.innovateuk.ifs.util.CollectionFunctions.toLinkedMap;
 
 public abstract class AbstractYourProjectCostsFormPopulator {
 
-    public YourProjectCostsForm populateForm(long targetId, Long organisationId) {
+    public YourProjectCostsForm populateForm(long targetId, OrganisationResource organisation) {
         YourProjectCostsForm form = new YourProjectCostsForm();
-        BaseFinanceResource finance = getFinanceResource(targetId, organisationId);
+        BaseFinanceResource finance = getFinanceResource(targetId, organisation.getId());
 
         form.setOverhead(overhead(finance));
         form.setLabour(labour(finance));
         form.setCapitalUsageRows(toRows(finance, FinanceRowType.CAPITAL_USAGE,
                 CapitalUsageRowForm.class, CapitalUsage.class));
         form.setMaterialRows(toRows(finance, FinanceRowType.MATERIALS,
-                MaterialRowForm.class,  Materials.class));
+                MaterialRowForm.class, Materials.class));
         form.setOtherRows(toRows(finance, FinanceRowType.OTHER_COSTS,
                 OtherCostRowForm.class, OtherCost.class));
         form.setSubcontractingRows(toRows(finance, FinanceRowType.SUBCONTRACTING_COSTS,
@@ -53,8 +57,21 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         form.setEstateCostRows(toRows(finance, FinanceRowType.ESTATE_COSTS,
                 EstateCostRowForm.class, EstateCost.class));
         form.setAdditionalCompanyCostForm(additionalCompanyCostForm(finance));
+        if (ApplicationFinanceResource.class.equals(finance.getClass()) && organisation.getOrganisationTypeEnum() == OrganisationTypeEnum.KNOWLEDGE_BASE) {
+            form.setJustificationForm(justificationForm(finance));
+        }
 
         return form;
+    }
+
+    private JustificationForm justificationForm(BaseFinanceResource finance) {
+
+//        do i need to store true/false in db as well, maybe another table?
+        ApplicationFinanceResource applicationFinanceResource = (ApplicationFinanceResource) finance;
+        if (StringUtils.isEmpty(applicationFinanceResource.getJustification())) {
+            return new JustificationForm();
+        }
+        return new JustificationForm(Boolean.TRUE, applicationFinanceResource.getJustification());
     }
 
     private int numberOfRows(BaseFinanceResource finance, FinanceRowType type) {
@@ -94,13 +111,13 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         return rows;
     }
 
-     private VatForm vat(BaseFinanceResource finance) {
+    private VatForm vat(BaseFinanceResource finance) {
         VatCostCategory costCategory = (VatCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.VAT);
-         if (costCategory != null) {
-             Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));
+        if (costCategory != null) {
+            Vat vat = costCategory.getCosts().stream().findFirst().map(Vat.class::cast).orElseThrow(() -> new IFSRuntimeException("Missing expected Vat cost"));
             return new VatForm(vat);
-         }
-         return new VatForm();
+        }
+        return new VatForm();
     }
 
     private AdditionalCompanyCostForm additionalCompanyCostForm(BaseFinanceResource finance) {
@@ -134,6 +151,7 @@ public abstract class AbstractYourProjectCostsFormPopulator {
         }
         return new HashMap<>();
     }
+
     private Map<String, AssociateDevelopmentCostRowForm> associateDevelopment(BaseFinanceResource finance) {
         DefaultCostCategory costCategory = (DefaultCostCategory) finance.getFinanceOrganisationDetails().get(FinanceRowType.ASSOCIATE_DEVELOPMENT_COSTS);
         if (costCategory != null) {
