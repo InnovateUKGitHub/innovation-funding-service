@@ -232,11 +232,6 @@ New lead applicant completes the KTP application
     And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
-#lead applicant can not view your organisation section of KTP applications
-#    [Documentation]  IFS-7958
-#     When the user clicks the button/link         link = Your project finances
-#     Then the user should not see the element     link = Your organisation
-
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
     When the user fills in the funding information                           ${KTPapplicationTitle}   yes
@@ -250,11 +245,6 @@ New lead applicant invites a new partner organisation user and fills in project 
     And the user clicks the button/link                              link = Back to application overview
     When the lead invites a partner and accepeted the invitation
     Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
-
-#Partner applicant can not view your project costs section of KTP applications
-#    [Documentation]  IFS-7958
-#     When the user clicks the button/link         link = Your project finances
-#     Then the user should not see the element     link = Your project costs
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
@@ -373,7 +363,8 @@ The KTA is able to see lead and non lead applicant's project finances
     Then KTA can view lead and partner finance summary calculations
 
 The KTA is able to see lead applicant's project costs summary
-      [Documentation]  IFS-7983  IFS-7958
+    [Documentation]  IFS-7983  IFS-7958
+    Given the user clicks the button/link                                 link = Back to application overview
     Then the user can see project cost breakdown of lead organisation
 
 Lead applicant verifies the KTA inviation is accepted.
@@ -786,7 +777,6 @@ the user should see the readonly view of other funding received
     the user should see the element     jQuery = th:contains("Lottery funding") ~ td:contains("£20,000")
 
 the user should see KTP finance sections are complete
-    #the user clicks the button/link     link = Return to finances
     the user should see the element     css = li:nth-of-type(1) .task-status-complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
