@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.application.forms.sections.yourfunding.saver;
 
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingAmountForm;
-import org.innovateuk.ifs.application.forms.sections.yourfunding.form.YourFundingPercentageForm;
+import org.innovateuk.ifs.application.forms.sections.yourfunding.form.*;
 import org.innovateuk.ifs.commons.exception.IFSRuntimeException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimAmount;
-import org.innovateuk.ifs.finance.resource.cost.GrantClaimPercentage;
-import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
+import org.innovateuk.ifs.finance.resource.category.BaseOtherFundingCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
@@ -19,7 +17,6 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -43,17 +40,21 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
     @Autowired
     private ApplicationFinanceRowRestService financeRowRestService;
 
+    @Autowired
+    private CompetitionRestService competitionRestService;
+
+
     @Override
     protected FinanceRowRestService getFinanceRowService() {
         return financeRowRestService;
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, YourFundingAmountForm form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingAmountForm<? extends BaseOtherFundingRowForm> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
 
-    public ServiceResult<Void> save(long applicationId, long organisationId, YourFundingPercentageForm form) {
+    public ServiceResult<Void> save(long applicationId, long organisationId, AbstractYourFundingPercentageForm<? extends BaseOtherFundingRowForm> form) {
         ApplicationFinanceResource finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
         return super.save(finance, form);
     }
@@ -71,19 +72,26 @@ public class YourFundingSaver extends AbstractYourFundingSaver {
                 grantClaim.setAmount(new BigDecimal(value));
                 getFinanceRowService().update(grantClaim).getSuccess();
             } else if (field.equals("otherFunding")) {
-                OtherFundingCostCategory otherFundingCategory = (OtherFundingCostCategory) finance.getFinanceOrganisationDetails(FinanceRowType.OTHER_FUNDING);
-                OtherFunding otherFunding = otherFundingCategory.getOtherFunding();
+                CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
+                FinanceRowType type = competition.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING) ? FinanceRowType.PREVIOUS_FUNDING : FinanceRowType.OTHER_FUNDING;
+                BaseOtherFundingCostCategory otherFundingCategory = (BaseOtherFundingCostCategory) finance.getFinanceOrganisationDetails(type);
+                BaseOtherFunding otherFunding = otherFundingCategory.getOtherFunding();
                 otherFunding.setOtherPublicFunding(Boolean.parseBoolean(value) ? "Yes" : "No");
                 getFinanceRowService().update(otherFunding).getSuccess();
             } else if (field.startsWith("otherFundingRows")) {
                 String id = field.substring(field.indexOf('[') + 1, field.indexOf(']'));
                 String rowField = field.substring(field.indexOf("].") + 2);
-                OtherFunding cost;
+                BaseOtherFunding cost;
 
                 if (id.startsWith(UNSAVED_ROW_PREFIX)) {
-                    cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();
+                    CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
+                    if (competition.getFinanceRowTypes().contains(FinanceRowType.PREVIOUS_FUNDING)) {
+                        cost = (PreviousFunding) getFinanceRowService().create(new PreviousFunding(finance.getId())).getSuccess();
+                    } else {
+                        cost = (OtherFunding) getFinanceRowService().create(new OtherFunding(finance.getId())).getSuccess();
+                    }
                 } else {
-                    cost = (OtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
+                    cost = (BaseOtherFunding) getFinanceRowService().get(Long.parseLong(id)).getSuccess();
                 }
 
                 switch (rowField) {
