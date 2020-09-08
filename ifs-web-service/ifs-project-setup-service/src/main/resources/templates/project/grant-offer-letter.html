@@ -22,7 +22,7 @@
         <form id="grant-offer-letter-form" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
             <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
-                <p class="govuk-body" th:text="|The signed ${model.title.toLowerCase()} has been received by Innovate UK and is awaiting review.|"></p>
+                <p class="govuk-body" th:text="|We have receieved the signed ${model.title.toLowerCase()} and it is waiting to be reviewed.|"></p>
                 <p class="govuk-body" th:text="|The unsigned ${model.title.toLowerCase()} is available for your records.|"></p>
             </th:block>
 
@@ -59,7 +59,7 @@
 
                 <th:block th:if="${!model.useDocusign or model.showGrantOfferLetterReceivedByInnovateMessage}">
                     <h2 class="govuk-heading-m" th:text="${model.title}"></h2>
-                    <p class="govuk-body" th:unless="${model.submitted}">This document is awaiting signature by the project manager.</p>
+                    <p class="govuk-body" th:unless="${model.submitted}">This document is waiting to be signed by the project manager.</p>
 
                     <th:block th:if="${model.grantOfferLetterSent}">
                         <p class="govuk-body">
