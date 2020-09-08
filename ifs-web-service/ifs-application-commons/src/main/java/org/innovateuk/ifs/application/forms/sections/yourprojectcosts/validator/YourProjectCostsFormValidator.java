@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.validator;
 
 import org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form.*;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.error.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -42,9 +40,6 @@ public class YourProjectCostsFormValidator {
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
-    private ApplicationRestService applicationRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -149,8 +144,7 @@ public class YourProjectCostsFormValidator {
     }
 
     public void validate(long applicationId, YourProjectCostsForm form, ValidationHandler validationHandler) {
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
-        CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
+        CompetitionResource competition = competitionRestService.getCompetitionForApplication(applicationId).getSuccess();
         competition.getFinanceRowTypes().forEach(type -> validateType(form, type, validationHandler));
     }
 

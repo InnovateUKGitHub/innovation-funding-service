@@ -47,6 +47,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         ApplicationReadOnlySettings settings = ApplicationReadOnlySettings.defaultSettings();
         if (assessment.isPresent()) {
             settings.setAssessmentId(assessment.get().getId());
+            settings.setIncludeAllAssessorFeedback(true);
         }
         ApplicationReadOnlyViewModel readOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
         return new AssessmentReviewApplicationSummaryViewModel(application.getId(),

@@ -16,7 +16,6 @@ import org.innovateuk.ifs.management.application.list.form.ReinstateIneligibleAp
 import org.innovateuk.ifs.management.application.view.form.IneligibleApplicationForm;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ReinstateIneligibleApplicationModelPopulator;
-import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -67,8 +66,7 @@ public class CompetitionManagementApplicationController {
                                         BindingResult bindingResult,
                                         UserResource user,
                                         Model model) {
-        ManagementApplicationViewModel viewModel = managementApplicationPopulator.populate(applicationId, user);
-        model.addAttribute("model", viewModel);
+        model.addAttribute("model", managementApplicationPopulator.populate(applicationId, user));
         return "competition-mgt-application-overview";
     }
 

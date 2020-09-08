@@ -38,7 +38,7 @@ public class GrantProcessServiceImpl implements GrantProcessService {
         Optional<Application> application = applicationRepository.findById(applicationId);
         application.ifPresent((a) -> {
             Optional<GrantProcessConfiguration> config = grantProcessConfigurationRepository.findByCompetitionId(a.getCompetition().getId());
-            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElse(false);
+            boolean sendByDefault = config.map(GrantProcessConfiguration::isSendByDefault).orElse(true);
             grantProcessRepository.save(new GrantProcess(applicationId, sendByDefault));
         });
     }

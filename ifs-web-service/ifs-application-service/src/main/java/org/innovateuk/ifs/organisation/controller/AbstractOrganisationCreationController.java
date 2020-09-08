@@ -41,6 +41,7 @@ public abstract class AbstractOrganisationCreationController {
     protected static final String FIND_ORGANISATION = "find-organisation";
     protected static final String CONFIRM_ORGANISATION = "confirm-organisation";
     protected static final String INTERNATIONAL_CONFIRM_ORGANISATION = "international-confirm-organisation";
+    protected static final String KNOWLEDGE_BASE_CONFIRM_ORGANISATION = "knowledge-base-confirm-organisation";
     protected static final String INTERNATIONAL_ORGANISATION = "international-organisation";
     protected static final String INTERNATIONAL_ORGANISATION_DETAILS = "international-organisation-details";
 

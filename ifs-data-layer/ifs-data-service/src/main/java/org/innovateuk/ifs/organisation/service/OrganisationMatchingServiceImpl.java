@@ -31,6 +31,8 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
         } else {
             if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
                 return findFirstResearchMatch(submittedOrganisationResource);
+            } else if (OrganisationTypeEnum.isKnowledgeBase(submittedOrganisationResource.getOrganisationTypeEnum())) {
+                return findFirstKnowledgeBaseMatch(submittedOrganisationResource);
             } else {
                 return findFirstCompaniesHouseMatch(submittedOrganisationResource);
             }
@@ -58,6 +60,14 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
         return findOrganisationByName(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
                 .findFirst();
+    }
+
+    private Optional<Organisation> findFirstKnowledgeBaseMatch(OrganisationResource submittedOrganisationResource) {
+        return findOrganisationByName(submittedOrganisationResource).stream()
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(
+                        foundOrganisation,
+                        submittedOrganisationResource
+                )).findFirst();
     }
 
     private List<Organisation> findOrganisationByName(OrganisationResource organisationResource) {

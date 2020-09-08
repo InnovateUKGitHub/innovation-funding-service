@@ -72,11 +72,11 @@ Non lead cannot reopen competition
 
 Lead can reopen application
    [Documentation]  IFS-7440
-   [Setup]  log in as a different user      &{lead_applicant_credentials}
-   Given the user clicks the button/link    link = Dashboard
-   When the user can reopen application     ${COVIDapplicationTitle1}
-   Then the user reads his email            collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
-   And the user reads his email             steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
+   [Setup]  log in as a different user                         &{lead_applicant_credentials}
+   Given the user clicks the application tile if displayed
+   When the user can reopen application                        ${COVIDapplicationTitle1}
+   Then the user reads his email                               collaborator@example.com     	 An Innovation Funding Service funding application has been reopened   The application was reopened by
+   And the user reads his email                                steve.smith@empire.com           An Innovation Funding Service funding application has been reopened   You reopened this application
 
 Lead can make changes and resubmit
     [Documentation]  IFS-7440  IFS-7552
@@ -98,9 +98,10 @@ Internal user can send funding notification
 
 Applicant can no longer reopen the competition
     [Documentation]  IFS-7440
-    Given Log in as a different user           &{lead_applicant_credentials}
-    When The user should see the element       link = ${COVIDapplicationTitle1}
-    Then the user should not see the element   jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
+    Given Log in as a different user                          &{lead_applicant_credentials}
+    And the user clicks the application tile if displayed
+    When The user should see the element                      link = ${COVIDapplicationTitle1}
+    Then the user should not see the element                  jQuery = li:contains("${COVIDapplicationTitle1}") a:contains("Reopen")
 
 Competition is in Live and PS tabs
     [Documentation]   IFS-7441
@@ -142,8 +143,9 @@ External finance can access appendix
 
 External project finance cannot access documents or MO
     [Documentation]  IFS-7357
-    Given the user clicks the button/link     link = Dashboard
-    When the user clicks the button/link      link = ${COVIDcompetitionTitle}
+    Given the user clicks the button/link                                    link = Dashboard
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                                     link = ${COVIDcompetitionTitle}
     Then the user should not have access to documents MO or bank details
     [Teardown]  the project finance approves all steps before finance
 
@@ -181,7 +183,7 @@ Internal user is able to approve Spend profile and generates the GOL
     Given proj finance approves the spend profiles  ${ProjectID}
     Then the user should see the element            css = #table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
     And check activity log
-    And internal user generates the GOL             YES  ${ProjectID}
+    And internal user generates the GOL             ${ProjectID}
 
 Applicant is able to upload the GOL
     [Documentation]  IFS-7365
@@ -221,18 +223,19 @@ Custom Suite teardown
     Disconnect from database
 
 the applicant adds contributor to Application Team
-    the user clicks the button/link  link = Application team
-    then the user clicks the button/link  jQuery = button:contains("Add person to Empire Ltd")
-    the user invites a person to the same organisation   Collaborator  collaborator@example.com
+    the user clicks the button/link                        link = Application team
+    the user clicks the button/link                        jQuery = button:contains("Add person to Empire Ltd")
+    the user invites a person to the same organisation     Collaborator  collaborator@example.com
     logout as user
-    When the user reads his email and clicks the link      collaborator@example.com    Invitation to contribute in ${COVIDcompetitionTitle}     You will be joining as part of the organisation    2
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Yes, accept invitation")
-    And the user clicks the button/link                    jQuery = .govuk-button:contains("Confirm and continue")
-    And the invited user fills the create account form     Collaborator  Axe
-    And the user reads his email and clicks the link       collaborator@example.com    Please verify your email address    Once verified you can sign into your account
-    the user clicks the button/link       jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
-    Logging in and Error Checking           &{lead_applicant_credentials}
-    then the user clicks the button/link    link = ${COVIDapplicationTitle1}
+    the user reads his email and clicks the link           collaborator@example.com    Invitation to contribute in ${COVIDcompetitionTitle}     You will be joining as part of the organisation    2
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Yes, accept invitation")
+    the user clicks the button/link                        jQuery = .govuk-button:contains("Confirm and continue")
+    the invited user fills the create account form         Collaborator  Axe
+    the user reads his email and clicks the link           collaborator@example.com    Please verify your email address    Once verified you can sign into your account
+    the user clicks the button/link                        jQuery = p:contains("Your account has been successfully verified.")~ a:contains("Sign in")
+    Logging in and Error Checking                          &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                        link = ${COVIDapplicationTitle1}
     the applicant completes Application Team
 
 the user fills in bank details
@@ -320,25 +323,26 @@ the user can send successful funding notification
     the user clicks the button/link    jQuery = .send-to-all-applicants-modal button:contains("Send email")
 
 Complete all PS steps before finance
-    Log in as a different user           &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDapplicationTitle1}
-    the user clicks the button/link    link = Project details
-    the user clicks the button/link    link = Correspondence address
+    Log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDapplicationTitle1}
+    the user clicks the button/link                       link = Project details
+    the user clicks the button/link                       link = Correspondence address
     the user enter the Correspondence address
-    the user clicks the button/link    id = return-to-set-up-your-project-button
-    the user clicks the button/link    link = Project team
-    the user clicks the button/link    link = Project manager
-    the user selects the radio button  projectManager    projectManager1
-    the user clicks the button/link    id = save-project-manager-button
-    The user selects their finance contact  financeContact1
-    the user clicks the button/link    link = Set up your project
-    the user clicks the button/link      link = Documents
-    the user clicks the button/link        link = Exploitation plan
-    the user uploads the file              css = .inputfile  ${valid_pdf}
-    the user should see the element        jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
-    the user clicks the button/link     id = submit-document-button
-    the user clicks the button/link     id = submitDocumentButtonConfirm
-    the user clicks the button/link    link = Back to document overview
+    the user clicks the button/link                       id = return-to-set-up-your-project-button
+    the user clicks the button/link                       link = Project team
+    the user clicks the button/link                       link = Project manager
+    the user selects the radio button                     projectManager    projectManager1
+    the user clicks the button/link                       id = save-project-manager-button
+    The user selects their finance contact                financeContact1
+    the user clicks the button/link                       link = Set up your project
+    the user clicks the button/link                       link = Documents
+    the user clicks the button/link                       link = Exploitation plan
+    the user uploads the file                             css = .inputfile  ${valid_pdf}
+    the user should see the element                       jQuery = .upload-section:contains("Exploitation plan") a:contains("${valid_pdf}")
+    the user clicks the button/link                       id = submit-document-button
+    the user clicks the button/link                       id = submitDocumentButtonConfirm
+    the user clicks the button/link                       link = Back to document overview
     the user fills in bank details
 
 the user should not have access to documents MO or bank details
@@ -363,16 +367,17 @@ the user raises a note
     the user clicks the button/link         jQuery = .govuk-button:contains("Save note")
 
 the internal user can complete PS
-    log in as a different user         &{lead_applicant_credentials}
-    the user clicks the button/link    link = ${COVIDapplicationTitle1}
-    the user clicks the button/link    link = Spend profile
-    the user clicks the button/link    link = Empire Ltd
-    the user clicks the button/link    id = spend-profile-mark-as-complete-button
-    the user clicks the button/link    jQuery = a:contains("Review and submit project spend profile")
-    the user clicks the button/link    jQuery = a:contains("Submit project spend profile")
-    the user clicks the button/link    id = submit-send-all-spend-profiles
+    log in as a different user                            &{lead_applicant_credentials}
+    the user clicks the application tile if displayed
+    the user clicks the button/link                       link = ${COVIDapplicationTitle1}
+    the user clicks the button/link                       link = Spend profile
+    the user clicks the button/link                       link = Empire Ltd
+    the user clicks the button/link                       id = spend-profile-mark-as-complete-button
+    the user clicks the button/link                       jQuery = a:contains("Review and submit project spend profile")
+    the user clicks the button/link                       jQuery = a:contains("Submit project spend profile")
+    the user clicks the button/link                       id = submit-send-all-spend-profiles
     the external finance cannot access spend profile
-    log in as a different user         &{ifs_admin_user_credentials}
+    log in as a different user                            &{ifs_admin_user_credentials}
 
 Requesting Project ID of this Project
     ${ProjectID} =  get project id by name   ${COVIDapplicationTitle1}
