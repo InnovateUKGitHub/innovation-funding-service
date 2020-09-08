@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsVi
  **/
 public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
+    private String title;
     private final Long projectId;
     private final String projectName;
     private final boolean leadPartner;
@@ -18,11 +19,13 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel additionalContractFile;
     private GrantOfferLetterStateResource golState;
     private boolean useDocusign;
+    private boolean procurement;
 
-    public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
+    public GrantOfferLetterModel(String title, Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign) {
-
+                                 boolean projectManager, GrantOfferLetterStateResource golState, boolean useDocusign,
+                                 boolean procurement) {
+        this.title = title;
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -32,6 +35,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.projectManager = projectManager;
         this.golState = golState;
         this.useDocusign = useDocusign;
+        this.procurement = procurement;
     }
 
     @Override
@@ -80,21 +84,16 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return useDocusign;
     }
 
-    public boolean isShowSubmitButton() {
-        return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
+    public String getTitle() {
+        return title;
     }
 
-    public boolean isShowDisabledSubmitButton() {
+    public boolean isProcurement() {
+        return procurement;
+    }
 
-        if (!projectManager) {
-            return false;
-        }
-
-        if (isSubmitted()) {
-            return false;
-        }
-
-        return !isOfferSigned();
+    public boolean isShowSubmitButton() {
+        return projectManager && !isSubmitted() && isOfferSigned() && grantOfferLetterFile != null;
     }
 
     public boolean isProjectManager() {

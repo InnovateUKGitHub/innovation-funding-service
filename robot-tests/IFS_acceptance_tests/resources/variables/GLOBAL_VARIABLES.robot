@@ -184,21 +184,22 @@ ${MEDIUM_ORGANISATION_SIZE}    MEDIUM
 ${LARGE_ORGANISATION_SIZE}     LARGE
 
 # File related variables
-${UPLOAD_FOLDER}    uploaded_files
-${DOWNLOAD_FOLDER}    download_files
-${valid_pdf}      testing.pdf
-${gol_pdf}        GOL_template.pdf
-${valid_xls}    testing.xls
-${valid_odt}    testing.odt
-${valid_doc}    testing.doc
-${valid_docx}    testing.docx
-${valid_jpeg}   testing.jpeg
-${5mb_pdf}        testing_5MB.pdf
-${too_large_pdf}    large.pdf
-${text_file}      testing.txt
-${excel_file}     testing.xlsx
+${UPLOAD_FOLDER}        uploaded_files
+${DOWNLOAD_FOLDER}      download_files
+${valid_pdf}            testing.pdf
+${gol_pdf}              GOL_template.pdf
+${contract_pdf}         Contract.pdf
+${valid_xls}            testing.xls
+${valid_odt}            testing.odt
+${valid_doc}            testing.doc
+${valid_docx}           testing.docx
+${valid_jpeg}           testing.jpeg
+${5mb_pdf}              testing_5MB.pdf
+${too_large_pdf}        large.pdf
+${text_file}            testing.txt
+${excel_file}           testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
-${ods_file}      file_example_ODS.ods
+${ods_file}             file_example_ODS.ods
 
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    ${assessment_ids["${IN_ASSESSMENT_APPLICATION_4_TITLE}"]["${assessor_credentials["email"]}"]}
