@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.BaseOtherFunding;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public abstract class BaseOtherFundingCostCategory implements FinanceRowCostCate
     private BaseOtherFunding otherFunding;
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal total = ZERO_COST;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -28,12 +29,13 @@ public abstract class BaseOtherFundingCostCategory implements FinanceRowCostCate
     @Override
     public void calculateTotal() {
         if (!otherFundingSet()) {
-            total = BigDecimal.ZERO;
+            total = ZERO_COST;
         } else {
             total = costs.stream()
                     .map(c -> c.getTotal())
                     .filter(c -> c != null)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    .reduce(ZERO_COST, BigDecimal::add)
+                    .setScale(2, RoundingMode.HALF_UP);
         }
     }
 
