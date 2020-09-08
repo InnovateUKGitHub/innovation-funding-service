@@ -230,18 +230,18 @@ Internal user should see bank details complete for an international applicant
     When the user clicks the button/link     jQuery = tr:contains("Procurement application 2") td:nth-of-type(5).status.ok
     Then the user should see the element     jQuery = span:contains("No action required")
 
-GOL section is enabled without bank details
+Contract section is enabled without bank details
     [Documentation]  IFS-8202
     Given the user navigates to the page     ${server}/project-setup-management/project/${sbriProjectId2}/finance-check
     When generate spend profile
     And the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
     Then the user should see the element     jQuery = tr:contains("${sbriProjectName2}") td:contains("Review")
 
-Internal user can send the GOL
+Internal user can send the contract
     [Documentation]  IFS-8202
-    Given internal user generates the GOL     ${sbriProjectId2}
-    When the user navigates to the page       ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
-    Then the user should see the element      jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
+    Given internal user generates the contract     ${sbriProjectId2}
+    When the user navigates to the page            ${server}/project-setup-management/competition/${sbriComp654Id}/status/all
+    Then the user should see the element           jQuery = tr:contains("${sbriProjectName2}") td:contains("Pending")
 
 External user of international org should not see bank details
     [Documentation]  IFS-8202
@@ -377,3 +377,14 @@ Generate spend profile
     confirm eligibility                 0
     the user clicks the button/link     css = .generate-spend-profile-main-button
     the user clicks the button/link     id = generate-spend-profile-modal-button
+
+internal user generates the contract
+    [Arguments]  ${projectID}
+    the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user uploads the file          grantOfferLetter  ${contract_pdf}
+    the user should see the element    jQuery = a:contains("Contract.pdf (opens in a new window)")
+    #horrible hack but we need to wait for virus scanning
+    sleep  5s
+    the user selects the checkbox      confirmation
+    the user clicks the button/link    jQuery = button:contains("Send Contract to project team")
+    the user clicks the button/link    jQuery = button:contains("Send contract")
