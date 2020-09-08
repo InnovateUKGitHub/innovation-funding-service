@@ -66,7 +66,6 @@ public abstract class AbstractYourProjectCostsFormPopulator {
 
     private JustificationForm justificationForm(BaseFinanceResource finance) {
 
-//        do i need to store true/false in db as well, maybe another table?
         ApplicationFinanceResource applicationFinanceResource = (ApplicationFinanceResource) finance;
         if (StringUtils.isEmpty(applicationFinanceResource.getJustification())) {
             return new JustificationForm();

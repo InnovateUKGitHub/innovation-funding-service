@@ -47,7 +47,7 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
             ApplicationFinanceResource finance =
                     applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
 
-            finance.setJustification(justificationForm.getExplanation());
+            finance.setJustification(justificationForm.getJustification());
 
             RestResult<ApplicationFinanceResource> result = applicationFinanceRestService.update(finance.getId(), finance);
 

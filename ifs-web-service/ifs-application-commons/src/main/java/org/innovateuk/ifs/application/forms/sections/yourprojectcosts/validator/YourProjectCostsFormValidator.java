@@ -18,6 +18,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -113,8 +114,8 @@ public class YourProjectCostsFormValidator {
         if (justificationForm.getExceedAllowedLimit() == null) {
             validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.exceedAllowedLimit", null, "validation.ktp.project.costs.exceeded.required")));
         }
-        if (justificationForm.getExceedAllowedLimit() == Boolean.TRUE && justificationForm.getExplanation().isEmpty()) {
-            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.explanation", null, "validation.ktp.project.costs.explanation.required")));
+        if (justificationForm.getExceedAllowedLimit() == Boolean.TRUE && StringUtils.isEmpty(justificationForm.getJustification())) {
+            validationHandler.addAnyErrors(new ValidationMessages(fieldError("justificationForm.justification", null, "validation.ktp.project.costs.justification.required")));
         }
     }
 

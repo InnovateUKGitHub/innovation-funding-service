@@ -83,6 +83,8 @@ public class YourProjectCostsAutosaver {
                 return autosaveProcurementOverheadCost(field, value, finance);
             } else if (field.startsWith("vat")) {
                 return autosaveVAT(value, finance, applicationId, organisation.getId());
+            } else if (field.startsWith("justificationForm.justification")) {
+                return autosaveJustification(value, finance, applicationId, organisation.getId());
             } else {
                 throw new IFSRuntimeException(format("Auto save field not handled %s", field), emptyList());
             }
@@ -90,6 +92,15 @@ public class YourProjectCostsAutosaver {
             LOG.debug("Error auto saving", e);
             LOG.info(format("Unable to auto save field (%s) value (%s)", field, value));
         }
+        return Optional.empty();
+    }
+
+    private Optional<Long> autosaveJustification(String value, ApplicationFinanceResource finance, long applicationId, long organisationId) {
+        finance = applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
+        if (value != null) {
+            finance.setJustification(value);
+        }
+        applicationFinanceRestService.update(finance.getId(), finance);
         return Optional.empty();
     }
 
