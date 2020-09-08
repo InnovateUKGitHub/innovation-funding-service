@@ -232,10 +232,10 @@ New lead applicant completes the KTP application
     And the user clicks the button/link                                                      jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
     Then the user completes the KTP application except application team and your funding
 
-lead applicant can not view your organisation section of KTP applications
-    [Documentation]  IFS-7958
-     When the user clicks the button/link         link = Your project finances
-     Then the user should not see the element     link = Your organisation
+#lead applicant can not view your organisation section of KTP applications
+#    [Documentation]  IFS-7958
+#     When the user clicks the button/link         link = Your project finances
+#     Then the user should not see the element     link = Your organisation
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956  IFS-7958
@@ -251,10 +251,10 @@ New lead applicant invites a new partner organisation user and fills in project 
     When the lead invites a partner and accepeted the invitation
     Then the user completes partner project finances                 ${ktpApplicationTitle}  yes
 
-Partner applicant can not view your project costs section of KTP applications
-    [Documentation]  IFS-7958
-     When the user clicks the button/link         link = Your project finances
-     Then the user should not see the element     link = Your project costs
+#Partner applicant can not view your project costs section of KTP applications
+#    [Documentation]  IFS-7958
+#     When the user clicks the button/link         link = Your project finances
+#     Then the user should not see the element     link = Your project costs
 
 Partner applicant can declare any other government funding received
     [Documentation]  IFS-7956
@@ -269,7 +269,7 @@ Organisations(KB plus business) can see each other's finance summary calculation
     And lead and partner can see each other's finance summary calculations
     And the user should not see the element                                     jQuery = p:contains("${financeBanerText}")
 
-Partner can view finance summary of KB and other businesses in Finance Overview section
+Partner organisation can see lead project cost summary and finance summary of each other's (KB and businesses) in finance overview section
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                     link = Back to application overview
     When the user clicks the button/link                                      link = Finances overview
@@ -284,7 +284,7 @@ Lead organisation(KB) can view other organisations's finance summary calculation
     Then lead and partner can see each other's finance summary calculations
     And the user should not see the element                                   jQuery = p:contains("${financeBanerText}")
 
-Lead organisation(KB) can view other organisations's finance summary in finance overview section
+Lead organisation can see lead project cost summary and finance summary of each other's (KB and businesses) in finance overview section
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                     link = Back to application overview
     When the user clicks the button/link                                      link = Finances overview
@@ -366,19 +366,15 @@ The KTA cannot edit any application section
     Then the user should see the element        jQuery = span:contains("${applicationQuestion}")
     And the user should not see the element     jQuery = p:contains("${questionTextGuidance}")
 
-The KTA is able to see lead applicant's project finances
-    #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
-    [Documentation]  IFS-7983
-    Given the user clicks the button/link     id = accordion-questions-heading-3-1
-    When the user clicks the button/link      jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
-    Then the user should see the element      jQuery = h2:contains("Finance summary")
+The KTA is able to see lead and non lead applicant's project finances
+    [Documentation]  IFS-7983  IFS-7958
+    Given the user clicks the button/link                               id = accordion-questions-heading-3-1
+    When the user clicks the button/link                                jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    Then KTA can view lead and partner finance summary calculations
 
-The KTA is able to see non-lead applicant's project finances
-     #Then should be changed once IFS-7958 is merged so that we can verify funding breakdown in KTA view. Remove this comment after that.
-     [Documentation]  IFS-7983
-     Given the user clicks the button/link     link = Back to application overview
-     When the user clicks the button/link      jQuery = div:contains("${newPartnerOrgName}") ~ a:contains("View finances")
-     Then the user should see the element      jQuery = h2:contains("Finance summary")
+The KTA is able to see lead applicant's project costs summary
+      [Documentation]  IFS-7983  IFS-7958
+    Then the user can see project cost breakdown of lead organisation
 
 Lead applicant verifies the KTA inviation is accepted.
     [Documentation]  IFS-7806  IFS-8001
@@ -796,13 +792,13 @@ the user should see KTP finance sections are complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
 
 lead and partner can see each other's finance summary calculations
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("246")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("10.00%")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("25")
-    the user should see the element     jQuery = th:contains("Middlesex University Higher Education Corporation") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("221")
-    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("90")
-    the user should see the element     jQuery = th:contains("INNOVATE LTD") ~ td:contains("20,000")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("246")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("25")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("221")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
@@ -821,4 +817,17 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = td:contains("Other costs")+td:contains("0")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
 
+KTA can view lead and partner finance summary calculations
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("246")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("25")
+    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
+    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("221")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
+    the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
 
