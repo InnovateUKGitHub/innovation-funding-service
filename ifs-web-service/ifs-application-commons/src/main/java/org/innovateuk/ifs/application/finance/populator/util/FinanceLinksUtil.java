@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.service.CompetitionAssessmentConfigRestSer
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.HttpServletUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class FinanceLinksUtil {
             }
 
             if (currentUserRole.get().getRole().isKta()) {
-                return Optional.of(internalLink(application.getId(), organisation));
+                return Optional.of(organisationIdInLink(application.getId(), organisation));
             }
 
             CompetitionAssessmentConfigResource competitionAssessmentConfigResource = competitionAssessmentConfigRestService.findOneByCompetitionId(competition.getId()).getSuccess();
