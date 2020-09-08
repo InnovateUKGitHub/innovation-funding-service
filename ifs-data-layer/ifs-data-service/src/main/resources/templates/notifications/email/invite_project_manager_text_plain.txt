@@ -4,7 +4,7 @@ Dear ${notificationTarget.name},
 
 You have been invited to join the project ${projectName} as the Project Manager.
 
-You will be managing the project on behalf of ${leadOrganisation} who is the lead organisation.
+You will be managing the project on behalf of ${leadOrganisation}<#if procurement> who is the lead organisation.</#if>
 
 Please sign in to accept this invitation. If you haven't used this service before you must create an account.
 

@@ -504,6 +504,38 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
+    public void findApplicationsForKtaDashboard() {
+        loginCompAdmin();
+
+        Competition competition = newCompetition().with(id(null)).build();
+        User user = new User("Kta", "Kta", "kta@gmail.com", "", "456abc");
+
+        Application ktaApp = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withName("ktaApp")
+                .build();
+
+        userRepository.save(user);
+        competitionRepository.save(competition);
+        applicationRepository.save(ktaApp);
+
+        ProcessRole ktaRole = newProcessRole()
+                .with(id(null))
+                .withRole(Role.KNOWLEDGE_TRANSFER_ADVISER)
+                .withApplication(ktaApp)
+                .withUser(user)
+                .build();
+
+        processRoleRepository.save(ktaRole);
+
+        List<Application> applications = repository.findApplicationsForDashboard(user.getId());
+
+        assertEquals(1, applications.size());
+        assertTrue(applications.stream().anyMatch(app -> app.getId().equals(ktaApp.getId())));
+    }
+
+    @Test
     public void findByApplicationStateAndFundingDecision() {
         loginCompAdmin();
         Competition competition = competitionRepository.save(newCompetition().with(id(null)).build());
