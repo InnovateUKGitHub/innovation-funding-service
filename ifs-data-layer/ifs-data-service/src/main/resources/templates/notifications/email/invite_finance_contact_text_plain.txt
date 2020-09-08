@@ -6,7 +6,7 @@ You have been invited to join the project ${projectName} as a named finance cont
 
 You will be providing finance details on behalf of ${inviteOrganisationName}.
 
-<#if procurement>The project is being led by ${leadOrganisation}.</#if>
+<#if !procurement>The project is being led by ${leadOrganisation}.</#if>
 
 Please sign in to accept this invitation. If you haven't used this service before you must create an account.
 

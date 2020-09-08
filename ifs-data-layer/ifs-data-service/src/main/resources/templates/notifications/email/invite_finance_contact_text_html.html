@@ -4,7 +4,7 @@
     <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
     <p style="margin: 0 0 1em 0;">You have been invited to join the project <b>${projectName}</b> as a named finance contact.</p>
     <p style="margin: 0 0 1em 0;">You will be providing finance details on behalf of <b>${inviteOrganisationName}</b></p>
-    <#if procurement>
+    <#if !procurement>
         <p style="margin: 0 0 1em 0;">The project is being led by <b>${leadOrganisation}</b></p>
     </#if>
     <p style="margin: 0 0 1em 0;">Please sign in to accept this invitation. If you haven't used this service before you must create an account.</p>
