@@ -20,6 +20,7 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
     private AdditionalCompanyCost managementSupervision;
     private AdditionalCompanyCost otherStaff;
     private AdditionalCompanyCost capitalEquipment;
+    private AdditionalCompanyCost consumables;
     private AdditionalCompanyCost otherCosts;
 
     private BigDecimal total;
@@ -56,6 +57,14 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
         this.capitalEquipment = capitalEquipment;
     }
 
+    public AdditionalCompanyCost getConsumables() {
+        return consumables;
+    }
+
+    public void setConsumables(AdditionalCompanyCost consumables) {
+        this.consumables = consumables;
+    }
+
     public AdditionalCompanyCost getOtherCosts() {
         return otherCosts;
     }
@@ -71,7 +80,7 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
     @Override
     @JsonIgnore
     public List<FinanceRowItem> getCosts() {
-        return newArrayList(associateSalary, managementSupervision, otherStaff, capitalEquipment, otherStaff);
+        return newArrayList(associateSalary, managementSupervision, otherStaff, capitalEquipment, consumables, otherStaff);
     }
 
     @Override
@@ -103,6 +112,9 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
                 break;
             case CAPITAL_EQUIPMENT:
                 capitalEquipment = cost;
+                break;
+            case CONSUMABLES:
+                consumables = cost;
                 break;
             case OTHER_COSTS:
                 otherCosts = cost;
