@@ -87,7 +87,6 @@ public class ApplicationSummaryController {
                                  Model model,
                                  @PathVariable("applicationId") long applicationId,
                                  UserResource user) {
-        System.out.println("say whaaat?");
         Supplier<String> failureAndSuccessView = () -> applicationSummary(form, bindingResult, validationHandler, model, applicationId, user);
         MultipartFile file = form.getResponse();
 
