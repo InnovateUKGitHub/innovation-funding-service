@@ -36,6 +36,13 @@
         <section>
             <h2 th:text="${section.name}"
                 class="govuk-heading-m govuk-!-margin-top-8 govuk-!-margin-bottom-0"/>
+
+            <th:block th:if="${model.settings.includeAllAssessorFeedback}">
+                <p th:if="${section.name.equals('Project details')}" class="govuk-body govuk-hint">This section is not scored but will provide background to the project.</p>
+                <p th:if="${section.name.equals('Application questions')}" class="govuk-body govuk-hint">Each question has been assessed by several independent assessors.<br>They have given a score and feedback for each.</p>
+
+            </th:block>
+
             <!--/* Show the accordion sections */-->
             <div class="govuk-accordion" data-module="govuk-accordion" th:id="|accordion-questions-${sectionIter.count}|">
                 <div class="govuk-accordion__section"  th:each="question, questionIter : ${section.questions}">
