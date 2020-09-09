@@ -68,8 +68,8 @@ ${nonRegisteredUserValidation}        You cannot invite the knowledge transfer a
 ${acceptInvitationValidation}         You cannot mark this page as complete until this invitation has either been accepted or removed.
 ${ktaEmail}                           simon.smith@ktn-uk.test
 ${nonKTAEmail}                        James.Smith@ktn-uk.test
-${invitedEmailPattern}                You have been invited to be the Knowledge Transfer Adviser for the Innovation Funding Service application
-${removedEmailPattern}                You have been removed as Knowledge Transfer Adviser for the Innovation Funding Service application
+${invitedEmailPattern}                You have been invited to be the knowledge transfer adviser for the Innovation Funding Service application:
+${removedEmailPattern}                You have been removed as knowledge transfer adviser for the Innovation Funding Service application:
 ${invitationEmailSubject}             Invitation to be Knowledge Transfer Adviser
 ${applicationQuestion}                What is the business opportunity that your project addresses?
 ${questionTextGuidance}               Entering text to allow valid mark as complete
