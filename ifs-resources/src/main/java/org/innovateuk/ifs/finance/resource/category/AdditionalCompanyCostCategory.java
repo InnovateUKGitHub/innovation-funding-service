@@ -80,7 +80,7 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
     @Override
     @JsonIgnore
     public List<FinanceRowItem> getCosts() {
-        return newArrayList(associateSalary, managementSupervision, otherStaff, capitalEquipment, consumables, otherStaff);
+        return newArrayList(associateSalary, managementSupervision, otherStaff, capitalEquipment, consumables, otherCosts);
     }
 
     @Override
