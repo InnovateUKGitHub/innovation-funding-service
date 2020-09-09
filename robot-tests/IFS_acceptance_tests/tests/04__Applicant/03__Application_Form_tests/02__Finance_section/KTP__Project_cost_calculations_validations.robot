@@ -78,7 +78,7 @@ Estate validations
 Estate calculations
     [Documentation]  IFS-7790
     Given the user enters text to a text field    css = input[id^="estate"][id$="cost"]  1000
-    Then the user should see the right values     1,000   Estates     1369
+    Then the user should see the right values     1,000   Associate estates cost     1369
 
 Additional associate support validations
    [Documentation]  IFS-7790
@@ -119,7 +119,7 @@ Consumables calculations
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790
-    Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimation")
+    Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimates")
     When the user fills additional company costs     ${EMPTY}  ${EMPTY}
     Then the user should see the validation messages for addition company costs
 

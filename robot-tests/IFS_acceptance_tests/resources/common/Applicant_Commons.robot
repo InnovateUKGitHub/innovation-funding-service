@@ -656,19 +656,19 @@ the user sets max available funding
     [Arguments]  ${amount}  ${compId}
     ${id} =  User gets competition config id for max funding  ${compId}
     User sets a max funding level for a competition           ${id}  ${amount}
-
 the user fills additional company costs
+
     [Arguments]  ${description}  ${value}
-    the user enters text to a text field  css = textarea[id$="associateSalary.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="managementSupervision.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="otherStaff.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="capitalEquipment.description"]  ${description}
-    the user enters text to a text field  css = textarea[id$="otherCosts.description"]  ${description}
-    the user enters text to a text field  css = input[id$="associateSalary.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="managementSupervision.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="otherStaff.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="capitalEquipment.cost"]  ${value}
-    the user enters text to a text field  css = input[id$="otherCosts.cost"]  ${value}
+    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.associateSalary.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.managementSupervision.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.otherStaff.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.capitalEquipment.description"]  ${description}
+    the user enters text to a text field  css = textarea[id$="additionalCompanyCostForm.otherCosts.description"]  ${description}
+    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.associateSalary.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.managementSupervision.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.otherStaff.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.capitalEquipment.cost"]  ${value}
+    the user enters text to a text field  css = input[id$="additionalCompanyCostForm.otherCosts.cost"]  ${value}
 
 the user selects organisation type as business
     [Arguments]  ${organisationTypeId}
