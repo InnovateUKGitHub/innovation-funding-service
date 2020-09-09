@@ -25,7 +25,7 @@ public class ManagementApplicationViewModelTest {
                 .withInnovationArea(InnovationAreaResourceBuilder.newInnovationAreaResource().build()).build();
 
         ManagementApplicationViewModel viewModel = new ManagementApplicationViewModel(applicationResource, competitionResource,
-                null, null, Collections.emptyList(), false, false, false, null, false);
+                null, null, Collections.emptyList(), false, false, false, null, false, false, null);
 
         assertTrue(viewModel.isKtpCompetition());
     }
@@ -39,7 +39,7 @@ public class ManagementApplicationViewModelTest {
                 .withInnovationArea(InnovationAreaResourceBuilder.newInnovationAreaResource().build()).build();
 
         ManagementApplicationViewModel viewModel = new ManagementApplicationViewModel(applicationResource, competitionResource,
-                null, null, Collections.emptyList(), false, false, false, null, false);
+                null, null, Collections.emptyList(), false, false, false, null, false, false, null);
 
         assertFalse(viewModel.isKtpCompetition());
     }
