@@ -9,6 +9,8 @@ import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -22,6 +24,7 @@ import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.management.application.view.viewmodel.AppendixViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.Role;
@@ -67,7 +70,13 @@ public class ManagementApplicationPopulator {
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
+    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
+
+    @Autowired
     private ProjectRestService projectRestService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private AssessmentRestService assessmentRestService;
@@ -95,6 +104,13 @@ public class ManagementApplicationPopulator {
             settings.setIncludeStatuses(true);
         }
 
+        final InterviewFeedbackViewModel interviewFeedbackViewModel;
+        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+        } else {
+            interviewFeedbackViewModel = null;
+        }
+
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 
@@ -113,7 +129,9 @@ public class ManagementApplicationPopulator {
                 user.hasAnyRoles(Role.PROJECT_FINANCE, Role.COMP_ADMIN),
                 support,
                 projectId,
-                user.hasRole(Role.EXTERNAL_FINANCE)
+                user.hasRole(Role.EXTERNAL_FINANCE),
+                isProjectWithdrawn(applicationId),
+                interviewFeedbackViewModel
         );
     }
 
@@ -123,6 +141,11 @@ public class ManagementApplicationPopulator {
 
     private boolean interviewAssigned(Long applicationId) {
         return interviewAssignmentRestService.isAssignedToInterview(applicationId).getSuccess();
+    }
+
+    private boolean isProjectWithdrawn(Long applicationId) {
+        ProjectResource project = projectService.getByApplicationId(applicationId);
+        return project != null && project.isWithdrawn();
     }
 
     private List<AppendixViewModel> getAppendices(Long applicationId) {

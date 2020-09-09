@@ -22,6 +22,8 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=|${applicationName}|,size='govuk-heading-xl'" />
 
+        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
+
         <th:block th:if="${model.ineligibility.ineligible}">
             <h2 class="govuk-heading-s">Removed by</h2>
             <p class="govuk-body" th:text="|${model.ineligibility.removedBy}, ${#temporals.format(model.ineligibility.removedOn, 'd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
@@ -117,7 +119,51 @@
             </div>
         </div>
 
+        <th:block th:unless="${model.interviewFeedbackViewModel == null || model.interviewFeedbackViewModel.feedbackReleased}">
+            <div class="message-alert"
+                 th:attr="aria-hidden=${!model.interviewFeedbackViewModel.hasResponse()}"
+                 data-js-toggle-on-file-upload="">
+                <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.responseBannerText}">Some info</p>
+            </div>
+            <div class="message-alert"
+                 th:attr="aria-hidden=${model.interviewFeedbackViewModel.hasResponse()}"
+                 data-js-toggle-on-file-upload="">
+                <p class="govuk-body" th:text="${model.interviewFeedbackViewModel.noResponseBannerText}">Some info</p>
+            </div>
+        </th:block>
+
+        <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.responseSectionEnabled}">
+            <th:block th:unless="${model.interviewFeedbackViewModel.leadApplicant}">
+                <h2 class="govuk-heading-m">Response from lead applicant</h2>
+                <th:block th:unless="${model.interviewFeedbackViewModel.hasResponse()}">
+                    <p class="govuk-body">The lead applicant has not yet uploaded a response.</p>
+                </th:block>
+                <th:block th:if="${model.interviewFeedbackViewModel.hasResponse()}">
+                    <div class="govuk-form-group download">
+                        <h3 class="govuk-heading-s govuk-!-margin-0">Lead applicant response</h3>
+                        <p class="govuk-body uploaded-file">
+                            <a th:href="@{/competition/{compId}/application/{applicationId}/download-response(applicationId=${model.application.id}, compId=${model.application.competition})}"
+                               th:text="|${model.interviewFeedbackViewModel.responseFilename} (opens in a new window)|"
+                               target="_blank"
+                               class="govuk-link">File</a>.
+                        </p>
+                    </div>
+                </th:block>
+            </th:block>
+        </th:block>
+
         <th:block th:insert="application/readonly/application-read-only :: accordion (${model.applicationReadOnlyViewModel})" />
+
+        <th:block th:if="${model.interviewFeedbackViewModel != null && model.interviewFeedbackViewModel.hasFeedback()}">
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">Additional feedback</h2>
+            <div class="govuk-form-group download">
+                <h3 class="govuk-heading-s govuk-!-margin-0">Additional Innovate UK feedback</h3>
+                <a target="_blank"
+                   th:href="@{/competition/{compId}/application/{applicationId}/summary/download-feedback(applicationId=${model.application.id}, compId=${model.application.competition})}"
+                   th:text="|${model.interviewFeedbackViewModel.feedbackFilename} (opens in a new window)|"
+                   class="govuk-link">panel-assessment-feedback.pdf, 6 KB </a>.
+            </div>
+        </th:block>
 
         <div th:unless="${model.externalFinanceUser}" class="govuk-body govuk-!-margin-top-6">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${model.application.competition},appId=${model.application.id})}"
