@@ -236,8 +236,9 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                         statusAccessor.canAccessSpendProfileSection(resolve(organisationRequest))
                 );
             case GRANT_OFFER_LETTER:
-                return new SetupStatusStageViewModel(stage, "Grant offer letter",
-                        "Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.",
+                String title = competition.isProcurement() ? "Contract" : "Grant offer letter";
+                return new SetupStatusStageViewModel(stage, title,
+                        "Once all tasks are complete the Project Manager can review, sign and submit the " + title.toLowerCase() + " to us.",
                         format("/project/%d/offer", project.getId()),
                         sectionStatus.grantOfferLetterSectionStatus(
                                 ownOrganisation.getGrantOfferLetterStatus(),

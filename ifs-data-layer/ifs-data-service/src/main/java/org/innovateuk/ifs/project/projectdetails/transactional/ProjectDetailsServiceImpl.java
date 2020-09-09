@@ -466,6 +466,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         globalArguments.put("inviteOrganisationName", inviteResource.getOrganisationName());
         globalArguments.put("competitionName", inviteResource.getCompetitionName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, inviteResource));
+        globalArguments.put("procurement", project.getApplication().getCompetition().isProcurement());
         return globalArguments;
     }
 
