@@ -131,6 +131,14 @@ public class YourProjectCostsAutosaver {
                 toSave = costCategory.getCapitalEquipment();
                 toSave.setDescription(value);
                 break;
+            case "consumables.cost":
+                toSave = costCategory.getConsumables();
+                toSave.setCost(new BigInteger(value));
+                break;
+            case "consumables.description":
+                toSave = costCategory.getConsumables();
+                toSave.setDescription(value);
+                break;
             case "otherCosts.cost":
                 toSave = costCategory.getOtherCosts();
                 toSave.setCost(new BigInteger(value));
