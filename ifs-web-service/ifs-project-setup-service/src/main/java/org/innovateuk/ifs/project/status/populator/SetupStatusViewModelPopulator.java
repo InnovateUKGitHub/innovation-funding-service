@@ -207,7 +207,7 @@ public class SetupStatusViewModelPopulator extends AsyncAdaptor {
                 );
             case BANK_DETAILS:
                 return new SetupStatusStageViewModel(stage, stage.getShortName(),
-                        competition.isProcurement() ? "We need your organisation's bank details." : "We need bank details for those partners eligible for funding.",
+                        "We need your organisation's bank details.",
                         projectComplete ? format("/project/%d/bank-details/readonly", project.getId())
                                 : format("/project/%d/bank-details", project.getId()),
                         sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus()),
