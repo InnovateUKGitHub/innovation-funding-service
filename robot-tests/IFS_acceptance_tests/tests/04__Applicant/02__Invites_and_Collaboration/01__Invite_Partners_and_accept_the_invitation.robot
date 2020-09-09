@@ -135,7 +135,7 @@ Partner is still marked as pending after accepting invitation but not completing
     And the user clicks the button/link     link = Sign in
     And Logging in and Error Checking       &{lead_applicant_credentials}
     Then the user still sees pending user
-    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invite")
+    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invitation")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -224,7 +224,7 @@ Lead applicant invites a non registered user in the same organisation
 Lead is able to resend invitation
     [Documentation]  IFS-5960
     [Tags]
-    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invitation")
     Then the user should see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
