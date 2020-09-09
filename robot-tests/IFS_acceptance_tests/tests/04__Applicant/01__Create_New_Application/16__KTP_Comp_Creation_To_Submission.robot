@@ -28,6 +28,8 @@ Documentation  IFS-7146  KTP - New funding type
 ...            IFS-7983  KTP Your Project Finances - KTA view
 ...
 ...            IFS-7956 KTP Your Project Finances - Other Funding
+...
+...            IFS-8095 Content improvement for KTA journey
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom suite teardown
@@ -262,18 +264,18 @@ System should display a validation if no email address entered while inviting th
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
 The applicant should not be able to mark the application team section as complete until lead applicant adds a KTA to the application
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     When the user clicks the button/link                   id = application-question-complete
     Then the user should see a field and summary error     ${noKTAInApplicationValidation}
 
 System should not allow a KTA to be invited if they do not have a KTA account in IFS
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     Given the user enters text to a text field             id = ktaEmail   ${nonKTAEmail}
     When the user clicks the button/link                   name = invite-kta
     Then the user should see a field and summary error     ${nonRegisteredUserValidation}
 
 The applicant invites a KTA user to the application
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     [Setup]  Assign the KTA role to the user
     Given Log in as a different user               &{ktpLeadApplicantCredentials}
     When the user invites a KTA to application     ${ktpApplicationTitle}   ${ktaEmail}
@@ -287,12 +289,12 @@ The applicant should not be able to mark the application team section as complet
     Then the user should see a field and summary error     ${acceptInvitationValidation}
 
 The applicant can resend the invite to the existing KTA
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     When the user clicks the button/link     name = resend-kta
     Then The user reads his email            ${ktaEmail}   ${invitationEmailSubject}   ${invitedEmailPattern}
 
 The applicant can remove pending KTA from the application and send a notification to the KTA
-    [Documentation]  IFS-7806
+    [Documentation]  IFS-7806 IFS-8095
     When the user clicks the button/link         name = remove-kta
     Then the user should not see the element     name = remove-kta
     And The user reads his email                 ${ktaEmail}   ${removedEmailSubject}   ${removedEmailPattern}
