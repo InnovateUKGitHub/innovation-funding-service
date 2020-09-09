@@ -119,7 +119,6 @@ public class ApplicationSummaryController {
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponse(Model model,
                                                        @PathVariable("applicationId") long applicationId) {
-        System.out.println("try this?");
         return getFileResponseEntity(interviewResponseRestService.downloadResponse(applicationId).getSuccess(),
                 interviewResponseRestService.findResponse(applicationId).getSuccess());
     }
