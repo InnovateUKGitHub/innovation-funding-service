@@ -143,12 +143,12 @@ Project finance completes all project setup steps
     And internal user approve bank details
     And internal user generate SP
 
-Internal user generate the GOL
+Internal user generate the contract
     [Documentation]  IFS-6368
     Given applicant send project spend profile
-    When the internal user approve SP and issue GOL
-    Then applicant upload the GOL
-    And the internal user approve the GOL   ${ProjectID}
+    When the internal user approve SP and issue contract
+    Then Lead applicant upload the contract
+    And the internal user approve the contract               ${ProjectID}
 
 *** Keywords ***
 Custom Suite Setup
@@ -312,7 +312,7 @@ applicant send project spend profile
     the user clicks the button/link       jQuery = a:contains("Submit project spend profile")
     the user clicks the button/link       id = submit-send-all-spend-profiles
 
-the internal user approve SP and issue GOL
+the internal user approve SP and issue contract
     log in as a different user        &{internal_finance_credentials}
     the user navigates to the page    ${server}/project-setup-management/project/${ProjectID}/spend-profile/approval
     the user selects the checkbox     approvedByLeadTechnologist
@@ -321,13 +321,10 @@ the internal user approve SP and issue GOL
     the user navigates to the page    ${server}/project-setup-management/project/${ProjectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${valid_pdf}
     the user selects the checkbox      confirmation
-    the user clicks the button/link    jQuery = button:contains("Send letter to project team")
-    the user clicks the button/link    jQuery = button:contains("Send grant offer letter")
+    the user clicks the button/link    jQuery = button:contains("Send contract to project team")
+    the user clicks the button/link    jQuery = button:contains("Send contract")
 
-applicant upload the GOL
-    Log in as a different user            &{RTO_lead_applicant_credentials}
-    the user navigates to the page        ${server}/project-setup/project/${ProjectID}
-    the user clicks the button/link       jQuery = a:contains("Grant offer letter")
-    the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
-    the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
-    the user clicks the button/link       id = submit-gol-for-review
+Lead applicant upload the contract
+    Log in as a different user         &{RTO_lead_applicant_credentials}
+    the user navigates to the page     ${server}/project-setup/project/${ProjectID}
+    Applicant uploads the contract

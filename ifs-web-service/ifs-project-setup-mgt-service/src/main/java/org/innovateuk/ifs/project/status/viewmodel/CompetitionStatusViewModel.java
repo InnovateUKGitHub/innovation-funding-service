@@ -50,5 +50,4 @@ public class CompetitionStatusViewModel extends BaseCompetitionStatusTableViewMo
     public PaginationViewModel getPaginationViewModel() {
         return paginationViewModel;
     }
-
 }
