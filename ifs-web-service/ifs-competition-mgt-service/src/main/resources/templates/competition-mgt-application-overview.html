@@ -22,7 +22,8 @@
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=|${applicationName}|,size='govuk-heading-xl'" />
 
-        <th:block th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
+        <th:block th:if="${model.applicationReadOnlyViewModel.settings.includeAllAssessorFeedback}"
+            th:insert="fragments/elements :: competition-status-message (applicationState=${model.application.applicationState}, competition=${model.competition}, projectWithdrawn=${model.projectWithdrawn})" />
 
         <th:block th:if="${model.ineligibility.ineligible}">
             <h2 class="govuk-heading-s">Removed by</h2>
