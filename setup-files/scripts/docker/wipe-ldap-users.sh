@@ -20,8 +20,8 @@ wipeLdapUsersByLdap() {
   ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD \
    | grep 'dn: ' \
    | cut -c4- \
-   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD \
-   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+   | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+   #| xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASSWORD
 }
 
 wipeLdapUsersByDatabase() {
@@ -34,9 +34,9 @@ wipeLdapUsersByDatabase() {
         ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
     fi
 
-    if [ "`ldapsearch -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -b $LDAP_DOMAIN uid=$uid -D "cn=admin,dc=int,dc=g2g3digital,dc=net" -w $LDAP_PASSWORD | grep uid: `" != "" ]; then
-        ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
-    fi
+    #if [ "`ldapsearch -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -b $LDAP_DOMAIN uid=$uid -D "cn=admin,dc=int,dc=g2g3digital,dc=net" -w $LDAP_PASSWORD | grep uid: `" != "" ]; then
+   #     ldapdelete -H $LDAP_SCHEME://$LDAP_HOST_NEW:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" "uid=$uid,$LDAP_DOMAIN" -w $LDAP_PASSWORD
+    #fi
 
   done
 }
