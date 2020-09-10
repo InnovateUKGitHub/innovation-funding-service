@@ -220,12 +220,12 @@ the user fills in Capital usage
     the user expands the section          Capital usage
 
 the user fills in Subcontracting costs
-    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting")
     the user enters text to a text field  css = .form-finances-subcontracting-company  SomeName
     the user enters text to a text field  css = input.govuk-input[name$=country]  Netherlands
     the user enters text to a text field  css = textarea.govuk-textarea[name$=role]  Quality Assurance
     the user enters text to a text field  css = input.govuk-input[name^=subcontracting][name$=cost]  1000
-    the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    the user clicks the button/link       jQuery = button:contains("Subcontracting")
 
 the user fills in Travel and subsistence
     the user clicks the button/link       jQuery = button:contains("Travel and subsistence")

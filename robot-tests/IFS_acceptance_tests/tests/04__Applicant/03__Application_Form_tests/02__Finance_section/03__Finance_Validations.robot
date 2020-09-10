@@ -158,7 +158,7 @@ Capital usage server side
 
 Subcontracting costs client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link       jQuery = button:contains("Subcontracting costs")
+    Given the user clicks the button/link       jQuery = button:contains("Subcontracting")
     When the user enters text to a text field   css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="cost"]    ${EMPTY}
     And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="name"]   ${EMPTY}
     And the user enters text to a text field    css = #accordion-finances-content-5 .form-row:nth-child(1) input[id$="country"]   ${EMPTY}
