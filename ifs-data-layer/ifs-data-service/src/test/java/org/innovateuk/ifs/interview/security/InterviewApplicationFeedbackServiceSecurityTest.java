@@ -26,7 +26,7 @@ public class InterviewApplicationFeedbackServiceSecurityTest extends BaseService
     public void downloadFeedback() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.downloadFeedback(1L),
-                COMP_ADMIN, PROJECT_FINANCE, APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER
+                COMP_ADMIN, PROJECT_FINANCE, APPLICANT, ASSESSOR, KNOWLEDGE_TRANSFER_ADVISER, MONITORING_OFFICER
         );
     }
 
