@@ -184,7 +184,7 @@ The user adds a new team member
   the user clicks the button/link        jQuery = button:contains("Invite to")
 
 internal user generates the GOL
-    [Arguments]  ${setDocusign}  ${projectID}
+    [Arguments]  ${projectID}
     the user navigates to the page     ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
     the user uploads the file          grantOfferLetter  ${gol_pdf}
     the user should see the element    jQuery = a:contains("GOL_template.pdf (opens in a new window)")
@@ -199,6 +199,12 @@ Applicant uploads the GOL
     the user navigates to the page        ${server}/project-setup/project/${projectID}
     the user clicks the button/link       jQuery = a:contains("Grant offer letter")
     the user uploads the file             signedGrantOfferLetter    ${valid_pdf}
+    the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
+    the user clicks the button/link       id = submit-gol-for-review
+
+Applicant uploads the contract
+    the user clicks the button/link       link = Contract
+    the user uploads the file             signedGrantOfferLetter    ${contract_pdf}
     the user clicks the button/link       css = .govuk-button[data-js-modal = "modal-confirm-grant-offer-letter"]
     the user clicks the button/link       id = submit-gol-for-review
 
@@ -242,7 +248,7 @@ the applicant is able to see the rejected GOL
     [Arguments]  ${projectID}
     the user navigates to the page            ${server}/project-setup/project/${projectID}
     the user clicks the button/link           link = Grant offer letter
-    the user should see the element           jQuery = .fail-alert h2:contains("Your grant offer letter has been rejected by Innovate UK")
+    the user should see the element           jQuery = .fail-alert h2:contains("Your signed grant offer letter has been rejected by Innovate UK")
 
 the user enters bank details
     the user clicks the button/link                      link = Bank details
@@ -796,3 +802,12 @@ confirm eligibility
     the user clicks the button/link                         css = #confirm-button        #Page confirmation button
     the user clicks the button/link                         name = confirm-eligibility   #Pop-up confirmation button
     the user clicks the button/link                         link = Return to finance checks
+
+the internal user approve the contract
+    [Arguments]  ${projectID}
+    log in as a different user          &{internal_finance_credentials}
+    the user navigates to the page      ${server}/project-setup-management/project/${projectID}/grant-offer-letter/send
+    the user selects the radio button   APPROVED  acceptGOL
+    the user clicks the button/link     id = submit-button
+    the user clicks the button/link     id = accept-signed-gol
+    the user should see the element     jQuery = .success-alert h2:contains("These documents have been approved.")

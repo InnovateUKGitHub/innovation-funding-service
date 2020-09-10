@@ -35,6 +35,8 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...
 ...               IFS-7960 KTA Dashboard
 ...
+...               IFS-8095 Content improvement for KTA journey
+...
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -198,7 +200,7 @@ Support cannot see internal users
     And the user should not see the element       jQuery = p:contains("users matching the search")
 
 Server side validation for invite new internal user
-    [Documentation]  IFS-27
+    [Documentation]  IFS-27 IFS-8095
     [Setup]  Log in as a different user                     &{ifs_admin_user_credentials}
     Given the user navigates to the page                    ${server}/management/admin/users/active
     When the user clicks the button/link                    link = Invite a new internal user
@@ -364,14 +366,14 @@ Deactivated innovation lead cannot be selected on initial details
     Then the user should not see the element  jQuery = option:contains("Ralph Nunes")
 
 Invite a new external user field validations
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                                            link = Manage users
     When the user clicks the button/link                                             link = Invite a new external user
     And the user clicks the button/link                                              jQuery = button:contains("Send invitation")
     Then the user should see invite a new external user field validation message
 
 KTN email domain validations
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user fills invite a new external user fields     Jake  Rayan  ${invalidEmail}
     When the user clicks the button/link                       jQuery = button:contains("Send invitation")
     Then the user should see a field and summary error         ${invalidKTNDomainValidationMessage}
@@ -383,7 +385,7 @@ Administrator can cancel the new external user details entered
     Then the user should see the element                            link = Invite a new external user
 
 Administrator can sucessfully save and return to the manage users page
-    [Documentation]  IFS-7975
+    [Documentation]  IFS-7975 IFS-8095
     Given the user clicks the button/link                     link = Invite a new external user
     When the user fills invite a new external user fields     Jake  Rayan  ${validKTNDomainEmail}
     And the user clicks the button/link                       jQuery = button:contains("Send invitation")

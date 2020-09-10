@@ -28,6 +28,9 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               IFS-951  Display 'Organisation type' against user
 ...
 ...               IFS-1841 Basic view of all 'external' IFS users
+...
+...               IFS-8095 Content improvement for KTA journey
+
 #create new competition to test the new application team view.
 Suite Setup       Custom Suite Setup
 Suite Teardown
@@ -85,7 +88,7 @@ Lead organisation already used email
     Then The user should see a field and summary error        This email is already in use.
 
 Lead Adds/Removes partner organisation
-    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590
+    [Documentation]    INFUND-1039 INFUND-7973 INFUND-7979 INFUND-8590 IFS-8095
     [Tags]  HappyPath
     Given the user clicks the button/link              link = Add a partner organisation
     And the user adds a partner organisation           Fannie May  Collaborator 2  ewan+10@hiveit.co.uk
@@ -132,7 +135,7 @@ Partner is still marked as pending after accepting invitation but not completing
     And the user clicks the button/link     link = Sign in
     And Logging in and Error Checking       &{lead_applicant_credentials}
     Then the user still sees pending user
-    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invite")
+    [Teardown]  the user clicks the button/link     jQuery = td:contains("Adrian") ~ td button:contains("Resend invitation")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -221,7 +224,7 @@ Lead applicant invites a non registered user in the same organisation
 Lead is able to resend invitation
     [Documentation]  IFS-5960
     [Tags]
-    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invite")
+    Given the user clicks the button/link    jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td button:contains("Resend invitation")
     Then the user should see the element     jQuery = td:contains("Roger Axe (pending for 0 days)") ~ td:contains("${test_mailbox_one}+inviteorg2@gmail.com")
     [Teardown]    Logout as user
 
