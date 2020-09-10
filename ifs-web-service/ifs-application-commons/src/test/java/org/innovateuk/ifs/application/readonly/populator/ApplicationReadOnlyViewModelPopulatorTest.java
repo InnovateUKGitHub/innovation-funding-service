@@ -41,6 +41,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.AsyncTestExpectationHelper.setupAsyncExpectations;
@@ -162,7 +163,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withFeedback(feedback)
                 .build();
 
-        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, Optional.of(processRole), questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture));
+        ApplicationReadOnlyData expectedData = new ApplicationReadOnlyData(application, competition, user, newArrayList(processRole), questions, formInputs, responses, questionStatuses, singletonList(assessorResponseFuture));
         ApplicationQuestionReadOnlyViewModel expectedRowModel = mock(ApplicationQuestionReadOnlyViewModel.class);
         FinanceReadOnlyViewModel expectedFinanceSummary = mock(FinanceReadOnlyViewModel.class);
 
