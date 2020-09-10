@@ -37,9 +37,9 @@
                        minlength="2"
                        maxlength="70"
                        pattern="\D{2,}"
-                       th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
+                       th:attr="data-minlength-errormessage=#{validation.invite.firstname.length.min(null,null,2)},
                                 data-pattern-errormessage=#{validation.standard.firstname.invalid},
-                                data-maxlength-errormessage=#{validation.standard.firstname.length.max},
+                                data-maxlength-errormessage=#{validation.invite.firstname.length.max},
                                 data-required-errormessage=#{validation.standard.firstname.required}" />
             </div>
             <div class="govuk-form-group govuk-!-width-one-third" th:classappend="${#fields.hasErrors('*{lastName}')} ? 'govuk-form-group--error'">
@@ -58,8 +58,8 @@
                        minlength="2"
                        maxlength="70"
                        pattern="\D{2,}"
-                       th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
-                                data-maxlength-errormessage=#{validation.standard.lastname.length.max},
+                       th:attr="data-minlength-errormessage=#{validation.invite.lastname.length.min(null,null,2)},
+                                data-maxlength-errormessage=#{validation.invite.lastname.length.max},
                                 data-pattern-errormessage=#{validation.standard.lastname.invalid},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
             </div>
