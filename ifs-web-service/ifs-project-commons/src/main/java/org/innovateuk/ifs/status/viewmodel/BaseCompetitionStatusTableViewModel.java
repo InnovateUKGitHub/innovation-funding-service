@@ -16,6 +16,7 @@ public abstract class BaseCompetitionStatusTableViewModel {
     private final List<InternalProjectSetupRow> rows;
     private final boolean canExportBankDetails;
     private final boolean isLoan;
+    private final boolean procurement;
     private final boolean externalFinanceUser;
     private final boolean projectFinanceUser;
     private final boolean ifsAdmin;
@@ -29,6 +30,7 @@ public abstract class BaseCompetitionStatusTableViewModel {
         this.canExportBankDetails = projectFinanceUser && columns.contains(BANK_DETAILS);
         this.projectFinanceUser = projectFinanceUser;
         this.isLoan = competitionResource.isLoan();
+        this.procurement = competitionResource.isProcurement();
         this.externalFinanceUser = externalFinanceUser;
         this.ifsAdmin = ifsAdmin;
     }
@@ -57,6 +59,10 @@ public abstract class BaseCompetitionStatusTableViewModel {
 
     public boolean isIsLoan() {
         return isLoan;
+    }
+
+    public boolean isProcurement() {
+        return procurement;
     }
 
     public boolean isExternalFinanceUser() {
