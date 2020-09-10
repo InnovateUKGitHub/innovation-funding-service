@@ -94,6 +94,10 @@ Additional associate support calculation
    And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="cost"]
    And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
 
+Subcontracting costs should not display in project costs
+    [Documentation]  IFS-7790
+    Then subcontracting fields should not display
+
 Travel and subsistence calculations
     [Documentation]  IFS-7790
     Given the user enters text to a text field     css = input[id^="travelRows"][id$="item"]    Travel
@@ -205,3 +209,9 @@ the user fills in associate salary
 expand the sections
     the user clicks the button/link       jQuery = button:contains("Associate employment")
     the user clicks the button/link       jQuery = button:contains("Associate development")
+
+subcontracting fields should not display
+    the user should not see the element     css = input[id^="subcontracting"][id$="cost"]
+    the user should not see the element     css = input[id^="subcontracting"][id$="name"]
+    the user should not see the element     css = input[id^="subcontracting"][id$="country"]
+    the user should not see the element     css = textarea[id^="subcontracting"][id$="role"]
