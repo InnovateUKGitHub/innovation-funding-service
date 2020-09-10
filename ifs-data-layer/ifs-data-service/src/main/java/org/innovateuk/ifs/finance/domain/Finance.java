@@ -137,6 +137,15 @@ public abstract class Finance {
             return FundingLevel.HUNDRED.getPercentage();
         }
 
+        boolean allMaximumsTheSame =
+                getCompetition().getGrantClaimMaximums().stream()
+                .map(max -> max.getMaximum())
+                .distinct()
+                .count() == 1;
+        if (allMaximumsTheSame) {
+            return getCompetition().getGrantClaimMaximums().get(0).getMaximum();
+        }
+
         return getCompetition().getGrantClaimMaximums()
                 .stream()
                 .filter(this::isMatchingGrantClaimMaximum)

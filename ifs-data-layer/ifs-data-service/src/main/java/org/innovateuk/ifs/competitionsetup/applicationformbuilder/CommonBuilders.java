@@ -63,12 +63,6 @@ public class CommonBuilders {
                 .withAssessorGuidanceDescription("Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the Finances overview section")
                 .withChildSections(newArrayList(
                         aSubSection()
-                                .withName("Finances overview")
-                                .withType(SectionType.OVERVIEW_FINANCES)
-                                .withQuestions(newArrayList(
-                                        aQuestion()
-                                )),
-                        aSubSection()
                                 .withName("Your project finances")
                                 .withType(SectionType.FINANCE)
                                 .withChildSections(newArrayList(
@@ -96,6 +90,12 @@ public class CommonBuilders {
                                                 .withQuestions(newArrayList(
                                                         aQuestionWithMultipleStatuses()
                                                 ))
+                                )),
+                        aSubSection()
+                                .withName("Finances overview")
+                                .withType(SectionType.OVERVIEW_FINANCES)
+                                .withQuestions(newArrayList(
+                                        aQuestion()
                                 ))
                 ));
     }

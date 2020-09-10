@@ -89,7 +89,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-
         Optional<Competition> competitionOptional = competitionRepository.findById(competitionId);
         if (!competitionOptional.isPresent() || competitionIsNotInSetupState(competitionOptional.get())) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
@@ -102,14 +101,12 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         setDefaultOrganisationConfig(competition);
         setDefaultApplicationConfig(competition);
 
-        CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
-
-        overrideTermsAndConditionsForNonGrantCompetitions(competition);
-
         setDefaultProjectDocuments(competition);
 
         competitionInitialiser.initialiseFinanceTypes(competition);
         competitionInitialiser.initialiseProjectSetupColumns(competition);
+
+        CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
 
         List<SectionBuilder> sectionBuilders = template.sections();
 
@@ -118,6 +115,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
 
         template.copyTemplatePropertiesToCompetition(competition);
+        overrideTermsAndConditionsForNonGrantCompetitions(competition);
 
         questionPriorityOrderService.persistAndPrioritiseSections(competition, competition.getSections(), null);
         return serviceSuccess(competitionRepository.save(competition));
