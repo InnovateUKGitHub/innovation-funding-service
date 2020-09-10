@@ -469,7 +469,7 @@ public class AssessmentOverviewControllerTest  extends AbstractApplicationMockMV
         when(applicantRestService.getSection(application1ProcessRoles.get(0).getUser(), applicationResource.getId(), sectionResources.get(7).getId())).thenReturn(section);
         YourProjectCostsViewModel viewModel = mock(YourProjectCostsViewModel.class);
         when(yourProjectCostsViewModelPopulator.populate(applicationResource.getId(), sectionResources.get(7).getId(), organisations.get(0).getId(), true)).thenReturn(viewModel);
-        when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0).getId())).thenReturn(new YourProjectCostsForm());
+        when(yourProjectCostsFormPopulator.populateForm(applicationResource.getId(), organisations.get(0))).thenReturn(new YourProjectCostsForm());
         when(applicationRestService.getApplicationById(APPLICATION_ID)).thenReturn(restSuccess(applicationResource));
 
         MvcResult result = mockMvc.perform(get("/application/{applicationId}/detailed-finances/organisation/{organisationId}", applicationResource.getId(), organisation.getId()))
