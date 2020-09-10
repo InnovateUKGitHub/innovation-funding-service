@@ -180,7 +180,7 @@ Comp Admin user uploads new grant offer letter
     Then the user should not see the element    css = [name = "removeGrantOfferLetterClicked"]
     When the user navigates to the page         ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
     Then the user should see the element        jQuery = tr:contains("${Elbow_Grease_Title}") td:nth-of-type(8).status.waiting   # GOL
-    And the user reads his email                ${Elbow_Grease_Lead_PM_Email}  ${PROJECT_SETUP_COMPETITION_NAME}: Your grant offer letter is available for project ${Elbow_Grease_Application_No}  We are pleased to inform you that your grant offer letter is now ready for you to sign
+    And the user reads his email                ${Elbow_Grease_Lead_PM_Email}  Your grant offer letter is available for project ${Elbow_Grease_Application_No}  We are pleased to inform you that your grant offer letter is now ready for you to sign
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
@@ -189,7 +189,7 @@ PM can view the grant offer letter page
     Given the user clicks the button/link            link = ${Elbow_Grease_Title}
     Then the user should see the element             css = li.require-action:last-of-type
     When the user clicks the button/link             link = Grant offer letter
-    Then the user should see the element             jQuery = p:contains("The grant offer letter has been provided by Innovate UK.")
+    Then the user should see the element             jQuery = p:contains("We have provided the grant offer letter")
     And the user should see the element              jQuery = label:contains(Upload)
     And the user goes back to the previous page
     When the user clicks the button/link             link = View the status of partners
@@ -479,7 +479,7 @@ Non lead cannot see the signed GOL
     [Tags]
     Given the user navigates to the page    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer
     Then the user should not see the element     jQUery = h2:contains("Signed grant offer letter")
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/signed-grant-offer-letter    ${403_error_message}
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${Elbow_Grease_Project_Id}/offer/signed-download    ${403_error_message}
 
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375

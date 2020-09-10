@@ -36,13 +36,11 @@
                     details have been approved.</strong></p></div>
             </th:block>
 
-            <p class="govuk-!-margin-top-6" th:if="${bankDetails?.approved}">Your details have been verified and can be
+            <p class="govuk-body govuk-!-margin-top-6" th:if="${bankDetails?.approved}">Your details have been verified and can be
                 used for this project.</p>
 
             <th:block th:if="${bankDetails == null}">
-                <p class="govuk-body govuk-!-margin-top-6">In order for us to pay your grant we need the bank details of
-                    your organisation.</p>
-                <p class="govuk-body">The bank account must belong to the organisation listed.</p>
+                <p class="govuk-body govuk-!-margin-top-6">We need your organisation's bank details to pay out your funds.</p>
             </th:block>
 
 
@@ -56,8 +54,7 @@
             </p>
 
             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Account details</h2>
-            <p th:if="${bankDetails == null}" class="govuk-body govuk-hint">Please enter the bank account that you wish
-                to use to receive the grant.</p>
+            <p th:if="${bankDetails == null}" class="govuk-body govuk-hint">The bank account must belong to your organisation.</p>
 
             <!--/* open */-->
             <th:block th:unless="${readonly}">

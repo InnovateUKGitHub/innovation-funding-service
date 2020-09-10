@@ -12,10 +12,12 @@ import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.management.application.view.populator.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.application.view.populator.ManagementApplicationPopulator;
 import org.innovateuk.ifs.management.application.view.viewmodel.ApplicationOverviewIneligibilityViewModel;
 import org.innovateuk.ifs.management.application.view.viewmodel.ManagementApplicationViewModel;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -67,6 +69,12 @@ public class ManagementApplicationPopulatorTest {
     @Mock
     private FileEntryRestService fileEntryRestService;
 
+    @Mock
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Mock
+    private ProjectService projectService;
+
     @Test
     public void populate() {
         CompetitionResource competition = newCompetitionResource()
@@ -85,6 +93,8 @@ public class ManagementApplicationPopulatorTest {
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(applicationReadOnlyViewModelPopulator.populate(application, competition, user, defaultSettings())).thenReturn(mock(ApplicationReadOnlyViewModel.class));
         when(applicationOverviewIneligibilityModelPopulator.populateModel(application)).thenReturn(mock(ApplicationOverviewIneligibilityViewModel.class));
+        when(projectService.getByApplicationId(application.getId())).thenReturn(null);
+        when(interviewAssignmentRestService.isAssignedToInterview(application.getId())).thenReturn(restSuccess(false));
 
         FormInputResource appendix = newFormInputResource().build();
         FormInputResponseResource response = newFormInputResponseResource()
