@@ -137,7 +137,7 @@ Question scores and application details are correct
     And the application details are correct
 
 User can see the Application details along with feedback
-    [Documentation]    INF-2473  IFS-2256
+    [Documentation]    INF-2473  IFS-2256  IFS-8066
     [Tags]
     Given the user should see the element                          jQuery = h2:contains("Application details")
     And the user should see the element                            jQuery = dt:contains("Application name") ~ dd:contains("${INFORM_COMPETITION_NAME_2}")
@@ -145,7 +145,7 @@ User can see the Application details along with feedback
     Then the user should see the element                            jQuery = h2:contains("Application details")
 
 User can see feedback to individual questions
-    [Documentation]    INFUND-8005
+    [Documentation]    INFUND-8005  IFS-8066
     [Tags]  HappyPath
     Given the user clicks the button/link            jQuery = button:contains("6. Innovation")
     Then the user should see the element             jQuery = p[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")

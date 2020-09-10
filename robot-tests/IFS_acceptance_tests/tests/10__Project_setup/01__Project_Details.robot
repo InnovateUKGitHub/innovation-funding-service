@@ -118,7 +118,7 @@ Lead partner can click the Dashboard link
     And the user can see the application overview
 
 Lead partner is able to see finances without an error
-    [Documentation]  INFUND-7634
+    [Documentation]  INFUND-7634  IFS-8066
     [Tags]
     Given the user clicks the button/link    jQuery = button:contains("Finances summary")
     When the user clicks the button/link     link = View finances

@@ -134,14 +134,14 @@ An assessor accept the application for panel
     [Teardown]  the user clicks the button/link  link = Back to panel overview
 
 An assessor view application assigned for interview panel
-    [Documentation]  IFS-6416
+    [Documentation]  IFS-6416  IFS-8066
     Given the user navigates to the page    ${server}/assessment/assessor/dashboard/competition/${EOI_comp_ID}/interview
     When the user clicks the button/link    link = ${EOI_application1}
     Then the user navigates to the page     ${server}/application/${EOI_application_id}/summary
     And the user should see the element     jQuery = h1:contains("Application overview")
 
 An applicant see the application in interview panel
-    [Documentation]  IFS-6416
+    [Documentation]  IFS-6416  IFS-8066
     Given log in as a different user       &{lead_applicant_credentials}
     When the user clicks the button/link   jQuery = ul li a:contains("${EOI_application1}")
     Then the user navigates to the page    ${server}/application/${EOI_application_id}/summary

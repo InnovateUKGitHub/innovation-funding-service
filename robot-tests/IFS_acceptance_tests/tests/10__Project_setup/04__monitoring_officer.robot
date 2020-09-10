@@ -137,7 +137,7 @@ Monitoring officer see the project setup veiw for assigned project
     Then the MO user is able to access all of the links
 
 MO sees the application feedback
-    [Documentation]  IFS-5298
+    [Documentation]  IFS-5298  IFS-8066
     Given the user clicks the button/link  link = view application feedback
     Then the user should see the element   jQuery = h1:contains("Application overview")
 
@@ -215,7 +215,7 @@ New MO see the project setup view for assigned project
     Then the user should see the project set view
 
 Mo is able to view application feedback on a competition which as been through assessment and interview panels
-    [Documentation]  IFS-7230
+    [Documentation]  IFS-7230  IFS-8066
     [Setup]  release feedback on inform comp
     Given the user clicks the button/link   link = view application feedback
     Then the user should see the element    jQuery = h1:contains("Application overview")
