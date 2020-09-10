@@ -256,14 +256,14 @@ Organisations(KB plus business) can see each other's finance summary calculation
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                       link = Return to finances
     Then the user should see KTP finance sections are complete
-    And lead and partner can see each other's finance summary calculations
+    And the user can view lead and partner finance summary calculations
     And the user should not see the element                                     jQuery = p:contains("${financeBanerText}")
 
 Partner organisation can see lead project cost summary and finance summary of each other's (KB and businesses) in finance overview section
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                     link = Back to application overview
     When the user clicks the button/link                                      link = Finances overview
-    Then lead and partner can see each other's finance summary calculations
+    Then the user can view lead and partner finance summary calculations
     And the user can see project cost breakdown of lead organisation
 
 Lead organisation(KB) can view other organisations's finance summary calculations on project finances page
@@ -271,14 +271,14 @@ Lead organisation(KB) can view other organisations's finance summary calculation
     Given Log in as a different user                                          &{ktpLeadApplicantCredentials}
     When the user clicks the button/link                                      link = ${ktpApplicationTitle}
     And the user clicks the button/link                                       link = Your project finances
-    Then lead and partner can see each other's finance summary calculations
+    Then the user can view lead and partner finance summary calculations
     And the user should not see the element                                   jQuery = p:contains("${financeBanerText}")
 
 Lead organisation can see lead project cost summary and finance summary of each other's (KB and businesses) in finance overview section
     [Documentation]  IFS-7958
     Given the user clicks the button/link                                     link = Back to application overview
     When the user clicks the button/link                                      link = Finances overview
-    Then lead and partner can see each other's finance summary calculations
+    Then the user can view lead and partner finance summary calculations
     And the user can see project cost breakdown of lead organisation
 
 System should display a validation if no email address entered while inviting the KTA
@@ -358,9 +358,9 @@ The KTA cannot edit any application section
 
 The KTA is able to see lead and non lead applicant's project finances
     [Documentation]  IFS-7983  IFS-7958
-    Given the user clicks the button/link                               id = accordion-questions-heading-3-1
-    When the user clicks the button/link                                jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
-    Then KTA can view lead and partner finance summary calculations
+    Given the user clicks the button/link                                    id = accordion-questions-heading-3-1
+    When the user clicks the button/link                                     jQuery = div:contains("${ktpOrgName}") ~ a:contains("View finances")
+    Then the user can view lead and partner finance summary calculations
 
 The KTA is able to see lead applicant's project costs summary
     [Documentation]  IFS-7983  IFS-7958
@@ -781,20 +781,6 @@ the user should see KTP finance sections are complete
     the user should see the element     css = li:nth-of-type(2) .task-status-complete
     the user should see the element     css = li:nth-of-type(3) .task-status-complete
 
-lead and partner can see each other's finance summary calculations
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("246")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("25")
-    the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("221")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("90")
-    the user should see the element     jQuery = th:contains("${newPartnerOrgName}") ~ td:contains("20,000")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("221")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("90")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
-    the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
-
 the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = td:contains("Associate Employment")+td:contains("123")
     the user should see the element     jQuery = td:contains("Associate development")+td:contains("123")
@@ -807,7 +793,7 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = td:contains("Other costs")+td:contains("0")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
 
-KTA can view lead and partner finance summary calculations
+the user can view lead and partner finance summary calculations
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("246")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("10.00%")
     the user should see the element     jQuery = th:contains("${ktpOrgName}") ~ td:contains("25")
