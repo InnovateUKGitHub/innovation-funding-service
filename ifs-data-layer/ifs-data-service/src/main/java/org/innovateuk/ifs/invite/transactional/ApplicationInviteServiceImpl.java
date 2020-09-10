@@ -233,7 +233,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
             return false;
         }
 
-        return application.getProcessRoles()
+        return !application.getProcessRoles()
                 .stream()
                 .filter(p -> p.getOrganisationId() != null)
                 .anyMatch(p -> p.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId()));
