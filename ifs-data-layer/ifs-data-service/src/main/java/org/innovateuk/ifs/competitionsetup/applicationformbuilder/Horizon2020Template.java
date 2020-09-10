@@ -49,6 +49,9 @@ public class Horizon2020Template implements CompetitionTemplate {
                                 aQuestion()
                                     .withShortName("Horizon 2020 grant agreement")
                                     .withName("Horizon 2020 grant agreement")
+                                    .withAssignEnabled(false)
+                                    .withMultipleStatuses(false)
+                                    .withMarkAsCompletedEnabled(true)
                                     .withType(QuestionType.LEAD_ONLY)
                                     .withQuestionSetupType(QuestionSetupType.GRANT_AGREEMENT),
                                 publicDescription(),
