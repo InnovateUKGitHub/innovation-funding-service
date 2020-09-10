@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +28,31 @@ public class ApplicationPrintPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
     public String print(final Long applicationId,
                         Model model, UserResource user) {
 
         ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
         CompetitionResource competition = competitionRestService.getCompetitionById(application.getCompetition()).getSuccess();
         ApplicationReadOnlySettings settings = defaultSettings()
-                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition));
+                .setIncludeAllAssessorFeedback(userCanViewFeedback(user, competition, application));
 
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(applicationId, user, settings);
         model.addAttribute("model", applicationReadOnlyViewModel);
         return "application/print";
     }
 
-    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition) {
-        return user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement();
+    private boolean userCanViewFeedback(UserResource user, CompetitionResource competition, ApplicationResource application) {
+        return (user.hasRole(Role.PROJECT_FINANCE) && competition.isProcurement()) ||
+                (user.hasAnyRoles(Role.APPLICANT, Role.ASSESSOR, Role.MONITORING_OFFICER, Role.STAKEHOLDER) && shouldDisplayFeedback(competition, application));
+    }
+
+    private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
+        boolean isApplicationAssignedToInterview = interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess();
+        boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
+        return application.isSubmitted()
+                && feedbackAvailable;
     }
 }
