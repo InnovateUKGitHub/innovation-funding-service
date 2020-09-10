@@ -2,6 +2,9 @@
 Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-7959  KTP Your Project Finances - Links for Detailed Finances
+...
+...               IFS-8157  KTP Project costs - Subcontracting costs
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -95,7 +98,7 @@ Additional associate support calculation
    And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
 
 Subcontracting costs should not display in project costs
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-8157
     Then subcontracting fields should not display
 
 Travel and subsistence calculations
