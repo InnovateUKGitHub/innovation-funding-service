@@ -1414,7 +1414,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-5">
-                    Subcontracting costs
+                    Subcontracting
                 </span>
                 <span class="finance-total" data-mirror="#section-total-subcontracting"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2733,7 +2733,7 @@
         <div class="govuk-accordion__section-header">
             <h3 class="govuk-accordion__section-heading">
                 <span class="govuk-accordion__section-button" id="accordion-finances-heading-9">
-                    Associate estates cost
+                    Associates estates costs
                 </span>
                 <span class="finance-total" data-mirror="#section-total-estate-costs"></span>
                 <span th:if="${model.internal}" class="finance-total" data-calculation-format="percentage"
@@ -2790,7 +2790,7 @@
                     </p>
                 </div>
                 <h4 class="govuk-heading-s alignright section-total-summary">
-                    Total estates costs
+                    Total associates estates costs
                     <span class="govuk-heading-s"
                           data-mirror="#section-total-estate-costs"
                           th:text="'£' + ${#numbers.formatInteger(form.totalEstateCosts, 0,'DEFAULT')}"></span>
@@ -2892,7 +2892,7 @@
             </tbody>
             <tfoot class="govuk-table__body">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">Total estates costs</th>
+                <th class="govuk-table__header" scope="row">Total associates estates costs</th>
                 <td class="govuk-table__cell govuk-table__cell--numeric" id="section-total-estate-costs"
                     th:attr="data-calculation-rawvalue=${form.totalEstateCosts}">
                     &pound;<th:block th:text="${#numbers.formatInteger(form.totalEstateCosts, 0, 'DEFAULT')}"/>
@@ -3355,7 +3355,7 @@
                         </tbody>
                         <tfoot class="govuk-table__body">
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" colspan="2" scope="row">Total additional company cost estimations</th>
+                            <th class="govuk-table__header" colspan="2" scope="row">Total additional company cost estimates</th>
                             <td class="govuk-table__cell govuk-table__cell--numeric"
                                 id="additional-company-costs-total"
                                 th:attr="data-calculation-rawvalue=${form.additionalCompanyCostForm.total}">
@@ -3366,7 +3366,7 @@
                     </table>
                     <th:block th:unless="${model.isReadOnly(financeRowType)}" >
                         <h4 class="govuk-heading-s alignright section-total-summary">
-                            Total additional company cost estimations
+                            Total additional company cost estimates
                             <span class="govuk-heading-s"
                                   data-mirror="#additional-company-costs-total"
                                   th:text="'£' + ${#numbers.formatInteger(form.additionalCompanyCostForm.total, 0,'DEFAULT')}"></span>
