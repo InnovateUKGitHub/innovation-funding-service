@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.application.feedback.populator;
+package org.innovateuk.ifs.application.summary.populator;
 
-import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
+import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
