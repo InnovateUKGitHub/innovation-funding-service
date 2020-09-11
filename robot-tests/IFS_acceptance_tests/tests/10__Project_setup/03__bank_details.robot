@@ -26,6 +26,9 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               IFS-2398 - 2164 Add count of outstanding bank details checks to the task management link
 ...
 ...               IFS-2731  PS - External - Submitting Bank details with manually added Oper Address leads to ISE
+...
+...               IFS-8197  SBRI Type 4: General content changes for procurements
+...
 Suite Setup       the user logs-in in new browser    &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -46,7 +49,7 @@ Project Finance should not be able to access bank details page
     Then the user is not able to access bank details
 
 Applicant user is unable to submit blank and invaild bank details
-    [Documentation]   INFUND-3010, INFUND-6018, INFUND-7173, IFS-2731, INFUND-6887, INFUND-6482, INFUND-3282
+    [Documentation]   INFUND-3010, INFUND-6018, INFUND-7173, IFS-2731, INFUND-6887, INFUND-6482, INFUND-3282  IFS-8197
     [Tags]  HappyPath
     [Setup]  log in as a different user   &{lead_applicant_credentials_bd}
     Given an applicant navigates to the Bank details page
@@ -314,7 +317,7 @@ An applicant navigates to the Bank details page
     the user should see the element     jQuery = h1:contains("Project team status")
     the user should see the element     css = #table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     the user clicks the button/link     link = Set up your project
-    the user should see the element     jQuery = h2:contains("Bank details") ~ p:contains("We need bank details for those partners eligible for funding.")
+    the user should see the element     jQuery = h2:contains("Bank details") ~ p:contains("We need your organisation's bank details.")
     the user clicks the button/link     link = Bank details
     the user should see the element     jQuery = .govuk-button:contains("Submit bank account details")
     the user should see the element     jQuery = h1:contains("Bank details")

@@ -25,6 +25,7 @@ public class ProjectDetailsViewModel {
     private boolean userLeadPartner;
     private boolean collaborativeProject;
     private boolean ktpCompetition;
+    private boolean procurementCompetition;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                          List<Long> usersPartnerOrganisations,
@@ -48,6 +49,7 @@ public class ProjectDetailsViewModel {
         this.userLeadPartner = userIsLeadPartner;
         this.collaborativeProject = project.isCollaborativeProject();
         this.ktpCompetition = competitionResource.isKtp();
+        this.procurementCompetition = competitionResource.isProcurement();
     }
 
     public ProjectResource getProject() {
@@ -117,5 +119,9 @@ public class ProjectDetailsViewModel {
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 }
