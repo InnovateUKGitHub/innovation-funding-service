@@ -22,7 +22,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private final boolean loanCompetition;
     private final boolean investorPartnershipCompetition;
     private final boolean collaborativeProject;
-    private final boolean showApplicationFeedbackLink;
+    private final boolean showApplicationSummaryLink;
     private final List<SetupStatusStageViewModel> stages;
     private final boolean projectManager;
     private final boolean projectFinanceContact;
@@ -33,7 +33,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                                 boolean monitoringOfficer,
                                 List<SetupStatusStageViewModel> stages,
                                 boolean loanCompetition,
-                                boolean showApplicationFeedbackLink,
+                                boolean showApplicationSummaryLink,
                                 boolean investorPartnershipCompetition,
                                 boolean projectManager,
                                 boolean projectFinanceContact,
@@ -50,7 +50,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         this.loanCompetition = loanCompetition;
         this.investorPartnershipCompetition = investorPartnershipCompetition;
         this.collaborativeProject = project.isCollaborativeProject();
-        this.showApplicationFeedbackLink = showApplicationFeedbackLink;
+        this.showApplicationSummaryLink = showApplicationSummaryLink;
         this.projectManager = projectManager;
         this.projectFinanceContact = projectFinanceContact;
         this.postAwardService = postAwardService;
@@ -101,8 +101,8 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
         return collaborativeProject;
     }
 
-    public boolean isShowApplicationFeedbackLink() {
-        return showApplicationFeedbackLink;
+    public boolean isShowApplicationSummaryLink() {
+        return showApplicationSummaryLink;
     }
 
     public boolean shouldShowStatus(SetupStatusStageViewModel stage) {
