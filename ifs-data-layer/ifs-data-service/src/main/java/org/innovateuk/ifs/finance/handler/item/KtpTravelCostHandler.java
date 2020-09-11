@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.KTP_TRAVEL;
 
 /**
@@ -21,17 +22,17 @@ public class KtpTravelCostHandler extends FinanceRowHandler<KtpTravelCost> {
 
     @Override
     public ApplicationFinanceRow toApplicationDomain(KtpTravelCost travel) {
-        return new ApplicationFinanceRow(travel.getId(), null, travel.getType().name(), travel.getDescription(), travel.getQuantity(), travel.getCost(), null, travel.getCostType());
+        return new ApplicationFinanceRow(travel.getId(), null, ofNullable(travel.getType()).map(KtpTravelCostType::name).orElse(null), travel.getDescription(), travel.getQuantity(), travel.getCost(), null, travel.getCostType());
     }
 
     @Override
     public ProjectFinanceRow toProjectDomain(KtpTravelCost travel) {
-        return new ProjectFinanceRow(travel.getId(), null, travel.getType().name(), travel.getDescription(), travel.getQuantity(), travel.getCost(), null, travel.getCostType());
+        return new ProjectFinanceRow(travel.getId(), null, ofNullable(travel.getType()).map(KtpTravelCostType::name).orElse(null), travel.getDescription(), travel.getQuantity(), travel.getCost(), null, travel.getCostType());
     }
 
     @Override
     public KtpTravelCost toResource(FinanceRow cost) {
-        return new KtpTravelCost(cost.getId(), KtpTravelCostType.valueOf(cost.getItem()), cost.getDescription(), cost.getCost(), cost.getQuantity(), cost.getTarget().getId());
+        return new KtpTravelCost(cost.getId(), ofNullable(cost.getItem()).map(KtpTravelCostType::valueOf).orElse(null), cost.getDescription(), cost.getCost(), cost.getQuantity(), cost.getTarget().getId());
     }
 
     @Override

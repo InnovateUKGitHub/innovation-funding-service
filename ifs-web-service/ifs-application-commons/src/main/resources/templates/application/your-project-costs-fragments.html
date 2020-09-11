@@ -3012,8 +3012,12 @@
             <label th:for="__${path}__.type">
                 <span class="govuk-visually-hidden">Purpose of journey or description of subsistence cost</span>
             </label>
+            <th:block
+                th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.type)"/>
             <select class="govuk-select"
                     required="required"
+                    data-required-errormessage="#{validation.ktp.travel.type.required}"
+                    th:errorclass="govuk-select--error"
                     th:name="__${path}__.type">
                 <option disabled="disabled" value="" th:selected="${row.type == null}">Select</option>
                 <option
@@ -3120,7 +3124,7 @@
             <tbody class="govuk-table__body">
             <th:block th:each="entry : *{ktpTravelCostRows}" th:with="cost=${entry.value}">
                 <tr class="govuk-table__row" th:unless="${cost.blank}">
-                    <td class="govuk-table__cell" th:text="${cost.type.text}"></td>
+                    <td class="govuk-table__cell" th:text="${cost.type?.text}"></td>
                     <td class="govuk-table__cell" th:text="${cost.description}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric"  th:text="${cost.times != null ? #numbers.formatInteger(cost.times,0,'DEFAULT') : '0'}"></td>
                     <td class="govuk-table__cell govuk-table__cell--numeric" th:text="${cost.eachCost != null ? #numbers.formatInteger(cost.eachCost,0,'DEFAULT') : '0'}"></td>

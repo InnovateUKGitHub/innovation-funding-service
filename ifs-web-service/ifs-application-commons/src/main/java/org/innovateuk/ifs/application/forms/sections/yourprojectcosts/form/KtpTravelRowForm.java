@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.*;
 
 public class KtpTravelRowForm extends AbstractCostRowForm<KtpTravelCost> {
 
-    @NotNull(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = "{validation.ktp.travel.type.required}")
     private KtpTravelCostType type;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
