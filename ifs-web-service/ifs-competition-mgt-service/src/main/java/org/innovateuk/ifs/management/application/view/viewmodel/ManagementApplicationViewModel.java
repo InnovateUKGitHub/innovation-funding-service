@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.application.view.viewmodel;
 
 import org.innovateuk.ifs.application.readonly.viewmodel.ApplicationReadOnlyViewModel;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDate;
@@ -32,7 +31,6 @@ public class ManagementApplicationViewModel {
     private final boolean externalFinanceUser;
     private final boolean ktpCompetition;
     private final boolean projectWithdrawn;
-    private final InterviewFeedbackViewModel interviewFeedbackViewModel;
 
     public ManagementApplicationViewModel(ApplicationResource application,
                                           CompetitionResource competition,
@@ -44,8 +42,7 @@ public class ManagementApplicationViewModel {
                                           boolean support,
                                           Long projectId,
                                           boolean externalFinanceUser,
-                                          boolean projectWithdrawn,
-                                          InterviewFeedbackViewModel interviewFeedbackViewModel) {
+                                          boolean projectWithdrawn) {
         this.application = application;
         this.competition = competition;
         this.ineligibility = ineligibility;
@@ -57,7 +54,6 @@ public class ManagementApplicationViewModel {
         this.projectId = projectId;
         this.externalFinanceUser = externalFinanceUser;
         this.projectWithdrawn = projectWithdrawn;
-        this.interviewFeedbackViewModel = interviewFeedbackViewModel;
 
         this.competitionName = competition.getName();
         this.applicationName = application.getName();
@@ -69,10 +65,6 @@ public class ManagementApplicationViewModel {
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
         this.ktpCompetition = competition.isKtp();
-    }
-
-    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
-        return interviewFeedbackViewModel;
     }
 
     public boolean isProjectWithdrawn() { return projectWithdrawn; }

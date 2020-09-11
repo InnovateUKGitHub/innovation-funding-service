@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
-import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -104,14 +103,8 @@ public class ManagementApplicationPopulator {
             settings.setIncludeStatuses(true);
         }
 
-        final InterviewFeedbackViewModel interviewFeedbackViewModel;
-        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
-        } else {
-            interviewFeedbackViewModel = null;
-        }
-
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
+        applicationReadOnlyViewModel.setDownloadBaseURL("/management/competition/"+ competition.getId() +"/application/" + applicationId);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 
         Long projectId = null;
@@ -130,8 +123,7 @@ public class ManagementApplicationPopulator {
                 support,
                 projectId,
                 user.hasRole(Role.EXTERNAL_FINANCE),
-                isProjectWithdrawn(applicationId),
-                interviewFeedbackViewModel
+                isProjectWithdrawn(applicationId)
         );
     }
 

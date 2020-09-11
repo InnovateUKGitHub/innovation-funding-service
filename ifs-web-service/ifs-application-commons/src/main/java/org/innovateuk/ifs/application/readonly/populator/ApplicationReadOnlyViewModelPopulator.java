@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
+import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
@@ -56,6 +58,12 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
+
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
+
+    @Autowired
+    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
     @Autowired
     private SectionRestService sectionRestService;
@@ -114,7 +122,15 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        return new ApplicationReadOnlyViewModel(settings, sectionViews, settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO, settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
+        ApplicationReadOnlyViewModel ApplicationReadOnlyViewModel = new ApplicationReadOnlyViewModel(settings,
+                sectionViews,
+                settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
+                settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
+
+        ApplicationReadOnlyViewModel.setInterviewFeedbackViewModel(interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess() ?
+                interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased()) : null);
+
+        return ApplicationReadOnlyViewModel;
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {

@@ -31,22 +31,17 @@ public class ApplicationSummaryViewModelPopulator {
     @Autowired
     private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
+    private InterviewFeedbackViewModel interviewFeedbackViewModel;
+
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
-
-        final InterviewFeedbackViewModel interviewFeedbackViewModel;
-        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
-        } else {
-            interviewFeedbackViewModel = null;
-        }
+        applicationReadOnlyViewModel.setDownloadBaseURL("/application/" + application.getId() + "/summary");
 
         return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
                                                application,
                                                competition,
-                                               isProjectWithdrawn(application.getId()),
-                                                interviewFeedbackViewModel);
+                                               isProjectWithdrawn(application.getId()));
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {
@@ -54,6 +49,10 @@ public class ApplicationSummaryViewModelPopulator {
         boolean feedbackAvailable = competition.getCompetitionStatus().isFeedbackReleased() || isApplicationAssignedToInterview;
         return application.isSubmitted()
                 && feedbackAvailable;
+    }
+
+    public InterviewFeedbackViewModel getInterviewFeedbackViewModel() {
+        return interviewFeedbackViewModel;
     }
 
     private boolean isProjectWithdrawn(Long applicationId) {
