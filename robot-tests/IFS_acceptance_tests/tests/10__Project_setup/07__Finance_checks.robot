@@ -1273,14 +1273,14 @@ Project finance user amends capital usage details in eligibility for lead
     And the user should not see the element         css = .govuk-button[name = save-eligibility]
 
 Project finance user amends subcontracting usage details in eligibility for lead
-    When the user expands the section               Subcontracting costs
-    Then verify percentage and total                Subcontracting costs  £90,000
+    When the user expands the section               Subcontracting
+    Then verify percentage and total                Subcontracting  £90,000
     When the user clicks the button/link            jQuery = #accordion-finances-content-5 a:contains("Edit")
     And the user adds subcontracting data into row  1    test    10600
-    Then verify percentage and total                Subcontracting costs  £10,600
+    Then verify percentage and total                Subcontracting  £10,600
     When the user clicks the button/link            jQuery = button:contains("Add another subcontractor")
     And the user adds subcontracting data into row  2    test    9400
-    Then verify percentage and total                Subcontracting costs  £20,000
+    Then verify percentage and total                Subcontracting  £20,000
     When the user clicks the button/link            css = #subcontracting div:nth-child(2) button
     When the user clicks the button/link            css = .govuk-button[name = save-eligibility]
     Then verify total costs of project              £162,150
@@ -1404,7 +1404,7 @@ the user verifies the financial sub-totals for external version under the Detail
     the user should see the element     jQuery = span:contains("${overheads}") + button:contains("Overhead costs")
     the user should see the element     jQuery = span:contains("${materials}") + button:contains("Materials")
     the user should see the element     jQuery = span:contains("${capital_usage}") + button:contains("Capital usage")
-    the user should see the element     jQuery = span:contains("${sub_contracting}") + button:contains("Subcontracting costs")
+    the user should see the element     jQuery = span:contains("${sub_contracting}") + button:contains("Subcontracting")
     the user should see the element     jQuery = span:contains("${travel_and_subsistence}") + button:contains("Travel and subsistence")
     the user should see the element     jQuery = span:contains("${other_costs}") + button:contains("Other costs")
 
