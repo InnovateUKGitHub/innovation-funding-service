@@ -40,7 +40,8 @@ public class DocumentsPopulator {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetitionDocuments(project.getCompetition());
+        CompetitionResource competition = getCompetition(project.getCompetition());
+        List<CompetitionDocumentResource> configuredProjectDocuments = competition.getCompetitionDocuments();
 
         List<PartnerOrganisationResource> partnerOrganisations =
                 partnerOrganisationRestService.getProjectPartnerOrganisations(project.getId()).getSuccess();
@@ -56,7 +57,7 @@ public class DocumentsPopulator {
                 new ProjectDocumentStatus(configuredDocument.getId(), configuredDocument.getTitle(),
                         getProjectDocumentStatus(projectDocuments, configuredDocument.getId())));
 
-        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId));
+        return new AllDocumentsViewModel(project, documents, isProjectManager(loggedInUserId, projectId), competition.isProcurement());
     }
 
     private DocumentStatus getProjectDocumentStatus(List<ProjectDocumentResource> projectDocuments, Long documentConfigId) {
@@ -70,7 +71,7 @@ public class DocumentsPopulator {
 
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
 
-        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetitionDocuments(project.getCompetition());
+        List<CompetitionDocumentResource> configuredProjectDocuments = getCompetition(project.getCompetition()).getCompetitionDocuments();
 
         CompetitionDocumentResource configuredProjectDocument =
                 simpleFindAny(configuredProjectDocuments,
@@ -106,9 +107,7 @@ public class DocumentsPopulator {
                 .orElse(false);
     }
 
-    private List<CompetitionDocumentResource> getCompetitionDocuments(long competitionId) {
-        return competitionRestService.getCompetitionById(competitionId)
-                .andOnSuccessReturn(CompetitionResource::getCompetitionDocuments)
-                .getSuccess();
+    private CompetitionResource getCompetition(long competitionId) {
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 }

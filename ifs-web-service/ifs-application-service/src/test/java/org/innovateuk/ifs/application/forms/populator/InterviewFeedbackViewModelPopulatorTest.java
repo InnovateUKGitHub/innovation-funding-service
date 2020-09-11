@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.populator;
 
-import org.innovateuk.ifs.application.feedback.populator.InterviewFeedbackViewModelPopulator;
-import org.innovateuk.ifs.application.feedback.viewmodel.InterviewFeedbackViewModel;
+import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
+import org.innovateuk.ifs.application.summary.viewmodel.InterviewFeedbackViewModel;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;

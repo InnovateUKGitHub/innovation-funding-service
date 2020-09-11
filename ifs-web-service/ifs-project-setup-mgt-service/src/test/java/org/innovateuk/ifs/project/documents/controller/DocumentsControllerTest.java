@@ -53,7 +53,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .build();
 
         AllDocumentsViewModel viewModel =
-                new AllDocumentsViewModel(project, emptyList(), true);
+                new AllDocumentsViewModel(project, emptyList(), true, false);
 
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
