@@ -148,7 +148,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
                 .withQuestions(questions.stream().map(QuestionResource::getId).collect(Collectors.toList()), emptyList())
                 .build(2);
 
-        ProcessRoleResource processRole = newProcessRoleResource().build();
+        ProcessRoleResource processRole = newProcessRoleResource().withRole(Role.LEADAPPLICANT).withUser(user).build();
 
         Map<Long, BigDecimal> scores = new HashMap<>();
         scores.put(1L, new BigDecimal("9"));
@@ -176,7 +176,7 @@ public class ApplicationReadOnlyViewModelPopulatorTest {
         when(organisationRestService.getByUserAndApplicationId(user.getId(), applicationId)).thenReturn(restSuccess(organisation));
         when(questionStatusRestService.findByApplicationAndOrganisation(applicationId, organisation.getId())).thenReturn(restSuccess(questionStatuses));
         when(sectionRestService.getByCompetition(competition.getId())).thenReturn(restSuccess(sections));
-        when(userRestService.findProcessRole(user.getId(), application.getId())).thenReturn(restSuccess(processRole));
+        when(userRestService.findProcessRole(application.getId())).thenReturn(restSuccess(newArrayList(processRole)));
         when(assessorFormInputResponseRestService.getApplicationAssessment(applicationId, assessmentId)).thenReturn(restSuccess(assessorResponseFuture));
 
         when(mockPopulator.populate(competition, questions.get(0), expectedData, settings)).thenReturn(expectedRowModel);
