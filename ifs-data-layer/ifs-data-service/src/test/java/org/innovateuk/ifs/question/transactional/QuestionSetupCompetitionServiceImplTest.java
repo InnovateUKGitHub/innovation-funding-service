@@ -18,7 +18,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.question.resource.QuestionSetupType;
 import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
-import org.innovateuk.ifs.question.transactional.template.QuestionSetupTemplateService;
+import org.innovateuk.ifs.question.transactional.template.QuestionSetupAddAndRemoveService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -95,7 +95,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private GuidanceRowRepository guidanceRowRepository;
 
     @Mock
-    private QuestionSetupTemplateService questionSetupTemplateService;
+    private QuestionSetupAddAndRemoveService questionSetupAddAndRemoveService;
 
     @Mock
     private QuestionPriorityOrderService questionPriorityOrderService;
@@ -541,7 +541,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void delete() {
         long questionId = 1L;
 
-        when(questionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupAddAndRemoveService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
         assertTrue(service.delete(questionId).isSuccess());
     }
 
@@ -550,7 +550,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().build();
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
+        when(questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
         when(questionRepository.findById(newlyCreatedQuestion.getId())).thenReturn(Optional.of(newlyCreatedQuestion));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
@@ -574,7 +574,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void createByCompetitionId_whenDefaultCreationFails() {
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(Optional.of(competition));
-        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
+        when(questionSetupAddAndRemoveService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competition.getId());
         assertTrue(result.isFailure());

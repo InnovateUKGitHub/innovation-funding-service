@@ -9,10 +9,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.READY_TO_OPEN;
 
@@ -135,6 +132,9 @@ public class FormInput {
     }
 
     public void addFormValidator(FormValidator inputValidator) {
+        if (this.inputValidators == null) {
+            this.inputValidators = new HashSet<>();
+        }
         this.inputValidators.add(inputValidator);
     }
 

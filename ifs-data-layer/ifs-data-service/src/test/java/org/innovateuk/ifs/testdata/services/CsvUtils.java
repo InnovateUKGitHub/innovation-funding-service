@@ -12,6 +12,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -424,7 +425,7 @@ public class CsvUtils {
         public String applicationName;
         public String assessorEmail;
         public String shortName;
-        public String description;
+        public FormInputType formInputType;
         public boolean isResearchCategory;
         public String value;
 
@@ -434,17 +435,17 @@ public class CsvUtils {
             applicationName = line.get(i++);
             assessorEmail = line.get(i++);
             shortName = line.get(i++);
-            description = line.get(i++);
+            formInputType = nullableEnum(line.get(i++), FormInputType::valueOf);
             isResearchCategory = nullableBoolean(line.get(i++));
             value = line.get(i++);
         }
 
-        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, String description, boolean isResearchCategory, String value) {
+        public AssessorResponseLine(String competitionName, String applicationName, String assessorEmail, String shortName, FormInputType formInputType, boolean isResearchCategory, String value) {
             this.competitionName = competitionName;
             this.applicationName = applicationName;
             this.assessorEmail = assessorEmail;
             this.shortName = shortName;
-            this.description = description;
+            this.formInputType = formInputType;
             this.isResearchCategory = isResearchCategory;
             this.value = value;
         }
