@@ -373,11 +373,29 @@ Lead applicant verifies the KTA inviation is accepted.
     And the user navigates to the page           ${server}/application/${ApplicationID}/form/question/1994/team
     Then the user should not see the element     name = resend-kta
 
+new lead applicant can uploads an appendix file in KTP Application
+    [Documentation]  IFS-7958
+    Given the user clicks the button/link     link = Application overview
+    When the user clicks the button/link      link = 6. Innovation
+    And the user clicks the button/link       id = edit
+    Then the user uploads the file            css = input[name="appendix"]    ${valid_pdf}
+
+KTA can download the appendix file uploaded by lead
+    [Documentation]  IFS-7958
+    [Setup]  the user clicks the button/link                  id = application-question-complete
+    Given Log in as a different user                          ${ktaEmail}   ${short_password}
+    And the user clicks the application tile if displayed
+    When the user clicks the button/link                      link = ${ktpApplicationTitle}
+    And the user clicks the button/link                       id = accordion-questions-heading-2-6
+    Then the user downloads the file                          ${ktaEmail}   ${server}/application/${ApplicationID}/form/question/2006/forminput/5403/file/744/download   ${DOWNLOAD_FOLDER}/${valid_pdf}
+    [Teardown]  remove the file from the operating system     ${valid_pdf}
+
 New lead applicant submits the application
-   [Documentation]  IFS-7812  IFS-7814
-   When the user clicks the button/link             link = Application overview
-   And the applicant completes Application Team
-   Then the applicant submits the application
+    [Documentation]  IFS-7812  IFS-7814
+    Given Log in as a different user                 &{ktpLeadApplicantCredentials}
+    When the user clicks the button/link              link = ${ktpApplicationTitle}
+    And the applicant completes Application Team
+    Then the applicant submits the application
 
 Moving KTP Competition to Project Setup
     [Documentation]  IFS-7146  IFS-7147  IFS-7148
@@ -806,4 +824,3 @@ the user can view lead and partner finance summary calculations
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("40,000")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("25")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
-

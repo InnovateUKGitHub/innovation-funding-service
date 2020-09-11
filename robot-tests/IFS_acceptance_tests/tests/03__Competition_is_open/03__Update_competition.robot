@@ -23,6 +23,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               IFS-7195  Organisational eligibility category in Competition details
 ...
+...               IFS-7958  KTP Your Project Finances - Funding Breakdown
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin
@@ -83,15 +85,15 @@ Assessed Questions are editable (Ready to Open)
     And the user clicks the button/link     link = Return to application questions
 
 Finances are editable (Ready to Open)
-    [Documentation]  INFUND-6941
+    [Documentation]  INFUND-6941  IFS-7958
     [Tags]
-    Given the user navigates to the page         ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
-    When The user clicks the button/link         link = Finances
-    And the user should see the element          jQuery = h1:contains("Finances")
-    When the user clicks the button/link         jQuery = a:contains("Edit this question")
-    Then if textarea is empty the proper validation messages are shown
-    And the user clicks the button/link          jQuery = button:contains("Done")
-    [Teardown]  the user clicks the button/link  link = Competition details
+    Given the user navigates to the page               ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    When The user clicks the button/link               link = Finances
+    And the user should see the element                jQuery = h1:contains("Finances")
+    When the user clicks the button/link               jQuery = a:contains("Edit this question")
+    Then if textarea is empty user enters the text
+    And the user clicks the button/link                jQuery = button:contains("Done")
+    [Teardown]  the user clicks the button/link        link = Competition details
 
 Project eligibility is editable (Ready to Open)
     [Documentation]    INFUND-6792
@@ -372,13 +374,13 @@ the user resets the milestone data
     The user resets the milestone data for milestone    NOTIFICATIONS    ${createApplicationOpenCompetitionId}
     The user resets the milestone data for milestone    RELEASE_FEEDBACK    ${createApplicationOpenCompetitionId}
 
-if textarea is empty the proper validation messages are shown
+if textarea is empty user enters the text
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the text in the element  css = .editor  Funding rules for this competition are now entered.
     run keyword if  '${status}'=='FAIL'  Run keywords  Set Focus To Element     css = .editor
-    ...                                           AND  Set Focus To Element     css = .govuk-button[type="submit"]
-    ...                                           AND  the user should see a field error  ${empty_field_warning_message}
-    ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
-    ...                                           AND  the user should see a field and summary error  ${empty_field_warning_message}
+     ...                                           AND  Set Focus To Element     css = .govuk-button[type="submit"]
+#    ...                                           AND  the user should not see a field error  ${empty_field_warning_message}
+#    ...                                           AND  the user clicks the button/link  css = .govuk-button[type="submit"]
+#    ...                                           AND  the user should not see a field and summary error  ${empty_field_warning_message}
     ...                                           AND  the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
 
 the user resets the milestone data for milestone
