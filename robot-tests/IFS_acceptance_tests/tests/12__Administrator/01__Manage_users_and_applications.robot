@@ -61,6 +61,8 @@ ${nonKTNDomainEmailAssessor}             simon.bates@gmail.com
 ${inviteExternalUserText}                Invite a new external user
 ${firstNameInvalidCharacterMessage}      Their first name should have at least 2 characters.
 ${lastNameInvalidCharacterMessage}       Their last name should have at least 2 characters.
+${newFirstNameInvalidCharacterMessage}   Your first name should have at least 2 characters.
+${newLastNameInvalidCharacterMessage}    Your last name should have at least 2 characters.
 ${firstNameValidationMessage}            Please enter a first name.
 ${lastNameValidationMessage}             Please enter a last name.
 ${emailAddressValidationMessage}         Please enter an email address.
@@ -173,7 +175,7 @@ Admin cannot change email to an email when there is a pending team member invita
     Then the internal user isnt able to update an existing users email with a pending email  ${emailToChange}
     And the external user removes the pending parter invitation  ${server}/project-setup/project/1/team
 
-Admin cannot change email to an email which is a pending invitation to an organisation in the application
+Admin cannot change email to an email which is a pending invitation to an organisation in the application   #This test is a duplicate
     [Documentation]   IFS-7160
     [Setup]  log in as a different user                                                      &{ifs_admin_user_credentials}
     Given the user adds an organisation                                                      ${server}/project-setup-management/competition/${ConnectedCompId}/project/${MobileProjectId}/team
@@ -473,8 +475,9 @@ the KTA user enters the details to create account
     the user selects the checkbox                           termsAndConditions
 
 the KTA user checks for all validations
-    the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${firstNameInvalidCharacterMessage}
-    the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${lastNameInvalidCharacterMessage}
+    #here
+    the user enters the text and checks for validation message     firstName  R  ${enter_a_first_name}  ${newFirstNameInvalidCharacterMessage}
+    the user enters the text and checks for validation message     lastName  K  ${enter_a_last_name}  ${newLastNameInvalidCharacterMessage}
     the user enters the text and checks for validation message     phoneNumber  12  ${enter_a_valid_phone_number}  ${enter_a_phone_number_between_8_and_20_digits}
     the user clicks the button/link                                name = create-account
     the user should see the element                                jquery = span:contains("${search_a_valid_postcode}")
@@ -595,7 +598,7 @@ the IFS admin send invite to internal user
     the user enters text to a text field                 id = lastName  ${last_name}
     the user enters text to a text field                 id = emailAddress  ${email}
     the user selects the option from the drop-down menu  ${user_role}  id = role
-    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invite")
+    the user clicks the button/link                      jQuery = .govuk-button:contains("Send invitation")
 
 the IFS admin edit internal user details
     the user enters text to a text field                 id = firstName  Innovation
@@ -628,7 +631,7 @@ the new internal user logs in and checks user details
     the user should see the element        jQuery = option[value="IFS_ADMINISTRATOR"][selected="selected"]
     the user clicks the button/link        link = Manage users
     the user clicks the button/link        jQuery = a:contains("Pending")
-    the user should see the element        jQuery = span:contains("0") + span:contains("pending internal users")
+    the user should see the element        jQuery = span:contains("0") + span:contains("pending users")
     the user should not see the element    css = .table-overflow ~ td
     the user clicks the button/link        jQuery = a:contains("Active")
 
@@ -714,7 +717,7 @@ the user should see invite a new external user field validation message
     The user should see a field and summary error     ${firstNameValidationMessage}
     The user should see a field and summary error     ${lastNameValidationMessage}
     The user should see a field and summary error     ${lastNameInvalidCharacterMessage}
-    The user should see a field and summary error     ${emailAddressValidationMessage}
+    The user should see a field and summary error     ${invalidKTNDomainValidationMessage}
 
 the user fills invite a new external user fields
     [Arguments]  ${firstName}  ${lastName}  ${emailAddress}
