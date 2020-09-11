@@ -21,16 +21,16 @@ public class EditUserForm extends BaseBindingResultTarget {
     @NotBlank(message = "{validation.standard.firstname.required}", groups = InternalUserFieldsGroup.class)
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}", groups = InternalUserFieldsGroup.class),
-            @Size(max=70, message="{validation.standard.firstname.length.max}", groups = InternalUserFieldsGroup.class),
+            @Size(min=2, message="{validation.invite.firstname.length.min}", groups = InternalUserFieldsGroup.class),
+            @Size(max=70, message="{validation.invite.firstname.length.max}", groups = InternalUserFieldsGroup.class),
     })
     private String firstName;
 
     @NotBlank(message = "{validation.standard.lastname.required}", groups = InternalUserFieldsGroup.class)
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}", groups = InternalUserFieldsGroup.class)
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}", groups = InternalUserFieldsGroup.class),
-            @Size(max=70, message="{validation.standard.lastname.length.max}", groups = InternalUserFieldsGroup.class),
+            @Size(min=2, message="{validation.invite.lastname.length.min}", groups = InternalUserFieldsGroup.class),
+            @Size(max=70, message="{validation.invite.lastname.length.max}", groups = InternalUserFieldsGroup.class),
     })
     private String lastName;
 

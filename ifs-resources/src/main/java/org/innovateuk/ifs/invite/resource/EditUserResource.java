@@ -18,16 +18,16 @@ public class EditUserResource {
     @NotBlank(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.firstname.length.min}"),
-            @Size(max=70, message="{validation.standard.firstname.length.max}"),
+            @Size(min=2, message="{validation.invite.firstname.length.min}"),
+            @Size(max=70, message="{validation.invite.firstname.length.max}"),
     })
     private String firstName;
 
     @NotBlank(message = "{validation.standard.lastname.required}")
     @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
     @Size.List ({
-            @Size(min=2, message="{validation.standard.lastname.length.min}"),
-            @Size(max=70, message="{validation.standard.lastname.length.max}"),
+            @Size(min=2, message="{validation.invite.lastname.length.min}"),
+            @Size(max=70, message="{validation.invite.lastname.length.max}"),
     })
     private String lastName;
 
