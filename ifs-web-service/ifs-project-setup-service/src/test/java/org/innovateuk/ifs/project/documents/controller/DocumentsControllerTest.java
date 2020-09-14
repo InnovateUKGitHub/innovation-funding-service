@@ -57,7 +57,7 @@ public class DocumentsControllerTest extends BaseControllerMockMVCTest<Documents
                 .withName("Project 12")
                 .build();
 
-        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true);
+        AllDocumentsViewModel viewModel = new AllDocumentsViewModel(project, emptyList(), true, false);
 
         when(populator.populateAllDocuments(projectId, loggedInUser.getId())).thenReturn(viewModel);
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/document/all"))

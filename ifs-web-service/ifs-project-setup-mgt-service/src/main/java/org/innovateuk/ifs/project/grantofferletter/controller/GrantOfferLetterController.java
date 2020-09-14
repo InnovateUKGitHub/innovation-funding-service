@@ -250,7 +250,10 @@ public class GrantOfferLetterController {
 
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
-        return new GrantOfferLetterModel(competition.getId(),
+        return new GrantOfferLetterModel(
+                competition.isProcurement() ? "Contract" : "Grant offer letter",
+                competition.isProcurement() ? "Contract" : "Letter",
+                competition.getId(),
                 competition.isH2020(),
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
