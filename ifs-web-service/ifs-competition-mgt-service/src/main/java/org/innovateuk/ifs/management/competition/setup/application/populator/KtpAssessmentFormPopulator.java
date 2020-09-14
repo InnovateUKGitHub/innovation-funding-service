@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.competition.setup.application.populator;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.management.competition.setup.application.form.GuidanceRowForm;
 import org.innovateuk.ifs.management.competition.setup.application.form.KtpAssessmentForm;
 import org.innovateuk.ifs.management.competition.setup.core.form.CompetitionSetupForm;
 import org.innovateuk.ifs.management.competition.setup.core.populator.CompetitionSetupSubsectionFormPopulator;
@@ -31,13 +32,14 @@ public class KtpAssessmentFormPopulator implements CompetitionSetupSubsectionFor
         if (objectId.isPresent()) {
             CompetitionSetupQuestionResource questionResource = questionSetupCompetitionRestService.getByQuestionId(
                     (objectId.get())).getSuccess();
+            competitionSetupForm.setQuestion(questionResource);
 
 //            copied and pasted
 //            add back in but do it better
-//            competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
-//                GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
-//                competitionSetupForm.getGuidanceRows().add(grvm);
-//            });
+            competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource -> {
+                GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
+                competitionSetupForm.getGuidanceRows().add(grvm);
+            });
 
         }
 
