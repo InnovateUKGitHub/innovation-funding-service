@@ -20,5 +20,3 @@ data:
   LDAP_ATTRIBUTE_SEARCHFILTER: "(mail=\$resolutionContext.principal)"
   LDAP_RETURNATTRIBUTES: "mail,uid"
   LDAP_AUTHENTICATOR: "${LDAP_AUTHENTICATOR}"
-
-  LDAP_HOST_NEW: "${LDAP_HOST_NEW}"
