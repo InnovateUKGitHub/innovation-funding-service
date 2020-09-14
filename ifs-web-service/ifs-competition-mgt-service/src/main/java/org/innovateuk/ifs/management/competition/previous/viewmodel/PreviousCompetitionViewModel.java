@@ -21,11 +21,11 @@ public class PreviousCompetitionViewModel extends BaseCompetitionStatusTableView
     private final List<PreviousApplicationResource> applications;
 
     public PreviousCompetitionViewModel(CompetitionResource competition,
-                                            List<PreviousApplicationResource> applications,
-                                            List<InternalProjectSetupRow> rows,
-                                            boolean hasProjectFinanceRole,
-                                            boolean ifsAdmin,
-                                            boolean externalFinanceUser) {
+                                        List<PreviousApplicationResource> applications,
+                                        List<InternalProjectSetupRow> rows,
+                                        boolean hasProjectFinanceRole,
+                                        boolean ifsAdmin,
+                                        boolean externalFinanceUser) {
         super(competition, rows, hasProjectFinanceRole, externalFinanceUser, ifsAdmin);
         this.competitionType = competition.getCompetitionTypeName();
         this.fundingBody = "Innovate UK";

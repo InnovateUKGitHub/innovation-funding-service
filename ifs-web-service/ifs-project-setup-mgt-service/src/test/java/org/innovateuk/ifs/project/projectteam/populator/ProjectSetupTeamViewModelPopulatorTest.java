@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.projectteam.populator;
 
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ProjectUserInviteResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
@@ -52,6 +54,9 @@ public class ProjectSetupTeamViewModelPopulatorTest {
     private ProjectService projectService;
 
     @Mock
+    private CompetitionRestService competitionRestService;
+
+    @Mock
     private ProjectInviteRestService projectInviteRestService;
 
     @Mock
@@ -65,6 +70,7 @@ public class ProjectSetupTeamViewModelPopulatorTest {
         UserResource loggedInUser = newUserResource().withRoleGlobal(IFS_ADMINISTRATOR).withId(123L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withName("Imaginative competition name")
+                .withCollaborationLevel(CollaborationLevel.SINGLE)
                 .build();
         ProjectResource project = newProjectResource()
                 .withCompetition(competition.getId())
@@ -106,6 +112,7 @@ public class ProjectSetupTeamViewModelPopulatorTest {
                 .build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
+        when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(projectOrgs);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrg);
