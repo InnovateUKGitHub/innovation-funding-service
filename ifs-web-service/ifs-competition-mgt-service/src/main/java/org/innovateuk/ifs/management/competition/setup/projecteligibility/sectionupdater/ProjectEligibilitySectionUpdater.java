@@ -140,8 +140,8 @@ public class ProjectEligibilitySectionUpdater extends AbstractSectionUpdater imp
                 }
             });
         } else {
-            Set<Long> gcmsForCompetitionType = grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(
-                    competition.getCompetitionType()).getSuccess();
+            Set<Long> gcmsForCompetitionType = grantClaimMaximumRestService.revertToDefaultForCompetitionType(
+                    competition.getId()).getSuccess();
 
             // remove the old
             competition.getGrantClaimMaximums().clear();

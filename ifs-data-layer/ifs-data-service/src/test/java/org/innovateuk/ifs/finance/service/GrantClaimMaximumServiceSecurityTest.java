@@ -42,8 +42,8 @@ public class GrantClaimMaximumServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
-    public void getGrantClaimMaximumsForCompetitionType() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getGrantClaimMaximumsForCompetitionType(1L),
+    public void revertToDefault() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.revertToDefault(1L),
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 

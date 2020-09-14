@@ -21,6 +21,8 @@ delete from competition_application_config where id in (select competition_asses
 
 delete from document_config where competition_id in (1,2,3,4,5,6,7,8,9);
 
+delete from grant_claim_maximum where id in (select grant_claim_maximum_id from grant_claim_maximum_competition where competition_id in (1,2,3,4,5,6,7,8,9));
+
 delete from grant_claim_maximum_competition where competition_id in (1,2,3,4,5,6,7,8,9);
 
 delete from file_type;

@@ -115,7 +115,7 @@ public class ProjectEligibilitySectionSaverTest {
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
+        when(grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getCompetitionType()))
                 .thenReturn(restSuccess(asLinkedSet(1L, 2L)));
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
@@ -147,7 +147,7 @@ public class ProjectEligibilitySectionSaverTest {
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
+        when(grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getCompetitionType()))
                 .thenReturn(restSuccess(asLinkedSet(1L, 2L)));
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
@@ -179,7 +179,7 @@ public class ProjectEligibilitySectionSaverTest {
 
         QuestionResource researchCategoryQuestion = newQuestionResource().build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
+        when(grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getCompetitionType()))
                 .thenReturn(restSuccess(asLinkedSet(1L, 2L)));
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
@@ -209,7 +209,7 @@ public class ProjectEligibilitySectionSaverTest {
                 .withApplicationFinanceType(STANDARD)
                 .build();
 
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
+        when(grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getCompetitionType()))
                 .thenReturn(restSuccess(asLinkedSet(1L, 2L)));
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
@@ -331,7 +331,7 @@ public class ProjectEligibilitySectionSaverTest {
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(questionRestService.getQuestionByCompetitionIdAndQuestionSetupType(competition.getId(),
                 QuestionSetupType.RESEARCH_CATEGORY)).thenReturn(restSuccess(researchCategoryQuestion));
-        when(grantClaimMaximumRestService.getGrantClaimMaximumsForCompetitionType(competition.getCompetitionType()))
+        when(grantClaimMaximumRestService.revertToDefaultForCompetitionType(competition.getCompetitionType()))
                 .thenReturn(restSuccess(asLinkedSet(gcms.get(0).getId(), gcms.get(1).getId())));
 
         service.saveSection(competition, competitionSetupForm).getSuccess();

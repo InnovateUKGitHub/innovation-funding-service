@@ -16,17 +16,13 @@ import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.finance.builder.GrantClaimMaximumResourceBuilder.newGrantClaimMaximumResource;
 import static org.innovateuk.ifs.finance.domain.builder.GrantClaimMaximumBuilder.newGrantClaimMaximum;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantClaimMaximumServiceImpl> {
@@ -45,8 +41,7 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
 
     @Override
     protected GrantClaimMaximumServiceImpl supplyServiceUnderTest() {
-        return new GrantClaimMaximumServiceImpl(grantClaimMaximumRepository, competitionTypeRepository,
-                competitionRepository, grantClaimMaximumMapper);
+        return new GrantClaimMaximumServiceImpl();
     }
 
     @Test
@@ -73,23 +68,23 @@ public class GrantClaimMaximumServiceImplTest extends BaseServiceUnitTest<GrantC
         assertTrue(result.getErrors().contains(notFoundError(GrantClaimMaximum.class, gcm.getId())));
     }
 
-    @Test
-    public void getGrantClaimMaximumsForCompetitionType() {
-        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum().build(2);
-        Competition competition = newCompetition()
-                .withGrantClaimMaximums(grantClaimMaximums)
-                .build();
-        CompetitionType competitionType = newCompetitionType()
-                .withTemplate(competition)
-                .build();
-
-        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
-
-        ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetitionType(competitionType.getId());
-        assertTrue(result.isSuccess());
-        assertEquals(asLinkedSet(grantClaimMaximums.get(0).getId(), grantClaimMaximums.get(1).getId()), result
-                .getSuccess());
-    }
+//    @Test
+//    public void getGrantClaimMaximumsForCompetitionType() {
+//        List<GrantClaimMaximum> grantClaimMaximums = newGrantClaimMaximum().build(2);
+//        Competition competition = newCompetition()
+//                .withGrantClaimMaximums(grantClaimMaximums)
+//                .build();
+//        CompetitionType competitionType = newCompetitionType()
+//                .withTemplate(competition)
+//                .build();
+//
+//        when(competitionTypeRepository.findById(competitionType.getId())).thenReturn(Optional.of(competitionType));
+//
+//        ServiceResult<Set<Long>> result = service.getGrantClaimMaximumsForCompetitionType(competitionType.getId());
+//        assertTrue(result.isSuccess());
+//        assertEquals(asLinkedSet(grantClaimMaximums.get(0).getId(), grantClaimMaximums.get(1).getId()), result
+//                .getSuccess());
+//    }
 
     @Test
     public void save() {

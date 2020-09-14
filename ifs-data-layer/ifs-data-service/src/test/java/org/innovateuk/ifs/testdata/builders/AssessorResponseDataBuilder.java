@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorR
                                                                 String applicationName,
                                                                 String assessorEmail,
                                                                 String shortName,
-                                                                String description,
+                                                                FormInputType formInputType,
                                                                 boolean isResearchCategory,
                                                                 String value) {
         return with(data -> {
@@ -46,7 +47,7 @@ public class AssessorResponseDataBuilder extends BaseDataBuilder<Void, AssessorR
 
             FormInput formInput = formInputRepository.findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(question.getId(), FormInputScope.ASSESSMENT)
                     .stream()
-                    .filter(x -> x.getDescription().contains(description))
+                    .filter(x -> x.getType().equals(formInputType))
                     .findFirst()
                     .get();
 

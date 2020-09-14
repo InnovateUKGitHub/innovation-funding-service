@@ -80,9 +80,6 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
 
-    @OneToOne(mappedBy = "template", fetch = FetchType.LAZY)
-    private CompetitionType templateForType;
-
     private String pafCode;
     private String budgetCode;
     private String code;
@@ -151,7 +148,7 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
     @JoinTable(name = "grant_claim_maximum_competition",
             joinColumns = {@JoinColumn(name = "competition_id", referencedColumnName = "id"),},
             inverseJoinColumns = {@JoinColumn(name = "grant_claim_maximum_id", referencedColumnName = "id")})
-    private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
+        private List<GrantClaimMaximum> grantClaimMaximums = new ArrayList<>();
 
     private boolean locationPerPartner = true;
 
@@ -998,6 +995,10 @@ public class Competition extends AuditableEntity implements ProcessActivity, App
 
     public void setCompetitionAssessmentConfig(CompetitionAssessmentConfig competitionAssessmentConfig) {
         this.competitionAssessmentConfig = competitionAssessmentConfig;
+    }
+
+    public CompetitionTypeEnum getCompetitionTypeEnum() {
+        return getCompetitionType().getCompetitionTypeEnum();
     }
 
     @Override
