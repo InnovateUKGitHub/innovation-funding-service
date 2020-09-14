@@ -44,7 +44,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResourc
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
 
     private static final String TERMS_AND_CONDITIONS_INVESTOR_PARTNERSHIPS = "Investor Partnerships terms and conditions";
-    private static final String TERMS_AND_CONDITIONS_OTHER = "Award terms and conditions";
 
     @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
