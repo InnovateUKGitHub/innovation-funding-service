@@ -18,8 +18,6 @@ import static org.junit.Assert.assertTrue;
 
 public class OtherFundingCostCategoryTest {
 
-    private static final BigDecimal OTHER_FUNDING_AMOUNT = new BigDecimal("30000");
-
     private List<FinanceRowItem> costs = new ArrayList<>();
 
     private OtherFunding otherFunding;
@@ -36,7 +34,7 @@ public class OtherFundingCostCategoryTest {
                 .build();
 
         otherPublicFunding = newOtherFunding()
-                .withFundingAmount(OTHER_FUNDING_AMOUNT)
+                .withFundingAmount(BigDecimal.valueOf(30000))
                 .build();
 
         costs.add(otherPublicFunding);
@@ -55,7 +53,7 @@ public class OtherFundingCostCategoryTest {
     public void getTotalWithYesOtherPublicFunding() {
 
         otherFundingCostCategory.calculateTotal();
-        assertEquals(OTHER_FUNDING_AMOUNT, otherFundingCostCategory.getTotal());
+        assertEquals(otherPublicFunding.getFundingAmount(), otherFundingCostCategory.getTotal());
     }
 
     @Test

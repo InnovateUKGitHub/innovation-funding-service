@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class LabourCostCategoryTest {
-
-    private static final BigDecimal GROSS_EMPLOYEE_COST = new BigDecimal("20000");
 
     private List<FinanceRowItem> costs = new ArrayList<>();
 
@@ -35,7 +34,7 @@ public class LabourCostCategoryTest {
                 .build();
         labourCost = newLabourCost()
                 .withLabourDays(100)
-                .withGrossEmployeeCost(GROSS_EMPLOYEE_COST)
+                .withGrossEmployeeCost(BigDecimal.valueOf(20000))
                 .withRole("Developer")
                 .build();
 
@@ -54,18 +53,20 @@ public class LabourCostCategoryTest {
     @Test
     public void getTotalWithWorkingDays() {
 
+        BigDecimal result = labourCost.getGrossEmployeeCost();
         labourCostCategory.calculateTotal();
 
-        assertEquals(GROSS_EMPLOYEE_COST, labourCostCategory.getTotal());
+        assertEquals(result, labourCostCategory.getTotal());
     }
 
     @Test
     public void getTotalWithNullWorkingDays() {
 
+        int result = 0;
         workingDays.setLabourDays(0);
         labourCostCategory.calculateTotal();
 
-        assertEquals(BigDecimal.ZERO, labourCostCategory.getTotal());
+        assertEquals(BigDecimal.valueOf(result), labourCostCategory.getTotal());
     }
 
     @Test
@@ -102,15 +103,6 @@ public class LabourCostCategoryTest {
         labourCostCategory.addCost(testerCost);
 
         assertEquals(costs, labourCostCategory.getCosts());
-    }
-
-    @Test
-    public void getTotalWithRounding() {
-
-        labourCost.setGrossEmployeeCost(new BigDecimal("20000.00080"));
-        labourCostCategory.calculateTotal();
-
-        assertEquals(new BigDecimal("20000"), labourCostCategory.getTotal());
     }
 
     @Test

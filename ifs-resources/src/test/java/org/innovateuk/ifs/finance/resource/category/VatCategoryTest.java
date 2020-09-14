@@ -16,7 +16,7 @@ public class VatCategoryTest {
         VatCostCategory vatCategory = newVATCategory().withCosts(newVATCost().withRegistered(false).build(1)).build();
         vatCategory.setTotalCostsWithoutVat(new BigDecimal(100));
         vatCategory.calculateTotal();
-        assertEquals(BigDecimal.ZERO, vatCategory.getTotal());
+        assertEquals(new BigDecimal(0), vatCategory.getTotal());
     }
 
     @Test
@@ -24,7 +24,7 @@ public class VatCategoryTest {
         VatCostCategory vatCategory = newVATCategory().withCosts(newVATCost().withRegistered(true).withRate(new BigDecimal("0.2")).build(1)).build();
         vatCategory.setTotalCostsWithoutVat(new BigDecimal(100));
         vatCategory.calculateTotal();
-        assertEquals(new BigDecimal("20"), vatCategory.getTotal());
+        assertEquals(new BigDecimal(20), vatCategory.getTotal());
     }
 
     @Test

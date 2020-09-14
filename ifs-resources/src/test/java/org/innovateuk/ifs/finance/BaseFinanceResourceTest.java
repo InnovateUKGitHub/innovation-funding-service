@@ -138,7 +138,7 @@ public class BaseFinanceResourceTest {
         baseFinanceResource.setFinanceOrganisationDetails(financeOrganisationDetails);
 
         BigDecimal totalCost = baseFinanceResource.getTotal();
-        assertEquals(new BigDecimal("100"), totalCost);
+        assertEquals(new BigDecimal(100), totalCost);
     }
 
     @Test
