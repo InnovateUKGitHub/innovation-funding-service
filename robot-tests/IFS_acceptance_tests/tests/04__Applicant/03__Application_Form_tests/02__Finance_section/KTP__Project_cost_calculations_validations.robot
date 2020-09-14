@@ -2,6 +2,9 @@
 Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-7959  KTP Your Project Finances - Links for Detailed Finances
+...
+...               IFS-8154 KTP Project Costs - consumables
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -118,18 +121,18 @@ Consumables calculations
     Then the user should see the right values    2,000    Consumables    8369
 
 Additional company cost estimation validations
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790  IFS-8154
     Given the user clicks the button/link            jQuery = button:contains("Additional company cost estimation")
     When the user fills additional company costs     ${EMPTY}  ${EMPTY}
     Then the user should see the validation messages for addition company costs
 
 Additional company cost estimation calculations
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790  IFS-8154
     Given the user fills additional company costs       description  100
     Then the user should see the element                jQuery = h4:contains("Total additional company cost estimations"):contains("£600")
 
 Mark as complete and check read only view
-    [Documentation]  IFS-7790
+    [Documentation]  IFS-7790  IFS-8154
     Given the user clicks the button/link    jQuery = button:contains("Mark as complete")
     When the user clicks the button/link     link = Your project costs
     Then the user should see the read only view of KTP
