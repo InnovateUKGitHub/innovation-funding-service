@@ -3273,8 +3273,7 @@
 *********************************/-->
 
 <!--/*<editor-fold defaultstate="collapsed">*/-->
-<th:block th:fragment="justification">
-<!--    if kb organisation add-->
+<th:block th:fragment="justification" th:if="${model.showJustificationForm}">
     <div class="govuk-form-group"
          th:classappend="${#fields.hasErrors('justificationForm.exceedAllowedLimit')} ? 'govuk-form-group--error'">
         <fieldset class="govuk-fieldset">
@@ -3282,7 +3281,7 @@
                 Do your project costs exceed the allowed limit?
             </legend>
             <th:block th:unless="${model.complete}">
-                <span class="govuk-hint">Provide detailed explanations for ll costs that exceed the allowable limits.
+                <span class="govuk-hint">Provide detailed explanations for all costs that exceed the allowable limits.
                     Please read the specific guidance for justifications in the Associate employment, Associate development and Associate estates cost sections.</span>
 
                 <th:block th:if="${#fields.hasErrors('justificationForm.exceedAllowedLimit')}">

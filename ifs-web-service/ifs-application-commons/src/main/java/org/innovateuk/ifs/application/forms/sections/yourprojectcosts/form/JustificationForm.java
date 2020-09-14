@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.forms.sections.yourprojectcosts.form;
 
+import org.innovateuk.ifs.commons.validation.constraints.WordCount;
+
 import javax.validation.constraints.NotNull;
 
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.NOT_BLANK_MESSAGE;
@@ -9,6 +11,7 @@ public class JustificationForm {
     @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean exceedAllowedLimit;
 
+    @WordCount(max = 750, message = "{validation.field.max.word.count}")
     private String justification;
 
     public JustificationForm() {
