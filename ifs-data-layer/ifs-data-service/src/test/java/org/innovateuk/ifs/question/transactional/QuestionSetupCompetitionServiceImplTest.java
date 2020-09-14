@@ -45,7 +45,6 @@ import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionBuilder.newMul
 import static org.innovateuk.ifs.form.builder.MultipleChoiceOptionResourceBuilder.newMultipleChoiceOptionResource;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.form.resource.QuestionType.LEAD_ONLY;
 import static org.innovateuk.ifs.question.resource.QuestionSetupType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.setup.resource.QuestionSection.PROJECT_DETAILS;
 import static org.junit.Assert.*;
@@ -629,13 +628,11 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         return createLambdaMatcher(question -> {
             assertNull(question.getId());
             assertFalse(question.getAssignEnabled());
-            assertEquals("Description not used", question.getDescription());
             assertTrue(question.getMarkAsCompletedEnabled());
             assertEquals("Research category", question.getName());
             assertEquals("Research category", question.getShortName());
             assertEquals(competition, question.getCompetition());
             assertEquals(section, question.getSection());
-            assertEquals(LEAD_ONLY, question.getType());
             assertEquals(RESEARCH_CATEGORY, question.getQuestionSetupType());
         });
     }

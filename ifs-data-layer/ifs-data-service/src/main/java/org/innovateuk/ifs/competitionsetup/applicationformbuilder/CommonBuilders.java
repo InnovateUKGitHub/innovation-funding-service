@@ -37,8 +37,6 @@ public class CommonBuilders {
                     form_input.includedInApplicationSummary
 
      */
-    //TODO validators
-    //TODO priorities
 
     public static SectionBuilder projectDetails() {
         return aSection()

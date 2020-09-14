@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CommonBuilders;
 import org.innovateuk.ifs.finance.domain.GrantClaimMaximum;
 import org.innovateuk.ifs.finance.mapper.GrantClaimMaximumMapper;
@@ -26,8 +25,6 @@ public class GrantClaimMaximumServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private GrantClaimMaximumRepository grantClaimMaximumRepository;
-    @Autowired
-    private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
     private GrantClaimMaximumMapper grantClaimMaximumMapper;
     @Autowired
