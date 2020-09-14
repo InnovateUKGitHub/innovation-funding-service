@@ -13,7 +13,12 @@
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col">Project</th>
                     <th:block th:each="column : ${model.columns}">
-                        <th class="govuk-table__header status" scope="col" th:text="${column.shortName}">column name</th>
+                        <th class="govuk-table__header status" scope="col">
+                            <th:block th:if="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}">Contract</th:block>
+                            <th:block th:unless="${model.procurement && column == T(org.innovateuk.ifs.project.internal.ProjectSetupStage).GRANT_OFFER_LETTER}"
+                                      th:text="${column.shortName}"></th:block>
+
+                        </th>
                     </th:block>
                 </tr>
                 </thead>

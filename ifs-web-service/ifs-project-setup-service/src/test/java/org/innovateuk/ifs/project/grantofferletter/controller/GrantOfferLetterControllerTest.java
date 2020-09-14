@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.ProjectService;
@@ -11,6 +13,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -27,8 +30,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
@@ -58,12 +63,18 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Mock
     private ProjectService projectService;
 
+    @Mock
+    private ProjectRestService projectRestService;
+
+    @Mock
+    private CompetitionRestService competitionRestService;
+
     @Test
     public void testViewGrantOfferLetterPageWithSignedOfferAsProjectManager() throws Exception {
         long projectId = 123L;
         long userId = 1L;
 
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource().withId(projectId).withCompetition(5L).build();
 
         setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, true, stateInformationForNonPartnersView(READY_TO_APPROVE, GOL_SIGNED));
 
@@ -175,7 +186,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         long projectId = 123L;
         long userId = 1L;
 
-        ProjectResource project = newProjectResource().withId(projectId).build();
+        ProjectResource project = newProjectResource().withId(projectId).withCompetition(5L).build();
 
         setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, false, stateInformationForPartnersView(SENT, SIGNED_GOL_REJECTED));
 
@@ -210,7 +221,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferFileDetails(123L)).
                 thenReturn(Optional.of(fileDetails));
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/grant-offer-letter", 123L)).
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/download", 123L)).
                 andExpect(status().isOk()).
                 andReturn();
 
@@ -233,7 +244,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(projectService.isUserLeadPartner(123L, 1L)).thenReturn(true);
 
-        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/signed-grant-offer-letter", 123L)).
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer/signed-download", 123L)).
                 andExpect(status().isOk()).
                 andReturn();
 
@@ -306,7 +317,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         MockMultipartFile uploadedFile = new MockMultipartFile("signedGrantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
 
-        ProjectResource project = newProjectResource().withId(123L).build();
+        ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
 
         ProjectUserResource pmUser = newProjectUserResource().withRole(PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
         List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
@@ -319,6 +330,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
         when(grantOfferLetterService.getGrantOfferLetterState(123L)).thenReturn(serviceSuccess(stateInformationForNonPartnersView(READY_TO_APPROVE, GOL_SIGNED)));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").
@@ -340,7 +352,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         MockMultipartFile uploadedFile = new MockMultipartFile("signedGrantOfferLetter", "filename.txt", "text/plain", "My content!".getBytes());
 
-        ProjectResource project = newProjectResource().withId(123L).build();
+        ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
 
         List<ProjectUserResource> pmUser = newProjectUserResource().
                 withRole(PROJECT_MANAGER).
@@ -355,6 +367,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY));
         when(grantOfferLetterService.getGrantOfferLetterState(123L)).thenReturn(serviceSuccess(stateInformationForNonPartnersView(SENT, SIGNED_GOL_REJECTED)));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
 
         MvcResult mvcResult = mockMvc.perform(
                 fileUpload("/project/123/offer").
@@ -371,6 +384,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void testConfirmationView() throws Exception {
+        ProjectResource project = newProjectResource().withId(123L).withCompetition(5L).build();
+        when(projectRestService.getProjectById(123L)).thenReturn(restSuccess(project));
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
         mockMvc.perform(get("/project/123/offer/confirmation")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/grant-offer-letter-confirmation"));
@@ -408,6 +424,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         FileEntryResource additionalContractFile = newFileEntryResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionRestService.getCompetitionById(project.getCompetition())).thenReturn(restSuccess(newCompetitionResource().withFundingType(FundingType.GRANT).build()));
         when(projectService.isProjectManager(userId, projectId)).thenReturn(projectManager);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
