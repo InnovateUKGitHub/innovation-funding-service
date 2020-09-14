@@ -19,8 +19,9 @@ public class AllDocumentsViewModel {
     private List<ProjectDocumentStatus> documents;
     private boolean projectManager;
     private boolean collaborativeProject;
+    private boolean isProcurement;
 
-    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager) {
+    public AllDocumentsViewModel(ProjectResource project, List<ProjectDocumentStatus> documents, boolean projectManager, boolean IsProcurement) {
         this.competitionId = project.getCompetition();
         this.applicationId = project.getApplication();
         this.projectId = project.getId();
@@ -28,6 +29,7 @@ public class AllDocumentsViewModel {
         this.documents = documents;
         this.projectManager = projectManager;
         this.collaborativeProject = project.isCollaborativeProject();
+        this.isProcurement = IsProcurement;
     }
 
     public long getCompetitionId() {
@@ -58,6 +60,10 @@ public class AllDocumentsViewModel {
         return collaborativeProject;
     }
 
+    public boolean IsProcurement() {
+        return isProcurement;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +79,7 @@ public class AllDocumentsViewModel {
                 .append(projectName, that.projectName)
                 .append(documents, that.documents)
                 .append(projectManager, that.projectManager)
+                .append(isProcurement, that.isProcurement)
                 .isEquals();
     }
 
@@ -85,6 +92,7 @@ public class AllDocumentsViewModel {
                 .append(projectName)
                 .append(documents)
                 .append(projectManager)
+                .append(isProcurement)
                 .toHashCode();
     }
 }

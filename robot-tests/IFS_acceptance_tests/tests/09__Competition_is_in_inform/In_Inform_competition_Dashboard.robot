@@ -137,20 +137,19 @@ Question scores and application details are correct
     And the application details are correct
 
 User can see the Application details along with feedback
-    [Documentation]    INF-2473  IFS-2256
+    [Documentation]    INF-2473  IFS-2256  IFS-8066
     [Tags]
     Given the user should see the element                          jQuery = h2:contains("Application details")
-    And the user should see the element                            jQuery = h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
+    And the user should see the element                            jQuery = dt:contains("Application name") ~ dd:contains("${INFORM_COMPETITION_NAME_2}")
     When the user checks the application details sections
     Then the user should see the element                            jQuery = h2:contains("Application details")
 
 User can see feedback to individual questions
-    [Documentation]    INFUND-8005
+    [Documentation]    INFUND-8005  IFS-8066
     [Tags]  HappyPath
-    Given the user clicks the button/link            jQuery = a:contains("6. Innovation")
-    Then the user should see the element             jQuery = h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
-    And the user should see the element              jQuery = h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
-    [Teardown]    the user clicks the button/link    jQuery = .govuk-back-link:contains("Feedback overview")
+    Given the user clicks the button/link            jQuery = button:contains("6. Innovation")
+    Then the user should see the element             jQuery = p[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
+    And the user should see the element              jQuery = h3:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
 
 The finance details are shown
     [Documentation]    INFUND-8168
@@ -171,24 +170,21 @@ Custom Suite Setup
     The user clicks the button/link       link = ${INFORM_COMPETITION_NAME}
 
 the application question scores are correct
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Business opportunity") + div .govuk-grid-column-one-third:contains("Average score 6.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Potential market") + div .govuk-grid-column-one-third:contains("Average score 4.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project exploitation") + div .govuk-grid-column-one-third:contains("Average score 5.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Economic benefit") + div .govuk-grid-column-one-third:contains("Average score 4.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Technical approach") + div .govuk-grid-column-one-third:contains("Average score 4.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Innovation") + div .govuk-grid-column-one-third:contains("Average score 4.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Risks") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Project team") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Funding") + div .govuk-grid-column-one-third:contains("Average score 3.3 / 10")
-    the user should see the element    jQuery = .govuk-grid-column-two-thirds:contains("Adding value") + div .govuk-grid-column-one-third:contains("Average score 6.7 / 10")
-    the user should see the element    jQuery = p:contains("Average overall: 53.3%")
+    the user should see the element    jQuery = span:contains("Average score 6.3 / 10") ~ button:contains("Business opportunity")
+    the user should see the element    jQuery = span:contains("Average score 4.7 / 10") ~ button:contains("Potential market")
+    the user should see the element    jQuery = span:contains("Average score 5.7 / 10") ~ button:contains("Project exploitation")
+    the user should see the element    jQuery = span:contains("Average score 4.3 / 10") ~ button:contains("Economic benefit")
+    the user should see the element    jQuery = span:contains("Average score 4.3 / 10") ~ button:contains("Technical approach")
+    the user should see the element    jQuery = span:contains("Average score 4.7 / 10") ~ button:contains("Innovation")
+    the user should see the element    jQuery = span:contains("Average score 6.7 / 10") ~ button:contains("Risks")
+    the user should see the element    jQuery = span:contains("Average score 6.7 / 10") ~ button:contains("Project team")
+    the user should see the element    jQuery = span:contains("Average score 3.3 / 10") ~ button:contains("Funding")
+    the user should see the element    jQuery = span:contains("Average score 6.7 / 10") ~ button:contains("Adding value")
+    the user should see the element    jQuery = h3:contains("Application score: 53.3%")
 
 the application details are correct
-    the user should see the element    jQuery = p:contains("High Performance Gasoline Stratified")
-    the user should see the element    jQuery = p:contains("Electric Sounds Ltd")
-    the user should see the element    jQuery = p:contains("Project start date: ")
-    the user should see the element    jQuery = p:contains("Duration")
-    the user should see the element    jQuery = h3:contains("Total project cost")
+    the user should see the element    jQuery = dt:contains("Competition name") ~ dd:contains("${INFORM_COMPETITION_NAME}")
+    the user should see the element    jQuery = dt:contains("Application name") ~ dd:contains("${INFORM_COMPETITION_NAME_2}")
 
 User sends the notification to enable release feedback
     the user clicks the button/link                                          link = Input and review funding decision
@@ -202,34 +198,28 @@ User sends the notification to enable release feedback
     the user clicks the button/link                                          jQuery = .govuk-back-link:contains("Competition")
 
 The user checks the Project summary functionality
-    the user clicks the button/link    jQuery = a:contains("Project summary")
-    the user should see the element    jQuery = h1:contains("Project summary")
+    the user clicks the button/link    jQuery = button:contains("Project summary")
+    the user should see the element    jQuery = span:contains("Project summary")
     the user should see the element    jQuery = p:contains("This is the applicant response for project summary.")
-    the user clicks the button/link    jQuery = a:contains("Feedback overview")
 
 The user checks the Public description functionality
-    the user clicks the button/link    jQuery = a:contains("Public description")
-    the user should see the element    jQuery = h1:contains("Public description")
+    the user clicks the button/link    jQuery = button:contains("Public description")
+    the user should see the element    jQuery = span:contains("Public description")
     the user should see the element    jQuery = p:contains("This is the applicant response for public description.")
-    the user clicks the button/link    jQuery = a:contains("Feedback overview")
 
 The user checks the Scope functionality
-    the user clicks the button/link    jQuery = a:contains("Scope")
-    the user should see the element    jQuery = h1:contains("Scope")
+    the user clicks the button/link    jQuery = button:contains("Scope")
     the user should see the element    jQuery = p:contains("This is the applicant response for how does your project align with the scope of this competition?")
-    the user should see the element    jQuery = h4:contains("Assessor 1")
+    the user should see the element    jQuery = h3:contains("Assessor 1")
     the user should see the element    jQuery = p:contains("This is the scope feedback")
-    the user clicks the button/link    jQuery = a:contains("Feedback overview")
 
 the user checks the application team
-    the user clicks the button/link  link = Application team
-    the user should see the element  jQuery = h1:contains("Application team")
-    the user clicks the button/link  link = Application overview
+    the user clicks the button/link  jQuery = button:contains("Application team")
+    the user should see the element  jQuery = h2:contains("Electric Sounds Ltd")
 
 the user checks the research category
-    the user clicks the button/link  link = Research category
-    the user should see the element  jQuery = main:contains("Research category") p:contains("Experimental")
-    the user clicks the button/link  link = Feedback overview
+    the user clicks the button/link  jQuery = button:contains("Research category")
+    the user should see the element  jQuery = dt:contains("Selected research category") ~ dd:contains("Experimental")
 
 The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${email}  ${password}
