@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRowRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
+import org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,10 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
 
     public ServiceResult<Void> save(YourProjectCostsForm form, long applicationId, UserResource user) {
         OrganisationResource organisation = organisationRestService.getByUserAndApplicationId(user.getId(), applicationId).getSuccess();
-        ValidationMessages messages = saveProjectCostJustification(applicationId, organisation.getId(), form);
+        ValidationMessages messages = new ValidationMessages();
+        if (organisation.getOrganisationType().equals(OrganisationTypeEnum.KNOWLEDGE_BASE.getId())) {
+            messages = saveProjectCostJustification(applicationId, organisation.getId(), form);
+        }
         return save(form, applicationId, organisation, messages);
     }
 
