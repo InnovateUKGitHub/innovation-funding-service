@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DefaultCostCategory implements FinanceRowCostCategory {
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = ZERO_COST;
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -28,9 +28,9 @@ public class DefaultCostCategory implements FinanceRowCostCategory {
     @Override
     public void calculateTotal() {
         total = costs.stream()
-                .map(c -> c.getTotal() == null ? ZERO_COST : c.getTotal())
-                .reduce(ZERO_COST, BigDecimal::add)
-                .setScale(2, RoundingMode.HALF_UP);
+                .map(c -> c.getTotal() == null ? BigDecimal.ZERO : c.getTotal())
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     @Override

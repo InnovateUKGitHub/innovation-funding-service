@@ -15,8 +15,8 @@ import java.util.List;
 public class OverheadCostCategory implements FinanceRowCostCategory {
     public static final String ACCEPT_RATE = "Accept Rate";
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = ZERO_COST;
-    private BigDecimal labourCostTotal = ZERO_COST;
+    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal labourCostTotal = BigDecimal.ZERO;
 
 
     @Override
@@ -39,9 +39,9 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
 
     private void setTotalCost(Overhead overhead) {
         if (overhead.getRateType().getRate() != null) {
-            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100))).setScale(2, RoundingMode.HALF_UP);
+            total = labourCostTotal.multiply(new BigDecimal(overhead.getRate()).divide(new BigDecimal(100))).setScale(0, RoundingMode.HALF_UP);
         } else {
-            total = new BigDecimal(overhead.getRate()).setScale(2, RoundingMode.HALF_UP);
+            total = new BigDecimal(overhead.getRate()).setScale(0, RoundingMode.HALF_UP);
         }
     }
 

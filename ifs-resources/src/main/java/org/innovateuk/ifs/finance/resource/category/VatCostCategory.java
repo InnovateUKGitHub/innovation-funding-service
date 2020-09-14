@@ -12,8 +12,8 @@ import java.util.Optional;
 public class VatCostCategory implements FinanceRowCostCategory {
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = ZERO_COST;
-    private BigDecimal totalCostsWithoutVat = ZERO_COST;
+    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal totalCostsWithoutVat = BigDecimal.ZERO;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -29,9 +29,9 @@ public class VatCostCategory implements FinanceRowCostCategory {
     public void calculateTotal() {
         Optional<Vat> vat = costs.stream().findAny().map(Vat.class::cast);
         if (vat.map(Vat::getRegistered).orElse(false)) {
-            total = totalCostsWithoutVat.multiply(vat.get().getRate()).setScale(2, RoundingMode.HALF_UP);
+            total = totalCostsWithoutVat.multiply(vat.get().getRate()).setScale(0, RoundingMode.HALF_UP);
         } else {
-            total = ZERO_COST;
+            total = BigDecimal.ZERO;
         }
     }
 

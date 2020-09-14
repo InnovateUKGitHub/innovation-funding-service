@@ -12,14 +12,13 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.LabourCostCategoryBuilder.newLabourCostCategory;
-import static org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory.ZERO_COST;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class LabourCostCategoryTest {
 
-    private static final BigDecimal GROSS_EMPLOYEE_COST = new BigDecimal("20000.00");
+    private static final BigDecimal GROSS_EMPLOYEE_COST = new BigDecimal("20000");
 
     private List<FinanceRowItem> costs = new ArrayList<>();
 
@@ -66,7 +65,7 @@ public class LabourCostCategoryTest {
         workingDays.setLabourDays(0);
         labourCostCategory.calculateTotal();
 
-        assertEquals(ZERO_COST, labourCostCategory.getTotal());
+        assertEquals(BigDecimal.ZERO, labourCostCategory.getTotal());
     }
 
     @Test
@@ -111,7 +110,7 @@ public class LabourCostCategoryTest {
         labourCost.setGrossEmployeeCost(new BigDecimal("20000.00080"));
         labourCostCategory.calculateTotal();
 
-        assertEquals(new BigDecimal("20000.00"), labourCostCategory.getTotal());
+        assertEquals(new BigDecimal("20000"), labourCostCategory.getTotal());
     }
 
     @Test

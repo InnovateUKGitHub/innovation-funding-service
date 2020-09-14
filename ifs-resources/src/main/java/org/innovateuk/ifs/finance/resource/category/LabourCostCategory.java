@@ -16,7 +16,7 @@ public class LabourCostCategory implements FinanceRowCostCategory {
     public static final String WORKING_DAYS_PER_YEAR = "Working days per year";
     public static final String WORKING_DAYS_KEY = "working-days-per-year";
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = ZERO_COST;
+    private BigDecimal total = BigDecimal.ZERO;
     private LabourCost workingDaysPerYearCostItem;
 
     @Override
@@ -38,10 +38,10 @@ public class LabourCostCategory implements FinanceRowCostCategory {
         if (workingDaysPerYearCostItem != null) {
             total = costs.stream()
                     .map(c -> ((LabourCost) c).getTotal(workingDaysPerYearCostItem.getLabourDays()))
-                    .reduce(ZERO_COST, BigDecimal::add)
-                    .setScale(2, RoundingMode.HALF_UP);
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .setScale(0, RoundingMode.HALF_UP);
         } else {
-            total = ZERO_COST;
+            total = BigDecimal.ZERO;
         }
     }
 

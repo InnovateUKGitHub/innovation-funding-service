@@ -23,7 +23,6 @@ import java.util.List;
         @JsonSubTypes.Type(value=PreviousFundingCostCategory.class, name="previousFundingCostCategory")
 })
 public interface FinanceRowCostCategory {
-    BigDecimal ZERO_COST = new BigDecimal("0.00");
     List<FinanceRowItem> getCosts();
     BigDecimal getTotal();
     void calculateTotal();

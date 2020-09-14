@@ -85,9 +85,9 @@ public class AdditionalCompanyCostCategory implements FinanceRowCostCategory {
         total = getCosts().stream()
                 .map(AdditionalCompanyCost.class::cast)
                 .map(AdditionalCompanyCost::getTotal)
-                .map(cost -> ofNullable(cost).orElse(ZERO_COST))
-                .reduce(ZERO_COST, BigDecimal::add)
-                .setScale(2, RoundingMode.HALF_UP);
+                .map(cost -> ofNullable(cost).orElse(BigDecimal.ZERO))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(0, RoundingMode.HALF_UP);
     }
 
     @Override

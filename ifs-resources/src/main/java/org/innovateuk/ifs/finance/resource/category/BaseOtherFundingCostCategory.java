@@ -14,7 +14,7 @@ public abstract class BaseOtherFundingCostCategory implements FinanceRowCostCate
     private BaseOtherFunding otherFunding;
 
     private List<FinanceRowItem> costs = new ArrayList<>();
-    private BigDecimal total = ZERO_COST;
+    private BigDecimal total = BigDecimal.ZERO;
 
     @Override
     public List<FinanceRowItem> getCosts() {
@@ -29,13 +29,13 @@ public abstract class BaseOtherFundingCostCategory implements FinanceRowCostCate
     @Override
     public void calculateTotal() {
         if (!otherFundingSet()) {
-            total = ZERO_COST;
+            total = BigDecimal.ZERO;
         } else {
             total = costs.stream()
                     .map(c -> c.getTotal())
                     .filter(c -> c != null)
-                    .reduce(ZERO_COST, BigDecimal::add)
-                    .setScale(2, RoundingMode.HALF_UP);
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .setScale(0, RoundingMode.HALF_UP);
         }
     }
 
