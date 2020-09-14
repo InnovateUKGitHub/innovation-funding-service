@@ -85,7 +85,6 @@ public final class SectionBuilder {
     public Section build() {
         Section section = new Section();
         section.setName(name);
-        section.setDescription(description);
         section.setAssessorGuidanceDescription(assessorGuidanceDescription);
         section.setQuestionGroup(questionGroup);
         section.setQuestions(questions.stream().map(QuestionBuilder::build).collect(Collectors.toList()));

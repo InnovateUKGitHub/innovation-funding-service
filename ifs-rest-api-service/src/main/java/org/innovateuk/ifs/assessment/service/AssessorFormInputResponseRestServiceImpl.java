@@ -42,6 +42,16 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
     }
 
     @Override
+    public RestResult<ApplicationAssessmentsResource> getApplicationAssessments(long applicationId) {
+        return getWithRestResult(format("%s/application/%d", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentsResource.class);
+    }
+
+    @Override
+    public RestResult<ApplicationAssessmentResource> getApplicationAssessment(long applicationId, long assessment) {
+        return getWithRestResult(format("%s/application/%d/assessment/%d", assessorFormInputResponseRestUrl, applicationId, assessment), ApplicationAssessmentResource.class);
+    }
+
+    @Override
     public RestResult<ApplicationAssessmentAggregateResource> getApplicationAssessmentAggregate(long applicationId) {
         return getWithRestResult(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class);
     }

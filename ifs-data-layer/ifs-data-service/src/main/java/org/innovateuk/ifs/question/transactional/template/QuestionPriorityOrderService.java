@@ -101,6 +101,7 @@ public class QuestionPriorityOrderService {
         questionRepository.saveAll(subsequentQuestions);
     }
 
+    @NotSecured("Must be secured by other services.")
     public void persistAndPrioritiseSections(Competition competition, List<Section> sections, Section parent) {
             FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
             FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
@@ -124,6 +125,7 @@ public class QuestionPriorityOrderService {
         }
     }
 
+    @NotSecured("Must be secured by other services.")
     public List<Question> peristAndPrioritiesQuestions(Competition competition, List<Question> questions, Section parent) {
         FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
@@ -137,6 +139,7 @@ public class QuestionPriorityOrderService {
                 requiredMultipleChoiceValidator);
     }
 
+    @NotSecured("Must be secured by other services.")
     public List<Question>  peristAndPrioritiesQuestions(Competition competition, List<Question> questions, Section parent,
                                              FormValidator notEmptyValidator, FormValidator wordCountValidator,
                                              FormValidator researchCategoryValidator, FormValidator assessorScopeValidator,

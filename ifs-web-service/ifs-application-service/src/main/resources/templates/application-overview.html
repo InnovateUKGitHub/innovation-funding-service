@@ -73,7 +73,7 @@
             <th:block th:each="section : ${model.sections}">
                 <section th:id="'section-'+${section.id}">
                     <h2 class="govuk-heading-m govuk-!-margin-bottom-0" th:text="${section.title}" />
-                    <p class="govuk-body" th:text="${section.subTitle}" />
+                    <p th:if="${section.subTitle}" class="govuk-body" th:text="${section.subTitle}" />
                     <ul class="task-list">
                         <li th:each="row : ${section.rows}">
                             <div class="task">

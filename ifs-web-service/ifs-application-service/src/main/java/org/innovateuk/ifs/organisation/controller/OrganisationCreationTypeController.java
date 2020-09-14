@@ -80,10 +80,6 @@ public class OrganisationCreationTypeController extends AbstractOrganisationCrea
     }
 
     private String handleKtpLeadOrganisationType(HttpServletRequest request, HttpServletResponse response) {
-        OrganisationTypeForm organisationTypeForm = registrationCookieService.getOrganisationTypeCookieValue(request).orElse(new OrganisationTypeForm());
-        organisationTypeForm.setOrganisationType(OrganisationTypeEnum.KNOWLEDGE_BASE.getId());
-        registrationCookieService.saveToOrganisationTypeCookie(organisationTypeForm, response);
-        saveOrganisationTypeToCreationForm(response, organisationTypeForm);
         return "redirect:" + BASE_URL + "/" + "knowledge-base";
     }
 

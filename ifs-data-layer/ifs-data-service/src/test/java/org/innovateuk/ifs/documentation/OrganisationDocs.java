@@ -17,6 +17,7 @@ public class OrganisationDocs {
             fieldWithPath("organisationTypeDescription").description("Description of the organisation type").optional(),
             fieldWithPath("international").description("The organisation is located outside UK.").optional(),
             fieldWithPath("internationalRegistrationNumber").description("The international organisation registration number.").optional(),
+            fieldWithPath("registrationNumber").description("The organisation registration number, used by knowledge bases.").optional(),
             fieldWithPath("addresses").description("The addresses of the organisation").optional()
     };
 

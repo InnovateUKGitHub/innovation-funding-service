@@ -42,7 +42,8 @@ public class UserAuthentication implements Authentication {
         }
 
         return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .flatMap(role -> role.getAuthorities().stream())
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 

@@ -438,7 +438,6 @@ public class CompetitionSetupApplicationController {
                                 setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
                             }
 
-
                             model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, loggedInUser, Optional.of(questionId), setupSubsection, isEditable, questionResource.getTemplateFilename()));
                             model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.of(questionId), setupSubsection, form));
 
@@ -462,7 +461,7 @@ public class CompetitionSetupApplicationController {
     }
 
     private boolean displayAssessmentOptions(CompetitionResource competitionResource, CompetitionSetupQuestionResource questionResource) {
-        return (!competitionResource.isKTP() && isAssessedQuestion(questionResource)) || questionResource.getType().equals(QuestionSetupType.KTP_ASSESSMENT);
+        return (!competitionResource.isKtp() && isAssessedQuestion(questionResource)) || questionResource.getType().equals(QuestionSetupType.KTP_ASSESSMENT);
     }
 
     private boolean isAssessedQuestion(CompetitionSetupQuestionResource questionResource) {

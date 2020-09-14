@@ -438,7 +438,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         UserResource userResource = newUserResource().build();
         ProfileResource profileResource = newProfileResource().build();
 
-        when(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR)).thenReturn(user);
+        when(userRepository.findById(assessorId)).thenReturn(user);
         when(profileRepository.findById(profileId)).thenReturn(Optional.of(profile));
         when(userMapper.mapToResource(user.get())).thenReturn(userResource);
         when(assessorProfileMapper.mapToResource(profile)).thenReturn(profileResource);
@@ -453,7 +453,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
 
         InOrder inOrder = inOrder(userRepository, profileRepository, userMapper, assessorProfileMapper, affiliationMapper);
-        inOrder.verify(userRepository).findByIdAndRoles(assessorId, Role.ASSESSOR);
+        inOrder.verify(userRepository).findById(assessorId);
         inOrder.verify(profileRepository).findById(profileId);
         inOrder.verify(userMapper).mapToResource(user.get());
         inOrder.verify(assessorProfileMapper).mapToResource(profile);

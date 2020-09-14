@@ -18,6 +18,7 @@ public class RegistrationCookieService {
     public static final String ORGANISATION_TYPE = "organisationType";
     public static final String ORGANISATION_INTERNATIONAL = "organisationInternational";
     public static final String ORGANISATION_INTERNATIONAL_DETAILS = "organisationInternationalDetails";
+    public static final String KNOWLEDGE_BASE_DETAILS = "knowledgeBaseDetails";
     public static final String ORGANISATION_FORM = "organisationForm";
     public static final String ORGANISATION_ID = "organisationId";
     public static final String INVITE_HASH = "invite_hash";
@@ -41,6 +42,10 @@ public class RegistrationCookieService {
 
     public void saveToOrganisationInternationalDetailsCookie(OrganisationInternationalDetailsForm organisationFormForCookie, HttpServletResponse response) {
         cookieUtil.saveToCookie(response, ORGANISATION_INTERNATIONAL_DETAILS, JsonUtil.getSerializedObject(organisationFormForCookie));
+    }
+
+    public void saveToKnowledgeBaseDetailsCookie(KnowledgeBaseCreateForm organisationFormForCookie, HttpServletResponse response) {
+        cookieUtil.saveToCookie(response, KNOWLEDGE_BASE_DETAILS, JsonUtil.getSerializedObject(organisationFormForCookie));
     }
 
     public void saveToOrganisationIdCookie(Long id, HttpServletResponse response) {
@@ -75,6 +80,10 @@ public class RegistrationCookieService {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_INTERNATIONAL_DETAILS), OrganisationInternationalDetailsForm.class));
     }
 
+    public Optional<KnowledgeBaseCreateForm> getKnowledgeBaseDetailsValue(HttpServletRequest request) {
+        return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, KNOWLEDGE_BASE_DETAILS), KnowledgeBaseCreateForm.class));
+    }
+
     public Optional<Long> getOrganisationIdCookieValue(HttpServletRequest request) {
         return Optional.ofNullable(getObjectFromJson(cookieUtil.getCookieValue(request, ORGANISATION_ID), Long.class));
     }
@@ -105,6 +114,10 @@ public class RegistrationCookieService {
         cookieUtil.removeCookie(response, ORGANISATION_FORM);
     }
 
+    public void deleteKnowledgeBaseDetailsCookie(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, KNOWLEDGE_BASE_DETAILS);
+    }
+
     public void deleteOrganisationInternationalDetailsCookie(HttpServletResponse response) {
         cookieUtil.removeCookie(response, ORGANISATION_INTERNATIONAL_DETAILS);
     }
@@ -133,6 +146,7 @@ public class RegistrationCookieService {
         deleteProjectInviteHashCookie(response);
         deleteOrganisationInternationalCookie(response);
         deleteOrganisationInternationalDetailsCookie(response);
+        deleteKnowledgeBaseDetailsCookie(response);
     }
 
     public boolean isCollaboratorJourney(HttpServletRequest request) {

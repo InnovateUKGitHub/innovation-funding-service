@@ -13,6 +13,7 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
     private long projectDurationInMonths;
     private Long competitionId;
     private boolean ktpCompetition;
+    private boolean procurementCompetition;
 
     public ProjectDetailsStartDateViewModel(ProjectResource project, CompetitionResource competition) {
         this.projectId = project.getId();
@@ -21,6 +22,7 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
         this.applicationId = project.getApplication();
         this.competitionId = project.getCompetition();
         this.ktpCompetition = competition.isKtp();
+        this.procurementCompetition = competition.isProcurement();
     }
 
     public String getProjectName() {
@@ -45,5 +47,9 @@ public class ProjectDetailsStartDateViewModel implements BasicProjectDetailsView
 
     public boolean isKtpCompetition() {
         return ktpCompetition;
+    }
+
+    public boolean isProcurementCompetition() {
+        return procurementCompetition;
     }
 }

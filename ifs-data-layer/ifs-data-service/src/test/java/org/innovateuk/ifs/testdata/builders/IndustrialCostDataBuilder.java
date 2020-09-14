@@ -55,7 +55,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     public IndustrialCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
         return updateCostCategory(OtherFundingCostCategory.class, FinanceRowType.OTHER_FUNDING,
                 otherFundingCostCategory -> {
-                    OtherFunding otherFunding = otherFundingCostCategory.getOtherFunding();
+                    BaseOtherFunding otherFunding = otherFundingCostCategory.getOtherFunding();
                     otherFunding.setOtherPublicFunding("Yes");
                     financeRowCostsService.update(otherFunding.getId(), otherFunding);
                 }).addCostItem("Other funding", (finance) -> {
@@ -171,15 +171,31 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });
     }
-
     public IndustrialCostDataBuilder withWorkPostcode(String workPostcode) {
         return with(data -> {
-
             ApplicationFinanceResource applicationFinance =
                     financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
                             getSuccess();
 
             applicationFinance.setWorkPostcode(workPostcode);
+
+            financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
+        });
+    }
+
+    public IndustrialCostDataBuilder withLocation() {
+        return with(data -> {
+
+            ApplicationFinanceResource applicationFinance =
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
+            OrganisationResource org = organisationService.findById(applicationFinance.getOrganisation()).getSuccess();
+
+            if (org.isInternational()) {
+                applicationFinance.setInternationalLocation("France");
+            } else {
+                applicationFinance.setWorkPostcode("AB12 3CD");
+            }
 
             financeService.updateApplicationFinance(applicationFinance.getId(), applicationFinance);
         });

@@ -173,12 +173,16 @@ public class YourFundingViewModel implements BaseAnalyticsViewModel {
         return organisationType;
     }
 
-    public boolean isKnowledgeBaseOrganisation() {
-        return OrganisationTypeEnum.KNOWLEDGE_BASE == organisationType;
-    }
-
     /* view logic */
     public boolean isReadOnly() {
         return complete || !open;
+    }
+
+    /*
+    * Will all lead applicants on a ktp competition be Knowledge Base
+    *
+    * */
+    public boolean hideAreYouRequestingFunding() {
+        return isKtpFundingType() && !leadApplicant;
     }
 }
