@@ -18,9 +18,10 @@ public class ApplicationSummaryControllerSecurityTest extends BaseControllerSecu
     public void applicationSummary() {
         List<Role> roles = new ArrayList<>();
         roles.add(Role.APPLICANT);
+        roles.add(Role.ASSESSOR);
         roles.add(Role.MONITORING_OFFICER);
         roles.add(Role.KNOWLEDGE_TRANSFER_ADVISER);
 
-        assertRolesCanPerform(() -> classUnderTest.applicationSummary(null, 0L, null), roles);
+        assertRolesCanPerform(() -> classUnderTest.applicationSummary(null, null, null,null, 0L, null), roles);
     }
 }
