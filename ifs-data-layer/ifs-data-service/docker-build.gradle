@@ -10,7 +10,6 @@ ext['flyway.schemas']='ifs,ifs_test'
 ext['flyway.user']="$ext.testIfsDatasourceUsername"
 ext['flyway.password']="$ext.testIfsDatasourcePassword"
 ext['flyway.table']="schema_version"
-ext['flyway.validateOnMigrate']=false
 
 def flywayPatchesPath = "filesystem:$project.buildDir.path/resources/main/db"
 ext['flyway.locations']="$flywayPatchesPath/migration," +

@@ -26,7 +26,6 @@ function upgradeServices {
     rolloutStatus "finance-data-service"
 
     # data-service
-    #oc create -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/ifs-services/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
 
     rolloutStatus "data-service"
