@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.organisation.populator;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationResource;
@@ -18,9 +17,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toSet;
-import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
+import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.KNOWLEDGE_BASE;
 
 @Component
 public class OrganisationSelectionViewModelPopulator {
@@ -42,9 +40,7 @@ public class OrganisationSelectionViewModelPopulator {
 
         EnumSet<OrganisationTypeEnum> allowedTypes = EnumSet.allOf(OrganisationTypeEnum.class);
 
-        if (competitionResource.getFundingType() == FundingType.KTP) {
-            allowedTypes.removeAll(asList(RESEARCH, RTO));
-        } else {
+        if (!competitionResource.isKtp()) {
             allowedTypes.remove(KNOWLEDGE_BASE);
         }
 

@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.organisation.controller.OrganisationCreationTyp
 import static org.innovateuk.ifs.organisation.resource.OrganisationTypeEnum.*;
 
 @RequestMapping("/organisation/select")
-@SecuredBySpring(value="Controller", description = "An existing applicant can pick a previous organisation." +
+@SecuredBySpring(value = "Controller", description = "An existing applicant can pick a previous organisation." +
         " An assessor will be passed on to create an organisation for the first time and become an applicant. ",
         securedType = OrganisationSelectionController.class)
 @PreAuthorize("hasAnyAuthority('applicant', 'assessor', 'stakeholder', 'monitoring_officer')")
@@ -98,10 +98,8 @@ public class OrganisationSelectionController extends AbstractOrganisationCreatio
 
         List<OrganisationResource> organisations = organisationRestService.getOrganisations(userId, international).getSuccess();
 
-        if (!competitionResource.isKtp()) {
-            if (organisations.size() == 1) {
-                return Boolean.TRUE.equals(organisations.stream().anyMatch(o -> o.getOrganisationTypeEnum().equals(KNOWLEDGE_BASE)));
-            }
+        if (!competitionResource.isKtp() && organisations.size() == 1) {
+            return Boolean.TRUE.equals(organisations.stream().anyMatch(o -> o.getOrganisationTypeEnum().equals(KNOWLEDGE_BASE)));
         }
 
         return organisationRestService.getOrganisations(userId, international).getSuccess().isEmpty();
