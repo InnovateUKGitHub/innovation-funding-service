@@ -16,7 +16,7 @@ Applicant should not see covid questionnaire banner in the dashboard
     Then The user should not see the element                    link = ${covidQuestionnarieBannerLink}
     And the user should not see an error in the page
 
-The users can not see covid questionnaire banner in search page
+The users should not see covid questionnaire banner in search page
     [Documentation]  IFS-8180
     Given Logout as user
     When the user clicks the button/link                 link = Innovation Funding Service
