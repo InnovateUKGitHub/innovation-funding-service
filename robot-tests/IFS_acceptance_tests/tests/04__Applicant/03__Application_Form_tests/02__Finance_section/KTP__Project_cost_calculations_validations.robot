@@ -113,12 +113,12 @@ Travel and subsistence cost calculations
 Other costs calculations
     [Documentation]  IFS-7790
     Given the user fills in ktp other costs     Other costs   1000
-    Then the user should see the right values   1,000    Other costs    10519
+    Then the user should see the right values   1,000    Other costs    9519
 
 Consumables calculations
     [Documentation]  IFS-7790
     Given the user fills in consumables
-    Then the user should see the right values    2,000    Consumables    12519
+    Then the user should see the right values    2,000    Consumables    11519
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790
@@ -196,7 +196,7 @@ the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Estate") ~ td:contains("1,000")
     the user should see the element       jQuery = td:contains("Additional associate support") ~ td:contains("1,000")
     the user should see the element       jQuery = td:contains("Other costs") ~ td:contains("1,000")
-    the user should see the element       jQuery = th:contains("Total") ~ td:contains("£12,519")
+    the user should see the element       jQuery = th:contains("Total") ~ td:contains("£11,519")
 
 the user fills in consumables
     the user enters text to a text field     css = input[id^="consumableCost"][id$="item"]  consumable
