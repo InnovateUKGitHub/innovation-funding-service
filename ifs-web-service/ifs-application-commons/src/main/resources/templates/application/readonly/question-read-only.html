@@ -186,7 +186,7 @@
         </table>
         </th:block>
         <th:block th:if="${model.ktpCompetition && model.ktaProcessRole.present}">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge Transfer Adviser</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Knowledge transfer adviser</h2>
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -209,7 +209,7 @@
             </table>
         </th:block>
 </th:block>
-<th:block th:fragment="grant-transfer-details(model)">
+<th:block th:fragment="grant-transfer-details (model)">
     <dl class="govuk-list">
         <dt>Project name</dt>
         <dd th:text="${model.projectName}">My EU project name</dd>
@@ -243,7 +243,7 @@
     </dl>
 </th:block>
 
-<th:block th:fragment="grant-agreement(model)">
+<th:block th:fragment="grant-agreement (model)">
     <th:block th:if="${model.filename != null}">
         <!--/* don't use @{...} so that URL is always pointing to application service */-->
         <a th:href="${'/application/' + model.applicationId +'/grant-agreement'}" th:text="${model.filename}"
@@ -255,7 +255,7 @@
     </th:block>
 </th:block>
 
-<th:block th:fragment="terms-and-conditions(model)">
+<th:block th:fragment="terms-and-conditions (model)">
     <th:block th:unless="${model.complete}">
         <div class="warning-alert">
             <p class="govuk-body">The following organisations have not yet accepted:</p>
