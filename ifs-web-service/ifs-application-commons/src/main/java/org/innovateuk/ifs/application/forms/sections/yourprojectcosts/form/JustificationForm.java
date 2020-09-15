@@ -11,7 +11,7 @@ public class JustificationForm {
     @NotNull(message = NOT_BLANK_MESSAGE)
     private Boolean exceedAllowedLimit;
 
-    @WordCount(max = 750, message = "{validation.field.max.word.count}")
+    @WordCount(max = 750, message = "{validation.ktp.project.costs.justification.word.count.too.long}")
     private String justification;
 
     public JustificationForm() {

@@ -3350,7 +3350,7 @@
             </th:block>
             <th:block th:if="${model.complete}">
                 <div class="govuk-body">
-                    <p th:text="*{justificationForm.exceedAllowedLimit}">yes</p>
+                    <p th:text="*{justificationForm.exceedAllowedLimit != null ? 'yes' : 'false'}">yes</p>
                     <p th:text="*{justificationForm.justification}">I am very bad with money</p>
                 </div>
             </th:block>

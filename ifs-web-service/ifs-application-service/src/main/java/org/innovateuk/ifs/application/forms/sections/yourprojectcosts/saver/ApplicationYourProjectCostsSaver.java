@@ -46,7 +46,7 @@ public class ApplicationYourProjectCostsSaver extends AbstractYourProjectCostsSa
 
         ValidationMessages messages = new ValidationMessages();
         JustificationForm justificationForm = form.getJustificationForm();
-        if (justificationForm != null && justificationForm.getExceedAllowedLimit()) {
+        if (justificationForm != null) {
 
             ApplicationFinanceResource finance =
                     applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
