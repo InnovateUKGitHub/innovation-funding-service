@@ -5,6 +5,8 @@ Documentation     IFS-7790  KTP: Your finances - Edit
 ...
 ...               IFS-8156 KTP Project costs - T&S
 ...
+...               IFS-8157  KTP Project costs - Subcontracting costs
+...
 Suite Setup       Custom Suite Setup
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../../../resources/common/Applicant_Commons.robot
@@ -72,7 +74,6 @@ Knowledge base supervisor calculations
 
 Estate validations
     [Documentation]  IFS-7790
-    #Given the user clicks the button/link                 jQuery = button:contains("Estates")
     Given the user enters text to a text field             css = input[id^="estate"][id$="description"]  estate
     When The user enters text to a text field              css = input[id^="estate"][id$="cost"]  ${estateValue}
     Then the user clicks the button/link                   jQuery = button:contains("Mark as complete")
@@ -98,10 +99,9 @@ Additional associate support calculation
    And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="cost"]
    And the user should not see the element        jQuery = span:contains(${empty_field_warning_message}) ~input[id^="associateSupport"][id$="description"]
 
-Subcontracting costs calculations
-    [Documentation]  IFS-7790
-    Given the user enters text to a text field            css = input[id^="subcontracting"][id$="cost"]        1000
-    Then the user fills in the subcontracting values
+Subcontracting costs should not display in project costs
+    [Documentation]  IFS-8157
+    Then subcontracting fields should not display
 
 Travel and subsistence cost calculations
     [Documentation]  IFS-7790  IFS-8156
@@ -184,7 +184,6 @@ the user should see the read only view of KTP
     the user should see the element       jQuery = th:contains("Total knowledge base supervisor costs") ~ td:contains("£123")
     the user should see the element       jQuery = th:contains("Total estates costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total additional associate support costs") ~ td:contains("£1,000")
-    the user should see the element       jQuery = th:contains("Total subcontracting costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total other costs") ~ td:contains("£1,000")
     the user should see the element       jQuery = th:contains("Total additional company cost estimations") ~ td:contains("£500")
 
@@ -196,7 +195,6 @@ the user should see the correct data in the finance tables
     the user should see the element       jQuery = td:contains("Knowledge base supervisor") ~ td:contains("123")
     the user should see the element       jQuery = td:contains("Estate") ~ td:contains("1,000")
     the user should see the element       jQuery = td:contains("Additional associate support") ~ td:contains("1,000")
-    the user should see the element       jQuery = td:contains("Subcontracting") ~ td:contains("1,000")
     the user should see the element       jQuery = td:contains("Other costs") ~ td:contains("1,000")
     the user should see the element       jQuery = th:contains("Total") ~ td:contains("£12,519")
 
@@ -230,8 +228,8 @@ expand the sections
     the user clicks the button/link       jQuery = button:contains("Associate employment")
     the user clicks the button/link       jQuery = button:contains("Associate development")
 
-the user fills in the subcontracting values
-    the user enters text to a text field      css = input[id^="subcontracting"][id$="name"]        Subcontracting
-    the user enters text to a text field      css = input[id^="subcontracting"][id$="country"]     UK
-    the user enters text to a text field      css = textarea[id^="subcontracting"][id$="role"]        Awesome
-    the user should see the right values      1,000   Subcontracting     3369
+subcontracting fields should not display
+    the user should not see the element     css = input[id^="subcontracting"][id$="cost"]
+    the user should not see the element     css = input[id^="subcontracting"][id$="name"]
+    the user should not see the element     css = input[id^="subcontracting"][id$="country"]
+    the user should not see the element     css = textarea[id^="subcontracting"][id$="role"]

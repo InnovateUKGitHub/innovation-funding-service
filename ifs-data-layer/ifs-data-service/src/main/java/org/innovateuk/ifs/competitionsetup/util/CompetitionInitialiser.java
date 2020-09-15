@@ -66,17 +66,16 @@ public class CompetitionInitialiser {
             default:
                 throw new IllegalArgumentException("Unrecognised funding type when initialising competition.");
         }
-        IntStream.range(0, types.size()).forEach(i -> {
+        IntStream.range(0, types.size()).forEach(i ->
             competition.getCompetitionFinanceRowTypes().add(
                     competitionFinanceRowsTypesRepository.save(
-                            new CompetitionFinanceRowTypes(competition, types.get(i), i)));
-
-        });
+                            new CompetitionFinanceRowTypes(competition, types.get(i), i)))
+        );
         return competition;
     }
 
     private List<FinanceRowType> ktpFinanceTypes() {
-        return newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, SUBCONTRACTING_COSTS, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, YOUR_FINANCE);
+        return newArrayList(ASSOCIATE_SALARY_COSTS, ASSOCIATE_DEVELOPMENT_COSTS, KTP_TRAVEL, CONSUMABLES, KNOWLEDGE_BASE, ESTATE_COSTS, ASSOCIATE_SUPPORT, OTHER_COSTS, ADDITIONAL_COMPANY_COSTS, FINANCE, PREVIOUS_FUNDING, YOUR_FINANCE);
     }
 
     private List<FinanceRowType> loanFinanceTypes() {
