@@ -12,14 +12,15 @@ Resource          ../../../../resources/common/Competition_Commons.robot
 Resource          ../../../../resources/common/PS_Common.robot
 
 *** Variables ***
-${KTPapplication}  	             KTP application
-${KTPapplicationId}              ${application_ids["${KTPapplication}"]}
-${KTPcompetiton}                 KTP new competition
-${KTPcompetitonId}               ${competition_ids["${KTPcompetiton}"]}
-&{KTPLead}                       email=bob@knowledge.base    password=Passw0rd
-${estateValue}                   11000
-${associateSalaryTable}          associate-salary-costs-table
-${associateDevelopmentTable}     associate-development-costs-table
+${KTPapplication}  	               KTP application
+${KTPapplicationId}                ${application_ids["${KTPapplication}"]}
+${KTPcompetiton}                   KTP new competition
+${KTPcompetitonId}                 ${competition_ids["${KTPcompetiton}"]}
+&{KTPLead}                         email=bob@knowledge.base    password=Passw0rd
+${estateValue}                     11000
+${associateSalaryTable}            associate-salary-costs-table
+${associateDevelopmentTable}       associate-development-costs-table
+${limitFieldValidationMessage}     You must provide justifications for exceeding allowable cost limits.
 
 *** Test Cases ***
 Associate employment and development client side validation
@@ -117,6 +118,17 @@ Consumables calculations
     [Documentation]  IFS-7790
     Given the user fills in consumables
     Then the user should see the right values    2,000    Consumables    7369
+
+Limit justification validation
+    [Documentation]  IFS-8158
+    Given the user clicks the button/link                 exceed-limit-yes
+    #When the user clicks the button/link                  css = label[for="stateAidAgreed"]
+    Then the user clicks the button/link                  jQuery = button:contains("Mark as complete")
+    And the user should see a field and summary error     ${limitFieldValidationMessage}
+    #Then the user enters text to a text field             justification   Test text    #id = name  ${appTitle} 
+    #Then the user enters text to a text field             justification-text  Test text
+    Then the user enters text to a text field            [id^="justification-text"]   Test Text
+    #Then the user clicks the button/link                       jQuery = button:contains("Mark as complete")
 
 Additional company cost estimation validations
     [Documentation]  IFS-7790
