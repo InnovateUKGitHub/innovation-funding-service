@@ -931,7 +931,7 @@ IFS.core.formValidation = (function () {
         // if this was the last error we remove the error styling
         if (formGroup.find('.govuk-error-message').length === 0) {
           formGroup.removeClass('govuk-form-group--error')
-          field.removeClass('govuk-input--error')
+          field.removeClass('govuk-input--error govuk-select--error')
           if (formInTable && formInTableErrors === 0) {
             field.closest('.form-in-table').removeClass('govuk-form-group--error')
           }

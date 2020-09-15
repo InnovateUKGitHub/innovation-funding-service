@@ -3006,7 +3006,7 @@
     <tr class="form-group-row-validated" th:with="path=${'ktpTravelCostRows[__${id}__]'}"
         th:attr="data-repeatable-row=${path}"
         th:id="${path}"
-        th:classappend="((${#ifsUtil.hasErrorsStartingWith('form', path)}) or (${#fields.hasErrors('ktpTravelCostRows')})) ? 'govuk-form-group--error'">
+        th:classappend="${#ifsUtil.hasErrorsStartingWith('form', path)} ? 'govuk-form-group--error'">
         <input type="hidden" th:field="*{__${path}__.costId}"/>
         <td class="govuk-table__cell govuk-form-group">
             <label th:for="__${path}__.type">
@@ -3016,7 +3016,7 @@
                 th:insert="question-type/form-elements :: form-validation-custom-messages (errorId=__${path}__.type)"/>
             <select class="govuk-select"
                     required="required"
-                    data-required-errormessage="#{validation.ktp.travel.type.required}"
+                    th:attr="data-required-errormessage=#{validation.ktp.travel.type.required}"
                     th:errorclass="govuk-select--error"
                     th:name="__${path}__.type">
                 <option disabled="disabled" value="" th:selected="${row.type == null}">Select</option>
