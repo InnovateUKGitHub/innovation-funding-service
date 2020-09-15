@@ -40,7 +40,6 @@ public class ApplicationSummaryViewModel implements BaseAnalyticsViewModel {
         this.previousApplicationNumber = application.getPreviousApplicationNumber();
         this.previousApplicationTitle = application.getPreviousApplicationTitle();
         this.ktpCompetition = competition.isKtp();
-
         this.interviewFeedbackViewModel = interviewFeedbackViewModel;
     }
 

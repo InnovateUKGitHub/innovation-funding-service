@@ -104,19 +104,19 @@ public class ManagementApplicationPopulator {
             settings.setIncludeStatuses(true);
         }
 
+        final InterviewFeedbackViewModel interviewFeedbackViewModel;
+        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+        } else {
+            interviewFeedbackViewModel = null;
+        }
+        
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationSummaryViewModelPopulator.populate(application, competition, user, settings);
         ApplicationOverviewIneligibilityViewModel ineligibilityViewModel = applicationOverviewIneligibilityModelPopulator.populateModel(application);
 
         Long projectId = null;
         if (application.getApplicationState() == ApplicationState.APPROVED) {
             projectId = projectRestService.getByApplicationId(applicationId).getOptionalSuccessObject().map(ProjectResource::getId).orElse(null);
-        }
-
-        final InterviewFeedbackViewModel interviewFeedbackViewModel;
-        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
-            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
-        } else {
-            interviewFeedbackViewModel = null;
         }
 
         return new ManagementApplicationViewModel(

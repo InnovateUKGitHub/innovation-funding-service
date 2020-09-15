@@ -118,12 +118,10 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 .map(this::resolve)
                 .collect(toCollection(LinkedHashSet::new));
 
-        ApplicationReadOnlyViewModel ApplicationReadOnlyViewModel = new ApplicationReadOnlyViewModel(settings,
+        return new ApplicationReadOnlyViewModel(settings,
                 sectionViews,
                 settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
                 settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
-
-        return ApplicationReadOnlyViewModel;
     }
 
     private ApplicationSectionReadOnlyViewModel sectionView(CompetitionResource competition, SectionResource section, ApplicationReadOnlySettings settings, ApplicationReadOnlyData data) {
