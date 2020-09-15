@@ -54,6 +54,12 @@ public class CommonBuilders {
                 .withAssessorGuidanceDescription("Each question should be given a score out of 10. Written feedback should also be given.");
     }
 
+    public static SectionBuilder ktpAssessmentQuestions() {
+        return aSection()
+                .withName("Score Guidance")
+                .withType(SectionType.KTP_ASSESSMENT);
+    }
+
     public static SectionBuilder finances() {
         return aSection()
                 .withName("Finances")
@@ -289,6 +295,88 @@ public class CommonBuilders {
                                         ))
                         )
                 );
+    }
+
+    //        maybe change default assessed questions and fix form inputs
+    public static QuestionBuilder impact() {
+        return aQuestion()
+                .withShortName("Impact")
+                .withName("Impact")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .withFormInputs(defaultKtpAssessedQuestionFormInputs());
+    }
+
+    public static QuestionBuilder innovation() {
+        return aQuestion()
+                .withShortName("Innovation")
+                .withName("Innovation")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .withFormInputs(defaultKtpAssessedQuestionFormInputs());
+    }
+
+    public static QuestionBuilder cohesiveness() {
+        return aQuestion()
+                .withShortName("Cohesiveness")
+                .withName("Cohesiveness")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .withFormInputs(defaultKtpAssessedQuestionFormInputs());
+    }
+
+    public static QuestionBuilder challenge() {
+        return aQuestion()
+                .withShortName("Challenge")
+                .withName("Challenge")
+                .withAssignEnabled(false)
+                .withMarkAsCompletedEnabled(true)
+                .withMultipleStatuses(false)
+                .withType(QuestionType.GENERAL)
+                .withQuestionSetupType(QuestionSetupType.KTP_ASSESSMENT)
+                .withFormInputs(defaultKtpAssessedQuestionFormInputs());
+    }
+
+    public static List<FormInputBuilder> defaultKtpAssessedQuestionFormInputs() {
+        return newArrayList(aFormInput()
+                        .withType(FormInputType.ASSESSOR_SCORE)
+                        .withScope(FormInputScope.ASSESSMENT)
+                .withGuidanceAnswer("guidance answer")
+                .withGuidanceTitle("guidance title")
+                        .withActive(true),
+                aFormInput()
+                        .withType(FormInputType.TEXTAREA)
+                        .withScope(FormInputScope.ASSESSMENT)
+                        .withGuidanceAnswer("guidance answer")
+                        .withGuidanceTitle("guidance title")
+                        .withActive(true)
+                .withGuidanceRows(newArrayList(
+                        aGuidanceRow()
+                                .withSubject("9,10")
+                                .withJustification(" 9 - 10 text"),
+                        aGuidanceRow()
+                                .withSubject("7,8")
+                                .withJustification(" 7 - 8 text"),
+                        aGuidanceRow()
+                                .withSubject("5,6")
+                                .withJustification(" 5 - 6 text"),
+                        aGuidanceRow()
+                                .withSubject("3,4")
+                                .withJustification(" 3 - 4 text"),
+                        aGuidanceRow()
+                                .withSubject("1,2")
+                                .withJustification(" 1 - 2 text")
+                ))
+        );
     }
 
     public static List<FormInputBuilder> defaultAssessedQuestionFormInputs(Function<FormInputBuilder, FormInputBuilder> applicationTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> assessorTextAreaModifier, Function<FormInputBuilder, FormInputBuilder> appendixFormInputModifier) {

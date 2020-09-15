@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.repository.GrantTermsAndConditionsReposito
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeEnum;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.CompetitionTemplate;
+import org.innovateuk.ifs.competitionsetup.applicationformbuilder.FundingTypeTemplate;
 import org.innovateuk.ifs.competitionsetup.applicationformbuilder.SectionBuilder;
 import org.innovateuk.ifs.competitionsetup.domain.AssessorCountOption;
 import org.innovateuk.ifs.competitionsetup.domain.CompetitionDocument;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionDocumentResource.COLLABORATION_AGREEMENT_TITLE;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * Service that can create Competition template copies
@@ -73,11 +75,18 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private QuestionPriorityOrderService questionPriorityOrderService;
 
     private Map<CompetitionTypeEnum, CompetitionTemplate> templates;
+    private Map<FundingType, FundingTypeTemplate> fundingTypeTemplates;
 
     @Autowired
     public void setCompetitionTemplates(List<CompetitionTemplate> templateBeans) {
         templates = templateBeans.stream()
                 .collect(toMap(CompetitionTemplate::type, Function.identity()));
+    }
+
+    @Autowired
+    public void setFundingTypeTemplates(List<FundingTypeTemplate> templateBeans) {
+        fundingTypeTemplates = templateBeans.stream()
+                .collect(toMap(FundingTypeTemplate::type, Function.identity()));
     }
 
     @Override
@@ -106,12 +115,15 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competitionInitialiser.initialiseProjectSetupColumns(competition);
 
         CompetitionTemplate template = templates.get(competition.getCompetitionTypeEnum());
+        FundingTypeTemplate fundingTypeTemplate = fundingTypeTemplates.get(competition.getFundingType());
 
-        List<SectionBuilder> sectionBuilders = template.sections();
+        List<SectionBuilder> competitionTemplateSectionBuilders = template.sections();
+        List<SectionBuilder> fundingTypeSectionBuilders = fundingTypeTemplate.sections();
 
-        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition.getFundingType(), sectionBuilders);
+        overrideTermsAndConditionsTerminologyForInvestorPartnerships(competition.getFundingType(), competitionTemplateSectionBuilders);
 
-        competition.setSections(sectionBuilders.stream().map(SectionBuilder::build).collect(Collectors.toList()));
+        competition.setSections(combineLists(competitionTemplateSectionBuilders, fundingTypeSectionBuilders)
+                .stream().map(SectionBuilder::build).collect(Collectors.toList()));
 
         template.copyTemplatePropertiesToCompetition(competition);
         overrideTermsAndConditionsForNonGrantCompetitions(competition);
