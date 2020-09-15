@@ -227,7 +227,7 @@ New lead applicant completes the KTP application
     [Documentation]  IFS-7146  IFS-7147  IFS-7148  IFS-7812  IFS-7814
     When Logging in and Error Checking                                      &{ktpLeadApplicantCredentials}
     And the user clicks the button/link                                     jQuery = a:contains("${UNTITLED_APPLICATION_DASHBOARD_LINK}")
-    Then the user completes the KTP application except application team and your funding
+    Then the user completes the KTP application except application team and your funding   TRUE
 
 New lead applicant can declare any other government funding received
     [Documentation]  IFS-7956
@@ -488,8 +488,8 @@ Internal user is able to approve the GOL and the project is now Live
 
 *** Keywords ***
 the user marks the KTP project costs, location and organisation information as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
-    the user fills in ktp project costs
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${leadUser}
+    the user fills in ktp project costs                      ${leadUser}
     the user enters the project location
     the user fills in the KTP organisation information       ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user clicks the button/link                          link = Back to application overview
@@ -588,12 +588,13 @@ Internal user is able to approve documents
     the user clicks the button/link              link = Return to documents
 
 the user completes the KTP application except application team and your funding
+    [Arguments]  ${leadUser}
     the user clicks the button/link                                                             link = Application details
     the user fills in the KTP Application details                                               ${KTPapplicationTitle}  ${tomorrowday}  ${month}  ${nextyear}
     the applicant marks EDI question as complete
     the lead applicant fills all the questions and marks as complete(programme)
     the user navigates to Your-finances page                                                    ${ktpApplicationTitle}
-    the user marks the KTP project costs, location and organisation information as complete     ${ktpApplicationTitle}   Calculate  52,214
+    the user marks the KTP project costs, location and organisation information as complete     ${ktpApplicationTitle}   Calculate  52,214  ${leadUser}
     the user accept the competition terms and conditions                                        Return to application overview
 
 the user fills in the KTP Application details
@@ -632,12 +633,14 @@ Custom suite teardown
     Disconnect from database
 
 the user fills in ktp project costs
+    [Arguments]  ${leadUser}
     the user clicks the button/link             link = Your project costs
     the user fills in Associate employment
     the user fills in Associate development
     ${STATUS}    ${VALUE} =   Run Keyword And Ignore Error Without Screenshots  the user should not see the element   css = textarea[id$="associateSalary.description"]
     Run Keyword If  '${status}' == 'PASS'    the user clicks the button/link         jQuery = button:contains("Additional company cost estimation")
     the user fills additional company costs     description  100
+    Run Keyword If  '${leadUser}' == 'TRUE'  the user clicks the button/link             exceed-limit-no
     the user clicks the button/link             css = label[for="stateAidAgreed"]
     the user clicks the button/link             jQuery = button:contains("Mark as complete")
 

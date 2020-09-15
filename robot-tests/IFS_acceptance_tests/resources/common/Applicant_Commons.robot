@@ -635,7 +635,7 @@ the lead invites a non-registered user
 the user completes partner project finances
     [Arguments]   ${application_title}  ${is_KTP}
     the user clicks the button/link                        link = Your project finances
-    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP project costs, location and organisation information as complete     ${application_title}   Calculate  52,214
+    Run Keyword If  '${is_KTP}' == 'yes'   Run keywords    the user marks the KTP project costs, location and organisation information as complete     ${application_title}   Calculate  52,214  FALSE
     ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
     ...  ELSE                              Run keywords    the user marks the finances as complete                                                     ${application_title}   Calculate  52,214  yes
     ...                                             AND    the user accept the competition terms and conditions                                        Return to application overview
