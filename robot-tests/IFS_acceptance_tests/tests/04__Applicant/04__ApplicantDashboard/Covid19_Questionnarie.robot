@@ -13,14 +13,14 @@ ${covidQuestionnarieBannerLink}     You may be eligible for additional funding
 Applicant should not see covid questionnaire banner in the dashboard
     [Documentation]  IFS-8180
     Given the user clicks the application tile if displayed
-    Then The user should not see the element                    link = ${covidQuestionnarieBannerLink}
+    Then the user should not see the element                    link = ${covidQuestionnarieBannerLink}
     And the user should not see an error in the page
 
 The users should not see covid questionnaire banner in search page
     [Documentation]  IFS-8180
     Given Logout as user
     When the user clicks the button/link                 link = Innovation Funding Service
-    Then The user should not see the element             link = ${covidQuestionnarieBannerLink}
+    Then the user should not see the element             link = ${covidQuestionnarieBannerLink}
     And the user should not see an error in the page
 
 
