@@ -807,7 +807,6 @@ the user can see project cost breakdown of lead organisation
     the user should see the element     jQuery = td:contains("Knowledge base supervisor")+td:contains("0")
     the user should see the element     jQuery = td:contains("Estate")+td:contains("0")
     the user should see the element     jQuery = td:contains("Additional associate support")+td:contains("0")
-    the user should see the element     jQuery = td:contains("Subcontracting")+td:contains("0")
     the user should see the element     jQuery = td:contains("Other costs")+td:contains("0")
     the user should see the element     jQuery = th:contains("Total") ~ td:contains("£246")
 
