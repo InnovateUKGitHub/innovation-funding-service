@@ -36,12 +36,19 @@ public class ApplicationSummaryViewModelPopulator {
     public ApplicationSummaryViewModel populate(ApplicationResource application, CompetitionResource competition, UserResource user) {
         ApplicationReadOnlySettings settings = defaultSettings().setIncludeAllAssessorFeedback(shouldDisplayFeedback(competition, application));
         ApplicationReadOnlyViewModel applicationReadOnlyViewModel = applicationReadOnlyViewModelPopulator.populate(application, competition, user, settings);
-        applicationReadOnlyViewModel.setDownloadBaseURL("/application/" + application.getId() + "/summary");
+
+        if (interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess()) {
+            interviewFeedbackViewModel = interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased());
+        } else {
+            interviewFeedbackViewModel = null;
+        }
+
 
         return new ApplicationSummaryViewModel(applicationReadOnlyViewModel,
                                                application,
                                                competition,
-                                               isProjectWithdrawn(application.getId()));
+                                               isProjectWithdrawn(application.getId()),
+                                               interviewFeedbackViewModel);
     }
 
     private boolean shouldDisplayFeedback(CompetitionResource competition, ApplicationResource application) {

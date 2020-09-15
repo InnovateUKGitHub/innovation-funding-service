@@ -12,7 +12,6 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionRestService;
 import org.innovateuk.ifs.application.service.QuestionStatusRestService;
 import org.innovateuk.ifs.application.service.SectionRestService;
-import org.innovateuk.ifs.application.summary.populator.InterviewFeedbackViewModelPopulator;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.async.generation.AsyncAdaptor;
@@ -61,9 +60,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
-
-    @Autowired
-    private InterviewFeedbackViewModelPopulator interviewFeedbackViewModelPopulator;
 
     @Autowired
     private SectionRestService sectionRestService;
@@ -126,9 +122,6 @@ public class ApplicationReadOnlyViewModelPopulator extends AsyncAdaptor {
                 sectionViews,
                 settings.isIncludeAllAssessorFeedback() ? data.getApplicationScore() : BigDecimal.ZERO,
                 settings.isIncludeAllAssessorFeedback() ? data.getAssessmentToApplicationAssessment().values().stream().map(ApplicationAssessmentResource::getOverallFeedback).collect(Collectors.toList()) : emptyList());
-
-        ApplicationReadOnlyViewModel.setInterviewFeedbackViewModel(interviewAssignmentRestService.isAssignedToInterview(application.getId()).getSuccess() ?
-                interviewFeedbackViewModelPopulator.populate(application.getId(), application.getCompetitionName(), user, application.getCompetitionStatus().isFeedbackReleased()) : null);
 
         return ApplicationReadOnlyViewModel;
     }
